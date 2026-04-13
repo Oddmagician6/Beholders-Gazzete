@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Beholder's Gazette | Truth is Subjective</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lato:wght@400;700&family=MedievalSharp&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">👁️ The Beholder's Gazette</div>
+        <div class="tagline">"We See All Truths (Especially The Ones We Made Up)"</div>
+        <div class="date-banner" id="date-banner"></div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#economy">Economy</a></li>
+            <li><a href="#politics">Politics</a></li>
+            <li><a href="#technology">Technology</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+    </nav>
+
+    <div class="ticker-wrap">
+        <div class="ticker">
+            BREAKING: Local Wizard Blames Lag for Failed Fireball &nbsp;&bull;&nbsp; 
+            King Announces New Tax on Potion Bottles &nbsp;&bull;&nbsp; 
+            Adventurers Guild Strikes Demand Better Loot &nbsp;&bull;&nbsp; 
+            Dragon Hoard Inflation Reaches All-Time High
+        </div>
+    </div>
+
+    <div class="container">
+        <main>
+            <div id="featured-article"></div>
+            <div class="article-grid" id="article-grid"></div>
+        </main>
+
+        <aside>
+            <div class="sidebar-widget economy-widget" id="economy-tracker">
+                <div style="text-align: center; padding: 20px; color: #888;">Loading Market Data...</div>
+            </div>
+
+            <div class="sidebar-widget">
+                <h4 class="widget-title">Prophecy Poll</h4>
+                <p style="font-size: 0.9rem; margin-bottom: 10px;">Will the Chosen One save the realm before lunch?</p>
+                <div style="margin-bottom: 5px; font-size: 0.8rem;">Yes (Destiny)</div>
+                <div class="poll-bar"><div class="poll-fill" style="width: 75%;">75%</div></div>
+                <div style="margin-bottom: 5px; font-size: 0.8rem;">No (DM Fiat)</div>
+                <div class="poll-bar"><div class="poll-fill" style="width: 25%; background: var(--accent-red); color: #fff;">25%</div></div>
+            </div>
+
+            <div class="sidebar-widget">
+                <h4 class="widget-title">Subscribe</h4>
+                <p style="font-size: 0.9rem;">Get news delivered by Raven.</p>
+                <input type="email" placeholder="Enter your email...">
+                <button class="btn" style="width: 100%; margin-top: 10px;">Send Raven</button>
+            </div>
+        </aside>
+    </div>
+
+    <footer>
+        <p>&copy; <span id="year"></span> The Beholder's Gazette. Published by the Bard's Guild of Journalism.</p>
+        <p>Disclaimer: All news is subject to DM approval. No dragons were harmed in the making of this website.</p>
+        <p style="margin-top: 10px; color: #444;">Powered by Static Magic</p>
+    </footer>
+
+    <script src="economy.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
