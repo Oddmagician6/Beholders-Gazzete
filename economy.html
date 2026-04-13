@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Exchange | The Beholder's Gazette</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lato:wght@400;700&family=MedievalSharp&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="economy-page.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">⚖️ Waterdeep Market Exchange</div>
+        <div class="tagline">"Real-Time Prices for All Your Adventuring Needs"</div>
+        <a href="index.html" class="btn" style="margin-top: 15px;">← Back to Home</a>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="economy.html" style="background: var(--accent-gold); color: #000;">Market</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+    </nav>
+
+    <div class="ticker-wrap">
+        <div class="ticker">
+            MARKET UPDATE: Prices refresh every 15 minutes &nbsp;&bull;&nbsp; 
+            Healing Potion demand up 300% &nbsp;&bull;&nbsp; 
+            Dragon Scales trending bearish &nbsp;&bull;&nbsp; 
+            New trade routes opened to Maztica
+        </div>
+    </div>
+
+    <div class="economy-container">
+        <!-- Market Overview -->
+        <div class="market-overview">
+            <div class="overview-card">
+                <h3>Market Status</h3>
+                <div class="status-indicator" id="market-status">
+                    <span class="dot"></span>
+                    <span class="text">Loading...</span>
+                </div>
+            </div>
+            <div class="overview-card">
+                <h3>Next Update</h3>
+                <div class="countdown" id="countdown">--:--</div>
+            </div>
+            <div class="overview-card">
+                <h3>Total Items</h3>
+                <div class="stat-value" id="total-items">--</div>
+            </div>
+            <div class="overview-card">
+                <h3>Price Changes</h3>
+                <div class="stat-row">
+                    <span class="up">▲ <span id="items-up">--</span></span>
+                    <span class="down">▼ <span id="items-down">--</span></span>
+                    <span class="stable">● <span id="items-stable">--</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search & Filters -->
+        <div class="filters-bar">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="🔍 Search items...">
+            </div>
+            <div class="filter-group">
+                <select id="category-filter">
+                    <option value="all">All Categories</option>
+                    <option value="weapons">Weapons</option>
+                    <option value="armor">Armor</option>
+                    <option value="adventuring-gear">Adventuring Gear</option>
+                    <option value="tools">Tools</option>
+                    <option value="mounts">Mounts & Vehicles</option>
+                    <option value="trade-goods">Trade Goods</option>
+                    <option value="magic-items">Magic Items</option>
+                    <option value="consumables">Consumables</option>
+                </select>
+                <select id="sort-filter">
+                    <option value="name">Sort by Name</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="change-up">Biggest Gainers</option>
+                    <option value="change-down">Biggest Losers</option>
+                </select>
+                <button class="refresh-btn" onclick="forceEconomyUpdate()">🔄 Refresh Prices</button>
+            </div>
+        </div>
+
+        <!-- Items Table -->
+        <div class="items-table-container">
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable('name')">Item Name ↕</th>
+                        <th onclick="sortTable('category')">Category ↕</th>
+                        <th onclick="sortTable('basePrice')">Base Price ↕</th>
+                        <th onclick="sortTable('currentPrice')">Current Price ↕</th>
+                        <th onclick="sortTable('changePercent')">Change ↕</th>
+                        <th>7-Day Trend</th>
+                    </tr>
+                </thead>
+                <tbody id="items-table-body">
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px;">Loading market data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Market Analysis -->
+        <div class="market-analysis">
+            <h2>📊 Market Analysis</h2>
+            <div class="analysis-grid">
+                <div class="analysis-card">
+                    <h3>🔥 Hot Items</h3>
+                    <ul id="hot-items"></ul>
+                </div>
+                <div class="analysis-card">
+                    <h3>📉 Cold Items</h3>
+                    <ul id="cold-items"></ul>
+                </div>
+                <div class="analysis-card">
+                    <h3>💡 Market Insights</h3>
+                    <ul id="market-insights"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; <span id="year"></span> The Beholder's Gazette | Waterdeep Market Exchange</p>
+        <p>Prices fluctuate based on supply, demand, and dragon activity</p>
+    </footer>
+
+    <script src="economy-full.js"></script>
+</body>
+</html>
