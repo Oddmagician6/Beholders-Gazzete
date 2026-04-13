@@ -1,0 +1,54 @@
+{
+  "articles": [
+    {
+      "id": "federal-reserve-waterdeep",
+      "title": "Federal Reserve of Waterdeep Announces Interest Rate Hike Amidst Goblin Inflation",
+      "category": "Economy",
+      "author": "Gimble Inkquill",
+      "date": "2024-01-15",
+      "excerpt": "In a move that has sent shockwaves through the merchant districts, the High Lords of Finance have raised the cost of borrowing gold pieces by 2.5%.",
+      "content": "<p>In a move that has sent shockwaves through the merchant districts, the High Lords of Finance have raised the cost of borrowing gold pieces by 2.5%. The decision comes as the price of basic healing potions has skyrocketed due to a shortage of glass vials and a goblin cartel controlling the silica trade.</p><br><p>\"It's a necessary correction,\" stated Lord Candlekeep, Chief Economist. \"We cannot allow the value of the Platinum Piece to be diluted by reckless spending on royal banquets.\"</p><br><p>Critics, however, argue that the real culprit is the recent dragon migration, which has disrupted supply lines and incinerated several key grain silos. Commoners are reportedly hoarding copper pieces and trading in barter systems involving livestock and +1 Swords.</p>",
+      "featured": true
+    },
+    {
+      "id": "stand-your-ground-shield",
+      "title": "Kingdom Passes 'Stand Your Ground' Shield Law",
+      "category": "Politics",
+      "author": "Elara Swiftquill",
+      "date": "2024-01-14",
+      "excerpt": "Citizens now legally allowed to bash first, ask questions later. Opposition claims this violates the Treaty of Non-Aggression.",
+      "content": "<p>The Royal Council has passed controversial legislation allowing citizens to use defensive force without retreating first. Critics argue this will lead to more tavern brawls.</p>",
+      "featured": false
+    },
+    {
+      "id": "unicorn-startup-valuation",
+      "title": "Unicorn Start-Up Valuation Plummets",
+      "category": "Economy",
+      "author": "Marcus Goldhand",
+      "date": "2024-01-13",
+      "excerpt": "Investors realize unicorns don't actually produce gold, just sparkles. Stock drops 40% in morning trading.",
+      "content": "<p>The mythical creature market took a hit today as investors realized the fundamental flaw in unicorn-based economies.</p>",
+      "featured": false
+    },
+    {
+      "id": "dungeon-delvers-unionize",
+      "title": "Dungeon Delvers Unionize",
+      "category": "Labor",
+      "author": "Thorin Ironforge",
+      "date": "2024-01-12",
+      "excerpt": "\"We demand hazard pay for traps,\" says union rep. \"And dental for when we bite into cursed coins.\"",
+      "content": "<p>The Adventurers Guild Local 421 has voted to strike until better working conditions are met.</p>",
+      "featured": false
+    },
+    {
+      "id": "teleportation-circle-glitches",
+      "title": "New Teleportation Circle App Glitches",
+      "category": "Technology",
+      "author": "Zara Spellweaver",
+      "date": "2024-01-11",
+      "excerpt": "Users report arriving 5 feet to the left of their destination, frequently inside walls. Developers call it a 'feature.'",
+      "content": "<p>TeleportCorp's new app has users stuck in walls. The company says it's working on a patch.</p>",
+      "featured": false
+    }
+  ]
+}
