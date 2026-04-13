@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Beholder's Gazette</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lato:wght@400;700&family=MedievalSharp&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">👁️ The Beholder's Gazette</div>
+        <div class="tagline">"We See All Truths (Especially The Ones We Made Up)"</div>
+        <a href="index.html" class="btn" style="margin-top: 15px;">← Back to Home</a>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#economy">Economy</a></li>
+            <li><a href="index.html#politics">Politics</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <main>
+            <article class="featured-article" id="article-content">
+                <div style="text-align: center; padding: 40px; color: #888;">Loading Article...</div>
+            </article>
+        </main>
+
+        <aside>
+            <div class="sidebar-widget economy-widget" id="economy-tracker">
+                <div style="text-align: center; padding: 20px; color: #888;">Loading Market Data...</div>
+            </div>
+        </aside>
+    </div>
+
+    <footer>
+        <p>&copy; <span id="year"></span> The Beholder's Gazette</p>
+    </footer>
+
+    <script src="economy.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
