@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NPC Generator | The Beholder's Gazette</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lato:wght@400;700&family=MedievalSharp&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tool-page.css">
+    <link rel="stylesheet" href="npc-generator.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">🎭 The Face Factory</div>
+        <div class="tagline">"Generating Personalities Since 1492 DR"</div>
+        <a href="index.html" class="btn" style="margin-top: 15px;">← Back to Home</a>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="economy.html">Market</a></li>
+            <li><a href="rumors.html">Tavern</a></li>
+            <li><a href="npc-generator.html" style="background: var(--accent-gold); color: #000;">Town Square</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+    </nav>
+
+    <div class="ticker-wrap">
+        <div class="ticker">
+            NPC NEWS: "Local bard forgot own name" &nbsp;&bull;&nbsp; 
+            "Blacksmith allergic to metal" &nbsp;&bull;&nbsp; 
+            "Wizard opens bakery (everything rises)" &nbsp;&bull;&nbsp; 
+            "Guard falls asleep on duty (again)"
+        </div>
+    </div>
+
+    <div class="tool-container">
+        <!-- Generation Controls -->
+        <div class="npc-controls">
+            <h2>⚙️ Configure Your NPC</h2>
+            <div class="control-grid">
+                <div class="control-group">
+                    <label>Race</label>
+                    <select id="npc-race">
+                        <option value="random">🎲 Random</option>
+                        <option value="human">Human</option>
+                        <option value="elf">Elf</option>
+                        <option value="dwarf">Dwarf</option>
+                        <option value="halfling">Halfling</option>
+                        <option value="gnome">Gnome</option>
+                        <option value="orc">Orc</option>
+                        <option value="tiefling">Tiefling</option>
+                        <option value="dragonborn">Dragonborn</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Profession Type</label>
+                    <select id="npc-profession">
+                        <option value="random">🎲 Random</option>
+                        <option value="commoner">Commoner</option>
+                        <option value="merchant">Merchant</option>
+                        <option value="guard">Guard/Official</option>
+                        <option value="magic">Magic User</option>
+                        <option value="criminal">Criminal</option>
+                        <option value="noble">Noble</option>
+                        <option value="religious">Religious</option>
+                        <option value="adventurer">Adventurer</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Age</label>
+                    <select id="npc-age">
+                        <option value="random">🎲 Random</option>
+                        <option value="young">Young</option>
+                        <option value="adult">Adult</option>
+                        <option value="middle">Middle-Aged</option>
+                        <option value="old">Old</option>
+                        <option value="ancient">Ancient</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Gender</label>
+                    <select id="npc-gender">
+                        <option value="random">🎲 Random</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="nonbinary">Non-Binary</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-toggles">
+                <label class="toggle">
+                    <input type="checkbox" id="include-stats" checked>
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-label">Include Quick Stats</span>
+                </label>
+                <label class="toggle">
+                    <input type="checkbox" id="include-secrets" checked>
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-label">Include Secrets</span>
+                </label>
+                <label class="toggle">
+                    <input type="checkbox" id="include-quest" checked>
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-label">Include Quest Hook</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Generate Button -->
+        <div class="generate-section">
+            <button class="generate-btn" onclick="generateNPC()">
+                🎲 Generate NPC
+            </button>
+            <p style="color: #888; font-size: 0.85rem; margin-top: 10px;">
+                (Or press Spacebar)
+            </p>
+        </div>
+
+        <!-- NPC Display Card -->
+        <div class="npc-card" id="npc-card" style="display: none;">
+            <!-- Header -->
+            <div class="npc-header">
+                <div class="npc-portrait" id="npc-portrait">
+                    <span class="portrait-icon" id="portrait-icon">👤</span>
+                </div>
+                <div class="npc-identity">
+                    <h1 class="npc-name" id="npc-name">Name Here</h1>
+                    <div class="npc-basics">
+                        <span class="npc-race" id="npc-race-display">Race</span>
+                        <span class="npc-divider">•</span>
+                        <span class="npc-age" id="npc-age-display">Age</span>
+                        <span class="npc-divider">•</span>
+                        <span class="npc-gender" id="npc-gender-display">Gender</span>
+                    </div>
+                    <div class="npc-profession" id="npc-profession-display">Profession</div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="npc-section" id="stats-section">
+                <h3>📊 Quick Stats</h3>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <span class="stat-label">STR</span>
+                        <span class="stat-value" id="stat-str">10</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">DEX</span>
+                        <span class="stat-value" id="stat-dex">10</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">CON</span>
+                        <span class="stat-value" id="stat-con">10</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">INT</span>
+                        <span class="stat-value" id="stat-int">10</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">WIS</span>
+                        <span class="stat-value" id="stat-wis">10</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">CHA</span>
+                        <span class="stat-value" id="stat-cha">10</span>
+                    </div>
+                </div>
+                <div class="npc-combat">
+                    <span class="combat-stat">HP: <strong id="npc-hp">10</strong></span>
+                    <span class="combat-stat">AC: <strong id="npc-ac">10</strong></span>
+                    <span class="combat-stat">Speed: <strong id="npc-speed">30ft</strong></span>
+                </div>
+            </div>
+
+            <!-- Personality -->
+            <div class="npc-section">
+                <h3>🎭 Personality</h3>
+                <div class="personality-grid">
+                    <div class="personality-item">
+                        <span class="personality-label">Trait:</span>
+                        <span class="personality-value" id="npc-trait">-</span>
+                    </div>
+                    <div class="personality-item">
+                        <span class="personality-label">Ideal:</span>
+                        <span class="personality-value" id="npc-ideal">-</span>
+                    </div>
+                    <div class="personality-item">
+                        <span class="personality-label">Bond:</span>
+                        <span class="personality-value" id="npc-bond">-</span>
+                    </div>
+                    <div class="personality-item">
+                        <span class="personality-label">Flaw:</span>
+                        <span class="personality-value" id="npc-flaw">-</span>
+                    </div>
+                </div>
+                <div class="npc-quirks">
+                    <h4>Quirks & Mannerisms:</h4>
+                    <ul id="npc-quirks-list">
+                        <li>-</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Appearance -->
+            <div class="npc-section">
+                <h3>👁️ Appearance</h3>
+                <div class="appearance-grid">
+                    <div class="appearance-item">
+                        <span class="appearance-label">Build:</span>
+                        <span class="appearance-value" id="npc-build">-</span>
+                    </div>
+                    <div class="appearance-item">
+                        <span class="appearance-label">Hair:</span>
+                        <span class="appearance-value" id="npc-hair">-</span>
+                    </div>
+                    <div class="appearance-item">
+                        <span class="appearance-label">Eyes:</span>
+                        <span class="appearance-value" id="npc-eyes">-</span>
+                    </div>
+                    <div class="appearance-item">
+                        <span class="appearance-label">Distinguishing Feature:</span>
+                        <span class="appearance-value" id="npc-feature">-</span>
+                    </div>
+                </div>
+                <div class="npc-clothing">
+                    <h4>Typical Attire:</h4>
+                    <p id="npc-clothing">-</p>
+                </div>
+            </div>
+
+            <!-- Dialogue -->
+            <div class="npc-section">
+                <h3>💬 Sample Dialogue</h3>
+                <div class="dialogue-box" id="npc-dialogue">
+                    "Dialogue goes here..."
+                </div>
+                <div class="dialogue-voice">
+                    <span class="voice-label">Voice:</span>
+                    <span class="voice-value" id="npc-voice">-</span>
+                </div>
+            </div>
+
+            <!-- Secrets & Quests -->
+            <div class="npc-section" id="secrets-section">
+                <h3>🗝️ Secrets & Quests</h3>
+                <div class="secret-box" id="npc-secret">
+                    <span class="secret-label">Secret:</span>
+                    <p id="npc-secret-text">-</p>
+                </div>
+                <div class="quest-box" id="npc-quest-section">
+                    <span class="quest-label">Quest Hook:</span>
+                    <p id="npc-quest-text">-</p>
+                </div>
+            </div>
+
+            <!-- Relationships -->
+            <div class="npc-section">
+                <h3>🔗 Relationships</h3>
+                <div class="relationship-box" id="npc-relationships">
+                    <p id="npc-relationship-text">-</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="npc-actions">
+                <button class="action-btn" onclick="copyNPC()">📋 Copy to Clipboard</button>
+                <button class="action-btn" onclick="saveNPC()">💾 Save to Favorites</button>
+                <button class="action-btn" onclick="regenerateNPC()">🔄 Regenerate</button>
+            </div>
+        </div>
+
+        <!-- Saved NPCs -->
+        <div class="saved-npcs">
+            <h3>💾 Saved NPCs</h3>
+            <div id="saved-list">
+                <p style="color: #888; font-style: italic;">No NPCs saved yet...</p>
+            </div>
+            <button class="btn" onclick="clearSaved()" style="margin-top: 15px; font-size: 0.8rem;">Clear All Saved</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; <span id="year"></span> The Beholder's Gazette | The Face Factory</p>
+        <p>Every face tells a story. Some of them are even true.</p>
+    </footer>
+
+    <script src="npc-generator.js"></script>
+</body>
+</html>
