@@ -101,4 +101,89 @@ input[type="email"] { width: 100%; padding: 10px; margin-top: 10px; background: 
     .logo { font-size: 2.5rem; }
     .featured-headline { font-size: 1.8rem; }
     .economy-grid { grid-template-columns: 1fr; }
+
+/* PATREON WIDGET STYLES */
+.patreon-widget {
+    background: linear-gradient(145deg, #2a1f1f, #1a1a1d);
+    border: 2px solid #c5a059;
+    position: relative;
+    overflow: hidden;
+}
+
+.patreon-widget::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #c5a059, #8a2c2c, #c5a059);
+}
+
+.patreon-tier {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    margin-bottom: 10px;
+    transition: 0.3s;
+}
+
+.patreon-tier:hover {
+    background: rgba(197, 160, 89, 0.1);
+    transform: translateX(5px);
+}
+
+.tier-icon {
+    font-size: 1.5rem;
+    width: 40px;
+    text-align: center;
+}
+
+.tier-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.tier-name {
+    font-family: 'Cinzel', serif;
+    color: #c5a059;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.tier-price {
+    font-size: 0.75rem;
+    color: #888;
+}
+
+.patreon-btn {
+    display: block;
+    background: linear-gradient(145deg, #c5a059, #a88645);
+    color: #000;
+    text-align: center;
+    padding: 12px 20px;
+    border-radius: 4px;
+    font-family: 'Cinzel', serif;
+    font-weight: bold;
+    font-size: 0.95rem;
+    transition: 0.3s;
+    margin-top: 15px;
+    border: none;
+    cursor: pointer;
+}
+
+.patreon-btn:hover {
+    background: linear-gradient(145deg, #d4af67, #b8954e);
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(197, 160, 89, 0.4);
+}
+
+.patreon-btn:active {
+    transform: scale(0.98);
+}
+
 }
