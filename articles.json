@@ -49,6 +49,17 @@
       "excerpt": "Users report arriving 5 feet to the left of their destination, frequently inside walls. Developers call it a 'feature.'",
       "content": "<p>TeleportCorp's new app has users stuck in walls. The company says it's working on a patch.</p>",
       "featured": false
-    }
+    },
+    {
+      "id": "unauthorized-tower-expansion",
+      "title": "High Wizard Fined for Unauthorized Tower Expansion",
+      "category": "Zoning",
+      "author": "Gobwiz Quillnib",
+      "date": "2026-04-13",
+      "excerpt": "Planning committee claims the extra dimension violates spatial zoning laws. Wizard argues 'it's bigger on the inside' is a loophole.",
+      "content": "<p>The Arcane Zoning Board has issued a cease and desist order after Bigby's tower exceeded its dimensional footprint. Neighbors complain of gravity leaks and occasional time dilation in the parking lot.</p>",
+      "featured": true
+}
+
   ]
 }
