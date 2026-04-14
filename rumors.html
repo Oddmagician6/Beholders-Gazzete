@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tavern Rumor Generator | The Beholder's Gazette</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lato:wght@400;700&family=MedievalSharp&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tool-page.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">🍺 The Rusty Flagon</div>
+        <div class="tagline">"Where Truth Goes to Die"</div>
+        <a href="index.html" class="btn" style="margin-top: 15px;">← Back to Home</a>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="economy.html">Market</a></li>
+            <li><a href="rumors.html" style="background: var(--accent-gold); color: #000;">Rumors</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+    </nav>
+
+    <div class="ticker-wrap">
+        <div class="ticker">
+            RUMOR MILL: "The Baron's wig is enchanted" &nbsp;&bull;&nbsp; 
+            "Goblins unionizing" &nbsp;&bull;&nbsp; 
+            "Dragon accepts cryptocurrency" &nbsp;&bull;&nbsp; 
+            "Local bard actually talented"
+        </div>
+    </div>
+
+    <div class="tool-container">
+        <!-- Category Selection -->
+        <div class="category-selector">
+            <h2>📜 Choose Your Poison</h2>
+            <div class="category-grid">
+                <button class="category-btn active" data-category="all">🎲 All Rumors</button>
+                <button class="category-btn" data-category="local">🏘️ Local Gossip</button>
+                <button class="category-btn" data-category="politics">👑 Politics</button>
+                <button class="category-btn" data-category="economics">💰 Economics</button>
+                <button class="category-btn" data-category="adventures">⚔️ Adventures</button>
+                <button class="category-btn" data-category="monsters">🐉 Monsters</button>
+                <button class="category-btn" data-category="magic">✨ Magic & Weird</button>
+            </div>
+        </div>
+
+        <!-- Generator Box -->
+        <div class="generator-box">
+            <button class="generate-btn" onclick="generateRumor()">
+                🎲 Generate Rumor
+            </button>
+            
+            <div class="rumor-display" id="rumor-display">
+                <div class="rumor-placeholder">
+                    <p>Click the button to hear the latest tavern gossip...</p>
+                    <p style="font-size: 0.9rem; color: #888; margin-top: 10px;">
+                        (Or press Spacebar)
+                    </p>
+                </div>
+            </div>
+
+            <div class="truth-meter" id="truth-meter">
+                <div class="truth-label">Veracity:</div>
+                <div class="truth-value" id="truth-value">??? (Roll Investigation)</div>
+                <div class="truth-bar">
+                    <div class="truth-fill" id="truth-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Rumors -->
+        <div class="recent-rumors">
+            <h3>📋 Recent Rumors</h3>
+            <div id="recent-list">
+                <p style="color: #888; font-style: italic;">No rumors generated yet...</p>
+            </div>
+            <button class="btn" onclick="clearRecent()" style="margin-top: 15px; font-size: 0.8rem;">Clear History</button>
+        </div>
+
+        <!-- Add Your Own -->
+        <div class="add-rumor-section">
+            <h3>✍️ Contribute a Rumor</h3>
+            <p style="font-size: 0.9rem; color: #888; margin-bottom: 15px;">
+                Heard something at your table? Add it to the collection!
+            </p>
+            <input type="text" id="new-rumor-text" placeholder="Enter your rumor..." maxlength="200">
+            <select id="new-rumor-category">
+                <option value="local">Local Gossip</option>
+                <option value="politics">Politics</option>
+                <option value="economics">Economics</option>
+                <option value="adventures">Adventures</option>
+                <option value="monsters">Monsters</option>
+                <option value="magic">Magic & Weird</option>
+            </select>
+            <button class="btn" onclick="addRumor()">Submit to the Mill</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; <span id="year"></span> The Beholder's Gazette | The Rusty Flagon Tavern</p>
+        <p>Remember: A good rumor is 10% truth, 90% entertainment</p>
+    </footer>
+
+    <script src="rumors.js"></script>
+</body>
+</html>
