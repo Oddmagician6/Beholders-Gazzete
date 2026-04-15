@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loot Generator | The Beholder's Gazette</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lato:wght@400;700&family=MedievalSharp&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tool-page.css">
+    <link rel="stylesheet" href="loot-generator.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">💰 The Vault of Wonders</div>
+        <div class="tagline">"Every Dungeon Deserves Better Loot"</div>
+        <a href="index.html" class="btn" style="margin-top: 15px;">← Back to Home</a>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="economy.html">Market</a></li>
+            <li><a href="rumors.html">Rumors</a></li>
+            <li><a href="npc-generator.html">NPCs</a></li>
+            <li><a href="loot-generator.html" style="background: var(--accent-gold); color: #000;">Loot</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+    </nav>
+
+    <div class="ticker-wrap">
+        <div class="ticker">
+            LOOT ALERT: "Dragon hoard inflation at 300%" &nbsp;&bull;&nbsp; 
+            "Magic sword prices dropping" &nbsp;&bull;&nbsp; 
+            "Gems trending bullish" &nbsp;&bull;&nbsp; 
+            "Cursed items on clearance"
+        </div>
+    </div>
+
+    <div class="tool-container">
+        <!-- Generation Controls -->
+        <div class="loot-controls">
+            <h2>⚙️ Configure Your Loot</h2>
+            
+            <div class="control-tabs">
+                <button class="tab-btn active" data-tab="individual">🪙 Individual Treasure</button>
+                <button class="tab-btn" data-tab="hoard">🐉 Treasure Hoard</button>
+                <button class="tab-btn" data-tab="magic">✨ Magic Items</button>
+                <button class="tab-btn" data-tab="custom">🎲 Custom</button>
+            </div>
+
+            <div class="tab-content active" id="tab-individual">
+                <p style="color: #888; margin-bottom: 15px;">Generate loot for a single creature or small encounter (DMG p.133)</p>
+                <div class="control-grid">
+                    <div class="control-group">
+                        <label>Challenge Rating</label>
+                        <select id="ind-cr">
+                            <option value="0-4">CR 0-4</option>
+                            <option value="5-10">CR 5-10</option>
+                            <option value="11-16">CR 11-16</option>
+                            <option value="17+">CR 17+</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Luck</label>
+                        <select id="ind-luck">
+                            <option value="normal">Normal</option>
+                            <option value="generous">Generous (+50%)</option>
+                            <option value="stingy">Stingy (-50%)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-hoard">
+                <p style="color: #888; margin-bottom: 15px;">Generate a dragon-sized treasure hoard (DMG p.136)</p>
+                <div class="control-grid">
+                    <div class="control-group">
+                        <label>Hoards to Generate</label>
+                        <input type="number" id="hoard-count" value="1" min="1" max="10">
+                    </div>
+                    <div class="control-group">
+                        <label>Include Magic Items</label>
+                        <select id="hoard-magic">
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-magic">
+                <p style="color: #888; margin-bottom: 15px;">Generate specific magic items</p>
+                <div class="control-grid">
+                    <div class="control-group">
+                        <label>Rarity</label>
+                        <select id="magic-rarity">
+                            <option value="random">🎲 Random</option>
+                            <option value="common">Common</option>
+                            <option value="uncommon">Uncommon</option>
+                            <option value="rare">Rare</option>
+                            <option value="very-rare">Very Rare</option>
+                            <option value="legendary">Legendary</option>
+                            <option value="artifact">Artifact</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Item Type</label>
+                        <select id="magic-type">
+                            <option value="random">🎲 Random</option>
+                            <option value="weapon">Weapon</option>
+                            <option value="armor">Armor</option>
+                            <option value="wondrous">Wondrous Item</option>
+                            <option value="potion">Potion</option>
+                            <option value="scroll">Scroll</option>
+                            <option value="ring">Ring</option>
+                            <option value="staff">Staff/Rod/Wand</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Quantity</label>
+                        <input type="number" id="magic-count" value="1" min="1" max="10">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-custom">
+                <p style="color: #888; margin-bottom: 15px;">Fully customize your loot generation</p>
+                <div class="control-grid">
+                    <div class="control-group">
+                        <label>Coins</label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="custom-coins" checked> Include
+                        </label>
+                    </div>
+                    <div class="control-group">
+                        <label>Gems</label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="custom-gems" checked> Include
+                        </label>
+                    </div>
+                    <div class="control-group">
+                        <label>Art Objects</label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="custom-art" checked> Include
+                        </label>
+                    </div>
+                    <div class="control-group">
+                        <label>Magic Items</label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="custom-magic" checked> Include
+                        </label>
+                    </div>
+                </div>
+                <div class="control-grid">
+                    <div class="control-group">
+                        <label>Min CR</label>
+                        <input type="number" id="custom-min-cr" value="1" min="0" max="30">
+                    </div>
+                    <div class="control-group">
+                        <label>Max CR</label>
+                        <input type="number" id="custom-max-cr" value="10" min="0" max="30">
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-toggles">
+                <label class="toggle">
+                    <input type="checkbox" id="show-market-value" checked>
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-label">Show Market Value</span>
+                </label>
+                <label class="toggle">
+                    <input type="checkbox" id="include-descriptions" checked>
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-label">Include Descriptions</span>
+                </label>
+                <label class="toggle">
+                    <input type="checkbox" id="use-economy-prices" checked>
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-label">Use Live Economy Prices</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Generate Button -->
+        <div class="generate-section">
+            <button class="generate-btn" onclick="generateLoot()">
+                💰 Generate Loot
+            </button>
+            <p style="color: #888; font-size: 0.85rem; margin-top: 10px;">
+                (Or press Spacebar)
+            </p>
+        </div>
+
+        <!-- Loot Display -->
+        <div class="loot-display" id="loot-display" style="display: none;">
+            <!-- Summary -->
+            <div class="loot-summary">
+                <div class="summary-card">
+                    <span class="summary-label">Total Value</span>
+                    <span class="summary-value" id="total-value">0 gp</span>
+                </div>
+                <div class="summary-card">
+                    <span class="summary-label">Coins</span>
+                    <span class="summary-value" id="total-coins">0</span>
+                </div>
+                <div class="summary-card">
+                    <span class="summary-label">Gems/Art</span>
+                    <span class="summary-value" id="total-gems">0</span>
+                </div>
+                <div class="summary-card">
+                    <span class="summary-label">Magic Items</span>
+                    <span class="summary-value" id="total-magic">0</span>
+                </div>
+            </div>
+
+            <!-- Coins Section -->
+            <div class="loot-section" id="coins-section">
+                <h3>🪙 Currency</h3>
+                <div class="coins-grid" id="coins-grid"></div>
+            </div>
+
+            <!-- Gems Section -->
+            <div class="loot-section" id="gems-section">
+                <h3>💎 Gems & Jewelry</h3>
+                <div class="items-grid" id="gems-grid"></div>
+            </div>
+
+            <!-- Art Section -->
+            <div class="loot-section" id="art-section">
+                <h3>🎨 Art Objects</h3>
+                <div class="items-grid" id="art-grid"></div>
+            </div>
+
+            <!-- Magic Items Section -->
+            <div class="loot-section" id="magic-section">
+                <h3>✨ Magic Items</h3>
+                <div class="magic-grid" id="magic-grid"></div>
+            </div>
+
+            <!-- Notes -->
+            <div class="loot-notes">
+                <h3>📝 DM Notes</h3>
+                <div class="notes-content" id="loot-notes">
+                    <p>Generated based on DMG treasure tables with economy adjustments.</p>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="loot-actions">
+                <button class="action-btn" onclick="copyLoot()">📋 Copy to Clipboard</button>
+                <button class="action-btn" onclick="saveLoot()">💾 Save to Favorites</button>
+                <button class="action-btn" onclick="exportLoot()">📤 Export JSON</button>
+                <button class="action-btn" onclick="regenerateLoot()">🔄 Regenerate</button>
+            </div>
+        </div>
+
+        <!-- Saved Loot -->
+        <div class="saved-loot">
+            <h3>💾 Saved Treasure</h3>
+            <div id="saved-list">
+                <p style="color: #888; font-style: italic;">No treasure saved yet...</p>
+            </div>
+            <button class="btn" onclick="clearSaved()" style="margin-top: 15px; font-size: 0.8rem;">Clear All Saved</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; <span id="year"></span> The Beholder's Gazette | The Vault of Wonders</p>
+        <p>Remember: Divide loot fairly, or the bard will write a song about you.</p>
+    </footer>
+
+    <script src="loot-data.js"></script>
+    <script src="loot-generator.js"></script>
+</body>
+</html>
