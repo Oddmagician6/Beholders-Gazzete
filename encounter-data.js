@@ -1,6 +1,5 @@
 /* ============================================
-   D&D 5E MONSTER DATABASE
-   Simplified stat blocks for encounter building
+   D&D 5E MONSTER DATABASE - FIXED
    ============================================ */
 
 const monsterDatabase = [
@@ -15,63 +14,65 @@ const monsterDatabase = [
     { name: 'Guard', cr: 0.125, xp: 25, hp: 11, ac: 16, type: 'humanoid', tags: [], source: 'MM' },
     { name: 'Thug', cr: 0.5, xp: 100, hp: 32, ac: 12, type: 'humanoid', tags: [], source: 'MM' },
     { name: 'Cultist', cr: 0.125, xp: 25, hp: 9, ac: 12, type: 'humanoid', tags: [], source: 'MM' },
+    { name: 'Bandit', cr: 0.125, xp: 25, hp: 11, ac: 12, type: 'humanoid', tags: [], source: 'MM' },
+    { name: 'Scout', cr: 0.5, xp: 100, hp: 16, ac: 13, type: 'humanoid', tags: [], source: 'MM' },
+    { name: 'Acolyte', cr: 0.25, xp: 50, hp: 9, ac: 10, type: 'humanoid', tags: ['spellcaster'], source: 'MM' },
     
     // CR 1-2
     { name: 'Orc', cr: 0.5, xp: 100, hp: 15, ac: 13, type: 'humanoid', tags: ['aggressive'], source: 'MM' },
     { name: 'Ogre', cr: 2, xp: 450, hp: 59, ac: 11, type: 'giant', tags: [], source: 'MM' },
     { name: 'Bugbear', cr: 1, xp: 200, hp: 27, ac: 16, type: 'humanoid', tags: ['surprise-attack'], source: 'MM' },
     { name: 'Gnoll', cr: 0.5, xp: 100, hp: 22, ac: 15, type: 'humanoid', tags: ['rampage'], source: 'MM' },
-    { name: 'Acolyte', cr: 0.25, xp: 50, hp: 9, ac: 10, type: 'humanoid', tags: ['spellcaster'], source: 'MM' },
-    { name: 'Mage', cr: 6, xp: 2300, hp: 40, ac: 12, type: 'humanoid', tags: ['spellcaster'], source: 'MM' },
     { name: 'Priest', cr: 2, xp: 450, hp: 27, ac: 13, type: 'humanoid', tags: ['spellcaster'], source: 'MM' },
-    { name: 'Bandit', cr: 0.125, xp: 25, hp: 11, ac: 12, type: 'humanoid', tags: [], source: 'MM' },
     { name: 'Bandit Captain', cr: 2, xp: 450, hp: 65, ac: 15, type: 'humanoid', tags: ['leader'], source: 'MM' },
-    { name: 'Scout', cr: 0.5, xp: 100, hp: 16, ac: 13, type: 'humanoid', tags: [], source: 'MM' },
+    { name: 'Veteran', cr: 3, xp: 700, hp: 58, ac: 17, type: 'humanoid', tags: [], source: 'MM' },
+    { name: 'Knight', cr: 3, xp: 700, hp: 52, ac: 18, type: 'humanoid', tags: [], source: 'MM' },
+    { name: 'Dire Wolf', cr: 1, xp: 200, hp: 37, ac: 14, type: 'beast', tags: ['pack-tactics'], source: 'MM' },
+    { name: 'Ghoul', cr: 1, xp: 200, hp: 22, ac: 12, type: 'undead', tags: ['paralyze'], source: 'MM' },
     
     // CR 3-5
     { name: 'Owlbear', cr: 3, xp: 700, hp: 59, ac: 13, type: 'monstrosity', tags: [], source: 'MM' },
     { name: 'Troll', cr: 5, xp: 1800, hp: 84, ac: 15, type: 'giant', tags: ['regeneration'], source: 'MM' },
     { name: 'Giant Spider', cr: 1, xp: 200, hp: 26, ac: 14, type: 'beast', tags: ['web'], source: 'MM' },
     { name: 'Wyvern', cr: 6, xp: 2300, hp: 110, ac: 13, type: 'dragon', tags: ['flying', 'poison'], source: 'MM' },
-    { name: 'Young Dragon (Any)', cr: 4, xp: 1100, hp: 70, ac: 17, type: 'dragon', tags: ['breath-weapon', 'flying'], source: 'MM' },
-    { name: 'Elemental (Any)', cr: 5, xp: 1800, hp: 90, ac: 15, type: 'elemental', tags: ['damage-resistance'], source: 'MM' },
+    { name: 'Young Red Dragon', cr: 10, xp: 5900, hp: 178, ac: 18, type: 'dragon', tags: ['breath-weapon', 'flying'], source: 'MM' },
+    { name: 'Fire Elemental', cr: 5, xp: 1800, hp: 102, ac: 13, type: 'elemental', tags: ['fire-form', 'illumination'], source: 'MM' },
     { name: 'Vampire Spawn', cr: 5, xp: 1800, hp: 82, ac: 15, type: 'undead', tags: ['regeneration', 'charm'], source: 'MM' },
     { name: 'Wraith', cr: 5, xp: 1800, hp: 67, ac: 13, type: 'undead', tags: ['incorporeal', 'life-drain'], source: 'MM' },
-    { name: 'Knight', cr: 3, xp: 700, hp: 52, ac: 18, type: 'humanoid', tags: [], source: 'MM' },
-    { name: 'Veteran', cr: 3, xp: 700, hp: 58, ac: 17, type: 'humanoid', tags: [], source: 'MM' },
+    { name: 'Hill Giant', cr: 5, xp: 1800, hp: 105, ac: 13, type: 'giant', tags: [], source: 'MM' },
+    { name: 'Flesh Golem', cr: 5, xp: 1800, hp: 93, ac: 14, type: 'construct', tags: ['damage-resistance'], source: 'MM' },
     
     // CR 6-10
     { name: 'Clay Golem', cr: 9, xp: 5000, hp: 133, ac: 14, type: 'construct', tags: ['damage-immunity'], source: 'MM' },
-    { name: 'Fire Elemental', cr: 5, xp: 1800, hp: 102, ac: 13, type: 'elemental', tags: ['fire-form', 'illumination'], source: 'MM' },
-    { name: 'Flesh Golem', cr: 5, xp: 1800, hp: 93, ac: 14, type: 'construct', tags: ['damage-resistance'], source: 'MM' },
-    { name: 'Hill Giant', cr: 5, xp: 1800, hp: 105, ac: 13, type: 'giant', tags: [], source: 'MM' },
     { name: 'Frost Giant', cr: 8, xp: 3900, hp: 138, ac: 15, type: 'giant', tags: [], source: 'MM' },
     { name: 'Stone Giant', cr: 7, xp: 2900, hp: 126, ac: 17, type: 'giant', tags: [], source: 'MM' },
-    { name: 'Beholder', cr: 13, xp: 10000, hp: 180, ac: 18, type: 'aberration', tags: ['antimagic', 'eye-rays'], source: 'MM' },
-    { name: 'Adult Dragon (Any)', cr: 14, xp: 11500, hp: 190, ac: 19, type: 'dragon', tags: ['breath-weapon', 'flying', 'legendary'], source: 'MM' },
-    { name: 'Lich', cr: 21, xp: 33000, hp: 135, ac: 17, type: 'undead', tags: ['spellcaster', 'legendary', 'rejuvenation'], source: 'MM' },
-    { name: 'Ancient Dragon (Any)', cr: 24, xp: 62000, hp: 256, ac: 22, type: 'dragon', tags: ['breath-weapon', 'flying', 'legendary'], source: 'MM' },
+    { name: 'Mage', cr: 6, xp: 2300, hp: 40, ac: 12, type: 'humanoid', tags: ['spellcaster'], source: 'MM' },
+    { name: 'Adult Red Dragon', cr: 17, xp: 18000, hp: 256, ac: 19, type: 'dragon', tags: ['breath-weapon', 'flying', 'legendary'], source: 'MM' },
     
-    // More monsters can be added here
+    // CR 11+
+    { name: 'Beholder', cr: 13, xp: 10000, hp: 180, ac: 18, type: 'aberration', tags: ['antimagic', 'eye-rays'], source: 'MM' },
+    { name: 'Lich', cr: 21, xp: 33000, hp: 135, ac: 17, type: 'undead', tags: ['spellcaster', 'legendary', 'rejuvenation'], source: 'MM' },
+    { name: 'Ancient Red Dragon', cr: 24, xp: 62000, hp: 546, ac: 22, type: 'dragon', tags: ['breath-weapon', 'flying', 'legendary'], source: 'MM' },
+    { name: 'Tarrasque', cr: 30, xp: 155000, hp: 676, ac: 25, type: 'monstrosity', tags: ['legendary', 'reflective-carapace'], source: 'MM' }
 ];
 
-// Synergy suggestions
+// Synergy suggestions - FIXED with exact name matching
 const synergyTable = {
     'Goblin': ['Goblin Boss', 'Goblin', 'Worg'],
     'Goblin Boss': ['Goblin', 'Goblin', 'Bugbear'],
-    'Kobold': ['Kobold', 'Adult Blue Dragon', 'Trap'],
+    'Kobold': ['Kobold', 'Young Red Dragon', 'Giant Spider'],
     'Orc': ['Orc', 'Ogre', 'Gnoll'],
     'Ogre': ['Orc', 'Goblin', 'Troll'],
-    'Bugbear': ['Goblin', 'Goblin Boss', 'Worg'],
-    'Gnoll': ['Gnoll', 'Hyena', 'Flind'],
+    'Bugbear': ['Goblin', 'Goblin Boss', 'Dire Wolf'],
+    'Gnoll': ['Gnoll', 'Hyena', 'Gnoll'],
     'Skeleton': ['Zombie', 'Skeleton', 'Wight'],
     'Zombie': ['Skeleton', 'Zombie', 'Ghoul'],
-    'Mage': ['Guard', 'Mage', 'Apprentice'],
-    'Priest': ['Acolyte', 'Guard', 'Zealot'],
+    'Mage': ['Guard', 'Mage', 'Acolyte'],
+    'Priest': ['Acolyte', 'Guard', 'Priest'],
     'Bandit Captain': ['Bandit', 'Thug', 'Scout'],
-    'Young Dragon': ['Kobold', 'Cultist', 'Drake'],
-    'Adult Dragon': ['Kobold', 'Cultist', 'Young Dragon'],
-    'Lich': ['Skeleton', 'Zombie', 'Wight', 'Vampire Spawn']
+    'Young Red Dragon': ['Kobold', 'Cultist', 'Giant Spider'],
+    'Adult Red Dragon': ['Kobold', 'Cultist', 'Young Red Dragon'],
+    'Lich': ['Skeleton', 'Zombie', 'Wraith', 'Vampire Spawn']
 };
 
 // Terrain & Hazards
@@ -160,7 +161,7 @@ const flavorTextTemplates = {
     ]
 };
 
-// Encounter difficulty thresholds (DMG p.82)
+// Encounter difficulty thresholds (DMG p.82) - FIXED
 const difficultyThresholds = {
     1: { easy: 100, medium: 200, hard: 300, deadly: 400 },
     2: { easy: 150, medium: 300, hard: 450, deadly: 600 },
@@ -184,26 +185,27 @@ const difficultyThresholds = {
     20: { easy: 2000, medium: 4000, hard: 6000, deadly: 8000 }
 };
 
-// Multipliers for encounter building (DMG p.82)
+// Multipliers for encounter building (DMG p.82) - FIXED
 const encounterMultipliers = {
-    1: { '1': 1, '2': 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 },
-    2: { '1': 1, '2': 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 },
-    3: { '1': 1, '2': 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 },
-    4: { '1': 1, '2': 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 },
-    5: { '1': 1, '2': 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 },
-    6: { '1': 1, '2': 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 },
-    7: { '1': 1, '2': 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 },
-    8: { '1': 1, '2': 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 },
-    9: { '1': 1, '2': 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 },
-    10: { '1': 1, '2': 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 },
-    11: { '1': 1, '2': 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 },
-    12: { '1': 1, '2': 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 },
-    13: { '1': 1, '2': 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 },
-    14: { '1': 1, '2': 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 },
-    15: { '1': 1, '2': 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 },
-    16: { '1': 1, '2': 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 },
-    17: { '1': 1, '2': 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 },
-    18: { '1': 1, '2': 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 },
-    19: { '1': 1, '2': 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 },
-    20: { '1': 1, '2': 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 }
+    1: { 1: 1, 2: 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 },
+    2: { 1: 1, 2: 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 },
+    3: { 1: 1, 2: 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 },
+    4: { 1: 1, 2: 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 },
+    5: { 1: 1, 2: 1.5, '3-4': 2, '5-6': 2.5, '7-10': 3, '11-14': 4, '15+': 5 }
 };
+
+// Helper function to get monster by name
+function getMonsterByName(name) {
+    return monsterDatabase.find(m => m.name.toLowerCase() === name.toLowerCase());
+}
+
+// Helper function to validate monster data
+function validateMonster(monster) {
+    if (!monster) return false;
+    if (!monster.name) return false;
+    if (typeof monster.cr !== 'number') return false;
+    if (typeof monster.xp !== 'number') return false;
+    if (typeof monster.hp !== 'number') return false;
+    if (typeof monster.ac !== 'number') return false;
+    return true;
+}
