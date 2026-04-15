@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encounter Generator | The Beholder's Gazette</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lato:wght@400;700&family=MedievalSharp&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tool-page.css">
+    <link rel="stylesheet" href="encounter.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">⚔️ The War Room</div>
+        <div class="tagline">"Where Combat Meets Strategy"</div>
+        <a href="index.html" class="btn" style="margin-top: 15px;">← Back to Home</a>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="economy.html">Market</a></li>
+            <li><a href="rumors.html">Rumors</a></li>
+            <li><a href="npc-generator.html">NPCs</a></li>
+            <li><a href="loot-generator.html">Loot</a></li>
+            <li><a href="encounter.html" style="background: var(--accent-gold); color: #000;">Encounters</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+    </nav>
+
+    <div class="ticker-wrap">
+        <div class="ticker">
+            COMBAT ALERT: "Goblins unionizing for better death benefits" &nbsp;&bull;&nbsp; 
+            "Dragon accepts payment plans" &nbsp;&bull;&nbsp; 
+            "Orcs demand hazard pay" &nbsp;&bull;&nbsp; 
+            "Skeletons complain about joint pain"
+        </div>
+    </div>
+
+    <!-- VIEW TOGGLE -->
+    <div class="view-toggle">
+        <button class="view-btn active" onclick="switchView('dm')" id="dm-view-btn">🛡️ DM View</button>
+        <button class="view-btn" onclick="switchView('player')" id="player-view-btn">⚔️ Player View</button>
+        <button class="view-btn" onclick="toggleFullScreen()" id="fullscreen-btn">📺 Full Screen</button>
+    </div>
+
+    <div class="tool-container">
+        <!-- ENCOUNTER BUILDER -->
+        <div class="encounter-builder" id="encounter-builder">
+            <h2>🎲 Encounter Builder</h2>
+            
+            <!-- Party Info -->
+            <div class="builder-section">
+                <h3>👥 Party Information</h3>
+                <div class="control-grid">
+                    <div class="control-group">
+                        <label>Party Level</label>
+                        <input type="number" id="party-level" value="5" min="1" max="20">
+                    </div>
+                    <div class="control-group">
+                        <label>Party Size</label>
+                        <input type="number" id="party-size" value="4" min="1" max="10">
+                    </div>
+                    <div class="control-group">
+                        <label>Difficulty</label>
+                        <select id="encounter-difficulty">
+                            <option value="easy">Easy</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="hard">Hard</option>
+                            <option value="deadly">Deadly</option>
+                            <option value="boss">Boss Fight</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Encounter Objective</label>
+                        <select id="encounter-objective">
+                            <option value="kill">Kill All Enemies</option>
+                            <option value="protect">Protect the NPC</option>
+                            <option value="retrieve">Retrieve the Item</option>
+                            <option value="survive">Survive 5 Rounds</option>
+                            <option value="escape">Escape the Room</option>
+                            <option value="delay">Delay the Enemy</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monster Selection -->
+            <div class="builder-section">
+                <h3>👹 Add Monsters</h3>
+                <div class="monster-search">
+                    <input type="text" id="monster-search" placeholder="🔍 Search monsters..." onkeyup="filterMonsters()">
+                    <select id="monster-cr-filter" onchange="filterMonsters()">
+                        <option value="all">All CR</option>
+                        <option value="0-1">CR 0-1</option>
+                        <option value="2-4">CR 2-4</option>
+                        <option value="5-10">CR 5-10</option>
+                        <option value="11+">CR 11+</option>
+                    </select>
+                </div>
+                <div class="monster-list" id="monster-list"></div>
+                <div class="synergy-suggestions" id="synergy-suggestions"></div>
+            </div>
+
+            <!-- Current Encounter -->
+            <div class="builder-section">
+                <h3>📋 Current Encounter</h3>
+                <div class="encounter-summary">
+                    <div class="summary-card">
+                        <span class="summary-label">Total XP</span>
+                        <span class="summary-value" id="total-xp">0</span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">Adjusted XP</span>
+                        <span class="summary-value" id="adjusted-xp">0</span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">Difficulty</span>
+                        <span class="summary-value" id="difficulty-rating">-</span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">Monster Count</span>
+                        <span class="summary-value" id="monster-count">0</span>
+                    </div>
+                </div>
+                <div class="encounter-monsters" id="encounter-monsters"></div>
+                <div class="builder-actions">
+                    <button class="action-btn" onclick="clearEncounter()">🗑️ Clear</button>
+                    <button class="action-btn" onclick="generateTerrain()">🏰 Generate Terrain</button>
+                    <button class="action-btn" onclick="startEncounter()">⚔️ Start Combat</button>
+                </div>
+            </div>
+
+            <!-- Terrain & Hazards -->
+            <div class="builder-section" id="terrain-section" style="display: none;">
+                <h3>🏰 Terrain & Hazards</h3>
+                <div class="terrain-list" id="terrain-list"></div>
+            </div>
+
+            <!-- Morale & Reinforcements -->
+            <div class="builder-section">
+                <h3>🚩 Morale & Reinforcements</h3>
+                <div class="control-grid">
+                    <div class="control-group">
+                        <label>Morale Check Trigger</label>
+                        <select id="morale-trigger">
+                            <option value="none">No Morale Checks</option>
+                            <option value="25">At 25% HP Remaining</option>
+                            <option value="50" selected>At 50% HP Remaining</option>
+                            <option value="leader">When Leader Falls</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Reinforcement Trigger</label>
+                        <select id="reinforcement-trigger">
+                            <option value="none">No Reinforcements</option>
+                            <option value="round3">Round 3</option>
+                            <option value="round5">Round 5</option>
+                            <option value="50hp">At 50% HP Lost</option>
+                            <option value="custom">Custom Trigger</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- INITIATIVE TRACKER -->
+        <div class="initiative-tracker" id="initiative-tracker" style="display: none;">
+            <div class="tracker-header">
+                <h2>⚔️ Combat Tracker</h2>
+                <div class="tracker-controls">
+                    <button class="tracker-btn" onclick="nextTurn()">▶️ Next Turn</button>
+                    <button class="tracker-btn" onclick="prevTurn()">◀️ Prev Turn</button>
+                    <button class="tracker-btn" onclick="toggleSideInitiative()">🔄 Side Initiative</button>
+                    <button class="tracker-btn" onclick="endCombat()">🏁 End Combat</button>
+                </div>
+            </div>
+
+            <!-- Round & Tension -->
+            <div class="combat-status">
+                <div class="round-counter">
+                    <span>Round:</span>
+                    <span class="round-number" id="current-round">1</span>
+                </div>
+                <div class="tension-meter">
+                    <span>Tension:</span>
+                    <div class="tension-bar">
+                        <div class="tension-fill" id="tension-fill" style="width: 0%;"></div>
+                    </div>
+                    <span class="tension-value" id="tension-value">0%</span>
+                </div>
+            </div>
+
+            <!-- Initiative Order -->
+            <div class="initiative-order" id="initiative-order"></div>
+
+            <!-- Ready Actions -->
+            <div class="ready-actions" id="ready-actions">
+                <h3>🎯 Ready Actions</h3>
+                <div id="ready-actions-list"></div>
+            </div>
+
+            <!-- Concentration -->
+            <div class="concentration-dashboard" id="concentration-dashboard">
+                <h3>🔮 Concentration Spells</h3>
+                <div id="concentration-list"></div>
+            </div>
+
+            <!-- Combat Log -->
+            <div class="combat-log" id="combat-log">
+                <h3>📜 Combat Log</h3>
+                <div id="combat-log-content"></div>
+            </div>
+
+            <!-- DM Controls -->
+            <div class="dm-controls" id="dm-controls">
+                <h3>🎭 DM Controls</h3>
+                <div class="control-grid">
+                    <div class="control-group">
+                        <label>Secret Rolls</label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="secret-rolls"> Enable
+                        </label>
+                    </div>
+                    <div class="control-group">
+                        <label>Fudge Slider</label>
+                        <input type="range" id="fudge-slider" min="-5" max="5" value="0">
+                        <span id="fudge-value">0</span>
+                    </div>
+                </div>
+                <div class="dm-actions">
+                    <button class="action-btn" onclick="rollSecretSave()">🎲 Secret Save</button>
+                    <button class="action-btn" onclick="generateFlavorText()">💬 Flavor Text</button>
+                    <button class="action-btn" onclick="triggerReinforcements()">🚨 Reinforcements</button>
+                    <button class="action-btn" onclick="checkMorale()">🏳️ Morale Check</button>
+                </div>
+            </div>
+
+            <!-- Player View -->
+            <div class="player-view" id="player-view" style="display: none;">
+                <div class="player-initiative" id="player-initiative"></div>
+            </div>
+        </div>
+
+        <!-- POST-COMBAT ANALYTICS -->
+        <div class="post-combat" id="post-combat" style="display: none;">
+            <h2>📊 Post-Combat Analytics</h2>
+            
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <h3>💰 XP Distribution</h3>
+                    <div id="xp-distribution"></div>
+                    <button class="action-btn" onclick="calculateXP()">Calculate XP</button>
+                </div>
+                
+                <div class="analytics-card">
+                    <h3>🔋 Resource Burn</h3>
+                    <div id="resource-burn"></div>
+                    <button class="action-btn" onclick="trackResources()">Track Resources</button>
+                </div>
+                
+                <div class="analytics-card">
+                    <h3>📝 Combat Summary</h3>
+                    <div id="combat-summary"></div>
+                    <button class="action-btn" onclick="exportCombatLog()">📤 Export Log</button>
+                </div>
+            </div>
+
+            <div class="loot-preview" id="loot-preview">
+                <h3>🏆 Loot Preview</h3>
+                <div id="loot-content"></div>
+                <button class="action-btn" onclick="generateLootDrop()">Generate Loot</button>
+            </div>
+
+            <button class="action-btn" onclick="saveToMemory()">💾 Save to Campaign Memory</button>
+            <button class="action-btn" onclick="resetEncounter()">🔄 New Encounter</button>
+        </div>
+    </div>
+
+    <!-- CAMPAIGN MEMORY MODAL -->
+    <div class="modal" id="memory-modal">
+        <div class="modal-content">
+            <h3>💾 Campaign Memory</h3>
+            <div id="memory-content"></div>
+            <button class="action-btn" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; <span id="year"></span> The Beholder's Gazette | The War Room</p>
+        <p>Remember: The best encounter is one where everyone survives to tell the tale.</p>
+    </footer>
+
+    <script src="encounter-data.js"></script>
+    <script src="encounter-tracker.js"></script>
+    <script src="encounter-memory.js"></script>
+</body>
+</html>
