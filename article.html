@@ -78,15 +78,21 @@
 
     <footer>
         <p>&copy; <span id="year"></span> The Beholder's Gazette</p>
+        <p>Disclaimer: All news is subject to DM approval.</p>
     </footer>
 
+    <!-- Economy Tracker Script -->
     <script src="economy.js"></script>
+    
+    <!-- Article Loader Script -->
     <script>
         // Set year
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // Load article
+        // Load article function
         async function loadArticle() {
+            console.log('📜 Loading article page...');
+            
             try {
                 const response = await fetch('articles.json');
                 const data = await response.json();
@@ -95,7 +101,10 @@
                 const urlParams = new URLSearchParams(window.location.search);
                 const articleId = urlParams.get('id');
                 
+                console.log('🔍 Article ID from URL:', articleId);
+                
                 if (!articleId) {
+                    console.error('❌ No article ID in URL');
                     showNotFound();
                     return;
                 }
@@ -103,7 +112,10 @@
                 // Find article
                 const article = data.articles.find(a => a.id === articleId);
                 
+                console.log('📄 Found article:', article ? article.title : 'NOT FOUND');
+                
                 if (!article) {
+                    console.error('❌ Article not found in JSON');
                     showNotFound();
                     return;
                 }
@@ -115,7 +127,7 @@
                 renderArticle(article);
                 
             } catch (error) {
-                console.error('Error loading article:', error);
+                console.error('❌ Error loading article:', error);
                 showNotFound();
             }
         }
@@ -147,7 +159,7 @@
                 <div class="article-not-found">
                     <h2>📜 Scroll Lost to the Void</h2>
                     <p>This article could not be found.</p>
-                    <a href="index.html" class="btn">Return Home</a>
+                    <a href="index.html" class="btn" style="margin-top: 20px;">Return Home</a>
                 </div>
             `;
         }
@@ -164,7 +176,7 @@
             return Math.ceil(words / 200);
         }
 
-        // Initialize
+        // Initialize when page loads
         document.addEventListener('DOMContentLoaded', loadArticle);
     </script>
 </body>
