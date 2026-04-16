@@ -8,29 +8,64 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lato:wght@400;700&family=MedievalSharp&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+        .article-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #2b2b2b;
+        }
+        .article-content p {
+            margin-bottom: 20px;
+        }
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        .article-not-found {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+        .article-not-found h2 {
+            color: var(--accent-gold);
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
 
     <header>
         <div class="logo">👁️ The Beholder's Gazette</div>
         <div class="tagline">"We See All Truths (Especially The Ones We Made Up)"</div>
-        <a href="index.html" class="btn" style="margin-top: 15px;">← Back to Home</a>
+        <a href="index.html" class="btn back-btn">← Back to Home</a>
     </header>
 
     <nav>
         <ul>
             <li><a href="index.html">Home</a></li>
-            <li><a href="index.html#economy">Economy</a></li>
-            <li><a href="index.html#politics">Politics</a></li>
-            <li><a href="npc-generator.html" style="background: var(--accent-gold); color: #000;">Town Square</a></li>
+            <li><a href="economy.html">Market</a></li>
+            <li><a href="rumors.html">Rumors</a></li>
+            <li><a href="npc-generator.html">NPCs</a></li>
+            <li><a href="loot-generator.html">Loot</a></li>
+            <li><a href="encounter.html">Encounters</a></li>
             <li><a href="about.html">About</a></li>
         </ul>
     </nav>
 
+    <div class="ticker-wrap">
+        <div class="ticker">
+            BREAKING: Local Wizard Blames Lag for Failed Fireball &nbsp;&bull;&nbsp; 
+            King Announces New Tax on Potion Bottles &nbsp;&bull;&nbsp; 
+            Adventurers Guild Strikes Demand Better Loot
+        </div>
+    </div>
+
     <div class="container">
         <main>
             <article class="featured-article" id="article-content">
-                <div style="text-align: center; padding: 40px; color: #888;">Loading Article...</div>
+                <div style="text-align: center; padding: 60px; color: #888;">
+                    <p>📜 Loading Article...</p>
+                </div>
             </article>
         </main>
 
@@ -46,6 +81,91 @@
     </footer>
 
     <script src="economy.js"></script>
-    <script src="script.js"></script>
+    <script>
+        // Set year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Load article
+        async function loadArticle() {
+            try {
+                const response = await fetch('articles.json');
+                const data = await response.json();
+                
+                // Get article ID from URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const articleId = urlParams.get('id');
+                
+                if (!articleId) {
+                    showNotFound();
+                    return;
+                }
+                
+                // Find article
+                const article = data.articles.find(a => a.id === articleId);
+                
+                if (!article) {
+                    showNotFound();
+                    return;
+                }
+                
+                // Set page title
+                document.title = `${article.title} | The Beholder's Gazette`;
+                
+                // Render article
+                renderArticle(article);
+                
+            } catch (error) {
+                console.error('Error loading article:', error);
+                showNotFound();
+            }
+        }
+
+        function renderArticle(article) {
+            const container = document.getElementById('article-content');
+            
+            container.innerHTML = `
+                <h1 class="featured-headline" style="margin-bottom: 20px;">${article.title}</h1>
+                
+                <div class="article-meta" style="margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #ccc;">
+                    <span>By <strong>${article.author}</strong></span>
+                    <span>📅 ${formatDate(article.date)}</span>
+                    <span>⏱️ ${estimateReadTime(article.content)} min read</span>
+                </div>
+                
+                <div class="article-content">
+                    ${article.content}
+                </div>
+                
+                <div style="margin-top: 40px; padding-top: 30px; border-top: 2px solid var(--accent-gold);">
+                    <a href="index.html" class="btn" style="margin-top: 20px;">← Back to All News</a>
+                </div>
+            `;
+        }
+
+        function showNotFound() {
+            document.getElementById('article-content').innerHTML = `
+                <div class="article-not-found">
+                    <h2>📜 Scroll Lost to the Void</h2>
+                    <p>This article could not be found.</p>
+                    <a href="index.html" class="btn">Return Home</a>
+                </div>
+            `;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        function estimateReadTime(content) {
+            const text = content.replace(/<[^>]*>/g, '');
+            const words = text.split(/\s+/).length;
+            return Math.ceil(words / 200);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadArticle);
+    </script>
 </body>
 </html>
