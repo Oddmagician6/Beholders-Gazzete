@@ -333,13 +333,11 @@
             console.log('📜 Loading article page...');
             
             try {
-                // Add cache-busting parameter
                 const response = await fetch('articles.json?t=' + Date.now());
                 const data = await response.json();
                 
                 console.log('✅ Loaded articles.json:', data.articles.length, 'articles');
                 
-                // Get article ID from URL
                 const urlParams = new URLSearchParams(window.location.search);
                 const articleId = urlParams.get('id');
                 
@@ -351,7 +349,6 @@
                     return;
                 }
                 
-                // Find article
                 const article = data.articles.find(a => a.id === articleId);
                 
                 console.log('📄 Article data:', article);
@@ -363,20 +360,15 @@
                     return;
                 }
                 
-                // Set page title
                 document.title = `${article.title} | The Beholder's Gazette`;
                 
-                // Update hero section - WITH BETTER FALLBACKS
                 document.getElementById('article-category').textContent = article.category || 'News';
                 document.getElementById('article-title').textContent = article.title;
                 document.getElementById('article-author').textContent = article.author || article.by || 'The Gazette Staff';
                 document.getElementById('article-date').textContent = formatDate(article.date);
                 document.getElementById('article-read-time').textContent = estimateReadTime(article.content);
                 
-                // Render article content
                 renderArticle(article);
-                
-                // Load related articles
                 loadRelatedArticles(data.articles, articleId);
                 
             } catch (error) {
@@ -450,4 +442,3 @@
     </script>
 </body>
 </html>
-
