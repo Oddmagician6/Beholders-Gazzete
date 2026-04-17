@@ -8,100 +8,142 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lato:wght@400;700&family=MedievalSharp&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="homepage.css">
 </head>
 <body>
 
-    <header>
-        <div class="logo">👁️ The Beholder's Gazette</div>
-        <div class="tagline">"We See All Truths (Especially The Ones We Made Up)"</div>
-        <div class="date-banner" id="date-banner"></div>
-    </header>
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-logo">👁️ The Beholder's Gazette</div>
+            <p class="hero-tagline">"We See All Truths (Especially The Ones We Made Up)"</p>
+            <p class="hero-description">Your premier source for satirical news from across the realms. Politics, economy, monsters, and magic — all the news that's fit to print (or burn).</p>
+            <div class="hero-date" id="date-banner"></div>
+        </div>
+    </section>
 
-    <nav>
+    <!-- NAVIGATION -->
+    <nav class="main-nav">
         <ul>
-            <li><a href="index.html" style="background: var(--accent-gold); color: #000;">Home</a></li>
-            <li><a href="economy.html">Economy</a></li>
-            <li><a href="rumors.html">Tavern</a></li>
-            <li><a href="npc-generator.html">Town Square</a></li>
-            <li><a href="loot-generator.html">Loot</a></li>
-            <li><a href="encounter.html">Encounters</a></li>
-            <li><a href="about.html">About</a></li>
+            <li><a href="index.html" class="active">🏠 Home</a></li>
+            <li><a href="economy.html">💰 Economy</a></li>
+            <li><a href="rumors.html">🍺 Tavern</a></li>
+            <li><a href="npc-generator.html">🎭 Town Square</a></li>
+            <li><a href="loot-generator.html">💎 Loot</a></li>
+            <li><a href="encounter.html">⚔️ Encounters</a></li>
+            <li><a href="about.html">📜 About</a></li>
         </ul>
-    
     </nav>
 
+    <!-- BREAKING NEWS TICKER -->
     <div class="ticker-wrap">
         <div class="ticker">
-            BREAKING: Local Wizard Blames Lag for Failed Fireball &nbsp;&bull;&nbsp; 
-            King Announces New Tax on Potion Bottles &nbsp;&bull;&nbsp; 
-            Adventurers Guild Strikes Demand Better Loot &nbsp;&bull;&nbsp; 
-            Dragon Hoard Inflation Reaches All-Time High
+            📰 BREAKING: Local Wizard Blames Lag for Failed Fireball &nbsp;&bull;&nbsp; 
+            👑 King Announces New Tax on Potion Bottles &nbsp;&bull;&nbsp; 
+            ⚔️ Adventurers Guild Strikes Demand Better Loot &nbsp;&bull;&nbsp; 
+            🐉 Dragon Hoard Inflation Reaches All-Time High &nbsp;&bull;&nbsp;
+            🍺 Tavern Owner Discovers Watered-Down Ale Was Just Water
         </div>
     </div>
 
+    <!-- MAIN CONTENT -->
     <div class="container">
         <main>
+            <!-- Welcome Section -->
+            <div class="welcome-section">
+                <h2 class="section-title">📜 Latest from the Realm</h2>
+                <p class="section-subtitle">Fresh scrolls, hot off the press. Updated daily by our team of investigative bards.</p>
+            </div>
+
+            <!-- Featured Article -->
             <div id="featured-article"></div>
+
+            <!-- Article Grid -->
+            <div class="section-divider">
+                <h2 class="section-title">📰 More News</h2>
+            </div>
             <div class="article-grid" id="article-grid"></div>
         </main>
-<aside>
-            <!-- PATREON WIDGET -->
-<div class="sidebar-widget patreon-widget">
-    <h4 class="widget-title">📜 Support the Gazette</h4>
-    <p style="font-size: 0.85rem; color: #aaa; margin-bottom: 15px;">
-        Keep the rumors flowing and the economy crashing! Your gold pieces fund our investigative bards.
-    </p>
-    
-    <div class="patreon-tier">
-        <div class="tier-icon">🍺</div>
-        <div class="tier-info">
-            <span class="tier-name">Tavern Regular</span>
-            <span class="tier-price">3 gp/month</span>
-        </div>
-    </div>
-     
-     <a href="https://patreon.com/DungeonMasterDen?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink" target="_blank" class="patreon-btn">
-        🏆 Become a Patron
-    </a>
-    
-    <p style="font-size: 0.75rem; color: #666; margin-top: 15px; text-align: center;">
-        All patrons get access to exclusive rumors & early edition scrolls
-    </p>
-</div>
 
-  <div class="sidebar-widget">
-    <h4 class="widget-title">📜 Subscribe by Raven</h4>
-    <p style="font-size: 0.85rem; color: #aaa; margin-bottom: 15px;">
-        Get news delivered by raven. No spam, only prophecy.
-    </p>
-    
-    <form action="https://formspree.io/f/xqewqavd" method="POST">
-        <input type="email" name="email" placeholder="Your email address..." required>
-        <input type="text" name="name" placeholder="Your name (optional)" style="margin-top: 10px;">
-        <input type="hidden" name="_subject" value="New Gazette Subscriber!">
-        <input type="hidden" name="_cc" value="your-email@example.com">
-        <input type="hidden" name="_next" value="https://YOUR-USERNAME.github.io/YOUR-REPO/thank-you.html">
-        
-        <button type="submit" class="btn" style="width: 100%; margin-top: 15px;">
-            🦅 Send Raven
-        </button>
-    </form>
-    
-    <p style="font-size: 0.7rem; color: #666; margin-top: 15px; text-align: center;">
-        🔒 Your raven is encrypted. We don't share with goblins.
-    </p>
-</div>
+        <!-- SIDEBAR -->
+        <aside>
+            <!-- Patreon Widget -->
+            <div class="sidebar-widget patreon-widget">
+                <h4 class="widget-title">📜 Support the Gazette</h4>
+                <p style="font-size: 0.85rem; color: #aaa; margin-bottom: 15px;">
+                    Keep the rumors flowing and the economy crashing! Your gold pieces fund our investigative bards.
+                </p>
+                
+                <div class="patreon-tier">
+                    <div class="tier-icon">🍺</div>
+                    <div class="tier-info">
+                        <span class="tier-name">Tavern Regular</span>
+                        <span class="tier-price">3 gp/month</span>
+                    </div>
+                </div>
+                
+                <a href="https://patreon.com/DungeonMasterDen?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink" target="_blank" class="patreon-btn">
+                    🏆 Become a Patron
+                </a>
+                
+                <p style="font-size: 0.75rem; color: #666; margin-top: 15px; text-align: center;">
+                    All patrons get access to exclusive rumors & early edition scrolls
+                </p>
+            </div>
 
+            <!-- Subscribe Widget -->
+            <div class="sidebar-widget">
+                <h4 class="widget-title">🦅 Subscribe by Raven</h4>
+                <p style="font-size: 0.85rem; color: #aaa; margin-bottom: 15px;">
+                    Get news delivered by raven. No spam, only prophecy.
+                </p>
+                
+                <form action="https://formspree.io/f/xqewqavd" method="POST">
+                    <input type="email" name="email" placeholder="Your email address..." required>
+                    <input type="text" name="name" placeholder="Your name (optional)" style="margin-top: 10px;">
+                    <input type="hidden" name="_subject" value="🦅 New Gazette Subscriber!">
+                    
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 15px;">
+                        🦅 Send Raven
+                    </button>
+                </form>
+                
+                <p style="font-size: 0.7rem; color: #666; margin-top: 15px; text-align: center;">
+                    🔒 Your raven is encrypted. We don't share with goblins.
+                </p>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="sidebar-widget">
+                <h4 class="widget-title">🔮 Quick Links</h4>
+                <div class="quick-links">
+                    <a href="economy.html" class="quick-link">💰 Market Tracker</a>
+                    <a href="rumors.html" class="quick-link">🍺 Tavern Rumors</a>
+                    <a href="npc-generator.html" class="quick-link">🎭 NPC Generator</a>
+                    <a href="loot-generator.html" class="quick-link">💎 Loot Tables</a>
+                    <a href="encounter.html" class="quick-link">⚔️ Encounter Builder</a>
+                </div>
+            </div>
         </aside>
     </div>
 
+    <!-- FOOTER -->
     <footer>
-        <p>&copy; <span id="year"></span> The Beholder's Gazette. Published by the Bard's Guild of Journalism.</p>
-        <p>Disclaimer: All news is subject to DM approval. No dragons were harmed in the making of this website.</p>
-        <p style="margin-top: 10px; color: #444;">Powered by Static Magic</p>
+        <div class="footer-content">
+            <div class="footer-logo">👁️ The Beholder's Gazette</div>
+            <p>Published by the Bard's Guild of Journalism</p>
+            <p style="margin: 15px 0; color: #888;">Disclaimer: All news is subject to DM approval. No dragons were harmed in the making of this website.</p>
+            <div class="footer-links">
+                <a href="about.html">About</a>
+                <a href="about.html">Contact</a>
+                <a href="about.html">Privacy</a>
+                <a href="https://patreon.com/DungeonMasterDen" target="_blank">Support</a>
+            </div>
+            <p style="margin-top: 20px; color: #444; font-size: 0.75rem;">Powered by Static Magic &copy; <span id="year"></span></p>
+        </div>
     </footer>
 
-    <script src="economy.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
