@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Confirmed | The Beholder's Gazette</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lato:wght@400;700&family=MedievalSharp&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .thank-you-container {
+            max-width: 600px;
+            margin: 100px auto;
+            text-align: center;
+            padding: 40px;
+            background: var(--parchment);
+            color: var(--parchment-text);
+            border: 2px solid var(--accent-gold);
+            border-radius: 5px;
+        }
+        .thank-you-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+        .thank-you-container h1 {
+            color: var(--accent-gold);
+            margin-bottom: 20px;
+        }
+        .thank-you-container p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">👁️ The Beholder's Gazette</div>
+    </header>
+    
+    <div class="thank-you-container">
+        <div class="thank-you-icon">🦅</div>
+        <h1>Your Raven Has Been Sent!</h1>
+        <p>Thank you for subscribing to The Beholder's Gazette. A raven will arrive at your location within 3-5 business days with the latest news from the realm.</p>
+        <p>If the raven gets lost (they sometimes do), check your spam folder or send a owl instead.</p>
+        <a href="index.html" class="btn">← Return to Gazette</a>
+    </div>
+    
+    <footer>
+        <p>&copy; <span id="year"></span> The Beholder's Gazette</p>
+    </footer>
+    
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
