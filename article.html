@@ -104,21 +104,6 @@
             font-weight: 300;
         }
 
-        .article-content br {
-            margin-bottom: 25px;
-        }
-
-        .article-content blockquote {
-            border-left: 4px solid var(--accent-gold);
-            padding-left: 25px;
-            margin: 30px 0;
-            font-style: italic;
-            color: var(--accent-gold);
-            background: rgba(197, 160, 89, 0.05);
-            padding: 20px 25px;
-            border-radius: 0 8px 8px 0;
-        }
-
         .article-divider {
             border-top: 2px solid var(--accent-gold);
             margin: 50px 0;
@@ -176,12 +161,6 @@
             font-size: 2rem;
         }
 
-        .article-not-found p {
-            font-size: 1.1rem;
-            margin-bottom: 30px;
-            color: #aaa;
-        }
-
         .reading-progress {
             position: fixed;
             top: 0;
@@ -223,39 +202,17 @@
             border-color: var(--accent-gold);
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
-            .article-hero {
-                padding: 60px 20px;
-            }
-
-            .article-hero-title {
-                font-size: 1.8rem;
-            }
-
-            .article-hero-meta {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .article-content {
-                padding: 25px;
-                font-size: 1.05rem;
-            }
-
-            .article-body {
-                padding: 40px 15px;
-            }
+            .article-hero { padding: 60px 20px; }
+            .article-hero-title { font-size: 1.8rem; }
+            .article-hero-meta { flex-direction: column; gap: 15px; }
+            .article-content { padding: 25px; font-size: 1.05rem; }
+            .article-body { padding: 40px 15px; }
         }
 
         @media (max-width: 500px) {
-            .article-hero-title {
-                font-size: 1.5rem;
-            }
-
-            .article-content {
-                padding: 20px;
-            }
+            .article-hero-title { font-size: 1.5rem; }
+            .article-content { padding: 20px; }
         }
     </style>
 </head>
@@ -316,7 +273,7 @@
 
         <div class="article-back-section">
             <h3>📜 Enjoyed This Scroll?</h3>
-            <p>Return to the main Gazette for more news from across the realms, or subscribe to have ravens delivered to your inbox.</p>
+            <p>Return to the main Gazette for more news from across the realms.</p>
             <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
                 <a href="index.html" class="btn">← Back to All News</a>
                 <a href="rumors.html" class="btn" style="background: var(--accent-gold); color: #000;">🍺 Browse Tavern Rumors</a>
@@ -340,11 +297,10 @@
         <div class="footer-content">
             <div class="footer-logo">👁️ The Beholder's Gazette</div>
             <p>Published by the Bard's Guild of Journalism</p>
-            <p style="margin: 15px 0; color: #888;">Disclaimer: All news is subject to DM approval. No dragons were harmed in the making of this website.</p>
+            <p style="margin: 15px 0; color: #888;">Disclaimer: All news is subject to DM approval.</p>
             <div class="footer-links">
                 <a href="index.html">Home</a>
                 <a href="about.html">About</a>
-                <a href="about.html">Contact</a>
                 <a href="https://patreon.com/DungeonMasterDen" target="_blank">Support</a>
             </div>
             <p style="margin-top: 20px; color: #444; font-size: 0.75rem;">Powered by Static Magic &copy; <span id="year"></span></p>
@@ -352,7 +308,6 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="economy.js"></script>
     <script>
         // Set year
         document.getElementById('year').textContent = new Date().getFullYear();
@@ -378,8 +333,11 @@
             console.log('📜 Loading article page...');
             
             try {
-                const response = await fetch('articles.json');
+                // Add cache-busting parameter
+                const response = await fetch('articles.json?t=' + Date.now());
                 const data = await response.json();
+                
+                console.log('✅ Loaded articles.json:', data.articles.length, 'articles');
                 
                 // Get article ID from URL
                 const urlParams = new URLSearchParams(window.location.search);
@@ -396,7 +354,8 @@
                 // Find article
                 const article = data.articles.find(a => a.id === articleId);
                 
-                console.log('📄 Found article:', article ? article.title : 'NOT FOUND');
+                console.log('📄 Article data:', article);
+                console.log('📝 Author field:', article ? article.author : 'No article');
                 
                 if (!article) {
                     console.error('❌ Article not found in JSON');
@@ -407,10 +366,10 @@
                 // Set page title
                 document.title = `${article.title} | The Beholder's Gazette`;
                 
-                // Update hero section
+                // Update hero section - WITH BETTER FALLBACKS
                 document.getElementById('article-category').textContent = article.category || 'News';
                 document.getElementById('article-title').textContent = article.title;
-                document.getElementById('article-author').textContent = article.author || 'Unknown';
+                document.getElementById('article-author').textContent = article.author || article.by || 'The Gazette Staff';
                 document.getElementById('article-date').textContent = formatDate(article.date);
                 document.getElementById('article-read-time').textContent = estimateReadTime(article.content);
                 
@@ -428,17 +387,12 @@
 
         function renderArticle(article) {
             const container = document.getElementById('article-content');
-            
-            container.innerHTML = `
-                ${article.content}
-            `;
+            container.innerHTML = article.content || '<p>No content available.</p>';
         }
 
         function loadRelatedArticles(allArticles, currentId) {
             const container = document.getElementById('related-articles');
-            const related = allArticles
-                .filter(a => a.id !== currentId)
-                .slice(0, 3);
+            const related = allArticles.filter(a => a.id !== currentId).slice(0, 3);
             
             if (related.length === 0) {
                 container.innerHTML = '<p style="color: #888; text-align: center;">No more scrolls in this section.</p>';
@@ -459,20 +413,13 @@
             document.getElementById('article-content').innerHTML = `
                 <div class="article-not-found">
                     <h2>📜 Scroll Lost to the Void</h2>
-                    <p>This article could not be found. It may have been:</p>
-                    <ul style="text-align: left; display: inline-block; margin: 20px 0; color: #888;">
-                        <li>Eaten by a mimic</li>
-                        <li>Burned by a dragon</li>
-                        <li>Stolen by a bard</li>
-                        <li>Never written in the first place</li>
-                    </ul>
-                    <br>
+                    <p>This article could not be found.</p>
                     <a href="index.html" class="btn" style="margin-top: 20px;">Return Home</a>
                 </div>
             `;
-            
             document.getElementById('article-title').textContent = 'Article Not Found';
             document.getElementById('article-category').textContent = 'Error';
+            document.getElementById('article-author').textContent = 'Unknown';
         }
 
         function formatDate(dateString) {
@@ -483,6 +430,7 @@
         }
 
         function estimateReadTime(content) {
+            if (!content) return 0;
             const text = content.replace(/<[^>]*>/g, '');
             const words = text.split(/\s+/).length;
             return Math.ceil(words / 200);
@@ -502,3 +450,4 @@
     </script>
 </body>
 </html>
+
