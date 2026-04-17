@@ -8,83 +8,372 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lato:wght@400;700&family=MedievalSharp&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="homepage.css">
     <style>
-        .article-content {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #2b2b2b;
+        /* Article Page Specific Styles */
+        .article-hero {
+            position: relative;
+            background: linear-gradient(135deg, #1a1a1d 0%, #2d2d35 100%);
+            background-image: url('https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 80px 20px;
+            text-align: center;
+            overflow: hidden;
         }
-        .article-content p {
-            margin-bottom: 20px;
+
+        .article-hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(26, 26, 29, 0.85) 0%, rgba(26, 26, 29, 0.95) 100%);
         }
-        .back-btn {
+
+        .article-hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .article-category-badge {
             display: inline-block;
+            padding: 6px 16px;
+            background: var(--accent-gold);
+            color: #000;
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 4px;
             margin-bottom: 20px;
+            letter-spacing: 1px;
         }
+
+        .article-hero-title {
+            font-family: 'MedievalSharp', cursive;
+            font-size: 2.5rem;
+            color: var(--accent-gold);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .article-hero-meta {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            color: #ccc;
+            font-size: 0.95rem;
+        }
+
+        .article-hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .article-body {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .article-content {
+            font-size: 1.15rem;
+            line-height: 1.9;
+            color: var(--text-color);
+            background: linear-gradient(145deg, #252529 0%, #1f1f23 100%);
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .article-content p {
+            margin-bottom: 25px;
+            color: #ccc;
+        }
+
+        .article-content p:first-of-type {
+            font-size: 1.2rem;
+            color: #fff;
+            font-weight: 300;
+        }
+
+        .article-content br {
+            margin-bottom: 25px;
+        }
+
+        .article-content blockquote {
+            border-left: 4px solid var(--accent-gold);
+            padding-left: 25px;
+            margin: 30px 0;
+            font-style: italic;
+            color: var(--accent-gold);
+            background: rgba(197, 160, 89, 0.05);
+            padding: 20px 25px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .article-divider {
+            border-top: 2px solid var(--accent-gold);
+            margin: 50px 0;
+            padding-top: 30px;
+        }
+
+        .article-back-section {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(145deg, #222 0%, #1a1a1d 100%);
+            border: 1px solid #444;
+            border-radius: 8px;
+            margin-top: 40px;
+        }
+
+        .article-back-section h3 {
+            color: var(--accent-gold);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .article-back-section p {
+            color: #888;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        .article-related {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid #444;
+        }
+
+        .article-related h3 {
+            color: var(--accent-gold);
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
         .article-not-found {
             text-align: center;
-            padding: 60px 20px;
+            padding: 100px 20px;
             color: #888;
+            background: linear-gradient(145deg, #252529 0%, #1f1f23 100%);
+            border: 1px solid #444;
+            border-radius: 8px;
+            max-width: 600px;
+            margin: 60px auto;
         }
+
         .article-not-found h2 {
             color: var(--accent-gold);
             margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .article-not-found p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: #aaa;
+        }
+
+        .reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: transparent;
+            z-index: 1000;
+        }
+
+        .reading-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-gold), #d4af67);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .share-btn {
+            padding: 10px 20px;
+            background: #333;
+            border: 1px solid #555;
+            border-radius: 4px;
+            color: var(--text-color);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .share-btn:hover {
+            background: var(--accent-gold);
+            color: #000;
+            border-color: var(--accent-gold);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .article-hero {
+                padding: 60px 20px;
+            }
+
+            .article-hero-title {
+                font-size: 1.8rem;
+            }
+
+            .article-hero-meta {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .article-content {
+                padding: 25px;
+                font-size: 1.05rem;
+            }
+
+            .article-body {
+                padding: 40px 15px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .article-hero-title {
+                font-size: 1.5rem;
+            }
+
+            .article-content {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">👁️ The Beholder's Gazette</div>
-        <div class="tagline">"We See All Truths (Especially The Ones We Made Up)"</div>
-        <a href="index.html" class="btn back-btn">← Back to Home</a>
-    </header>
+    <!-- Reading Progress Bar -->
+    <div class="reading-progress">
+        <div class="reading-progress-bar" id="progress-bar"></div>
+    </div>
 
-    <nav>
+    <!-- Article Hero -->
+    <section class="article-hero">
+        <div class="article-hero-overlay"></div>
+        <div class="article-hero-content">
+            <div class="article-category-badge" id="article-category">Category</div>
+            <h1 class="article-hero-title" id="article-title">Loading...</h1>
+            <div class="article-hero-meta">
+                <span>✍️ <strong id="article-author">Author</strong></span>
+                <span>📅 <span id="article-date">Date</span></span>
+                <span>⏱️ <span id="article-read-time">0</span> min read</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
         <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="economy.html">Market</a></li>
-            <li><a href="rumors.html">Rumors</a></li>
-            <li><a href="npc-generator.html">NPCs</a></li>
-            <li><a href="loot-generator.html">Loot</a></li>
-            <li><a href="encounter.html">Encounters</a></li>
-            <li><a href="about.html">About</a></li>
+            <li><a href="index.html">🏠 Home</a></li>
+            <li><a href="economy.html">💰 Economy</a></li>
+            <li><a href="rumors.html">🍺 Tavern</a></li>
+            <li><a href="npc-generator.html">🎭 Town Square</a></li>
+            <li><a href="loot-generator.html">💎 Loot</a></li>
+            <li><a href="encounter.html">⚔️ Encounters</a></li>
+            <li><a href="about.html">📜 About</a></li>
         </ul>
     </nav>
 
+    <!-- Breaking News Ticker -->
     <div class="ticker-wrap">
         <div class="ticker">
-            BREAKING: Local Wizard Blames Lag for Failed Fireball &nbsp;&bull;&nbsp; 
-            King Announces New Tax on Potion Bottles &nbsp;&bull;&nbsp; 
-            Adventurers Guild Strikes Demand Better Loot
+            📰 BREAKING: Local Wizard Blames Lag for Failed Fireball &nbsp;&bull;&nbsp; 
+            👑 King Announces New Tax on Potion Bottles &nbsp;&bull;&nbsp; 
+            ⚔️ Adventurers Guild Strikes Demand Better Loot &nbsp;&bull;&nbsp; 
+            🐉 Dragon Hoard Inflation Reaches All-Time High
         </div>
     </div>
 
-    <div class="container">
-        <main>
-            <article class="featured-article" id="article-content">
-                <div style="text-align: center; padding: 60px; color: #888;">
-                    <p>📜 Loading Article...</p>
-                </div>
-            </article>
-        </main>
-        
+    <!-- Article Body -->
+    <div class="article-body">
+        <article class="article-content" id="article-content">
+            <div style="text-align: center; padding: 60px; color: #888;">
+                <p>📜 Loading Article...</p>
+            </div>
+        </article>
+
+        <!-- Article Footer -->
+        <div class="article-divider"></div>
+
+        <div class="article-back-section">
+            <h3>📜 Enjoyed This Scroll?</h3>
+            <p>Return to the main Gazette for more news from across the realms, or subscribe to have ravens delivered to your inbox.</p>
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <a href="index.html" class="btn">← Back to All News</a>
+                <a href="rumors.html" class="btn" style="background: var(--accent-gold); color: #000;">🍺 Browse Tavern Rumors</a>
+            </div>
+            
+            <div class="share-buttons">
+                <button class="share-btn" onclick="copyArticleLink()">🔗 Copy Link</button>
+                <button class="share-btn" onclick="window.print()">🖨️ Print</button>
+            </div>
+        </div>
+
+        <!-- Related Articles -->
+        <div class="article-related">
+            <h3>📰 More From the Gazette</h3>
+            <div class="article-grid" id="related-articles"></div>
+        </div>
     </div>
 
+    <!-- Footer -->
     <footer>
-        <p>&copy; <span id="year"></span> The Beholder's Gazette</p>
-        <p>Disclaimer: All news is subject to DM approval.</p>
+        <div class="footer-content">
+            <div class="footer-logo">👁️ The Beholder's Gazette</div>
+            <p>Published by the Bard's Guild of Journalism</p>
+            <p style="margin: 15px 0; color: #888;">Disclaimer: All news is subject to DM approval. No dragons were harmed in the making of this website.</p>
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="about.html">Contact</a>
+                <a href="https://patreon.com/DungeonMasterDen" target="_blank">Support</a>
+            </div>
+            <p style="margin-top: 20px; color: #444; font-size: 0.75rem;">Powered by Static Magic &copy; <span id="year"></span></p>
+        </div>
     </footer>
 
-    <!-- Economy Tracker Script -->
+    <!-- Scripts -->
     <script src="economy.js"></script>
-    
-    <!-- Article Loader Script -->
     <script>
         // Set year
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // Load article function
+        // Reading progress bar
+        window.addEventListener('scroll', () => {
+            const article = document.querySelector('.article-content');
+            if (!article) return;
+            
+            const articleTop = article.offsetTop;
+            const articleHeight = article.offsetHeight;
+            const scrollTop = window.scrollY;
+            const windowHeight = window.innerHeight;
+            
+            const progress = ((scrollTop - articleTop + windowHeight) / articleHeight) * 100;
+            const clampedProgress = Math.max(0, Math.min(100, progress));
+            
+            document.getElementById('progress-bar').style.width = `${clampedProgress}%`;
+        });
+
+        // Load article
         async function loadArticle() {
             console.log('📜 Loading article page...');
             
@@ -118,8 +407,18 @@
                 // Set page title
                 document.title = `${article.title} | The Beholder's Gazette`;
                 
-                // Render article
+                // Update hero section
+                document.getElementById('article-category').textContent = article.category || 'News';
+                document.getElementById('article-title').textContent = article.title;
+                document.getElementById('article-author').textContent = article.author || 'Unknown';
+                document.getElementById('article-date').textContent = formatDate(article.date);
+                document.getElementById('article-read-time').textContent = estimateReadTime(article.content);
+                
+                // Render article content
                 renderArticle(article);
+                
+                // Load related articles
+                loadRelatedArticles(data.articles, articleId);
                 
             } catch (error) {
                 console.error('❌ Error loading article:', error);
@@ -131,35 +430,53 @@
             const container = document.getElementById('article-content');
             
             container.innerHTML = `
-                <h1 class="featured-headline" style="margin-bottom: 20px;">${article.title}</h1>
-                
-                <div class="article-meta" style="margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #ccc;">
-                    <span>By <strong>${article.author}</strong></span>
-                    <span>📅 ${formatDate(article.date)}</span>
-                    <span>⏱️ ${estimateReadTime(article.content)} min read</span>
-                </div>
-                
-                <div class="article-content">
-                    ${article.content}
-                </div>
-                
-                <div style="margin-top: 40px; padding-top: 30px; border-top: 2px solid var(--accent-gold);">
-                    <a href="index.html" class="btn" style="margin-top: 20px;">← Back to All News</a>
-                </div>
+                ${article.content}
             `;
+        }
+
+        function loadRelatedArticles(allArticles, currentId) {
+            const container = document.getElementById('related-articles');
+            const related = allArticles
+                .filter(a => a.id !== currentId)
+                .slice(0, 3);
+            
+            if (related.length === 0) {
+                container.innerHTML = '<p style="color: #888; text-align: center;">No more scrolls in this section.</p>';
+                return;
+            }
+            
+            container.innerHTML = `<div class="article-grid">${related.map(article => `
+                <article class="card">
+                    <div class="card-tag">${article.category || 'News'}</div>
+                    <h3><a href="article.html?id=${article.id}">${article.title}</a></h3>
+                    <p>${article.excerpt || (article.content ? article.content.substring(0, 100) + '...' : 'No excerpt')}</p>
+                    <a href="article.html?id=${article.id}" class="btn" style="font-size:0.7rem; padding: 5px 10px; margin-top: 10px;">📜 Read Scroll</a>
+                </article>
+            `).join('')}</div>`;
         }
 
         function showNotFound() {
             document.getElementById('article-content').innerHTML = `
                 <div class="article-not-found">
                     <h2>📜 Scroll Lost to the Void</h2>
-                    <p>This article could not be found.</p>
+                    <p>This article could not be found. It may have been:</p>
+                    <ul style="text-align: left; display: inline-block; margin: 20px 0; color: #888;">
+                        <li>Eaten by a mimic</li>
+                        <li>Burned by a dragon</li>
+                        <li>Stolen by a bard</li>
+                        <li>Never written in the first place</li>
+                    </ul>
+                    <br>
                     <a href="index.html" class="btn" style="margin-top: 20px;">Return Home</a>
                 </div>
             `;
+            
+            document.getElementById('article-title').textContent = 'Article Not Found';
+            document.getElementById('article-category').textContent = 'Error';
         }
 
         function formatDate(dateString) {
+            if (!dateString) return 'Unknown Date';
             const date = new Date(dateString);
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             return date.toLocaleDateString('en-US', options);
@@ -171,7 +488,16 @@
             return Math.ceil(words / 200);
         }
 
-        // Initialize when page loads
+        function copyArticleLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert('🔗 Link copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy link.');
+            });
+        }
+
+        // Initialize
         document.addEventListener('DOMContentLoaded', loadArticle);
     </script>
 </body>
