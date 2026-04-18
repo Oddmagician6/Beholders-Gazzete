@@ -8,50 +8,378 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Lato:wght@400;700&family=MedievalSharp&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="homepage.css">
+    <style>
+        .about-hero {
+            position: relative;
+            background: linear-gradient(135deg, #1a1a1d 0%, #2d2d35 100%);
+            background-image: url('https://images.unsplash.com/photo-1507842217121-9e93c8aaf27c?w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 80px 20px;
+            text-align: center;
+            overflow: hidden;
+        }
+        .about-hero-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(180deg, rgba(26, 26, 29, 0.85) 0%, rgba(26, 26, 29, 0.95) 100%);
+        }
+        .about-hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .about-hero-logo {
+            font-family: 'MedievalSharp', cursive;
+            font-size: 3rem;
+            color: var(--accent-gold);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            margin-bottom: 15px;
+        }
+        .about-body {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        .about-section {
+            background: linear-gradient(145deg, #252529 0%, #1f1f23 100%);
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+        .about-section h2 {
+            font-size: 1.8rem;
+            color: var(--accent-gold);
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--accent-gold);
+            padding-bottom: 15px;
+        }
+        .about-section h3 {
+            font-size: 1.3rem;
+            color: var(--accent-gold);
+            margin: 30px 0 15px;
+        }
+        .about-section p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+        .about-section ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 25px;
+        }
+        .about-section li {
+            padding: 12px 0;
+            border-bottom: 1px solid #333;
+            font-size: 1rem;
+            color: var(--text-color);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .about-section li:last-child {
+            border-bottom: none;
+        }
+        .about-section li::before {
+            content: '📜';
+            color: var(--accent-gold);
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .feature-card {
+            background: linear-gradient(145deg, #1a1a1d, #252529);
+            border: 1px solid #444;
+            border-radius: 6px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            border-color: var(--accent-gold);
+            transform: translateY(-5px);
+        }
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        .feature-card h4 {
+            color: var(--accent-gold);
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            font-family: 'Cinzel', serif;
+        }
+        .feature-card p {
+            font-size: 0.95rem;
+            color: #aaa;
+            margin: 0;
+        }
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .team-card {
+            background: linear-gradient(145deg, #1a1a1d, #252529);
+            border: 1px solid #444;
+            border-radius: 6px;
+            padding: 25px;
+            text-align: center;
+        }
+        .team-avatar {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+        .team-card h4 {
+            color: var(--accent-gold);
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            font-family: 'MedievalSharp', cursive;
+        }
+        .team-card .role {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        .team-card p {
+            font-size: 0.95rem;
+            color: #aaa;
+            margin: 0;
+        }
+        .contact-box {
+            background: rgba(197, 160, 89, 0.1);
+            border: 1px solid var(--accent-gold);
+            border-radius: 6px;
+            padding: 30px;
+            text-align: center;
+            margin: 30px 0;
+        }
+        .contact-box h3 {
+            color: var(--accent-gold);
+            margin-bottom: 15px;
+        }
+        .contact-box p {
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+        .contact-links {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .contact-btn {
+            background: linear-gradient(145deg, var(--accent-gold), #a88645);
+            color: #000;
+            padding: 14px 30px;
+            border-radius: 6px;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .contact-btn:hover {
+            background: linear-gradient(145deg, #d4af67, #b8954e);
+            transform: scale(1.05);
+        }
+        .faq-item {
+            background: linear-gradient(145deg, #1a1a1d, #252529);
+            border: 1px solid #444;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .faq-item h4 {
+            color: var(--accent-gold);
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            font-family: 'Cinzel', serif;
+        }
+        .faq-item p {
+            color: #aaa;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+        @media (max-width: 768px) {
+            .about-hero { padding: 60px 20px; }
+            .about-hero-logo { font-size: 2.2rem; }
+            .about-section { padding: 30px; }
+            .feature-grid, .team-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 500px) {
+            .about-hero-logo { font-size: 1.8rem; }
+            .about-section { padding: 25px; }
+            .contact-links { flex-direction: column; }
+            .contact-btn { width: 100%; }
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="logo">👁️ The Beholder's Gazette</div>
-        <div class="tagline">"We See All Truths (Especially The Ones We Made Up)"</div>
-        <a href="index.html" class="btn" style="margin-top: 15px;">← Back to Home</a>
-    </header>
-    <nav>
+    <section class="about-hero">
+        <div class="about-hero-overlay"></div>
+        <div class="about-hero-content">
+            <div class="about-hero-logo">📜 About The Gazette</div>
+            <p style="color: #ccc; font-size: 1.2rem; font-style: italic;">"Truth is Subjective, But Entertainment is Eternal"</p>
+        </div>
+    </section>
+    <nav class="main-nav">
         <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="index.html#economy">Economy</a></li>
-            <li><a href="index.html#politics">Politics</a></li>
-            <li><a href="npc-generator.html">Town Square</a></li>
-            <li><a href="loot-generator.html" >Loot</a></li>
-            <li><a href="encounter.html" >Encounters</a></li>
-            <li><a href="about.html" style="background: var(--accent-gold); color: #000;">About</a></li>
+            <li><a href="index.html">🏠 Home</a></li>
+            <li><a href="economy.html">💰 Economy</a></li>
+            <li><a href="rumors.html">🍺 Tavern</a></li>
+            <li><a href="npc-generator.html">🎭 Town Square</a></li>
+            <li><a href="loot-generator.html">💎 Loot</a></li>
+            <li><a href="encounter.html">⚔️ Encounters</a></li>
+            <li><a href="about.html" class="active">📜 About</a></li>
         </ul>
     </nav>
-    <div class="container">
-        <main>
-            <article class="featured-article">
-                <h1 class="featured-headline">About The Gazette</h1>
-                <div class="article-meta">
-                    <span>Published by the Bard's Guild of Journalism</span>
+    <div class="ticker-wrap">
+        <div class="ticker">
+            📰 ABOUT US: "Founded by bards, run by wizards" &nbsp;&bull;&nbsp; 
+            ✍️ "All news subject to DM approval" &nbsp;&bull;&nbsp; 
+            🎲 "No dragons were harmed (mostly)" &nbsp;&bull;&nbsp; 
+            🍺 "Tavern reviews available upon request"
+        </div>
+    </div>
+    <div class="about-body">
+        <div class="about-section">
+            <h2>👁️ Welcome to The Beholder's Gazette</h2>
+            <p>Founded in 1492 DR, The Beholder's Gazette is the realm's premier source for satirical news, DM tools, and everything in between. We see all truths — especially the ones we made up.</p>
+            <p>Our mission is simple: provide Dungeon Masters with high-quality, free tools while keeping everyone entertained. Because let's face it, if the DM isn't having fun, nobody is.</p>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📰</div>
+                    <h4>Satirical News</h4>
+                    <p>D&D-themed parody of real-world events</p>
                 </div>
-                <div class="featured-content" style="color: #2b2b2b;">
-                    <p>Welcome to The Beholder's Gazette, the realm's premier source for satirical news and economic analysis.</p><br>
-                    <p>Founded in 1492 DR, we bring you unbiased reporting on kingdom affairs, dungeon economics, and arcane technology.</p><br>
-                    <p>All content is subject to DM approval. No dragons were harmed in the making of this website.</p>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h4>Dynamic Economy</h4>
+                    <p>200+ items with fluctuating prices</p>
                 </div>
-            </article>
-        </main>
-        <aside>
-            <div class="sidebar-widget economy-widget" id="economy-tracker">
-                <div style="text-align: center; padding: 20px; color: #888;">Loading Market Data...</div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎭</div>
+                    <h4>NPC Generator</h4>
+                    <p>Full characters with secrets & quests</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💎</div>
+                    <h4>Loot Generator</h4>
+                    <p>DMG-compliant treasure tables</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚔️</div>
+                    <h4>Encounter Builder</h4>
+                    <p>Balanced combat with initiative tracking</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🍺</div>
+                    <h4>Tavern Rumors</h4>
+                    <p>100+ quest hooks & flavor text</p>
+                </div>
             </div>
-        </aside>
+        </div>
+        <div class="about-section">
+            <h2>🛠️ Our Tools</h2>
+            <p>Every tool on this site is designed with one goal: make your D&D sessions better. Here's what we offer:</p>
+            <ul>
+                <li><strong>Dynamic Economy Tracker:</strong> 200+ D&D items with prices that fluctuate every 15 minutes. Perfect for adding realism to your campaign's economy.</li>
+                <li><strong>NPC Generator:</strong> Create full NPCs with stats, personality, appearance, dialogue, secrets, and quest hooks. Save them to your grimoire for later.</li>
+                <li><strong>Loot Generator:</strong> DMG-compliant treasure generation with coins, gems, art objects, and magic items. Export to JSON or copy to clipboard.</li>
+                <li><strong>Encounter Builder:</strong> Build balanced encounters with synergy suggestions, terrain hazards, morale checks, and full initiative tracking.</li>
+                <li><strong>Tavern Rumor Generator:</strong> 100+ rumors across 6 categories with truth values. Perfect for session starters or downtime activities.</li>
+                <li><strong>Satirical News:</strong> D&D-themed parody articles that mock real-world politics, economics, and current events.</li>
+            </ul>
+        </div>
+        <div class="about-section">
+            <h2>👥 The Team</h2>
+            <p>Behind every great publication is a team of dedicated (and slightly unhinged) individuals.</p>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar">👁️</div>
+                    <h4>The Beholder</h4>
+                    <p class="role">Editor-in-Chief</p>
+                    <p>Sees all truths. Especially the convenient ones.</p>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">✍️</div>
+                    <h4>Gimble Inkquill</h4>
+                    <p class="role">Lead Scribe</p>
+                    <p>Writes the news. Sometimes makes it up.</p>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">🧙</div>
+                    <h4>Gobwiz Quillnib</h4>
+                    <p class="role">Investigative Bard</p>
+                    <p>Specializes in political scandals and zoning violations.</p>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">🎲</div>
+                    <h4>You</h4>
+                    <p class="role">Valued Reader</p>
+                    <p>Without you, we're just shouting into the void.</p>
+                </div>
+            </div>
+        </div>
+        <div class="about-section">
+            <h2>❓ FAQ</h2>
+            <div class="faq-item">
+                <h4>Is this site free?</h4>
+                <p>Yes! All tools are completely free. We accept voluntary donations via Patreon to keep the servers running and the bards fed.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Can I use this for my campaign?</h4>
+                <p>Absolutely! That's what it's for. Generate NPCs, loot, encounters, and rumors to your heart's content.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Is the economy tracker accurate?</h4>
+                <p>It's accurate to the DMG base prices, with random fluctuations for realism. Use it as a guide, not gospel.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Can I contribute rumors or articles?</h4>
+                <p>Currently, contributions are session-only. We're working on a submission system for the future!</p>
+            </div>
+            <div class="faq-item">
+                <h4>Why is everything satire?</h4>
+                <p>Because D&D is supposed to be fun. If we can make you laugh while you prepare your session, we've done our job.</p>
+            </div>
+        </div>
+        <div class="contact-box">
+            <h3>📬 Contact Us</h3>
+            <p>Have questions, suggestions, or want to report a bug? We'd love to hear from you!</p>
+            <div class="contact-links">
+                <a href="https://patreon.com/DungeonMasterDen" target="_blank" class="contact-btn">🏆 Support on Patreon</a>
+                <a href="mailto:contact@beholdersgazette.com" class="contact-btn">📧 Send a Raven</a>
+            </div>
+        </div>
     </div>
     <footer>
-        <p>&copy; <span id="year"></span> The Beholder's Gazette</p>
+        <div class="footer-content">
+            <div class="footer-logo">👁️ The Beholder's Gazette</div>
+            <p>Published by the Bard's Guild of Journalism</p>
+            <p style="margin: 15px 0; color: #888;">Disclaimer: All news is subject to DM approval. No dragons were harmed in the making of this website. Several goblins, however, did not survive.</p>
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="about.html">Contact</a>
+                <a href="https://patreon.com/DungeonMasterDen" target="_blank">Support</a>
+            </div>
+            <p style="margin-top: 20px; color: #444; font-size: 0.75rem;">Powered by Static Magic &copy; <span id="year"></span></p>
+        </div>
     </footer>
-    <script src="economy.js"></script>
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
     </script>
 </body>
 </html>
+
