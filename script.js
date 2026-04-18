@@ -1,8 +1,14 @@
 /* ============================================
-   HOMEPAGE ARTICLE LOADER - FIXED SORTING
+   HOMEPAGE ARTICLE LOADER - WITH LOAD MORE
    ============================================ */
 
 console.log('📜 Script loading...');
+
+// ============================================
+// GLOBAL VARIABLES FOR LOAD MORE FUNCTIONALITY
+// ============================================
+let allArticles = [];
+let displayedArticles = 6; // Show 6 articles at a time
 
 // Set year in footer
 const yearEl = document.getElementById('year');
@@ -56,10 +62,11 @@ async function loadArticles() {
         
         renderFeaturedArticle(featured);
         
-        // Grid = ALL other articles (already sorted)
-        const gridArticles = articles.slice(1);
-        console.log('📰 Grid articles:', gridArticles.map(a => a.id));
-        renderArticleGrid(gridArticles);
+        // Grid = ALL other articles (already sorted) - stored globally for Load More
+        allArticles = articles.slice(1);
+        displayedArticles = 6; // Reset to 6 when page loads
+        console.log('📰 Grid articles:', allArticles.map(a => a.id));
+        renderArticleGrid(allArticles);
         
     } catch (error) {
         console.error('❌ Error loading articles:', error);
@@ -119,14 +126,17 @@ function renderArticleGrid(articles) {
         return;
     }
     
-    console.log('📰 Rendering grid with', articles.length, 'articles');
+    console.log('📰 Rendering grid with', articles.length, 'total articles, showing', displayedArticles);
     
     if (!articles || articles.length === 0) {
         container.innerHTML = '<p style="color: #888; text-align: center; padding: 40px;">No more news from the realm today.</p>';
         return;
     }
     
-    const html = articles.map((article, index) => {
+    // Show only the first X articles
+    const visibleArticles = articles.slice(0, displayedArticles);
+    
+    const html = visibleArticles.map((article, index) => {
         if (!article.id || !article.title) {
             console.error('❌ Invalid article at index', index, article);
             return '';
@@ -146,7 +156,43 @@ function renderArticleGrid(articles) {
     }).join('');
     
     container.innerHTML = html;
+    
+    // Add Load More button if there are more articles
+    if (displayedArticles < articles.length) {
+        const loadMoreDiv = document.createElement('div');
+        loadMoreDiv.style.gridColumn = '1 / -1';
+        loadMoreDiv.style.textAlign = 'center';
+        loadMoreDiv.style.padding = '40px';
+        loadMoreDiv.style.background = 'rgba(197, 160, 89, 0.05)';
+        loadMoreDiv.style.borderRadius = '6px';
+        loadMoreDiv.style.marginTop = '20px';
+        loadMoreDiv.innerHTML = `
+            <p style="color: #888; margin-bottom: 20px; font-size: 0.95rem;">
+                📜 ${articles.length - displayedArticles} older articles in the archives
+            </p>
+            <button class="btn" onclick="loadMoreArticles()" style="font-size: 1rem; padding: 15px 40px;">
+                📜 Load More Articles
+            </button>
+        `;
+        container.appendChild(loadMoreDiv);
+    }
+    
     console.log('✅ Grid rendered successfully');
+}
+
+// ============================================
+// LOAD MORE FUNCTIONALITY
+// ============================================
+function loadMoreArticles() {
+    displayedArticles += 6; // Load 6 more articles
+    console.log('📜 Loading more articles, now showing:', displayedArticles);
+    renderArticleGrid(allArticles);
+    
+    // Scroll smoothly to the new content
+    const loadMoreBtn = document.querySelector('button[onclick="loadMoreArticles()"]');
+    if (loadMoreBtn) {
+        loadMoreBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
 }
 
 function formatDate(dateString) {
@@ -165,3 +211,4 @@ document.addEventListener('DOMContentLoaded', () => {
 // Console easter egg
 console.log("%c 🛑 Stop! ", "color: red; font-size: 30px; font-weight: bold; background: #000; padding: 10px;");
 console.log("%c This is a magical console. Don't paste things here!", "color: #888; font-size: 12px;");
+
