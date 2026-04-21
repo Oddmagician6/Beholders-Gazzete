@@ -6,7 +6,7 @@
     <title>Encounter Generator | The Beholder's Gazette</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700;900&family=EB+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="homepage.css">
     <style>
@@ -32,7 +32,7 @@
             margin: 0 auto;
         }
         .encounter-hero-logo {
-            font-family: 'Cinzel Decorative', 'Cinzel', serif;
+            font-family: 'MedievalSharp', cursive;
             font-size: 3rem;
             color: var(--accent-gold);
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
@@ -225,7 +225,7 @@
             font-size: 1.5rem;
             font-weight: bold;
             color: var(--accent-gold);
-            font-family: 'Cinzel Decorative', 'Cinzel', serif;
+            font-family: 'MedievalSharp', cursive;
         }
         .encounter-monsters {
             background: linear-gradient(145deg, #1a1a1d, #252529);
@@ -468,26 +468,27 @@
     </style>
 </head>
 <body>
-    <section class="encounter-hero">
-        <div class="encounter-hero-overlay"></div>
-        <div class="encounter-hero-content">
-            <div class="encounter-hero-logo">⚔️ The War Room</div>
+    <section class="page-hero" style="background-image: url('https://images.unsplash.com/photo-1610890716271-e75f918f9335?w=1920&q=80'); background-size:cover; background-position:center;">
+        <div class="page-hero-overlay"></div>
+        <div class="page-hero-content">
+            <div class="page-hero-logo">⚔️ The War Room</div>
             <p class="encounter-hero-tagline">"Where Combat Meets Strategy"</p>
             <p class="encounter-hero-description">Build balanced encounters, track initiative, manage combat, and analyze post-battle. Because TPKs should be intentional, not accidental.</p>
         </div>
     </section>
-    <nav class="main-nav">
-        <ul>
-            <li><a href="index.html">🏠 Home</a></li>
-            <li><a href="economy.html">💰 Economy</a></li>
-            <li><a href="rumors.html">🍺 Tavern</a></li>
-            <li><a href="npc-generator.html">🎭 Town Square</a></li>
-            <li><a href="loot-generator.html">💎 Loot</a></li>
-            <li><a href="encounter.html" class="active">⚔️ Encounters</a></li>
-            <li><a href="spell-tome.html">📖 Spell Tome</a></li>
-            <li><a href="about.html">📜 About</a></li>
-        </ul>
-    </nav>
+      <!-- Navigation -->
+  <nav class="main-nav">
+    <ul>
+      <li><a href="index.html">🏠 Home</a></li>
+      <li><a href="economy.html">💰 Economy</a></li>
+      <li><a href="rumors.html">🍺 Tavern</a></li>
+      <li><a href="npc-generator.html">🎭 Town Square</a></li>
+      <li><a href="loot-generator.html">💎 Loot</a></li>
+      <li><a href="encounter.html" class="active">⚔️ Encounters</a></li>
+      <li><a href="spellbook.html">📖 Spellbook</a></li>
+      <li><a href="about.html">📜 About</a></li>
+    </ul>
+  </nav>
     <div class="ticker-wrap">
         <div class="ticker">
             ⚔️ COMBAT ALERT: "Goblins unionizing for better death benefits" &nbsp;&bull;&nbsp; 
@@ -593,7 +594,7 @@
             <p style="margin: 15px 0; color: #888;">Remember: The best encounter is one where everyone survives to tell the tale. Except the goblins. They don't talk.</p>
             <div class="footer-links">
                 <a href="index.html">Home</a>
-                <a href="encounter.html">Encounters</a>
+                <a href="encounter.html" class="active">Encounters</a>
                 <a href="about.html">About</a>
                 <a href="https://patreon.com/DungeonMasterDen" target="_blank">Support</a>
             </div>

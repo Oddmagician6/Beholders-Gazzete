@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spellbook Reference | The Beholder's Gazette</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .page-hero { background-image: url('https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=1920&q=80'); }
+    .spell-body { max-width: 1200px; margin: 0 auto; padding: 60px 24px; }
+    .spell-controls {
+      display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+      margin-bottom: 32px;
+      background: var(--bg-raised); border: var(--border-gold); border-radius: var(--radius-md); padding: 22px;
+    }
+    .spell-controls select, .spell-controls input {
+      flex: 1; min-width: 160px; margin-top: 0;
+    }
+    .spell-controls label { font-family: var(--font-head); font-size: 0.72rem; color: var(--gold-bright); letter-spacing: 0.06em; margin-bottom: 4px; display: block; }
+    .spell-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+    .spell-card {
+      background: linear-gradient(145deg, var(--bg-card), var(--bg-dark));
+      border: var(--border-gold); border-radius: var(--radius-md); padding: 24px;
+      transition: all 0.3s ease; position: relative; overflow: hidden;
+    }
+    .spell-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .spell-card:hover { transform: translateY(-5px); border-color: var(--gold-mid); box-shadow: var(--shadow-glow); }
+    .spell-card:hover::before { opacity: 1; }
+    /* School colors */
+    .spell-card[data-school="Evocation"]    { --school-color: #c94040; }
+    .spell-card[data-school="Abjuration"]   { --school-color: #4080c9; }
+    .spell-card[data-school="Illusion"]     { --school-color: #9040c9; }
+    .spell-card[data-school="Conjuration"]  { --school-color: #40c980; }
+    .spell-card[data-school="Necromancy"]   { --school-color: #60c940; }
+    .spell-card[data-school="Divination"]   { --school-color: #c9a040; }
+    .spell-card[data-school="Transmutation"]{ --school-color: #c97040; }
+    .spell-card[data-school="Enchantment"]  { --school-color: #c940a0; }
+    .spell-card::before { background: var(--school-color, var(--gold-bright)); }
+    .spell-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px; }
+    .spell-name { font-family: var(--font-head); font-size: 1.05rem; color: var(--text-bright); flex: 1; line-height: 1.3; }
+    .spell-level-badge {
+      font-family: var(--font-head); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em;
+      padding: 3px 8px; border-radius: 3px; white-space: nowrap;
+      background: rgba(212,168,67,0.15); color: var(--gold-bright); border: 1px solid var(--gold-dim);
+    }
+    .spell-school {
+      font-family: var(--font-ui); font-size: 0.72rem; color: var(--school-color, var(--gold-mid));
+      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px;
+    }
+    .spell-desc { font-size: 0.86rem; color: var(--text-dim); line-height: 1.65; margin-bottom: 14px; }
+    .spell-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .spell-stat {
+      background: rgba(0,0,0,0.3); border-radius: var(--radius-sm); padding: 7px 10px;
+      border-left: 2px solid var(--school-color, var(--gold-dim));
+    }
+    .spell-stat-label { font-family: var(--font-ui); font-size: 0.62rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+    .spell-stat-value { font-family: var(--font-head); font-size: 0.82rem; color: var(--text-bright); margin-top: 2px; }
+    .no-results { text-align: center; padding: 60px; color: var(--text-dim); grid-column: 1/-1; font-style: italic; }
+    .spell-count { font-family: var(--font-ui); font-size: 0.8rem; color: var(--text-dim); margin-bottom: 16px; }
+    .concentration-pip {
+      display: inline-block; width: 6px; height: 6px; background: var(--gold-bright);
+      border-radius: 50%; margin-left: 5px; vertical-align: middle;
+      title: "Requires Concentration";
+    }
+    @media (max-width: 600px) { .spell-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <section class="page-hero">
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+      <div class="page-hero-logo">📖 Spellbook Reference</div>
+      <p class="page-hero-tagline">"All the arcane knowledge you need (until the DM fudges the rules)"</p>
+      <p class="page-hero-description">Browse, search, and filter spells for your next session. No memorization required.</p>
+    </div>
+  </section>
+
+  <!-- Navigation -->
+  <nav class="main-nav">
+    <ul>
+      <li><a href="index.html">🏠 Home</a></li>
+      <li><a href="economy.html">💰 Economy</a></li>
+      <li><a href="rumors.html">🍺 Tavern</a></li>
+      <li><a href="npc-generator.html">🎭 Town Square</a></li>
+      <li><a href="loot-generator.html">💎 Loot</a></li>
+      <li><a href="encounter.html">⚔️ Encounters</a></li>
+      <li><a href="spellbook.html" class="active">📖 Spellbook</a></li>
+      <li><a href="about.html">📜 About</a></li>
+    </ul>
+  </nav>
+
+  <div class="ticker-wrap">
+    <div class="ticker">
+      ✨ ARCANE ALERT: Fireball nerfed to 7d6 by Wizard's Council &nbsp;&bull;&nbsp; 📖 New cantrip discovered: "Prestidigitate Away Student Debt" &nbsp;&bull;&nbsp; 🧙 Spell components shortage — eye of newt on backorder &nbsp;&bull;&nbsp; ✨ ARCANE ALERT: Fireball nerfed to 7d6 by Wizard's Council &nbsp;&bull;&nbsp; 📖 New cantrip discovered: "Prestidigitate Away Student Debt" &nbsp;&bull;&nbsp; 🧙 Spell components shortage — eye of newt on backorder
+    </div>
+  </div>
+
+  <div class="spell-body">
+    <!-- Controls -->
+    <div class="spell-controls">
+      <div style="flex:2;min-width:200px;">
+        <label>🔍 Search Spells</label>
+        <input type="text" id="spell-search" placeholder="Search by name or description…">
+      </div>
+      <div style="flex:1;min-width:130px;">
+        <label>🎓 Spell Level</label>
+        <select id="level-filter">
+          <option value="">All Levels</option>
+          <option value="0">Cantrip</option>
+          <option value="1">1st Level</option>
+          <option value="2">2nd Level</option>
+          <option value="3">3rd Level</option>
+          <option value="4">4th Level</option>
+          <option value="5">5th Level</option>
+          <option value="6">6th Level</option>
+          <option value="7">7th Level</option>
+          <option value="8">8th Level</option>
+          <option value="9">9th Level</option>
+        </select>
+      </div>
+      <div style="flex:1;min-width:150px;">
+        <label>🔮 School</label>
+        <select id="school-filter">
+          <option value="">All Schools</option>
+          <option>Abjuration</option><option>Conjuration</option><option>Divination</option>
+          <option>Enchantment</option><option>Evocation</option><option>Illusion</option>
+          <option>Necromancy</option><option>Transmutation</option>
+        </select>
+      </div>
+      <div style="flex:1;min-width:130px;">
+        <label>📚 Class</label>
+        <select id="class-filter">
+          <option value="">All Classes</option>
+          <option>Bard</option><option>Cleric</option><option>Druid</option>
+          <option>Paladin</option><option>Ranger</option><option>Sorcerer</option>
+          <option>Warlock</option><option>Wizard</option>
+        </select>
+      </div>
+      <div style="align-self:flex-end;">
+        <label>&nbsp;</label>
+        <button class="btn btn-gold" onclick="resetFilters()">✕ Reset</button>
+      </div>
+    </div>
+
+    <p class="spell-count" id="spell-count"></p>
+    <div class="spell-grid" id="spell-grid"></div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-logo">👁️ The Beholder's Gazette</div>
+      <p style="color:var(--text-dim);font-family:var(--font-ui);font-size:0.82rem;">Published by the Bard's Guild of Journalism</p>
+      <div class="footer-links">
+        <a href="index.html">Home</a><a href="about.html">About</a>
+        <a href="https://patreon.com/DungeonMasterDen" target="_blank">Support</a>
+      </div>
+      <p style="margin-top:16px;color:var(--text-dim);font-family:var(--font-ui);font-size:0.7rem;opacity:0.4;">Powered by Static Magic &copy; <span id="year"></span></p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const SPELLS = [
+      { name:'Fireball', level:3, school:'Evocation', cast:'1 Action', range:'150 ft', duration:'Instant', concentration:false, classes:['Sorcerer','Wizard'], desc:'A bright streak flashes from your pointing finger to a point you choose within range, then blossoms with a low roar into a 20-ft radius explosion of flame. Each creature in the area must make a DEX save, taking 8d6 fire damage on a fail (half on success).' },
+      { name:'Shield', level:1, school:'Abjuration', cast:'1 Reaction', range:'Self', duration:'1 round', concentration:false, classes:['Sorcerer','Wizard'], desc:'An invisible barrier of magical force appears and protects you. Until the start of your next turn, you have a +5 bonus to AC, including against the triggering attack.' },
+      { name:'Healing Word', level:1, school:'Evocation', cast:'1 Bonus Action', range:'60 ft', duration:'Instant', concentration:false, classes:['Bard','Cleric','Druid'], desc:'A creature of your choice that you can see within range regains hit points equal to 1d4 + your spellcasting ability modifier.' },
+      { name:'Counterspell', level:3, school:'Abjuration', cast:'1 Reaction', range:'60 ft', duration:'Instant', concentration:false, classes:['Sorcerer','Warlock','Wizard'], desc:'You attempt to interrupt a creature in the process of casting a spell. If the spell is 3rd level or lower, it automatically fails. If 4th or higher, make a spellcasting check (DC 10 + spell level).' },
+      { name:'Misty Step', level:2, school:'Conjuration', cast:'1 Bonus Action', range:'Self', duration:'Instant', concentration:false, classes:['Sorcerer','Warlock','Wizard'], desc:'Briefly surrounded by silvery mist, you teleport up to 30 feet to an unoccupied space that you can see.' },
+      { name:'Detect Magic', level:1, school:'Divination', cast:'1 Action', range:'Self', duration:'10 min', concentration:true, classes:['Bard','Cleric','Druid','Paladin','Ranger','Sorcerer','Wizard'], desc:'For the duration, you sense the presence of magic within 30 feet of you. If you sense magic in this way, you can use your action to see a faint aura around any visible creature or object that bears magic, and you learn its school.' },
+      { name:'Charm Person', level:1, school:'Enchantment', cast:'1 Action', range:'30 ft', duration:'1 hour', concentration:false, classes:['Bard','Druid','Sorcerer','Warlock','Wizard'], desc:'You attempt to charm a humanoid you can see within range. It must make a WIS saving throw, and does so with advantage if you or your companions are fighting it. On a failed save, the target is charmed.' },
+      { name:'Invisibility', level:2, school:'Illusion', cast:'1 Action', range:'Touch', duration:'1 hour', concentration:true, classes:['Bard','Sorcerer','Warlock','Wizard'], desc:'A creature you touch becomes invisible until the spell ends. Anything the target is wearing or carrying is invisible as long as it is on the target\'s person. The spell ends early if the target attacks or casts a spell.' },
+      { name:'Animate Dead', level:3, school:'Necromancy', cast:'1 Minute', range:'10 ft', duration:'24 hours', concentration:false, classes:['Cleric','Wizard'], desc:'This spell creates an undead servant. Choose a pile of bones or a corpse of a Medium or Small humanoid within range. Your spell imbues the target with a foul mimicry of life, raising it as an undead creature.' },
+      { name:'Polymorph', level:4, school:'Transmutation', cast:'1 Action', range:'60 ft', duration:'1 hour', concentration:true, classes:['Bard','Druid','Sorcerer','Wizard'], desc:'This spell transforms a creature that you can see within range into a new form. A hostile creature must make a WIS save. The new form can be any beast whose challenge rating is equal to or less than the target\'s.' },
+      { name:'Magic Missile', level:1, school:'Evocation', cast:'1 Action', range:'120 ft', duration:'Instant', concentration:false, classes:['Sorcerer','Wizard'], desc:'You create three glowing darts of magical force. Each dart hits a creature of your choice that you can see within range. A dart deals 1d4+1 force damage. All darts strike simultaneously.' },
+      { name:'Hold Person', level:2, school:'Enchantment', cast:'1 Action', range:'60 ft', duration:'1 min', concentration:true, classes:['Bard','Cleric','Druid','Sorcerer','Warlock','Wizard'], desc:'Choose a humanoid you can see within range. The target must succeed on a WIS saving throw or be paralyzed for the duration. At the end of each of its turns, the target can make another saving throw.' },
+      { name:'Thunderwave', level:1, school:'Evocation', cast:'1 Action', range:'Self (15-ft cube)', duration:'Instant', concentration:false, classes:['Bard','Cleric','Druid','Sorcerer','Wizard'], desc:'A wave of thunderous force sweeps out from you. Each creature in a 15-foot cube must make a CON save, taking 2d8 thunder damage and being pushed 10 feet away (half damage, no push on success).' },
+      { name:'Mage Armor', level:1, school:'Abjuration', cast:'1 Action', range:'Touch', duration:'8 hours', concentration:false, classes:['Sorcerer','Wizard'], desc:'You touch a willing creature who isn\'t wearing armor, and a protective magical force surrounds it until the spell ends. The target\'s base AC becomes 13 + its Dexterity modifier.' },
+      { name:'Cure Wounds', level:1, school:'Evocation', cast:'1 Action', range:'Touch', duration:'Instant', concentration:false, classes:['Bard','Cleric','Druid','Paladin','Ranger'], desc:'A creature you touch regains a number of hit points equal to 1d8 + your spellcasting ability modifier. This spell has no effect on undead or constructs.' },
+      { name:'Hypnotic Pattern', level:3, school:'Illusion', cast:'1 Action', range:'120 ft', duration:'1 min', concentration:true, classes:['Bard','Sorcerer','Warlock','Wizard'], desc:'You create a twisting pattern of colors that weaves through the air in a 30-foot cube. Each creature in the area must make a WIS save or become charmed and incapacitated for the duration, entranced by the pattern.' },
+      { name:'Eldritch Blast', level:0, school:'Evocation', cast:'1 Action', range:'120 ft', duration:'Instant', concentration:false, classes:['Warlock'], desc:'A beam of crackling energy streaks toward a creature within range. Make a ranged spell attack against the target. On a hit, the target takes 1d10 force damage. The spell creates more than one beam when you reach higher levels.' },
+      { name:'Vicious Mockery', level:0, school:'Enchantment', cast:'1 Action', range:'60 ft', duration:'Instant', concentration:false, classes:['Bard'], desc:'You unleash a string of insults laced with subtle enchantments at a creature you can see within range. The creature must succeed on a WIS save or take 1d4 psychic damage and have disadvantage on its next attack roll.' },
+      { name:'Shatter', level:2, school:'Evocation', cast:'1 Action', range:'60 ft', duration:'Instant', concentration:false, classes:['Bard','Sorcerer','Warlock','Wizard'], desc:'A sudden loud ringing noise, painfully intense, erupts from a point of your choice within range. Each creature in a 10-foot-radius sphere centered on that point must make a CON save, taking 3d8 thunder damage on a failed save.' },
+      { name:'Dimension Door', level:4, school:'Conjuration', cast:'1 Action', range:'500 ft', duration:'Instant', concentration:false, classes:['Bard','Sorcerer','Warlock','Wizard'], desc:'You teleport yourself from your current location to any other spot within range. You arrive at exactly the spot desired. It can be a place you can see, one you can visualize, or one you can describe by stating distance and direction.' },
+    ];
+
+    let filtered = [...SPELLS];
+
+    function levelLabel(l) { return l === 0 ? 'Cantrip' : l + (l===1?'st':l===2?'nd':l===3?'rd':'th') + ' Level'; }
+
+    function render() {
+      const grid = document.getElementById('spell-grid');
+      const count = document.getElementById('spell-count');
+      count.textContent = `Showing ${filtered.length} of ${SPELLS.length} spells`;
+
+      if (!filtered.length) {
+        grid.innerHTML = '<p class="no-results">No spells matched your search. Perhaps the arcane tomes were misplaced…</p>';
+        return;
+      }
+
+      grid.innerHTML = filtered.map(s => `
+        <div class="spell-card" data-school="${s.school}" style="animation: fadeInUp 0.4s ease both;">
+          <div class="spell-header">
+            <div class="spell-name">${s.name}${s.concentration ? '<span class="concentration-pip" title="Concentration"></span>' : ''}</div>
+            <div class="spell-level-badge">${levelLabel(s.level)}</div>
+          </div>
+          <div class="spell-school">${s.school}</div>
+          <p class="spell-desc">${s.desc}</p>
+          <div class="spell-stats">
+            <div class="spell-stat">
+              <div class="spell-stat-label">Casting Time</div>
+              <div class="spell-stat-value">${s.cast}</div>
+            </div>
+            <div class="spell-stat">
+              <div class="spell-stat-label">Range</div>
+              <div class="spell-stat-value">${s.range}</div>
+            </div>
+            <div class="spell-stat">
+              <div class="spell-stat-label">Duration</div>
+              <div class="spell-stat-value">${s.duration}</div>
+            </div>
+            <div class="spell-stat">
+              <div class="spell-stat-label">Classes</div>
+              <div class="spell-stat-value" style="font-size:0.7rem;">${s.classes.join(', ')}</div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function applyFilters() {
+      const search = document.getElementById('spell-search').value.toLowerCase();
+      const level  = document.getElementById('level-filter').value;
+      const school = document.getElementById('school-filter').value;
+      const cls    = document.getElementById('class-filter').value;
+
+      filtered = SPELLS.filter(s => {
+        if (search && !s.name.toLowerCase().includes(search) && !s.desc.toLowerCase().includes(search)) return false;
+        if (level  !== '' && s.level !== +level) return false;
+        if (school && s.school !== school) return false;
+        if (cls    && !s.classes.includes(cls)) return false;
+        return true;
+      });
+
+      render();
+    }
+
+    function resetFilters() {
+      document.getElementById('spell-search').value = '';
+      document.getElementById('level-filter').value  = '';
+      document.getElementById('school-filter').value = '';
+      document.getElementById('class-filter').value  = '';
+      filtered = [...SPELLS];
+      render();
+    }
+
+    document.getElementById('spell-search').addEventListener('input', applyFilters);
+    document.getElementById('level-filter').addEventListener('change', applyFilters);
+    document.getElementById('school-filter').addEventListener('change', applyFilters);
+    document.getElementById('class-filter').addEventListener('change', applyFilters);
+
+    render();
+  </script>
+</body>
+</html>

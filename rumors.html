@@ -6,7 +6,7 @@
     <title>Tavern Rumor Generator | The Beholder's Gazette</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700;900&family=EB+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="homepage.css">
     <style>
@@ -39,7 +39,7 @@
         }
 
         .rumors-hero-logo {
-            font-family: 'Cinzel Decorative', 'Cinzel', serif;
+            font-family: 'MedievalSharp', cursive;
             font-size: 3rem;
             color: var(--accent-gold);
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
@@ -187,11 +187,11 @@
             font-size: 4rem;
             color: var(--accent-gold);
             opacity: 0.3;
-            font-family: 'Cinzel Decorative', 'Cinzel', serif;
+            font-family: 'MedievalSharp', cursive;
         }
 
         .rumor-text {
-            font-family: 'Cinzel Decorative', 'Cinzel', serif;
+            font-family: 'MedievalSharp', cursive;
             font-size: 1.4rem;
             line-height: 1.6;
             color: #2b2b2b;
@@ -375,28 +375,29 @@
 <body>
 
     <!-- Hero Section -->
-    <section class="rumors-hero">
-        <div class="rumors-hero-overlay"></div>
-        <div class="rumors-hero-content">
-            <div class="rumors-hero-logo">🍺 The Rusty Flagon</div>
-            <p class="rumors-hero-tagline">"Where Truth Goes to Die"</p>
-            <p class="rumors-hero-description">Pull up a stool, adventurer. The ale is watered down, the bard is tone-deaf, and the gossip is hotter than a dragon's breath. What've you heard?</p>
+    <section class="page-hero" style="background-image: url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=1920&q=80'); background-size:cover; background-position:center;">
+        <div class="page-hero-overlay"></div>
+        <div class="page-hero-content">
+            <div class="page-hero-logo">🍺 The Rusty Flagon</div>
+            <p class="page-hero-tagline">"Where Truth Goes to Die"</p>
+            <p class="page-hero-description">Pull up a stool, adventurer. The ale is watered down, the bard is tone-deaf, and the gossip is hotter than a dragon's breath. What've you heard?</p>
         </div>
     </section>
 
     <!-- Navigation -->
-    <nav class="main-nav">
-        <ul>
-            <li><a href="index.html">🏠 Home</a></li>
-            <li><a href="economy.html">💰 Economy</a></li>
-            <li><a href="rumors.html" class="active">🍺 Tavern</a></li>
-            <li><a href="npc-generator.html">🎭 Town Square</a></li>
-            <li><a href="loot-generator.html">💎 Loot</a></li>
-            <li><a href="encounter.html">⚔️ Encounters</a></li>
-            <li><a href="spell-tome.html">📖 Spell Tome</a></li>
-            <li><a href="about.html">📜 About</a></li>
-        </ul>
-    </nav>
+      <!-- Navigation -->
+  <nav class="main-nav">
+    <ul>
+      <li><a href="index.html">🏠 Home</a></li>
+      <li><a href="economy.html">💰 Economy</a></li>
+      <li><a href="rumors.html" class="active">🍺 Tavern</a></li>
+      <li><a href="npc-generator.html">🎭 Town Square</a></li>
+      <li><a href="loot-generator.html">💎 Loot</a></li>
+      <li><a href="encounter.html">⚔️ Encounters</a></li>
+      <li><a href="spellbook.html">📖 Spellbook</a></li>
+      <li><a href="about.html">📜 About</a></li>
+    </ul>
+  </nav>
 
     <!-- Breaking News Ticker -->
     <div class="ticker-wrap">
@@ -507,7 +508,7 @@
             <p style="margin: 15px 0; color: #888;">Remember: A good rumor is 10% truth, 90% entertainment, and 100% deniable.</p>
             <div class="footer-links">
                 <a href="index.html">Home</a>
-                <a href="rumors.html">Tavern</a>
+                <a href="rumors.html" class="active">Tavern</a>
                 <a href="about.html">About</a>
                 <a href="https://patreon.com/DungeonMasterDen" target="_blank">Support</a>
             </div>

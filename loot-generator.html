@@ -6,7 +6,7 @@
     <title>Loot Generator | The Beholder's Gazette</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700;900&family=EB+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="homepage.css">
     <style>
@@ -32,7 +32,7 @@
             margin: 0 auto;
         }
         .loot-hero-logo {
-            font-family: 'Cinzel Decorative', 'Cinzel', serif;
+            font-family: 'MedievalSharp', cursive;
             font-size: 3rem;
             color: var(--accent-gold);
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
@@ -239,7 +239,7 @@
             font-size: 1.5rem;
             font-weight: bold;
             color: var(--accent-gold);
-            font-family: 'Cinzel Decorative', 'Cinzel', serif;
+            font-family: 'MedievalSharp', cursive;
         }
         .loot-section {
             background: linear-gradient(145deg, #252529, #1f1f23);
@@ -272,7 +272,7 @@
             font-size: 1.6rem;
             font-weight: bold;
             color: var(--accent-gold);
-            font-family: 'Cinzel Decorative', 'Cinzel', serif;
+            font-family: 'MedievalSharp', cursive;
         }
         .coin-type {
             font-size: 0.8rem;
@@ -456,26 +456,27 @@
     </style>
 </head>
 <body>
-    <section class="loot-hero">
-        <div class="loot-hero-overlay"></div>
-        <div class="loot-hero-content">
-            <div class="loot-hero-logo">💎 The Vault of Wonders</div>
+    <section class="page-hero" style="background-image: url('https://images.unsplash.com/photo-1605218427306-635ba2439af2?w=1920&q=80'); background-size:cover; background-position:center;">
+        <div class="page-hero-overlay"></div>
+        <div class="page-hero-content">
+            <div class="page-hero-logo">💎 The Vault of Wonders</div>
             <p class="loot-hero-tagline">"Every Dungeon Deserves Better Loot"</p>
             <p class="loot-hero-description">Generate DMG-compliant treasure with balanced coins, gems, art objects, and magic items. Because your players deserve more than 37 copper pieces.</p>
         </div>
     </section>
-    <nav class="main-nav">
-        <ul>
-            <li><a href="index.html">🏠 Home</a></li>
-            <li><a href="economy.html">💰 Economy</a></li>
-            <li><a href="rumors.html">🍺 Tavern</a></li>
-            <li><a href="npc-generator.html">🎭 Town Square</a></li>
-            <li><a href="loot-generator.html" class="active">💎 Loot</a></li>
-            <li><a href="encounter.html">⚔️ Encounters</a></li>
-            <li><a href="spell-tome.html">📖 Spell Tome</a></li>
-            <li><a href="about.html">📜 About</a></li>
-        </ul>
-    </nav>
+      <!-- Navigation -->
+  <nav class="main-nav">
+    <ul>
+      <li><a href="index.html">🏠 Home</a></li>
+      <li><a href="economy.html">💰 Economy</a></li>
+      <li><a href="rumors.html">🍺 Tavern</a></li>
+      <li><a href="npc-generator.html">🎭 Town Square</a></li>
+      <li><a href="loot-generator.html" class="active">💎 Loot</a></li>
+      <li><a href="encounter.html">⚔️ Encounters</a></li>
+      <li><a href="spellbook.html">📖 Spellbook</a></li>
+      <li><a href="about.html">📜 About</a></li>
+    </ul>
+  </nav>
     <div class="ticker-wrap">
         <div class="ticker">
             💰 LOOT ALERT: "Dragon hoard inflation at 300%" &nbsp;&bull;&nbsp; 
@@ -586,7 +587,7 @@
             <p style="margin: 15px 0; color: #888;">Remember: Divide loot fairly, or the bard will write a song about you. A unflattering one.</p>
             <div class="footer-links">
                 <a href="index.html">Home</a>
-                <a href="loot-generator.html">Loot</a>
+                <a href="loot-generator.html" class="active">Loot</a>
                 <a href="about.html">About</a>
                 <a href="https://patreon.com/DungeonMasterDen" target="_blank">Support</a>
             </div>

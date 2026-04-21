@@ -6,7 +6,7 @@
     <title>About | The Beholder's Gazette</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700;900&family=EB+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="homepage.css">
     <style>
@@ -32,7 +32,7 @@
             margin: 0 auto;
         }
         .about-hero-logo {
-            font-family: 'Cinzel Decorative', 'Cinzel', serif;
+            font-family: 'MedievalSharp', cursive;
             font-size: 3rem;
             color: var(--accent-gold);
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
@@ -143,7 +143,7 @@
             color: var(--accent-gold);
             font-size: 1.2rem;
             margin-bottom: 8px;
-            font-family: 'Cinzel Decorative', 'Cinzel', serif;
+            font-family: 'MedievalSharp', cursive;
         }
         .team-card .role {
             color: #888;
@@ -225,24 +225,26 @@
     </style>
 </head>
 <body>
-    <section class="about-hero">
-        <div class="about-hero-overlay"></div>
-        <div class="about-hero-content">
-            <div class="about-hero-logo">📜 About The Gazette</div>
+    <section class="page-hero" style="background-image: url('https://images.unsplash.com/photo-1507842217121-9e93c8aaf27c?w=1920&q=80'); background-size:cover; background-position:center;">
+        <div class="page-hero-overlay"></div>
+        <div class="page-hero-content">
+            <div class="page-hero-logo">📜 About The Gazette</div>
             <p style="color: #ccc; font-size: 1.2rem; font-style: italic;">"Truth is Subjective, But Entertainment is Eternal"</p>
         </div>
     </section>
-    <nav class="main-nav">
-        <ul>
-            <li><a href="index.html">🏠 Home</a></li>
-            <li><a href="economy.html">💰 Economy</a></li>
-            <li><a href="rumors.html">🍺 Tavern</a></li>
-            <li><a href="npc-generator.html">🎭 Town Square</a></li>
-            <li><a href="loot-generator.html">💎 Loot</a></li>
-            <li><a href="encounter.html">⚔️ Encounters</a></li>
-            <li><a href="about.html" class="active">📜 About</a></li>
-        </ul>
-    </nav>
+      <!-- Navigation -->
+  <nav class="main-nav">
+    <ul>
+      <li><a href="index.html">🏠 Home</a></li>
+      <li><a href="economy.html">💰 Economy</a></li>
+      <li><a href="rumors.html">🍺 Tavern</a></li>
+      <li><a href="npc-generator.html">🎭 Town Square</a></li>
+      <li><a href="loot-generator.html">💎 Loot</a></li>
+      <li><a href="encounter.html">⚔️ Encounters</a></li>
+      <li><a href="spellbook.html">📖 Spellbook</a></li>
+      <li><a href="about.html" class="active">📜 About</a></li>
+    </ul>
+  </nav>
     <div class="ticker-wrap">
         <div class="ticker">
             📰 ABOUT US: "Founded by bards, run by wizards" &nbsp;&bull;&nbsp; 
@@ -370,8 +372,8 @@
             <p style="margin: 15px 0; color: #888;">Disclaimer: All news is subject to DM approval. No dragons were harmed in the making of this website. Several goblins, however, did not survive.</p>
             <div class="footer-links">
                 <a href="index.html">Home</a>
-                <a href="about.html">About</a>
-                <a href="about.html">Contact</a>
+                <a href="about.html" class="active">About</a>
+                <a href="about.html" class="active">Contact</a>
                 <a href="https://patreon.com/DungeonMasterDen" target="_blank">Support</a>
             </div>
             <p style="margin-top: 20px; color: #444; font-size: 0.75rem;">Powered by Static Magic &copy; <span id="year"></span></p>
