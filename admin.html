@@ -127,6 +127,8 @@
       transition: all var(--transition);
     }
     .new-article-btn:hover { background: linear-gradient(135deg, var(--gold-mid), var(--gold-bright)); }
+    .realm-btn { background: linear-gradient(135deg, #4a1010, var(--crimson)) !important; color: var(--text-bright) !important; margin-top: 8px; }
+    .realm-btn:hover { background: linear-gradient(135deg, var(--crimson), var(--crimson-b)) !important; }
 
     .article-list { list-style: none; }
     .article-list-item {
@@ -327,6 +329,10 @@
       </div>
 
       <div class="sidebar-section">
+        <button class="new-article-btn realm-btn" onclick="newBrief()">🔮 New Realm Brief</button>
+      </div>
+
+      <div class="sidebar-section">
         <div class="sidebar-title">📊 Gazette Stats</div>
         <div class="stat-grid">
           <div class="stat-box">
@@ -359,6 +365,14 @@
         <button class="export-btn" onclick="importClick()">📤 Import articles.json</button>
         <input type="file" id="import-file" accept=".json" onchange="importJSON(event)">
       </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title">🔮 Realm Briefs</div>
+        <ul class="article-list" id="brief-list">
+          <li style="padding:12px 20px;color:var(--text-dim);font-size:0.76rem;font-style:italic;">No briefs yet</li>
+        </ul>
+        <button class="export-btn" style="margin-top:8px;" onclick="publishBriefs()">📥 Publish briefs.json</button>
+      </div>
     </aside>
 
     <!-- Main Panel -->
@@ -369,6 +383,7 @@
         <p>Select an article from the left to edit it,<br>or press "New Article" to begin a fresh scroll.</p>
       </div>
       <div id="editor-view" style="display:none;"></div>
+      <div id="realm-view"  style="display:none;"></div>
     </main>
   </div>
 </div>
@@ -427,6 +442,8 @@ async function init() {
   }
   renderSidebar();
   updateStats();
+  await loadBriefs();
+  renderBriefSidebar();
 }
 
 // ══════════════════════════════════════════════════
@@ -457,6 +474,7 @@ function updateStats() {
 // ══════════════════════════════════════════════════
 function showEditor(article) {
   document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('realm-view').style.display  = 'none';
   const view = document.getElementById('editor-view');
   view.style.display = 'block';
 
@@ -718,18 +736,212 @@ function formatDate(s) {
   return new Date(s).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
 }
 
-function esc(str) {
-  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+// ══════════════════════════════════════════════════
+//  REALM BRIEFS
+// ══════════════════════════════════════════════════
+//  REALM BRIEFS — stored in briefs.json
+//  localStorage is used as a live draft cache only.
+//  "Publish" downloads a new briefs.json to deploy.
+// ══════════════════════════════════════════════════
+const BRIEFS_KEY  = 'gazette_realm_briefs_draft';
+const BRIEFS_FILE = 'briefs.json';
+const BRIEF_CATS  = ['D&D','Pathfinder','Critical Role','Industry','VTT','Indie','Opinion','Rumor','Review','Other'];
+let briefs        = [];
+let currentBriefId = null;
+
+async function loadBriefs() {
+  // 1. Try to fetch the live briefs.json from the site
+  try {
+    const r = await fetch(BRIEFS_FILE + '?t=' + Date.now());
+    const d = await r.json();
+    briefs = d.briefs || [];
+    // Sync draft cache with live file
+    localStorage.setItem(BRIEFS_KEY, JSON.stringify(briefs));
+  } catch(e) {
+    // 2. Fall back to draft cache if file unavailable (e.g. file:// local)
+    try { briefs = JSON.parse(localStorage.getItem(BRIEFS_KEY) || '[]'); }
+    catch(e2) { briefs = []; }
+  }
 }
 
-let toastTimer;
-function toast(msg, isError = false) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = 'toast show' + (isError ? ' error' : '');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
+function saveBriefs() {
+  // Always keep draft cache in sync
+  localStorage.setItem(BRIEFS_KEY, JSON.stringify(briefs));
 }
+
+function publishBriefs() {
+  // Download briefs.json — replace this file in your repo to go live
+  const json = JSON.stringify({ briefs }, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = 'briefs.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('📥 briefs.json downloaded — replace the file in your site folder to publish');
+}
+
+function renderBriefSidebar() {
+  const list = document.getElementById('brief-list');
+  if (!briefs.length) {
+    list.innerHTML = '<li style="padding:12px 20px;color:var(--text-dim);font-size:0.76rem;font-style:italic;">No briefs yet</li>';
+    return;
+  }
+  list.innerHTML = [...briefs]
+    .sort((a,b) => new Date(b.date) - new Date(a.date))
+    .map(b => `
+      <li class="article-list-item ${currentBriefId === b.id ? 'active' : ''}"
+          onclick="editBrief('${esc(b.id)}')">
+        <div class="ali-title">${esc(b.title)}</div>
+        <div class="ali-meta">${esc(b.category)} · ${formatDate(b.date)}</div>
+      </li>`).join('');
+}
+
+function showRealmView(html) {
+  // Hide everything else
+  document.getElementById('empty-state').style.display  = 'none';
+  document.getElementById('editor-view').style.display  = 'none';
+  const rv = document.getElementById('realm-view');
+  rv.style.display = 'block';
+  rv.innerHTML = html;
+  document.getElementById('main-panel').scrollTop = 0;
+}
+
+function newBrief() {
+  currentBriefId = null;
+  renderBriefSidebar();
+  showRealmView(buildBriefForm({}));
+  document.getElementById('bf-title')?.focus();
+}
+
+function editBrief(id) {
+  const b = briefs.find(x => x.id === id);
+  if (!b) return;
+  currentBriefId = id;
+  renderBriefSidebar();
+  showRealmView(buildBriefForm(b));
+}
+
+function buildBriefForm(b) {
+  const isNew = !b.id;
+  const catOpts = BRIEF_CATS.map(c =>
+    `<option value="${c}" ${c === (b.category || 'D&D') ? 'selected' : ''}>${c}</option>`
+  ).join('');
+
+  return `
+    <div class="editor-header">
+      <div class="editor-heading">${isNew ? '🔮 New Realm Brief' : '✏️ Edit Realm Brief'}</div>
+      <div class="editor-actions">
+        <a class="preview-btn" href="this-week.html" target="_blank">👁️ View Page</a>
+        ${!isNew ? `<button class="delete-btn" onclick="deleteBrief('${esc(b.id)}')">🗑️ Delete</button>` : ''}
+        <button class="save-btn" onclick="saveBrief()">💾 Save Brief</button>
+      </div>
+    </div>
+
+    <p style="font-family:var(--font-ui);font-size:0.82rem;color:var(--text-dim);margin-bottom:24px;font-style:italic;">
+      Briefs appear on the <strong style="color:var(--gold-dim)">This Week in the Realm</strong> page
+      with a <strong style="color:var(--gold-dim)">📌 Gazette Original</strong> badge, pinned above the AI news digest.
+    </p>
+
+    <div class="form-grid">
+      <div class="field-group">
+        <label class="field-label">Category *</label>
+        <select class="field-select" id="bf-category">${catOpts}</select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Publish Date</label>
+        <input class="field-input" id="bf-date" type="date" value="${b.date || today()}">
+      </div>
+    </div>
+
+    <div class="form-grid full" style="margin-top:14px;">
+      <div class="field-group">
+        <label class="field-label">Headline *</label>
+        <input class="field-input" id="bf-title" type="text"
+               value="${esc(b.title || '')}"
+               placeholder="e.g. Wizards of the Coast Announces Surprise Sourcebook…">
+      </div>
+    </div>
+
+    <div class="form-grid full" style="margin-top:14px;">
+      <div class="field-group">
+        <label class="field-label">Summary * <span style="color:var(--text-dim);font-size:0.7rem;font-style:italic;">(2–3 sentences — the main facts)</span></label>
+        <textarea class="field-textarea" id="bf-summary" rows="3"
+                  placeholder="What happened? Keep it factual and clear.">${esc(b.summary || '')}</textarea>
+      </div>
+    </div>
+
+    <div class="form-grid full" style="margin-top:14px;">
+      <div class="field-group">
+        <label class="field-label">Gazette Commentary <span style="color:var(--text-dim);font-size:0.7rem;font-style:italic;">(optional — the snarky in-universe take)</span></label>
+        <textarea class="field-textarea" id="bf-commentary" rows="2"
+                  placeholder="e.g. Our court wizard notes this is the third \'surprise\' announcement this moon cycle…">${esc(b.commentary || '')}</textarea>
+      </div>
+    </div>
+
+    <div class="form-grid" style="margin-top:14px;">
+      <div class="field-group">
+        <label class="field-label">Source Name</label>
+        <input class="field-input" id="bf-source" type="text"
+               value="${esc(b.source || '')}"
+               placeholder="e.g. D&D Beyond, ICv2, Polygon…">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Source URL <span style="color:var(--text-dim);font-size:0.7rem;">(optional)</span></label>
+        <input class="field-input" id="bf-url" type="url"
+               value="${esc(b.url || '')}"
+               placeholder="https://…">
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:24px;padding-top:20px;border-top:var(--border-gold);">
+      ${!isNew ? `<button class="delete-btn" onclick="deleteBrief('${esc(b.id)}')">🗑️ Delete</button>` : ''}
+      <button class="save-btn" onclick="saveBrief()">💾 Save Brief</button>
+      <button class="save-btn" style="background:linear-gradient(135deg,var(--crimson),#8b2020);" onclick="saveBrief();publishBriefs()">📥 Save & Publish</button>
+    </div>
+  `;
+}
+
+function saveBrief() {
+  const title      = document.getElementById('bf-title')?.value.trim();
+  const category   = document.getElementById('bf-category')?.value;
+  const summary    = document.getElementById('bf-summary')?.value.trim();
+  const commentary = document.getElementById('bf-commentary')?.value.trim();
+  const source     = document.getElementById('bf-source')?.value.trim();
+  const url        = document.getElementById('bf-url')?.value.trim();
+  const date       = document.getElementById('bf-date')?.value || today();
+
+  if (!title)   { toast('⚠️ Headline is required', true); return; }
+  if (!summary) { toast('⚠️ Summary is required', true);  return; }
+
+  const id = currentBriefId || ('brief-' + Date.now());
+
+  const brief = { id, title, category, summary, commentary, source, url, date };
+
+  if (currentBriefId) {
+    const idx = briefs.findIndex(b => b.id === currentBriefId);
+    if (idx >= 0) briefs[idx] = brief;
+  } else {
+    briefs.unshift(brief);
+    currentBriefId = id;
+  }
+
+  saveBriefs();
+  renderBriefSidebar();
+  toast('🔮 Brief saved — visible on This Week in the Realm');
+}
+
+function deleteBrief(id) {
+  if (!confirm('Delete this brief? It will be removed from the page immediately.')) return;
+  briefs = briefs.filter(b => b.id !== id);
+  currentBriefId = null;
+  saveBriefs();
+  renderBriefSidebar();
+  document.getElementById('realm-view').style.display  = 'none';
+  document.getElementById('empty-state').style.display = 'block';
+  toast('🗑️ Brief deleted');
+}
+
 </script>
 </body>
 </html>

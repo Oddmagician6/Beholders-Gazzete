@@ -162,6 +162,26 @@
       line-height: 1.75;
       margin-bottom: 14px;
     }
+    .news-item-pinned {
+      border-color: var(--gold-mid);
+      background: linear-gradient(145deg, var(--bg-card), rgba(212,168,67,0.04));
+    }
+    .news-item-pinned::before {
+      background: var(--gold-bright);
+    }
+    .pinned-badge {
+      display: inline-block;
+      font-family: var(--font-head);
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #000;
+      background: var(--gold-bright);
+      padding: 2px 10px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
     .news-item-commentary {
       font-family: var(--font-body);
       font-style: italic;
@@ -457,9 +477,22 @@
     document.getElementById('issue-date').textContent =
       `Week of ${fmt(weekStart)} – ${fmt(weekEnd)}, ${weekEnd.getFullYear()}`;
 
-    let allItems = [];
+    let pinnedItems  = [];   // hand-written briefs from briefs.json
+    let allItems     = [];   // AI-fetched items
     let activeFilter = 'all';
 
+    // ── Load pinned briefs from briefs.json ───────────────
+    async function loadPinned() {
+      try {
+        const r = await fetch('briefs.json?t=' + Date.now());
+        const d = await r.json();
+        pinnedItems = d.briefs || [];
+      } catch(e) {
+        pinnedItems = []; // file missing or local — silently skip
+      }
+    }
+
+    // ── Fetch AI digest ───────────────────────────────────
     async function loadDigest() {
       const feed = document.getElementById('digest-feed');
       const btn  = document.getElementById('refresh-btn');
@@ -479,72 +512,88 @@
             model: 'claude-sonnet-4-20250514',
             max_tokens: 1000,
             tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-            system: `You are the news editor for The Beholder's Gazette, a D&D satirical news site. 
-Search the web for the 4-5 most interesting real TTRPG/D&D/tabletop gaming news stories from this past week.
-Return ONLY valid JSON, no markdown, no preamble. Format:
-{
-  "topic": "short punchy headline for this week's theme (max 8 words)",
-  "items": [
-    {
-      "category": "one of: D&D | Pathfinder | Critical Role | Industry | VTT | Indie",
-      "title": "real factual news headline",
-      "summary": "2-3 sentence factual summary of what happened",
-      "commentary": "1-2 sentence witty Beholder's Gazette in-universe commentary written like a medieval journalist (funny, sarcastic, fantasy-themed)",
-      "source": "publication name",
-      "url": "actual URL if you have it, otherwise empty string"
-    }
-  ]
-}`,
+            system: `You are the news editor for The Beholder's Gazette, a D&D satirical news site. \nSearch the web for the 4-5 most interesting real TTRPG/D&D/tabletop gaming news stories from this past week.\nReturn ONLY valid JSON, no markdown, no preamble. Format:\n{\n  "topic": "short punchy headline for this week\\'s theme (max 8 words)",\n  "items": [\n    {\n      "category": "one of: D&D | Pathfinder | Critical Role | Industry | VTT | Indie",\n      "title": "real factual news headline",\n      "summary": "2-3 sentence factual summary of what happened",\n      "commentary": "1-2 sentence witty Beholder\\'s Gazette in-universe commentary written like a medieval journalist (funny, sarcastic, fantasy-themed)",\n      "source": "publication name",\n      "url": "actual URL if you have it, otherwise empty string"\n    }\n  ]\n}`,
             messages: [{ role: 'user', content: 'What are the top TTRPG and D&D news stories from this week? Search the web and return the JSON digest.' }]
           })
         });
 
-        const data = await response.json();
-        const text = data.content.map(b => b.text || '').join('');
+        const data  = await response.json();
+        const text  = data.content.map(b => b.text || '').join('');
         const clean = text.replace(/```json|```/g, '').trim();
         const digest = JSON.parse(clean);
 
         allItems = digest.items || [];
         document.getElementById('issue-topic').textContent = digest.topic || 'Latest Dispatches';
-        document.getElementById('issue-count').textContent = `${allItems.length} dispatches`;
-
+        updateCount();
         renderItems();
+
       } catch (err) {
         console.error(err);
-        feed.innerHTML = `
-          <div class="error-state">
-            <h3>🔮 Orb Temporarily Clouded</h3>
-            <p>Our scrying orb has gone dark — possibly due to a wild magic surge. Try again in a moment.</p>
-            <button class="btn" onclick="loadDigest()">Try Again</button>
-          </div>`;
+        // Still show pinned items even if AI fails
+        renderItems();
+        if (!pinnedItems.length) {
+          document.getElementById('digest-feed').innerHTML = `
+            <div class="error-state">
+              <h3>🔮 Orb Temporarily Clouded</h3>
+              <p>Our scrying orb has gone dark — possibly due to a wild magic surge. Try again in a moment.</p>
+              <button class="btn" onclick="loadDigest()">Try Again</button>
+            </div>`;
+        }
       } finally {
         btn.classList.remove('spinning');
       }
     }
 
+    function updateCount() {
+      const total = allItems.length + pinnedItems.length;
+      document.getElementById('issue-count').textContent = `${total} dispatch${total !== 1 ? 'es' : ''}`;
+    }
+
+    // ── Render feed (pinned first, then AI) ───────────────
     function renderItems() {
       const feed = document.getElementById('digest-feed');
+
+      const combined = [
+        ...pinnedItems.map(i => ({ ...i, _pinned: true })),
+        ...allItems
+      ];
+
       const visible = activeFilter === 'all'
-        ? allItems
-        : allItems.filter(i => i.category === activeFilter);
+        ? combined
+        : combined.filter(i => i.category === activeFilter);
 
       if (!visible.length) {
-        feed.innerHTML = `<div class="loading-state"><span class="loading-rune">📜</span><p class="loading-text">No dispatches found for this topic</p></div>`;
+        feed.innerHTML = `<div class="loading-state"><span class="loading-rune">📜</span><p class="loading-text">No dispatches found for this realm</p></div>`;
         return;
       }
 
-      feed.innerHTML = visible.map((item, idx) => `
-        <div class="news-item" style="animation: fadeInUp 0.4s ease ${idx * 0.08}s both;">
-          <div class="news-item-category">${escHtml(item.category)}</div>
+      feed.innerHTML = visible.map((item, idx) => {
+        const pinClass  = item._pinned ? ' news-item-pinned' : '';
+        const pinBadge  = item._pinned
+          ? `<span class="pinned-badge">📌 Gazette Original</span>`
+          : '';
+        const commentary = item.commentary
+          ? `<div class="news-item-commentary">${escHtml(item.commentary)}</div>`
+          : '';
+        const sourceStr = escHtml(item.source || "The Beholder's Gazette");
+        const linkStr   = item.url
+          ? `<a class="news-item-link" href="${escHtml(item.url)}" target="_blank" rel="noopener">Read Full Scroll →</a>`
+          : '';
+
+        return `<div class="news-item${pinClass}" style="animation: fadeInUp 0.4s ease ${idx * 0.08}s both;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+            <div class="news-item-category">${escHtml(item.category)}</div>
+            ${pinBadge}
+          </div>
           <h2 class="news-item-title">${escHtml(item.title)}</h2>
           <p class="news-item-summary">${escHtml(item.summary)}</p>
-          <div class="news-item-commentary">${escHtml(item.commentary)}</div>
+          ${commentary}
           <div class="news-item-footer">
-            <span class="news-item-source">📰 ${escHtml(item.source)}</span>
-            ${item.url ? `<a class="news-item-link" href="${escHtml(item.url)}" target="_blank" rel="noopener">Read Full Scroll →</a>` : ''}
+            <span class="news-item-source">📰 ${sourceStr}</span>
+            ${linkStr}
           </div>
-        </div>
-      `).join('');
+        </div>`;
+      }).join('');
     }
 
     function escHtml(str) {
@@ -552,7 +601,7 @@ Return ONLY valid JSON, no markdown, no preamble. Format:
       return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
-    // Filter pills
+    // ── Filter pills ──────────────────────────────────────
     document.getElementById('topic-filters').addEventListener('click', e => {
       const pill = e.target.closest('.topic-pill');
       if (!pill) return;
@@ -562,13 +611,18 @@ Return ONLY valid JSON, no markdown, no preamble. Format:
       renderItems();
     });
 
-    // Add fade-in animation
+    // ── Fade-in animation ─────────────────────────────────
     const style = document.createElement('style');
     style.textContent = `@keyframes fadeInUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }`;
     document.head.appendChild(style);
 
-    // Load on page open
-    loadDigest();
+    // ── Init ──────────────────────────────────────────────
+    (async () => {
+      await loadPinned();   // fetch briefs.json first
+      updateCount();
+      if (pinnedItems.length) renderItems(); // show pinned while AI loads
+      loadDigest();
+    })();
   </script>
 </body>
 </html>
