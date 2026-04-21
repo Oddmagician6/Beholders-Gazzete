@@ -391,14 +391,41 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════════════════════════════════════
-//  CONFIG — change this passphrase!
-// ══════════════════════════════════════════════════
-const PASSPHRASE = 'gazette2024';
+// ════════════════════════════════════════════════════════════
+//  BEHOLDER'S GAZETTE — ADMIN PANEL
+// ════════════════════════════════════════════════════════════
 
-// ══════════════════════════════════════════════════
-//  AUTH
-// ══════════════════════════════════════════════════
+// ── CONFIG ───────────────────────────────────────────────────
+const PASSPHRASE = 'gazette2024'; // change this!
+
+// ── UTILITIES ────────────────────────────────────────────────
+function esc(str) {
+  return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function slugify(str) {
+  return str.toLowerCase().replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-').replace(/-+/g,'-').slice(0,60);
+}
+
+function today() {
+  return new Date().toISOString().slice(0,10);
+}
+
+function formatDate(s) {
+  if (!s) return '—';
+  return new Date(s).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+}
+
+let toastTimer;
+function toast(msg, isError = false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (isError ? ' error' : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+// ── AUTH ──────────────────────────────────────────────────────
 function attemptLogin() {
   const val = document.getElementById('pw-input').value;
   if (val === PASSPHRASE) {
@@ -415,76 +442,75 @@ document.getElementById('pw-input').addEventListener('keydown', e => {
   if (e.key === 'Enter') attemptLogin();
 });
 
-function logout() {
-  location.reload();
-}
+function logout() { location.reload(); }
 
-// ══════════════════════════════════════════════════
-//  STATE
-// ══════════════════════════════════════════════════
-let articles = [];
-let currentId = null;  // id of article being edited (null = new)
-const CATEGORIES = ['Economy','Politics','Technology','Local Chaos','Creature Features','Labor','International','Regulations','Product Safety','Education','Health','Public Safety','Business','Social','Environment','Finance','Real Estate','Transport','Lifestyle','Tavern Tales','Events','Zoning','Scandal','Legislation','Elections'];
-const AUTHORS    = ['Gobwiz Quillnib','Gimble Inkquill','Elara Swiftquill','Marcus Goldhand','Thorin Ironforge','Zara Spellweaver','The Gazette Staff'];
+// ── STATE ─────────────────────────────────────────────────────
+let articles       = [];
+let currentId      = null;
 
-// ══════════════════════════════════════════════════
-//  INIT — load articles.json via fetch
-// ══════════════════════════════════════════════════
+const CATEGORIES = ['Economy','Politics','Technology','Local Chaos','Creature Features','Labor','International',
+  'Regulations','Product Safety','Education','Health','Public Safety','Business','Social','Environment',
+  'Finance','Real Estate','Transport','Lifestyle','Tavern Tales','Events','Zoning','Scandal','Legislation','Elections'];
+const AUTHORS = ['Gobwiz Quillnib','Gimble Inkquill','Elara Swiftquill','Marcus Goldhand',
+  'Thorin Ironforge','Zara Spellweaver','The Gazette Staff'];
+
+// ── INIT ──────────────────────────────────────────────────────
 async function init() {
+  // Load articles
   try {
     const r = await fetch('articles.json?t=' + Date.now());
     const d = await r.json();
     articles = d.articles || [];
   } catch(e) {
-    // If fetch fails (file:// protocol), start empty
     articles = [];
     toast('⚠️ Could not load articles.json — start fresh or import', true);
   }
   renderSidebar();
   updateStats();
+
+  // Load briefs
   await loadBriefs();
   renderBriefSidebar();
 }
 
-// ══════════════════════════════════════════════════
-//  SIDEBAR
-// ══════════════════════════════════════════════════
+// ── ARTICLE SIDEBAR ───────────────────────────────────────────
 function renderSidebar() {
-  const list = document.getElementById('article-list');
+  const list   = document.getElementById('article-list');
   const sorted = [...articles].sort((a,b) => new Date(b.date) - new Date(a.date));
   list.innerHTML = sorted.map(a => `
     <li class="article-list-item ${currentId === a.id ? 'active' : ''}" onclick="editArticle('${esc(a.id)}')">
-      <div class="ali-title">${esc(a.title)}${a.featured ? '<span class="ali-badge">★</span>':''}
-      </div>
-      <div class="ali-meta">${esc(a.category||'')} · ${formatDate(a.date)}</div>
-    </li>
-  `).join('');
+      <div class="ali-title">${esc(a.title)}${a.featured ? '<span class="ali-badge">★</span>' : ''}</div>
+      <div class="ali-meta">${esc(a.category || '')} · ${formatDate(a.date)}</div>
+    </li>`).join('');
   updateStats();
 }
 
 function updateStats() {
   document.getElementById('stat-total').textContent    = articles.length;
-  document.getElementById('stat-featured').textContent = articles.filter(a=>a.featured).length;
-  document.getElementById('stat-cats').textContent     = new Set(articles.map(a=>a.category).filter(Boolean)).size;
-  document.getElementById('stat-authors').textContent  = new Set(articles.map(a=>a.author).filter(Boolean)).size;
+  document.getElementById('stat-featured').textContent = articles.filter(a => a.featured).length;
+  document.getElementById('stat-cats').textContent     = new Set(articles.map(a => a.category).filter(Boolean)).size;
+  document.getElementById('stat-authors').textContent  = new Set(articles.map(a => a.author).filter(Boolean)).size;
 }
 
-// ══════════════════════════════════════════════════
-//  EDITOR
-// ══════════════════════════════════════════════════
-function showEditor(article) {
-  document.getElementById('empty-state').style.display = 'none';
-  document.getElementById('realm-view').style.display  = 'none';
-  const view = document.getElementById('editor-view');
-  view.style.display = 'block';
+// ── SHOW / HIDE PANELS ────────────────────────────────────────
+function showPanel(panelId) {
+  ['empty-state','editor-view','realm-view'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  document.getElementById(panelId).style.display = 'block';
+  document.getElementById('main-panel').scrollTop = 0;
+}
 
+// ── ARTICLE EDITOR ────────────────────────────────────────────
+function showEditor(article) {
+  showPanel('editor-view');
+  const view  = document.getElementById('editor-view');
   const isNew = !article.id;
-  const catOptions = CATEGORIES.map(c =>
-    `<option value="${c}" ${c===article.category?'selected':''}>${c}</option>`
-  ).join('');
+
+  const catOptions    = CATEGORIES.map(c =>
+    `<option value="${c}" ${c === article.category ? 'selected' : ''}>${c}</option>`).join('');
   const authorOptions = AUTHORS.map(a =>
-    `<option value="${a}" ${a===article.author?'selected':''}>${a}</option>`
-  ).join('');
+    `<option value="${a}" ${a === article.author ? 'selected' : ''}>${a}</option>`).join('');
 
   view.innerHTML = `
     <div class="editor-header">
@@ -492,15 +518,16 @@ function showEditor(article) {
       <div class="editor-actions">
         <button class="preview-btn" onclick="previewArticle()">👁️ Preview</button>
         ${!isNew ? `<button class="delete-btn" onclick="deleteArticle('${esc(article.id)}')">🗑️ Delete</button>` : ''}
-        <button class="save-btn" id="save-btn" onclick="saveArticle()">💾 Save Article</button>
+        <button class="save-btn" onclick="saveArticle()">💾 Save Article</button>
       </div>
     </div>
 
     <div class="form-grid full">
       <div class="field-group">
         <label class="field-label">Headline *</label>
-        <input class="field-input" id="f-title" type="text" value="${esc(article.title||'')}" placeholder="Write a headline worthy of the Gazette…" oninput="updateIdPreview()">
-        <div class="id-preview" id="id-preview">${article.id ? 'ID: '+article.id : ''}</div>
+        <input class="field-input" id="f-title" type="text" value="${esc(article.title || '')}"
+               placeholder="Write a headline worthy of the Gazette…" oninput="updateIdPreview()">
+        <div class="id-preview" id="id-preview">${article.id ? 'ID: ' + article.id : ''}</div>
       </div>
     </div>
 
@@ -522,11 +549,11 @@ function showEditor(article) {
       </div>
       <div class="field-group">
         <label class="field-label">Publish Date</label>
-        <input class="field-input" id="f-date" type="date" value="${article.date||today()}">
+        <input class="field-input" id="f-date" type="date" value="${article.date || today()}">
       </div>
       <div class="field-group" style="justify-content:flex-end;padding-bottom:4px;">
         <div class="checkbox-row">
-          <input type="checkbox" id="f-featured" ${article.featured?'checked':''}>
+          <input type="checkbox" id="f-featured" ${article.featured ? 'checked' : ''}>
           <label for="f-featured">★ Feature this article (shows at top of home page)</label>
         </div>
       </div>
@@ -535,7 +562,8 @@ function showEditor(article) {
     <div class="form-grid full" style="margin-bottom:16px;">
       <div class="field-group">
         <label class="field-label">Excerpt / Teaser</label>
-        <textarea class="field-textarea" id="f-excerpt" rows="3" placeholder="One or two punchy sentences shown in article cards…">${esc(article.excerpt||'')}</textarea>
+        <textarea class="field-textarea" id="f-excerpt" rows="3"
+                  placeholder="One or two punchy sentences shown in article cards…">${esc(article.excerpt || '')}</textarea>
       </div>
     </div>
 
@@ -551,17 +579,16 @@ function showEditor(article) {
         <button class="toolbar-btn" onclick="insertHr()">— Divider</button>
         <button class="toolbar-btn" onclick="wrapLink()">🔗 Link</button>
       </div>
-      <textarea class="content-editor" id="f-content" placeholder="Write the article here. Use HTML tags like &lt;p&gt;, &lt;strong&gt;, &lt;em&gt;, etc. Each paragraph should be wrapped in &lt;p&gt;&lt;/p&gt;…">${esc(article.content||'')}</textarea>
+      <textarea class="content-editor" id="f-content"
+                placeholder="Write the article here. Each paragraph should be wrapped in &lt;p&gt;&lt;/p&gt;…">${esc(article.content || '')}</textarea>
     </div>
 
     <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px;">
       <button class="preview-btn" onclick="previewArticle()">👁️ Preview</button>
       ${!isNew ? `<button class="delete-btn" onclick="deleteArticle('${esc(article.id)}')">🗑️ Delete</button>` : ''}
       <button class="save-btn" onclick="saveArticle()">💾 Save Article</button>
-    </div>
-  `;
+    </div>`;
 
-  // Handle custom category/author
   document.getElementById('f-category').addEventListener('change', function() {
     if (this.value === '__custom__') {
       const v = prompt('Enter custom category:');
@@ -582,7 +609,7 @@ function newArticle() {
   currentId = null;
   renderSidebar();
   showEditor({});
-  document.getElementById('f-title')?.focus();
+  setTimeout(() => document.getElementById('f-title')?.focus(), 50);
 }
 
 function editArticle(id) {
@@ -591,7 +618,6 @@ function editArticle(id) {
   currentId = id;
   renderSidebar();
   showEditor(a);
-  document.getElementById('main-panel').scrollTop = 0;
 }
 
 function saveArticle() {
@@ -606,9 +632,8 @@ function saveArticle() {
   if (!title)    { toast('⚠️ Headline is required', true); return; }
   if (!category) { toast('⚠️ Category is required', true); return; }
 
-  const id = currentId || slugify(title);
-
-  const article = { id, title, category, author: author||'The Gazette Staff', date: date||today(), excerpt, content, featured };
+  const id      = currentId || slugify(title);
+  const article = { id, title, category, author: author || 'The Gazette Staff', date: date || today(), excerpt, content, featured };
 
   if (currentId) {
     const idx = articles.findIndex(a => a.id === currentId);
@@ -619,81 +644,61 @@ function saveArticle() {
   }
 
   renderSidebar();
-  toast('📜 Article saved! Download articles.json to publish.');
+  toast('📜 Article saved! Click Export to download articles.json.');
 }
 
 function deleteArticle(id) {
   if (!confirm('Delete this article? This cannot be undone.')) return;
-  articles = articles.filter(a => a.id !== id);
+  articles  = articles.filter(a => a.id !== id);
   currentId = null;
-  document.getElementById('editor-view').style.display = 'none';
-  document.getElementById('empty-state').style.display = 'block';
+  showPanel('empty-state');
   renderSidebar();
   toast('🗑️ Article deleted');
 }
 
 function previewArticle() {
-  const id = currentId || 'preview';
-  if (currentId) {
-    window.open('article.html?id=' + currentId, '_blank');
-  } else {
-    toast('💡 Save the article first, then preview it on the site.', true);
-  }
+  if (currentId) window.open('article.html?id=' + currentId, '_blank');
+  else toast('💡 Save the article first, then preview it.', true);
 }
 
-// ══════════════════════════════════════════════════
-//  TOOLBAR HELPERS
-// ══════════════════════════════════════════════════
+// ── TOOLBAR HELPERS ───────────────────────────────────────────
 function wrap(open, close) {
   const ta = document.getElementById('f-content');
   if (!ta) return;
-  const start = ta.selectionStart, end = ta.selectionEnd;
-  const sel = ta.value.substring(start, end);
-  ta.value = ta.value.substring(0, start) + open + sel + close + ta.value.substring(end);
+  const s = ta.selectionStart, e = ta.selectionEnd;
+  const sel = ta.value.substring(s, e);
+  ta.value = ta.value.substring(0, s) + open + sel + close + ta.value.substring(e);
   ta.focus();
-  ta.selectionStart = start + open.length;
-  ta.selectionEnd   = start + open.length + sel.length;
+  ta.selectionStart = s + open.length;
+  ta.selectionEnd   = s + open.length + sel.length;
 }
-
-function wrapLink() {
-  const url = prompt('Enter URL:');
-  if (url) wrap(`<a href="${url}">`, '</a>');
-}
-
-function insertHr() {
+function wrapLink()  { const u = prompt('Enter URL:'); if (u) wrap(`<a href="${u}">`, '</a>'); }
+function insertHr()  {
   const ta = document.getElementById('f-content');
   if (!ta) return;
-  const pos = ta.selectionEnd;
-  ta.value = ta.value.substring(0, pos) + '\n<hr>\n' + ta.value.substring(pos);
+  const p = ta.selectionEnd;
+  ta.value = ta.value.substring(0, p) + '\n<hr>\n' + ta.value.substring(p);
 }
 
-// ══════════════════════════════════════════════════
-//  ID PREVIEW
-// ══════════════════════════════════════════════════
 function updateIdPreview() {
-  if (currentId) return; // don't change existing IDs
-  const title = document.getElementById('f-title')?.value || '';
-  const id = slugify(title);
+  if (currentId) return;
+  const id = slugify(document.getElementById('f-title')?.value || '');
   const el = document.getElementById('id-preview');
   if (el) el.textContent = id ? 'ID: ' + id : '';
 }
 
-// ══════════════════════════════════════════════════
-//  IMPORT / EXPORT
-// ══════════════════════════════════════════════════
+// ── IMPORT / EXPORT ───────────────────────────────────────────
 function exportJSON() {
-  const json = JSON.stringify({ articles }, null, 2);
-  const blob = new Blob([json], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
+  const blob = new Blob([JSON.stringify({ articles }, null, 2)], { type: 'application/json' });
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
   a.download = 'articles.json';
   a.click();
-  toast('📥 articles.json downloaded — replace the one in your site folder');
+  URL.revokeObjectURL(a.href);
+  toast('📥 articles.json downloaded — replace the file in your site folder');
 }
 
-function importClick() {
-  document.getElementById('import-file').click();
-}
+function importClick() { document.getElementById('import-file').click(); }
 
 function importJSON(e) {
   const file = e.target.files[0];
@@ -703,76 +708,46 @@ function importJSON(e) {
     try {
       const data = JSON.parse(ev.target.result);
       if (!Array.isArray(data.articles)) throw new Error('Invalid format');
-      articles = data.articles;
+      articles  = data.articles;
       currentId = null;
-      document.getElementById('editor-view').style.display = 'none';
-      document.getElementById('empty-state').style.display = 'block';
+      showPanel('empty-state');
       renderSidebar();
       toast(`📤 Imported ${articles.length} articles`);
-    } catch(err) {
-      toast('⚠️ Invalid JSON file', true);
-    }
+    } catch(err) { toast('⚠️ Invalid JSON file', true); }
   };
   reader.readAsText(file);
   e.target.value = '';
 }
 
-// ══════════════════════════════════════════════════
-//  UTILITIES
-// ══════════════════════════════════════════════════
-function slugify(str) {
-  return str.toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .trim().replace(/\s+/g, '-')
-    .replace(/-+/g, '-').slice(0, 60);
-}
-
-function today() {
-  return new Date().toISOString().slice(0, 10);
-}
-
-function formatDate(s) {
-  if (!s) return '—';
-  return new Date(s).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
-}
-
-// ══════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════
 //  REALM BRIEFS
-// ══════════════════════════════════════════════════
-//  REALM BRIEFS — stored in briefs.json
-//  localStorage is used as a live draft cache only.
-//  "Publish" downloads a new briefs.json to deploy.
-// ══════════════════════════════════════════════════
+//  Stored in briefs.json (file-based, same pattern as articles)
+//  localStorage used as draft cache while working
+// ════════════════════════════════════════════════════════════
 const BRIEFS_KEY  = 'gazette_realm_briefs_draft';
-const BRIEFS_FILE = 'briefs.json';
 const BRIEF_CATS  = ['D&D','Pathfinder','Critical Role','Industry','VTT','Indie','Opinion','Rumor','Review','Other'];
-let briefs        = [];
+let briefs         = [];
 let currentBriefId = null;
 
 async function loadBriefs() {
-  // 1. Try to fetch the live briefs.json from the site
   try {
-    const r = await fetch(BRIEFS_FILE + '?t=' + Date.now());
+    const r = await fetch('briefs.json?t=' + Date.now());
     const d = await r.json();
     briefs = d.briefs || [];
-    // Sync draft cache with live file
     localStorage.setItem(BRIEFS_KEY, JSON.stringify(briefs));
   } catch(e) {
-    // 2. Fall back to draft cache if file unavailable (e.g. file:// local)
+    // Fallback to draft cache (works when opening admin locally via file://)
     try { briefs = JSON.parse(localStorage.getItem(BRIEFS_KEY) || '[]'); }
     catch(e2) { briefs = []; }
   }
 }
 
 function saveBriefs() {
-  // Always keep draft cache in sync
   localStorage.setItem(BRIEFS_KEY, JSON.stringify(briefs));
 }
 
 function publishBriefs() {
-  // Download briefs.json — replace this file in your repo to go live
-  const json = JSON.stringify({ briefs }, null, 2);
-  const blob = new Blob([json], { type: 'application/json' });
+  const blob = new Blob([JSON.stringify({ briefs }, null, 2)], { type: 'application/json' });
   const a    = document.createElement('a');
   a.href     = URL.createObjectURL(blob);
   a.download = 'briefs.json';
@@ -793,25 +768,16 @@ function renderBriefSidebar() {
       <li class="article-list-item ${currentBriefId === b.id ? 'active' : ''}"
           onclick="editBrief('${esc(b.id)}')">
         <div class="ali-title">${esc(b.title)}</div>
-        <div class="ali-meta">${esc(b.category)} · ${formatDate(b.date)}</div>
+        <div class="ali-meta">${esc(b.category || '')} · ${formatDate(b.date)}</div>
       </li>`).join('');
-}
-
-function showRealmView(html) {
-  // Hide everything else
-  document.getElementById('empty-state').style.display  = 'none';
-  document.getElementById('editor-view').style.display  = 'none';
-  const rv = document.getElementById('realm-view');
-  rv.style.display = 'block';
-  rv.innerHTML = html;
-  document.getElementById('main-panel').scrollTop = 0;
 }
 
 function newBrief() {
   currentBriefId = null;
   renderBriefSidebar();
-  showRealmView(buildBriefForm({}));
-  document.getElementById('bf-title')?.focus();
+  showPanel('realm-view');
+  document.getElementById('realm-view').innerHTML = buildBriefForm({});
+  setTimeout(() => document.getElementById('bf-title')?.focus(), 50);
 }
 
 function editBrief(id) {
@@ -819,14 +785,14 @@ function editBrief(id) {
   if (!b) return;
   currentBriefId = id;
   renderBriefSidebar();
-  showRealmView(buildBriefForm(b));
+  showPanel('realm-view');
+  document.getElementById('realm-view').innerHTML = buildBriefForm(b);
 }
 
 function buildBriefForm(b) {
-  const isNew = !b.id;
+  const isNew   = !b.id;
   const catOpts = BRIEF_CATS.map(c =>
-    `<option value="${c}" ${c === (b.category || 'D&D') ? 'selected' : ''}>${c}</option>`
-  ).join('');
+    `<option value="${c}" ${c === (b.category || 'D&D') ? 'selected' : ''}>${c}</option>`).join('');
 
   return `
     <div class="editor-header">
@@ -840,7 +806,9 @@ function buildBriefForm(b) {
 
     <p style="font-family:var(--font-ui);font-size:0.82rem;color:var(--text-dim);margin-bottom:24px;font-style:italic;">
       Briefs appear on the <strong style="color:var(--gold-dim)">This Week in the Realm</strong> page
-      with a <strong style="color:var(--gold-dim)">📌 Gazette Original</strong> badge, pinned above the AI news digest.
+      with a <strong style="color:var(--gold-dim)">📌 Gazette Original</strong> badge, pinned above the AI digest.
+      After saving, click <strong style="color:var(--gold-dim)">Save &amp; Publish</strong> to download
+      <code style="color:var(--gold-dim)">briefs.json</code> and push it to your repo.
     </p>
 
     <div class="form-grid">
@@ -865,7 +833,7 @@ function buildBriefForm(b) {
 
     <div class="form-grid full" style="margin-top:14px;">
       <div class="field-group">
-        <label class="field-label">Summary * <span style="color:var(--text-dim);font-size:0.7rem;font-style:italic;">(2–3 sentences — the main facts)</span></label>
+        <label class="field-label">Summary * <span style="font-size:0.7rem;font-style:italic;color:var(--text-dim);">(2–3 sentences — the main facts)</span></label>
         <textarea class="field-textarea" id="bf-summary" rows="3"
                   placeholder="What happened? Keep it factual and clear.">${esc(b.summary || '')}</textarea>
       </div>
@@ -873,9 +841,9 @@ function buildBriefForm(b) {
 
     <div class="form-grid full" style="margin-top:14px;">
       <div class="field-group">
-        <label class="field-label">Gazette Commentary <span style="color:var(--text-dim);font-size:0.7rem;font-style:italic;">(optional — the snarky in-universe take)</span></label>
+        <label class="field-label">Gazette Commentary <span style="font-size:0.7rem;font-style:italic;color:var(--text-dim);">(optional — the snarky in-universe take)</span></label>
         <textarea class="field-textarea" id="bf-commentary" rows="2"
-                  placeholder="e.g. Our court wizard notes this is the third \'surprise\' announcement this moon cycle…">${esc(b.commentary || '')}</textarea>
+                  placeholder="e.g. Our court wizard notes this is the third 'surprise' announcement this moon cycle…">${esc(b.commentary || '')}</textarea>
       </div>
     </div>
 
@@ -884,22 +852,21 @@ function buildBriefForm(b) {
         <label class="field-label">Source Name</label>
         <input class="field-input" id="bf-source" type="text"
                value="${esc(b.source || '')}"
-               placeholder="e.g. D&D Beyond, ICv2, Polygon…">
+               placeholder="e.g. D&D Beyond, Polygon, ICv2…">
       </div>
       <div class="field-group">
-        <label class="field-label">Source URL <span style="color:var(--text-dim);font-size:0.7rem;">(optional)</span></label>
+        <label class="field-label">Source URL <span style="font-size:0.7rem;color:var(--text-dim);">(optional)</span></label>
         <input class="field-input" id="bf-url" type="url"
-               value="${esc(b.url || '')}"
-               placeholder="https://…">
+               value="${esc(b.url || '')}" placeholder="https://…">
       </div>
     </div>
 
     <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:24px;padding-top:20px;border-top:var(--border-gold);">
       ${!isNew ? `<button class="delete-btn" onclick="deleteBrief('${esc(b.id)}')">🗑️ Delete</button>` : ''}
       <button class="save-btn" onclick="saveBrief()">💾 Save Brief</button>
-      <button class="save-btn" style="background:linear-gradient(135deg,var(--crimson),#8b2020);" onclick="saveBrief();publishBriefs()">📥 Save & Publish</button>
-    </div>
-  `;
+      <button class="save-btn" style="background:linear-gradient(135deg,var(--crimson),#8b2020);"
+              onclick="saveBrief(); publishBriefs()">📥 Save &amp; Publish</button>
+    </div>`;
 }
 
 function saveBrief() {
@@ -914,8 +881,7 @@ function saveBrief() {
   if (!title)   { toast('⚠️ Headline is required', true); return; }
   if (!summary) { toast('⚠️ Summary is required', true);  return; }
 
-  const id = currentBriefId || ('brief-' + Date.now());
-
+  const id    = currentBriefId || ('brief-' + Date.now());
   const brief = { id, title, category, summary, commentary, source, url, date };
 
   if (currentBriefId) {
@@ -928,20 +894,20 @@ function saveBrief() {
 
   saveBriefs();
   renderBriefSidebar();
-  toast('🔮 Brief saved — visible on This Week in the Realm');
+  // Refresh the form to show delete button now that it has an id
+  document.getElementById('realm-view').innerHTML = buildBriefForm(brief);
+  toast('🔮 Brief saved! Use Save & Publish to push to the site.');
 }
 
 function deleteBrief(id) {
-  if (!confirm('Delete this brief? It will be removed from the page immediately.')) return;
-  briefs = briefs.filter(b => b.id !== id);
+  if (!confirm('Delete this brief?')) return;
+  briefs         = briefs.filter(b => b.id !== id);
   currentBriefId = null;
   saveBriefs();
   renderBriefSidebar();
-  document.getElementById('realm-view').style.display  = 'none';
-  document.getElementById('empty-state').style.display = 'block';
+  showPanel('empty-state');
   toast('🗑️ Brief deleted');
 }
-
 </script>
 </body>
 </html>
