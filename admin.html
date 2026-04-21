@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gazette Admin — Editorial Chamber</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep:      #0a0908;
+      --bg-dark:      #111009;
+      --bg-card:      #18160f;
+      --bg-raised:    #201d14;
+      --gold-bright:  #d4a843;
+      --gold-mid:     #b8922e;
+      --gold-dim:     #6a5418;
+      --gold-glow:    rgba(212,168,67,0.15);
+      --crimson:      #8b1a1a;
+      --crimson-b:    #b02020;
+      --green:        #2d6a2d;
+      --green-b:      #4a9e4a;
+      --text-bright:  #f0e8d8;
+      --text-mid:     #c8bda8;
+      --text-dim:     #7a6d5a;
+      --border-gold:  1px solid var(--gold-dim);
+      --radius-sm: 4px; --radius-md: 8px;
+      --font-display: 'Cinzel Decorative', serif;
+      --font-head:    'Cinzel', serif;
+      --font-body:    'IM Fell English', serif;
+      --font-ui:      'Lato', sans-serif;
+      --transition: 0.2s ease;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-deep);
+      background-image:
+        radial-gradient(ellipse 60% 40% at 50% 0%, rgba(139,26,26,0.06) 0%, transparent 60%),
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(212,168,67,0.02) 40px);
+      font-family: var(--font-ui);
+      color: var(--text-mid);
+      min-height: 100vh;
+    }
+
+    /* ── LOGIN ───────────────────────────────────────────── */
+    #login-screen {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; padding: 24px;
+    }
+    .login-card {
+      background: linear-gradient(145deg, var(--bg-card), var(--bg-dark));
+      border: 1px solid var(--gold-dim);
+      border-radius: var(--radius-md);
+      padding: 48px 40px;
+      width: 100%; max-width: 420px;
+      text-align: center;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+    }
+    .login-logo { font-family: var(--font-display); font-size: 1.4rem; color: var(--gold-bright); margin-bottom: 6px; }
+    .login-sub  { font-family: var(--font-body); font-style: italic; color: var(--text-dim); font-size: 0.88rem; margin-bottom: 32px; }
+    .login-label { display: block; text-align: left; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; margin-top: 18px; }
+    .login-input {
+      width: 100%; padding: 10px 14px;
+      background: var(--bg-deep); border: var(--border-gold);
+      border-radius: var(--radius-sm); color: var(--text-bright);
+      font-family: var(--font-ui); font-size: 0.9rem;
+      transition: border-color var(--transition);
+    }
+    .login-input:focus { outline: none; border-color: var(--gold-mid); }
+    .login-btn {
+      width: 100%; margin-top: 24px; padding: 11px;
+      background: var(--gold-mid); border: none; border-radius: var(--radius-sm);
+      color: #000; font-family: var(--font-head); font-size: 0.78rem;
+      letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
+      transition: background var(--transition);
+    }
+    .login-btn:hover { background: var(--gold-bright); }
+    .login-error { color: #e07070; font-size: 0.8rem; margin-top: 12px; min-height: 18px; }
+
+    /* ── APP SHELL ───────────────────────────────────────── */
+    #app { display: none; }
+    .top-bar {
+      background: linear-gradient(180deg, #1a1712, var(--bg-dark));
+      border-bottom: 1px solid var(--gold-dim);
+      padding: 0 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 52px; position: sticky; top: 0; z-index: 100;
+    }
+    .top-bar-logo { font-family: var(--font-display); font-size: 0.95rem; color: var(--gold-bright); }
+    .top-bar-logo span { font-family: var(--font-head); font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; margin-left: 12px; }
+    .top-bar-right { display: flex; gap: 12px; align-items: center; }
+    .btn-sm {
+      padding: 6px 14px; border-radius: var(--radius-sm);
+      font-family: var(--font-head); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer; transition: all var(--transition); border: var(--border-gold);
+      background: var(--bg-card); color: var(--text-mid);
+    }
+    .btn-sm:hover { color: var(--gold-bright); border-color: var(--gold-mid); }
+    .btn-sm.danger:hover { background: rgba(139,26,26,0.2); border-color: var(--crimson-b); color: #e07070; }
+
+    /* ── LAYOUT ──────────────────────────────────────────── */
+    .app-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: calc(100vh - 52px);
+    }
+    @media (max-width: 768px) { .app-layout { grid-template-columns: 1fr; } }
+
+    /* ── SIDEBAR ─────────────────────────────────────────── */
+    .sidebar {
+      background: var(--bg-dark);
+      border-right: var(--border-gold);
+      padding: 24px 0;
+    }
+    .sidebar-section { padding: 0 16px; margin-bottom: 24px; }
+    .sidebar-title {
+      font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 10px; padding: 0 4px;
+    }
+    .new-article-btn {
+      width: 100%; padding: 10px;
+      background: linear-gradient(135deg, var(--gold-dim), var(--gold-mid));
+      border: none; border-radius: var(--radius-sm);
+      font-family: var(--font-head); font-size: 0.7rem; letter-spacing: 0.08em;
+      text-transform: uppercase; color: #000; cursor: pointer;
+      transition: all var(--transition);
+    }
+    .new-article-btn:hover { background: linear-gradient(135deg, var(--gold-mid), var(--gold-bright)); }
+
+    .article-list { list-style: none; }
+    .article-list-item {
+      padding: 10px 20px; cursor: pointer;
+      border-left: 2px solid transparent;
+      transition: all var(--transition);
+      border-bottom: 1px solid rgba(212,168,67,0.06);
+    }
+    .article-list-item:hover { background: var(--gold-glow); border-left-color: var(--gold-dim); }
+    .article-list-item.active { background: var(--gold-glow); border-left-color: var(--gold-mid); }
+    .ali-title { font-size: 0.78rem; color: var(--text-bright); line-height: 1.3; margin-bottom: 3px; }
+    .ali-meta  { font-size: 0.62rem; color: var(--text-dim); }
+    .ali-badge {
+      display: inline-block; font-size: 0.52rem; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 1px 6px; border-radius: 2px; margin-left: 5px;
+      background: var(--gold-dim); color: #000;
+    }
+
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .stat-box {
+      background: var(--bg-card); border: var(--border-gold);
+      border-radius: var(--radius-sm); padding: 10px 12px; text-align: center;
+    }
+    .stat-number { font-family: var(--font-display); font-size: 1.3rem; color: var(--gold-bright); line-height: 1; }
+    .stat-label  { font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-top: 3px; }
+
+    .export-btn {
+      width: 100%; padding: 8px;
+      background: transparent; border: var(--border-gold);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-head); font-size: 0.62rem; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-dim); cursor: pointer;
+      transition: all var(--transition); margin-bottom: 6px;
+    }
+    .export-btn:hover { color: var(--gold-bright); border-color: var(--gold-mid); background: var(--gold-glow); }
+
+    /* ── MAIN EDITOR ─────────────────────────────────────── */
+    .main-panel { padding: 32px 36px; overflow-y: auto; }
+    @media (max-width: 768px) { .main-panel { padding: 24px 16px; } }
+
+    .empty-state {
+      text-align: center; padding: 80px 24px;
+      color: var(--text-dim);
+    }
+    .empty-state .rune { font-size: 3rem; margin-bottom: 16px; opacity: 0.4; }
+    .empty-state h3 { font-family: var(--font-head); color: var(--gold-dim); margin-bottom: 8px; font-size: 1rem; letter-spacing: 0.06em; text-transform: uppercase; }
+    .empty-state p { font-size: 0.84rem; }
+
+    .editor-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 28px; gap: 16px; flex-wrap: wrap; }
+    .editor-heading { font-family: var(--font-head); font-size: 1rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold-bright); }
+    .editor-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+    .form-grid.full { grid-template-columns: 1fr; }
+
+    .field-group { display: flex; flex-direction: column; gap: 5px; }
+    .field-label {
+      font-size: 0.64rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .field-input, .field-select, .field-textarea {
+      padding: 9px 12px;
+      background: var(--bg-deep); border: var(--border-gold);
+      border-radius: var(--radius-sm); color: var(--text-bright);
+      font-family: var(--font-ui); font-size: 0.88rem;
+      transition: border-color var(--transition);
+    }
+    .field-input:focus, .field-select:focus, .field-textarea:focus {
+      outline: none; border-color: var(--gold-mid);
+    }
+    .field-select { cursor: pointer; }
+    .field-select option { background: var(--bg-card); }
+    .field-textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+
+    .content-editor {
+      width: 100%; min-height: 340px;
+      padding: 14px 16px;
+      background: var(--bg-deep); border: var(--border-gold);
+      border-radius: var(--radius-sm); color: var(--text-bright);
+      font-family: var(--font-body); font-size: 1rem; line-height: 1.85;
+      resize: vertical; transition: border-color var(--transition);
+    }
+    .content-editor:focus { outline: none; border-color: var(--gold-mid); }
+
+    .editor-toolbar {
+      display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap;
+    }
+    .toolbar-btn {
+      padding: 5px 10px; background: var(--bg-card); border: var(--border-gold);
+      border-radius: 3px; font-family: var(--font-ui); font-size: 0.72rem;
+      color: var(--text-mid); cursor: pointer; transition: all var(--transition);
+    }
+    .toolbar-btn:hover { color: var(--gold-bright); border-color: var(--gold-mid); }
+
+    .section-divider {
+      border: none; border-top: 1px solid rgba(212,168,67,0.15);
+      margin: 24px 0;
+    }
+
+    .checkbox-row { display: flex; align-items: center; gap: 10px; }
+    .checkbox-row input[type=checkbox] { accent-color: var(--gold-mid); width: 14px; height: 14px; cursor: pointer; }
+    .checkbox-row label { font-size: 0.8rem; color: var(--text-mid); cursor: pointer; }
+
+    /* ── SAVE BUTTON ─────────────────────────────────────── */
+    .save-btn {
+      padding: 10px 24px;
+      background: linear-gradient(135deg, var(--gold-dim), var(--gold-mid));
+      border: none; border-radius: var(--radius-sm);
+      font-family: var(--font-head); font-size: 0.72rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #000; cursor: pointer;
+      transition: all var(--transition);
+    }
+    .save-btn:hover { background: linear-gradient(135deg, var(--gold-mid), var(--gold-bright)); }
+    .save-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .delete-btn {
+      padding: 10px 20px; background: transparent;
+      border: 1px solid var(--crimson); border-radius: var(--radius-sm);
+      font-family: var(--font-head); font-size: 0.72rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #e07070; cursor: pointer;
+      transition: all var(--transition);
+    }
+    .delete-btn:hover { background: rgba(139,26,26,0.2); border-color: var(--crimson-b); }
+
+    .preview-btn {
+      padding: 10px 20px; background: transparent;
+      border: var(--border-gold); border-radius: var(--radius-sm);
+      font-family: var(--font-head); font-size: 0.72rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-mid); cursor: pointer;
+      transition: all var(--transition);
+    }
+    .preview-btn:hover { color: var(--gold-bright); border-color: var(--gold-mid); }
+
+    /* ── TOAST ───────────────────────────────────────────── */
+    .toast {
+      position: fixed; bottom: 24px; right: 24px;
+      background: var(--bg-raised); border: 1px solid var(--gold-mid);
+      border-radius: var(--radius-sm); padding: 12px 20px;
+      font-family: var(--font-head); font-size: 0.72rem; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--gold-bright);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      transform: translateY(80px); opacity: 0;
+      transition: all 0.3s ease; z-index: 999;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.error { border-color: var(--crimson-b); color: #e07070; }
+
+    /* ── IMPORT ──────────────────────────────────────────── */
+    #import-file { display: none; }
+    .drop-zone {
+      border: 2px dashed var(--gold-dim); border-radius: var(--radius-md);
+      padding: 32px; text-align: center; cursor: pointer;
+      transition: all var(--transition);
+      color: var(--text-dim); font-size: 0.84rem;
+    }
+    .drop-zone:hover, .drop-zone.drag-over { border-color: var(--gold-mid); background: var(--gold-glow); color: var(--gold-bright); }
+    .drop-zone .icon { font-size: 2rem; margin-bottom: 8px; }
+
+    /* ── ID PREVIEW ──────────────────────────────────────── */
+    .id-preview {
+      font-size: 0.62rem; color: var(--text-dim); margin-top: 4px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ LOGIN ══════════════════════════════════════════════ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">👁️ The Beholder's Gazette</div>
+    <p class="login-sub">Editorial Chamber — Authorized Personnel Only</p>
+    <label class="login-label" for="pw-input">Passphrase</label>
+    <input class="login-input" id="pw-input" type="password" placeholder="Enter passphrase…" autocomplete="current-password">
+    <div class="login-error" id="login-error"></div>
+    <button class="login-btn" onclick="attemptLogin()">⚔️ Enter the Chamber</button>
+    <p style="font-size:0.68rem;color:var(--text-dim);margin-top:18px;font-style:italic;">Default passphrase: <code style="color:var(--gold-dim)">gazette2024</code> — change in script below</p>
+  </div>
+</div>
+
+<!-- ═══ APP ════════════════════════════════════════════════ -->
+<div id="app">
+  <div class="top-bar">
+    <div class="top-bar-logo">👁️ Gazette <span>Editorial Chamber</span></div>
+    <div class="top-bar-right">
+      <button class="btn-sm" onclick="window.open('index.html','_blank')">View Site ↗</button>
+      <button class="btn-sm danger" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <button class="new-article-btn" onclick="newArticle()">✍️ New Article</button>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title">📊 Gazette Stats</div>
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="stat-number" id="stat-total">0</div>
+            <div class="stat-label">Articles</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number" id="stat-featured">0</div>
+            <div class="stat-label">Featured</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number" id="stat-cats">0</div>
+            <div class="stat-label">Categories</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number" id="stat-authors">0</div>
+            <div class="stat-label">Authors</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title">🗂️ Articles</div>
+        <ul class="article-list" id="article-list"></ul>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title">⚙️ Tools</div>
+        <button class="export-btn" onclick="exportJSON()">📥 Export articles.json</button>
+        <button class="export-btn" onclick="importClick()">📤 Import articles.json</button>
+        <input type="file" id="import-file" accept=".json" onchange="importJSON(event)">
+      </div>
+    </aside>
+
+    <!-- Main Panel -->
+    <main class="main-panel" id="main-panel">
+      <div class="empty-state" id="empty-state">
+        <div class="rune">📜</div>
+        <h3>The Quill Awaits</h3>
+        <p>Select an article from the left to edit it,<br>or press "New Article" to begin a fresh scroll.</p>
+      </div>
+      <div id="editor-view" style="display:none;"></div>
+    </main>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════
+//  CONFIG — change this passphrase!
+// ══════════════════════════════════════════════════
+const PASSPHRASE = 'gazette2024';
+
+// ══════════════════════════════════════════════════
+//  AUTH
+// ══════════════════════════════════════════════════
+function attemptLogin() {
+  const val = document.getElementById('pw-input').value;
+  if (val === PASSPHRASE) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    init();
+  } else {
+    document.getElementById('login-error').textContent = '🔒 Incorrect passphrase. The orb sees all.';
+    document.getElementById('pw-input').value = '';
+  }
+}
+
+document.getElementById('pw-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') attemptLogin();
+});
+
+function logout() {
+  location.reload();
+}
+
+// ══════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════
+let articles = [];
+let currentId = null;  // id of article being edited (null = new)
+const CATEGORIES = ['Economy','Politics','Technology','Local Chaos','Creature Features','Labor','International','Regulations','Product Safety','Education','Health','Public Safety','Business','Social','Environment','Finance','Real Estate','Transport','Lifestyle','Tavern Tales','Events','Zoning','Scandal','Legislation','Elections'];
+const AUTHORS    = ['Gobwiz Quillnib','Gimble Inkquill','Elara Swiftquill','Marcus Goldhand','Thorin Ironforge','Zara Spellweaver','The Gazette Staff'];
+
+// ══════════════════════════════════════════════════
+//  INIT — load articles.json via fetch
+// ══════════════════════════════════════════════════
+async function init() {
+  try {
+    const r = await fetch('articles.json?t=' + Date.now());
+    const d = await r.json();
+    articles = d.articles || [];
+  } catch(e) {
+    // If fetch fails (file:// protocol), start empty
+    articles = [];
+    toast('⚠️ Could not load articles.json — start fresh or import', true);
+  }
+  renderSidebar();
+  updateStats();
+}
+
+// ══════════════════════════════════════════════════
+//  SIDEBAR
+// ══════════════════════════════════════════════════
+function renderSidebar() {
+  const list = document.getElementById('article-list');
+  const sorted = [...articles].sort((a,b) => new Date(b.date) - new Date(a.date));
+  list.innerHTML = sorted.map(a => `
+    <li class="article-list-item ${currentId === a.id ? 'active' : ''}" onclick="editArticle('${esc(a.id)}')">
+      <div class="ali-title">${esc(a.title)}${a.featured ? '<span class="ali-badge">★</span>':''}
+      </div>
+      <div class="ali-meta">${esc(a.category||'')} · ${formatDate(a.date)}</div>
+    </li>
+  `).join('');
+  updateStats();
+}
+
+function updateStats() {
+  document.getElementById('stat-total').textContent    = articles.length;
+  document.getElementById('stat-featured').textContent = articles.filter(a=>a.featured).length;
+  document.getElementById('stat-cats').textContent     = new Set(articles.map(a=>a.category).filter(Boolean)).size;
+  document.getElementById('stat-authors').textContent  = new Set(articles.map(a=>a.author).filter(Boolean)).size;
+}
+
+// ══════════════════════════════════════════════════
+//  EDITOR
+// ══════════════════════════════════════════════════
+function showEditor(article) {
+  document.getElementById('empty-state').style.display = 'none';
+  const view = document.getElementById('editor-view');
+  view.style.display = 'block';
+
+  const isNew = !article.id;
+  const catOptions = CATEGORIES.map(c =>
+    `<option value="${c}" ${c===article.category?'selected':''}>${c}</option>`
+  ).join('');
+  const authorOptions = AUTHORS.map(a =>
+    `<option value="${a}" ${a===article.author?'selected':''}>${a}</option>`
+  ).join('');
+
+  view.innerHTML = `
+    <div class="editor-header">
+      <div class="editor-heading">${isNew ? '✍️ New Article' : '✏️ Edit Article'}</div>
+      <div class="editor-actions">
+        <button class="preview-btn" onclick="previewArticle()">👁️ Preview</button>
+        ${!isNew ? `<button class="delete-btn" onclick="deleteArticle('${esc(article.id)}')">🗑️ Delete</button>` : ''}
+        <button class="save-btn" id="save-btn" onclick="saveArticle()">💾 Save Article</button>
+      </div>
+    </div>
+
+    <div class="form-grid full">
+      <div class="field-group">
+        <label class="field-label">Headline *</label>
+        <input class="field-input" id="f-title" type="text" value="${esc(article.title||'')}" placeholder="Write a headline worthy of the Gazette…" oninput="updateIdPreview()">
+        <div class="id-preview" id="id-preview">${article.id ? 'ID: '+article.id : ''}</div>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="field-group">
+        <label class="field-label">Category *</label>
+        <select class="field-select" id="f-category">
+          <option value="">— Select —</option>
+          ${catOptions}
+          <option value="__custom__">+ Custom…</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Author</label>
+        <select class="field-select" id="f-author">
+          ${authorOptions}
+          <option value="__custom__">+ Custom…</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Publish Date</label>
+        <input class="field-input" id="f-date" type="date" value="${article.date||today()}">
+      </div>
+      <div class="field-group" style="justify-content:flex-end;padding-bottom:4px;">
+        <div class="checkbox-row">
+          <input type="checkbox" id="f-featured" ${article.featured?'checked':''}>
+          <label for="f-featured">★ Feature this article (shows at top of home page)</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-grid full" style="margin-bottom:16px;">
+      <div class="field-group">
+        <label class="field-label">Excerpt / Teaser</label>
+        <textarea class="field-textarea" id="f-excerpt" rows="3" placeholder="One or two punchy sentences shown in article cards…">${esc(article.excerpt||'')}</textarea>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="field-group" style="margin-bottom:24px;">
+      <label class="field-label">Article Content (HTML supported)</label>
+      <div class="editor-toolbar">
+        <button class="toolbar-btn" onclick="wrap('&lt;p&gt;','&lt;/p&gt;')">¶ Para</button>
+        <button class="toolbar-btn" onclick="wrap('&lt;strong&gt;','&lt;/strong&gt;')"><b>B</b></button>
+        <button class="toolbar-btn" onclick="wrap('&lt;em&gt;','&lt;/em&gt;')"><i>I</i></button>
+        <button class="toolbar-btn" onclick="wrap('&lt;blockquote&gt;','&lt;/blockquote&gt;')">" Quote</button>
+        <button class="toolbar-btn" onclick="insertHr()">— Divider</button>
+        <button class="toolbar-btn" onclick="wrapLink()">🔗 Link</button>
+      </div>
+      <textarea class="content-editor" id="f-content" placeholder="Write the article here. Use HTML tags like &lt;p&gt;, &lt;strong&gt;, &lt;em&gt;, etc. Each paragraph should be wrapped in &lt;p&gt;&lt;/p&gt;…">${esc(article.content||'')}</textarea>
+    </div>
+
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px;">
+      <button class="preview-btn" onclick="previewArticle()">👁️ Preview</button>
+      ${!isNew ? `<button class="delete-btn" onclick="deleteArticle('${esc(article.id)}')">🗑️ Delete</button>` : ''}
+      <button class="save-btn" onclick="saveArticle()">💾 Save Article</button>
+    </div>
+  `;
+
+  // Handle custom category/author
+  document.getElementById('f-category').addEventListener('change', function() {
+    if (this.value === '__custom__') {
+      const v = prompt('Enter custom category:');
+      if (v) { this.innerHTML += `<option value="${v}" selected>${v}</option>`; this.value = v; }
+      else this.value = '';
+    }
+  });
+  document.getElementById('f-author').addEventListener('change', function() {
+    if (this.value === '__custom__') {
+      const v = prompt('Enter author name:');
+      if (v) { this.innerHTML += `<option value="${v}" selected>${v}</option>`; this.value = v; }
+      else this.value = AUTHORS[0];
+    }
+  });
+}
+
+function newArticle() {
+  currentId = null;
+  renderSidebar();
+  showEditor({});
+  document.getElementById('f-title')?.focus();
+}
+
+function editArticle(id) {
+  const a = articles.find(x => x.id === id);
+  if (!a) return;
+  currentId = id;
+  renderSidebar();
+  showEditor(a);
+  document.getElementById('main-panel').scrollTop = 0;
+}
+
+function saveArticle() {
+  const title    = document.getElementById('f-title')?.value.trim();
+  const category = document.getElementById('f-category')?.value;
+  const author   = document.getElementById('f-author')?.value;
+  const date     = document.getElementById('f-date')?.value;
+  const excerpt  = document.getElementById('f-excerpt')?.value.trim();
+  const content  = document.getElementById('f-content')?.value.trim();
+  const featured = document.getElementById('f-featured')?.checked || false;
+
+  if (!title)    { toast('⚠️ Headline is required', true); return; }
+  if (!category) { toast('⚠️ Category is required', true); return; }
+
+  const id = currentId || slugify(title);
+
+  const article = { id, title, category, author: author||'The Gazette Staff', date: date||today(), excerpt, content, featured };
+
+  if (currentId) {
+    const idx = articles.findIndex(a => a.id === currentId);
+    if (idx >= 0) articles[idx] = article;
+  } else {
+    articles.unshift(article);
+    currentId = id;
+  }
+
+  renderSidebar();
+  toast('📜 Article saved! Download articles.json to publish.');
+}
+
+function deleteArticle(id) {
+  if (!confirm('Delete this article? This cannot be undone.')) return;
+  articles = articles.filter(a => a.id !== id);
+  currentId = null;
+  document.getElementById('editor-view').style.display = 'none';
+  document.getElementById('empty-state').style.display = 'block';
+  renderSidebar();
+  toast('🗑️ Article deleted');
+}
+
+function previewArticle() {
+  const id = currentId || 'preview';
+  if (currentId) {
+    window.open('article.html?id=' + currentId, '_blank');
+  } else {
+    toast('💡 Save the article first, then preview it on the site.', true);
+  }
+}
+
+// ══════════════════════════════════════════════════
+//  TOOLBAR HELPERS
+// ══════════════════════════════════════════════════
+function wrap(open, close) {
+  const ta = document.getElementById('f-content');
+  if (!ta) return;
+  const start = ta.selectionStart, end = ta.selectionEnd;
+  const sel = ta.value.substring(start, end);
+  ta.value = ta.value.substring(0, start) + open + sel + close + ta.value.substring(end);
+  ta.focus();
+  ta.selectionStart = start + open.length;
+  ta.selectionEnd   = start + open.length + sel.length;
+}
+
+function wrapLink() {
+  const url = prompt('Enter URL:');
+  if (url) wrap(`<a href="${url}">`, '</a>');
+}
+
+function insertHr() {
+  const ta = document.getElementById('f-content');
+  if (!ta) return;
+  const pos = ta.selectionEnd;
+  ta.value = ta.value.substring(0, pos) + '\n<hr>\n' + ta.value.substring(pos);
+}
+
+// ══════════════════════════════════════════════════
+//  ID PREVIEW
+// ══════════════════════════════════════════════════
+function updateIdPreview() {
+  if (currentId) return; // don't change existing IDs
+  const title = document.getElementById('f-title')?.value || '';
+  const id = slugify(title);
+  const el = document.getElementById('id-preview');
+  if (el) el.textContent = id ? 'ID: ' + id : '';
+}
+
+// ══════════════════════════════════════════════════
+//  IMPORT / EXPORT
+// ══════════════════════════════════════════════════
+function exportJSON() {
+  const json = JSON.stringify({ articles }, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'articles.json';
+  a.click();
+  toast('📥 articles.json downloaded — replace the one in your site folder');
+}
+
+function importClick() {
+  document.getElementById('import-file').click();
+}
+
+function importJSON(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!Array.isArray(data.articles)) throw new Error('Invalid format');
+      articles = data.articles;
+      currentId = null;
+      document.getElementById('editor-view').style.display = 'none';
+      document.getElementById('empty-state').style.display = 'block';
+      renderSidebar();
+      toast(`📤 Imported ${articles.length} articles`);
+    } catch(err) {
+      toast('⚠️ Invalid JSON file', true);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+// ══════════════════════════════════════════════════
+//  UTILITIES
+// ══════════════════════════════════════════════════
+function slugify(str) {
+  return str.toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim().replace(/\s+/g, '-')
+    .replace(/-+/g, '-').slice(0, 60);
+}
+
+function today() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function formatDate(s) {
+  if (!s) return '—';
+  return new Date(s).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+}
+
+function esc(str) {
+  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+let toastTimer;
+function toast(msg, isError = false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (isError ? ' error' : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
+}
+</script>
+</body>
+</html>

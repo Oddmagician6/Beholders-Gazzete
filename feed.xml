@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/"
+  xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>The Beholder&apos;s Gazette</title>
+    <link>https://oddmagician6.github.io/Beholders-Gazzete</link>
+    <description>Your premier source for satirical news from across the realms. All the news that&apos;s fit to print (or burn).</description>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 21 Apr 2026 11:39:55 GMT</lastBuildDate>
+    <managingEditor>gazette@beholders-gazette.com (The Gazette Staff)</managingEditor>
+    <atom:link href="https://oddmagician6.github.io/Beholders-Gazzete/feed.xml" rel="self" type="application/rss+xml"/>
+    <image>
+      <url>https://oddmagician6.github.io/Beholders-Gazzete/favicon.ico</url>
+      <title>The Beholder&apos;s Gazette</title>
+      <link>https://oddmagician6.github.io/Beholders-Gazzete</link>
+    </image>
+
+  <item>
+    <title>Lord Donwald Secures High Council Seat After Hard-Fought Campaign</title>
+    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=donwald-high-council-victory</link>
+    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=donwald-high-council-victory</guid>
+    <pubDate>Tue, 21 Apr 2026 00:00:00 GMT</pubDate>
+    <category>Politics</category>
+    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
+    <description>The Golden Tower shines brighter today. Archmage Joebid retires to his farm. Merchants brace for new trade decrees.</description>
+  </item>
+
+  <item>
+    <title>Candlekeep Librarians Reject AI-Generated Spellbooks</title>
+    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=candlekeep-ai-scribe-controversy</link>
+    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=candlekeep-ai-scribe-controversy</guid>
+    <pubDate>Tue, 21 Apr 2026 00:00:00 GMT</pubDate>
+    <category>Technology</category>
+    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
+    <description>Automated quills produce errors in components. Wizards demand human verification. Plagiarism scandals erupt.</description>
+  </item>
+
+  <item>
+    <title>Magic Coin Cryptocurrency Crashes After Rug Pull</title>
+    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=crypto-gold-piece-crash</link>
+    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=crypto-gold-piece-crash</guid>
+    <pubDate>Tue, 21 Apr 2026 00:00:00 GMT</pubDate>
+    <category>Economy</category>
+    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
+    <description>Investors lose fortunes in DragonCoin scheme. Developers vanish via teleportation circle. Regulators demand oversight.</description>
+  </item>
+
+  <item>
+    <title>Owlbear Migration Grounds All Flying Brooms</title>
+    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=owlbear-migration-flight-paths</link>
+    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=owlbear-migration-flight-paths</guid>
+    <pubDate>Tue, 21 Apr 2026 00:00:00 GMT</pubDate>
+    <category>Transport</category>
+    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
+    <description>Seasonal nesting blocks air corridors. Commuters forced to walk. Airlines offer refund vouchers.</description>
+  </item>
+
+  <item>
+    <title>Alchemists Launch Healing Potion Soda Flavors</title>
+    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=healing-potion-soda-flavor</link>
+    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=healing-potion-soda-flavor</guid>
+    <pubDate>Tue, 21 Apr 2026 00:00:00 GMT</pubDate>
+    <category>Lifestyle</category>
+    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
+    <description>Cherry burst and mountain dew variants hit shelves. Clerics warn against casual consumption. Sugar rush side effects reported.</description>
+  </item>
+
+  <item>
+    <title>Royal Revenue Service Audits Adventurer Hoards</title>
+    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=royal-revenue-service-audit</link>
+    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=royal-revenue-service-audit</guid>
+    <pubDate>Mon, 20 Apr 2026 00:00:00 GMT</pubDate>
+    <category>Finance</category>
+    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
+    <description>Tax day arrives. Wizards caught hiding gold in extra-dimensional spaces. Penalties include forced community service cleaning sewers.</description>
+  </item>
+
+  <item>
+    <title>ScrollTok Influencer Promotes Cursed Amulet</title>
+    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=scrolltok-influencer-scandal</link>
+    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=scrolltok-influencer-scandal</guid>
+    <pubDate>Mon, 20 Apr 2026 00:00:00 GMT</pubDate>
+    <category>Social</category>
+    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
+    <description>Followers turn into newts after using discount code. Platform claims no responsibility for magical side effects.</description>
+  </item>
+
+  <item>
+    <title>Druids Plant Trees That Bite Back</title>
+    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=druidic-tree-planting-initiative</link>
+    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=druidic-tree-planting-initiative</guid>
+    <pubDate>Mon, 20 Apr 2026 00:00:00 GMT</pubDate>
+    <category>Environment</category>
+    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
+    <description>Reforestation project goes awry. Saplings identified as aggressive mimic variants. City orders immediate containment.</description>
+  </item>
+
+  <item>
+    <title>Resurrection Insurance Premiums Skyrocket</title>
+    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=resurrection-insurance-premiums</link>
+    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=resurrection-insurance-premiums</guid>
+    <pubDate>Mon, 20 Apr 2026 00:00:00 GMT</pubDate>
+    <category>Health</category>
+    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
+    <description>Necromancer monopoly drives up costs. Clerics demand better working conditions. Dead waitlists grow longer.</description>
+  </item>
+
+  <item>
+    <title>Broomstick Traffic Jams Ground Commuters</title>
+    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=broomstick-traffic-congestion</link>
+    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=broomstick-traffic-congestion</guid>
+    <pubDate>Mon, 20 Apr 2026 00:00:00 GMT</pubDate>
+    <category>Transport</category>
+    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
+    <description>Airspace regulations ignored. Collisions reported near tower districts. Wizard proposes mandatory flying licenses.</description>
+  </item>
+
+  <item>
+    <title>Starbuck&apos;s Mystical Brews Opens Near Dungeon Entrance</title>
+    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=starbucks-mystical-brews-expansion</link>
+    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=starbucks-mystical-brews-expansion</guid>
+    <pubDate>Sun, 19 Apr 2026 00:00:00 GMT</pubDate>
+    <category>Business</category>
+    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
+    <description>Local cafes AstralDoe and Moondeer protest corporate gentrification. Customers confused by size names like &apos;Gargantuan&apos;.</description>
+  </item>
+
+  <item>
+    <title>Oracle Echo Stones Accused of Listening to Private Conversations</title>
+    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=oracle-echo-stone-privacy</link>
+    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=oracle-echo-stone-privacy</guid>
+    <pubDate>Sun, 19 Apr 2026 00:00:00 GMT</pubDate>
+    <category>Technology</category>
+    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
+    <description>Wizards deny allegations. Merchants receive targeted ads based overheard spell components.</description>
+  </item>
+
+  <item>
+    <title>Phantom Carriage Surge Pricing During Raid Events</title>
+    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=phantom-carriage-surge-pricing</link>
+    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=phantom-carriage-surge-pricing</guid>
+    <pubDate>Sun, 19 Apr 2026 00:00:00 GMT</pubDate>
+    <category>Transport</category>
+    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
+    <description>Commuters stranded as prices multiply during dragon attacks. Drivers cancel rides if passengers look too much like loot goblins.</description>
+  </item>
+
+  <item>
+    <title>Landlords Renting Out Bags of Holding as Apartments</title>
+    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=bag-of-holding-housing-crisis</link>
+    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=bag-of-holding-housing-crisis</guid>
+    <pubDate>Sun, 19 Apr 2026 00:00:00 GMT</pubDate>
+    <category>Real Estate</category>
+    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
+    <description>Tenants complain of lack of windows and air. Safety violations cited after a sneeze ejects a family into the Astral Plane.</description>
+  </item>
+
+  <item>
+    <title>Elemental Fire Leak Causes Unseasonable Heatwave</title>
+    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=elemental-fire-heatwave</link>
+    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=elemental-fire-heatwave</guid>
+    <pubDate>Sun, 19 Apr 2026 00:00:00 GMT</pubDate>
+    <category>Environment</category>
+    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
+    <description>Druids protest Artificer factories. City sells cooling charms at inflated prices. Crops wilting in the fields.</description>
+  </item>
+
+  <item>
+    <title>Adventurer&apos;s Guild Mandates Ramps for Gelatinous Cubes</title>
+    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=dungeon-accessibility-regulations</link>
+    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=dungeon-accessibility-regulations</guid>
+    <pubDate>Sat, 18 Apr 2026 00:00:00 GMT</pubDate>
+    <category>Regulations</category>
+    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
+    <description>New dungeon safety laws require wide corridors. Delvers complain stealth is impossible with construction crews everywhere.</description>
+  </item>
+
+  <item>
+    <title>Mass Recall Issued for &apos;Whiner +1&apos; Magic Swords</title>
+    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=cursed-sword-recall-notice</link>
+    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=cursed-sword-recall-notice</guid>
+    <pubDate>Sat, 18 Apr 2026 00:00:00 GMT</pubDate>
+    <category>Product Safety</category>
+    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
+    <description>The blades scream constantly during combat. Manufacturers offer free mute spells. Paladins return them in droves.</description>
+  </item>
+
+  <item>
+    <title>College of Valor Accused of Song Plagiarism</title>
+    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=bard-college-plagiarism-scandal</link>
+    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=bard-college-plagiarism-scandal</guid>
+    <pubDate>Sat, 18 Apr 2026 00:00:00 GMT</pubDate>
+    <category>Education</category>
+    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
+    <description>Famous ballad found to be written by a mute kobold. Dean resigns. Students demand tuition refund in gold.</description>
+  </item>
+
+  <item>
+    <title>Healing Potions Found to be Watered Down</title>
+    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=healing-potion-watering-down</link>
+    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=healing-potion-watering-down</guid>
+    <pubDate>Sat, 18 Apr 2026 00:00:00 GMT</pubDate>
+    <category>Health</category>
+    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
+    <description>Alchemists caught adding tap water to red vials. Adventurers report feeling only slightly less dead. Investigation ongoing.</description>
+  </item>
+
+  <item>
+    <title>Mimic Infestation Hits Suburban Mailboxes</title>
+    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=mimic-mailbox-infestation</link>
+    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=mimic-mailbox-infestation</guid>
+    <pubDate>Sat, 18 Apr 2026 00:00:00 GMT</pubDate>
+    <category>Public Safety</category>
+    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
+    <description>Residents bitten while checking bills. Postal service issues armored gloves. Mimics demand stamp payment.</description>
+  </item>
+  </channel>
+</rss>
