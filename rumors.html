@@ -14,7 +14,7 @@
         .rumors-hero {
             position: relative;
             background: linear-gradient(135deg, #1a1a1d 0%, #2d2d35 100%);
-            background-image: url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=1920&q=80');
+            background: radial-gradient(ellipse at 25% 65%, rgba(160,80,20,0.65) 0%, transparent 45%), radial-gradient(ellipse at 75% 35%, rgba(200,120,30,0.4) 0%, transparent 40%), radial-gradient(ellipse at 50% 90%, rgba(80,30,5,0.9) 0%, transparent 55%), linear-gradient(165deg, #1a0d04 0%, #2e1a07 30%, #1c0e04 65%, #0e0703 100%);
             background-size: cover;
             background-position: center;
             padding: 80px 20px;
@@ -371,11 +371,29 @@
             .generate-btn { width: 100%; }
         }
     </style>
+
+  <style id="hero-atmosphere">
+    /* Tavern: warm firelight flicker + smoke texture */
+    .page-hero::after {
+      content: '';
+      position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+    }
+    .page-hero-content { position: relative; z-index: 2; }
+    .page-hero-logo { animation: flickerGlow 4s ease-in-out infinite; }
+    @keyframes flickerGlow {
+      0%,100% { text-shadow: 0 0 30px rgba(200,120,30,0.5), 0 0 60px rgba(180,80,10,0.3); }
+      33%      { text-shadow: 0 0 20px rgba(200,120,30,0.3), 0 0 40px rgba(180,80,10,0.2); }
+      66%      { text-shadow: 0 0 40px rgba(220,140,40,0.6), 0 0 80px rgba(180,80,10,0.4); }
+    }
+  </style>
 </head>
 <body>
 
     <!-- Hero Section -->
-    <section class="page-hero" style="background-image: url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=1920&q=80'); background-size:cover; background-position:center;">
+    <section class="page-hero" style="background: radial-gradient(ellipse at 30% 60%, rgba(139,69,19,0.6) 0%, transparent 50%), radial-gradient(ellipse at 70% 40%, rgba(180,100,20,0.4) 0%, transparent 45%), linear-gradient(160deg, #1a0e06 0%, #2d1a08 25%, #1c0f05 50%, #0e0805 100%); background-size: cover;">
         <div class="page-hero-overlay"></div>
         <div class="page-hero-content">
             <div class="page-hero-logo">🍺 The Rusty Flagon</div>

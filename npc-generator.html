@@ -14,7 +14,7 @@
         .npc-hero {
             position: relative;
             background: linear-gradient(135deg, #1a1a1d 0%, #2d2d35 100%);
-            background-image: url('https://images.unsplash.com/photo-1599839575945-a9e5af0c3fa5?w=1920&q=80');
+            background: radial-gradient(ellipse at 20% 25%, rgba(90,130,70,0.4) 0%, transparent 45%), radial-gradient(ellipse at 75% 65%, rgba(50,80,130,0.35) 0%, transparent 50%), radial-gradient(ellipse at 50% 50%, rgba(170,140,70,0.2) 0%, transparent 55%), linear-gradient(150deg, #0c1107 0%, #161d0e 35%, #0f1607 65%, #090d05 100%);
             background-size: cover;
             background-position: center;
             padding: 80px 20px;
@@ -684,11 +684,30 @@
             .action-btn { width: 100%; }
         }
     </style>
+
+  <style id="hero-atmosphere">
+    /* Town Square: dappled forest light + mist */
+    .page-hero::after {
+      content: '';
+      position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background:
+        radial-gradient(ellipse at 10% 20%, rgba(120,180,80,0.08) 0%, transparent 35%),
+        radial-gradient(ellipse at 90% 80%, rgba(80,120,180,0.08) 0%, transparent 35%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+    }
+    .page-hero-content { position: relative; z-index: 2; }
+    .page-hero-logo { animation: breatheGlow 5s ease-in-out infinite; }
+    @keyframes breatheGlow {
+      0%,100% { text-shadow: 0 0 30px rgba(130,180,80,0.4), 0 0 60px rgba(100,140,60,0.2); }
+      50%      { text-shadow: 0 0 50px rgba(160,210,100,0.5), 0 0 90px rgba(100,140,60,0.3); }
+    }
+  </style>
 </head>
 <body>
 
     <!-- Hero Section -->
-    <section class="page-hero" style="background-image: url('https://images.unsplash.com/photo-1599839575945-a9e5af0c3fa5?w=1920&q=80'); background-size:cover; background-position:center;">
+    <section class="page-hero" style="background: radial-gradient(ellipse at 20% 30%, rgba(100,140,80,0.35) 0%, transparent 45%), radial-gradient(ellipse at 80% 70%, rgba(60,90,140,0.3) 0%, transparent 50%), linear-gradient(150deg, #0d1208 0%, #181f10 30%, #0a0e06 100%); background-size: cover;">
         <div class="page-hero-overlay"></div>
         <div class="page-hero-content">
             <div class="page-hero-logo">🎭 The Face Factory</div>
