@@ -167,9 +167,44 @@
         <label>📚 Class</label>
         <select id="class-filter">
           <option value="">All Classes</option>
-          <option>Bard</option><option>Cleric</option><option>Druid</option>
+          <option>Artificer</option><option>Bard</option><option>Cleric</option><option>Druid</option>
           <option>Paladin</option><option>Ranger</option><option>Sorcerer</option>
           <option>Warlock</option><option>Wizard</option>
+        </select>
+      </div>
+      <div style="flex:1;min-width:140px;">
+        <label>📖 Source</label>
+        <select id="source-filter">
+          <option value="">All Sources</option>
+          <option value="PHB">PHB</option>
+          <option value="XGE">XGE (Xanathar's)</option>
+          <option value="TCE">TCE (Tasha's)</option>
+          <option value="SCAG">SCAG</option>
+          <option value="EE">EE (Elem. Evil)</option>
+          <option value="AI">AI (Acquisitions)</option>
+          <option value="GGR">GGR (Ravnica)</option>
+          <option value="MOT">MOT (Theros)</option>
+          <option value="FTD">FTD (Dragons)</option>
+          <option value="SCC">SCC (Strixhaven)</option>
+          <option value="BMT">BMT (Multiverse)</option>
+          <option value="IDRotF">IDRotF</option>
+          <option value="EGW">EGW (Wildemount)</option>
+        </select>
+      </div>
+      <div style="flex:1;min-width:130px;">
+        <label>⏱ Concentration</label>
+        <select id="conc-filter">
+          <option value="">Any</option>
+          <option value="yes">Required</option>
+          <option value="no">Not Required</option>
+        </select>
+      </div>
+      <div style="flex:1;min-width:110px;">
+        <label>📿 Ritual</label>
+        <select id="ritual-filter">
+          <option value="">Any</option>
+          <option value="yes">Ritual Only</option>
+          <option value="no">Non-Ritual</option>
         </select>
       </div>
       <div style="align-self:flex-end;">
@@ -195,53 +230,54 @@
     </div>
   </footer>
 
+  <script src="spells-data.js"></script>
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    const SPELLS = [
-      { name:'Fireball', level:3, school:'Evocation', cast:'1 Action', range:'150 ft', duration:'Instant', concentration:false, classes:['Sorcerer','Wizard'], desc:'A bright streak flashes from your pointing finger to a point you choose within range, then blossoms with a low roar into a 20-ft radius explosion of flame. Each creature in the area must make a DEX save, taking 8d6 fire damage on a fail (half on success).' },
-      { name:'Shield', level:1, school:'Abjuration', cast:'1 Reaction', range:'Self', duration:'1 round', concentration:false, classes:['Sorcerer','Wizard'], desc:'An invisible barrier of magical force appears and protects you. Until the start of your next turn, you have a +5 bonus to AC, including against the triggering attack.' },
-      { name:'Healing Word', level:1, school:'Evocation', cast:'1 Bonus Action', range:'60 ft', duration:'Instant', concentration:false, classes:['Bard','Cleric','Druid'], desc:'A creature of your choice that you can see within range regains hit points equal to 1d4 + your spellcasting ability modifier.' },
-      { name:'Counterspell', level:3, school:'Abjuration', cast:'1 Reaction', range:'60 ft', duration:'Instant', concentration:false, classes:['Sorcerer','Warlock','Wizard'], desc:'You attempt to interrupt a creature in the process of casting a spell. If the spell is 3rd level or lower, it automatically fails. If 4th or higher, make a spellcasting check (DC 10 + spell level).' },
-      { name:'Misty Step', level:2, school:'Conjuration', cast:'1 Bonus Action', range:'Self', duration:'Instant', concentration:false, classes:['Sorcerer','Warlock','Wizard'], desc:'Briefly surrounded by silvery mist, you teleport up to 30 feet to an unoccupied space that you can see.' },
-      { name:'Detect Magic', level:1, school:'Divination', cast:'1 Action', range:'Self', duration:'10 min', concentration:true, classes:['Bard','Cleric','Druid','Paladin','Ranger','Sorcerer','Wizard'], desc:'For the duration, you sense the presence of magic within 30 feet of you. If you sense magic in this way, you can use your action to see a faint aura around any visible creature or object that bears magic, and you learn its school.' },
-      { name:'Charm Person', level:1, school:'Enchantment', cast:'1 Action', range:'30 ft', duration:'1 hour', concentration:false, classes:['Bard','Druid','Sorcerer','Warlock','Wizard'], desc:'You attempt to charm a humanoid you can see within range. It must make a WIS saving throw, and does so with advantage if you or your companions are fighting it. On a failed save, the target is charmed.' },
-      { name:'Invisibility', level:2, school:'Illusion', cast:'1 Action', range:'Touch', duration:'1 hour', concentration:true, classes:['Bard','Sorcerer','Warlock','Wizard'], desc:'A creature you touch becomes invisible until the spell ends. Anything the target is wearing or carrying is invisible as long as it is on the target\'s person. The spell ends early if the target attacks or casts a spell.' },
-      { name:'Animate Dead', level:3, school:'Necromancy', cast:'1 Minute', range:'10 ft', duration:'24 hours', concentration:false, classes:['Cleric','Wizard'], desc:'This spell creates an undead servant. Choose a pile of bones or a corpse of a Medium or Small humanoid within range. Your spell imbues the target with a foul mimicry of life, raising it as an undead creature.' },
-      { name:'Polymorph', level:4, school:'Transmutation', cast:'1 Action', range:'60 ft', duration:'1 hour', concentration:true, classes:['Bard','Druid','Sorcerer','Wizard'], desc:'This spell transforms a creature that you can see within range into a new form. A hostile creature must make a WIS save. The new form can be any beast whose challenge rating is equal to or less than the target\'s.' },
-      { name:'Magic Missile', level:1, school:'Evocation', cast:'1 Action', range:'120 ft', duration:'Instant', concentration:false, classes:['Sorcerer','Wizard'], desc:'You create three glowing darts of magical force. Each dart hits a creature of your choice that you can see within range. A dart deals 1d4+1 force damage. All darts strike simultaneously.' },
-      { name:'Hold Person', level:2, school:'Enchantment', cast:'1 Action', range:'60 ft', duration:'1 min', concentration:true, classes:['Bard','Cleric','Druid','Sorcerer','Warlock','Wizard'], desc:'Choose a humanoid you can see within range. The target must succeed on a WIS saving throw or be paralyzed for the duration. At the end of each of its turns, the target can make another saving throw.' },
-      { name:'Thunderwave', level:1, school:'Evocation', cast:'1 Action', range:'Self (15-ft cube)', duration:'Instant', concentration:false, classes:['Bard','Cleric','Druid','Sorcerer','Wizard'], desc:'A wave of thunderous force sweeps out from you. Each creature in a 15-foot cube must make a CON save, taking 2d8 thunder damage and being pushed 10 feet away (half damage, no push on success).' },
-      { name:'Mage Armor', level:1, school:'Abjuration', cast:'1 Action', range:'Touch', duration:'8 hours', concentration:false, classes:['Sorcerer','Wizard'], desc:'You touch a willing creature who isn\'t wearing armor, and a protective magical force surrounds it until the spell ends. The target\'s base AC becomes 13 + its Dexterity modifier.' },
-      { name:'Cure Wounds', level:1, school:'Evocation', cast:'1 Action', range:'Touch', duration:'Instant', concentration:false, classes:['Bard','Cleric','Druid','Paladin','Ranger'], desc:'A creature you touch regains a number of hit points equal to 1d8 + your spellcasting ability modifier. This spell has no effect on undead or constructs.' },
-      { name:'Hypnotic Pattern', level:3, school:'Illusion', cast:'1 Action', range:'120 ft', duration:'1 min', concentration:true, classes:['Bard','Sorcerer','Warlock','Wizard'], desc:'You create a twisting pattern of colors that weaves through the air in a 30-foot cube. Each creature in the area must make a WIS save or become charmed and incapacitated for the duration, entranced by the pattern.' },
-      { name:'Eldritch Blast', level:0, school:'Evocation', cast:'1 Action', range:'120 ft', duration:'Instant', concentration:false, classes:['Warlock'], desc:'A beam of crackling energy streaks toward a creature within range. Make a ranged spell attack against the target. On a hit, the target takes 1d10 force damage. The spell creates more than one beam when you reach higher levels.' },
-      { name:'Vicious Mockery', level:0, school:'Enchantment', cast:'1 Action', range:'60 ft', duration:'Instant', concentration:false, classes:['Bard'], desc:'You unleash a string of insults laced with subtle enchantments at a creature you can see within range. The creature must succeed on a WIS save or take 1d4 psychic damage and have disadvantage on its next attack roll.' },
-      { name:'Shatter', level:2, school:'Evocation', cast:'1 Action', range:'60 ft', duration:'Instant', concentration:false, classes:['Bard','Sorcerer','Warlock','Wizard'], desc:'A sudden loud ringing noise, painfully intense, erupts from a point of your choice within range. Each creature in a 10-foot-radius sphere centered on that point must make a CON save, taking 3d8 thunder damage on a failed save.' },
-      { name:'Dimension Door', level:4, school:'Conjuration', cast:'1 Action', range:'500 ft', duration:'Instant', concentration:false, classes:['Bard','Sorcerer','Warlock','Wizard'], desc:'You teleport yourself from your current location to any other spot within range. You arrive at exactly the spot desired. It can be a place you can see, one you can visualize, or one you can describe by stating distance and direction.' },
-    ];
+    /* Full 5e spell database loaded from spells-data.js */
+    const SPELLS = SPELLS_DATA.slice().sort((a,b) => a.name.localeCompare(b.name));
 
     let filtered = [...SPELLS];
 
-    function levelLabel(l) { return l === 0 ? 'Cantrip' : l + (l===1?'st':l===2?'nd':l===3?'rd':'th') + ' Level'; }
+    function levelLabel(l) {
+      if (l === 0) return 'Cantrip';
+      const sfx = l===1?'st':l===2?'nd':l===3?'rd':'th';
+      return l + sfx + ' Level';
+    }
+
+    function sourceBadge(s) {
+      const colors = { PHB:'#8b1a1a', XGE:'#1a528b', TCE:'#1a8b3c', SCAG:'#8b6e1a',
+        EE:'#5a1a8b', AI:'#8b1a6e', GGR:'#1a8b8b', MOT:'#8b4f1a',
+        FTD:'#6e8b1a', SCC:'#1a4f8b', BMT:'#8b1a4f', IDRotF:'#4f8b1a',
+        EGW:'#8b3c1a', ONE:'#555' };
+      const col = colors[s] || '#555';
+      return `<span style="font-size:0.6rem;padding:2px 6px;border-radius:3px;background:${col}22;color:${col};border:1px solid ${col}55;font-family:var(--font-ui);letter-spacing:0.05em;">${s}</span>`;
+    }
 
     function render() {
-      const grid = document.getElementById('spell-grid');
+      const grid  = document.getElementById('spell-grid');
       const count = document.getElementById('spell-count');
-      count.textContent = `Showing ${filtered.length} of ${SPELLS.length} spells`;
+      count.textContent = `Showing ${filtered.length.toLocaleString()} of ${SPELLS.length.toLocaleString()} spells`;
 
       if (!filtered.length) {
-        grid.innerHTML = '<p class="no-results">No spells matched your search. Perhaps the arcane tomes were misplaced…</p>';
+        grid.innerHTML = '<p class="no-results">No spells matched your search. The arcane tomes yield nothing…</p>';
         return;
       }
 
       grid.innerHTML = filtered.map(s => `
-        <div class="spell-card" data-school="${s.school}" style="animation: fadeInUp 0.4s ease both;">
+        <div class="spell-card" data-school="${s.school}">
           <div class="spell-header">
-            <div class="spell-name">${s.name}${s.concentration ? '<span class="concentration-pip" title="Concentration"></span>' : ''}</div>
+            <div class="spell-name">
+              ${s.name}
+              ${s.concentration ? '<span class="concentration-pip" title="Requires Concentration"></span>' : ''}
+              ${s.ritual ? '<span style="font-size:0.6rem;color:var(--gold-mid);margin-left:4px;" title="Can be cast as a ritual">(R)</span>' : ''}
+            </div>
             <div class="spell-level-badge">${levelLabel(s.level)}</div>
           </div>
-          <div class="spell-school">${s.school}</div>
+          <div class="spell-school" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <span>${s.school}</span>
+            ${sourceBadge(s.source)}
+          </div>
           <p class="spell-desc">${s.desc}</p>
           <div class="spell-stats">
             <div class="spell-stat">
@@ -256,9 +292,9 @@
               <div class="spell-stat-label">Duration</div>
               <div class="spell-stat-value">${s.duration}</div>
             </div>
-            <div class="spell-stat">
+            <div class="spell-stat" style="grid-column:1/-1;">
               <div class="spell-stat-label">Classes</div>
-              <div class="spell-stat-value" style="font-size:0.7rem;">${s.classes.join(', ')}</div>
+              <div class="spell-stat-value" style="font-size:0.72rem;">${s.classes.join(' · ')}</div>
             </div>
           </div>
         </div>
@@ -266,16 +302,24 @@
     }
 
     function applyFilters() {
-      const search = document.getElementById('spell-search').value.toLowerCase();
+      const search = document.getElementById('spell-search').value.toLowerCase().trim();
       const level  = document.getElementById('level-filter').value;
       const school = document.getElementById('school-filter').value;
       const cls    = document.getElementById('class-filter').value;
+      const source = document.getElementById('source-filter').value;
+      const conc   = document.getElementById('conc-filter').value;
+      const ritual = document.getElementById('ritual-filter').value;
 
       filtered = SPELLS.filter(s => {
         if (search && !s.name.toLowerCase().includes(search) && !s.desc.toLowerCase().includes(search)) return false;
         if (level  !== '' && s.level !== +level) return false;
         if (school && s.school !== school) return false;
         if (cls    && !s.classes.includes(cls)) return false;
+        if (source && s.source !== source) return false;
+        if (conc   === 'yes' && !s.concentration) return false;
+        if (conc   === 'no'  &&  s.concentration) return false;
+        if (ritual === 'yes' && !s.ritual) return false;
+        if (ritual === 'no'  &&  s.ritual) return false;
         return true;
       });
 
@@ -283,18 +327,15 @@
     }
 
     function resetFilters() {
-      document.getElementById('spell-search').value = '';
-      document.getElementById('level-filter').value  = '';
-      document.getElementById('school-filter').value = '';
-      document.getElementById('class-filter').value  = '';
+      ['spell-search','level-filter','school-filter','class-filter','source-filter','conc-filter','ritual-filter']
+        .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
       filtered = [...SPELLS];
       render();
     }
 
     document.getElementById('spell-search').addEventListener('input', applyFilters);
-    document.getElementById('level-filter').addEventListener('change', applyFilters);
-    document.getElementById('school-filter').addEventListener('change', applyFilters);
-    document.getElementById('class-filter').addEventListener('change', applyFilters);
+    ['level-filter','school-filter','class-filter','source-filter','conc-filter','ritual-filter']
+      .forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('change', applyFilters); });
 
     render();
   </script>
