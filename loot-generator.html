@@ -1,470 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loot Generator | The Beholder's Gazette</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="homepage.css">
-    <style>
-        .loot-hero {
-            position: relative;
-            background: linear-gradient(135deg, #1a1a1d 0%, #2d2d35 100%);
-            background-image: url('https://images.unsplash.com/photo-1605218427306-635ba2439af2?w=1920&q=80');
-            background-size: cover;
-            background-position: center;
-            padding: 80px 20px;
-            text-align: center;
-            overflow: hidden;
-        }
-        .loot-hero-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(180deg, rgba(26, 26, 29, 0.85) 0%, rgba(26, 26, 29, 0.95) 100%);
-        }
-        .loot-hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .loot-hero-logo {
-            font-family: 'MedievalSharp', cursive;
-            font-size: 3rem;
-            color: var(--accent-gold);
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-            margin-bottom: 15px;
-        }
-        .loot-hero-tagline {
-            font-style: italic;
-            color: #ccc;
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-        }
-        .loot-hero-description {
-            color: #aaa;
-            font-size: 1.1rem;
-            line-height: 1.6;
-            max-width: 600px;
-            margin: 0 auto 30px;
-        }
-        .loot-body {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 60px 20px;
-        }
-        .tool-container {
-            background: linear-gradient(145deg, #252529 0%, #1f1f23 100%);
-            border: 1px solid #444;
-            border-radius: 8px;
-            padding: 40px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        }
-        .control-tabs {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 25px;
-            border-bottom: 2px solid #444;
-            padding-bottom: 15px;
-        }
-        .tab-btn {
-            background: linear-gradient(145deg, #2a2a2e, #252529);
-            border: 1px solid #444;
-            border-radius: 6px;
-            padding: 14px 22px;
-            color: var(--text-color);
-            font-family: 'Cinzel', serif;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .tab-btn:hover {
-            background: linear-gradient(145deg, #333, #2a2a2e);
-            border-color: var(--accent-gold);
-        }
-        .tab-btn.active {
-            background: linear-gradient(145deg, var(--accent-gold), #a88645);
-            color: #000;
-            border-color: var(--accent-gold);
-            font-weight: bold;
-        }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .control-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 18px;
-            margin-bottom: 25px;
-        }
-        .control-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--accent-gold);
-            font-family: 'Cinzel', serif;
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
-        .control-group select,
-        .control-group input[type="number"] {
-            width: 100%;
-            padding: 14px;
-            background: #333;
-            border: 1px solid #555;
-            border-radius: 6px;
-            color: #fff;
-            font-family: 'Lato', sans-serif;
-            font-size: 0.95rem;
-        }
-        .control-group select:focus,
-        .control-group input:focus {
-            outline: none;
-            border-color: var(--accent-gold);
-        }
-        .control-group select option {
-            background: #333;
-            color: #fff;
-        }
-        .control-toggles {
-            display: flex;
-            gap: 25px;
-            flex-wrap: wrap;
-            padding-top: 20px;
-            border-top: 1px solid #444;
-        }
-        .toggle {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-        }
-        .toggle input { display: none; }
-        .toggle-slider {
-            width: 45px;
-            height: 24px;
-            background: #333;
-            border-radius: 12px;
-            position: relative;
-            transition: 0.3s;
-            border: 1px solid #555;
-        }
-        .toggle-slider::before {
-            content: '';
-            position: absolute;
-            width: 18px;
-            height: 18px;
-            background: #888;
-            border-radius: 50%;
-            top: 2px;
-            left: 2px;
-            transition: 0.3s;
-        }
-        .toggle input:checked + .toggle-slider {
-            background: var(--accent-gold);
-            border-color: var(--accent-gold);
-        }
-        .toggle input:checked + .toggle-slider::before {
-            transform: translateX(21px);
-            background: #000;
-        }
-        .toggle-label {
-            color: var(--text-color);
-            font-size: 0.9rem;
-            font-family: 'Cinzel', serif;
-        }
-        .generate-section {
-            text-align: center;
-            margin: 40px 0;
-        }
-        .generate-btn {
-            background: linear-gradient(145deg, var(--accent-gold), #a88645);
-            color: #000;
-            border: none;
-            padding: 20px 60px;
-            font-family: 'Cinzel', serif;
-            font-size: 1.3rem;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.4);
-        }
-        .generate-btn:hover {
-            background: linear-gradient(145deg, #d4af67, #b8954e);
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(197, 160, 89, 0.6);
-        }
-        .loot-display {
-            background: linear-gradient(145deg, #1a1a1d, #252529);
-            border: 2px solid var(--accent-gold);
-            border-radius: 8px;
-            padding: 40px;
-            margin-top: 30px;
-            animation: fadeInUp 0.6s ease;
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .loot-summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-            padding-bottom: 25px;
-            border-bottom: 1px solid #444;
-        }
-        .summary-card {
-            background: linear-gradient(145deg, #252529, #1f1f23);
-            border: 1px solid #444;
-            border-radius: 6px;
-            padding: 20px;
-            text-align: center;
-        }
-        .summary-label {
-            display: block;
-            font-size: 0.75rem;
-            color: #888;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-        }
-        .summary-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--accent-gold);
-            font-family: 'MedievalSharp', cursive;
-        }
-        .loot-section {
-            background: linear-gradient(145deg, #252529, #1f1f23);
-            border: 1px solid #444;
-            border-radius: 6px;
-            padding: 25px;
-            margin-bottom: 20px;
-        }
-        .loot-section h3 {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            color: var(--accent-gold);
-            border-bottom: 1px solid #444;
-            padding-bottom: 12px;
-        }
-        .coins-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 15px;
-        }
-        .coin-box {
-            background: linear-gradient(145deg, #1a1a1d, #252529);
-            border: 1px solid #444;
-            border-radius: 6px;
-            padding: 20px;
-            text-align: center;
-        }
-        .coin-icon { font-size: 2.5rem; margin-bottom: 10px; }
-        .coin-amount {
-            font-size: 1.6rem;
-            font-weight: bold;
-            color: var(--accent-gold);
-            font-family: 'MedievalSharp', cursive;
-        }
-        .coin-type {
-            font-size: 0.8rem;
-            color: #888;
-            text-transform: uppercase;
-            margin-top: 5px;
-        }
-        .items-grid, .magic-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
-        }
-        .item-card, .magic-card {
-            background: linear-gradient(145deg, #1a1a1d, #252529);
-            border: 1px solid #444;
-            border-radius: 6px;
-            padding: 20px;
-            transition: all 0.3s ease;
-        }
-        .item-card:hover, .magic-card:hover {
-            border-color: var(--accent-gold);
-            transform: translateY(-3px);
-        }
-        .magic-card {
-            border-color: var(--accent-gold);
-            position: relative;
-        }
-        .magic-card::before {
-            content: '✨';
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 1.5rem;
-            opacity: 0.3;
-        }
-        .item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 12px;
-        }
-        .item-name {
-            font-family: 'Cinzel', serif;
-            color: var(--accent-gold);
-            font-size: 1.05rem;
-            font-weight: bold;
-        }
-        .item-rarity {
-            font-size: 0.7rem;
-            padding: 3px 10px;
-            border-radius: 4px;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-        .rarity-common { background: #888; color: #000; }
-        .rarity-uncommon { background: #4caf50; color: #000; }
-        .rarity-rare { background: #2196f3; color: #fff; }
-        .rarity-very-rare { background: #9c27b0; color: #fff; }
-        .rarity-legendary { background: #ff9800; color: #000; }
-        .item-description {
-            font-size: 0.9rem;
-            color: #aaa;
-            margin-bottom: 12px;
-            line-height: 1.5;
-        }
-        .item-value {
-            font-size: 0.85rem;
-            color: var(--accent-gold);
-            font-family: 'Cinzel', serif;
-        }
-        .loot-notes {
-            background: var(--parchment);
-            color: var(--parchment-text);
-            border: 2px solid var(--accent-gold);
-            border-radius: 6px;
-            padding: 25px;
-            margin: 30px 0;
-        }
-        .loot-notes h3 {
-            color: #2b2b2b;
-            margin-bottom: 15px;
-        }
-        .loot-notes p {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 10px;
-        }
-        .loot-actions {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-top: 30px;
-            padding-top: 30px;
-            border-top: 1px solid #444;
-        }
-        .action-btn {
-            background: linear-gradient(145deg, #333, #2a2a2e);
-            border: 1px solid #555;
-            border-radius: 6px;
-            padding: 12px 25px;
-            color: var(--text-color);
-            font-family: 'Cinzel', serif;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .action-btn:hover {
-            background: linear-gradient(145deg, var(--accent-gold), #a88645);
-            color: #000;
-            border-color: var(--accent-gold);
-        }
-        .saved-loot {
-            background: linear-gradient(145deg, #222, #1a1a1d);
-            border: 1px solid #444;
-            border-radius: 8px;
-            padding: 30px;
-            margin-top: 30px;
-        }
-        .saved-loot h3 {
-            font-size: 1.3rem;
-            color: var(--accent-gold);
-            margin-bottom: 20px;
-            border-bottom: 1px solid #444;
-            padding-bottom: 12px;
-        }
-        #saved-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        .saved-item {
-            background: linear-gradient(145deg, #252529, #1f1f23);
-            border: 1px solid #444;
-            border-radius: 6px;
-            padding: 18px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .saved-item:hover {
-            border-color: var(--accent-gold);
-            transform: translateX(5px);
-        }
-        .saved-item h4 {
-            color: var(--accent-gold);
-            margin-bottom: 8px;
-            font-size: 1.05rem;
-        }
-        .saved-item p {
-            font-size: 0.85rem;
-            color: #888;
-            margin: 5px 0;
-        }
-        .dm-tip {
-            background: rgba(197, 160, 89, 0.1);
-            border: 1px solid var(--accent-gold);
-            border-radius: 6px;
-            padding: 20px;
-            margin-top: 30px;
-            text-align: center;
-        }
-        .dm-tip p {
-            color: var(--accent-gold);
-            font-size: 0.95rem;
-            margin: 0;
-        }
-        @media (max-width: 768px) {
-            .loot-hero { padding: 60px 20px; }
-            .loot-hero-logo { font-size: 2.2rem; }
-            .control-grid { grid-template-columns: repeat(2, 1fr); }
-            .tool-container { padding: 25px; }
-            .generate-btn { padding: 18px 40px; font-size: 1.1rem; }
-            .coins-grid, .items-grid, .magic-grid { grid-template-columns: 1fr; }
-        }
-        @media (max-width: 500px) {
-            .control-grid { grid-template-columns: 1fr; }
-            .loot-hero-logo { font-size: 1.8rem; }
-            .generate-btn { width: 100%; }
-            .loot-actions { flex-direction: column; }
-            .action-btn { width: 100%; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loot Generator | The Beholder's Gazette</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── HERO ──────────────────────────────────────────────── */
+    .loot-hero {
+      position: relative;
+      background-image: url('https://images.unsplash.com/photo-1605218427306-635ba2439af2?w=1920&q=80');
+      background-size: cover; background-position: center;
+      padding: 80px 24px 60px; text-align: center; overflow: hidden;
+    }
+    .loot-hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(14,13,11,0.82) 0%, rgba(14,13,11,0.96) 100%);
+    }
+    .loot-hero-content { position: relative; z-index: 2; max-width: 800px; margin: 0 auto; }
+    .loot-hero-title { font-family: var(--font-display); font-size: clamp(1.8rem,4vw,3rem); color: var(--gold-bright); text-shadow: 0 0 40px var(--gold-glow); margin-bottom: 12px; }
+    .loot-hero-tagline { font-family: var(--font-body); font-style: italic; color: var(--text-dim); font-size: 1.05rem; margin-bottom: 8px; }
+    .loot-hero-desc { color: var(--text-dim); font-family: var(--font-ui); font-size: 0.9rem; max-width: 560px; margin: 0 auto; }
+
+    /* ── LAYOUT ────────────────────────────────────────────── */
+    .loot-body { max-width: 1100px; margin: 0 auto; padding: 48px 24px; }
+    .tool-container {
+      background: linear-gradient(145deg, var(--bg-card), var(--bg-dark));
+      border: var(--border-gold); border-radius: var(--radius-md);
+      padding: 36px; box-shadow: var(--shadow-card);
+    }
+
+    /* ── TABS ──────────────────────────────────────────────── */
+    .control-tabs {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      margin-bottom: 24px; padding-bottom: 20px;
+      border-bottom: var(--border-gold);
+    }
+    .tab-btn {
+      background: var(--bg-raised); border: var(--border-gold);
+      border-radius: var(--radius-sm); padding: 10px 20px;
+      color: var(--text-dim); font-family: var(--font-head);
+      font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase;
+      cursor: pointer; transition: all var(--transition);
+    }
+    .tab-btn:hover { color: var(--gold-bright); border-color: var(--gold-mid); }
+    .tab-btn.active { background: var(--gold-mid); color: #000; border-color: var(--gold-bright); font-weight: bold; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeInUp 0.3s ease; }
+    @keyframes fadeInUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+    .tab-desc { color: var(--text-dim); font-family: var(--font-ui); font-size: 0.84rem; margin-bottom: 20px; font-style: italic; }
+
+    /* ── CONTROLS ──────────────────────────────────────────── */
+    .control-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 20px; }
+    .control-group label { display: block; font-family: var(--font-head); font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-mid); margin-bottom: 6px; }
+    .control-group select,
+    .control-group input[type="number"] {
+      width: 100%; padding: 10px 12px;
+      background: var(--bg-deep); border: var(--border-gold);
+      border-radius: var(--radius-sm); color: var(--text-bright);
+      font-family: var(--font-ui); font-size: 0.9rem;
+      transition: border-color var(--transition);
+    }
+    .control-group select:focus,
+    .control-group input:focus { outline: none; border-color: var(--gold-mid); }
+    .control-group select option { background: var(--bg-card); }
+
+    .checkbox-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .checkbox-row input[type=checkbox] { accent-color: var(--gold-mid); width: 14px; height: 14px; cursor: pointer; }
+    .checkbox-row label { font-family: var(--font-ui); font-size: 0.84rem; color: var(--text-mid); cursor: pointer; }
+
+    /* ── GENERATE BUTTON ───────────────────────────────────── */
+    .generate-section { text-align: center; margin: 32px 0 24px; }
+    .generate-btn {
+      background: linear-gradient(135deg, var(--gold-dim), var(--gold-mid));
+      color: #000; border: none; padding: 16px 56px;
+      font-family: var(--font-head); font-size: 1.1rem; font-weight: bold;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      border-radius: var(--radius-sm); cursor: pointer;
+      transition: all var(--transition);
+      box-shadow: 0 4px 20px rgba(212,168,67,0.3);
+    }
+    .generate-btn:hover { background: linear-gradient(135deg, var(--gold-mid), var(--gold-bright)); transform: translateY(-2px); box-shadow: 0 6px 24px rgba(212,168,67,0.5); }
+    .generate-hint { color: var(--text-dim); font-family: var(--font-ui); font-size: 0.76rem; margin-top: 10px; }
+
+    /* ── LOOT DISPLAY ──────────────────────────────────────── */
+    .loot-display {
+      border: 2px solid var(--gold-mid); border-radius: var(--radius-md);
+      padding: 36px; margin-top: 28px;
+      background: linear-gradient(145deg, var(--bg-raised), var(--bg-dark));
+    }
+
+    .loot-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px,1fr)); gap: 12px; margin-bottom: 28px; padding-bottom: 24px; border-bottom: var(--border-gold); }
+    .summary-card { background: var(--bg-card); border: var(--border-gold); border-radius: var(--radius-sm); padding: 16px; text-align: center; }
+    .summary-label { display: block; font-family: var(--font-head); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; }
+    .summary-value { font-family: var(--font-display); font-size: 1.3rem; color: var(--gold-bright); line-height: 1; }
+
+    .loot-section { background: var(--bg-card); border: var(--border-gold); border-radius: var(--radius-sm); padding: 22px; margin-bottom: 18px; }
+    .loot-section h3 { font-family: var(--font-head); font-size: 0.9rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold-bright); margin-bottom: 18px; padding-bottom: 10px; border-bottom: var(--border-gold); }
+
+    .coins-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px,1fr)); gap: 12px; }
+    .coin-box { background: var(--bg-raised); border: var(--border-gold); border-radius: var(--radius-sm); padding: 16px; text-align: center; }
+    .coin-icon { font-size: 2rem; margin-bottom: 6px; }
+    .coin-amount { font-family: var(--font-display); font-size: 1.3rem; color: var(--gold-bright); line-height: 1.2; }
+    .coin-type { font-family: var(--font-head); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-top: 4px; }
+    .coin-value { font-family: var(--font-ui); font-size: 0.72rem; color: var(--gold-dim); margin-top: 3px; }
+
+    .items-grid, .magic-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 12px; }
+    .item-card {
+      background: var(--bg-raised); border: var(--border-gold);
+      border-radius: var(--radius-sm); padding: 16px;
+      transition: border-color var(--transition), transform var(--transition);
+    }
+    .item-card:hover { border-color: var(--gold-mid); transform: translateY(-2px); }
+    .magic-card {
+      background: linear-gradient(145deg, var(--bg-raised), rgba(212,168,67,0.05));
+      border: 1px solid var(--gold-mid); border-radius: var(--radius-sm);
+      padding: 16px; transition: all var(--transition);
+    }
+    .magic-card:hover { box-shadow: 0 0 16px var(--gold-glow); transform: translateY(-2px); }
+    .item-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+    .item-name { font-family: var(--font-head); color: var(--gold-bright); font-size: 0.9rem; line-height: 1.3; }
+    .item-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+    .item-type { font-family: var(--font-head); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); background: var(--bg-dark); border: var(--border-gold); border-radius: 2px; padding: 2px 8px; }
+    .attune-badge { font-family: var(--font-head); font-size: 0.58rem; letter-spacing: 0.06em; text-transform: uppercase; color: #e0c050; background: rgba(224,192,80,0.1); border: 1px solid rgba(224,192,80,0.4); border-radius: 2px; padding: 2px 8px; }
+    .item-value { font-family: var(--font-head); font-size: 0.72rem; color: var(--gold-dim); }
+    .item-rarity { font-family: var(--font-head); font-size: 0.56rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 2px; white-space: nowrap; flex-shrink: 0; }
+    .rarity-common    { background: #6b6b6b; color: #fff; }
+    .rarity-uncommon  { background: #2d7a2d; color: #fff; }
+    .rarity-rare      { background: #1a5fa8; color: #fff; }
+    .rarity-very-rare { background: #6b2fa0; color: #fff; }
+    .rarity-legendary { background: #b06000; color: #fff; }
+    .rarity-artifact  { background: #8b1a1a; color: #fff; }
+    .rarity-Gem       { background: #2d6a6a; color: #fff; }
+    .rarity-Art       { background: #5a4a2d; color: #fff; }
+
+    /* ── NOTES ─────────────────────────────────────────────── */
+    .loot-notes {
+      background: linear-gradient(145deg, rgba(212,168,67,0.06), transparent);
+      border: var(--border-gold); border-radius: var(--radius-sm);
+      padding: 20px; margin-top: 16px;
+    }
+    .loot-notes h3 { font-family: var(--font-head); font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-bright); margin-bottom: 12px; }
+    .loot-notes p { font-family: var(--font-ui); font-size: 0.84rem; color: var(--text-dim); margin-bottom: 4px; }
+
+    /* ── ACTIONS ───────────────────────────────────────────── */
+    .loot-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; padding-top: 20px; border-top: var(--border-gold); }
+    .action-btn {
+      padding: 9px 20px; background: var(--bg-card); border: var(--border-gold);
+      border-radius: var(--radius-sm); color: var(--text-mid);
+      font-family: var(--font-head); font-size: 0.68rem; letter-spacing: 0.08em;
+      text-transform: uppercase; cursor: pointer; transition: all var(--transition);
+    }
+    .action-btn:hover { background: var(--gold-glow); color: var(--gold-bright); border-color: var(--gold-mid); }
+
+    /* ── VAULT ─────────────────────────────────────────────── */
+    .saved-loot { background: var(--bg-card); border: var(--border-gold); border-radius: var(--radius-md); padding: 28px; margin-top: 28px; }
+    .saved-loot h3 { font-family: var(--font-head); font-size: 0.9rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold-bright); margin-bottom: 18px; padding-bottom: 12px; border-bottom: var(--border-gold); }
+    #saved-list { max-height: 360px; overflow-y: auto; }
+    .saved-item { background: var(--bg-raised); border: var(--border-gold); border-radius: var(--radius-sm); padding: 14px 18px; margin-bottom: 10px; cursor: pointer; transition: all var(--transition); }
+    .saved-item:hover { border-color: var(--gold-mid); transform: translateX(4px); }
+    .saved-item h4 { font-family: var(--font-head); color: var(--gold-bright); font-size: 0.82rem; margin-bottom: 4px; }
+    .saved-item p { font-family: var(--font-ui); font-size: 0.76rem; color: var(--text-dim); margin: 0; }
+    .saved-meta { font-family: var(--font-ui); font-size: 0.68rem; color: var(--text-dim); margin-top: 4px; }
+    .clear-vault-btn { width: 100%; margin-top: 14px; padding: 9px; background: transparent; border: 1px solid var(--crimson); border-radius: var(--radius-sm); color: #a06060; font-family: var(--font-head); font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all var(--transition); }
+    .clear-vault-btn:hover { background: rgba(139,26,26,0.15); color: #e07070; }
+
+    /* ── DM TIP ────────────────────────────────────────────── */
+    .dm-tip { background: rgba(212,168,67,0.06); border: var(--border-gold); border-radius: var(--radius-sm); padding: 18px; margin-top: 24px; text-align: center; }
+    .dm-tip p { font-family: var(--font-body); font-style: italic; color: var(--gold-dim); font-size: 0.9rem; margin: 0; }
+
+    @media (max-width: 600px) {
+      .tool-container { padding: 20px; }
+      .generate-btn { padding: 14px 32px; font-size: 0.95rem; width: 100%; }
+      .loot-actions { flex-direction: column; }
+      .action-btn { width: 100%; text-align: center; }
+    }
+  </style>
 </head>
 <body>
-    <section class="page-hero" style="background-image: url('https://images.unsplash.com/photo-1605218427306-635ba2439af2?w=1920&q=80'); background-size:cover; background-position:center;">
-        <div class="page-hero-overlay"></div>
-        <div class="page-hero-content">
-            <div class="page-hero-logo">💎 The Vault of Wonders</div>
-            <p class="loot-hero-tagline">"Every Dungeon Deserves Better Loot"</p>
-            <p class="loot-hero-description">Generate DMG-compliant treasure with balanced coins, gems, art objects, and magic items. Because your players deserve more than 37 copper pieces.</p>
-        </div>
-    </section>
-      <!-- Navigation -->
+
+  <!-- Hero -->
+  <section class="loot-hero">
+    <div class="loot-hero-overlay"></div>
+    <div class="loot-hero-content">
+      <h1 class="loot-hero-title">💎 The Vault of Wonders</h1>
+      <p class="loot-hero-tagline">"Every Dungeon Deserves Better Loot"</p>
+      <p class="loot-hero-desc">Generate DMG-compliant treasure with coins, gems, art objects, and 500+ magic items from every official 5e book. Because your players deserve more than 37 copper pieces.</p>
+    </div>
+  </section>
+
+  <!-- Navigation -->
   <nav class="main-nav">
     <ul>
       <li><a href="index.html">🏠 Home</a></li>
@@ -478,125 +207,239 @@
       <li><a href="about.html">📜 About</a></li>
     </ul>
   </nav>
-    <div class="ticker-wrap">
-        <div class="ticker">
-            💰 LOOT ALERT: "Dragon hoard inflation at 300%" &nbsp;&bull;&nbsp; 
-            ⚔️ "Magic sword prices dropping" &nbsp;&bull;&nbsp; 
-            💎 "Gems trending bullish" &nbsp;&bull;&nbsp; 
-            📜 "Cursed items on clearance"
-        </div>
+
+  <!-- Ticker -->
+  <div class="ticker-wrap">
+    <div class="ticker">
+      💰 LOOT ALERT: Dragon hoard inflation at 300% &nbsp;&bull;&nbsp;
+      ⚔️ Magic sword prices dropping — bards blamed &nbsp;&bull;&nbsp;
+      💎 Gem markets bullish on jacinth futures &nbsp;&bull;&nbsp;
+      📜 Cursed items on clearance — all sales final &nbsp;&bull;&nbsp;
+      💰 LOOT ALERT: Dragon hoard inflation at 300% &nbsp;&bull;&nbsp;
+      ⚔️ Magic sword prices dropping — bards blamed &nbsp;&bull;&nbsp;
+      💎 Gem markets bullish on jacinth futures &nbsp;&bull;&nbsp;
+      📜 Cursed items on clearance — all sales final
     </div>
-    <div class="loot-body">
-        <div class="tool-container">
-            <h2 style="color: var(--accent-gold); font-size: 1.8rem; margin-bottom: 25px; text-align: center;">⚙️ Configure Your Loot</h2>
-            <div class="control-tabs">
-                <button class="tab-btn active" data-tab="individual">🪙 Individual Treasure</button>
-                <button class="tab-btn" data-tab="hoard">🐉 Treasure Hoard</button>
-                <button class="tab-btn" data-tab="magic">✨ Magic Items</button>
-                <button class="tab-btn" data-tab="custom">🎲 Custom</button>
-            </div>
-            <div class="tab-content active" id="tab-individual">
-                <p style="color: #888; margin-bottom: 20px;">Generate loot for a single creature or small encounter (DMG p.133)</p>
-                <div class="control-grid">
-                    <div class="control-group">
-                        <label>Challenge Rating</label>
-                        <select id="ind-cr">
-                            <option value="0-4">CR 0-4</option>
-                            <option value="5-10">CR 5-10</option>
-                            <option value="11-16">CR 11-16</option>
-                            <option value="17+">CR 17+</option>
-                        </select>
-                    </div>
-                    <div class="control-group">
-                        <label>Luck</label>
-                        <select id="ind-luck">
-                            <option value="normal">Normal</option>
-                            <option value="generous">Generous (+50%)</option>
-                            <option value="stingy">Stingy (-50%)</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="generate-section">
-                <button class="generate-btn" onclick="generateLoot()">💰 Generate Loot</button>
-                <p style="color: #888; font-size: 0.85rem; margin-top: 15px;">(Or press Spacebar)</p>
-            </div>
-            <div class="loot-display" id="loot-display" style="display: none;">
-                <div class="loot-summary">
-                    <div class="summary-card">
-                        <span class="summary-label">Total Value</span>
-                        <span class="summary-value" id="total-value">0 gp</span>
-                    </div>
-                    <div class="summary-card">
-                        <span class="summary-label">Coins</span>
-                        <span class="summary-value" id="total-coins">0</span>
-                    </div>
-                    <div class="summary-card">
-                        <span class="summary-label">Gems/Art</span>
-                        <span class="summary-value" id="total-gems">0</span>
-                    </div>
-                    <div class="summary-card">
-                        <span class="summary-label">Magic Items</span>
-                        <span class="summary-value" id="total-magic">0</span>
-                    </div>
-                </div>
-                <div class="loot-section" id="coins-section">
-                    <h3>🪙 Currency</h3>
-                    <div class="coins-grid" id="coins-grid"></div>
-                </div>
-                <div class="loot-section" id="gems-section">
-                    <h3>💎 Gems & Jewelry</h3>
-                    <div class="items-grid" id="gems-grid"></div>
-                </div>
-                <div class="loot-section" id="magic-section">
-                    <h3>✨ Magic Items</h3>
-                    <div class="magic-grid" id="magic-grid"></div>
-                </div>
-                <div class="loot-notes">
-                    <h3>📝 DM Notes</h3>
-                    <div id="loot-notes-content">
-                        <p>Generated based on DMG treasure tables with economy adjustments.</p>
-                    </div>
-                </div>
-                <div class="loot-actions">
-                    <button class="action-btn" onclick="copyLoot()">📋 Copy to Clipboard</button>
-                    <button class="action-btn" onclick="saveLoot()">💾 Save to Vault</button>
-                    <button class="action-btn" onclick="exportLoot()">📤 Export JSON</button>
-                    <button class="action-btn" onclick="regenerateLoot()">🔄 Regenerate</button>
-                </div>
-            </div>
-            <div class="saved-loot">
-                <h3>💾 Saved Treasure (Vault)</h3>
-                <div id="saved-list">
-                    <p style="color: #888; font-style: italic; text-align: center; padding: 30px;">
-                        No treasure saved yet... your vault is empty.
-                    </p>
-                </div>
-                <button class="btn" onclick="clearSaved()" style="width: 100%; margin-top: 15px; font-size: 0.85rem;">
-                    🗑️ Clear Vault
-                </button>
-            </div>
-            <div class="dm-tip">
-                <p>💡 <strong>DM Tip:</strong> Adjust loot based on your party's wealth! Too rich? Reduce magic items. Too poor? Add more coins. Balance is key to a satisfying campaign.</p>
-            </div>
+  </div>
+
+  <div class="loot-body">
+    <div class="tool-container">
+
+      <h2 style="font-family:var(--font-head);font-size:1.2rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-bright);text-align:center;margin-bottom:24px;">⚙️ Configure Your Loot</h2>
+
+      <!-- Tabs -->
+      <div class="control-tabs">
+        <button class="tab-btn active" data-tab="individual">🪙 Individual</button>
+        <button class="tab-btn" data-tab="hoard">🐉 Hoard</button>
+        <button class="tab-btn" data-tab="magic">✨ Magic Items</button>
+        <button class="tab-btn" data-tab="custom">🎲 Custom</button>
+      </div>
+
+      <!-- Individual Tab -->
+      <div class="tab-content active" id="tab-individual">
+        <p class="tab-desc">Loot for a single monster or small encounter (DMG p.133). Scales with Challenge Rating.</p>
+        <div class="control-grid">
+          <div class="control-group">
+            <label for="ind-cr">Challenge Rating</label>
+            <select id="ind-cr">
+              <option value="0-4">CR 0–4 (Goblins & Kobolds)</option>
+              <option value="5-10">CR 5–10 (Ogres & Manticores)</option>
+              <option value="11-16">CR 11–16 (Giants & Vampires)</option>
+              <option value="17+">CR 17+ (Liches & Ancient Dragons)</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label for="ind-luck">Fortune</label>
+            <select id="ind-luck">
+              <option value="normal">Normal</option>
+              <option value="generous">Generous (+50%)</option>
+              <option value="stingy">Stingy (−50%)</option>
+            </select>
+          </div>
         </div>
+      </div>
+
+      <!-- Hoard Tab -->
+      <div class="tab-content" id="tab-hoard">
+        <p class="tab-desc">A full treasure hoard — lair or encounter total (DMG p.133). Generous by default.</p>
+        <div class="control-grid">
+          <div class="control-group">
+            <label for="hoard-cr">Challenge Rating</label>
+            <select id="hoard-cr">
+              <option value="0-4">CR 0–4 Hoard</option>
+              <option value="5-10">CR 5–10 Hoard</option>
+              <option value="11-16" selected>CR 11–16 Hoard</option>
+              <option value="17+">CR 17+ Hoard</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label for="hoard-magic">Magic Items</label>
+            <select id="hoard-magic">
+              <option value="yes">Include (chance-based)</option>
+              <option value="no">Exclude</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label for="hoard-luck">Fortune</label>
+            <select id="hoard-luck">
+              <option value="normal">Normal</option>
+              <option value="generous">Generous (+50%)</option>
+              <option value="stingy">Stingy (−50%)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Magic Items Tab -->
+      <div class="tab-content" id="tab-magic">
+        <p class="tab-desc">Generate magic items directly from 500+ items across all official 5e sourcebooks.</p>
+        <div class="control-grid">
+          <div class="control-group">
+            <label for="magic-rarity">Rarity</label>
+            <select id="magic-rarity">
+              <option value="random">Random</option>
+              <option value="common">Common</option>
+              <option value="uncommon">Uncommon</option>
+              <option value="rare">Rare</option>
+              <option value="very-rare">Very Rare</option>
+              <option value="legendary">Legendary</option>
+              <option value="artifact">Artifact</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label for="magic-type">Item Type</label>
+            <select id="magic-type">
+              <option value="any">Any Type</option>
+              <option value="weapon">Weapon</option>
+              <option value="armor">Armor / Shield</option>
+              <option value="potion">Potion</option>
+              <option value="scroll">Scroll</option>
+              <option value="wand">Wand</option>
+              <option value="staff">Staff</option>
+              <option value="rod">Rod</option>
+              <option value="ring">Ring</option>
+              <option value="wondrous">Wondrous Item</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label for="magic-count">Number of Items</label>
+            <input type="number" id="magic-count" value="1" min="1" max="20">
+          </div>
+        </div>
+      </div>
+
+      <!-- Custom Tab -->
+      <div class="tab-content" id="tab-custom">
+        <p class="tab-desc">Build your own loot package — choose exactly what to include.</p>
+        <div class="control-grid" style="margin-bottom:16px;">
+          <div class="control-group">
+            <label for="custom-cr">CR Tier (sets tables)</label>
+            <select id="custom-cr">
+              <option value="0-4">CR 0–4</option>
+              <option value="5-10">CR 5–10</option>
+              <option value="11-16">CR 11–16</option>
+              <option value="17+">CR 17+</option>
+            </select>
+          </div>
+        </div>
+        <div class="checkbox-row"><input type="checkbox" id="custom-coins" checked><label for="custom-coins">🪙 Include Coins</label></div>
+        <div class="checkbox-row"><input type="checkbox" id="custom-gems"  checked><label for="custom-gems">💎 Include Gems</label></div>
+        <div class="checkbox-row"><input type="checkbox" id="custom-art"   checked><label for="custom-art">🎨 Include Art Objects</label></div>
+        <div class="checkbox-row"><input type="checkbox" id="custom-magic" checked><label for="custom-magic">✨ Include Magic Items</label></div>
+      </div>
+
+      <!-- Generate Button -->
+      <div class="generate-section">
+        <button class="generate-btn" onclick="generateLoot()">💰 Open the Vault</button>
+        <p class="generate-hint">Press Spacebar to generate instantly</p>
+      </div>
+
+      <!-- Loot Display -->
+      <div class="loot-display" id="loot-display" style="display:none;">
+
+        <div class="loot-summary">
+          <div class="summary-card">
+            <span class="summary-label">Total Value</span>
+            <span class="summary-value" id="total-value">0 gp</span>
+          </div>
+          <div class="summary-card">
+            <span class="summary-label">Coins</span>
+            <span class="summary-value" id="total-coins">0</span>
+          </div>
+          <div class="summary-card">
+            <span class="summary-label">Gems & Art</span>
+            <span class="summary-value" id="total-gems">0</span>
+          </div>
+          <div class="summary-card">
+            <span class="summary-label">Magic Items</span>
+            <span class="summary-value" id="total-magic">0</span>
+          </div>
+        </div>
+
+        <div class="loot-section" id="coins-section">
+          <h3>🪙 Currency</h3>
+          <div class="coins-grid" id="coins-grid"></div>
+        </div>
+
+        <div class="loot-section" id="gems-section">
+          <h3>💎 Gems</h3>
+          <div class="items-grid" id="gems-grid"></div>
+        </div>
+
+        <div class="loot-section" id="art-section">
+          <h3>🎨 Art Objects</h3>
+          <div class="items-grid" id="art-grid"></div>
+        </div>
+
+        <div class="loot-section" id="magic-section">
+          <h3>✨ Magic Items</h3>
+          <div class="magic-grid" id="magic-grid"></div>
+        </div>
+
+        <div class="loot-notes">
+          <h3>📝 Hoard Notes</h3>
+          <div id="loot-notes-content"></div>
+        </div>
+
+        <div class="loot-actions">
+          <button class="action-btn" id="copy-btn"  onclick="copyLoot()">📋 Copy to Clipboard</button>
+          <button class="action-btn" id="save-btn"  onclick="saveLoot()">💾 Save to Vault</button>
+          <button class="action-btn"                onclick="exportLoot()">📤 Export JSON</button>
+          <button class="action-btn"                onclick="regenerateLoot()">🔄 Regenerate</button>
+        </div>
+      </div>
+
+      <!-- Saved Vault -->
+      <div class="saved-loot">
+        <h3>💾 Saved Hoards</h3>
+        <div id="saved-list"></div>
+        <button class="clear-vault-btn" onclick="clearSaved()">🗑️ Clear Vault</button>
+      </div>
+
+      <div class="dm-tip">
+        <p>💡 <strong>DM Tip:</strong> Adjust loot based on your party's wealth tier. Too rich? Remove magic items. Too poor? Switch to the Generous fortune setting. Magic items from adventure books marked with their source in the full DMG tables.</p>
+      </div>
+
     </div>
-    <footer>
-        <div class="footer-content">
-            <div class="footer-logo">💎 The Vault of Wonders</div>
-            <p>A Division of The Beholder's Gazette</p>
-            <p style="margin: 15px 0; color: #888;">Remember: Divide loot fairly, or the bard will write a song about you. A unflattering one.</p>
-            <div class="footer-links">
-                <a href="index.html">Home</a>
-                <a href="loot-generator.html" class="active">Loot</a>
-                <a href="about.html">About</a>
-                <a href="https://patreon.com/DungeonMasterDen" target="_blank">Support</a>
-            </div>
-            <p style="margin-top: 20px; color: #444; font-size: 0.75rem;">Powered by Static Magic &copy; <span id="year"></span></p>
-        </div>
-    </footer>
-    <script src="loot-data.js"></script>
-    <script src="loot-generator.js"></script>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-logo">💎 The Vault of Wonders</div>
+      <p style="color:var(--text-dim);font-family:var(--font-ui);font-size:0.82rem;">A Division of The Beholder's Gazette</p>
+      <p style="margin:12px 0;color:var(--text-dim);font-style:italic;font-size:0.8rem;">Remember: divide loot fairly, or the bard will write a song about you. An unflattering one.</p>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="loot-generator.html">Loot</a>
+        <a href="about.html">About</a>
+        <a href="https://patreon.com/DungeonMasterDen" target="_blank">Support</a>
+      </div>
+      <p style="margin-top:16px;color:var(--text-dim);font-family:var(--font-ui);font-size:0.7rem;opacity:0.4;">Powered by Static Magic &copy; <span id="year"></span></p>
+    </div>
+  </footer>
+
+  <script src="loot-data.js"></script>
+  <script src="loot-generator.js"></script>
 </body>
 </html>
-
