@@ -195,6 +195,8 @@
 
   <!-- Navigation -->
   <nav class="main-nav">
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu">☰</button>
+
     <ul>
       <li><a href="index.html">🏠 Home</a></li>
       <li><a href="economy.html">💰 Economy</a></li>
@@ -441,5 +443,33 @@
 
   <script src="loot-data.js"></script>
   <script src="loot-generator.js"></script>
+  <script>
+  // ── Mobile nav toggle ─────────────────────────────────
+  (function() {
+    const btn = document.getElementById('nav-hamburger');
+    const ul  = document.querySelector('.main-nav ul');
+    if (!btn || !ul) return;
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const open = ul.classList.toggle('nav-open');
+      btn.textContent = open ? '✕' : '☰';
+      btn.setAttribute('aria-expanded', open);
+    });
+    // Close when a link is tapped
+    ul.addEventListener('click', function(e) {
+      if (e.target.tagName === 'A') {
+        ul.classList.remove('nav-open');
+        btn.textContent = '☰';
+      }
+    });
+    // Close when tapping outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.main-nav')) {
+        ul.classList.remove('nav-open');
+        btn.textContent = '☰';
+      }
+    });
+  })();
+  </script>
 </body>
 </html>

@@ -76,6 +76,26 @@ p { margin-bottom: 1em; }
 p:last-child { margin-bottom: 0; }
 
 /* ── NAVIGATION ─────────────────────────────────────────── */
+/* ── HAMBURGER BUTTON (mobile only) ──────────────────────── */
+.nav-hamburger {
+  display: none;
+  background: none;
+  border: 1px solid var(--gold-dim);
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  color: var(--gold-bright);
+  font-size: 1.2rem;
+  line-height: 1;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 201;
+  transition: all var(--transition);
+}
+.nav-hamburger:hover { background: var(--gold-glow); border-color: var(--gold-mid); }
+
 .main-nav {
   background: linear-gradient(180deg, #1a1712 0%, #0e0d0b 100%);
   border-bottom: var(--border-double);
@@ -83,6 +103,8 @@ p:last-child { margin-bottom: 0; }
   top: 0;
   z-index: 200;
   box-shadow: 0 4px 30px rgba(0,0,0,0.8);
+  /* needed so the mobile dropdown positions relative to the bar */
+  isolation: isolate;
 }
 
 .main-nav ul {
@@ -669,12 +691,53 @@ footer::before {
 
 @media (max-width: 768px) {
   .hero-content, .page-hero-content { padding: 55px 20px 48px; }
-  .main-nav ul { flex-direction: column; }
-  .main-nav a { padding: 12px 20px; border-bottom: 1px solid rgba(212,168,67,0.08); }
-  .main-nav a::after { display: none; }
   .featured-article { padding: 26px; }
   .tool-container { padding: 22px; }
   .footer-links { flex-direction: column; gap: 12px; }
+
+  /* ── Hamburger nav ── */
+  .nav-hamburger { display: block; }
+
+  .main-nav {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+  }
+
+  .main-nav ul {
+    display: none;               /* hidden until toggled */
+    flex-direction: column;
+    width: 100%;
+    background: linear-gradient(180deg, #1a1712 0%, #0e0d0b 100%);
+    border-top: 1px solid var(--gold-dim);
+    padding: 8px 0 12px;
+    position: absolute;          /* drop down over content */
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 199;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.9);
+    animation: fadeInDown 0.2s ease;
+  }
+
+  .main-nav ul.nav-open {
+    display: flex;               /* shown when toggled */
+  }
+
+  .main-nav li {
+    border-bottom: 1px solid rgba(212,168,67,0.08);
+  }
+  .main-nav li:last-child { border-bottom: none; }
+
+  .main-nav a {
+    padding: 14px 24px;
+    font-size: 0.82rem;
+  }
+  .main-nav a::after { display: none; }
+  .main-nav a:hover, .main-nav a.active {
+    border-left: 3px solid var(--gold-bright);
+    padding-left: 21px;
+  }
 }
 
 @media (max-width: 500px) {
