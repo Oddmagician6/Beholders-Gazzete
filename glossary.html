@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Who's Who | The Beholder's Gazette</title>
+    <meta name="description" content="Meet the Beholder's Gazette newsroom and the lords, guilds, and realms that keep them busy.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="homepage.css">
+    <style>
+        .gl-body { max-width: 1100px; margin: 0 auto; padding: 50px 16px 60px; }
+        .gl-section { margin-bottom: 56px; }
+        .gl-section > h2 {
+            font-family: var(--font-head); color: var(--gold-bright); font-size: 1.8rem;
+            border-bottom: var(--border-gold2); padding-bottom: 12px; margin-bottom: 10px;
+        }
+        .gl-intro { color: var(--text-mid); font-family: var(--font-body); font-size: 1.05rem; margin-bottom: 26px; }
+
+        /* Newsroom */
+        .writer-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        .writer-card {
+            background: linear-gradient(145deg, var(--bg-raised), var(--bg-card));
+            border: var(--border-gold); border-radius: var(--radius-md); padding: 24px;
+            display: flex; flex-direction: column; gap: 10px; scroll-margin-top: 90px;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .writer-card:target, .writer-card:hover { border-color: var(--gold-mid); box-shadow: var(--shadow-glow); }
+        .writer-head { display: flex; gap: 14px; align-items: center; }
+        .writer-avatar {
+            font-size: 2.2rem; width: 62px; height: 62px; flex: none; display: grid; place-items: center;
+            border: var(--border-gold2); border-radius: 50%; background: var(--bg-dark);
+        }
+        .writer-name { font-family: var(--font-head); color: var(--gold-bright); font-size: 1.2rem; line-height: 1.2; }
+        .writer-race { color: var(--text-dim); font-family: var(--font-ui); font-size: .82rem; }
+        .writer-desk {
+            align-self: flex-start; font-family: var(--font-ui); font-size: .72rem; letter-spacing: .08em;
+            text-transform: uppercase; color: var(--bg-deep); background: var(--gold-mid);
+            padding: 3px 10px; border-radius: var(--radius-sm);
+        }
+        .writer-tagline { font-family: var(--font-body); font-style: italic; color: var(--text-bright); font-size: 1.05rem; }
+        .writer-bio { color: var(--text-mid); font-family: var(--font-body); font-size: .98rem; line-height: 1.6; }
+        .writer-meta { font-family: var(--font-ui); font-size: .82rem; color: var(--text-dim); }
+        .writer-meta a { color: var(--gold-bright); }
+        .writer-signoff { font-family: var(--font-body); font-style: italic; color: var(--text-dim); border-top: 1px solid #333; padding-top: 10px; }
+        .art-list { list-style: none; padding: 0; margin: 4px 0 0; }
+        .art-list li { padding: 5px 0; border-bottom: 1px dashed #333; font-size: .92rem; }
+        .art-list li:last-child { border-bottom: none; }
+        .art-list a { color: var(--text-bright); text-decoration: none; }
+        .art-list a:hover { color: var(--gold-bright); }
+        .art-list .empty { color: var(--text-dim); font-style: italic; }
+        .legacy-note {
+            margin-top: 22px; padding: 16px 20px; border: 1px dashed var(--gold-dim); border-radius: var(--radius-md);
+            color: var(--text-mid); font-family: var(--font-body);
+        }
+
+        /* Realm */
+        .realm-tools { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; align-items: center; }
+        .realm-search {
+            flex: 1 1 240px; min-width: 0; background: var(--bg-dark); border: var(--border-gold); color: var(--text-bright);
+            padding: 10px 14px; border-radius: var(--radius-sm); font-family: var(--font-ui); font-size: 1rem;
+        }
+        .chip {
+            background: transparent; border: var(--border-gold); color: var(--text-mid); cursor: pointer;
+            padding: 7px 13px; border-radius: 999px; font-family: var(--font-ui); font-size: .82rem;
+        }
+        .chip.active, .chip:hover { background: var(--gold-mid); color: var(--bg-deep); border-color: var(--gold-mid); }
+        .realm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+        .realm-card { background: var(--bg-card); border: var(--border-gold); border-radius: var(--radius-md); padding: 18px; }
+        .realm-top { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+        .realm-name { font-family: var(--font-head); color: var(--gold-bright); font-size: 1.05rem; }
+        .realm-type { font-family: var(--font-ui); font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text-dim); white-space: nowrap; }
+        .realm-blurb { color: var(--text-mid); font-family: var(--font-body); margin: 8px 0; line-height: 1.55; }
+        .realm-count { font-family: var(--font-ui); font-size: .8rem; color: var(--text-dim); }
+        .realm-empty { color: var(--text-dim); font-style: italic; grid-column: 1 / -1; }
+
+        @media (max-width: 500px) {
+            .writer-grid, .realm-grid { grid-template-columns: 1fr; }
+            .gl-section > h2 { font-size: 1.45rem; }
+        }
+    </style>
+</head>
+<body>
+    <section class="page-hero" style="background-image: url('https://images.unsplash.com/photo-1507842217121-9e93c8aaf27c?w=1920&q=80'); background-size:cover; background-position:center;">
+        <div class="page-hero-overlay"></div>
+        <div class="page-hero-content">
+            <div class="page-hero-logo">👥 Who's Who</div>
+            <p class="page-hero-tagline">"Any resemblance to persons living, dead, or undead is entirely the point."</p>
+        </div>
+    </section>
+  <!-- Navigation -->
+  <nav class="main-nav">
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu">☰</button>
+
+    <ul>
+      <li><a href="index.html">🏠 Home</a></li>
+      <li><a href="economy.html">💰 Economy</a></li>
+      <li><a href="rumors.html">🍺 Tavern</a></li>
+      <li><a href="npc-generator.html">🎭 Town Square</a></li>
+      <li><a href="loot-generator.html">💎 Loot</a></li>
+      <li><a href="encounter.html">⚔️ Encounters</a></li>
+      <li><a href="spellbook.html">📖 Spellbook</a></li>
+      <li><a href="glossary.html" class="active">👥 Who's Who</a></li>
+      <li><a href="about.html">📜 About</a></li>
+    </ul>
+  </nav>
+    <div class="ticker-wrap">
+        <div class="ticker">
+            ✍️ NEWSROOM: Eight writers, eight desks, zero agreement &nbsp;&bull;&nbsp;
+            🏛️ "Promises Made: many. Promises Kept: see page 9" &nbsp;&bull;&nbsp;
+            🍞 Loaf Index holding steady (Barnaby is not) &nbsp;&bull;&nbsp;
+            🦎 Skritch reports this ticker is allegedly scrolling
+        </div>
+    </div>
+
+    <div class="gl-body">
+        <section class="gl-section" id="newsroom">
+            <h2>✍️ The Newsroom</h2>
+            <p class="gl-intro">Every desk has one writer, and every writer has opinions. Click a byline on any article to land here.</p>
+            <div class="writer-grid" id="writer-grid"><p class="realm-empty">Summoning the staff…</p></div>
+            <div class="legacy-note" id="legacy-note" hidden></div>
+        </section>
+
+        <section class="gl-section" id="realm">
+            <h2>🗺️ Who's Who in the Realms</h2>
+            <p class="gl-intro">The lords, guilds, and kingdoms that keep our writers employed. Anyone who has made the paper is listed here.</p>
+            <div class="realm-tools">
+                <input class="realm-search" id="realm-search" type="search" placeholder="Search the realms…" aria-label="Search the realms">
+                <div id="realm-chips" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+            </div>
+            <div class="realm-grid" id="realm-grid"></div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">👁️ The Beholder's Gazette</div>
+            <p>Published by the Bard's Guild of Journalism</p>
+            <p style="margin: 15px 0; color: #888;">Disclaimer: All news is subject to DM approval. No dragons were harmed in the making of this website. Several goblins, however, did not survive.</p>
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="glossary.html">Who's Who</a>
+                <a href="about.html">About</a>
+                <a href="https://patreon.com/DungeonMasterDen" target="_blank">Support</a>
+            </div>
+            <p style="margin-top: 20px; color: #444; font-size: 0.75rem;">Powered by Static Magic &copy; <span id="year"></span></p>
+        </div>
+    </footer>
+
+    <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const TYPE_LABELS = { person:'People', party:'Factions', country:'Realms', city:'Cities', place:'Places',
+                          company:'Guilds & Companies', agency:'Agencies', institution:'Institutions', product:'Wares', ip:'Tales & Works' };
+    const artLinks = list => list.length
+        ? list.map(a => `<li><a href="article.html?id=${encodeURIComponent(a.id)}">${esc(a.title)}</a></li>`).join('')
+        : '<li class="empty">No dispatches filed yet.</li>';
+
+    let realm = [], activeType = 'all';
+
+    function renderWriters(g) {
+        document.getElementById('writer-grid').innerHTML = g.writers.map(w => `
+          <article class="writer-card" id="${esc(w.id)}">
+            <div class="writer-head">
+              <div class="writer-avatar" aria-hidden="true">${esc(w.avatar || '✍️')}</div>
+              <div>
+                <div class="writer-name">${esc(w.name)}</div>
+                <div class="writer-race">${esc(w.race_class)}</div>
+              </div>
+            </div>
+            <span class="writer-desk">${esc(w.desk)}</span>
+            <div class="writer-tagline">${esc(w.tagline)}</div>
+            <div class="writer-bio">${esc(w.bio)}</div>
+            <div class="writer-meta">
+              Covers: ${esc(w.categories.join(', '))}
+              ${w.rivals.length ? `<br>Feuding with: ${w.rivals.map(r => `<a href="#${esc(r.id)}">${esc(r.name)}</a>`).join(', ')}` : ''}
+            </div>
+            <div class="writer-meta">Latest dispatches (${w.article_count}):</div>
+            <ul class="art-list">${artLinks(w.articles)}</ul>
+            <div class="writer-signoff">${esc(w.signoff)}</div>
+          </article>`).join('');
+
+        if (g.legacy.length) {
+            const note = document.getElementById('legacy-note');
+            note.hidden = false;
+            note.innerHTML = '📜 <strong>From the archives:</strong> earlier editions were filed by ' +
+                g.legacy.map(l => `${esc(l.name)} (${l.article_count})`).join(', ') +
+                '. Gobwiz Quillnib, our founding goblin, wrote most of the first era alone and has since retired to a very comfortable cave.';
+        }
+        if (location.hash) document.getElementById(location.hash.slice(1))?.scrollIntoView();
+    }
+
+    function renderChips() {
+        const types = [...new Set(realm.map(e => e.type))];
+        document.getElementById('realm-chips').innerHTML =
+            ['all', ...types].map(t => `<button class="chip ${t === activeType ? 'active' : ''}" data-type="${esc(t)}">${t === 'all' ? 'All' : esc(TYPE_LABELS[t] || t)}</button>`).join('');
+    }
+
+    function renderRealm() {
+        const q = document.getElementById('realm-search').value.trim().toLowerCase();
+        const rows = realm.filter(e => (activeType === 'all' || e.type === activeType) &&
+            (!q || `${e.name} ${e.short} ${e.blurb}`.toLowerCase().includes(q)));
+        document.getElementById('realm-grid').innerHTML = rows.length ? rows.map(e => `
+          <div class="realm-card">
+            <div class="realm-top">
+              <span class="realm-name">${esc(e.name)}</span>
+              <span class="realm-type">${esc(TYPE_LABELS[e.type] || e.type)}</span>
+            </div>
+            ${e.blurb ? `<p class="realm-blurb">${esc(e.blurb)}</p>` : ''}
+            <div class="realm-count">Mentioned in ${e.appearances} ${e.appearances === 1 ? 'dispatch' : 'dispatches'}</div>
+            ${e.articles.length ? `<ul class="art-list">${artLinks(e.articles.slice(0, 3))}</ul>` : ''}
+          </div>`).join('') : '<p class="realm-empty">No one by that name has made the paper. Yet.</p>';
+    }
+
+    document.getElementById('realm-chips').addEventListener('click', e => {
+        const b = e.target.closest('.chip'); if (!b) return;
+        activeType = b.dataset.type; renderChips(); renderRealm();
+    });
+    document.getElementById('realm-search').addEventListener('input', renderRealm);
+
+    fetch('glossary.json?t=' + Date.now())
+        .then(r => r.json())
+        .then(g => { renderWriters(g); realm = g.realm || []; renderChips(); renderRealm(); })
+        .catch(() => {
+            document.getElementById('writer-grid').innerHTML = '<p class="realm-empty">The newsroom scroll could not be loaded.</p>';
+        });
+    </script>
+  <script>
+  // ── Mobile nav toggle ─────────────────────────────────
+  (function() {
+    const btn = document.getElementById('nav-hamburger');
+    const ul  = document.querySelector('.main-nav ul');
+    if (!btn || !ul) return;
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const open = ul.classList.toggle('nav-open');
+      btn.textContent = open ? '✕' : '☰';
+      btn.setAttribute('aria-expanded', open);
+    });
+    ul.addEventListener('click', function(e) {
+      if (e.target.tagName === 'A') {
+        ul.classList.remove('nav-open');
+        btn.textContent = '☰';
+      }
+    });
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.main-nav')) {
+        ul.classList.remove('nav-open');
+        btn.textContent = '☰';
+      }
+    });
+  })();
+  </script>
+</body>
+</html>

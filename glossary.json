@@ -1,0 +1,820 @@
+{
+    "generated":  "2026-10-10",
+    "writers":  [
+                    {
+                        "id":  "ottoline-vex",
+                        "name":  "Ottoline Vex",
+                        "avatar":  "🏛️",
+                        "race_class":  "Tiefling court scribe (retired herald)",
+                        "desk":  "Politics \u0026 Realm Affairs",
+                        "categories":  [
+                                           "Politics",
+                                           "Elections",
+                                           "Legislation",
+                                           "Scandal",
+                                           "Civil Rights",
+                                           "Regulations"
+                                       ],
+                        "tagline":  "Thirty years in the Senate Chamber gallery. Still unimpressed.",
+                        "bio":  "Ottoline Vex transcribed High Council sessions for three decades before the Gazette hired her to say what she actually thought. She has outlasted four High Lords, two Grand Viziers, and one quill that caught fire from boredom.",
+                        "signoff":  "— O.V., from the gallery",
+                        "rivals":  [
+                                       {
+                                           "id":  "grashka-ironjaw",
+                                           "name":  "Grashka Ironjaw"
+                                       }
+                                   ],
+                        "article_count":  0,
+                        "articles":  [
+
+                                     ]
+                    },
+                    {
+                        "id":  "barnaby-tallowmere",
+                        "name":  "Barnaby Tallowmere",
+                        "avatar":  "🍞",
+                        "race_class":  "Halfling ledger-keeper",
+                        "desk":  "Economy \u0026 Coin",
+                        "categories":  [
+                                           "Economy",
+                                           "Finance",
+                                           "Real Estate"
+                                       ],
+                        "tagline":  "Inventor of the Loaf Index. Has not slept since the last rate hike.",
+                        "bio":  "Barnaby Tallowmere kept the books for a Shire bakery until he noticed bread was getting more expensive and could not stop noticing. He now tracks the economy entirely through the Loaf Index, the price of one honest loaf of bread in copper pieces, and worries about it professionally.",
+                        "signoff":  "— B.T. (Loaf Index: see sidebar)",
+                        "rivals":  [
+                                       {
+                                           "id":  "sterling-vanmoor",
+                                           "name":  "Sterling Vanmoor"
+                                       }
+                                   ],
+                        "article_count":  0,
+                        "articles":  [
+
+                                     ]
+                    },
+                    {
+                        "id":  "sterling-vanmoor",
+                        "name":  "Sterling Vanmoor",
+                        "avatar":  "💼",
+                        "race_class":  "Human merchant-prince (self-described \u0027Guild Visionary\u0027)",
+                        "desk":  "Business \u0026 Guilds",
+                        "categories":  [
+                                           "Business",
+                                           "Consumer",
+                                           "Product Safety"
+                                       ],
+                        "tagline":  "Every catastrophe is a market opportunity. Ask him how.",
+                        "bio":  "Sterling Vanmoor has founded eleven ventures, nine of which he describes as \u0027learning experiences\u0027 and two of which are under investigation by the Royal Inquisitors. He covers the Guilds with the unshakable optimism of a man who has never personally been eaten by a mimic.",
+                        "signoff":  "— Sterling Vanmoor, Guild Visionary. Let\u0027s connect at the Yawning Portal.",
+                        "rivals":  [
+                                       {
+                                           "id":  "brakka-stonesweat",
+                                           "name":  "Brakka Stonesweat"
+                                       },
+                                       {
+                                           "id":  "barnaby-tallowmere",
+                                           "name":  "Barnaby Tallowmere"
+                                       }
+                                   ],
+                        "article_count":  0,
+                        "articles":  [
+
+                                     ]
+                    },
+                    {
+                        "id":  "brakka-stonesweat",
+                        "name":  "Brakka Stonesweat",
+                        "avatar":  "⛏️",
+                        "race_class":  "Dwarf ex-miner and shop steward",
+                        "desk":  "Labor \u0026 Commoners",
+                        "categories":  [
+                                           "Labor",
+                                           "Social",
+                                           "Education"
+                                       ],
+                        "tagline":  "Forty years in the shafts. Not a single one of them paid enough.",
+                        "bio":  "Brakka Stonesweat swung a pick in the Mithral Hall deeps for forty years and organized her first strike at age nineteen. She covers labor because somebody has to say what the guildmasters won\u0027t, and because her knees no longer allow mining.",
+                        "signoff":  "Solidarity. And stretch your back. — Brakka",
+                        "rivals":  [
+                                       {
+                                           "id":  "sterling-vanmoor",
+                                           "name":  "Sterling Vanmoor"
+                                       }
+                                   ],
+                        "article_count":  0,
+                        "articles":  [
+
+                                     ]
+                    },
+                    {
+                        "id":  "nyx-spindlecoil",
+                        "name":  "Nyx Spindlecoil",
+                        "avatar":  "⚙️",
+                        "race_class":  "Gnome artificer and early adopter",
+                        "desk":  "Arcane Technology",
+                        "categories":  [
+                                           "Technology",
+                                           "Transport"
+                                       ],
+                        "tagline":  "Tests every new gadget personally. Eyebrows currently regrowing.",
+                        "bio":  "Nyx Spindlecoil has preordered every enchanted device released in Waterdeep since the first Sending Stone. They review each one hands-on, which explains the burn scars, the slight case of polymorph, and the fact that their familiar now speaks only in advertisements.",
+                        "signoff":  "— Nyx (they/them). Damage Report below.",
+                        "rivals":  [
+                                       {
+                                           "id":  "wendell-tumbleberry",
+                                           "name":  "Brother Wendell Tumbleberry"
+                                       }
+                                   ],
+                        "article_count":  0,
+                        "articles":  [
+
+                                     ]
+                    },
+                    {
+                        "id":  "grashka-ironjaw",
+                        "name":  "Grashka Ironjaw",
+                        "avatar":  "⚔️",
+                        "race_class":  "Half-orc war correspondent",
+                        "desk":  "Foreign Realms",
+                        "categories":  [
+                                           "International",
+                                           "Travel"
+                                       ],
+                        "tagline":  "Has covered nineteen sieges. Considers diplomacy the twentieth.",
+                        "bio":  "Grashka Ironjaw reported from the front lines of the Moonsea campaigns, the Vaasan winter, and three separate \u0027final\u0027 peace summits. She has seen everything twice and been surprised by none of it.",
+                        "signoff":  "Ironjaw, filed from the front.",
+                        "rivals":  [
+                                       {
+                                           "id":  "ottoline-vex",
+                                           "name":  "Ottoline Vex"
+                                       }
+                                   ],
+                        "article_count":  0,
+                        "articles":  [
+
+                                     ]
+                    },
+                    {
+                        "id":  "wendell-tumbleberry",
+                        "name":  "Brother Wendell Tumbleberry",
+                        "avatar":  "🍲",
+                        "race_class":  "Halfling cleric of the Harvest Mother",
+                        "desk":  "Health, Science \u0026 Nature",
+                        "categories":  [
+                                           "Health",
+                                           "Environment",
+                                           "Science",
+                                           "Creature Features"
+                                       ],
+                        "tagline":  "Has a potion, a poultice, or a soup for that.",
+                        "bio":  "Brother Wendell Tumbleberry runs a small temple infirmary in the Lower City and writes the Gazette\u0027s health and nature column between soup batches. He believes most problems can be solved by rest, fresh air, and a hearty bowl of something, and he is right more often than the Clerics\u0027 Disease Council would like.",
+                        "signoff":  "Rest well, friends. — Brother Wendell",
+                        "rivals":  [
+                                       {
+                                           "id":  "nyx-spindlecoil",
+                                           "name":  "Nyx Spindlecoil"
+                                       }
+                                   ],
+                        "article_count":  0,
+                        "articles":  [
+
+                                     ]
+                    },
+                    {
+                        "id":  "skritch-mudwhistle",
+                        "name":  "Skritch Mudwhistle",
+                        "avatar":  "🦎",
+                        "race_class":  "Kobold night-beat reporter",
+                        "desk":  "Local, Crime \u0026 Oddities",
+                        "categories":  [
+                                           "Local",
+                                           "Local Chaos",
+                                           "Public Safety",
+                                           "Zoning",
+                                           "Events",
+                                           "Tavern Tales",
+                                           "Lifestyle",
+                                           "Sports"
+                                       ],
+                        "tagline":  "Small. Nosy. Always first on the scene. Allegedly.",
+                        "bio":  "Skritch Mudwhistle grew up under the Lower City docks and still knows every alley, sewer grate, and City Watch sergeant by smell. He covers crime, weird news, and neighborhood chaos from a cramped desk under the Gazette\u0027s printing press.",
+                        "signoff":  "— Skritch, on the beat (allegedly)",
+                        "rivals":  [
+
+                                   ],
+                        "article_count":  0,
+                        "articles":  [
+
+                                     ]
+                    }
+                ],
+    "legacy":  [
+                   {
+                       "name":  "Gobwiz Quillnib",
+                       "article_count":  46
+                   },
+                   {
+                       "name":  "Gimble Inkquill",
+                       "article_count":  1
+                   },
+                   {
+                       "name":  "Elara Swiftquill",
+                       "article_count":  1
+                   },
+                   {
+                       "name":  "Marcus Goldhand",
+                       "article_count":  1
+                   },
+                   {
+                       "name":  "Thorin Ironforge",
+                       "article_count":  1
+                   },
+                   {
+                       "name":  "Zara Spellweaver",
+                       "article_count":  1
+                   }
+               ],
+    "realm":  [
+                  {
+                      "name":  "Waterdeep",
+                      "short":  "Waterdeep",
+                      "type":  "country",
+                      "blurb":  "The great realm, and great city, where most Gazette news happens. Home of the High Council.",
+                      "appearances":  30,
+                      "articles":  [
+                                       {
+                                           "id":  "dragon-ridership-app",
+                                           "title":  "Uber-Style Dragon Ridership App Launches in Waterdeep",
+                                           "date":  "2026-04-23"
+                                       },
+                                       {
+                                           "id":  "haunted-house-airbnb",
+                                           "title":  "Haunted House Listed on Airbnb Causes Guest Trauma",
+                                           "date":  "2026-04-23"
+                                       },
+                                       {
+                                           "id":  "mimic-furniture-recall",
+                                           "title":  "IKEA-Style Furniture Store Recalls Mimic-Infested Chairs",
+                                           "date":  "2026-04-23"
+                                       },
+                                       {
+                                           "id":  "flying-mount-parking-crisis",
+                                           "title":  "Flying Mount Parking Crisis Grips Tower District",
+                                           "date":  "2026-04-23"
+                                       },
+                                       {
+                                           "id":  "potion-addiction-support-group",
+                                           "title":  "Potion Addiction Support Group Forms in Lower City",
+                                           "date":  "2026-04-23"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "High Lord Donwald of the Golden Towers",
+                      "short":  "Donwald",
+                      "type":  "person",
+                      "blurb":  "Current holder of the High Seat. Governs mostly from the balcony of his Golden Tower. Fond of walls, tariffs, and solid gold plumbing.",
+                      "appearances":  9,
+                      "articles":  [
+                                       {
+                                           "id":  "donwald-oil-lords-dispute",
+                                           "title":  "High Lord Donwald Clashes With Oil Lords Over Drilling Rights",
+                                           "date":  "2026-04-23"
+                                       },
+                                       {
+                                           "id":  "joebid-sleeping-scandal",
+                                           "title":  "Archmage Joebid Found Napping in Dragon Stable",
+                                           "date":  "2026-04-23"
+                                       },
+                                       {
+                                           "id":  "donwald-golden-toilet-decree",
+                                           "title":  "High Lord Donwald Orders Golden Toilets for Council Chambers",
+                                           "date":  "2026-04-23"
+                                       },
+                                       {
+                                           "id":  "council-spending-investigation",
+                                           "title":  "Inquisitors Launch Probe Into High Council Spending",
+                                           "date":  "2026-04-22"
+                                       },
+                                       {
+                                           "id":  "donwald-first-decree-wall",
+                                           "title":  "High Lord Donwald Signs Executive Decree for Border Wall",
+                                           "date":  "2026-04-22"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the High Council",
+                      "short":  "the High Council",
+                      "type":  "institution",
+                      "blurb":  "The ruling executive of Waterdeep. Whoever holds the High Seat runs it, in theory.",
+                      "appearances":  8,
+                      "articles":  [
+                                       {
+                                           "id":  "donwald-oil-lords-dispute",
+                                           "title":  "High Lord Donwald Clashes With Oil Lords Over Drilling Rights",
+                                           "date":  "2026-04-23"
+                                       },
+                                       {
+                                           "id":  "donwald-golden-toilet-decree",
+                                           "title":  "High Lord Donwald Orders Golden Toilets for Council Chambers",
+                                           "date":  "2026-04-23"
+                                       },
+                                       {
+                                           "id":  "council-spending-investigation",
+                                           "title":  "Inquisitors Launch Probe Into High Council Spending",
+                                           "date":  "2026-04-22"
+                                       },
+                                       {
+                                           "id":  "donwald-first-decree-wall",
+                                           "title":  "High Lord Donwald Signs Executive Decree for Border Wall",
+                                           "date":  "2026-04-22"
+                                       },
+                                       {
+                                           "id":  "donwald-high-council-victory",
+                                           "title":  "Lord Donwald Secures High Council Seat After Hard-Fought Campaign",
+                                           "date":  "2026-04-21"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Party of the Blue Donkey",
+                      "short":  "the Blue Donkeys",
+                      "type":  "party",
+                      "blurb":  "One of the two great political factions of Waterdeep.",
+                      "appearances":  6,
+                      "articles":  [
+                                       {
+                                           "id":  "joebid-sleeping-scandal",
+                                           "title":  "Archmage Joebid Found Napping in Dragon Stable",
+                                           "date":  "2026-04-23"
+                                       },
+                                       {
+                                           "id":  "donwald-golden-toilet-decree",
+                                           "title":  "High Lord Donwald Orders Golden Toilets for Council Chambers",
+                                           "date":  "2026-04-23"
+                                       },
+                                       {
+                                           "id":  "donwald-first-decree-wall",
+                                           "title":  "High Lord Donwald Signs Executive Decree for Border Wall",
+                                           "date":  "2026-04-22"
+                                       },
+                                       {
+                                           "id":  "donwald-high-council-victory",
+                                           "title":  "Lord Donwald Secures High Council Seat After Hard-Fought Campaign",
+                                           "date":  "2026-04-21"
+                                       },
+                                       {
+                                           "id":  "debate-arena-magic-microphones",
+                                           "title":  "Archmage Joebid and Warlord Donwald Clash in Debate Arena",
+                                           "date":  "2026-04-16"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the City Watch",
+                      "short":  "the Watch",
+                      "type":  "agency",
+                      "blurb":  "Underpaid, overworked, and frequently outmatched by griffins.",
+                      "appearances":  5,
+                      "articles":  [
+                                       {
+                                           "id":  "potion-addiction-support-group",
+                                           "title":  "Potion Addiction Support Group Forms in Lower City",
+                                           "date":  "2026-04-23"
+                                       },
+                                       {
+                                           "id":  "donwald-first-decree-wall",
+                                           "title":  "High Lord Donwald Signs Executive Decree for Border Wall",
+                                           "date":  "2026-04-22"
+                                       },
+                                       {
+                                           "id":  "tavern-music-noise-ordinance",
+                                           "title":  "Bards Protest New Noise Ordinance After Curfew",
+                                           "date":  "2026-04-22"
+                                       },
+                                       {
+                                           "id":  "scrolltok-influencer-scandal",
+                                           "title":  "ScrollTok Influencer Promotes Cursed Amulet",
+                                           "date":  "2026-04-20"
+                                       },
+                                       {
+                                           "id":  "starbucks-mystical-brews-expansion",
+                                           "title":  "Starbuck\u0027s Mystical Brews Opens Near Dungeon Entrance",
+                                           "date":  "2026-04-19"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Candlekeep",
+                      "short":  "Candlekeep",
+                      "type":  "institution",
+                      "blurb":  "Fortress-library and seat of learning, run by the stern Head Librarian.",
+                      "appearances":  4,
+                      "articles":  [
+                                       {
+                                           "id":  "candlekeep-ai-scribe-controversy",
+                                           "title":  "Candlekeep Librarians Reject AI-Generated Spellbooks",
+                                           "date":  "2026-04-21"
+                                       },
+                                       {
+                                           "id":  "bard-college-plagiarism-scandal",
+                                           "title":  "College of Valor Accused of Song Plagiarism",
+                                           "date":  "2026-04-18"
+                                       },
+                                       {
+                                           "id":  "candlekeep-ink-imp-riot",
+                                           "title":  "Candlekeep Librarians Battle Ink Imp Rebellion",
+                                           "date":  "2026-04-17"
+                                       },
+                                       {
+                                           "id":  "federal-reserve-waterdeep",
+                                           "title":  "Federal Reserve of Waterdeep Announces Interest Rate Hike Amidst Goblin Inflation",
+                                           "date":  "2024-01-15"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Golden Tower",
+                      "short":  "the Golden Tower",
+                      "type":  "place",
+                      "blurb":  "A spire of pure gold that pierces the clouds. Lord Donwald\u0027s preferred residence and press podium.",
+                      "appearances":  4,
+                      "articles":  [
+                                       {
+                                           "id":  "donwald-oil-lords-dispute",
+                                           "title":  "High Lord Donwald Clashes With Oil Lords Over Drilling Rights",
+                                           "date":  "2026-04-23"
+                                       },
+                                       {
+                                           "id":  "joebid-sleeping-scandal",
+                                           "title":  "Archmage Joebid Found Napping in Dragon Stable",
+                                           "date":  "2026-04-23"
+                                       },
+                                       {
+                                           "id":  "donwald-first-decree-wall",
+                                           "title":  "High Lord Donwald Signs Executive Decree for Border Wall",
+                                           "date":  "2026-04-22"
+                                       },
+                                       {
+                                           "id":  "donwald-high-council-victory",
+                                           "title":  "Lord Donwald Secures High Council Seat After Hard-Fought Campaign",
+                                           "date":  "2026-04-21"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Archmage Joebid the Elder",
+                      "short":  "Joebid",
+                      "type":  "person",
+                      "blurb":  "Former High Lord, now retired. Usually found leaning on his staff of office or napping in the royal dragon stables.",
+                      "appearances":  4,
+                      "articles":  [
+                                       {
+                                           "id":  "joebid-sleeping-scandal",
+                                           "title":  "Archmage Joebid Found Napping in Dragon Stable",
+                                           "date":  "2026-04-23"
+                                       },
+                                       {
+                                           "id":  "council-spending-investigation",
+                                           "title":  "Inquisitors Launch Probe Into High Council Spending",
+                                           "date":  "2026-04-22"
+                                       },
+                                       {
+                                           "id":  "donwald-high-council-victory",
+                                           "title":  "Lord Donwald Secures High Council Seat After Hard-Fought Campaign",
+                                           "date":  "2026-04-21"
+                                       },
+                                       {
+                                           "id":  "debate-arena-magic-microphones",
+                                           "title":  "Archmage Joebid and Warlord Donwald Clash in Debate Arena",
+                                           "date":  "2026-04-16"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Royal Inquisitors",
+                      "short":  "the Inquisitors",
+                      "type":  "agency",
+                      "blurb":  "The investigators of the realm. Mostly they subpoena grimoires.",
+                      "appearances":  4,
+                      "articles":  [
+                                       {
+                                           "id":  "donwald-golden-toilet-decree",
+                                           "title":  "High Lord Donwald Orders Golden Toilets for Council Chambers",
+                                           "date":  "2026-04-23"
+                                       },
+                                       {
+                                           "id":  "council-spending-investigation",
+                                           "title":  "Inquisitors Launch Probe Into High Council Spending",
+                                           "date":  "2026-04-22"
+                                       },
+                                       {
+                                           "id":  "donwald-high-council-victory",
+                                           "title":  "Lord Donwald Secures High Council Seat After Hard-Fought Campaign",
+                                           "date":  "2026-04-21"
+                                       },
+                                       {
+                                           "id":  "classified-grimoire-inquisition",
+                                           "title":  "Lady Hillara Summoned by Inquisitors Over Scrolls",
+                                           "date":  "2026-04-16"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the High Courts",
+                      "short":  "the High Courts",
+                      "type":  "institution",
+                      "blurb":  "The highest judges in the realm. They rule on everything from executive decrees to bardic noise ordinances.",
+                      "appearances":  3,
+                      "articles":  [
+                                       {
+                                           "id":  "sentient-broom-strike",
+                                           "title":  "Sentient Brooms Demand Voting Rights",
+                                           "date":  "2026-04-23"
+                                       },
+                                       {
+                                           "id":  "donwald-first-decree-wall",
+                                           "title":  "High Lord Donwald Signs Executive Decree for Border Wall",
+                                           "date":  "2026-04-22"
+                                       },
+                                       {
+                                           "id":  "tavern-music-noise-ordinance",
+                                           "title":  "Bards Protest New Noise Ordinance After Curfew",
+                                           "date":  "2026-04-22"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Damara",
+                      "short":  "Damara",
+                      "type":  "country",
+                      "blurb":  "Frozen northern realm ruled by Czar Vlad the Bear-Handed. Exports furs, iron ore, and tension.",
+                      "appearances":  3,
+                      "articles":  [
+                                       {
+                                           "id":  "donwald-golden-toilet-decree",
+                                           "title":  "High Lord Donwald Orders Golden Toilets for Council Chambers",
+                                           "date":  "2026-04-23"
+                                       },
+                                       {
+                                           "id":  "donwald-high-council-victory",
+                                           "title":  "Lord Donwald Secures High Council Seat After Hard-Fought Campaign",
+                                           "date":  "2026-04-21"
+                                       },
+                                       {
+                                           "id":  "eastern-front-winter-wizards",
+                                           "title":  "Czar Vlad the Bear-Handed Freezes Trade Routes",
+                                           "date":  "2026-04-16"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "ScrollTok",
+                      "short":  "ScrollTok",
+                      "type":  "company",
+                      "blurb":  "An endless scroll of dancing-bard videos and influencers selling cursed amulets.",
+                      "appearances":  3,
+                      "articles":  [
+                                       {
+                                           "id":  "dragon-ridership-app",
+                                           "title":  "Uber-Style Dragon Ridership App Launches in Waterdeep",
+                                           "date":  "2026-04-23"
+                                       },
+                                       {
+                                           "id":  "crypto-gold-piece-crash",
+                                           "title":  "Magic Coin Cryptocurrency Crashes After Rug Pull",
+                                           "date":  "2026-04-21"
+                                       },
+                                       {
+                                           "id":  "scrolltok-influencer-scandal",
+                                           "title":  "ScrollTok Influencer Promotes Cursed Amulet",
+                                           "date":  "2026-04-20"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Cormyr",
+                      "short":  "Cormyr",
+                      "type":  "country",
+                      "blurb":  "Old kingdom with a crown, a parliament, and terrible weather, especially when the meteoromancers strike.",
+                      "appearances":  3,
+                      "articles":  [
+                                       {
+                                           "id":  "international-trade-tariffs",
+                                           "title":  "New Tariffs Imposed on Kara-Tur Imports",
+                                           "date":  "2026-04-22"
+                                       },
+                                       {
+                                           "id":  "weather-wizard-union-strike",
+                                           "title":  "Weather Wizards Union Go on Strike",
+                                           "date":  "2026-04-17"
+                                       },
+                                       {
+                                           "id":  "eastern-front-winter-wizards",
+                                           "title":  "Czar Vlad the Bear-Handed Freezes Trade Routes",
+                                           "date":  "2026-04-16"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Federal Reserve of Waterdeep",
+                      "short":  "the Reserve",
+                      "type":  "agency",
+                      "blurb":  "Sets the price of borrowing gold. Occasionally prints far too much gold leaf.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "federal-reserve-gold-leaf",
+                                           "title":  "Federal Reserve Prints Too Much Gold Leaf",
+                                           "date":  "2026-04-16"
+                                       },
+                                       {
+                                           "id":  "federal-reserve-waterdeep",
+                                           "title":  "Federal Reserve of Waterdeep Announces Interest Rate Hike Amidst Goblin Inflation",
+                                           "date":  "2024-01-15"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Kara-Tur",
+                      "short":  "Kara-Tur",
+                      "type":  "country",
+                      "blurb":  "Distant eastern empire and one of the biggest trading partners of Waterdeep, currently buried under tariffs.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "international-trade-tariffs",
+                                           "title":  "New Tariffs Imposed on Kara-Tur Imports",
+                                           "date":  "2026-04-22"
+                                       },
+                                       {
+                                           "id":  "donwald-high-council-victory",
+                                           "title":  "Lord Donwald Secures High Council Seat After Hard-Fought Campaign",
+                                           "date":  "2026-04-21"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Merchant Princes",
+                      "short":  "the Merchant Princes",
+                      "type":  "institution",
+                      "blurb":  "The coin-counting elite who run the trade networks and the counting houses.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "international-trade-tariffs",
+                                           "title":  "New Tariffs Imposed on Kara-Tur Imports",
+                                           "date":  "2026-04-22"
+                                       },
+                                       {
+                                           "id":  "federal-reserve-gold-leaf",
+                                           "title":  "Federal Reserve Prints Too Much Gold Leaf",
+                                           "date":  "2026-04-16"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Phantom Carriage",
+                      "short":  "Phantom Carriage",
+                      "type":  "company",
+                      "blurb":  "Ride-summoning service for driverless coaches. Famous for surge pricing during raid events.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "phantom-carriage-surge-pricing",
+                                           "title":  "Phantom Carriage Surge Pricing During Raid Events",
+                                           "date":  "2026-04-19"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Czar Vlad the Bear-Handed",
+                      "short":  "Czar Vlad",
+                      "type":  "person",
+                      "blurb":  "Ruler of frozen Damara. Expands his borders every winter and freezes trade routes when annoyed.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "eastern-front-winter-wizards",
+                                           "title":  "Czar Vlad the Bear-Handed Freezes Trade Routes",
+                                           "date":  "2026-04-16"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Lady Hillara of the Deleted Scrolls",
+                      "short":  "Hillara",
+                      "type":  "person",
+                      "blurb":  "Former official whose private tower held several classified grimoires. She insists she declassified them with a thought.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "classified-grimoire-inquisition",
+                                           "title":  "Lady Hillara Summoned by Inquisitors Over Scrolls",
+                                           "date":  "2026-04-16"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Oracle Echo Stones",
+                      "short":  "Echo Stones",
+                      "type":  "product",
+                      "blurb":  "Household scrying stones that answer questions and, allegedly, listen to everything else.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "oracle-echo-stone-privacy",
+                                           "title":  "Oracle Echo Stones Accused of Listening to Private Conversations",
+                                           "date":  "2026-04-19"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Starbuck\u0027s Mystical Brews",
+                      "short":  "Starbuck\u0027s",
+                      "type":  "company",
+                      "blurb":  "Coffee-and-elixir chain with a location across from every dungeon entrance.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "starbucks-mystical-brews-expansion",
+                                           "title":  "Starbuck\u0027s Mystical Brews Opens Near Dungeon Entrance",
+                                           "date":  "2026-04-19"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Oil Lords of Amn",
+                      "short":  "the Oil Lords",
+                      "type":  "institution",
+                      "blurb":  "Wealthy cartel controlling the lamp oil of the realm. Prices move whenever drilling rights come up.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "donwald-oil-lords-dispute",
+                                           "title":  "High Lord Donwald Clashes With Oil Lords Over Drilling Rights",
+                                           "date":  "2026-04-23"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Senate Chamber",
+                      "short":  "the Chamber",
+                      "type":  "institution",
+                      "blurb":  "Upper house of Waterdeep, where Councilors debate, filibuster, and occasionally stop time.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "senate-filibuster-time-stop",
+                                           "title":  "Grand Vizier Mitch Casts Time Stop Spell Again",
+                                           "date":  "2026-04-16"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Royal Revenue Service",
+                      "short":  "the RRS",
+                      "type":  "agency",
+                      "blurb":  "The tax collectors of the crown. They would like to see your looting permit for that dragon hoard.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "royal-revenue-service-audit",
+                                           "title":  "Royal Revenue Service Audits Adventurer Hoards",
+                                           "date":  "2026-04-20"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Grand Vizier Mitch the Turtle",
+                      "short":  "the Turtle",
+                      "type":  "person",
+                      "blurb":  "Senate Chamber elder and master of the Time Stop spell, which he casts whenever a vote looks inconvenient.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "senate-filibuster-time-stop",
+                                           "title":  "Grand Vizier Mitch Casts Time Stop Spell Again",
+                                           "date":  "2026-04-16"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Speaker Nancy Pelosis",
+                      "short":  "Pelosis",
+                      "type":  "person",
+                      "blurb":  "Longtime Speaker for the Blue Donkeys. Has strong opinions about Time Stop spells.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "senate-filibuster-time-stop",
+                                           "title":  "Grand Vizier Mitch Casts Time Stop Spell Again",
+                                           "date":  "2026-04-16"
+                                       }
+                                   ]
+                  }
+              ]
+}
