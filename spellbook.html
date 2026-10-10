@@ -93,6 +93,14 @@
     }
     .spell-stat-label { font-family: var(--font-ui); font-size: 0.62rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
     .spell-stat-value { font-family: var(--font-head); font-size: 0.82rem; color: var(--text-bright); margin-top: 2px; }
+    .spell-fav {
+      background: none; border: none; cursor: pointer; padding: 0 2px; line-height: 1;
+      font-size: 1.15rem; color: var(--text-dim); opacity: 0.55; transition: color 0.2s, opacity 0.2s, transform 0.2s;
+    }
+    .spell-fav:hover { opacity: 1; transform: scale(1.15); }
+    .spell-fav[aria-pressed="true"] { color: var(--gold-bright); opacity: 1; text-shadow: 0 0 8px rgba(212,168,67,0.5); }
+    .spell-fav:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 2px; }
+    .spell-card.is-fav { border-color: var(--gold-mid); }
     .no-results { text-align: center; padding: 60px; color: var(--text-dim); grid-column: 1/-1; font-style: italic; }
     .spell-count { font-family: var(--font-ui); font-size: 0.8rem; color: var(--text-dim); margin-bottom: 16px; }
     .concentration-pip {
@@ -150,10 +158,12 @@
     <ul>
       <li><a href="index.html">🏠 Home</a></li>
       <li><a href="economy.html">💰 Economy</a></li>
+      <li><a href="shop.html">🏪 Shops</a></li>
       <li><a href="rumors.html">🍺 Tavern</a></li>
       <li><a href="npc-generator.html">🎭 Town Square</a></li>
       <li><a href="loot-generator.html">💎 Loot</a></li>
       <li><a href="spellbook.html" class="active">📖 Spellbook</a></li>
+      <li><a href="session-kit.html">🎲 Session Kit</a></li>
       <li><a href="glossary.html">👥 Who's Who</a></li>
       <li><a href="about.html">📜 About</a></li>
     </ul>
@@ -222,6 +232,13 @@
           <option value="no">Non-Ritual</option>
         </select>
       </div>
+      <div style="flex:1;min-width:130px;">
+        <label>★ Favorites</label>
+        <select id="fav-filter">
+          <option value="">All Spells</option>
+          <option value="yes">Favorites Only</option>
+        </select>
+      </div>
       <div style="align-self:flex-end;">
         <label>&nbsp;</label>
         <button class="btn btn-gold" onclick="resetFilters()">✕ Reset</button>
@@ -231,6 +248,7 @@
     <p class="spell-count" id="spell-count"></p>
     <div class="spell-grid" id="spell-grid"></div>
     <p class="srd-note">Spell text is from the <a href="https://dnd.wizards.com/resources/systems-reference-document" target="_blank" rel="noopener">System Reference Document 5.1</a> by Wizards of the Coast LLC, licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>. The Beholder's Gazette is unofficial fan content and is not affiliated with Wizards of the Coast.</p>
+    <p class="srd-note">★ Favorites are saved in this browser only. Clearing site data or switching devices starts a fresh list.</p>
   </div>
 
   <!-- Footer -->
@@ -261,7 +279,29 @@
     const SPELLS = SPELLS_DATA.slice().sort((a,b) => a.name.localeCompare(b.name));
 
     let filtered = [...SPELLS];
-
+    // Favorites live in this browser only (by spell name).
+    const FAV_KEY = 'gazette-spell-favorites';
+    let favorites = new Set();
+    try { favorites = new Set(JSON.parse(localStorage.getItem(FAV_KEY)) || []); } catch (e) {}
+    function saveFavorites() {
+      try { localStorage.setItem(FAV_KEY, JSON.stringify([...favorites])); } catch (e) {}
+    }
+    function favLabel(name, on) {
+      return on ? `Remove ${name} from favorites` : `Add ${name} to favorites`;
+    }
+    function toggleFavorite(btn) {
+      const name = btn.dataset.name;
+      const on = !favorites.has(name);
+      if (on) favorites.add(name); else favorites.delete(name);
+      saveFavorites();
+      if (document.getElementById('fav-filter').value === 'yes') { applyFilters(); return; }
+      btn.setAttribute('aria-pressed', on);
+      btn.textContent = on ? '★' : '☆';
+      btn.title = favLabel(name, on);
+      btn.setAttribute('aria-label', btn.title);
+      btn.closest('.spell-card').classList.toggle('is-fav', on);
+      updateCount();
+    }
     function levelLabel(l) {
       if (l === 0) return 'Cantrip';
       const sfx = l===1?'st':l===2?'nd':l===3?'rd':'th';
@@ -301,18 +341,25 @@
       btn.setAttribute('aria-expanded', open);
     }
 
+    function updateCount() {
+      const favNote = favorites.size ? ` · ★ ${favorites.size} favorite${favorites.size === 1 ? '' : 's'}` : '';
+      document.getElementById('spell-count').textContent =
+        `Showing ${filtered.length.toLocaleString()} of ${SPELLS.length.toLocaleString()} spells${favNote}`;
+    }
     function render() {
       const grid  = document.getElementById('spell-grid');
-      const count = document.getElementById('spell-count');
-      count.textContent = `Showing ${filtered.length.toLocaleString()} of ${SPELLS.length.toLocaleString()} spells`;
-
+      updateCount();
       if (!filtered.length) {
-        grid.innerHTML = '<p class="no-results">No spells matched your search. The arcane tomes yield nothing…</p>';
+        grid.innerHTML = document.getElementById('fav-filter').value === 'yes' && !favorites.size
+          ? '<p class="no-results">No favorites yet. Tap the ☆ on any spell to add it to your book.</p>'
+          : '<p class="no-results">No spells matched your search. The arcane tomes yield nothing…</p>';
         return;
       }
-
-      grid.innerHTML = filtered.map(s => `
-        <div class="spell-card" data-school="${s.school}">
+      grid.innerHTML = filtered.map(s => {
+        const fav = favorites.has(s.name);
+        const label = esc(favLabel(s.name, fav));
+        return `
+        <div class="spell-card${fav ? ' is-fav' : ''}" data-school="${s.school}">
           <div class="spell-header">
             <div class="spell-name">
               ${s.name}
@@ -320,6 +367,7 @@
               ${s.ritual ? '<span style="font-size:0.6rem;color:var(--gold-mid);margin-left:4px;" title="Can be cast as a ritual">(R)</span>' : ''}
             </div>
             <div class="spell-level-badge">${levelLabel(s.level)}</div>
+            <button type="button" class="spell-fav" data-name="${esc(s.name)}" aria-pressed="${fav}" title="${label}" aria-label="${label}" onclick="toggleFavorite(this)">${fav ? '★' : '☆'}</button>
           </div>
           <div class="spell-school">${s.school}</div>
           <div class="spell-components">${esc(s.components)}</div>
@@ -343,8 +391,8 @@
               <div class="spell-stat-value" style="font-size:0.72rem;">${s.classes.join(' · ')}</div>
             </div>
           </div>
-        </div>
-      `).join('');
+        </div>`;
+      }).join('');
     }
 
     function applyFilters() {
@@ -354,6 +402,7 @@
       const cls    = document.getElementById('class-filter').value;
       const conc   = document.getElementById('conc-filter').value;
       const ritual = document.getElementById('ritual-filter').value;
+      const favOnly = document.getElementById('fav-filter').value === 'yes';
 
       filtered = SPELLS.filter(s => {
         if (search && !s.name.toLowerCase().includes(search) && !s.desc.toLowerCase().includes(search)) return false;
@@ -364,6 +413,7 @@
         if (conc   === 'no'  &&  s.concentration) return false;
         if (ritual === 'yes' && !s.ritual) return false;
         if (ritual === 'no'  &&  s.ritual) return false;
+        if (favOnly && !favorites.has(s.name)) return false;
         return true;
       });
 
@@ -371,14 +421,14 @@
     }
 
     function resetFilters() {
-      ['spell-search','level-filter','school-filter','class-filter','conc-filter','ritual-filter']
+      ['spell-search','level-filter','school-filter','class-filter','conc-filter','ritual-filter','fav-filter']
         .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
       filtered = [...SPELLS];
       render();
     }
 
     document.getElementById('spell-search').addEventListener('input', applyFilters);
-    ['level-filter','school-filter','class-filter','conc-filter','ritual-filter']
+    ['level-filter','school-filter','class-filter','conc-filter','ritual-filter','fav-filter']
       .forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('change', applyFilters); });
 
     render();

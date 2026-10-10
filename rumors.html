@@ -163,6 +163,9 @@
             opacity: 0.1;
         }
 
+        .rumor-link { display: block; margin: 14px auto 0; font-size: 0.85rem; }
+        .rumor-link[hidden] { display: none; }
+
         .generate-btn {
             background: linear-gradient(145deg, var(--accent-red), #a33);
             color: #fff;
@@ -355,6 +358,62 @@
             color: #fff;
         }
 
+        .crier-banner {
+            display: flex;
+            align-items: center;
+            gap: 14px 18px;
+            flex-wrap: wrap;
+            background: rgba(197, 160, 89, 0.08);
+            border: 1px solid var(--gold-dim);
+            border-left: 4px solid var(--accent-gold);
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-bottom: 30px;
+        }
+
+        .crier-banner[hidden] { display: none; }
+
+        .crier-banner .crier-bell { font-size: 1.8rem; line-height: 1; }
+
+        .crier-banner .crier-body { flex: 1 1 300px; min-width: 0; }
+
+        .crier-banner .crier-label {
+            font-family: var(--font-ui);
+            font-size: 0.68rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .crier-banner .crier-shout { margin: 0; color: var(--text-bright); font-size: 1.05rem; line-height: 1.5; }
+
+        .crier-banner .crier-opener { font-family: var(--font-head); color: var(--gold-bright); margin-right: 6px; }
+
+        .crier-banner .crier-shout a {
+            color: var(--text-bright);
+            text-decoration: underline;
+            text-decoration-color: var(--gold-dim);
+            text-underline-offset: 3px;
+        }
+
+        .crier-banner .crier-shout a:hover { color: var(--gold-bright); }
+
+        .crier-banner button {
+            background: none;
+            border: 1px solid var(--gold-dim);
+            color: var(--gold-bright);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-ui);
+            font-size: 0.75rem;
+            padding: 6px 12px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .crier-banner button:hover { background: var(--gold-glow); border-color: var(--gold-mid); }
+
         .tavern-tip {
             background: rgba(197, 160, 89, 0.1);
             border: 1px solid var(--accent-gold);
@@ -432,10 +491,12 @@
     <ul>
       <li><a href="index.html">🏠 Home</a></li>
       <li><a href="economy.html">💰 Economy</a></li>
+      <li><a href="shop.html">🏪 Shops</a></li>
       <li><a href="rumors.html" class="active">🍺 Tavern</a></li>
       <li><a href="npc-generator.html">🎭 Town Square</a></li>
       <li><a href="loot-generator.html">💎 Loot</a></li>
       <li><a href="spellbook.html">📖 Spellbook</a></li>
+      <li><a href="session-kit.html">🎲 Session Kit</a></li>
       <li><a href="glossary.html">👥 Who's Who</a></li>
       <li><a href="about.html">📜 About</a></li>
     </ul>
@@ -454,6 +515,16 @@
     <!-- Main Content -->
     <div class="rumors-body">
         <div class="tool-container">
+            <!-- Town Crier: a real Gazette headline, shouted in the square -->
+            <div class="crier-banner" id="crier-banner" hidden>
+                <span class="crier-bell" aria-hidden="true">🔔</span>
+                <div class="crier-body">
+                    <span class="crier-label">The town crier, outside the window</span>
+                    <p class="crier-shout" id="crier-shout" aria-live="polite"></p>
+                </div>
+                <button type="button" id="crier-again">🔔 Ring again</button>
+            </div>
+
             <!-- Category Selection -->
             <div class="category-selector">
                 <h2>📜 Choose Your Poison</h2>
@@ -480,9 +551,6 @@
                 <div class="rumor-display" id="rumor-display">
                     <div class="rumor-placeholder">
                         <p>🍺 Click the button to hear the latest tavern gossip...</p>
-                        <p style="font-size: 0.9rem; color: #888; margin-top: 10px;">
-                            (Or press Spacebar, if you're lazy)
-                        </p>
                     </div>
                 </div>
 
@@ -493,6 +561,8 @@
                         <div class="truth-fill" id="truth-fill"></div>
                     </div>
                 </div>
+
+                <button type="button" class="btn rumor-link" id="rumor-link" hidden>🔗 Copy Link</button>
 
                 <div class="dice-decoration">
                     🎲 🍺 🎲
@@ -563,6 +633,8 @@
       </div>
     </footer>
 
+    <script src="rng.js"></script>
+    <script src="town-crier.js"></script>
     <script src="rumors.js"></script>
   <script>
   // ── Mobile nav toggle ─────────────────────────────────

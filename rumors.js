@@ -5,6 +5,8 @@
 let allRumors = { rumors: [] };
 let currentCategory = 'all';
 let recentRumors = [];
+let baseCount = 0;   // rumors from rumors.json; reader-added ones come after and can't be shared
+let currentIdx = -1;
 
 // Rumor text can come from the reader (Contribute form), so never inject it raw.
 function escapeHTML(text) {
@@ -21,6 +23,7 @@ async function loadRumors() {
     try {
         const response = await fetch('rumors.json');
         allRumors = await response.json();
+        baseCount = allRumors.rumors.length;
         console.log(`Loaded ${allRumors.rumors.length} rumors`);
     } catch (error) {
         console.error('Error loading rumors:', error);
@@ -37,23 +40,50 @@ function generateRumor() {
         return;
     }
 
-    // Filter by category
-    let filteredRumors = allRumors.rumors;
-    if (currentCategory !== 'all') {
-        filteredRumors = allRumors.rumors.filter(r => r.category === currentCategory);
-    }
+    // Filter by category (indexes, so the pick can go in the URL)
+    const pool = allRumors.rumors.map((r, i) => i)
+        .filter(i => currentCategory === 'all' || allRumors.rumors[i].category === currentCategory);
 
-    // Pick random rumor
-    const rumor = filteredRumors[Math.floor(Math.random() * filteredRumors.length)];
+    // Pick random rumor (rand() from rng.js)
+    currentIdx = pool[Math.floor(rand() * pool.length)];
+    const rumor = allRumors.rumors[currentIdx];
 
     // Display rumor
     displayRumor(rumor);
+    syncUrl(true);
 
     // Add to recent
     addToRecent(rumor);
 
     // Animate
     animateDisplay();
+}
+
+// ── Shareable link: ?rumor=<index in rumors.json> ─────────
+function syncUrl(push) {
+    const shareable = currentIdx >= 0 && currentIdx < baseCount;
+    setUrlParams(shareable ? { rumor: currentIdx } : {}, push);
+    document.getElementById('rumor-link').hidden = !shareable;
+}
+
+// Show the rumor named in the address bar. Returns false when there isn't one.
+function applyUrl() {
+    const v = urlParams().get('rumor');
+    const idx = /^\d+$/.test(v || '') ? Number(v) : -1;
+    if (idx < 0 || idx >= baseCount) return false;
+    currentIdx = idx;
+    displayRumor(allRumors.rumors[idx]);
+    document.getElementById('rumor-link').hidden = false;
+    animateDisplay();
+    return true;
+}
+
+function copyLink() {
+    const btn = document.getElementById('rumor-link');
+    copyPageLink(ok => {
+        btn.textContent = ok ? '✅ Link copied!' : '⚠️ Copy blocked';
+        setTimeout(() => { btn.textContent = '🔗 Copy Link'; }, 2000);
+    });
 }
 
 // Display rumor in the box
@@ -203,8 +233,10 @@ function addRumor() {
 
     status.textContent = 'Added to tonight\'s mill. It can now come up when you draw rumors, until you refresh the page.';
 
-    // Display it
+    // Display it (reader-added rumors stay out of the URL)
+    currentIdx = allRumors.rumors.length - 1;
     displayRumor(newRumor);
+    syncUrl(true);
     addToRecent(newRumor);
 }
 
@@ -224,22 +256,37 @@ function setupCategoryButtons() {
     });
 }
 
-// Spacebar to generate
-function setupKeyboardShortcut() {
-    document.addEventListener('keydown', (e) => {
-        if (e.code === 'Space' && e.target.tagName !== 'INPUT') {
-            e.preventDefault();
-            generateRumor();
-        }
-    });
+// Town crier banner (town-crier.js): a recent Gazette headline, shouted in-world
+async function setupCrier() {
+    let pool;
+    try {
+        ({ pool } = await loadCrierPool());
+    } catch (error) {
+        console.error('Error loading headlines:', error);
+        return;
+    }
+    if (!pool.length) return;
+    let current = null;
+    const shout = () => {
+        current = pickCrier(pool, current && current.id);
+        document.getElementById('crier-shout').innerHTML =
+            `<span class="crier-opener">${escapeHTML(current.opener)}</span> <a href="${crierHref(current.id)}">${escapeHTML(current.title)}</a>`;
+    };
+    document.getElementById('crier-again').addEventListener('click', shout);
+    shout();
+    document.getElementById('crier-banner').hidden = false;
 }
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('year').textContent = new Date().getFullYear();
 
+    setupCrier();
     await loadRumors();
     loadRecent();
     setupCategoryButtons();
-    setupKeyboardShortcut();
+    document.getElementById('rumor-link').addEventListener('click', copyLink);
+    applyUrl();
+    // Back/Forward step through earlier draws.
+    window.addEventListener('popstate', applyUrl);
 });

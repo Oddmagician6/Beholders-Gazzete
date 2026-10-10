@@ -585,6 +585,17 @@
             border-top: 1px solid #444;
         }
 
+        /* Lock and reroll (F14) */
+        .lock-btn { background: none; border: 1px solid transparent; border-radius: 4px; cursor: pointer; font-size: 0.8rem; line-height: 1; padding: 2px 4px; opacity: 0.4; vertical-align: middle; transition: opacity 0.15s, background 0.15s; }
+        .lock-btn:hover, .lock-btn:focus-visible { opacity: 0.9; }
+        .lock-btn[aria-pressed="true"] { opacity: 1; border-color: var(--gold-mid); background: var(--gold-glow); }
+        .lock-btn.corner { position: absolute; top: 6px; right: 6px; }
+        .personality-item, .appearance-item, .secret-box, .quest-box { position: relative; }
+        .lock-hint { font-family: var(--font-ui); font-size: 0.78rem; color: var(--text-dim); text-align: center; margin-top: 14px; }
+        .lock-clear { background: none; border: none; color: var(--gold-bright); cursor: pointer; font: inherit; text-decoration: underline; padding: 0 4px; }
+        .lock-clear[hidden] { display: none; }
+        @media print { .lock-btn, .lock-hint { display: none !important; } }
+
         .action-btn {
             background: linear-gradient(145deg, #333, #2a2a2e);
             border: 1px solid #555;
@@ -705,6 +716,30 @@
             .npc-actions { flex-direction: column; }
             .action-btn { width: 100%; }
         }
+
+        /* Print: just the NPC card, ink-friendly */
+        @media print {
+            @page { margin: 12mm; }
+            body { background: #fff !important; }
+            body > *:not(.npc-body), .tool-container > *:not(#npc-card), .npc-actions { display: none !important; }
+            .npc-body, .tool-container { padding: 0 !important; margin: 0 !important; max-width: none !important; }
+            #npc-card { animation: none !important; padding: 0 !important; margin: 0 !important; border: none !important; }
+            #npc-card, #npc-card * {
+                background: transparent !important; color: #111 !important;
+                box-shadow: none !important; text-shadow: none !important;
+                border-color: #999 !important;
+            }
+            #npc-card .npc-name { font-size: 1.8rem !important; }
+            #npc-card .npc-section { break-inside: avoid; margin-bottom: 14px !important; padding-bottom: 10px !important; }
+            #npc-card .stat-box, #npc-card .personality-item, #npc-card .appearance-item,
+            #npc-card .dialogue-box, #npc-card .secret-box, #npc-card .quest-box, #npc-card .relationship-box {
+                border: 1px solid #bbb !important; padding: 6px 8px !important;
+            }
+            #npc-card::after {
+                content: "The Beholder's Gazette · Town Square NPC Generator";
+                display: block; margin-top: 12px; font-size: 0.7rem; color: #666 !important; text-align: right;
+            }
+        }
     </style>
 
   <style id="hero-atmosphere">
@@ -746,10 +781,12 @@
     <ul>
       <li><a href="index.html">🏠 Home</a></li>
       <li><a href="economy.html">💰 Economy</a></li>
+      <li><a href="shop.html">🏪 Shops</a></li>
       <li><a href="rumors.html">🍺 Tavern</a></li>
       <li><a href="npc-generator.html" class="active">🎭 Town Square</a></li>
       <li><a href="loot-generator.html">💎 Loot</a></li>
       <li><a href="spellbook.html">📖 Spellbook</a></li>
+      <li><a href="session-kit.html">🎲 Session Kit</a></li>
       <li><a href="glossary.html">👥 Who's Who</a></li>
       <li><a href="about.html">📜 About</a></li>
     </ul>
@@ -848,9 +885,6 @@
                 <button class="generate-btn" onclick="generateNPC()">
                     🎭 Generate NPC
                 </button>
-                <p style="color: #888; font-size: 0.85rem; margin-top: 15px;">
-                    (Or press Spacebar, if you're feeling lazy)
-                </p>
                 <div class="dice-decoration">
                     🎲 🎭 🎲
                 </div>
@@ -869,16 +903,18 @@
                             <span class="npc-race" id="npc-race-display">Race</span>
                             <span class="npc-divider">•</span>
                             <span class="npc-age" id="npc-age-display">Age</span>
+                            <button type="button" class="lock-btn" data-lock="age" aria-pressed="false" title="Lock age" aria-label="Lock age">🔓</button>
                             <span class="npc-divider">•</span>
                             <span class="npc-gender" id="npc-gender-display">Gender</span>
+                            <button type="button" class="lock-btn" data-lock="identity" aria-pressed="false" title="Lock name, race, and gender" aria-label="Lock name, race, and gender">🔓</button>
                         </div>
-                        <div class="npc-profession" id="npc-profession-display">Profession</div>
+                        <div class="npc-profession"><span id="npc-profession-display">Profession</span> <button type="button" class="lock-btn" data-lock="job" aria-pressed="false" title="Lock profession" aria-label="Lock profession">🔓</button></div>
                     </div>
                 </div>
 
                 <!-- Quick Stats -->
                 <div class="npc-section" id="stats-section">
-                    <h3>📊 Quick Stats</h3>
+                    <h3>📊 Quick Stats <button type="button" class="lock-btn" data-lock="stats" aria-pressed="false" title="Lock stats, HP, and AC" aria-label="Lock stats, HP, and AC">🔓</button></h3>
                     <div class="stats-grid">
                         <div class="stat-box">
                             <span class="stat-label">STR</span>
@@ -918,23 +954,27 @@
                     <div class="personality-grid">
                         <div class="personality-item">
                             <span class="personality-label">Trait</span>
+                            <button type="button" class="lock-btn corner" data-lock="trait" aria-pressed="false" title="Lock trait" aria-label="Lock trait">🔓</button>
                             <span class="personality-value" id="npc-trait">-</span>
                         </div>
                         <div class="personality-item">
                             <span class="personality-label">Ideal</span>
+                            <button type="button" class="lock-btn corner" data-lock="ideal" aria-pressed="false" title="Lock ideal" aria-label="Lock ideal">🔓</button>
                             <span class="personality-value" id="npc-ideal">-</span>
                         </div>
                         <div class="personality-item">
                             <span class="personality-label">Bond</span>
+                            <button type="button" class="lock-btn corner" data-lock="bond" aria-pressed="false" title="Lock bond" aria-label="Lock bond">🔓</button>
                             <span class="personality-value" id="npc-bond">-</span>
                         </div>
                         <div class="personality-item">
                             <span class="personality-label">Flaw</span>
+                            <button type="button" class="lock-btn corner" data-lock="flaw" aria-pressed="false" title="Lock flaw" aria-label="Lock flaw">🔓</button>
                             <span class="personality-value" id="npc-flaw">-</span>
                         </div>
                     </div>
                     <div class="npc-quirks">
-                        <h4>🎪 Quirks & Mannerisms:</h4>
+                        <h4>🎪 Quirks & Mannerisms: <button type="button" class="lock-btn" data-lock="quirks" aria-pressed="false" title="Lock quirks" aria-label="Lock quirks">🔓</button></h4>
                         <ul id="npc-quirks-list">
                             <li>-</li>
                         </ul>
@@ -947,35 +987,39 @@
                     <div class="appearance-grid">
                         <div class="appearance-item">
                             <span class="appearance-label">Build</span>
+                            <button type="button" class="lock-btn corner" data-lock="build" aria-pressed="false" title="Lock build" aria-label="Lock build">🔓</button>
                             <span class="appearance-value" id="npc-build">-</span>
                         </div>
                         <div class="appearance-item">
                             <span class="appearance-label" id="npc-hair-label">Hair</span>
+                            <button type="button" class="lock-btn corner" data-lock="hair" aria-pressed="false" title="Lock hair" aria-label="Lock hair">🔓</button>
                             <span class="appearance-value" id="npc-hair">-</span>
                         </div>
                         <div class="appearance-item">
                             <span class="appearance-label">Eyes</span>
+                            <button type="button" class="lock-btn corner" data-lock="eyes" aria-pressed="false" title="Lock eyes" aria-label="Lock eyes">🔓</button>
                             <span class="appearance-value" id="npc-eyes">-</span>
                         </div>
                         <div class="appearance-item">
                             <span class="appearance-label">Distinguishing Feature</span>
+                            <button type="button" class="lock-btn corner" data-lock="feature" aria-pressed="false" title="Lock feature" aria-label="Lock feature">🔓</button>
                             <span class="appearance-value" id="npc-feature">-</span>
                         </div>
                     </div>
                     <div class="npc-clothing">
-                        <h4>👔 Typical Attire:</h4>
+                        <h4>👔 Typical Attire: <button type="button" class="lock-btn" data-lock="clothing" aria-pressed="false" title="Lock attire" aria-label="Lock attire">🔓</button></h4>
                         <p id="npc-clothing">-</p>
                     </div>
                 </div>
 
                 <!-- Dialogue -->
                 <div class="npc-section">
-                    <h3>💬 Sample Dialogue</h3>
+                    <h3>💬 Sample Dialogue <button type="button" class="lock-btn" data-lock="dialogue" aria-pressed="false" title="Lock dialogue" aria-label="Lock dialogue">🔓</button></h3>
                     <div class="dialogue-box" id="npc-dialogue">
                         "Dialogue goes here..."
                     </div>
                     <div class="dialogue-voice">
-                        <span class="voice-label">🎤 Voice:</span>
+                        <span class="voice-label">🎤 Voice:</span> <button type="button" class="lock-btn" data-lock="voice" aria-pressed="false" title="Lock voice" aria-label="Lock voice">🔓</button>
                         <span class="voice-value" id="npc-voice">-</span>
                     </div>
                 </div>
@@ -984,18 +1028,18 @@
                 <div class="npc-section" id="secrets-section">
                     <h3>🗝️ Secrets & Quests</h3>
                     <div class="secret-box" id="npc-secret">
-                        <span class="secret-label">🤫 Secret:</span>
+                        <span class="secret-label">🤫 Secret:</span> <button type="button" class="lock-btn corner" data-lock="secret" aria-pressed="false" title="Lock secret" aria-label="Lock secret">🔓</button>
                         <p id="npc-secret-text">-</p>
                     </div>
                     <div class="quest-box" id="npc-quest-section">
-                        <span class="quest-label">⚔️ Quest Hook:</span>
+                        <span class="quest-label">⚔️ Quest Hook:</span> <button type="button" class="lock-btn corner" data-lock="questHook" aria-pressed="false" title="Lock quest hook" aria-label="Lock quest hook">🔓</button>
                         <p id="npc-quest-text">-</p>
                     </div>
                 </div>
 
                 <!-- Relationships -->
                 <div class="npc-section">
-                    <h3>🔗 Relationships</h3>
+                    <h3>🔗 Relationships <button type="button" class="lock-btn" data-lock="relationship" aria-pressed="false" title="Lock relationship" aria-label="Lock relationship">🔓</button></h3>
                     <div class="relationship-box" id="npc-relationships">
                         <p id="npc-relationship-text">-</p>
                     </div>
@@ -1004,9 +1048,12 @@
                 <!-- Action Buttons -->
                 <div class="npc-actions">
                     <button class="action-btn" onclick="copyNPC()">📋 Copy to Clipboard</button>
+                    <button class="action-btn" id="copy-link-btn" onclick="copyLink()">🔗 Copy Link</button>
                     <button class="action-btn" onclick="saveNPC()">💾 Save to Grimoire</button>
+                    <button class="action-btn" onclick="window.print()">🖨️ Print Card</button>
                     <button class="action-btn" onclick="regenerateNPC()">🔄 Regenerate</button>
                 </div>
+                <p class="lock-hint">🔒 Click a padlock to keep that part, and Regenerate rerolls the rest. <button type="button" class="lock-clear" id="unlock-all" hidden>Unlock all</button></p>
             </div>
 
             <!-- Saved NPCs -->
@@ -1024,7 +1071,7 @@
 
             <!-- DM Tip -->
             <div class="dm-tip">
-                <p>💡 <strong>DM Tip:</strong> Save your favorite NPCs to the grimoire! They'll persist between sessions, but only in this browser: clearing site data or switching devices empties the grimoire. Need inspiration? Generate 3 NPCs and pick the best traits from each.</p>
+                <p>💡 <strong>DM Tip:</strong> Save your favorite NPCs to the grimoire! They'll persist between sessions, but only in this browser: clearing site data or switching devices empties the grimoire. To share one, use 🔗 Copy Link: the link rolls the same NPC on any device, and Back steps to the previous roll. Need inspiration? Generate 3 NPCs and pick the best traits from each.</p>
             </div>
         </div>
     </div>
@@ -1049,6 +1096,8 @@
       </div>
     </footer>
 
+    <script src="rng.js"></script>
+    <script src="npc-data.js"></script>
     <script src="npc-generator.js"></script>
   <script>
   // ── Mobile nav toggle ─────────────────────────────────

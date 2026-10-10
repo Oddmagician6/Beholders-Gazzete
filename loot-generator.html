@@ -222,10 +222,12 @@
     <ul>
       <li><a href="index.html">🏠 Home</a></li>
       <li><a href="economy.html">💰 Economy</a></li>
+      <li><a href="shop.html">🏪 Shops</a></li>
       <li><a href="rumors.html">🍺 Tavern</a></li>
       <li><a href="npc-generator.html">🎭 Town Square</a></li>
       <li><a href="loot-generator.html" class="active">💎 Loot</a></li>
       <li><a href="spellbook.html">📖 Spellbook</a></li>
+      <li><a href="session-kit.html">🎲 Session Kit</a></li>
       <li><a href="glossary.html">👥 Who's Who</a></li>
       <li><a href="about.html">📜 About</a></li>
     </ul>
@@ -425,6 +427,7 @@
 
         <div class="loot-actions">
           <button class="action-btn" id="copy-btn"  onclick="copyLoot()">📋 Copy to Clipboard</button>
+          <button class="action-btn" id="link-btn"  onclick="copyLink()">🔗 Copy Link</button>
           <button class="action-btn" id="save-btn"  onclick="saveLoot()">💾 Save to Vault</button>
           <button class="action-btn"                onclick="exportLoot()">📤 Export JSON</button>
           <button class="action-btn"                onclick="regenerateLoot()">🔄 Regenerate</button>
@@ -434,7 +437,7 @@
       <!-- Saved Vault -->
       <div class="saved-loot">
         <h3>💾 Saved Hoards</h3>
-        <p style="font-family:var(--font-ui);font-size:0.74rem;color:var(--text-dim);margin:-8px 0 14px;">Saved in this browser only. Clearing site data or switching devices empties the vault.</p>
+        <p style="font-family:var(--font-ui);font-size:0.74rem;color:var(--text-dim);margin:-8px 0 14px;">Saved in this browser only. Clearing site data or switching devices empties the vault. To share a roll, use 🔗 Copy Link: the link opens the same treasure anywhere.</p>
         <div id="saved-list"></div>
         <button class="clear-vault-btn" onclick="clearSaved()">🗑️ Clear Vault</button>
       </div>
@@ -466,7 +469,9 @@
     </div>
   </footer>
 
+  <script src="rng.js"></script>
   <script src="loot-data.js"></script>
+  <script src="loot-engine.js"></script>
   <script src="loot-generator.js"></script>
   <script>
   // ── Mobile nav toggle ─────────────────────────────────
