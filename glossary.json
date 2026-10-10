@@ -24,9 +24,13 @@
                                            "name":  "Grashka Ironjaw"
                                        }
                                    ],
-                        "article_count":  0,
+                        "article_count":  1,
                         "articles":  [
-
+                                         {
+                                             "id":  "ivory-keep-names-new-herald-unblemished-record",
+                                             "title":  "Ivory Keep Names New Herald for Her Unblemished Record of Agreeing",
+                                             "date":  "2026-10-10"
+                                         }
                                      ]
                     },
                     {
@@ -49,9 +53,13 @@
                                            "name":  "Sterling Vanmoor"
                                        }
                                    ],
-                        "article_count":  0,
+                        "article_count":  1,
                         "articles":  [
-
+                                         {
+                                             "id":  "coin-piles-record-heights-realm-mood-sinks",
+                                             "title":  "Coin Piles Hit Record Heights as Realm\u0027s Mood Sinks Below Dungeon Level",
+                                             "date":  "2026-10-10"
+                                         }
                                      ]
                     },
                     {
@@ -78,9 +86,13 @@
                                            "name":  "Barnaby Tallowmere"
                                        }
                                    ],
-                        "article_count":  0,
+                        "article_count":  1,
                         "articles":  [
-
+                                         {
+                                             "id":  "skytrance-megamerger-rightsizes-hollowood",
+                                             "title":  "Skytrance Megamerger Closes, Bravely Rightsizes Hollowood\u0027s Adventuring Party",
+                                             "date":  "2026-10-10"
+                                         }
                                      ]
                     },
                     {
@@ -103,9 +115,13 @@
                                            "name":  "Sterling Vanmoor"
                                        }
                                    ],
-                        "article_count":  0,
+                        "article_count":  1,
                         "articles":  [
-
+                                         {
+                                             "id":  "golden-coast-clerks-call-first-strike-margrave-rolls-initiative",
+                                             "title":  "Golden Coast Clerks Call First Strike; Margrave Rolls for Initiative",
+                                             "date":  "2026-10-10"
+                                         }
                                      ]
                     },
                     {
@@ -127,9 +143,13 @@
                                            "name":  "Brother Wendell Tumbleberry"
                                        }
                                    ],
-                        "article_count":  0,
+                        "article_count":  1,
                         "articles":  [
-
+                                         {
+                                             "id":  "openeye-chattygolem-6-intelligent-illusions",
+                                             "title":  "OpenEye\u0027s New Golem Answers in Illusions, Charts, and Tiny Catapults",
+                                             "date":  "2026-10-10"
+                                         }
                                      ]
                     },
                     {
@@ -151,9 +171,13 @@
                                            "name":  "Ottoline Vex"
                                        }
                                    ],
-                        "article_count":  0,
+                        "article_count":  1,
                         "articles":  [
-
+                                         {
+                                             "id":  "donwald-no-siege-of-calimshan-until-ballots-counted",
+                                             "title":  "Donwald Declares No Siege of Calimshan Until the Ballots Are Counted",
+                                             "date":  "2026-10-10"
+                                         }
                                      ]
                     },
                     {
@@ -177,9 +201,13 @@
                                            "name":  "Nyx Spindlecoil"
                                        }
                                    ],
-                        "article_count":  0,
+                        "article_count":  1,
                         "articles":  [
-
+                                         {
+                                             "id":  "healing-minister-opens-infirmary-to-hunt-curses-in-pox-vials",
+                                             "title":  "Healing Minister Opens Infirmary to Hunt for Curses in Pox Vials",
+                                             "date":  "2026-10-10"
+                                         }
                                      ]
                     },
                     {
@@ -204,9 +232,13 @@
                         "rivals":  [
 
                                    ],
-                        "article_count":  0,
+                        "article_count":  1,
                         "articles":  [
-
+                                         {
+                                             "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
+                                             "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
+                                             "date":  "2026-10-10"
+                                         }
                                      ]
                     }
                 ],
@@ -242,8 +274,23 @@
                       "short":  "Waterdeep",
                       "type":  "country",
                       "blurb":  "The great realm, and great city, where most Gazette news happens. Home of the High Council.",
-                      "appearances":  30,
+                      "appearances":  33,
                       "articles":  [
+                                       {
+                                           "id":  "skytrance-megamerger-rightsizes-hollowood",
+                                           "title":  "Skytrance Megamerger Closes, Bravely Rightsizes Hollowood\u0027s Adventuring Party",
+                                           "date":  "2026-10-10"
+                                       },
+                                       {
+                                           "id":  "coin-piles-record-heights-realm-mood-sinks",
+                                           "title":  "Coin Piles Hit Record Heights as Realm\u0027s Mood Sinks Below Dungeon Level",
+                                           "date":  "2026-10-10"
+                                       },
+                                       {
+                                           "id":  "donwald-no-siege-of-calimshan-until-ballots-counted",
+                                           "title":  "Donwald Declares No Siege of Calimshan Until the Ballots Are Counted",
+                                           "date":  "2026-10-10"
+                                       },
                                        {
                                            "id":  "dragon-ridership-app",
                                            "title":  "Uber-Style Dragon Ridership App Launches in Waterdeep",
@@ -253,21 +300,6 @@
                                            "id":  "haunted-house-airbnb",
                                            "title":  "Haunted House Listed on Airbnb Causes Guest Trauma",
                                            "date":  "2026-04-23"
-                                       },
-                                       {
-                                           "id":  "mimic-furniture-recall",
-                                           "title":  "IKEA-Style Furniture Store Recalls Mimic-Infested Chairs",
-                                           "date":  "2026-04-23"
-                                       },
-                                       {
-                                           "id":  "flying-mount-parking-crisis",
-                                           "title":  "Flying Mount Parking Crisis Grips Tower District",
-                                           "date":  "2026-04-23"
-                                       },
-                                       {
-                                           "id":  "potion-addiction-support-group",
-                                           "title":  "Potion Addiction Support Group Forms in Lower City",
-                                           "date":  "2026-04-23"
                                        }
                                    ]
                   },
@@ -276,8 +308,23 @@
                       "short":  "Donwald",
                       "type":  "person",
                       "blurb":  "Current holder of the High Seat. Governs mostly from the balcony of his Golden Tower. Fond of walls, tariffs, and solid gold plumbing.",
-                      "appearances":  9,
+                      "appearances":  12,
                       "articles":  [
+                                       {
+                                           "id":  "skytrance-megamerger-rightsizes-hollowood",
+                                           "title":  "Skytrance Megamerger Closes, Bravely Rightsizes Hollowood\u0027s Adventuring Party",
+                                           "date":  "2026-10-10"
+                                       },
+                                       {
+                                           "id":  "ivory-keep-names-new-herald-unblemished-record",
+                                           "title":  "Ivory Keep Names New Herald for Her Unblemished Record of Agreeing",
+                                           "date":  "2026-10-10"
+                                       },
+                                       {
+                                           "id":  "donwald-no-siege-of-calimshan-until-ballots-counted",
+                                           "title":  "Donwald Declares No Siege of Calimshan Until the Ballots Are Counted",
+                                           "date":  "2026-10-10"
+                                       },
                                        {
                                            "id":  "donwald-oil-lords-dispute",
                                            "title":  "High Lord Donwald Clashes With Oil Lords Over Drilling Rights",
@@ -287,21 +334,6 @@
                                            "id":  "joebid-sleeping-scandal",
                                            "title":  "Archmage Joebid Found Napping in Dragon Stable",
                                            "date":  "2026-04-23"
-                                       },
-                                       {
-                                           "id":  "donwald-golden-toilet-decree",
-                                           "title":  "High Lord Donwald Orders Golden Toilets for Council Chambers",
-                                           "date":  "2026-04-23"
-                                       },
-                                       {
-                                           "id":  "council-spending-investigation",
-                                           "title":  "Inquisitors Launch Probe Into High Council Spending",
-                                           "date":  "2026-04-22"
-                                       },
-                                       {
-                                           "id":  "donwald-first-decree-wall",
-                                           "title":  "High Lord Donwald Signs Executive Decree for Border Wall",
-                                           "date":  "2026-04-22"
                                        }
                                    ]
                   },
@@ -378,8 +410,13 @@
                       "short":  "the Watch",
                       "type":  "agency",
                       "blurb":  "Underpaid, overworked, and frequently outmatched by griffins.",
-                      "appearances":  5,
+                      "appearances":  6,
                       "articles":  [
+                                       {
+                                           "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
+                                           "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
+                                           "date":  "2026-10-10"
+                                       },
                                        {
                                            "id":  "potion-addiction-support-group",
                                            "title":  "Potion Addiction Support Group Forms in Lower City",
@@ -399,11 +436,40 @@
                                            "id":  "scrolltok-influencer-scandal",
                                            "title":  "ScrollTok Influencer Promotes Cursed Amulet",
                                            "date":  "2026-04-20"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Royal Inquisitors",
+                      "short":  "the Inquisitors",
+                      "type":  "agency",
+                      "blurb":  "The investigators of the realm. Mostly they subpoena grimoires.",
+                      "appearances":  5,
+                      "articles":  [
+                                       {
+                                           "id":  "skytrance-megamerger-rightsizes-hollowood",
+                                           "title":  "Skytrance Megamerger Closes, Bravely Rightsizes Hollowood\u0027s Adventuring Party",
+                                           "date":  "2026-10-10"
                                        },
                                        {
-                                           "id":  "starbucks-mystical-brews-expansion",
-                                           "title":  "Starbuck\u0027s Mystical Brews Opens Near Dungeon Entrance",
-                                           "date":  "2026-04-19"
+                                           "id":  "donwald-golden-toilet-decree",
+                                           "title":  "High Lord Donwald Orders Golden Toilets for Council Chambers",
+                                           "date":  "2026-04-23"
+                                       },
+                                       {
+                                           "id":  "council-spending-investigation",
+                                           "title":  "Inquisitors Launch Probe Into High Council Spending",
+                                           "date":  "2026-04-22"
+                                       },
+                                       {
+                                           "id":  "donwald-high-council-victory",
+                                           "title":  "Lord Donwald Secures High Council Seat After Hard-Fought Campaign",
+                                           "date":  "2026-04-21"
+                                       },
+                                       {
+                                           "id":  "classified-grimoire-inquisition",
+                                           "title":  "Lady Hillara Summoned by Inquisitors Over Scrolls",
+                                           "date":  "2026-04-16"
                                        }
                                    ]
                   },
@@ -412,8 +478,13 @@
                       "short":  "Candlekeep",
                       "type":  "institution",
                       "blurb":  "Fortress-library and seat of learning, run by the stern Head Librarian.",
-                      "appearances":  4,
+                      "appearances":  5,
                       "articles":  [
+                                       {
+                                           "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
+                                           "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
+                                           "date":  "2026-10-10"
+                                       },
                                        {
                                            "id":  "candlekeep-ai-scribe-controversy",
                                            "title":  "Candlekeep Librarians Reject AI-Generated Spellbooks",
@@ -441,8 +512,13 @@
                       "short":  "the Golden Tower",
                       "type":  "place",
                       "blurb":  "A spire of pure gold that pierces the clouds. Lord Donwald\u0027s preferred residence and press podium.",
-                      "appearances":  4,
+                      "appearances":  5,
                       "articles":  [
+                                       {
+                                           "id":  "ivory-keep-names-new-herald-unblemished-record",
+                                           "title":  "Ivory Keep Names New Herald for Her Unblemished Record of Agreeing",
+                                           "date":  "2026-10-10"
+                                       },
                                        {
                                            "id":  "donwald-oil-lords-dispute",
                                            "title":  "High Lord Donwald Clashes With Oil Lords Over Drilling Rights",
@@ -462,6 +538,35 @@
                                            "id":  "donwald-high-council-victory",
                                            "title":  "Lord Donwald Secures High Council Seat After Hard-Fought Campaign",
                                            "date":  "2026-04-21"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Merchant Princes",
+                      "short":  "the Merchant Princes",
+                      "type":  "institution",
+                      "blurb":  "The coin-counting elite who run the trade networks and the counting houses.",
+                      "appearances":  4,
+                      "articles":  [
+                                       {
+                                           "id":  "skytrance-megamerger-rightsizes-hollowood",
+                                           "title":  "Skytrance Megamerger Closes, Bravely Rightsizes Hollowood\u0027s Adventuring Party",
+                                           "date":  "2026-10-10"
+                                       },
+                                       {
+                                           "id":  "coin-piles-record-heights-realm-mood-sinks",
+                                           "title":  "Coin Piles Hit Record Heights as Realm\u0027s Mood Sinks Below Dungeon Level",
+                                           "date":  "2026-10-10"
+                                       },
+                                       {
+                                           "id":  "international-trade-tariffs",
+                                           "title":  "New Tariffs Imposed on Kara-Tur Imports",
+                                           "date":  "2026-04-22"
+                                       },
+                                       {
+                                           "id":  "federal-reserve-gold-leaf",
+                                           "title":  "Federal Reserve Prints Too Much Gold Leaf",
+                                           "date":  "2026-04-16"
                                        }
                                    ]
                   },
@@ -490,35 +595,6 @@
                                        {
                                            "id":  "debate-arena-magic-microphones",
                                            "title":  "Archmage Joebid and Warlord Donwald Clash in Debate Arena",
-                                           "date":  "2026-04-16"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "the Royal Inquisitors",
-                      "short":  "the Inquisitors",
-                      "type":  "agency",
-                      "blurb":  "The investigators of the realm. Mostly they subpoena grimoires.",
-                      "appearances":  4,
-                      "articles":  [
-                                       {
-                                           "id":  "donwald-golden-toilet-decree",
-                                           "title":  "High Lord Donwald Orders Golden Toilets for Council Chambers",
-                                           "date":  "2026-04-23"
-                                       },
-                                       {
-                                           "id":  "council-spending-investigation",
-                                           "title":  "Inquisitors Launch Probe Into High Council Spending",
-                                           "date":  "2026-04-22"
-                                       },
-                                       {
-                                           "id":  "donwald-high-council-victory",
-                                           "title":  "Lord Donwald Secures High Council Seat After Hard-Fought Campaign",
-                                           "date":  "2026-04-21"
-                                       },
-                                       {
-                                           "id":  "classified-grimoire-inquisition",
-                                           "title":  "Lady Hillara Summoned by Inquisitors Over Scrolls",
                                            "date":  "2026-04-16"
                                        }
                                    ]
@@ -572,30 +648,6 @@
                                    ]
                   },
                   {
-                      "name":  "ScrollTok",
-                      "short":  "ScrollTok",
-                      "type":  "company",
-                      "blurb":  "An endless scroll of dancing-bard videos and influencers selling cursed amulets.",
-                      "appearances":  3,
-                      "articles":  [
-                                       {
-                                           "id":  "dragon-ridership-app",
-                                           "title":  "Uber-Style Dragon Ridership App Launches in Waterdeep",
-                                           "date":  "2026-04-23"
-                                       },
-                                       {
-                                           "id":  "crypto-gold-piece-crash",
-                                           "title":  "Magic Coin Cryptocurrency Crashes After Rug Pull",
-                                           "date":  "2026-04-21"
-                                       },
-                                       {
-                                           "id":  "scrolltok-influencer-scandal",
-                                           "title":  "ScrollTok Influencer Promotes Cursed Amulet",
-                                           "date":  "2026-04-20"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Cormyr",
                       "short":  "Cormyr",
                       "type":  "country",
@@ -620,6 +672,30 @@
                                    ]
                   },
                   {
+                      "name":  "ScrollTok",
+                      "short":  "ScrollTok",
+                      "type":  "company",
+                      "blurb":  "An endless scroll of dancing-bard videos and influencers selling cursed amulets.",
+                      "appearances":  3,
+                      "articles":  [
+                                       {
+                                           "id":  "dragon-ridership-app",
+                                           "title":  "Uber-Style Dragon Ridership App Launches in Waterdeep",
+                                           "date":  "2026-04-23"
+                                       },
+                                       {
+                                           "id":  "crypto-gold-piece-crash",
+                                           "title":  "Magic Coin Cryptocurrency Crashes After Rug Pull",
+                                           "date":  "2026-04-21"
+                                       },
+                                       {
+                                           "id":  "scrolltok-influencer-scandal",
+                                           "title":  "ScrollTok Influencer Promotes Cursed Amulet",
+                                           "date":  "2026-04-20"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Federal Reserve of Waterdeep",
                       "short":  "the Reserve",
                       "type":  "agency",
@@ -635,6 +711,25 @@
                                            "id":  "federal-reserve-waterdeep",
                                            "title":  "Federal Reserve of Waterdeep Announces Interest Rate Hike Amidst Goblin Inflation",
                                            "date":  "2024-01-15"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Senate Chamber",
+                      "short":  "the Chamber",
+                      "type":  "institution",
+                      "blurb":  "Upper house of Waterdeep, where Councilors debate, filibuster, and occasionally stop time.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "ivory-keep-names-new-herald-unblemished-record",
+                                           "title":  "Ivory Keep Names New Herald for Her Unblemished Record of Agreeing",
+                                           "date":  "2026-10-10"
+                                       },
+                                       {
+                                           "id":  "senate-filibuster-time-stop",
+                                           "title":  "Grand Vizier Mitch Casts Time Stop Spell Again",
+                                           "date":  "2026-04-16"
                                        }
                                    ]
                   },
@@ -658,21 +753,135 @@
                                    ]
                   },
                   {
-                      "name":  "the Merchant Princes",
-                      "short":  "the Merchant Princes",
-                      "type":  "institution",
-                      "blurb":  "The coin-counting elite who run the trade networks and the counting houses.",
+                      "name":  "the Crier News Nexus",
+                      "short":  "the Crier",
+                      "type":  "company",
+                      "blurb":  "A round-the-clock town-crier network, now owned by Skytrance Consolidated.",
                       "appearances":  2,
                       "articles":  [
                                        {
-                                           "id":  "international-trade-tariffs",
-                                           "title":  "New Tariffs Imposed on Kara-Tur Imports",
-                                           "date":  "2026-04-22"
+                                           "id":  "skytrance-megamerger-rightsizes-hollowood",
+                                           "title":  "Skytrance Megamerger Closes, Bravely Rightsizes Hollowood\u0027s Adventuring Party",
+                                           "date":  "2026-10-10"
                                        },
                                        {
-                                           "id":  "federal-reserve-gold-leaf",
-                                           "title":  "Federal Reserve Prints Too Much Gold Leaf",
-                                           "date":  "2026-04-16"
+                                           "id":  "ivory-keep-names-new-herald-unblemished-record",
+                                           "title":  "Ivory Keep Names New Herald for Her Unblemished Record of Agreeing",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Major League Batball",
+                      "short":  "the League",
+                      "type":  "institution",
+                      "blurb":  "Waterdeep\u0027s grand league of bat-and-ball clubs, whose autumn tournament empties every tavern in the realm.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
+                                           "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
+                                           "date":  "2026-10-10"
+                                       },
+                                       {
+                                           "id":  "potion-sports-doping-scandal",
+                                           "title":  "Professional Quidditch League Doping Scandal Erupts",
+                                           "date":  "2026-04-23"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Royal Exchequer of Waterdeep",
+                      "short":  "the Exchequer",
+                      "type":  "agency",
+                      "blurb":  "Keeper of the realm\u0027s purse and debts. Its ten-year notes set the price of borrowing for every tavern-keeper in Waterdeep, and it announces each new round of sanctions as the biggest yet.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "coin-piles-record-heights-realm-mood-sinks",
+                                           "title":  "Coin Piles Hit Record Heights as Realm\u0027s Mood Sinks Below Dungeon Level",
+                                           "date":  "2026-10-10"
+                                       },
+                                       {
+                                           "id":  "donwald-no-siege-of-calimshan-until-ballots-counted",
+                                           "title":  "Donwald Declares No Siege of Calimshan Until the Ballots Are Counted",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "OpenEye (makers of ChattyGolem)",
+                      "short":  "OpenEye",
+                      "type":  "company",
+                      "blurb":  "The arcane workshop behind ChattyGolem, the realm\u0027s most talkative golem. Valued very highly by people who own pieces of it.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "coin-piles-record-heights-realm-mood-sinks",
+                                           "title":  "Coin Piles Hit Record Heights as Realm\u0027s Mood Sinks Below Dungeon Level",
+                                           "date":  "2026-10-10"
+                                       },
+                                       {
+                                           "id":  "openeye-chattygolem-6-intelligent-illusions",
+                                           "title":  "OpenEye\u0027s New Golem Answers in Illusions, Charts, and Tiny Catapults",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Ivory Keep",
+                      "short":  "the Keep",
+                      "type":  "place",
+                      "blurb":  "The official white seat of the High Council. The High Lord visits it between stays at the Golden Tower.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "ivory-keep-names-new-herald-unblemished-record",
+                                           "title":  "Ivory Keep Names New Herald for Her Unblemished Record of Agreeing",
+                                           "date":  "2026-10-10"
+                                       },
+                                       {
+                                           "id":  "donwald-no-siege-of-calimshan-until-ballots-counted",
+                                           "title":  "Donwald Declares No Siege of Calimshan Until the Ballots Are Counted",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Oil Lords of Amn",
+                      "short":  "the Oil Lords",
+                      "type":  "institution",
+                      "blurb":  "Wealthy cartel controlling the lamp oil of the realm. Prices move whenever drilling rights come up.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "coin-piles-record-heights-realm-mood-sinks",
+                                           "title":  "Coin Piles Hit Record Heights as Realm\u0027s Mood Sinks Below Dungeon Level",
+                                           "date":  "2026-10-10"
+                                       },
+                                       {
+                                           "id":  "donwald-oil-lords-dispute",
+                                           "title":  "High Lord Donwald Clashes With Oil Lords Over Drilling Rights",
+                                           "date":  "2026-04-23"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Lantan",
+                      "short":  "Lantan",
+                      "type":  "country",
+                      "blurb":  "A small, very rich island nation that has made a trade of carrying messages between realms that refuse to talk to each other.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "donwald-no-siege-of-calimshan-until-ballots-counted",
+                                           "title":  "Donwald Declares No Siege of Calimshan Until the Ballots Are Counted",
+                                           "date":  "2026-10-10"
+                                       },
+                                       {
+                                           "id":  "cursed-sword-recall-notice",
+                                           "title":  "Mass Recall Issued for \u0027Whiner +1\u0027 Magic Swords",
+                                           "date":  "2026-04-18"
                                        }
                                    ]
                   },
@@ -691,30 +900,16 @@
                                    ]
                   },
                   {
-                      "name":  "Czar Vlad the Bear-Handed",
-                      "short":  "Czar Vlad",
-                      "type":  "person",
-                      "blurb":  "Ruler of frozen Damara. Expands his borders every winter and freezes trade routes when annoyed.",
+                      "name":  "Warder Bros. Diskovery",
+                      "short":  "Warder Bros.",
+                      "type":  "company",
+                      "blurb":  "Storied studio of talking cartoon beasts and brooding caped heroes, swallowed whole by Skytrance Consolidated.",
                       "appearances":  1,
                       "articles":  [
                                        {
-                                           "id":  "eastern-front-winter-wizards",
-                                           "title":  "Czar Vlad the Bear-Handed Freezes Trade Routes",
-                                           "date":  "2026-04-16"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Lady Hillara of the Deleted Scrolls",
-                      "short":  "Hillara",
-                      "type":  "person",
-                      "blurb":  "Former official whose private tower held several classified grimoires. She insists she declassified them with a thought.",
-                      "appearances":  1,
-                      "articles":  [
-                                       {
-                                           "id":  "classified-grimoire-inquisition",
-                                           "title":  "Lady Hillara Summoned by Inquisitors Over Scrolls",
-                                           "date":  "2026-04-16"
+                                           "id":  "skytrance-megamerger-rightsizes-hollowood",
+                                           "title":  "Skytrance Megamerger Closes, Bravely Rightsizes Hollowood\u0027s Adventuring Party",
+                                           "date":  "2026-10-10"
                                        }
                                    ]
                   },
@@ -733,6 +928,76 @@
                                    ]
                   },
                   {
+                      "name":  "The Atlantean",
+                      "short":  "The Atlantean",
+                      "type":  "company",
+                      "blurb":  "A venerable Waterdhavian journal of long essays and longer scoops, much read in the Keep and much resented there too.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "donwald-no-siege-of-calimshan-until-ballots-counted",
+                                           "title":  "Donwald Declares No Siege of Calimshan Until the Ballots Are Counted",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Golden Tower Scrying Company",
+                      "short":  "Golden Tower Scrying",
+                      "type":  "company",
+                      "blurb":  "The High Lord\u0027s own scrying-and-message company, operator of the Truthscroll.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "ivory-keep-names-new-herald-unblemished-record",
+                                           "title":  "Ivory Keep Names New Herald for Her Unblemished Record of Agreeing",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Cauldron Broadcasting Society",
+                      "short":  "the Cauldron",
+                      "type":  "company",
+                      "blurb":  "An old broadcasting house with a famous eye-shaped sigil, now sharing a roof with its old rival crier.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "skytrance-megamerger-rightsizes-hollowood",
+                                           "title":  "Skytrance Megamerger Closes, Bravely Rightsizes Hollowood\u0027s Adventuring Party",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Pallamount Pictures",
+                      "short":  "Pallamount",
+                      "type":  "company",
+                      "blurb":  "A venerable spectacle studio with a mountain on its banner, now folded into Skytrance Consolidated.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "skytrance-megamerger-rightsizes-hollowood",
+                                           "title":  "Skytrance Megamerger Closes, Bravely Rightsizes Hollowood\u0027s Adventuring Party",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the News Maximus Crier",
+                      "short":  "Maximus",
+                      "type":  "company",
+                      "blurb":  "A crier house that finds the Foxfire Tidings too restrained.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "ivory-keep-names-new-herald-unblemished-record",
+                                           "title":  "Ivory Keep Names New Herald for Her Unblemished Record of Agreeing",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Starbuck\u0027s Mystical Brews",
                       "short":  "Starbuck\u0027s",
                       "type":  "company",
@@ -747,30 +1012,366 @@
                                    ]
                   },
                   {
-                      "name":  "the Oil Lords of Amn",
-                      "short":  "the Oil Lords",
-                      "type":  "institution",
-                      "blurb":  "Wealthy cartel controlling the lamp oil of the realm. Prices move whenever drilling rights come up.",
+                      "name":  "the Foxfire Tidings",
+                      "short":  "Foxfire",
+                      "type":  "company",
+                      "blurb":  "The realm\u0027s loudest town-crier house, friendly to the Red Oliphants and a common landing spot for former Keep officials.",
                       "appearances":  1,
                       "articles":  [
                                        {
-                                           "id":  "donwald-oil-lords-dispute",
-                                           "title":  "High Lord Donwald Clashes With Oil Lords Over Drilling Rights",
-                                           "date":  "2026-04-23"
+                                           "id":  "ivory-keep-names-new-herald-unblemished-record",
+                                           "title":  "Ivory Keep Names New Herald for Her Unblemished Record of Agreeing",
+                                           "date":  "2026-10-10"
                                        }
                                    ]
                   },
                   {
-                      "name":  "the Senate Chamber",
-                      "short":  "the Chamber",
-                      "type":  "institution",
-                      "blurb":  "Upper house of Waterdeep, where Councilors debate, filibuster, and occasionally stop time.",
+                      "name":  "Sean Berserk",
+                      "short":  "Berserk",
+                      "type":  "person",
+                      "blurb":  "A Pale Stockings hurler of medium size and, allegedly, considerable stamina.",
                       "appearances":  1,
                       "articles":  [
                                        {
-                                           "id":  "senate-filibuster-time-stop",
-                                           "title":  "Grand Vizier Mitch Casts Time Stop Spell Again",
-                                           "date":  "2026-04-16"
+                                           "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
+                                           "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Munetaka Muramagi",
+                      "short":  "Muramagi",
+                      "type":  "person",
+                      "blurb":  "A slugger from Kozakura who crossed the sea to hit balls for the Pale Stockings into places balls are not allowed.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
+                                           "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Skytrance Consolidated",
+                      "short":  "Skytrance",
+                      "type":  "company",
+                      "blurb":  "The colossal spectacle-house formed when two of Hollowood\u0027s oldest studios fused into one, along with a mountain of debt and two rival town criers.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "skytrance-megamerger-rightsizes-hollowood",
+                                           "title":  "Skytrance Megamerger Closes, Bravely Rightsizes Hollowood\u0027s Adventuring Party",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Delvta Wyvern Lines",
+                      "short":  "Delvta",
+                      "type":  "company",
+                      "blurb":  "A major wyvern carrier whose mounts eat staggering quantities of lamp oil.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "coin-piles-record-heights-realm-mood-sinks",
+                                           "title":  "Coin Piles Hit Record Heights as Realm\u0027s Mood Sinks Below Dungeon Level",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Pale Stockings",
+                      "short":  "the Stockings",
+                      "type":  "company",
+                      "blurb":  "Chikraggo\u0027s Southside batball club, famous for losing 121 games in one season and then, two years later, refusing to stop winning.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
+                                           "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Intelligent Illusions",
+                      "short":  "Intelligent Illusions",
+                      "type":  "product",
+                      "blurb":  "ChattyGolem\u0027s knack for conjuring its answers as glowing charts, forms, and tiny working tools.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "openeye-chattygolem-6-intelligent-illusions",
+                                           "title":  "OpenEye\u0027s New Golem Answers in Illusions, Charts, and Tiny Catapults",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Sacramantle",
+                      "short":  "Sacramantle",
+                      "type":  "city",
+                      "blurb":  "Seat of the Golden Coast\u0027s government, where the Margrave keeps his offices and wants everyone else to keep theirs.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "golden-coast-clerks-call-first-strike-margrave-rolls-initiative",
+                                           "title":  "Golden Coast Clerks Call First Strike; Margrave Rolls for Initiative",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "ChattyGolem-6 Sunforged",
+                      "short":  "Sunforged",
+                      "type":  "product",
+                      "blurb":  "The paid-tier edition of ChattyGolem-6, for those who tithe monthly.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "openeye-chattygolem-6-intelligent-illusions",
+                                           "title":  "OpenEye\u0027s New Golem Answers in Illusions, Charts, and Tiny Catapults",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "ChattyGolem-6 Moonforged",
+                      "short":  "Moonforged",
+                      "type":  "product",
+                      "blurb":  "The free-tier edition of ChattyGolem-6. Same golem, smaller celestial body.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "openeye-chattygolem-6-intelligent-illusions",
+                                           "title":  "OpenEye\u0027s New Golem Answers in Illusions, Charts, and Tiny Catapults",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Oakenland",
+                      "short":  "Oakenland",
+                      "type":  "city",
+                      "blurb":  "A hardworking bay city of the Golden Coast with a long memory and a longer picket line.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "golden-coast-clerks-call-first-strike-margrave-rolls-initiative",
+                                           "title":  "Golden Coast Clerks Call First Strike; Margrave Rolls for Initiative",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Cleaveland",
+                      "short":  "Cleaveland",
+                      "type":  "city",
+                      "blurb":  "A lakeshore forge town of Waterdeep that takes its batball and its grudges seriously.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
+                                           "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the World Siege",
+                      "short":  "the World Siege",
+                      "type":  "ip",
+                      "blurb":  "The final autumn showdown of Major League Batball, in which two clubs besiege each other for the championship.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
+                                           "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Lost Angels",
+                      "short":  "Lost Angels",
+                      "type":  "city",
+                      "blurb":  "Sprawling southern city of the Golden Coast, home to bards, illusionists and the worst carriage traffic in the realm.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "golden-coast-clerks-call-first-strike-margrave-rolls-initiative",
+                                           "title":  "Golden Coast Clerks Call First Strike; Margrave Rolls for Initiative",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Chikraggo",
+                      "short":  "Chikraggo",
+                      "type":  "city",
+                      "blurb":  "A windy lakeside trade city of Waterdeep split into a Southside and a Northside that agree on nothing, least of all batball.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
+                                           "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Stingmantas of Tampering Bay",
+                      "short":  "the Stingmantas",
+                      "type":  "company",
+                      "blurb":  "A thrifty batball club from a swampy southern bay that keeps beating richer clubs on a shoestring.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
+                                           "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Starcallers of Hewston",
+                      "short":  "the Starcallers",
+                      "type":  "company",
+                      "blurb":  "Hewston\u0027s batball club, star-gazers with a long memory for signals of every kind.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
+                                           "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Northside Owlbear Whelps",
+                      "short":  "the Whelps",
+                      "type":  "company",
+                      "blurb":  "Chikraggo\u0027s Northside batball club, much loved, much photographed, and often home early.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
+                                           "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Cleaveland Sentinels",
+                      "short":  "the Sentinels",
+                      "type":  "company",
+                      "blurb":  "Cleaveland\u0027s batball club, stone-faced defenders of their home field, except when they aren\u0027t.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
+                                           "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Bitgold",
+                      "short":  "Bitgold",
+                      "type":  "product",
+                      "blurb":  "Magic coins conjured from pure belief. Their value goes up, then down, then sideways, for reasons nobody can explain.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "coin-piles-record-heights-realm-mood-sinks",
+                                           "title":  "Coin Piles Hit Record Heights as Realm\u0027s Mood Sinks Below Dungeon Level",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "ChattyGolem-6",
+                      "short":  "ChattyGolem-6",
+                      "type":  "product",
+                      "blurb":  "OpenEye\u0027s newest talking golem. It answers in conjured charts and buttons, and sometimes in catapults.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "openeye-chattygolem-6-intelligent-illusions",
+                                           "title":  "OpenEye\u0027s New Golem Answers in Illusions, Charts, and Tiny Catapults",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "ChattyGolem-5.6",
+                      "short":  "ChattyGolem-5.6",
+                      "type":  "product",
+                      "blurb":  "The previous edition of OpenEye\u0027s talking golem, now mostly remembered for being slower to start talking than its successor.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "openeye-chattygolem-6-intelligent-illusions",
+                                           "title":  "OpenEye\u0027s New Golem Answers in Illusions, Charts, and Tiny Catapults",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Truthscroll",
+                      "short":  "the Truthscroll",
+                      "type":  "product",
+                      "blurb":  "Message board owned by the High Lord, where most decrees of state are now first posted.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "ivory-keep-names-new-herald-unblemished-record",
+                                           "title":  "Ivory Keep Names New Herald for Her Unblemished Record of Agreeing",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Dwarven Jones Industrial Average",
+                      "short":  "the Dwarven Jones",
+                      "type":  "product",
+                      "blurb":  "An old index of thirty mighty forges and trading houses, still reckoned in points by dwarven accountants.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "coin-piles-record-heights-realm-mood-sinks",
+                                           "title":  "Coin Piles Hit Record Heights as Realm\u0027s Mood Sinks Below Dungeon Level",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Clerics\u0027 Disease Council",
+                      "short":  "the Disease Council",
+                      "type":  "agency",
+                      "blurb":  "The realm\u0027s plague wardens, who track every cough and pox and publish very long scrolls about handwashing.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "healing-minister-opens-infirmary-to-hunt-curses-in-pox-vials",
+                                           "title":  "Healing Minister Opens Infirmary to Hunt for Curses in Pox Vials",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Homeland Watchtower",
+                      "short":  "the Watchtower",
+                      "type":  "agency",
+                      "blurb":  "Ministry that guards the realm\u0027s borders and gates, and which goes through spokespeople quickly.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "ivory-keep-names-new-herald-unblemished-record",
+                                           "title":  "Ivory Keep Names New Herald for Her Unblemished Record of Agreeing",
+                                           "date":  "2026-10-10"
                                        }
                                    ]
                   },
@@ -785,6 +1386,90 @@
                                            "id":  "royal-revenue-service-audit",
                                            "title":  "Royal Revenue Service Audits Adventurer Hoards",
                                            "date":  "2026-04-20"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Pentacle",
+                      "short":  "the Pentacle",
+                      "type":  "agency",
+                      "blurb":  "Five-sided fortress of Waterdeep\u0027s war ministry, where generals draw up siege plans on request.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "donwald-no-siege-of-calimshan-until-ballots-counted",
+                                           "title":  "Donwald Declares No Siege of Calimshan Until the Ballots Are Counted",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Noble Institutes of Healing",
+                      "short":  "the Institutes",
+                      "type":  "agency",
+                      "blurb":  "The realm\u0027s great house of healing research, where scholars study ailments and cures.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "healing-minister-opens-infirmary-to-hunt-curses-in-pox-vials",
+                                           "title":  "Healing Minister Opens Infirmary to Hunt for Curses in Pox Vials",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Coffers of Medicine \u0026 Succor",
+                      "short":  "the Coffers",
+                      "type":  "agency",
+                      "blurb":  "The crown treasury that pays healers for tending the elderly and the poor.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "healing-minister-opens-infirmary-to-hunt-curses-in-pox-vials",
+                                           "title":  "Healing Minister Opens Infirmary to Hunt for Curses in Pox Vials",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Bureau of Mounts \u0026 Wagons",
+                      "short":  "the Mounts Bureau",
+                      "type":  "agency",
+                      "blurb":  "Where you register your wagon, license your horse and lose an afternoon.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "golden-coast-clerks-call-first-strike-margrave-rolls-initiative",
+                                           "title":  "Golden Coast Clerks Call First Strike; Margrave Rolls for Initiative",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Ministry of Humours \u0026 Healing",
+                      "short":  "the Ministry",
+                      "type":  "agency",
+                      "blurb":  "The crown ministry that oversees the realm\u0027s healers, plague wardens and infirmaries.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "healing-minister-opens-infirmary-to-hunt-curses-in-pox-vials",
+                                           "title":  "Healing Minister Opens Infirmary to Hunt for Curses in Pox Vials",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Hormoth Narrows",
+                      "short":  "the Narrows",
+                      "type":  "place",
+                      "blurb":  "A thin, much-fought-over sea passage that half the realm\u0027s lamp oil has to squeeze through. Whoever shuts it sets the price of everything.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "donwald-no-siege-of-calimshan-until-ballots-counted",
+                                           "title":  "Donwald Declares No Siege of Calimshan Until the Ballots Are Counted",
+                                           "date":  "2026-10-10"
                                        }
                                    ]
                   },
@@ -814,6 +1499,362 @@
                                            "title":  "Grand Vizier Mitch Casts Time Stop Spell Again",
                                            "date":  "2026-04-16"
                                        }
+                                   ]
+                  },
+                  {
+                      "name":  "Lady Hillara of the Deleted Scrolls",
+                      "short":  "Hillara",
+                      "type":  "person",
+                      "blurb":  "Former official whose private tower held several classified grimoires. She insists she declassified them with a thought.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "classified-grimoire-inquisition",
+                                           "title":  "Lady Hillara Summoned by Inquisitors Over Scrolls",
+                                           "date":  "2026-04-16"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Czar Vlad the Bear-Handed",
+                      "short":  "Czar Vlad",
+                      "type":  "person",
+                      "blurb":  "Ruler of frozen Damara. Expands his borders every winter and freezes trade routes when annoyed.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "eastern-front-winter-wizards",
+                                           "title":  "Czar Vlad the Bear-Handed Freezes Trade Routes",
+                                           "date":  "2026-04-16"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Hollowood",
+                      "short":  "Hollowood",
+                      "type":  "place",
+                      "blurb":  "The hillside district where spectacles, plays, and illusions are made for the whole realm.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "skytrance-megamerger-rightsizes-hollowood",
+                                           "title":  "Skytrance Megamerger Closes, Bravely Rightsizes Hollowood\u0027s Adventuring Party",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Golden Coast",
+                      "short":  "the Golden Coast",
+                      "type":  "place",
+                      "blurb":  "The sun-soaked western province of Waterdeep, rich in orchards, artificers and very long lines.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "golden-coast-clerks-call-first-strike-margrave-rolls-initiative",
+                                           "title":  "Golden Coast Clerks Call First Strike; Margrave Rolls for Initiative",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Calimshan",
+                      "short":  "Calimshan",
+                      "type":  "country",
+                      "blurb":  "A proud desert realm in the south, ruled by stern clerics. It keeps a chokehold on the realm\u0027s busiest oil strait and holds grudges longer than most dragons.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "donwald-no-siege-of-calimshan-until-ballots-counted",
+                                           "title":  "Donwald Declares No Siege of Calimshan Until the Ballots Are Counted",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Kozakura",
+                      "short":  "Kozakura",
+                      "type":  "country",
+                      "blurb":  "An island realm off the eastern coast of Kara-Tur, known for its sluggers, its craftsmen, and its very punctual carriages.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
+                                           "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Collegium of Michigloom",
+                      "short":  "Michigloom",
+                      "type":  "institution",
+                      "blurb":  "A northern seat of learning that asks commoners every month how they feel about their purses. The answer is usually \u0027glum.\u0027",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "coin-piles-record-heights-realm-mood-sinks",
+                                           "title":  "Coin Piles Hit Record Heights as Realm\u0027s Mood Sinks Below Dungeon Level",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Steward Annika Wallbreaker",
+                      "short":  "Wallbreaker",
+                      "type":  "person",
+                      "blurb":  "President of Lodge 1000, who says a clerk forced back to the office deserves the coin to get there.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "golden-coast-clerks-call-first-strike-margrave-rolls-initiative",
+                                           "title":  "Golden Coast Clerks Call First Strike; Margrave Rolls for Initiative",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Royal Minister of Healing Robbert Fennedy the Younger, the Worm-Touched",
+                      "short":  "Fennedy",
+                      "type":  "person",
+                      "blurb":  "The realm\u0027s Royal Minister of Healing, scion of an old noble house, who trusts his own hunches over the herbalists\u0027 ledgers and has a particular suspicion of pox vials.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "healing-minister-opens-infirmary-to-hunt-curses-in-pox-vials",
+                                           "title":  "Healing Minister Opens Infirmary to Hunt for Curses in Pox Vials",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Co-Guildmaster Ynnon Kryse",
+                      "short":  "Kryse",
+                      "type":  "person",
+                      "blurb":  "Co-Guildmaster of Skytrance Consolidated, formerly master of a toymaking guild famous for its dolls.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "skytrance-megamerger-rightsizes-hollowood",
+                                           "title":  "Skytrance Megamerger Closes, Bravely Rightsizes Hollowood\u0027s Adventuring Party",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Margrave Gavin Newsoom of the Golden Coast",
+                      "short":  "Newsoom",
+                      "type":  "person",
+                      "blurb":  "Margrave of the Golden Coast. Very good hair, very firm opinions about where his clerks should sit.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "golden-coast-clerks-call-first-strike-margrave-rolls-initiative",
+                                           "title":  "Golden Coast Clerks Call First Strike; Margrave Rolls for Initiative",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Archcleric Jaybird Battlecharya",
+                      "short":  "Battlecharya",
+                      "type":  "person",
+                      "blurb":  "Archcleric of the Noble Institutes of Healing, and a reliable presence at the Minister\u0027s ribbon-cuttings.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "healing-minister-opens-infirmary-to-hunt-curses-in-pox-vials",
+                                           "title":  "Healing Minister Opens Infirmary to Hunt for Curses in Pox Vials",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Quartermaster Chris Gets",
+                      "short":  "Gets",
+                      "type":  "person",
+                      "blurb":  "The Pale Stockings\u0027 quartermaster, who rebuilt the club by getting rid of nearly everyone on it.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
+                                           "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Skipper Will Venerable",
+                      "short":  "Venerable",
+                      "type":  "person",
+                      "blurb":  "The young skipper of the Pale Stockings, whose name sounds older than he is.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
+                                           "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Grand Almoner Mehmagus the Great and Powerful",
+                      "short":  "Mehmagus",
+                      "type":  "person",
+                      "blurb":  "Grand Almoner of the Coffers of Medicine \u0026 Succor, formerly a crystal-ball showman who sold miracle tonics to the masses.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "healing-minister-opens-infirmary-to-hunt-curses-in-pox-vials",
+                                           "title":  "Healing Minister Opens Infirmary to Hunt for Curses in Pox Vials",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "High Cleric Errica Swartsword",
+                      "short":  "Swartsword",
+                      "type":  "person",
+                      "blurb":  "High Cleric of the Clerics\u0027 Disease Council, the realm\u0027s chief plague warden.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "healing-minister-opens-infirmary-to-hunt-curses-in-pox-vials",
+                                           "title":  "Healing Minister Opens Infirmary to Hunt for Curses in Pox Vials",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Larrion Elfison the Elder",
+                      "short":  "Elfison the Elder",
+                      "type":  "person",
+                      "blurb":  "One of the richest wizards in Waterdeep, owner of many yachts, and father of the Guildmaster of Skytrance.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "skytrance-megamerger-rightsizes-hollowood",
+                                           "title":  "Skytrance Megamerger Closes, Bravely Rightsizes Hollowood\u0027s Adventuring Party",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Guildmaster Sam Altarman",
+                      "short":  "Altarman",
+                      "type":  "person",
+                      "blurb":  "Guildmaster of OpenEye, who speaks softly about the future and carries a very large golem.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "openeye-chattygolem-6-intelligent-illusions",
+                                           "title":  "OpenEye\u0027s New Golem Answers in Illusions, Charts, and Tiny Catapults",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Lodge 1000 of the Servitors\u0027 Guild-Union",
+                      "short":  "Lodge 1000",
+                      "type":  "institution",
+                      "blurb":  "The Golden Coast\u0027s biggest union of state clerks and civil servants, some hundred thousand strong.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "golden-coast-clerks-call-first-strike-margrave-rolls-initiative",
+                                           "title":  "Golden Coast Clerks Call First Strike; Margrave Rolls for Initiative",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Grand Assembly of Nations",
+                      "short":  "the Grand Assembly",
+                      "type":  "institution",
+                      "blurb":  "The yearly gathering where every realm\u0027s envoy gets a turn at the podium and nobody listens to anyone else\u0027s speech.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "donwald-no-siege-of-calimshan-until-ballots-counted",
+                                           "title":  "Donwald Declares No Siege of Calimshan Until the Ballots Are Counted",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Vial Effects Ailment Register",
+                      "short":  "the Register",
+                      "type":  "institution",
+                      "blurb":  "The crown\u0027s ledger where healers and commoners write down any ill effect they suspect came from a vial.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "healing-minister-opens-infirmary-to-hunt-curses-in-pox-vials",
+                                           "title":  "Healing Minister Opens Infirmary to Hunt for Curses in Pox Vials",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Herald Karoline Levitate",
+                      "short":  "Levitate",
+                      "type":  "person",
+                      "blurb":  "Former Herald of the Ivory Keep and the youngest ever sworn in. Now a contributor at the Foxfire Tidings.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "ivory-keep-names-new-herald-unblemished-record",
+                                           "title":  "Ivory Keep Names New Herald for Her Unblemished Record of Agreeing",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Guildmaster Davyd Elfison",
+                      "short":  "Elfison",
+                      "type":  "person",
+                      "blurb":  "Young Guildmaster of Skytrance Consolidated and heir to one of the largest fortunes in Waterdeep. Fond of buying studios.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "skytrance-megamerger-rightsizes-hollowood",
+                                           "title":  "Skytrance Megamerger Closes, Bravely Rightsizes Hollowood\u0027s Adventuring Party",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Herald Katie Saccharia",
+                      "short":  "Saccharia",
+                      "type":  "person",
+                      "blurb":  "Newly appointed Herald of the Ivory Keep, hired straight from the High Lord\u0027s own scrying company. Her chief qualification, per the High Lord, is an unblemished record of support.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "ivory-keep-names-new-herald-unblemished-record",
+                                           "title":  "Ivory Keep Names New Herald for Her Unblemished Record of Agreeing",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Golden Coast Office of Hirelings \u0026 Rosters",
+                      "short":  "the Rosters Office",
+                      "type":  "agency",
+                      "blurb":  "The Golden Coast bureau that bargains with state workers, mostly by saying it is ready to bargain.",
+                      "appearances":  0,
+                      "articles":  [
+
+                                   ]
+                  },
+                  {
+                      "name":  "the Silver \u0026 Platinum 500",
+                      "short":  "the Silver \u0026 Platinum",
+                      "type":  "product",
+                      "blurb":  "The realm\u0027s favorite tally of five hundred great guilds\u0027 share prices. When it rises, the Merchant Princes ring bells.",
+                      "appearances":  0,
+                      "articles":  [
+
                                    ]
                   }
               ]
