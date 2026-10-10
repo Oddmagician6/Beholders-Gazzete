@@ -268,6 +268,7 @@
       <p>Return to the Gazette for more news from across the realms.</p>
       <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
         <a href="index.html" class="btn">← Back to All News</a>
+        <a href="archive.html" class="btn">📚 The Archives</a>
         <a href="rumors.html" class="btn btn-gold">🍺 Tavern Rumors</a>
       </div>
       <div class="share-section">
@@ -296,7 +297,26 @@
     <!-- Related Articles -->
     <div class="article-related">
       <h3>📰 More From the Gazette</h3>
-      <div class="article-grid" id="related-articles"></div>
+      <div class="article-grid" id="related-articles">
+        <article class="card">
+          <div class="card-tag">International</div>
+          <h3><a href="a/donwald-no-siege-of-calimshan-until-ballots-counted.html">Donwald Declares No Siege of Calimshan Until the Ballots Are Counted</a></h3>
+          <p>The High Lord has found the one thing that can pause a war: the election calendar. The blockade stays, and so do the bad rations.</p>
+          <a href="a/donwald-no-siege-of-calimshan-until-ballots-counted.html" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">&#x1F4DC; Read Scroll</a>
+        </article>
+        <article class="card">
+          <div class="card-tag">International</div>
+          <h3><a href="a/eastern-front-winter-wizards.html">Czar Vlad the Bear-Handed Freezes Trade Routes</a></h3>
+          <p>The Order of the Western Shield imposes new sanctions. Czar Vlad claims the cold weather is a natural phenomenon, not a weaponized spell.</p>
+          <a href="a/eastern-front-winter-wizards.html" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">&#x1F4DC; Read Scroll</a>
+        </article>
+        <article class="card">
+          <div class="card-tag">Sports</div>
+          <h3><a href="a/pale-stockings-121-losses-one-win-from-pennant-melee.html">Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee</a></h3>
+          <p>Two years ago they lost 121 games. Tonight the Pale Stockings play one game for a trip to the Pennant Melee, and the Southside taverns are out of chairs, allegedly.</p>
+          <a href="a/pale-stockings-121-losses-one-win-from-pennant-melee.html" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">&#x1F4DC; Read Scroll</a>
+        </article>
+      </div>
     </div>
   </div>
 
@@ -308,6 +328,7 @@
       <p class="footer-quip">Disclaimer: All news is subject to DM approval.</p>
       <div class="footer-links">
         <a href="index.html">Home</a>
+        <a href="archive.html">Archive</a>
         <a href="glossary.html">Who's Who</a>
         <a href="about.html">About</a>
         <a href="about.html#contact">Contact</a>
@@ -357,7 +378,7 @@
         updateShareLinks(article.title, id);
 
         document.getElementById('article-content').innerHTML = article.content || '<p>No content available.</p>';
-        loadRelated(data.articles, id);
+        loadRelated(data.articles, article);
 
       } catch (e) {
         console.error(e);
@@ -365,18 +386,37 @@
       }
     }
 
-    function loadRelated(articles, currentId) {
-      const related = articles.filter(a => a.id !== currentId).slice(0, 3);
+    // Same rule as export-articles.ps1 (which pre-renders this block on the a/ pages): same category
+    // first, then same desk, then anything; newest first within each tier.
+    async function loadRelated(articles, current) {
       const el = document.getElementById('related-articles');
+      if (el.children.length) return;
+      const deskOf = {};
+      try {
+        const g = await fetch('glossary.json?t=' + Date.now()).then(r => r.json());
+        (g.writers || []).forEach(w => (w.categories || []).forEach(c => { deskOf[c] = w.desk_id; }));
+      } catch (e) {}
+      const desk = deskOf[current.category];
+      const score = a => a.category === current.category ? 2 : desk && deskOf[a.category] === desk ? 1 : 0;
+      const related = articles.map((a, i) => ({ a, i }))
+        .filter(x => x.a.id !== current.id)
+        .sort((x, y) => y.a.date.localeCompare(x.a.date) || y.i - x.i)
+        .map((x, rank) => ({ a: x.a, s: score(x.a), rank }))
+        .sort((x, y) => y.s - x.s || x.rank - y.rank)
+        .slice(0, 3).map(x => x.a);
       if (!related.length) { el.innerHTML = '<p style="color:var(--text-dim);text-align:center;">No more scrolls found.</p>'; return; }
       el.innerHTML = related.map(a => `
         <article class="card">
-          <div class="card-tag">${a.category || 'News'}</div>
-          <h3><a href="a/${a.id}.html">${a.title}</a></h3>
-          <p>${a.excerpt || ''}</p>
+          <div class="card-tag">${esc(a.category || 'News')}</div>
+          <h3><a href="a/${a.id}.html">${esc(a.title)}</a></h3>
+          <p>${esc(a.excerpt)}</p>
           <a href="a/${a.id}.html" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">📜 Read Scroll</a>
         </article>
       `).join('');
+    }
+
+    function esc(s) {
+      return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     }
 
     function showNotFound() {
@@ -390,7 +430,8 @@
       document.getElementById('article-category').textContent = 'Error';
     }
 
-    // Turn the byline into a link to the writer's card on the Who's Who page (desk writers only)
+    // Turn the byline into a link to the writer's desk page (desk writers only).
+    // export-articles.ps1 pre-renders the same link on the a/ pages for crawlers.
     function linkAuthor(name) {
         if (!name) return;
         fetch('glossary.json?t=' + Date.now())
@@ -400,7 +441,7 @@
                 if (!w) return;
                 const el = document.getElementById('article-author');
                 const a = document.createElement('a');
-                a.href = 'glossary.html#' + encodeURIComponent(w.id);
+                a.href = 'desk/' + encodeURIComponent(w.id) + '.html';
                 a.textContent = (w.avatar ? w.avatar + ' ' : '') + w.name;
                 a.style.color = 'inherit';
                 el.replaceChildren(a);

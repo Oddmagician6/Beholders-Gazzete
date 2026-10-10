@@ -24,3 +24,8 @@
   border-radius: 3px;
   margin-bottom: 14px;
 }
+
+/* Archive link under the article grid */
+.archive-link { text-align: center; margin-top: 28px; font-family: var(--font-ui); font-size: 0.92rem; }
+.archive-link a { color: var(--gold-bright); }
+.archive-link a:hover { text-decoration: underline; }

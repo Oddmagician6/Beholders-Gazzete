@@ -6,6 +6,7 @@
                         "name":  "Ottoline Vex",
                         "avatar":  "🏛️",
                         "race_class":  "Tiefling court scribe (retired herald)",
+                        "desk_id":  "politics",
                         "desk":  "Politics \u0026 Realm Affairs",
                         "categories":  [
                                            "Politics",
@@ -38,6 +39,7 @@
                         "name":  "Barnaby Tallowmere",
                         "avatar":  "🍞",
                         "race_class":  "Halfling ledger-keeper",
+                        "desk_id":  "economy",
                         "desk":  "Economy \u0026 Coin",
                         "categories":  [
                                            "Economy",
@@ -67,6 +69,7 @@
                         "name":  "Sterling Vanmoor",
                         "avatar":  "💼",
                         "race_class":  "Human merchant-prince (self-described \u0027Guild Visionary\u0027)",
+                        "desk_id":  "business",
                         "desk":  "Business \u0026 Guilds",
                         "categories":  [
                                            "Business",
@@ -100,6 +103,7 @@
                         "name":  "Brakka Stonesweat",
                         "avatar":  "⛏️",
                         "race_class":  "Dwarf ex-miner and shop steward",
+                        "desk_id":  "labor",
                         "desk":  "Labor \u0026 Commoners",
                         "categories":  [
                                            "Labor",
@@ -129,6 +133,7 @@
                         "name":  "Nyx Spindlecoil",
                         "avatar":  "⚙️",
                         "race_class":  "Gnome artificer and early adopter",
+                        "desk_id":  "tech",
                         "desk":  "Arcane Technology",
                         "categories":  [
                                            "Technology",
@@ -157,6 +162,7 @@
                         "name":  "Grashka Ironjaw",
                         "avatar":  "⚔️",
                         "race_class":  "Half-orc war correspondent",
+                        "desk_id":  "world",
                         "desk":  "Foreign Realms",
                         "categories":  [
                                            "International",
@@ -185,6 +191,7 @@
                         "name":  "Brother Wendell Tumbleberry",
                         "avatar":  "🍲",
                         "race_class":  "Halfling cleric of the Harvest Mother",
+                        "desk_id":  "health",
                         "desk":  "Health, Science \u0026 Nature",
                         "categories":  [
                                            "Health",
@@ -215,6 +222,7 @@
                         "name":  "Skritch Mudwhistle",
                         "avatar":  "🦎",
                         "race_class":  "Kobold night-beat reporter",
+                        "desk_id":  "local",
                         "desk":  "Local, Crime \u0026 Oddities",
                         "categories":  [
                                            "Local",

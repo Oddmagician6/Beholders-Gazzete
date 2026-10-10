@@ -55,6 +55,8 @@
             border: var(--border-gold2); border-radius: 50%; background: var(--bg-dark);
         }
         .writer-name { font-family: var(--font-head); color: var(--gold-bright); font-size: 1.2rem; line-height: 1.2; }
+        .writer-name a { color: inherit; }
+        .writer-name a:hover { text-decoration: underline; }
         .writer-race { color: var(--text-dim); font-family: var(--font-ui); font-size: .82rem; }
         .writer-desk {
             align-self: flex-start; font-family: var(--font-ui); font-size: .72rem; letter-spacing: .08em;
@@ -138,7 +140,7 @@
     <div class="gl-body">
         <section class="gl-section" id="newsroom">
             <h2>✍️ The Newsroom</h2>
-            <p class="gl-intro">Every desk has one writer, and every writer has opinions. Click a byline on any article to land here.</p>
+            <p class="gl-intro">Every desk has one writer, and every writer has opinions. Click a name to visit that writer's desk and every story they've filed.</p>
             <div class="writer-grid" id="writer-grid"><p class="realm-empty">Summoning the staff…</p></div>
             <div class="legacy-note" id="legacy-note" hidden></div>
         </section>
@@ -161,6 +163,7 @@
         <p class="footer-quip">Disclaimer: All news is subject to DM approval. No dragons were harmed in the making of this website. Several goblins, however, did not survive.</p>
         <div class="footer-links">
           <a href="index.html">Home</a>
+          <a href="archive.html">Archive</a>
           <a href="glossary.html">Who's Who</a>
           <a href="about.html">About</a>
           <a href="about.html#contact">Contact</a>
@@ -190,7 +193,7 @@
             <div class="writer-head">
               <div class="writer-avatar" aria-hidden="true">${esc(w.avatar || '✍️')}</div>
               <div>
-                <div class="writer-name">${esc(w.name)}</div>
+                <div class="writer-name"><a href="desk/${encodeURIComponent(w.id)}.html">${esc(w.name)}</a></div>
                 <div class="writer-race">${esc(w.race_class)}</div>
               </div>
             </div>
@@ -203,6 +206,7 @@
             </div>
             <div class="writer-meta">Latest dispatches (${w.article_count}):</div>
             <ul class="art-list">${artLinks(w.articles)}</ul>
+            <div class="writer-meta"><a href="desk/${encodeURIComponent(w.id)}.html">Visit the desk: every dispatch →</a></div>
             <div class="writer-signoff">${esc(w.signoff)}</div>
           </article>`).join('');
 
