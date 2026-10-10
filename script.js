@@ -46,6 +46,7 @@ async function loadArticles() {
 
     renderFeatured(featured);
     renderGrid();
+    renderTicker(articles.slice(0, 8));
 
   } catch (err) {
     console.error('Failed to load articles:', err);
@@ -126,6 +127,32 @@ function loadMore() {
   displayedCount += 6;
   renderGrid();
   document.querySelector('.load-more-wrap')?.scrollIntoView({ behavior:'smooth', block:'center' });
+}
+
+/* ── TICKER ──────────────────────────────────────────────── */
+// Latest headlines, each linking to its article. Keeps the placeholder text if articles fail to load.
+const TICKER_ICONS = {
+  Politics:'👑', Elections:'🗳️', Legislation:'📜', International:'🌍', Economy:'💰', Finance:'💰',
+  Business:'🏪', Labor:'⚒️', Technology:'🔮', Health:'🧪', Transport:'🐴', Sports:'🏆',
+  Environment:'🌿', Scandal:'🕯️', 'Creature Features':'🐉', 'Tavern Tales':'🍺',
+};
+
+function renderTicker(articles) {
+  const el = document.getElementById('news-ticker');
+  if (!el || !articles.length) return;
+
+  el.textContent = '';
+  articles.forEach((a, i) => {
+    if (i) el.append('  •  ');
+    const link = document.createElement('a');
+    link.href = `a/${a.id}.html`;
+    link.textContent = `${TICKER_ICONS[a.category] || '📰'} ${stripTags(a.title)}`;
+    el.append(link);
+  });
+
+  // Same scroll speed however many characters the headlines add up to.
+  const chars = el.textContent.length;
+  el.style.animationDuration = Math.max(40, Math.round(chars * 0.2)) + 's';
 }
 
 /* ── ECONOMY SIDEBAR ─────────────────────────────────────── */

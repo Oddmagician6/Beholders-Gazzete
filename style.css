@@ -177,6 +177,11 @@ p:last-child { margin-bottom: 0; }
   100% { transform: translate3d(-100%,0,0); }
 }
 
+/* Headline links (homepage ticker): hold still while hovered so they can be clicked */
+.ticker a { color: inherit; }
+.ticker a:hover { color: var(--gold-bright); text-decoration: underline; }
+.ticker:hover, .ticker:focus-within { animation-play-state: paused; }
+
 /* ── HERO ────────────────────────────────────────────────── */
 .hero, .page-hero {
   position: relative;
