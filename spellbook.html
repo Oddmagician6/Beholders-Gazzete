@@ -42,6 +42,7 @@
     .spell-controls select, .spell-controls input {
       flex: 1; min-width: 160px; margin-top: 0;
     }
+    .spell-controls > div > select, .spell-controls > div > input { min-width: 0; width: 100%; }
     .spell-controls label { font-family: var(--font-head); font-size: 0.72rem; color: var(--gold-bright); letter-spacing: 0.06em; margin-bottom: 4px; display: block; }
     .spell-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
     .spell-card {
@@ -109,7 +110,51 @@
       border-radius: 50%; margin-left: 5px; vertical-align: middle;
       title: "Requires Concentration";
     }
-    @media (max-width: 600px) { .spell-grid { grid-template-columns: 1fr; } }
+    /* Spell lists (F16) */
+    .book-bar {
+      display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+      margin: -14px 0 24px; padding: 14px 18px;
+      background: rgba(0,0,0,0.25); border: 1px solid var(--gold-dim); border-radius: var(--radius-md);
+    }
+    .book-bar .book-label { font-family: var(--font-head); font-size: 0.72rem; color: var(--gold-bright); letter-spacing: 0.06em; }
+    .book-bar select, .book-bar input { margin-top: 0; width: auto; min-width: 170px; font-size: 0.86rem; padding: 8px 10px; }
+    .book-bar .btn { font-size: 0.8rem; padding: 8px 14px; }
+    .book-bar .btn.danger { border-color: #a04040; }
+    .book-status { flex-basis: 100%; font-family: var(--font-ui); font-size: 0.78rem; color: var(--text-dim); min-height: 1em; margin: 0; }
+    .book-status:empty { display: none; }
+    .shared-banner {
+      display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: space-between;
+      margin: 0 0 24px; padding: 14px 18px; border-radius: var(--radius-md);
+      background: rgba(110,55,200,0.18); border: 1px solid rgba(180,140,255,0.5);
+      font-family: var(--font-ui); font-size: 0.88rem; color: var(--text-bright);
+    }
+    .shared-banner[hidden] { display: none; }
+    .shared-banner .btn { font-size: 0.8rem; padding: 8px 14px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    #print-cards { display: none; }
+    @media (max-width: 600px) {
+      .spell-grid { grid-template-columns: 1fr; }
+      .book-bar select, .book-bar input { flex: 1 1 100%; }
+    }
+    @media print {
+      @page { margin: 10mm; }
+      body { background: #fff !important; }
+      body > *:not(.spell-body), .spell-body > *:not(#print-cards) { display: none !important; }
+      .spell-body { padding: 0 !important; max-width: none !important; }
+      #print-cards { display: block !important; color: #111; font-family: Georgia, serif; }
+      .print-title { font-family: var(--font-head); font-size: 15pt; margin: 0 0 8pt; color: #111; }
+      .print-grid { columns: 2; column-gap: 8mm; }
+      .pcard { break-inside: avoid; border: 1px solid #888; border-radius: 4px; padding: 7pt 9pt; margin: 0 0 6mm; font-size: 8.5pt; line-height: 1.35; }
+      .pcard h3 { font-family: var(--font-head); font-size: 11pt; margin: 0; color: #111; }
+      .pcard .pmeta { font-style: italic; margin: 1pt 0 4pt; }
+      .pcard dl { display: grid; grid-template-columns: auto 1fr; gap: 0 6pt; margin: 0 0 4pt; padding: 3pt 0; border-top: 1px solid #bbb; border-bottom: 1px solid #bbb; }
+      .pcard dt { font-weight: bold; }
+      .pcard dd { margin: 0; }
+      .pcard p { margin: 0 0 3pt; }
+      .pcard table { width: 100%; border-collapse: collapse; margin: 0 0 3pt; }
+      .pcard th, .pcard td { border: 1px solid #aaa; padding: 1pt 3pt; text-align: left; }
+      .pcard .pclasses { font-size: 7.5pt; color: #444; margin-top: 3pt; }
+    }
   </style>
 
   <style id="hero-atmosphere">
@@ -234,10 +279,10 @@
         </select>
       </div>
       <div style="flex:1;min-width:130px;">
-        <label>★ Favorites</label>
+        <label for="fav-filter">★ Spell List</label>
         <select id="fav-filter">
           <option value="">All Spells</option>
-          <option value="yes">Favorites Only</option>
+          <option value="yes" id="fav-filter-list">My List Only</option>
         </select>
       </div>
       <div style="align-self:flex-end;">
@@ -246,10 +291,32 @@
       </div>
     </div>
 
+    <!-- Spell lists: ☆ on a card adds it to the list picked here -->
+    <div class="book-bar">
+      <label class="book-label" for="book-select">📜 My spell list</label>
+      <select id="book-select"></select>
+      <label class="sr-only" for="book-name">List name</label>
+      <input type="text" id="book-name" maxlength="40" placeholder="List name" title="Rename this list">
+      <button type="button" class="btn" id="book-new">＋ New List</button>
+      <button type="button" class="btn danger" id="book-delete">🗑 Delete</button>
+      <button type="button" class="btn btn-gold" id="book-print">🖨️ Print Cards</button>
+      <button type="button" class="btn" id="book-link">🔗 Copy Link</button>
+      <p class="book-status" id="book-status" role="status"></p>
+    </div>
+
+    <div class="shared-banner" id="shared-banner" hidden>
+      <span id="shared-text"></span>
+      <span>
+        <button type="button" class="btn btn-gold" id="shared-save">＋ Save to My Lists</button>
+        <button type="button" class="btn" id="shared-close">✕ Close</button>
+      </span>
+    </div>
+
     <p class="spell-count" id="spell-count"></p>
     <div class="spell-grid" id="spell-grid"></div>
+    <div id="print-cards"></div>
     <p class="srd-note">Spell text is from the <a href="https://dnd.wizards.com/resources/systems-reference-document" target="_blank" rel="noopener">System Reference Document 5.1</a> by Wizards of the Coast LLC, licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>. The Beholder's Gazette is unofficial fan content and is not affiliated with Wizards of the Coast.</p>
-    <p class="srd-note">★ Favorites are saved in this browser only. Clearing site data or switching devices starts a fresh list.</p>
+    <p class="srd-note">★ Keep a list per character: pick a list above, then tap ☆ on a spell to add it. Lists are saved in this browser only, so clearing site data or switching devices starts fresh. To move or share one, use 🔗 Copy Link: the link holds the list's name and spells, and whoever opens it can save a copy.</p>
   </div>
 
   <!-- Footer -->
@@ -280,28 +347,218 @@
     const SPELLS = SPELLS_DATA.slice().sort((a,b) => a.name.localeCompare(b.name));
 
     let filtered = [...SPELLS];
-    // Favorites live in this browser only (by spell name).
-    const FAV_KEY = 'gazette-spell-favorites';
-    let favorites = new Set();
-    try { favorites = new Set(JSON.parse(localStorage.getItem(FAV_KEY)) || []); } catch (e) {}
-    function saveFavorites() {
-      try { localStorage.setItem(FAV_KEY, JSON.stringify([...favorites])); } catch (e) {}
+
+    // ── Spell lists (browser only) ──────────────────────────
+    // gazette-spell-lists = { active: id, lists: [{ id, name, spells: [spell names] }] }.
+    // The old single favorites list (gazette-spell-favorites) becomes "Favorites".
+    const LISTS_KEY = 'gazette-spell-lists';
+    const OLD_FAV_KEY = 'gazette-spell-favorites';
+    const MAX_LISTS = 30;
+    const slugOf = name => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const BY_NAME = new Map(SPELLS.map(s => [s.name, s]));
+    const BY_SLUG = new Map(SPELLS.map(s => [slugOf(s.name), s]));
+
+    let book = { active: '', lists: [] };
+    let shared = null;   // { name, spells } opened from a link, not saved until asked
+    let deleteArmed = null;
+
+    function saveBook() {
+      try { localStorage.setItem(LISTS_KEY, JSON.stringify(book)); return true; } catch (e) { return false; }
     }
+    function newListId() { return 'l' + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36); }
+    function cleanSpells(arr) {
+      return Array.isArray(arr) ? [...new Set(arr.filter(n => BY_NAME.has(n)))] : [];
+    }
+    function loadBook() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(LISTS_KEY));
+        if (saved && Array.isArray(saved.lists)) {
+          book.lists = saved.lists
+            .filter(l => l && typeof l.name === 'string')
+            .map(l => ({ id: String(l.id || newListId()), name: l.name.slice(0, 40) || 'Untitled', spells: cleanSpells(l.spells) }));
+          book.active = saved.active;
+        }
+      } catch (e) {}
+      if (!book.lists.length) {
+        let old = [];
+        try { old = JSON.parse(localStorage.getItem(OLD_FAV_KEY)) || []; } catch (e) {}
+        book.lists = [{ id: newListId(), name: 'Favorites', spells: cleanSpells(old) }];
+        book.active = book.lists[0].id;
+        if (saveBook()) { try { localStorage.removeItem(OLD_FAV_KEY); } catch (e) {} }
+      }
+      if (!book.lists.some(l => l.id === book.active)) book.active = book.lists[0].id;
+    }
+    function activeList() { return book.lists.find(l => l.id === book.active); }
+    function viewList() { return shared || activeList(); }
+    function uniqueName(base) {
+      let name = base, n = 2;
+      while (book.lists.some(l => l.name === name)) name = `${base} (${n++})`;
+      return name;
+    }
+    function bookStatus(msg) { document.getElementById('book-status').textContent = msg || ''; }
+
     function favLabel(name, on) {
-      return on ? `Remove ${name} from favorites` : `Add ${name} to favorites`;
+      const list = activeList().name;
+      return on ? `Remove ${name} from “${list}”` : `Add ${name} to “${list}”`;
     }
     function toggleFavorite(btn) {
       const name = btn.dataset.name;
-      const on = !favorites.has(name);
-      if (on) favorites.add(name); else favorites.delete(name);
-      saveFavorites();
-      if (document.getElementById('fav-filter').value === 'yes') { applyFilters(); return; }
+      const list = activeList();
+      const on = !list.spells.includes(name);
+      if (on) list.spells.push(name); else list.spells = list.spells.filter(n => n !== name);
+      saveBook();
+      renderBook();
+      if (document.getElementById('fav-filter').value === 'yes' && !shared) { applyFilters(); return; }
       btn.setAttribute('aria-pressed', on);
       btn.textContent = on ? '★' : '☆';
       btn.title = favLabel(name, on);
       btn.setAttribute('aria-label', btn.title);
       btn.closest('.spell-card').classList.toggle('is-fav', on);
       updateCount();
+    }
+
+    function renderBook() {
+      const sel = document.getElementById('book-select');
+      sel.innerHTML = '';
+      book.lists.forEach(l => sel.add(new Option(`${l.name} · ${l.spells.length} spell${l.spells.length === 1 ? '' : 's'}`, l.id)));
+      sel.value = book.active;
+      const nameInput = document.getElementById('book-name');
+      if (document.activeElement !== nameInput) nameInput.value = activeList().name;
+      document.getElementById('fav-filter-list').textContent = shared ? 'Shared List Only' : 'My List Only';
+      document.getElementById('book-new').disabled = book.lists.length >= MAX_LISTS;
+      disarmDelete();
+    }
+    function disarmDelete() {
+      if (!deleteArmed) return;
+      clearTimeout(deleteArmed);
+      bookStatus('');
+      deleteArmed = null;
+      document.getElementById('book-delete').textContent = '🗑 Delete';
+    }
+
+    function switchList() {
+      book.active = document.getElementById('book-select').value;
+      saveBook();
+      bookStatus('');
+      renderBook();
+      applyFilters();
+    }
+    function newList() {
+      if (book.lists.length >= MAX_LISTS) return;
+      const list = { id: newListId(), name: uniqueName('New List'), spells: [] };
+      book.lists.push(list);
+      book.active = list.id;
+      saveBook();
+      renderBook();
+      applyFilters();
+      bookStatus('New list started. Name it, then tap ☆ on the spells you want.');
+      const input = document.getElementById('book-name');
+      input.focus();
+      input.select();
+    }
+    function renameList() {
+      const name = document.getElementById('book-name').value.trim().slice(0, 40);
+      if (!name) return;
+      activeList().name = name;
+      saveBook();
+      renderBook();
+      if (document.getElementById('fav-filter').value !== 'yes') updateCount();
+      else applyFilters();
+    }
+    function deleteList() {
+      const list = activeList();
+      if (list.spells.length && !deleteArmed) {
+        document.getElementById('book-delete').textContent = '🗑 Click again to delete';
+        bookStatus(`Delete “${list.name}” and its ${list.spells.length} spell${list.spells.length === 1 ? '' : 's'}? Click Delete again.`);
+        deleteArmed = setTimeout(disarmDelete, 5000);
+        return;
+      }
+      book.lists = book.lists.filter(l => l !== list);
+      if (!book.lists.length) book.lists.push({ id: newListId(), name: 'Favorites', spells: [] });
+      book.active = book.lists[0].id;
+      saveBook();
+      renderBook();
+      applyFilters();
+      bookStatus(`Deleted “${list.name}”.`);
+    }
+
+    function listLink(list) {
+      const slugs = list.spells.map(slugOf).join('.');
+      return `${location.origin}${location.pathname}?list=${encodeURIComponent(list.name)}&spells=${slugs}`;
+    }
+    function copyListLink() {
+      const list = viewList();
+      if (!list.spells.length) { bookStatus(`“${list.name}” is empty. Add a spell first.`); return; }
+      navigator.clipboard.writeText(listLink(list))
+        .then(() => bookStatus(`🔗 Link copied. It opens “${list.name}” (${list.spells.length} spell${list.spells.length === 1 ? '' : 's'}), and anyone can save a copy.`))
+        .catch(() => bookStatus('Copy failed. Your browser blocked clipboard access.'));
+    }
+
+    function byLevelThenName(a, b) { return a.level - b.level || a.name.localeCompare(b.name); }
+    function printCards() {
+      const list = viewList();
+      const spells = list.spells.map(n => BY_NAME.get(n)).filter(Boolean).sort(byLevelThenName);
+      if (!spells.length) { bookStatus(`“${list.name}” is empty. Add a spell first.`); return; }
+      document.getElementById('print-cards').innerHTML =
+        `<h2 class="print-title">📖 ${esc(list.name)}</h2><div class="print-grid">` +
+        spells.map(s => `
+          <div class="pcard">
+            <h3>${esc(s.name)}</h3>
+            <div class="pmeta">${s.level === 0 ? `${esc(s.school)} cantrip` : `${levelLabel(s.level)} ${esc(s.school.toLowerCase())}`}${s.ritual ? ' (ritual)' : ''}</div>
+            <dl>
+              <dt>Casting Time</dt><dd>${esc(s.cast)}</dd>
+              <dt>Range</dt><dd>${esc(s.range)}</dd>
+              <dt>Components</dt><dd>${esc(s.components)}</dd>
+              <dt>Duration</dt><dd>${esc(s.duration)}</dd>
+            </dl>
+            ${formatText(s.desc)}${s.higher ? `<p><strong>At Higher Levels.</strong> ${esc(s.higher)}</p>` : ''}
+            <div class="pclasses">${esc(s.classes.join(' · '))} · SRD 5.1, CC BY 4.0</div>
+          </div>`).join('') + '</div>';
+      window.print();
+    }
+
+    function readSharedLink() {
+      const params = new URLSearchParams(location.search);
+      if (!params.has('spells')) return;
+      const names = [...new Set((params.get('spells') || '').split('.').map(s => BY_SLUG.get(s)).filter(Boolean).map(s => s.name))];
+      if (!names.length) return;
+      shared = { name: (params.get('list') || 'Shared List').trim().slice(0, 40) || 'Shared List', spells: names };
+    }
+    function renderShared() {
+      const banner = document.getElementById('shared-banner');
+      banner.hidden = !shared;
+      if (!shared) return;
+      document.getElementById('shared-text').textContent =
+        `📜 Shared spell list: “${shared.name}”, ${shared.spells.length} spell${shared.spells.length === 1 ? '' : 's'}.`;
+    }
+    function clearSharedUrl() {
+      history.replaceState(null, '', location.pathname + location.hash);
+    }
+    function saveShared() {
+      const key = shared.spells.slice().sort().join('|');
+      const same = book.lists.find(l => l.name === shared.name && l.spells.slice().sort().join('|') === key);
+      let list = same;
+      if (!list) {
+        if (book.lists.length >= MAX_LISTS) { bookStatus(`You have ${MAX_LISTS} lists. Delete one first.`); return; }
+        list = { id: newListId(), name: uniqueName(shared.name), spells: shared.spells.slice() };
+        book.lists.push(list);
+      }
+      book.active = list.id;
+      shared = null;
+      saveBook();
+      clearSharedUrl();
+      renderShared();
+      renderBook();
+      applyFilters();
+      bookStatus(same ? `You already have “${list.name}”. It's now your active list.` : `Saved as “${list.name}”. It's now your active list.`);
+    }
+    function closeShared() {
+      shared = null;
+      clearSharedUrl();
+      document.getElementById('fav-filter').value = '';
+      renderShared();
+      renderBook();
+      applyFilters();
     }
     function levelLabel(l) {
       if (l === 0) return 'Cantrip';
@@ -343,21 +600,26 @@
     }
 
     function updateCount() {
-      const favNote = favorites.size ? ` · ★ ${favorites.size} favorite${favorites.size === 1 ? '' : 's'}` : '';
+      const list = activeList();
+      const n = list.spells.length;
+      const listNote = shared && document.getElementById('fav-filter').value === 'yes'
+        ? ` from the shared list “${shared.name}”`
+        : ` · ★ ${n} in “${list.name}”`;
       document.getElementById('spell-count').textContent =
-        `Showing ${filtered.length.toLocaleString()} of ${SPELLS.length.toLocaleString()} spells${favNote}`;
+        `Showing ${filtered.length.toLocaleString()} of ${SPELLS.length.toLocaleString()} spells${listNote}`;
     }
     function render() {
       const grid  = document.getElementById('spell-grid');
       updateCount();
       if (!filtered.length) {
-        grid.innerHTML = document.getElementById('fav-filter').value === 'yes' && !favorites.size
-          ? '<p class="no-results">No favorites yet. Tap the ☆ on any spell to add it to your book.</p>'
+        grid.innerHTML = document.getElementById('fav-filter').value === 'yes' && !viewList().spells.length
+          ? `<p class="no-results">“${esc(viewList().name)}” has no spells yet. Set Spell List to All Spells, then tap the ☆ on any spell to add it.</p>`
           : '<p class="no-results">No spells matched your search. The arcane tomes yield nothing…</p>';
         return;
       }
+      const inList = new Set(activeList().spells);
       grid.innerHTML = filtered.map(s => {
-        const fav = favorites.has(s.name);
+        const fav = inList.has(s.name);
         const label = esc(favLabel(s.name, fav));
         return `
         <div class="spell-card${fav ? ' is-fav' : ''}" data-school="${s.school}">
@@ -404,6 +666,7 @@
       const conc   = document.getElementById('conc-filter').value;
       const ritual = document.getElementById('ritual-filter').value;
       const favOnly = document.getElementById('fav-filter').value === 'yes';
+      const view = new Set(viewList().spells);
 
       filtered = SPELLS.filter(s => {
         if (search && !s.name.toLowerCase().includes(search) && !s.desc.toLowerCase().includes(search)) return false;
@@ -414,7 +677,7 @@
         if (conc   === 'no'  &&  s.concentration) return false;
         if (ritual === 'yes' && !s.ritual) return false;
         if (ritual === 'no'  &&  s.ritual) return false;
-        if (favOnly && !favorites.has(s.name)) return false;
+        if (favOnly && !view.has(s.name)) return false;
         return true;
       });
 
@@ -424,15 +687,28 @@
     function resetFilters() {
       ['spell-search','level-filter','school-filter','class-filter','conc-filter','ritual-filter','fav-filter']
         .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
-      filtered = [...SPELLS];
-      render();
+      applyFilters();
     }
 
     document.getElementById('spell-search').addEventListener('input', applyFilters);
     ['level-filter','school-filter','class-filter','conc-filter','ritual-filter','fav-filter']
       .forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('change', applyFilters); });
+    document.getElementById('book-select').addEventListener('change', switchList);
+    document.getElementById('book-name').addEventListener('input', renameList);
+    document.getElementById('book-name').addEventListener('blur', () => renderBook());
+    document.getElementById('book-new').addEventListener('click', newList);
+    document.getElementById('book-delete').addEventListener('click', deleteList);
+    document.getElementById('book-print').addEventListener('click', printCards);
+    document.getElementById('book-link').addEventListener('click', copyListLink);
+    document.getElementById('shared-save').addEventListener('click', saveShared);
+    document.getElementById('shared-close').addEventListener('click', closeShared);
 
-    render();
+    loadBook();
+    readSharedLink();
+    if (shared) document.getElementById('fav-filter').value = 'yes';
+    renderShared();
+    renderBook();
+    applyFilters();
   </script>
   <script>
   // ── Mobile nav toggle ─────────────────────────────────
