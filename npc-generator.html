@@ -672,6 +672,40 @@
             border-top: 1px solid #333;
         }
 
+        /* Just a Name (F17) */
+        .name-roll {
+            background: linear-gradient(145deg, #222, #1a1a1d);
+            border: 1px solid #444; border-radius: 8px;
+            padding: 24px 30px; margin-bottom: 40px;
+        }
+        .name-roll-head h3 { font-size: 1.2rem; color: var(--accent-gold); margin-bottom: 6px; }
+        .name-roll-head p { color: #888; font-size: 0.9rem; margin-bottom: 16px; }
+        .name-roll-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+        .name-roll .action-btn:disabled, .saved-tools .action-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; background: linear-gradient(145deg, #333, #2a2a2e); color: var(--text-color); }
+        .name-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
+        .name-list:empty { display: none; }
+        .name-chip {
+            width: 100%; text-align: left; cursor: pointer;
+            background: rgba(0,0,0,0.3); border: 1px solid #444; border-radius: 6px;
+            padding: 10px 12px; color: var(--text-color); transition: border-color 0.2s;
+        }
+        .name-chip:hover, .name-chip:focus-visible { border-color: var(--accent-gold); outline: none; }
+        .name-chip strong { display: block; font-family: 'MedievalSharp', cursive; font-size: 1.05rem; color: var(--accent-gold); font-weight: normal; }
+        .name-chip span { font-size: 0.75rem; color: #888; text-transform: capitalize; }
+        .name-status { color: #888; font-size: 0.82rem; margin: 10px 0 0; min-height: 1em; }
+        .name-status:empty { display: none; }
+
+        /* Grimoire selection + print sheet (F17) */
+        .saved-tools { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+        .saved-tools[hidden] { display: none; }
+        .saved-tools .action-btn { padding: 8px 16px; font-size: 0.82rem; }
+        .saved-hint { color: #777; font-size: 0.8rem; }
+        .saved-item { display: flex; gap: 14px; align-items: flex-start; }
+        .saved-item .saved-text { flex: 1; min-width: 0; }
+        .saved-pick { width: 20px; height: 20px; margin: 3px 0 0; accent-color: var(--accent-gold); cursor: pointer; flex-shrink: 0; }
+        .saved-item.picked { border-color: var(--accent-gold); }
+        #print-sheet { display: none; }
+
         .dm-tip {
             background: rgba(197, 160, 89, 0.1);
             border: 1px solid var(--accent-gold);
@@ -740,6 +774,18 @@
                 content: "The Beholder's Gazette · Town Square NPC Generator";
                 display: block; margin-top: 12px; font-size: 0.7rem; color: #666 !important; text-align: right;
             }
+            /* Print Selected: the grimoire sheet instead of the card */
+            body.printing-sheet .tool-container > *:not(#print-sheet) { display: none !important; }
+            body.printing-sheet #print-sheet { display: block !important; color: #111; font-family: Georgia, serif; }
+            body.printing-sheet .npc-body, body.printing-sheet .tool-container, body.printing-sheet #print-sheet * { background: transparent !important; box-shadow: none !important; }
+            .sheet-title { font-family: 'Cinzel', serif; font-size: 14pt; margin: 0 0 8pt; color: #111; }
+            .sheet-grid { columns: 2; column-gap: 7mm; }
+            .sheet-npc { break-inside: avoid; border: 1px solid #888; border-radius: 4px; padding: 7pt 9pt; margin: 0 0 5mm; font-size: 8.5pt; line-height: 1.35; }
+            .sheet-npc h4 { font-family: 'Cinzel', serif; font-size: 11.5pt; margin: 0; color: #111; }
+            .sheet-npc .sheet-sub { font-style: italic; margin: 1pt 0 4pt; }
+            .sheet-npc .sheet-stats { display: flex; flex-wrap: wrap; gap: 2pt 8pt; padding: 3pt 0; margin-bottom: 4pt; border-top: 1px solid #bbb; border-bottom: 1px solid #bbb; }
+            .sheet-npc p { margin: 0 0 2.5pt; }
+            .sheet-foot { font-size: 7pt; color: #666; text-align: right; margin-top: 3pt; }
         }
     </style>
 
@@ -889,6 +935,20 @@
                 <div class="dice-decoration">
                     🎲 🎭 🎲
                 </div>
+            </div>
+
+            <!-- Just a Name -->
+            <div class="name-roll">
+                <div class="name-roll-head">
+                    <h3>📜 Just a Name</h3>
+                    <p>Ten names at once, using the Race and Gender picked above. Click a name to copy it.</p>
+                </div>
+                <div class="name-roll-actions">
+                    <button type="button" class="action-btn" id="roll-names">🎲 Roll 10 Names</button>
+                    <button type="button" class="action-btn" id="copy-names" disabled>📋 Copy All</button>
+                </div>
+                <ul class="name-list" id="name-list" aria-live="polite"></ul>
+                <p class="name-status" id="name-status" role="status"></p>
             </div>
 
             <!-- NPC Display Card -->
@@ -1051,7 +1111,7 @@
                     <button class="action-btn" onclick="copyNPC()">📋 Copy to Clipboard</button>
                     <button class="action-btn" id="copy-link-btn" onclick="copyLink()">🔗 Copy Link</button>
                     <button class="action-btn" onclick="saveNPC()">💾 Save to Grimoire</button>
-                    <button class="action-btn" onclick="window.print()">🖨️ Print Card</button>
+                    <button class="action-btn" onclick="document.body.classList.remove('printing-sheet'); window.print()">🖨️ Print Card</button>
                     <button class="action-btn" onclick="regenerateNPC()">🔄 Regenerate</button>
                 </div>
                 <p class="lock-hint">🔒 Click a padlock to keep that part, and Regenerate rerolls the rest. <button type="button" class="lock-clear" id="unlock-all" hidden>Unlock all</button></p>
@@ -1060,6 +1120,11 @@
             <!-- Saved NPCs -->
             <div class="saved-npcs">
                 <h3>💾 Saved NPCs (Grimoire)</h3>
+                <div class="saved-tools" id="saved-tools" hidden>
+                    <button type="button" class="action-btn" id="select-all-saved">☑ Select All</button>
+                    <button type="button" class="action-btn" id="print-saved" disabled>🖨️ Print Selected</button>
+                    <span class="saved-hint">Tick NPCs to print them together on one sheet.</span>
+                </div>
                 <div id="saved-list">
                     <p style="color: #888; font-style: italic; text-align: center; padding: 30px;">
                         No NPCs saved yet... your grimoire is empty.
@@ -1069,10 +1134,11 @@
                     🗑️ Clear Grimoire
                 </button>
             </div>
+            <div id="print-sheet"></div>
 
             <!-- DM Tip -->
             <div class="dm-tip">
-                <p>💡 <strong>DM Tip:</strong> Save your favorite NPCs to the grimoire! They'll persist between sessions, but only in this browser: clearing site data or switching devices empties the grimoire. To share one, use 🔗 Copy Link: the link rolls the same NPC on any device, and Back steps to the previous roll. Need inspiration? Generate 3 NPCs and pick the best traits from each.</p>
+                <p>💡 <strong>DM Tip:</strong> Save your favorite NPCs to the grimoire! They'll persist between sessions, but only in this browser: clearing site data or switching devices empties the grimoire. To share one, use 🔗 Copy Link: the link rolls the same NPC on any device, and Back steps to the previous roll. Tick saved NPCs and use 🖨️ Print Selected to print your whole cast on one sheet. Need only a name for a passer-by? Roll ten with 📜 Just a Name.</p>
             </div>
         </div>
     </div>

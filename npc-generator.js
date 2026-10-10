@@ -248,23 +248,136 @@ function saveNPC() {
     alert('NPC saved to favorites!');
 }
 
+// Grimoire NPCs ticked for Print Selected, by savedKey().
+const pickedSaved = new Set();
+
+function readSaved() {
+    try { return JSON.parse(localStorage.getItem('saved_npcs')) || []; } catch (e) { return []; }
+}
+
+function savedKey(npc, index) {
+    return npc.generatedAt ? `${npc.generatedAt}|${npc.name}` : `#${index}`;
+}
+
+function esc(t) {
+    return String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
 function renderSavedNPCs() {
     const container = document.getElementById('saved-list');
-    let saved = localStorage.getItem('saved_npcs');
-    saved = saved ? JSON.parse(saved) : [];
+    const saved = readSaved();
+    const keys = saved.map(savedKey);
+    [...pickedSaved].forEach(k => { if (!keys.includes(k)) pickedSaved.delete(k); });
+    document.getElementById('saved-tools').hidden = !saved.length;
 
     if (saved.length === 0) {
         container.innerHTML = '<p style="color: #888; font-style: italic;">No NPCs saved yet...</p>';
+        updateSavedTools(0);
         return;
     }
 
-    container.innerHTML = saved.map((npc, index) => `
-        <div class="saved-item" onclick="loadSavedNPC(${index})">
-            <h4>${npc.name}</h4>
-            <p>${npc.race} ${npc.profession}</p>
-            <div class="saved-meta">${new Date(npc.generatedAt).toLocaleDateString()}</div>
-        </div>
-    `).join('');
+    container.innerHTML = saved.map((npc, index) => {
+        const picked = pickedSaved.has(keys[index]);
+        return `
+        <div class="saved-item${picked ? ' picked' : ''}" onclick="loadSavedNPC(${index})">
+            <input type="checkbox" class="saved-pick" data-key="${esc(keys[index])}" ${picked ? 'checked' : ''}
+                aria-label="Pick ${esc(npc.name)} for printing" onclick="event.stopPropagation()" onchange="togglePicked(this)">
+            <div class="saved-text">
+                <h4>${esc(npc.name)}</h4>
+                <p>${esc(npc.race)} ${esc(npc.profession)}</p>
+                <div class="saved-meta">${new Date(npc.generatedAt).toLocaleDateString()}</div>
+            </div>
+        </div>`;
+    }).join('');
+    updateSavedTools(saved.length);
+}
+
+function updateSavedTools(total) {
+    const n = pickedSaved.size;
+    const printBtn = document.getElementById('print-saved');
+    printBtn.disabled = !n;
+    printBtn.textContent = n ? `🖨️ Print Selected (${n})` : '🖨️ Print Selected';
+    document.getElementById('select-all-saved').textContent = total && n === total ? '☐ Select None' : '☑ Select All';
+}
+
+function togglePicked(box) {
+    box.checked ? pickedSaved.add(box.dataset.key) : pickedSaved.delete(box.dataset.key);
+    box.closest('.saved-item').classList.toggle('picked', box.checked);
+    updateSavedTools(readSaved().length);
+}
+
+function selectAllSaved() {
+    const saved = readSaved();
+    if (pickedSaved.size === saved.length) pickedSaved.clear();
+    else saved.forEach((npc, i) => pickedSaved.add(savedKey(npc, i)));
+    renderSavedNPCs();
+}
+
+// One compact block per NPC; follows the Stats / Secrets / Quest Hook toggles.
+function sheetBlock(npc) {
+    const showStats = document.getElementById('include-stats').checked;
+    const showSecrets = document.getElementById('include-secrets').checked;
+    const showQuest = showSecrets && document.getElementById('include-quest').checked;
+    const cap = s => String(s ?? '').charAt(0).toUpperCase() + String(s ?? '').slice(1);
+    const line = (label, value) => value ? `<p><strong>${label}:</strong> ${esc(value)}</p>` : '';
+    const s = npc.stats || {};
+    const hairLabel = npc.hairLabel || 'Hair';
+    return `
+        <div class="sheet-npc">
+            <h4>${esc(npc.name)}</h4>
+            <div class="sheet-sub">${esc([cap(npc.race), cap(npc.gender), npc.age, npc.profession].filter(Boolean).join(' · '))}</div>
+            ${showStats && npc.stats ? `<div class="sheet-stats">
+                ${['str', 'dex', 'con', 'int', 'wis', 'cha'].map(k => `<span><strong>${k.toUpperCase()}</strong> ${esc(s[k])}</span>`).join('')}
+                <span><strong>HP</strong> ${esc(npc.hp)}</span><span><strong>AC</strong> ${esc(npc.ac)}</span><span><strong>Speed</strong> ${esc(npc.speed)}</span>
+            </div>` : ''}
+            ${line('Trait', npc.trait)}${line('Ideal', npc.ideal)}${line('Bond', npc.bond)}${line('Flaw', npc.flaw)}
+            ${line('Quirks', (npc.quirks || []).join('; '))}
+            ${line('Look', [npc.build, npc.hair && `${hairLabel.toLowerCase()}: ${npc.hair}`, npc.eyes && `${npc.eyes} eyes`, npc.feature].filter(Boolean).join(', '))}
+            ${line('Clothing', npc.clothing)}
+            ${line('Voice', npc.voice)}
+            ${npc.dialogue ? `<p><strong>Says:</strong> “${esc(npc.dialogue)}”</p>` : ''}
+            ${showSecrets ? line('Secret', npc.secret) : ''}
+            ${showQuest ? line('Quest hook', npc.questHook) : ''}
+            ${line('Relationship', npc.relationship)}
+        </div>`;
+}
+
+function printSelected() {
+    const saved = readSaved();
+    const picked = saved.filter((npc, i) => pickedSaved.has(savedKey(npc, i)));
+    if (!picked.length) return;
+    document.getElementById('print-sheet').innerHTML =
+        `<h2 class="sheet-title">🎭 Cast of Characters</h2><div class="sheet-grid">${picked.map(sheetBlock).join('')}</div>` +
+        `<p class="sheet-foot">The Beholder's Gazette · Town Square NPC Generator</p>`;
+    document.body.classList.add('printing-sheet');
+    window.print();
+}
+
+// ==================== JUST A NAME ====================
+
+let rolledNames = [];
+
+function rollNameList() {
+    rolledNames = rollNames(10, {
+        race: document.getElementById('npc-race').value,
+        gender: document.getElementById('npc-gender').value
+    });
+    document.getElementById('name-list').innerHTML = rolledNames.map((n, i) => `
+        <li><button type="button" class="name-chip" data-i="${i}" title="Copy ${esc(n.name)}">
+            <strong>${esc(n.name)}</strong><span>${esc(n.race)} · ${n.gender === 'nonbinary' ? 'non-binary' : esc(n.gender)}</span>
+        </button></li>`).join('');
+    document.getElementById('copy-names').disabled = !rolledNames.length;
+    document.getElementById('name-status').textContent = '';
+}
+
+function copyText(text, done) {
+    navigator.clipboard.writeText(text)
+        .then(() => done(true))
+        .catch(() => done(false));
+}
+
+function nameStatus(msg) {
+    document.getElementById('name-status').textContent = msg;
 }
 
 function loadSavedNPC(index) {
@@ -294,6 +407,21 @@ document.addEventListener('DOMContentLoaded', () => {
     renderSavedNPCs();
     document.querySelectorAll('.lock-btn').forEach(btn => btn.addEventListener('click', () => toggleLock(btn.dataset.lock)));
     document.getElementById('unlock-all').addEventListener('click', () => { locks.clear(); renderLocks(); });
+    document.getElementById('roll-names').addEventListener('click', rollNameList);
+    document.getElementById('copy-names').addEventListener('click', () => {
+        if (!rolledNames.length) return;
+        copyText(rolledNames.map(n => n.name).join('\n'),
+            ok => nameStatus(ok ? `📋 ${rolledNames.length} names copied, one per line.` : 'Copy failed. Your browser blocked clipboard access.'));
+    });
+    document.getElementById('name-list').addEventListener('click', e => {
+        const chip = e.target.closest('.name-chip');
+        if (!chip) return;
+        const n = rolledNames[+chip.dataset.i];
+        copyText(n.name, ok => nameStatus(ok ? `📋 Copied “${n.name}”.` : 'Copy failed. Your browser blocked clipboard access.'));
+    });
+    document.getElementById('select-all-saved').addEventListener('click', selectAllSaved);
+    document.getElementById('print-saved').addEventListener('click', printSelected);
+    window.addEventListener('afterprint', () => document.body.classList.remove('printing-sheet'));
     applyUrl(false);
     // Back/Forward step through earlier rolls.
     window.addEventListener('popstate', () => applyUrl(null));

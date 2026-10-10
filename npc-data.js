@@ -304,6 +304,24 @@ const NPC_PORTRAITS = {
     gnome: '🎩', orc: '👹', tiefling: '😈', dragonborn: '🐉'
 };
 
+// "Just a name" (F17): count names for a race and gender ('random' = any).
+// No repeats unless the pool runs dry.
+function rollNames(count = 10, opts = {}) {
+    const races = NPC_RACES.includes(opts.race) ? [opts.race] : NPC_RACES;
+    const genders = NPC_GENDERS.includes(opts.gender) ? [opts.gender] : NPC_GENDERS;
+    const out = [];
+    const seen = new Set();
+    for (let tries = 0; out.length < count && tries < count * 25; tries++) {
+        const race = randomArray(races);
+        const gender = randomArray(genders);
+        const name = randomArray(npcData.names[race][gender]);
+        if (seen.has(name)) continue;
+        seen.add(name);
+        out.push({ name, race, gender });
+    }
+    return out;
+}
+
 // The parts of an NPC that can be locked and rerolled on their own (F14).
 // identity = name, race, gender (and so speed and portrait); job = profession;
 // stats = abilities plus HP/AC (whose range follows the job).
