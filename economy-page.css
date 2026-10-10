@@ -134,21 +134,6 @@
     border-color: var(--accent-gold);
 }
 
-.filter-group .refresh-btn {
-    padding: 12px 20px;
-    background: var(--accent-gold);
-    border: none;
-    border-radius: 4px;
-    color: #000;
-    font-family: 'Cinzel', serif;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.filter-group .refresh-btn:hover {
-    background: #d4af67;
-}
 
 /* Items Table */
 .items-table-container {
@@ -197,7 +182,6 @@
 .item-category {
     font-size: 0.85rem;
     color: #888;
-    text-transform: uppercase;
 }
 
 .price-cell {
@@ -214,22 +198,10 @@
 .change-cell.down { color: #f44336; }
 .change-cell.stable { color: #888; }
 
-.trend-bar {
-    width: 100px;
-    height: 20px;
-    background: #333;
-    border-radius: 10px;
-    overflow: hidden;
-    position: relative;
-}
-
-.trend-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #f44336, #4caf50);
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-}
+.sparkline { display: block; }
+.sparkline.up { color: #4caf50; }
+.sparkline.down { color: #f44336; }
+.sparkline.stable { color: #888; }
 
 /* Market Analysis */
 .market-analysis {

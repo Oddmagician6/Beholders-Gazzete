@@ -131,6 +131,9 @@ const npcData = {
     builds: ["Thin", "Slender", "Average", "Stocky", "Muscular", "Burly", "Portly", "Frail", "Tall", "Short"],
     hair: ["Bald", "Buzz cut", "Short", "Shoulder-length", "Long", "Braided", "Curly", "Wavy", "Straight", "Dreadlocks"],
     hairColors: ["Black", "Brown", "Blonde", "Red", "Grey", "White", "Silver", "Auburn", "Blue", "Green", "Purple", "Pink"],
+    // Dragonborn have no hair: scale color plus head ornament instead
+    scaleColors: ["Black", "Blue", "Brass", "Bronze", "Copper", "Gold", "Green", "Red", "Silver", "White"],
+    dragonbornHead: ["swept-back horns", "curved horns", "a frilled crest", "short spiked frills", "a smooth scaled crown", "jaw barbels", "a ridge of bony plates", "one broken horn"],
     eyes: ["Brown", "Blue", "Green", "Hazel", "Grey", "Amber", "Violet", "Red", "Gold", "Heterochromatic"],
     features: [
         "Scar across face", "Missing tooth", "Birthmark", "Tattoo", 
@@ -309,14 +312,11 @@ function generateNPC() {
     // Generate name
     const name = randomArray(npcData.names[npcRace][npcGender]);
 
-    // Generate profession
-    let profession;
-    if (professionType === 'random') {
-        const allProfessions = Object.values(npcData.professions).flat();
-        profession = randomArray(allProfessions);
-    } else {
-        profession = randomArray(npcData.professions[professionType]);
-    }
+    // Generate profession (pick the category first so stats can follow the roll)
+    const professionCategory = professionType === 'random'
+        ? randomArray(Object.keys(npcData.professions))
+        : professionType;
+    const profession = randomArray(npcData.professions[professionCategory]);
 
     // Generate age
     const ageRanges = {
@@ -338,9 +338,10 @@ function generateNPC() {
         cha: rollStat()
     };
 
-    // Generate HP and AC based on profession
-    const hp = professionType === 'adventurer' || professionType === 'guard' ? randomInt(30, 80) : randomInt(5, 25);
-    const ac = professionType === 'adventurer' || professionType === 'guard' ? randomInt(12, 18) : randomInt(10, 13);
+    // Generate HP and AC based on the rolled profession's category
+    const isFighter = professionCategory === 'adventurer' || professionCategory === 'guard';
+    const hp = isFighter ? randomInt(30, 80) : randomInt(5, 25);
+    const ac = isFighter ? randomInt(12, 18) : randomInt(10, 13);
     const speed = npcRace === 'dwarf' ? '25ft' : npcRace === 'halfling' ? '25ft' : '30ft';
 
     // Generate personality
@@ -352,7 +353,11 @@ function generateNPC() {
 
     // Generate appearance
     const build = randomArray(npcData.builds);
-    const hair = `${randomArray(npcData.hairColors)} ${randomArray(npcData.hair)}`;
+    const isDragonborn = npcRace === 'dragonborn';
+    const hairLabel = isDragonborn ? 'Scales' : 'Hair';
+    const hair = isDragonborn
+        ? `${randomArray(npcData.scaleColors)} scales, ${randomArray(npcData.dragonbornHead)}`
+        : `${randomArray(npcData.hairColors)} ${randomArray(npcData.hair)}`;
     const eyes = randomArray(npcData.eyes);
     const feature = randomArray(npcData.features);
     const clothing = randomArray(npcData.clothing);
@@ -381,6 +386,7 @@ function generateNPC() {
         gender: npcGender,
         age: npcAge,
         profession,
+        professionCategory,
         stats,
         hp,
         ac,
@@ -392,6 +398,7 @@ function generateNPC() {
         quirks,
         build,
         hair,
+        hairLabel,
         eyes,
         feature,
         clothing,
@@ -449,6 +456,7 @@ function displayNPC(includeStats, includeSecrets, includeQuest) {
     // Appearance
     document.getElementById('npc-build').textContent = currentNPC.build;
     document.getElementById('npc-hair').textContent = currentNPC.hair;
+    document.getElementById('npc-hair-label').textContent = currentNPC.hairLabel || 'Hair';
     document.getElementById('npc-eyes').textContent = currentNPC.eyes;
     document.getElementById('npc-feature').textContent = currentNPC.feature;
     document.getElementById('npc-clothing').textContent = currentNPC.clothing;
@@ -506,7 +514,7 @@ Bond: ${currentNPC.bond}
 Flaw: ${currentNPC.flaw}
 Quirks: ${currentNPC.quirks.join(', ')}
 
-APPEARANCE: ${currentNPC.build}, ${currentNPC.hair} hair, ${currentNPC.eyes} eyes
+APPEARANCE: ${currentNPC.build}, ${currentNPC.hairLabel === 'Scales' ? currentNPC.hair : currentNPC.hair + ' hair'}, ${currentNPC.eyes} eyes
 Feature: ${currentNPC.feature}
 Clothing: ${currentNPC.clothing}
 

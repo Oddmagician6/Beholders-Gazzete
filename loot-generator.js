@@ -67,17 +67,25 @@ function generateArt(chance, tier, countRange, luckMult = 1) {
 }
 
 // ── MAGIC ITEM GENERATION ──────────────────────────────────
-function getMagicItem(rarity) {
+// d100 weights used when rarity is 'random'
+const RARITY_WEIGHTS = { common:30, uncommon:25, rare:20, 'very-rare':15, legendary:8, artifact:2 };
+
+function magicPool(rarity, type = 'any') {
+  const pool = lootData.magicItems[rarity] || [];
+  return type === 'any' ? pool : pool.filter(i => i.type === type);
+}
+
+// Returns null when no item of that type exists at that rarity.
+function getMagicItem(rarity, type = 'any') {
   if (rarity === 'random') {
-    const r = d100();
-    if (r <= 30)      rarity = 'common';
-    else if (r <= 55) rarity = 'uncommon';
-    else if (r <= 75) rarity = 'rare';
-    else if (r <= 90) rarity = 'very-rare';
-    else if (r <= 98) rarity = 'legendary';
-    else              rarity = 'artifact';
+    // Only roll among rarities that actually have an item of this type.
+    const options = Object.entries(RARITY_WEIGHTS).filter(([r]) => magicPool(r, type).length);
+    if (!options.length) return null;
+    let r = Math.random() * options.reduce((sum, [, w]) => sum + w, 0);
+    rarity = options.find(([, w]) => (r -= w) < 0)?.[0] || options[options.length - 1][0];
   }
-  const pool = lootData.magicItems[rarity] || lootData.magicItems.uncommon;
+  const pool = magicPool(rarity, type);
+  if (!pool.length) return null;
   const item = pick(pool);
   return {
     name:      item.name,
@@ -115,10 +123,10 @@ function totalGP(coins, gems, art, magic) {
 function generateLoot() {
   let coins = { cp:0, sp:0, ep:0, gp:0, pp:0 };
   let gems  = [], art = [], magic = [];
+  let magicNote = '';
 
-  const luck = (document.getElementById('ind-luck')
-    || document.getElementById('hoard-luck')
-    || { value: 'normal' }).value;
+  const luckSelect = { individual: 'ind-luck', hoard: 'hoard-luck' }[currentTab];
+  const luck = (luckSelect && document.getElementById(luckSelect) || { value: 'normal' }).value;
   const luckMult = luck === 'generous' ? 1.5 : luck === 'stingy' ? 0.5 : 1;
 
   switch (currentTab) {
@@ -151,9 +159,12 @@ function generateLoot() {
       const rarity = document.getElementById('magic-rarity').value;
       const mtype  = document.getElementById('magic-type').value;
       const cnt    = Math.min(20, Math.max(1, parseInt(document.getElementById('magic-count').value) || 1));
-      magic = Array.from({ length: cnt }, () => getMagicItem(rarity));
-      if (mtype !== 'any') magic = magic.filter(m => m.type === mtype);
-      if (!magic.length)   magic = [getMagicItem(rarity)]; // always show something
+      // Pick from the pool already filtered by rarity and type, so you get exactly cnt items.
+      magic = Array.from({ length: cnt }, () => getMagicItem(rarity, mtype)).filter(Boolean);
+      if (!magic.length) {
+        const sel = id => document.getElementById(id).selectedOptions[0].textContent;
+        magicNote = `The vault holds no ${sel('magic-type').toLowerCase()} items of ${rarity === 'random' ? 'any' : sel('magic-rarity').toLowerCase()} rarity. Try another combination.`;
+      }
       break;
     }
 
@@ -172,7 +183,7 @@ function generateLoot() {
   }
 
   currentLoot = {
-    coins, gems, art, magic,
+    coins, gems, art, magic, magicNote,
     totalValue: totalGP(coins, gems, art, magic),
     tab: currentTab,
     generatedAt: new Date().toISOString()
@@ -190,7 +201,10 @@ function displayLoot() {
   el.style.display = 'block';
 
   // Summary
-  document.getElementById('total-value').textContent  = loot.totalValue.toLocaleString() + ' gp';
+  const hasArtifact = loot.magic.some(m => m.rarity === 'artifact');
+  document.getElementById('total-value').textContent  = hasArtifact && !loot.totalValue
+    ? 'Priceless'
+    : loot.totalValue.toLocaleString() + ' gp' + (hasArtifact ? ' + priceless' : '');
   const coinSum = Object.values(loot.coins).reduce((a,b) => a+b, 0);
   document.getElementById('total-coins').textContent  = coinSum.toLocaleString();
   document.getElementById('total-gems').textContent   = (loot.gems.length + loot.art.length).toString();
@@ -242,7 +256,11 @@ function displayLoot() {
   }
 
   // Magic
-  document.getElementById('magic-section').style.display = loot.magic.length ? 'block' : 'none';
+  document.getElementById('magic-section').style.display = loot.magic.length || loot.magicNote ? 'block' : 'none';
+  if (!loot.magic.length && loot.magicNote) {
+    document.getElementById('magic-grid').innerHTML =
+      `<p style="color:var(--text-dim);font-style:italic;grid-column:1/-1;">${loot.magicNote}</p>`;
+  }
   if (loot.magic.length) {
     document.getElementById('magic-grid').innerHTML = loot.magic.map(item => {
       const rarityClass = item.rarity.replace(' ', '-');
@@ -268,7 +286,7 @@ function displayLoot() {
       <p><strong>Coins:</strong> ${coinSum.toLocaleString()} total pieces</p>
       <p><strong>Valuables:</strong> ${loot.gems.length} gems, ${loot.art.length} art objects</p>
       <p><strong>Magic Items:</strong> ${loot.magic.length} items found</p>
-      <p><strong>Total GP Equivalent:</strong> ${loot.totalValue.toLocaleString()} gp</p>
+      <p><strong>Total GP Equivalent:</strong> ${loot.totalValue.toLocaleString()} gp${hasArtifact ? ' (plus artifacts, which have no market price)' : ''}</p>
     `;
   }
 
@@ -291,7 +309,8 @@ function copyLoot() {
   if (!currentLoot) return;
   const { coins, gems, art, magic, totalValue } = currentLoot;
   let txt = '🏆 TREASURE LOOT 🏆\n\n';
-  txt += `Total Value: ~${totalValue.toLocaleString()} gp\n\n`;
+  const priceless = magic.some(m => m.rarity === 'artifact') ? ' + priceless artifact' : '';
+  txt += `Total Value: ~${totalValue.toLocaleString()} gp${priceless}\n\n`;
 
   const coinLines = Object.entries(coins).filter(([,v]) => v > 0)
     .map(([t,v]) => `  ${v.toLocaleString()} ${lootData.coins[t].name}`).join('\n');
@@ -376,14 +395,6 @@ function flashBtn(id, text) {
   btn.textContent = text;
   setTimeout(() => btn.textContent = orig, 2000);
 }
-
-// ── KEYBOARD SHORTCUT ──────────────────────────────────────
-document.addEventListener('keydown', e => {
-  if (e.code === 'Space' && !['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)) {
-    e.preventDefault();
-    generateLoot();
-  }
-});
 
 // ── INIT ───────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {

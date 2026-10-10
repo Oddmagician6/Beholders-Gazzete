@@ -503,7 +503,7 @@ const lootData = {
       {name:'Mighty Servant of Leuk-o',type:'wondrous',attune:true},
       {name:'Teeth of Dahlver-Nar',type:'wondrous',attune:false},
       {name:"Baba Yaga's Mortar and Pestle",type:'wondrous',attune:true},
-      {name:'Blackstaff (Waterdeep)',type:'staff',attune:true},
+      {name:'Staff of the Ebon Warden',type:'staff',attune:true},
       {name:"Danoth's Visor",type:'wondrous',attune:true},
       {name:'Grovelthrash (Flail)',type:'weapon',attune:true},
       {name:'Jewel of Three Prayers',type:'wondrous',attune:true},

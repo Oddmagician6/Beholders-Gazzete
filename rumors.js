@@ -2,9 +2,19 @@
    TAVERN RUMOR GENERATOR
    ============================================ */
 
-let allRumors = [];
+let allRumors = { rumors: [] };
 let currentCategory = 'all';
 let recentRumors = [];
+
+// Rumor text can come from the reader (Contribute form), so never inject it raw.
+function escapeHTML(text) {
+    return String(text).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+// truth: 0-100 = percent true; null = unknown (quest hooks and reader-added rumors)
+function truthLabel(truth) {
+    return truth === null || truth === undefined ? 'Unknown' : `${truth}% True`;
+}
 
 // Load rumors from JSON
 async function loadRumors() {
@@ -21,7 +31,7 @@ async function loadRumors() {
 
 // Generate a random rumor
 function generateRumor() {
-    if (allRumors.length === 0) {
+    if (!allRumors.rumors.length) {
         document.getElementById('rumor-display').innerHTML = 
             '<p style="color: #f44336;">Rumors not loaded yet. Please wait...</p>';
         return;
@@ -58,7 +68,7 @@ function displayRumor(rumor) {
     };
 
     document.getElementById('rumor-display').innerHTML = `
-        <div class="rumor-text">"${rumor.text}"</div>
+        <div class="rumor-text">"${escapeHTML(rumor.text)}"</div>
         <div class="rumor-meta">
             <span class="category-tag">${categoryNames[rumor.category]}</span>
         </div>
@@ -73,8 +83,9 @@ function updateTruthMeter(truth) {
     const truthValue = document.getElementById('truth-value');
     const truthFill = document.getElementById('truth-fill');
 
-    if (truth === 0) {
+    if (truth === null || truth === undefined) {
         truthValue.textContent = '??? (Roll Investigation)';
+        truthValue.style.color = '';
         truthFill.style.width = '50%';
     } else {
         truthValue.textContent = `${truth}% True`;
@@ -134,10 +145,10 @@ function renderRecent() {
 
     container.innerHTML = recentRumors.map((rumor, index) => `
         <div class="recent-item">
-            <p>"${rumor.text}"</p>
+            <p>"${escapeHTML(rumor.text)}"</p>
             <div class="meta">
-                ${categoryNames[rumor.category]} ${rumor.category} • 
-                ${rumor.truth > 0 ? `${rumor.truth}% True` : 'Unknown'}
+                ${categoryNames[rumor.category] || ''} ${escapeHTML(rumor.category)} •
+                ${truthLabel(rumor.truth)}
             </div>
         </div>
     `).join('');
@@ -147,21 +158,24 @@ function renderRecent() {
 function clearRecent() {
     recentRumors = [];
     renderRecent();
-    localStorage.removeItem('tavern_recent_rumors');
+    try { localStorage.removeItem('tavern_recent_rumors'); } catch (e) {}
 }
 
 // Save to localStorage
 function saveRecent() {
-    localStorage.setItem('tavern_recent_rumors', JSON.stringify(recentRumors));
+    try { localStorage.setItem('tavern_recent_rumors', JSON.stringify(recentRumors)); } catch (e) {}
 }
 
 // Load from localStorage
 function loadRecent() {
-    const saved = localStorage.getItem('tavern_recent_rumors');
-    if (saved) {
-        recentRumors = JSON.parse(saved);
-        renderRecent();
-    }
+    try {
+        const saved = localStorage.getItem('tavern_recent_rumors');
+        if (saved) {
+            // Older saves used truth 0 for "unknown"
+            recentRumors = JSON.parse(saved).map(r => r.truth === 0 ? { ...r, truth: null } : r);
+            renderRecent();
+        }
+    } catch (e) {}
 }
 
 // Add custom rumor
@@ -169,15 +183,16 @@ function addRumor() {
     const text = document.getElementById('new-rumor-text').value.trim();
     const category = document.getElementById('new-rumor-category').value;
 
+    const status = document.getElementById('new-rumor-status');
     if (!text) {
-        alert('Please enter a rumor!');
+        status.textContent = 'The bard waits. Whisper something first.';
         return;
     }
 
     const newRumor = {
         text: text,
         category: category,
-        truth: 0 // Unknown truth value
+        truth: null // Unknown truth value
     };
 
     // Add to local array (not saved to JSON)
@@ -186,7 +201,7 @@ function addRumor() {
     // Clear input
     document.getElementById('new-rumor-text').value = '';
 
-    alert('Rumor added to the mill! (Session only - will reset on refresh)');
+    status.textContent = 'Added to tonight\'s mill. It can now come up when you draw rumors, until you refresh the page.';
 
     // Display it
     displayRumor(newRumor);

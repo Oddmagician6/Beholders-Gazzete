@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://oddmagician6.github.io/Beholders-Gazzete/sitemap.xml

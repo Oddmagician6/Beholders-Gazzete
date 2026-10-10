@@ -1,0 +1,354 @@
+/* ============================================
+   REALM MARKET EXCHANGE: shared item list and price model
+   Used by economy.html (economy-full.js) and the homepage sidebar (script.js).
+   Prices are deterministic: they come from a seeded hash of the item id and the
+   15-minute time slot, so every visitor sees the same market and any past price
+   can be recomputed instead of stored. Base prices are in gp.
+   ============================================ */
+
+const MARKET_CATEGORIES = {
+  "weapons": "Weapons & Ammo",
+  "armor": "Armor & Shields",
+  "adventuring-gear": "Adventuring Gear",
+  "tools": "Tools & Kits",
+  "mounts": "Mounts & Vehicles",
+  "trade-goods": "Trade Goods",
+  "consumables": "Potions & Consumables",
+  "magic-items": "Magic Items",
+};
+
+const MARKET_ITEMS = [
+  { id:"club", name:"Club", category:"weapons", basePrice:0.1 },
+  { id:"dagger", name:"Dagger", category:"weapons", basePrice:2 },
+  { id:"greatclub", name:"Greatclub", category:"weapons", basePrice:0.2 },
+  { id:"handaxe", name:"Handaxe", category:"weapons", basePrice:5 },
+  { id:"javelin", name:"Javelin", category:"weapons", basePrice:0.5 },
+  { id:"light-hammer", name:"Light Hammer", category:"weapons", basePrice:2 },
+  { id:"mace", name:"Mace", category:"weapons", basePrice:5 },
+  { id:"quarterstaff", name:"Quarterstaff", category:"weapons", basePrice:0.2 },
+  { id:"sickle", name:"Sickle", category:"weapons", basePrice:1 },
+  { id:"spear", name:"Spear", category:"weapons", basePrice:1 },
+  { id:"crossbow-light", name:"Crossbow, Light", category:"weapons", basePrice:25 },
+  { id:"dart", name:"Dart", category:"weapons", basePrice:0.05 },
+  { id:"shortbow", name:"Shortbow", category:"weapons", basePrice:25 },
+  { id:"sling", name:"Sling", category:"weapons", basePrice:0.1 },
+  { id:"battleaxe", name:"Battleaxe", category:"weapons", basePrice:10 },
+  { id:"flail", name:"Flail", category:"weapons", basePrice:10 },
+  { id:"glaive", name:"Glaive", category:"weapons", basePrice:20 },
+  { id:"greataxe", name:"Greataxe", category:"weapons", basePrice:30 },
+  { id:"greatsword", name:"Greatsword", category:"weapons", basePrice:50 },
+  { id:"halberd", name:"Halberd", category:"weapons", basePrice:20 },
+  { id:"lance", name:"Lance", category:"weapons", basePrice:10 },
+  { id:"longsword", name:"Longsword", category:"weapons", basePrice:15 },
+  { id:"maul", name:"Maul", category:"weapons", basePrice:10 },
+  { id:"morningstar", name:"Morningstar", category:"weapons", basePrice:15 },
+  { id:"pike", name:"Pike", category:"weapons", basePrice:5 },
+  { id:"rapier", name:"Rapier", category:"weapons", basePrice:25 },
+  { id:"scimitar", name:"Scimitar", category:"weapons", basePrice:25 },
+  { id:"shortsword", name:"Shortsword", category:"weapons", basePrice:10 },
+  { id:"trident", name:"Trident", category:"weapons", basePrice:5 },
+  { id:"war-pick", name:"War Pick", category:"weapons", basePrice:5 },
+  { id:"warhammer", name:"Warhammer", category:"weapons", basePrice:15 },
+  { id:"whip", name:"Whip", category:"weapons", basePrice:2 },
+  { id:"blowgun", name:"Blowgun", category:"weapons", basePrice:10 },
+  { id:"crossbow-hand", name:"Crossbow, Hand", category:"weapons", basePrice:75 },
+  { id:"crossbow-heavy", name:"Crossbow, Heavy", category:"weapons", basePrice:50 },
+  { id:"longbow", name:"Longbow", category:"weapons", basePrice:50 },
+  { id:"net", name:"Net", category:"weapons", basePrice:1 },
+  { id:"arrows-20", name:"Arrows (20)", category:"weapons", basePrice:1 },
+  { id:"blowgun-needles-50", name:"Blowgun Needles (50)", category:"weapons", basePrice:1 },
+  { id:"crossbow-bolts-20", name:"Crossbow Bolts (20)", category:"weapons", basePrice:1 },
+  { id:"sling-bullets-20", name:"Sling Bullets (20)", category:"weapons", basePrice:0.04 },
+  { id:"padded-armor", name:"Padded Armor", category:"armor", basePrice:5 },
+  { id:"leather-armor", name:"Leather Armor", category:"armor", basePrice:10 },
+  { id:"studded-leather", name:"Studded Leather", category:"armor", basePrice:45 },
+  { id:"hide-armor", name:"Hide Armor", category:"armor", basePrice:10 },
+  { id:"chain-shirt", name:"Chain Shirt", category:"armor", basePrice:50 },
+  { id:"scale-mail", name:"Scale Mail", category:"armor", basePrice:50 },
+  { id:"breastplate", name:"Breastplate", category:"armor", basePrice:400 },
+  { id:"half-plate", name:"Half Plate", category:"armor", basePrice:750 },
+  { id:"ring-mail", name:"Ring Mail", category:"armor", basePrice:30 },
+  { id:"chain-mail", name:"Chain Mail", category:"armor", basePrice:75 },
+  { id:"splint-armor", name:"Splint Armor", category:"armor", basePrice:200 },
+  { id:"plate-armor", name:"Plate Armor", category:"armor", basePrice:1500 },
+  { id:"shield", name:"Shield", category:"armor", basePrice:10 },
+  { id:"abacus", name:"Abacus", category:"adventuring-gear", basePrice:2 },
+  { id:"acid-flask", name:"Acid (flask)", category:"consumables", basePrice:25 },
+  { id:"alchemist-s-fire", name:"Alchemist's Fire", category:"consumables", basePrice:50 },
+  { id:"ammunition-box", name:"Ammunition Box", category:"adventuring-gear", basePrice:1 },
+  { id:"antitoxin-vial", name:"Antitoxin (vial)", category:"consumables", basePrice:50 },
+  { id:"backpack", name:"Backpack", category:"adventuring-gear", basePrice:2 },
+  { id:"ball-bearings-bag-of-1000", name:"Ball Bearings (bag of 1000)", category:"adventuring-gear", basePrice:1 },
+  { id:"barrel", name:"Barrel", category:"adventuring-gear", basePrice:2 },
+  { id:"basket", name:"Basket", category:"adventuring-gear", basePrice:0.4 },
+  { id:"bedroll", name:"Bedroll", category:"adventuring-gear", basePrice:1 },
+  { id:"bell", name:"Bell", category:"adventuring-gear", basePrice:1 },
+  { id:"blanket", name:"Blanket", category:"adventuring-gear", basePrice:0.5 },
+  { id:"block-and-tackle", name:"Block and Tackle", category:"adventuring-gear", basePrice:1 },
+  { id:"book", name:"Book", category:"adventuring-gear", basePrice:25 },
+  { id:"bottle-glass", name:"Bottle, Glass", category:"adventuring-gear", basePrice:2 },
+  { id:"bucket", name:"Bucket", category:"adventuring-gear", basePrice:0.05 },
+  { id:"caltrops", name:"Caltrops", category:"adventuring-gear", basePrice:1 },
+  { id:"candle", name:"Candle", category:"adventuring-gear", basePrice:0.01 },
+  { id:"case-crossbow-bolt", name:"Case, Crossbow Bolt", category:"adventuring-gear", basePrice:1 },
+  { id:"case-map-or-scroll", name:"Case, Map or Scroll", category:"adventuring-gear", basePrice:1 },
+  { id:"chain-10-feet", name:"Chain (10 feet)", category:"adventuring-gear", basePrice:5 },
+  { id:"chalk-1-piece", name:"Chalk (1 piece)", category:"adventuring-gear", basePrice:0.01 },
+  { id:"chest", name:"Chest", category:"adventuring-gear", basePrice:5 },
+  { id:"climber-s-kit", name:"Climber's Kit", category:"adventuring-gear", basePrice:25 },
+  { id:"clothes-common", name:"Clothes, Common", category:"adventuring-gear", basePrice:0.5 },
+  { id:"clothes-costume", name:"Clothes, Costume", category:"adventuring-gear", basePrice:5 },
+  { id:"clothes-fine", name:"Clothes, Fine", category:"adventuring-gear", basePrice:15 },
+  { id:"clothes-traveler-s", name:"Clothes, Traveler's", category:"adventuring-gear", basePrice:2 },
+  { id:"component-pouch", name:"Component Pouch", category:"adventuring-gear", basePrice:25 },
+  { id:"crowbar", name:"Crowbar", category:"adventuring-gear", basePrice:2 },
+  { id:"fishing-tackle", name:"Fishing Tackle", category:"adventuring-gear", basePrice:1 },
+  { id:"flask-or-tankard", name:"Flask or Tankard", category:"adventuring-gear", basePrice:0.02 },
+  { id:"grappling-hook", name:"Grappling Hook", category:"adventuring-gear", basePrice:2 },
+  { id:"hammer", name:"Hammer", category:"adventuring-gear", basePrice:1 },
+  { id:"hammer-sledge", name:"Hammer, Sledge", category:"adventuring-gear", basePrice:2 },
+  { id:"healer-s-kit", name:"Healer's Kit", category:"adventuring-gear", basePrice:5 },
+  { id:"hourglass", name:"Hourglass", category:"adventuring-gear", basePrice:25 },
+  { id:"hunting-trap", name:"Hunting Trap", category:"adventuring-gear", basePrice:5 },
+  { id:"ink-1-ounce-bottle", name:"Ink (1 ounce bottle)", category:"adventuring-gear", basePrice:10 },
+  { id:"ink-pen", name:"Ink Pen", category:"adventuring-gear", basePrice:0.02 },
+  { id:"jug-or-pitcher", name:"Jug or Pitcher", category:"adventuring-gear", basePrice:0.02 },
+  { id:"ladder-10-foot", name:"Ladder (10-foot)", category:"adventuring-gear", basePrice:0.1 },
+  { id:"lamp", name:"Lamp", category:"adventuring-gear", basePrice:0.5 },
+  { id:"lantern-bullseye", name:"Lantern, Bullseye", category:"adventuring-gear", basePrice:10 },
+  { id:"lantern-hooded", name:"Lantern, Hooded", category:"adventuring-gear", basePrice:5 },
+  { id:"lock", name:"Lock", category:"adventuring-gear", basePrice:10 },
+  { id:"magnifying-glass", name:"Magnifying Glass", category:"adventuring-gear", basePrice:100 },
+  { id:"manacles", name:"Manacles", category:"adventuring-gear", basePrice:2 },
+  { id:"mess-kit", name:"Mess Kit", category:"adventuring-gear", basePrice:0.2 },
+  { id:"mirror-steel", name:"Mirror, Steel", category:"adventuring-gear", basePrice:5 },
+  { id:"oil-flask", name:"Oil (flask)", category:"adventuring-gear", basePrice:0.1 },
+  { id:"paper-sheet", name:"Paper (sheet)", category:"adventuring-gear", basePrice:0.2 },
+  { id:"parchment-sheet", name:"Parchment (sheet)", category:"adventuring-gear", basePrice:0.1 },
+  { id:"perfume-vial", name:"Perfume (vial)", category:"adventuring-gear", basePrice:5 },
+  { id:"pick-miner-s", name:"Pick, Miner's", category:"adventuring-gear", basePrice:2 },
+  { id:"piton", name:"Piton", category:"adventuring-gear", basePrice:0.05 },
+  { id:"poison-basic-vial", name:"Poison, Basic (vial)", category:"consumables", basePrice:100 },
+  { id:"pole-10-foot", name:"Pole (10-foot)", category:"adventuring-gear", basePrice:0.05 },
+  { id:"pot-iron", name:"Pot, Iron", category:"adventuring-gear", basePrice:2 },
+  { id:"pouch", name:"Pouch", category:"adventuring-gear", basePrice:0.5 },
+  { id:"quiver", name:"Quiver", category:"adventuring-gear", basePrice:1 },
+  { id:"ram-portable", name:"Ram, Portable", category:"adventuring-gear", basePrice:4 },
+  { id:"rations-1-day", name:"Rations (1 day)", category:"adventuring-gear", basePrice:0.5 },
+  { id:"robes", name:"Robes", category:"adventuring-gear", basePrice:1 },
+  { id:"rope-hempen-50-feet", name:"Rope, Hempen (50 feet)", category:"adventuring-gear", basePrice:1 },
+  { id:"rope-silk-50-feet", name:"Rope, Silk (50 feet)", category:"adventuring-gear", basePrice:10 },
+  { id:"sack", name:"Sack", category:"adventuring-gear", basePrice:0.01 },
+  { id:"scale-merchant-s", name:"Scale, Merchant's", category:"adventuring-gear", basePrice:5 },
+  { id:"sealing-wax", name:"Sealing Wax", category:"adventuring-gear", basePrice:0.5 },
+  { id:"shovel", name:"Shovel", category:"adventuring-gear", basePrice:2 },
+  { id:"signal-whistle", name:"Signal Whistle", category:"adventuring-gear", basePrice:0.05 },
+  { id:"signet-ring", name:"Signet Ring", category:"adventuring-gear", basePrice:5 },
+  { id:"soap", name:"Soap", category:"adventuring-gear", basePrice:0.02 },
+  { id:"spellbook", name:"Spellbook", category:"adventuring-gear", basePrice:50 },
+  { id:"spikes-iron-10", name:"Spikes, Iron (10)", category:"adventuring-gear", basePrice:1 },
+  { id:"spyglass", name:"Spyglass", category:"adventuring-gear", basePrice:1000 },
+  { id:"tent-two-person", name:"Tent, Two-Person", category:"adventuring-gear", basePrice:2 },
+  { id:"tinderbox", name:"Tinderbox", category:"adventuring-gear", basePrice:0.5 },
+  { id:"torch", name:"Torch", category:"adventuring-gear", basePrice:0.01 },
+  { id:"vial", name:"Vial", category:"adventuring-gear", basePrice:1 },
+  { id:"waterskin", name:"Waterskin", category:"adventuring-gear", basePrice:0.2 },
+  { id:"whetstone", name:"Whetstone", category:"adventuring-gear", basePrice:0.01 },
+  { id:"alchemist-s-supplies", name:"Alchemist's Supplies", category:"tools", basePrice:50 },
+  { id:"brewer-s-supplies", name:"Brewer's Supplies", category:"tools", basePrice:20 },
+  { id:"calligrapher-s-supplies", name:"Calligrapher's Supplies", category:"tools", basePrice:10 },
+  { id:"carpenter-s-tools", name:"Carpenter's Tools", category:"tools", basePrice:8 },
+  { id:"cartographer-s-tools", name:"Cartographer's Tools", category:"tools", basePrice:15 },
+  { id:"cobbler-s-tools", name:"Cobbler's Tools", category:"tools", basePrice:5 },
+  { id:"cook-s-utensils", name:"Cook's Utensils", category:"tools", basePrice:1 },
+  { id:"glassblower-s-tools", name:"Glassblower's Tools", category:"tools", basePrice:30 },
+  { id:"jeweler-s-tools", name:"Jeweler's Tools", category:"tools", basePrice:25 },
+  { id:"leatherworker-s-tools", name:"Leatherworker's Tools", category:"tools", basePrice:5 },
+  { id:"mason-s-tools", name:"Mason's Tools", category:"tools", basePrice:10 },
+  { id:"painter-s-supplies", name:"Painter's Supplies", category:"tools", basePrice:10 },
+  { id:"potter-s-tools", name:"Potter's Tools", category:"tools", basePrice:10 },
+  { id:"smith-s-tools", name:"Smith's Tools", category:"tools", basePrice:20 },
+  { id:"tinker-s-tools", name:"Tinker's Tools", category:"tools", basePrice:50 },
+  { id:"weaver-s-tools", name:"Weaver's Tools", category:"tools", basePrice:1 },
+  { id:"woodcarver-s-tools", name:"Woodcarver's Tools", category:"tools", basePrice:1 },
+  { id:"disguise-kit", name:"Disguise Kit", category:"tools", basePrice:25 },
+  { id:"forgery-kit", name:"Forgery Kit", category:"tools", basePrice:15 },
+  { id:"dice-set", name:"Dice Set", category:"tools", basePrice:1 },
+  { id:"playing-card-set", name:"Playing Card Set", category:"tools", basePrice:0.2 },
+  { id:"herbalism-kit", name:"Herbalism Kit", category:"tools", basePrice:5 },
+  { id:"medicine-kit", name:"Medicine Kit", category:"tools", basePrice:10 },
+  { id:"poisoner-s-kit", name:"Poisoner's Kit", category:"tools", basePrice:50 },
+  { id:"thieves-tools", name:"Thieves' Tools", category:"tools", basePrice:25 },
+  { id:"navigation-tools", name:"Navigation Tools", category:"tools", basePrice:25 },
+  { id:"land-vehicle", name:"Land Vehicle", category:"tools", basePrice:50 },
+  { id:"horse-draft", name:"Horse, Draft", category:"mounts", basePrice:25 },
+  { id:"horse-riding", name:"Horse, Riding", category:"mounts", basePrice:75 },
+  { id:"mule", name:"Mule", category:"mounts", basePrice:8 },
+  { id:"pony", name:"Pony", category:"mounts", basePrice:30 },
+  { id:"warhorse", name:"Warhorse", category:"mounts", basePrice:400 },
+  { id:"camel", name:"Camel", category:"mounts", basePrice:50 },
+  { id:"elephant", name:"Elephant", category:"mounts", basePrice:200 },
+  { id:"griffon", name:"Griffon", category:"mounts", basePrice:500 },
+  { id:"pegasus", name:"Pegasus", category:"mounts", basePrice:1000 },
+  { id:"cart", name:"Cart", category:"mounts", basePrice:15 },
+  { id:"chariot", name:"Chariot", category:"mounts", basePrice:250 },
+  { id:"carriage", name:"Carriage", category:"mounts", basePrice:100 },
+  { id:"saddle-military", name:"Saddle, Military", category:"mounts", basePrice:20 },
+  { id:"saddle-riding", name:"Saddle, Riding", category:"mounts", basePrice:10 },
+  { id:"saddlebags", name:"Saddlebags", category:"mounts", basePrice:4 },
+  { id:"sled", name:"Sled", category:"mounts", basePrice:20 },
+  { id:"stabling-per-day", name:"Stabling (per day)", category:"mounts", basePrice:0.5 },
+  { id:"feed-per-day", name:"Feed (per day)", category:"mounts", basePrice:0.05 },
+  { id:"ale-gallon", name:"Ale (gallon)", category:"trade-goods", basePrice:0.2 },
+  { id:"bread-loaf", name:"Bread (loaf)", category:"trade-goods", basePrice:0.02 },
+  { id:"cheese-wedge", name:"Cheese (wedge)", category:"trade-goods", basePrice:0.1 },
+  { id:"chicken", name:"Chicken", category:"trade-goods", basePrice:0.2 },
+  { id:"fish-fresh", name:"Fish, Fresh", category:"trade-goods", basePrice:0.1 },
+  { id:"meat-chunk", name:"Meat, Chunk", category:"trade-goods", basePrice:0.3 },
+  { id:"wine-bottle", name:"Wine (bottle)", category:"trade-goods", basePrice:2 },
+  { id:"wine-fine-bottle", name:"Wine, Fine (bottle)", category:"trade-goods", basePrice:10 },
+  { id:"salt-pound", name:"Salt (pound)", category:"trade-goods", basePrice:0.5 },
+  { id:"spices-pound", name:"Spices (pound)", category:"trade-goods", basePrice:5 },
+  { id:"sugar-pound", name:"Sugar (pound)", category:"trade-goods", basePrice:0.2 },
+  { id:"flour-pound", name:"Flour (pound)", category:"trade-goods", basePrice:0.01 },
+  { id:"grain-bushel", name:"Grain (bushel)", category:"trade-goods", basePrice:0.5 },
+  { id:"hay-bale", name:"Hay (bale)", category:"trade-goods", basePrice:0.1 },
+  { id:"wood-cord", name:"Wood (cord)", category:"trade-goods", basePrice:1 },
+  { id:"coal-bag", name:"Coal (bag)", category:"trade-goods", basePrice:0.5 },
+  { id:"iron-pound", name:"Iron (pound)", category:"trade-goods", basePrice:0.1 },
+  { id:"steel-pound", name:"Steel (pound)", category:"trade-goods", basePrice:0.5 },
+  { id:"copper-pound", name:"Copper (pound)", category:"trade-goods", basePrice:0.05 },
+  { id:"silver-pound", name:"Silver (pound)", category:"trade-goods", basePrice:5 },
+  { id:"gold-pound", name:"Gold (pound)", category:"trade-goods", basePrice:50 },
+  { id:"platinum-pound", name:"Platinum (pound)", category:"trade-goods", basePrice:500 },
+  { id:"gemstones-100gp", name:"Gemstones (100gp)", category:"trade-goods", basePrice:100 },
+  { id:"gemstones-500gp", name:"Gemstones (500gp)", category:"trade-goods", basePrice:500 },
+  { id:"gemstones-1000gp", name:"Gemstones (1000gp)", category:"trade-goods", basePrice:1000 },
+  { id:"art-object-25gp", name:"Art Object (25gp)", category:"trade-goods", basePrice:25 },
+  { id:"art-object-250gp", name:"Art Object (250gp)", category:"trade-goods", basePrice:250 },
+  { id:"art-object-750gp", name:"Art Object (750gp)", category:"trade-goods", basePrice:750 },
+  { id:"silk-yard", name:"Silk (yard)", category:"trade-goods", basePrice:10 },
+  { id:"velvet-yard", name:"Velvet (yard)", category:"trade-goods", basePrice:20 },
+  { id:"linen-yard", name:"Linen (yard)", category:"trade-goods", basePrice:1 },
+  { id:"wool-yard", name:"Wool (yard)", category:"trade-goods", basePrice:0.5 },
+  { id:"leather-square-yard", name:"Leather (square yard)", category:"trade-goods", basePrice:1 },
+  { id:"fur-pelt", name:"Fur (pelt)", category:"trade-goods", basePrice:5 },
+  { id:"dragon-scale", name:"Dragon Scale", category:"trade-goods", basePrice:100 },
+  { id:"phoenix-feather", name:"Phoenix Feather", category:"trade-goods", basePrice:250 },
+  { id:"unicorn-horn", name:"Unicorn Horn", category:"trade-goods", basePrice:1000 },
+  { id:"potion-of-healing", name:"Potion of Healing", category:"consumables", basePrice:50 },
+  { id:"potion-of-greater-healing", name:"Potion of Greater Healing", category:"consumables", basePrice:150 },
+  { id:"potion-of-superior-healing", name:"Potion of Superior Healing", category:"consumables", basePrice:500 },
+  { id:"potion-of-supreme-healing", name:"Potion of Supreme Healing", category:"consumables", basePrice:1000 },
+  { id:"potion-of-invisibility", name:"Potion of Invisibility", category:"consumables", basePrice:300 },
+  { id:"potion-of-flying", name:"Potion of Flying", category:"consumables", basePrice:400 },
+  { id:"potion-of-fire-breath", name:"Potion of Fire Breath", category:"consumables", basePrice:100 },
+  { id:"potion-of-climbing", name:"Potion of Climbing", category:"consumables", basePrice:100 },
+  { id:"potion-of-water-breathing", name:"Potion of Water Breathing", category:"consumables", basePrice:100 },
+  { id:"elixir-of-health", name:"Elixir of Health", category:"consumables", basePrice:500 },
+  { id:"oil-of-slipperiness", name:"Oil of Slipperiness", category:"consumables", basePrice:500 },
+  { id:"oil-of-etherealness", name:"Oil of Etherealness", category:"consumables", basePrice:1000 },
+  { id:"antidote", name:"Antidote", category:"consumables", basePrice:50 },
+  { id:"holy-water", name:"Holy Water", category:"consumables", basePrice:25 },
+  { id:"scroll-of-protection", name:"Scroll of Protection", category:"consumables", basePrice:500 },
+  { id:"spell-scroll-cantrip", name:"Spell Scroll (Cantrip)", category:"consumables", basePrice:25 },
+  { id:"spell-scroll-1st-level", name:"Spell Scroll (1st Level)", category:"consumables", basePrice:50 },
+  { id:"spell-scroll-2nd-level", name:"Spell Scroll (2nd Level)", category:"consumables", basePrice:150 },
+  { id:"spell-scroll-3rd-level", name:"Spell Scroll (3rd Level)", category:"consumables", basePrice:300 },
+  { id:"spell-scroll-4th-level", name:"Spell Scroll (4th Level)", category:"consumables", basePrice:500 },
+  { id:"spell-scroll-5th-level", name:"Spell Scroll (5th Level)", category:"consumables", basePrice:1000 },
+  { id:"bag-of-holding", name:"Bag of Holding", category:"magic-items", basePrice:500 },
+  { id:"cloak-of-protection", name:"Cloak of Protection", category:"magic-items", basePrice:1000 },
+  { id:"ring-of-protection", name:"Ring of Protection", category:"magic-items", basePrice:1000 },
+  { id:"wand-of-magic-missiles", name:"Wand of Magic Missiles", category:"magic-items", basePrice:500 },
+  { id:"wand-of-secrets", name:"Wand of Secrets", category:"magic-items", basePrice:300 },
+  { id:"staff-of-power", name:"Staff of Power", category:"magic-items", basePrice:5000 },
+  { id:"amulet-of-health", name:"Amulet of Health", category:"magic-items", basePrice:2000 },
+  { id:"boots-of-speed", name:"Boots of Speed", category:"magic-items", basePrice:1500 },
+  { id:"bracers-of-defense", name:"Bracers of Defense", category:"magic-items", basePrice:1500 },
+  { id:"cloak-of-elvenkind", name:"Cloak of Elvenkind", category:"magic-items", basePrice:500 },
+  { id:"gloves-of-thievery", name:"Gloves of Thievery", category:"magic-items", basePrice:500 },
+  { id:"hat-of-disguise", name:"Hat of Disguise", category:"magic-items", basePrice:500 },
+  { id:"headband-of-intellect", name:"Headband of Intellect", category:"magic-items", basePrice:2000 },
+  { id:"necklace-of-fireballs", name:"Necklace of Fireballs", category:"magic-items", basePrice:1500 },
+  { id:"pearl-of-power", name:"Pearl of Power", category:"magic-items", basePrice:500 },
+  { id:"ring-of-jumping", name:"Ring of Jumping", category:"magic-items", basePrice:500 },
+  { id:"ring-of-swimming", name:"Ring of Swimming", category:"magic-items", basePrice:500 },
+  { id:"ring-of-warmth", name:"Ring of Warmth", category:"magic-items", basePrice:500 },
+  { id:"rope-of-climbing", name:"Rope of Climbing", category:"magic-items", basePrice:500 },
+  { id:"sentinel-shield", name:"Sentinel Shield", category:"magic-items", basePrice:500 },
+  { id:"slippers-of-spider-climbing", name:"Slippers of Spider Climbing", category:"magic-items", basePrice:500 },
+  { id:"stone-of-good-luck", name:"Stone of Good Luck", category:"magic-items", basePrice:500 },
+  { id:"weapon-1", name:"Weapon, +1", category:"magic-items", basePrice:1000 },
+  { id:"weapon-2", name:"Weapon, +2", category:"magic-items", basePrice:5000 },
+  { id:"weapon-3", name:"Weapon, +3", category:"magic-items", basePrice:15000 },
+  { id:"armor-1", name:"Armor, +1", category:"magic-items", basePrice:1000 },
+  { id:"armor-2", name:"Armor, +2", category:"magic-items", basePrice:5000 },
+  { id:"armor-3", name:"Armor, +3", category:"magic-items", basePrice:15000 },
+  { id:"dragon-slayer-sword", name:"Dragon Slayer Sword", category:"magic-items", basePrice:3000 },
+  { id:"flame-tongue", name:"Flame Tongue", category:"magic-items", basePrice:2000 },
+  { id:"frost-brand", name:"Frost Brand", category:"magic-items", basePrice:2000 },
+  { id:"holy-avenger", name:"Holy Avenger", category:"magic-items", basePrice:20000 },
+  { id:"vorpal-sword", name:"Vorpal Sword", category:"magic-items", basePrice:25000 },
+];
+
+const MARKET_SLOT_MS = 15 * 60 * 1000;
+const MARKET_DAY_MS = 24 * 60 * 60 * 1000;
+const MARKET_SWING = 0.15; // prices stay within ±15% of base
+
+// String -> float in [0, 1). FNV-1a with a final avalanche step.
+function marketHash(str) {
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  h ^= h >>> 13; h = Math.imul(h, 0x5bd1e995); h ^= h >>> 15;
+  return (h >>> 0) / 4294967296;
+}
+
+// Smooth noise in [-1, 1]: random control points every `period` ms, cosine-interpolated.
+function marketNoise(key, t, period) {
+  const x = t / period, i = Math.floor(x), f = x - i;
+  const a = marketHash(key + ':' + i) * 2 - 1;
+  const b = marketHash(key + ':' + (i + 1)) * 2 - 1;
+  return a + (b - a) * (1 - Math.cos(f * Math.PI)) / 2;
+}
+
+function marketSlotStart(t) {
+  return Math.floor(t / MARKET_SLOT_MS) * MARKET_SLOT_MS;
+}
+
+// Price in gp at time t. Category-wide drift (3-day swells) + the item's own daily
+// drift + a little per-slot chatter. Rounded to the copper.
+function marketPrice(item, t) {
+  const s = marketSlotStart(t);
+  const n = 0.45 * marketNoise('cat:' + item.category, s, 3 * MARKET_DAY_MS)
+          + 0.40 * marketNoise(item.id, s, MARKET_DAY_MS)
+          + 0.15 * (marketHash(item.id + '#' + s / MARKET_SLOT_MS) * 2 - 1);
+  return Math.max(0.01, Math.round(item.basePrice * (1 + MARKET_SWING * n) * 100) / 100);
+}
+
+// Snapshot of every item at time t: current price, 24h change, and 7 daily points
+// (same time of day, six days ago through now).
+function marketSnapshot(t = Date.now()) {
+  return MARKET_ITEMS.map(item => {
+    const history = [];
+    for (let d = 6; d >= 0; d--) history.push(marketPrice(item, t - d * MARKET_DAY_MS));
+    const currentPrice = history[6];
+    const dayAgo = marketPrice(item, t - MARKET_DAY_MS);
+    return { ...item, currentPrice, dayAgo, history,
+             changePercent: Math.round((currentPrice - dayAgo) / dayAgo * 10000) / 100 };
+  });
+}
+
+// 52.37 gp, 1,250 gp, 4 sp 6 cp, 6 cp
+function formatCoins(gp) {
+  if (gp >= 1) {
+    return gp >= 1000
+      ? Math.round(gp).toLocaleString('en-US') + ' gp'
+      : gp.toFixed(2).replace(/\.00$/, '') + ' gp';
+  }
+  const cp = Math.round(gp * 100), sp = Math.floor(cp / 10), rem = cp % 10;
+  return [sp ? sp + ' sp' : '', rem || !sp ? rem + ' cp' : ''].filter(Boolean).join(' ');
+}

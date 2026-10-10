@@ -44,6 +44,13 @@
   --font-ui:      'Lato', sans-serif;
 
   --transition: 0.3s ease;
+
+  /* Legacy names still used by older page styles */
+  --accent-gold:    var(--gold-bright);
+  --accent-red:     var(--crimson-bright);
+  --text-color:     var(--text-mid);
+  --parchment:      var(--bg-parchment);
+  --parchment-text: var(--text-parchment);
 }
 
 /* ── RESET ──────────────────────────────────────────────── */
@@ -592,6 +599,7 @@ select option { background: var(--bg-raised); color: var(--text-bright); }
   letter-spacing: 0.05em;
   cursor: pointer;
   border-radius: var(--radius-sm);
+  text-decoration: none;
   transition: all var(--transition);
 }
 .refresh-btn:hover { background: var(--gold-glow); }
@@ -630,6 +638,10 @@ footer::before {
 .footer-links { display: flex; justify-content: center; gap: 26px; margin: 18px 0; flex-wrap: wrap; }
 .footer-links a { color: var(--text-dim); font-family: var(--font-ui); font-size: 0.82rem; transition: color var(--transition); }
 .footer-links a:hover { color: var(--gold-bright); }
+.footer-tagline { color: var(--text-dim); font-family: var(--font-ui); font-size: 0.85rem; }
+.footer-quip { margin: 12px auto 0; max-width: 640px; color: var(--text-dim); font-style: italic; font-size: 0.82rem; }
+.footer-quip a { color: inherit; text-decoration: underline; }
+.footer-copy { margin-top: 16px; color: var(--text-dim); font-family: var(--font-ui); font-size: 0.72rem; opacity: 0.5; }
 
 /* ── TOOL PAGES ──────────────────────────────────────────── */
 .tool-body { max-width: 1200px; margin: 0 auto; padding: 60px 24px; }
@@ -744,3 +756,12 @@ footer::before {
   .article-grid { grid-template-columns: 1fr; }
   .card { padding: 18px; }
 }
+
+/* Formspree forms (raven-form.js) */
+.raven-status { margin-top: 10px; font-size: 0.85rem; min-height: 1em; }
+.raven-ok { color: var(--gold-bright); }
+.raven-err { color: #e07a6a; }
+.raven-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* Footer satire notice (every page) */
+.satire-note { margin-top: 4px; color: var(--text-dim); font-family: var(--font-ui); font-size: 0.78rem; letter-spacing: 0.04em; }

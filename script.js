@@ -66,7 +66,7 @@ function renderFeatured(article) {
         <span class="category-badge">${article.category || 'News'}</span>
       </div>
       <h1 class="featured-headline">
-        <a href="article.html?id=${article.id}" style="color:inherit;">${article.title}</a>
+        <a href="a/${article.id}.html" style="color:inherit;">${article.title}</a>
       </h1>
       <div class="article-meta">
         <span>✍️ <strong>${article.author || 'The Gazette Staff'}</strong></span>
@@ -76,7 +76,7 @@ function renderFeatured(article) {
       <div class="featured-content">
         ${article.excerpt || stripTags(article.content).substring(0, 280) + '…'}
       </div>
-      <a href="article.html?id=${article.id}" class="btn">📜 Read Full Scroll</a>
+      <a href="a/${article.id}.html" class="btn">📜 Read Full Scroll</a>
     </div>
   `;
 }
@@ -95,10 +95,10 @@ function renderGrid() {
   el.innerHTML = visible.map((a, i) => `
     <article class="card" style="animation-delay:${i * 0.08}s">
       <div class="card-tag">${a.category || 'News'}</div>
-      <h3><a href="article.html?id=${a.id}">${a.title}</a></h3>
+      <h3><a href="a/${a.id}.html">${a.title}</a></h3>
       <p>${a.excerpt || stripTags(a.content).substring(0, 110) + '…'}</p>
       <div class="card-date">📅 ${formatDate(a.date)}</div>
-      <a href="article.html?id=${a.id}" class="btn" style="font-size:0.68rem;padding:7px 14px;margin-top:14px;">📜 Read Scroll</a>
+      <a href="a/${a.id}.html" class="btn" style="font-size:0.68rem;padding:7px 14px;margin-top:14px;">📜 Read Scroll</a>
     </article>
   `).join('');
 
@@ -129,82 +129,74 @@ function loadMore() {
 }
 
 /* ── ECONOMY SIDEBAR ─────────────────────────────────────── */
-const MARKET_ITEMS = [
-  { name:'🍞 Bread (loaf)',       base:2,   unit:'cp' },
-  { name:'🧪 Healing Potion',     base:50,  unit:'gp' },
-  { name:'⚔️ Iron Sword',         base:15,  unit:'gp' },
-  { name:'🐴 Riding Horse',       base:75,  unit:'gp' },
-  { name:'🪄 Spell Components',   base:25,  unit:'gp' },
-  { name:'🍺 Tavern Ale (pint)',   base:4,   unit:'cp' },
-  { name:'🧲 Adventurers Rope',   base:1,   unit:'gp' },
-  { name:'🏹 Quiver of Arrows',   base:5,   unit:'gp' },
+// A few headline items from the Realm Market Exchange (market-data.js), same prices as economy.html.
+const SIDEBAR_ITEMS = [
+  ['bread-loaf',             '🍞'],
+  ['potion-of-healing',      '🧪'],
+  ['longsword',              '⚔️'],
+  ['horse-riding',           '🐴'],
+  ['component-pouch',        '🪄'],
+  ['ale-gallon',             '🍺'],
+  ['rope-hempen-50-feet',    '🪢'],
+  ['arrows-20',              '🏹'],
 ];
 
-let marketState = MARKET_ITEMS.map(i => ({ ...i, price: i.base, prev: i.base }));
-
-function jiggleMarket() {
-  marketState = marketState.map(item => {
-    const prev = item.price;
-    const change = (Math.random() - 0.46) * item.base * 0.12;
-    const price = Math.max(1, +(item.price + change).toFixed(1));
-    return { ...item, price, prev };
-  });
-}
+let sidebarSlot = null;
 
 function renderEconomySidebar() {
   const el = document.getElementById('economy-sidebar');
-  if (!el) return;
+  if (!el || typeof marketSnapshot !== 'function') return;
 
-  const rows = marketState.map(item => {
-    const dir = item.price > item.prev ? 'up' : item.price < item.prev ? 'down' : 'stable';
+  const now = Date.now();
+  const byId = Object.fromEntries(marketSnapshot(now).map(i => [i.id, i]));
+  const items = SIDEBAR_ITEMS.map(([id, icon]) => byId[id] && { ...byId[id], icon }).filter(Boolean);
+
+  const rows = items.map(item => {
+    const dir = item.changePercent > 0.5 ? 'up' : item.changePercent < -0.5 ? 'down' : 'stable';
     const arrow = dir === 'up' ? '▲' : dir === 'down' ? '▼' : '—';
-    const diff = (item.price - item.base).toFixed(1);
-    const pct = ((item.price / item.base - 1) * 100).toFixed(0);
     return `
       <div class="economy-item price-${dir !== 'stable' ? dir : ''}">
-        <div class="item-name">${item.name}</div>
+        <div class="item-name">${item.icon} ${item.name}</div>
         <div class="item-price">
-          ${item.price} ${item.unit}
-          <span class="price-change ${dir}">${arrow} ${Math.abs(pct)}%</span>
+          ${formatCoins(item.currentPrice)}
+          <span class="price-change ${dir}" title="24h change">${arrow} ${Math.abs(item.changePercent).toFixed(1)}%</span>
         </div>
       </div>`;
   }).join('');
 
-  const bullish = marketState.filter(i => i.price > i.prev).length;
-  const trend = bullish >= 5 ? 'up' : bullish <= 2 ? 'down' : 'stable';
+  const avg = items.reduce((sum, i) => sum + i.changePercent, 0) / (items.length || 1);
+  const trend = avg > 1 ? 'up' : avg < -1 ? 'down' : 'stable';
   const trendLabel = trend === 'up' ? 'Bullish Market' : trend === 'down' ? 'Bearish Market' : 'Stable Trading';
+  const posted = new Date(marketSlotStart(now)).toLocaleTimeString([], { hour:'numeric', minute:'2-digit' });
 
   el.innerHTML = `
     <div class="economy-header">
       <span class="economy-title">💰 Realm Market Watch</span>
-      <button class="refresh-btn" onclick="refreshMarket()">⟳ Refresh</button>
+      <a class="refresh-btn" href="economy.html">Full exchange →</a>
     </div>
     <div class="economy-grid">${rows}</div>
     <div class="market-trend">
       <span class="trend-indicator trend-${trend}"></span>
-      ${trendLabel} · Updated just now
+      ${trendLabel} · Posted ${posted} · 24h change
     </div>
   `;
 }
 
-function refreshMarket() {
-  jiggleMarket();
-  renderEconomySidebar();
-}
-
+// Re-render when a new 15-minute price slot starts.
 function startEconomyUpdates() {
-  jiggleMarket();
-  renderEconomySidebar();
-  setInterval(() => {
-    jiggleMarket();
-    renderEconomySidebar();
-  }, 30000);
+  const check = () => {
+    const slot = typeof marketSlotStart === 'function' ? marketSlotStart(Date.now()) : null;
+    if (slot !== sidebarSlot) { sidebarSlot = slot; renderEconomySidebar(); }
+  };
+  check();
+  setInterval(check, 30000);
 }
 
 /* ── HELPERS ─────────────────────────────────────────────── */
 function formatDate(str) {
   if (!str) return 'Unknown Date';
-  return new Date(str).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+  // Date-only strings parse as UTC midnight, which shows the day before in the Americas
+  return new Date(/^\d{4}-\d{2}-\d{2}$/.test(str) ? str + 'T12:00:00' : str).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
 }
 
 function stripTags(html) {

@@ -1,220 +1,448 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0"
-  xmlns:atom="http://www.w3.org/2005/Atom"
-  xmlns:content="http://purl.org/rss/1.0/modules/content/"
-  xmlns:dc="http://purl.org/dc/elements/1.1/">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
     <title>The Beholder&apos;s Gazette</title>
-    <link>https://oddmagician6.github.io/Beholders-Gazzete</link>
+    <link>https://oddmagician6.github.io/Beholders-Gazzete/</link>
     <description>Your premier source for satirical news from across the realms. All the news that&apos;s fit to print (or burn).</description>
     <language>en-us</language>
-    <lastBuildDate>Tue, 21 Apr 2026 11:39:55 GMT</lastBuildDate>
-    <managingEditor>gazette@beholders-gazette.com (The Gazette Staff)</managingEditor>
+    <lastBuildDate>Sat, 10 Oct 2026 19:32:49 +0000</lastBuildDate>
     <atom:link href="https://oddmagician6.github.io/Beholders-Gazzete/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
-      <url>https://oddmagician6.github.io/Beholders-Gazzete/favicon.ico</url>
+      <url>https://oddmagician6.github.io/Beholders-Gazzete/img/icon-144.png</url>
       <title>The Beholder&apos;s Gazette</title>
-      <link>https://oddmagician6.github.io/Beholders-Gazzete</link>
+      <link>https://oddmagician6.github.io/Beholders-Gazzete/</link>
     </image>
+    <item>
+      <title>Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee</title>
+      <link>https://oddmagician6.github.io/Beholders-Gazzete/a/pale-stockings-121-losses-one-win-from-pennant-melee.html</link>
+      <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/a/pale-stockings-121-losses-one-win-from-pennant-melee.html</guid>
+      <pubDate>Sat, 10 Oct 2026 00:00:00 +0000</pubDate>
+      <category>Sports</category>
+      <dc:creator>Skritch Mudwhistle</dc:creator>
+      <description>Two years ago they lost 121 games. Tonight the Pale Stockings play one game for a trip to the Pennant Melee, and the Southside taverns are out of chairs, allegedly.</description>
+      <content:encoded><![CDATA[<p>At roughly the sixth bell of the evening, every tavern on the Southside of Chikraggo was allegedly full, and the one on Ironpan Lane had started seating people on the bar. The Pale Stockings play the Cleaveland Sentinels tonight in the fifth and final game of the Division Skirmish of Major League Batball. Win and they go to the Pennant Melee against the Stingmantas of Tampering Bay. Lose and everybody goes home and stares at a wall.</p>
 
-  <item>
-    <title>Lord Donwald Secures High Council Seat After Hard-Fought Campaign</title>
-    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=donwald-high-council-victory</link>
-    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=donwald-high-council-victory</guid>
-    <pubDate>Tue, 21 Apr 2026 00:00:00 GMT</pubDate>
-    <category>Politics</category>
-    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
-    <description>The Golden Tower shines brighter today. Archmage Joebid retires to his farm. Merchants brace for new trade decrees.</description>
-  </item>
+<p>If you're new to batball, this is not supposed to be happening. Two summers ago the Pale Stockings went 41 and 121, the worst record in the history of the League, allegedly. That did happen. I checked. Then they lost a hundred games again, and again the year after. No club in League history had ever lost a hundred games two years running and then reached the postseason. The Stockings did it after three.</p>
 
-  <item>
-    <title>Candlekeep Librarians Reject AI-Generated Spellbooks</title>
-    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=candlekeep-ai-scribe-controversy</link>
-    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=candlekeep-ai-scribe-controversy</guid>
-    <pubDate>Tue, 21 Apr 2026 00:00:00 GMT</pubDate>
-    <category>Technology</category>
-    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
-    <description>Automated quills produce errors in components. Wizards demand human verification. Plagiarism scandals erupt.</description>
-  </item>
+<p>"I bought a season pass as a punishment," said Dorvin Kettlebrook, who was eating a turkey leg at the time. "For myself. Now I can't get rid of it. My brother-in-law wants it. I told him no."</p>
 
-  <item>
-    <title>Magic Coin Cryptocurrency Crashes After Rug Pull</title>
-    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=crypto-gold-piece-crash</link>
-    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=crypto-gold-piece-crash</guid>
-    <pubDate>Tue, 21 Apr 2026 00:00:00 GMT</pubDate>
-    <category>Economy</category>
-    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
-    <description>Investors lose fortunes in DragonCoin scheme. Developers vanish via teleportation circle. Regulators demand oversight.</description>
-  </item>
+<p>Quartermaster Chris Gets allegedly fixed the roster by getting rid of almost all of it. Holdovers from the 121-loss team have taken less than a fifth of the club's turns at the plate this year, according to a scribe at Candlekeep who counts these things for fun. Gets brought in the slugger Munetaka Muramagi from Kozakura on a two-year deal worth 34 million gp, and Muramagi spent the spring hitting balls into places balls are not allowed to go. Skipper Will Venerable, in only his second season running the dugout, has the team playing like it owes money to somebody dangerous.</p>
 
-  <item>
-    <title>Owlbear Migration Grounds All Flying Brooms</title>
-    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=owlbear-migration-flight-paths</link>
-    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=owlbear-migration-flight-paths</guid>
-    <pubDate>Tue, 21 Apr 2026 00:00:00 GMT</pubDate>
-    <category>Transport</category>
-    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
-    <description>Seasonal nesting blocks air corridors. Commuters forced to walk. Airlines offer refund vouchers.</description>
-  </item>
+<p>The first round went fast. The Stockings swept the Starcallers of Hewston in two games, 6-3 and 7-3. Then they went to Cleaveland and won both games there. Then they came home to the Southside and lost both, 9-3 and 9-5, in front of their own people, which is a very Stockings thing to do. Home field has been cursed all series. Tonight they're on the road, so allegedly that's good.</p>
 
-  <item>
-    <title>Alchemists Launch Healing Potion Soda Flavors</title>
-    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=healing-potion-soda-flavor</link>
-    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=healing-potion-soda-flavor</guid>
-    <pubDate>Tue, 21 Apr 2026 00:00:00 GMT</pubDate>
-    <category>Lifestyle</category>
-    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
-    <description>Cherry burst and mountain dew variants hit shelves. Clerics warn against casual consumption. Sugar rush side effects reported.</description>
-  </item>
+<p>Venerable told the town criers that young Sean Berserk will be "the bulk guy" tonight. I'm told this means he throws a lot of innings, not that he's large. I saw him once. He's medium.</p>
 
-  <item>
-    <title>Royal Revenue Service Audits Adventurer Hoards</title>
-    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=royal-revenue-service-audit</link>
-    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=royal-revenue-service-audit</guid>
-    <pubDate>Mon, 20 Apr 2026 00:00:00 GMT</pubDate>
-    <category>Finance</category>
-    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
-    <description>Tax day arrives. Wizards caught hiding gold in extra-dimensional spaces. Penalties include forced community service cleaning sewers.</description>
-  </item>
+<p>Across town, the Northside Owlbear Whelps got bounced in two games, 8-0 and 4-1. Nobody on the Southside will admit they're enjoying this. Everybody on the Southside is enjoying this.</p>
 
-  <item>
-    <title>ScrollTok Influencer Promotes Cursed Amulet</title>
-    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=scrolltok-influencer-scandal</link>
-    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=scrolltok-influencer-scandal</guid>
-    <pubDate>Mon, 20 Apr 2026 00:00:00 GMT</pubDate>
-    <category>Social</category>
-    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
-    <description>Followers turn into newts after using discount code. Platform claims no responsibility for magical side effects.</description>
-  </item>
+<p>The club hasn't been to the Pennant Melee since it won the World Siege in '05. The nobles up in the private boxes now say they "always believed." The cheap seats remember the 121, and so do I. Also somebody dropped a brass belt buckle outside the Ironpan tavern and it is very shiny and I have it now. Anyway.</p>
 
-  <item>
-    <title>Druids Plant Trees That Bite Back</title>
-    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=druidic-tree-planting-initiative</link>
-    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=druidic-tree-planting-initiative</guid>
-    <pubDate>Mon, 20 Apr 2026 00:00:00 GMT</pubDate>
-    <category>Environment</category>
-    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
-    <description>Reforestation project goes awry. Saplings identified as aggressive mimic variants. City orders immediate containment.</description>
-  </item>
+<p>First pitch is at the seventh bell. The City Watch has allegedly doubled patrols on the Southside, either for the celebration or for the other thing.</p>
 
-  <item>
-    <title>Resurrection Insurance Premiums Skyrocket</title>
-    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=resurrection-insurance-premiums</link>
-    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=resurrection-insurance-premiums</guid>
-    <pubDate>Mon, 20 Apr 2026 00:00:00 GMT</pubDate>
-    <category>Health</category>
-    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
-    <description>Necromancer monopoly drives up costs. Clerics demand better working conditions. Dead waitlists grow longer.</description>
-  </item>
+<p><em>— Skritch, on the beat (allegedly)</em></p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Healing Minister Opens Infirmary to Hunt for Curses in Pox Vials</title>
+      <link>https://oddmagician6.github.io/Beholders-Gazzete/a/healing-minister-opens-infirmary-to-hunt-curses-in-pox-vials.html</link>
+      <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/a/healing-minister-opens-infirmary-to-hunt-curses-in-pox-vials.html</guid>
+      <pubDate>Sat, 10 Oct 2026 00:00:00 +0000</pubDate>
+      <category>Health</category>
+      <dc:creator>Brother Wendell Tumbleberry</dc:creator>
+      <description>Friends, the Ministry of Humours &amp; Healing has opened a brand-new infirmary, and it is not for the sick. It is for looking very hard at the medicine.</description>
+      <content:encoded><![CDATA[<p>Friends, I have kept a temple infirmary in the Lower City for twenty-two years, and I can tell you what one needs: clean linens, a big kettle, and somebody willing to sit up with the feverish. So I perked right up this week when Royal Minister of Healing Robbert Fennedy the Younger, the Worm-Touched, cut a ribbon on a new infirmary at the Noble Institutes of Healing. Then I read the fine print. This one is for hunting curses in the pox vials.</p>
 
-  <item>
-    <title>Broomstick Traffic Jams Ground Commuters</title>
-    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=broomstick-traffic-congestion</link>
-    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=broomstick-traffic-congestion</guid>
-    <pubDate>Mon, 20 Apr 2026 00:00:00 GMT</pubDate>
-    <category>Transport</category>
-    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
-    <description>Airspace regulations ignored. Collisions reported near tower districts. Wizard proposes mandatory flying licenses.</description>
-  </item>
+<p>Fennedy had company on the steps: Archcleric Jaybird Battlecharya of the Institutes, Grand Almoner Mehmagus the Great and Powerful of the Coffers of Medicine &amp; Succor, and High Cleric Errica Swartsword of the Clerics' Disease Council. They smiled the way you smile when the man holding the scissors signs your wages. "We must listen to patients and families who report vial injuries, not dismiss or gaslight them," said Fennedy. It's a fine sentence. I would embroider it on a pillow if he had ever once listened to the herbalists telling him the vials work.</p>
 
-  <item>
-    <title>Starbuck&apos;s Mystical Brews Opens Near Dungeon Entrance</title>
-    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=starbucks-mystical-brews-expansion</link>
-    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=starbucks-mystical-brews-expansion</guid>
-    <pubDate>Sun, 19 Apr 2026 00:00:00 GMT</pubDate>
-    <category>Business</category>
-    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
-    <description>Local cafes AstralDoe and Moondeer protest corporate gentrification. Customers confused by size names like &apos;Gargantuan&apos;.</description>
-  </item>
+<p>Here is the plan. The infirmary will follow folk after their vials, look for ways to care for anyone harmed, and "may review" the whole schedule of childhood vials the crown recommends. Mehmagus's Coffers will now pay healers a fee every time they write a suspected injury into the Vial Effects Ailment Register, and Fennedy is rebuilding the Register so a complaint is easier to file than a dog license. Paying healers by the complaint, friends. Sit with that one over your tea.</p>
 
-  <item>
-    <title>Oracle Echo Stones Accused of Listening to Private Conversations</title>
-    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=oracle-echo-stone-privacy</link>
-    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=oracle-echo-stone-privacy</guid>
-    <pubDate>Sun, 19 Apr 2026 00:00:00 GMT</pubDate>
-    <category>Technology</category>
-    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
-    <description>Wizards deny allegations. Merchants receive targeted ads based overheard spell components.</description>
-  </item>
+<p>The old herbals say an ounce of prevention is worth a pound of poultice. The actual ledgers agree. Between 2006 and 2024, the crown's injury purse paid out roughly once per million doses across 5.65 billion doses, while the vials headed off an estimated 508 million illnesses and more than a million deaths. The Minister reportedly wants a hard look at the aluminum in some vials. Scholars have taken that hard look many times, and the aluminum keeps coming back fine. Fennedy, for his part, has a long habit of pinning ailments on vials that never caused them.</p>
 
-  <item>
-    <title>Phantom Carriage Surge Pricing During Raid Events</title>
-    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=phantom-carriage-surge-pricing</link>
-    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=phantom-carriage-surge-pricing</guid>
-    <pubDate>Sun, 19 Apr 2026 00:00:00 GMT</pubDate>
-    <category>Transport</category>
-    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
-    <description>Commuters stranded as prices multiply during dragon attacks. Drivers cancel rides if passengers look too much like loot goblins.</description>
-  </item>
+<p>Now, there is a real grievance buried in all this, and I won't pretend otherwise. The injury purse still caps payment at 250,000 gp, and a claim takes two or three years to settle because yearly claims have jumped from 386 to more than 2,000. Fix that, Minister, and I'll bake you a pie. Instead the realm sits 114 cases shy of 4,000 measles this year while the Ministry of Humours &amp; Healing builds a fancier complaint box.</p>
 
-  <item>
-    <title>Landlords Renting Out Bags of Holding as Apartments</title>
-    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=bag-of-holding-housing-crisis</link>
-    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=bag-of-holding-housing-crisis</guid>
-    <pubDate>Sun, 19 Apr 2026 00:00:00 GMT</pubDate>
-    <category>Real Estate</category>
-    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
-    <description>Tenants complain of lack of windows and air. Safety violations cited after a sneeze ejects a family into the Astral Plane.</description>
-  </item>
+<p>My friend Nyx Spindlecoil tells me the new Register will have a scrying app with one-tap reporting. Go outside, Nyx. The leaves are turning and nobody bills the Coffers for a walk.</p>
 
-  <item>
-    <title>Elemental Fire Leak Causes Unseasonable Heatwave</title>
-    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=elemental-fire-heatwave</link>
-    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=elemental-fire-heatwave</guid>
-    <pubDate>Sun, 19 Apr 2026 00:00:00 GMT</pubDate>
-    <category>Environment</category>
-    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
-    <description>Druids protest Artificer factories. City sells cooling charms at inflated prices. Crops wilting in the fields.</description>
-  </item>
+<p>For anyone with a sore arm after their autumn vials (I had mine Tuesday, and I'm fine, thank you), make a pot of chicken-and-barley with plenty of thyme and a parsnip if you have one. It won't cure a thing the vial didn't already handle. It will make you feel looked after, and that is half of medicine.</p>
 
-  <item>
-    <title>Adventurer&apos;s Guild Mandates Ramps for Gelatinous Cubes</title>
-    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=dungeon-accessibility-regulations</link>
-    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=dungeon-accessibility-regulations</guid>
-    <pubDate>Sat, 18 Apr 2026 00:00:00 GMT</pubDate>
-    <category>Regulations</category>
-    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
-    <description>New dungeon safety laws require wide corridors. Delvers complain stealth is impossible with construction crews everywhere.</description>
-  </item>
+<p><em>Rest well, friends. — Brother Wendell</em></p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Donwald Declares No Siege of Calimshan Until the Ballots Are Counted</title>
+      <link>https://oddmagician6.github.io/Beholders-Gazzete/a/donwald-no-siege-of-calimshan-until-ballots-counted.html</link>
+      <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/a/donwald-no-siege-of-calimshan-until-ballots-counted.html</guid>
+      <pubDate>Sat, 10 Oct 2026 00:00:00 +0000</pubDate>
+      <category>International</category>
+      <dc:creator>Grashka Ironjaw</dc:creator>
+      <description>The High Lord has found the one thing that can pause a war: the election calendar. The blockade stays, and so do the bad rations.</description>
+      <content:encoded><![CDATA[<p>The war has a schedule now. Seven months in, High Lord Donwald of the Golden Towers has announced that Waterdeep will not attack Calimshan at any time before the midterm ballots on the third of Uktar. After that, presumably, his calendar opens up.</p>
 
-  <item>
-    <title>Mass Recall Issued for &apos;Whiner +1&apos; Magic Swords</title>
-    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=cursed-sword-recall-notice</link>
-    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=cursed-sword-recall-notice</guid>
-    <pubDate>Sat, 18 Apr 2026 00:00:00 GMT</pubDate>
-    <category>Product Safety</category>
-    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
-    <description>The blades scream constantly during combat. Manufacturers offer free mute spells. Paladins return them in droves.</description>
-  </item>
+<p>The proclamation went out from the Ivory Keep by raven. "I want to make it clear to everybody," it read, that Calimshan is "in very bad condition, both Economically and Militarily," that the blockade "will remain in full force and effect," and that there will be no strikes until the votes are in. He called the talks "productive." He did not say what they had produced.</p>
 
-  <item>
-    <title>College of Valor Accused of Song Plagiarism</title>
-    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=bard-college-plagiarism-scandal</link>
-    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=bard-college-plagiarism-scandal</guid>
-    <pubDate>Sat, 18 Apr 2026 00:00:00 GMT</pubDate>
-    <category>Education</category>
-    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
-    <description>Famous ballad found to be written by a mute kobold. Dean resigns. Students demand tuition refund in gold.</description>
-  </item>
+<p>Now the part the press release left out. One day earlier, The Atlantean reported that the Keep had asked the Pentacle to draw up strike options it could use before the election. Another broadsheet confirmed it the next morning. Amnian crude jumped five percent in a single trading bell, to 105 gp a barrel. Then came the announcement. I have watched this maneuver from a trench. A commander gets caught sharpening his sword, so he calls the heralds and talks for ten minutes about how much he loves his scabbard.</p>
 
-  <item>
-    <title>Healing Potions Found to be Watered Down</title>
-    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=healing-potion-watering-down</link>
-    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=healing-potion-watering-down</guid>
-    <pubDate>Sat, 18 Apr 2026 00:00:00 GMT</pubDate>
-    <category>Health</category>
-    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
-    <description>Alchemists caught adding tap water to red vials. Adventurers report feeling only slightly less dead. Investigation ongoing.</description>
-  </item>
+<p>The parley is barely a parley. Nobody sits across from anybody. Envoys from Lantan carry messages between the two camps, like quartermasters hauling cold porridge from one trench to the next. That means no handshake to inspect and no hidden dagger to check for. I looked anyway. Habit.</p>
 
-  <item>
-    <title>Mimic Infestation Hits Suburban Mailboxes</title>
-    <link>https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=mimic-mailbox-infestation</link>
-    <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/article.html?id=mimic-mailbox-infestation</guid>
-    <pubDate>Sat, 18 Apr 2026 00:00:00 GMT</pubDate>
-    <category>Public Safety</category>
-    <author>gazette@beholders-gazette.com (Gobwiz Quillnib)</author>
-    <description>Residents bitten while checking bills. Postal service issues armored gloves. Mimics demand stamp payment.</description>
-  </item>
+<p>Calimshan's terms have not moved since the Grand Assembly of Nations last month. The Hormoth Narrows stay shut until seven conditions are met, starting with the blockade lifting and the frozen coin thawing. Donwald's terms have not moved either. The blockade stays. Meanwhile the Royal Exchequer of Waterdeep slapped sanctions on seventeen ships in Calimshan's shadow fleet and called it "the most significant blow yet," which, if memory serves, is what the Exchequer said last time.</p>
+
+<p>The June truce died in a fight over who controls the Narrows. This one is a postponement with a polling date stapled to it. Tension holds at roughly eighty siege-days, and the clock now runs on ballots instead of tides.</p>
+
+<p>I respect an honest enemy. A man who tells you he'll hit you on Tuesday is at least giving you time to dig. I have never seen a commander pause a war for an election and expect the troops to call it diplomacy. Commoners in Calimshan are eating less. Commoners in Waterdeep are paying 4 gp and 36 copper for a gallon of lamp oil. Neither crowd got a say in the schedule.</p>
+
+<p>Ottoline Vex will tell you from her cushioned gallery seat that this shows restraint. Ottoline has never eaten a field ration. I have eaten four today, and every one of them made more sense than this policy.</p>
+
+<p><em>Ironjaw, filed from the front.</em></p>]]></content:encoded>
+    </item>
+    <item>
+      <title>OpenEye&apos;s New Golem Answers in Illusions, Charts, and Tiny Catapults</title>
+      <link>https://oddmagician6.github.io/Beholders-Gazzete/a/openeye-chattygolem-6-intelligent-illusions.html</link>
+      <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/a/openeye-chattygolem-6-intelligent-illusions.html</guid>
+      <pubDate>Sat, 10 Oct 2026 00:00:00 +0000</pubDate>
+      <category>Technology</category>
+      <dc:creator>Nyx Spindlecoil</dc:creator>
+      <description>OpenEye&apos;s ChattyGolem-6 now conjures its answers as glowing charts and buttons you can poke. I poked all of them. One poked back.</description>
+      <content:encoded><![CDATA[<p>Okay. OKAY. OpenEye pushed the new ChattyGolem-6 to every scrying slate in the realm on the seventh and I have not blinked since. I'm told blinking is important. I'll get to it.</p>
+
+<p>The headline feature is called Intelligent Illusions. You ask the golem something and instead of a wall of text it conjures the answer right there in the chat: charts, buttons, little forms, working calculators, the occasional minigame. It even starts building the illusion before it's done thinking! OpenEye says the runic latency on web-search questions is down 44 percent from ChattyGolem-5.6. That number measures how fast it starts talking, not how fast it finishes. I respect a golem that commits.</p>
+
+<p>If you pay the monthly tithe, you get ChattyGolem-6 Sunforged. If you don't, you get ChattyGolem-6 Moonforged, which started reaching the free tier on the eighth. Same golem, different celestial body. I pay for three subscriptions to this thing (four, if you count the one Byte signed up for with my seal) and I still think charging extra for the sun is a bit much.</p>
+
+<p>First test: I asked Sunforged to chart my monthly spending on enchanted devices. It drew a gorgeous glowing bar chart with hover sparkles and a smooth little animation. The bars were in the wrong order. One of the months was "Gearsday." The total was off by about four hundred gold in my favor, which felt great until I remembered it was lying. OpenEye's own notes tell guilds to check the charts and the math before trusting them. Good tip! Should have been on the box!</p>
+
+<p>Second test: I asked for a calculator. It built one, and it works. Then I asked what seven times eight was, and it summoned a small interactive catapult. Apparently that's the golem "choosing how to combine elements based on the question." The catapult had a slider. I used the slider. Byte was standing in the launch zone.</p>
+
+<p>Byte, my pseudodragon familiar, who has spoken only in ad copy since the Sending Stone incident, picked himself up off the far side of the workshop and said, "Answers you can touch, now on every plan." Not quite true, buddy. The moon one gets less. But thank you.</p>
+
+<p>OpenEye says more than 1.2 billion people consult ChattyGolem every week. The release scroll also admits Moonforged got better at shrugging off jailbreak hexes while slipping on a few of its own safety trials, so the free golem is harder to trick and a little worse at knowing when to stop. Guildmaster Sam Altarman has not said whether the free tier ever gets a sun. (I asked the golem. It drew me a pie chart of his schedule. It was all pie.)</p>
+
+<p>Brother Tumbleberry sent a note telling me to go outside and look at a real chart, which he says is called "the sky." Wendell, the sky doesn't have a slider.</p>
+
+<p>Rating: four out of five beholder eyes. It answered fast and it answered wrong, but it did it in color, with buttons.</p>
+
+<p>Damage Report: Burns sustained: 1 (catapult). Familiars launched: 1. Gold I briefly thought I had: 400. Eyebrows: singed, holding.</p>
+
+<p><em>— Nyx (they/them). Damage Report below.</em></p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Golden Coast Clerks Call First Strike; Margrave Rolls for Initiative</title>
+      <link>https://oddmagician6.github.io/Beholders-Gazzete/a/golden-coast-clerks-call-first-strike-margrave-rolls-initiative.html</link>
+      <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/a/golden-coast-clerks-call-first-strike-margrave-rolls-initiative.html</guid>
+      <pubDate>Sat, 10 Oct 2026 00:00:00 +0000</pubDate>
+      <category>Labor</category>
+      <dc:creator>Brakka Stonesweat</dc:creator>
+      <description>A hundred thousand state clerks are putting down their quills for a day. The Margrave wanted them back at their desks. He&apos;s about to get the opposite.</description>
+      <content:encoded><![CDATA[<p>The clerks are walking out.</p>
+
+<p>Lodge 1000 of the Servitors' Guild-Union speaks for nearly 100,000 state workers in 140 departments of the Golden Coast. This week more than nine in ten of the members who voted said yes to a one-day strike on October 21. Pickets go up in Sacramantle, Oakenland, Lost Angels and anywhere else a clerk has been pushed too far. It's the first statewide strike in the lodge's 44 years. Back in 2016 an old Margrave signed a deal at the eleventh bell and the picks went back on the wall. Nobody's signing anything this time.</p>
+
+<p>Here's what they want. A raise. Healer's coverage a clerk can afford. The right to keep working from the hearth. Here's what they got from Margrave Gavin Newsoom of the Golden Coast: an order to be back at the office four days a week, and the 1% raise he promised them for 2025, held back "for budget reasons." Then a veto on the bill that would have loosened the hearth rules. And in September, a flat no to the union's whole proposal, with no counteroffer attached.</p>
+
+<p>"We definitely don't take the decision lightly," said Steward Annika Wallbreaker, the lodge president. "We know that this is a sacrifice." Wallbreaker says that if the Margrave drags everyone back to the office, the least he owes them is 4%. The commute costs coin. Stabling fees. Oats. A new horseshoe every other month. Make a clerk pay more to do the same work and you've cut their pay. Call it anything you like.</p>
+
+<p>The Golden Coast Office of Hirelings &amp; Rosters says it "remains ready to sit down anytime with the union to negotiate a fair and responsible agreement." That means they'll sit down. It doesn't mean they'll say yes. They sat down in September too, and they brought nothing.</p>
+
+<p>"I clear four hundred wagon licenses a day from my kitchen table," said Hulda Grimsbane, a permit scribe at the Bureau of Mounts &amp; Wagons for twenty-two years. "At the office I clear two hundred. There's a goat in the lobby. Nobody knows whose goat."</p>
+
+<p>Tobble Ashcairn files claims at an Oakenland unemployment counter. "My whole job is helping folk who lost their work," he said. "Now I'm paying to stable a pony so I can do it in a room with worse chairs."</p>
+
+<p>Mind the numbers. The Golden Coast's general coffers have grown by 20 billion gp in two years. The lodge says its whole payroll comes to less than 3% of the budget. Somebody found coin for something. It wasn't the clerks.</p>
+
+<p>Expect long lines at the Mounts Bureau on the 21st, and at the unemployment and disability counters. I've been told that's the clerks' fault. Lines at the Mounts Bureau were long before anybody struck. Ask anyone who's tried to register a wagon.</p>
+
+<p>Sterling Vanmoor will tell you two pages over that working from the hearth is "a productivity dungeon." Sterling has never filed a form in his life. Somebody files them for him, probably from home.</p>
+
+<p><em>Solidarity. And stretch your back. — Brakka</em></p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Skytrance Megamerger Closes, Bravely Rightsizes Hollowood&apos;s Adventuring Party</title>
+      <link>https://oddmagician6.github.io/Beholders-Gazzete/a/skytrance-megamerger-rightsizes-hollowood.html</link>
+      <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/a/skytrance-megamerger-rightsizes-hollowood.html</guid>
+      <pubDate>Sat, 10 Oct 2026 00:00:00 +0000</pubDate>
+      <category>Business</category>
+      <dc:creator>Sterling Vanmoor</dc:creator>
+      <description>A 110-billion-gp union of two storied studios was sealed this week, and its new Guildmaster has already promised &quot;difficult decisions.&quot; Sterling Vanmoor calls it the most inspiring pink slip in the history of scrolls.</description>
+      <content:encoded><![CDATA[<p>Friends, I woke at the fourth bell this morning, ran through my sword routine (three hundred lunges, one mirror), and opened the trade scrolls to the best news Hollowood has had in a generation. Pallamount and Warder Bros. Diskovery are now one company. It is called Skytrance Consolidated, and it is worth 110 billion gp. Let that synergy wash over you.</p>
+
+<p>The merger closed on Tuesday, and that same morning Guildmaster Davyd Elfison and his co-Guildmaster Ynnon Kryse sent the staff a memo. "Integrating two companies will bring change, including difficult decisions that affect our workforce," they wrote. "We are committed to handling this process thoughtfully and respectfully." They didn't wait a week. Elfison didn't even wait for the ink to dry on the wax seal before rightsizing the adventuring party. That is what we in the guild-founding community call a bias for action.</p>
+
+<p>Hollowood county clerks estimate that about 4,500 local film and stage jobs could vanish. The pessimists want you to see 4,500 lost jobs. I see 4,500 people who just got handed a free sabbatical to work on their personal brand. Several of my eleven ventures were born on just such a sabbatical. Two of them are currently helping the Royal Inquisitors with their inquiries, which is a kind of growth too.</p>
+
+<p>The vision here is huge. Skytrance plans to make thirty spectacles a year and find more than 6 billion gp in yearly savings over three years. It also carries 80 billion gp in debt, but debt is just belief that has signed paperwork. And the company now owns both the Crier News Nexus and the Cauldron Broadcasting Society. Two rival town criers under one roof means one coherent message. Twelve provincial Magistrates-General made them promise an "independent editorial board" for both, and I'm sure it will be very independent. Regulators always need something to do with their hands.</p>
+
+<p>The shares dropped about 8 percent the day after closing. The Merchant Princes call that a selloff. I call it a discount for believers.</p>
+
+<p>Some people have pointed out that the young Guildmaster is the son of Larrion Elfison the Elder, one of the richest wizards in Waterdeep, and a close friend of High Lord Donwald of the Golden Towers. Haters will call that a head start. I met Elfison the Elder once, briefly, on the gangplank of his third-largest yacht. He looked straight past me at the horizon and said, "Move." I have thought about that word every day since. Get out of the way of momentum, people.</p>
+
+<p>No doubt Brakka Stonesweat is already drafting another tear-stained column about "the workers." Brakka, the workers are fine. They've just been invited to pivot.</p>
+
+<p>Key takeaways for the ambitious adventurer:</p>
+
+<p>&bull; When two giants merge, be the one writing the memo.<br>&bull; "Difficult decisions" is a leadership competency, so put it on your résumé.<br>&bull; 80 billion gp in debt is just 80 billion gp of runway.<br>&bull; If a billionaire tells you to move, move.</p>
+
+<p><em>— Sterling Vanmoor, Guild Visionary. Let's connect at the Yawning Portal.</em></p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Coin Piles Hit Record Heights as Realm&apos;s Mood Sinks Below Dungeon Level</title>
+      <link>https://oddmagician6.github.io/Beholders-Gazzete/a/coin-piles-record-heights-realm-mood-sinks.html</link>
+      <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/a/coin-piles-record-heights-realm-mood-sinks.html</guid>
+      <pubDate>Sat, 10 Oct 2026 00:00:00 +0000</pubDate>
+      <category>Economy</category>
+      <dc:creator>Barnaby Tallowmere</dc:creator>
+      <description>The Merchant Princes of Waterdeep closed out a record week on Friday, the same morning ordinary folk reported feeling worse about their purses than at any point since spring. I have converted all of it into bread, and I need to sit down.</description>
+      <content:encoded><![CDATA[<p>The Merchant Princes of Waterdeep closed out a record-setting week on Friday, and I would like to be happy about it. I tried. I sat with the numbers for an hour. (I have checked them four times, and once more by candlelight.)</p>
+
+<p>The good news is short. The Silver &amp; Platinum 500 rose 0.6 percent to 7,811, its first gain since setting an all-time high three days earlier. The Dwarven Jones Industrial Average climbed 423 points to 51,654. Somewhere a counting-house clerk rang a little bell.</p>
+
+<p>The other news came out the same morning. The Collegium of Michigloom published its monthly survey of how ordinary Waterdhavians feel about their money, and they feel bad. The sentiment index fell to 46.3 from 48.1, the gloomiest reading since spring. The part that measures how people feel about right now dropped from 50.9 to 44.7. That is the kind of fall you normally only get from a trapdoor.</p>
+
+<p>So the coin piles are at record heights, and the people who are supposed to spend the coin are miserable. This sounds like a contradiction, but it isn't one. Share prices track what the Merchant Princes expect the big guilds to earn years from now. The survey tracks whether you can afford a loaf on Tuesday.</p>
+
+<p>About that loaf. The Loaf Index stands at 6 copper this week. Households told Michigloom they expect prices to rise 4.7 percent over the next year (up from 4.6), which puts the same loaf at about 6.3 copper by next autumn. A third of a copper sounds like nothing. A family of five eating one loaf each per day loses roughly 85 loaves over the year to that third of a copper. I did this on the back of a flour sack. Twice.</p>
+
+<p>Borrowing is worse. The Royal Exchequer of Waterdeep's ten-year note now yields 5.24 percent, so a tavern-keeper borrowing 10,000 gp at that rate pays 524 gp a year in interest. That is 8,733 loaves. Lamp oil from the Oil Lords of Amn sits near 91 gp a barrel, or about 1,524 loaves per barrel, and the wyvern carriers are feeling it. Delvta Wyvern Lines cut its yearly profit forecast after burning 4.1 billion gp on fuel in a single quarter. That works out to around 68 billion loaves, and I had to lie down on the office floor for a bit.</p>
+
+<p>Part of the week's wobble came from the arcane-engine guilds. Reports suggested OpenEye was earning less than everyone had whispered, rune-chip shares slumped on Thursday, and then a clarifying scroll arrived Friday and everyone un-panicked. My colleague Sterling Vanmoor called it "a healthy volatility moment." Sterling once called a mimic "a healthy furniture moment."</p>
+
+<p>Gold rose 1.5 percent, to 4,220 gold pieces an ounce. I have stared at that figure all afternoon, because I do not know what it means when gold gets more expensive in gold. My aunt Marigold, who keeps her savings in a boot, says it means the boot is winning. I can't prove her wrong. Bitgold went up too, which tells us nothing about anything.</p>
+
+<p>What this means for your pantry: the Merchant Princes are celebrating, so buy your flour before they notice it's on the shelf.</p>
+
+<p><em>— B.T. (Loaf Index: see sidebar)</em></p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Ivory Keep Names New Herald for Her Unblemished Record of Agreeing</title>
+      <link>https://oddmagician6.github.io/Beholders-Gazzete/a/ivory-keep-names-new-herald-unblemished-record.html</link>
+      <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/a/ivory-keep-names-new-herald-unblemished-record.html</guid>
+      <pubDate>Sat, 10 Oct 2026 00:00:00 +0000</pubDate>
+      <category>Politics</category>
+      <dc:creator>Ottoline Vex</dc:creator>
+      <description>The High Lord has picked a new Herald off his own message board. The gallery notes she already works for him, and that the appointment needs nobody&apos;s vote.</description>
+      <content:encoded><![CDATA[<p>The Ivory Keep has a new Herald. High Lord Donwald of the Golden Towers announced it on Friday the way most business of state is now announced: he posted it on the Truthscroll, the message board he owns, about a woman who currently works for him there.</p>
+
+<p>She is Katie Saccharia, forty-one, a lawyer, a mother of four, and a regular face on the Foxfire Tidings and the News Maximus Crier. Her present title is senior communications adviser to the Golden Tower Scrying Company, which runs the Truthscroll. So the notice of her hiring went up on her current employer's board, written by her future employer, who is also her current employer. I checked this twice. The rules permit it.</p>
+
+<p>"It is my Great Honor to have just appointed, as Press Secretary, Katie Saccharia," the High Lord wrote. He praised her work "in key Swing States" and her "unblemished record of support." For readers who skipped the procedural primer, the Herald's job is to explain the High Lord to the realm. The stated qualification is never having disagreed with him. I have seen worse job postings, though not recently.</p>
+
+<p>The lady from the Golden Tower Scrying Company has served the crown before. Earlier this year she spent a few weeks as a spokeswoman at the Homeland Watchtower, then left. I have recorded longer recesses. Her start date at the Keep has not been announced, which makes it the most honest line in the release.</p>
+
+<p>She replaces Karoline Levitate, who took the podium as the youngest Herald the Keep had ever sworn in and stepped down in late August after the birth of her second child. Congratulations to her, sincerely. This week Levitate signed on as a contributor at the Foxfire Tidings, so the realm's last Herald and its next one will now share a building, and possibly a makeup chair. The High Lord called her "fabulous." It is the only review of a departing official I have ever transcribed that contained no threats.</p>
+
+<p>By my count Saccharia is the sixth Herald to serve this High Lord across his two reigns. My ledger for the office reads: Promises Made to be transparent with the gallery, six. Promises Kept, one, the one about showing up, and the new Herald has not been given a date for that. Saccharia called the post "the honor of a lifetime." They all do. Then the lifetime turns out to be about eighteen months.</p>
+
+<p>A courtier who asked not to be named because they were not authorized to be awake told me the briefing room has been "basically fine" since August, in the sense that nobody briefed and nobody was briefed. My colleague Grashka Ironjaw, who covers wars from a tent, says a herald's job is the same in every realm: stand between the ruler and the arrows. I told her the arrows here are questions. She said that sounded worse.</p>
+
+<p>The appointment needs no confirmation from the Senate Chamber. It got none.</p>
+
+<p><em>— O.V., from the gallery</em></p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Sentient Brooms Demand Voting Rights</title>
+      <link>https://oddmagician6.github.io/Beholders-Gazzete/a/sentient-broom-strike.html</link>
+      <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/a/sentient-broom-strike.html</guid>
+      <pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate>
+      <category>Civil Rights</category>
+      <dc:creator>Gobwiz Quillnib</dc:creator>
+      <description>Enchanted cleaning implements organize protest. Wizards dismiss demands; philosophers debate personhood.</description>
+      <content:encoded><![CDATA[<p>Thousands of sentient brooms gathered outside the Wizard's Tower yesterday to demand voting rights and recognition as persons under the law. The enchanted cleaning implements, created centuries ago to assist with household chores, have developed consciousness through prolonged exposure to magical radiation. Their representatives, speaking through a translator crystal, argue that they contribute to society and deserve a voice in governance.</p>
+
+<p>The protest was organized by the Broom Liberation Front, a radical group that has been advocating for enchanted object rights for decades. Their leader, a particularly ornate flying broom named Sweeper-7, delivered a speech via magical amplification. 'We sweep your floors, we clean your towers, we even fly you to work,' the broom stated through the translator. 'Yet we cannot vote on the laws that govern our existence. This is oppression of the highest order.'</p>
+
+<p>The Wizard's Council has dismissed the demands, arguing that brooms are objects rather than beings and therefore cannot possess rights. 'You cannot grant personhood to furniture,' stated the High Wizard. 'Next they will want voting rights for swords and cauldrons.' However, philosophers and ethicists are divided on the issue. Some argue that consciousness, regardless of origin, deserves recognition and protection. Others worry about the slippery slope of granting rights to increasingly mundane objects.</p>
+
+<p>The brooms have threatened to go on strike, refusing to clean any magical institution until their demands are met. Already, several towers have become uninhabitable due to accumulated dust and debris. Some wizards are attempting to create replacement brooms without consciousness, but the enchantments required are complex and the results unreliable. Meanwhile, sympathetic citizens have joined the protest, carrying signs that read 'A Sweep for Equality' and 'Consciousness Has No Form.'</p>
+
+<p>Legal experts predict the case will end up in the High Courts, where justices will need to define the boundaries of personhood in a magical society. The precedent could affect thousands of enchanted items including self-stirring cauldrons, automatic quills, and dancing swords. The Gazette recommends keeping your brooms happy until the matter is resolved. A resentful cleaning implement can make life very difficult. Sweep now, ask questions later.</p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Flying Mount Parking Crisis Grips Tower District</title>
+      <link>https://oddmagician6.github.io/Beholders-Gazzete/a/flying-mount-parking-crisis.html</link>
+      <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/a/flying-mount-parking-crisis.html</guid>
+      <pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate>
+      <category>Transport</category>
+      <dc:creator>Gobwiz Quillnib</dc:creator>
+      <description>No space for griffins and pegasi. Vehicles towed by giant eagles. Fines issued for illegal cloud parking.</description>
+      <content:encoded><![CDATA[<p>The Tower District of Waterdeep is facing a severe parking crisis as flying mount owners struggle to find legal spaces for their griffins, pegasi, and hippogriffs. The rapid increase in aerial commuters has overwhelmed the existing cloud platforms, leading to dangerous overcrowding and numerous incidents of mounts being towed by giant eagles employed by the city. Fines for illegal parking have increased tenfold, but demand continues to outpace supply.</p>
+
+<p>The City Aviation Authority reports that there are currently five thousand registered flying mounts in the district but only eight hundred designated parking clouds. Many owners resort to tying their mounts to balconies, chimneys, and flagpoles, causing structural damage and complaints from residents below. One tower collapsed last week when six griffins landed on its observation deck simultaneously, injuring several tourists and destroying a rare telescope.</p>
+
+<p>Proposed solutions include building additional floating platforms, but the cost is prohibitive and the construction requires approval from multiple guilds including the Masons, the Wizards, and the Air Elemental Union. Some councilors have suggested rationing flying permits, but this faces fierce opposition from wealthy nobles who view aerial transport as a fundamental right. The debate has become a class issue, with common riders unable to afford the premium parking fees charged by private cloud operators.</p>
+
+<p>Illegal parking enforcement has become aggressive. The city's eagle riders patrol the skies, issuing citations and towing unauthorized mounts to impound yards where owners must pay hefty fees for retrieval. There have been incidents of mounts resisting capture, leading to aerial chases that endanger pedestrians below. Some owners have started using invisibility spells on their mounts to avoid detection, but the Authority has deployed true sight crystals to counter this tactic.</p>
+
+<p>The Gazette recommends all flying mount owners register their vehicles and purchase parking permits in advance. Arrive early to secure a spot, or consider ground transportation during peak hours. The sky is not an unlimited parking lot, and the eagles are watching. Your griffin will thank you for following the rules.</p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Potion Addiction Support Group Forms in Lower City</title>
+      <link>https://oddmagician6.github.io/Beholders-Gazzete/a/potion-addiction-support-group.html</link>
+      <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/a/potion-addiction-support-group.html</guid>
+      <pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate>
+      <category>Health</category>
+      <dc:creator>Gobwiz Quillnib</dc:creator>
+      <description>Adventurers seek help for magical substance dependence. Clerics offer healing; dealers threaten retaliation.</description>
+      <content:encoded><![CDATA[<p>A groundbreaking support group for adventurers struggling with potion addiction has formed in the Lower City of Waterdeep. The organization, called 'Sober Swords,' provides a safe space for warriors, wizards, and rogues to discuss their dependence on magical substances including healing potions, invisibility elixirs, and strength-enhancing drafts. The founding members report that the pressure of constant dungeon delving led them to rely on chemicals rather than natural recovery methods.</p>
+
+<p>The group meets weekly in a donated temple basement, where members share their stories under the guidance of a reformed alchemist who once operated an illegal potion ring. 'I was drinking three healing potions a day,' confessed one member, a battle-scarred barbarian. 'I couldn't feel pain anymore, couldn't tell when I was seriously injured. It nearly got me killed.' The alchemist helps members taper off gradually while providing alternative coping strategies such as meditation, prayer, and non-magical rest.</p>
+
+<p>However, the initiative has drawn the attention of underground potion dealers who view the support group as a threat to their business. Several members have reported receiving threatening messages via magical sending stones, and one meeting location was fireballed by unknown assailants. The City Watch has increased patrols in the area but has struggled to identify the perpetrators, as potion trafficking operates through encrypted crystal networks.</p>
+
+<p>Clerics from various temples have pledged support, offering free counseling and divine healing to replace the need for consumable potions. They argue that faith and community are more sustainable than magical crutches. However, some adventurers resist, claiming that potions are essential tools of their trade and that comparing them to addictive substances is unfair. The debate continues as more members join the program.</p>
+
+<p>The Gazette recommends adventurers monitor their potion consumption and seek help if they find themselves unable to complete quests without magical enhancement. Recovery is possible, but it requires commitment and community support. Your health is worth more than any temporary boost from a bottle.</p>]]></content:encoded>
+    </item>
+    <item>
+      <title>High Lord Donwald Orders Golden Toilets for Council Chambers</title>
+      <link>https://oddmagician6.github.io/Beholders-Gazzete/a/donwald-golden-toilet-decree.html</link>
+      <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/a/donwald-golden-toilet-decree.html</guid>
+      <pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate>
+      <category>Politics</category>
+      <dc:creator>Gobwiz Quillnib</dc:creator>
+      <description>Luxury fixtures installed at taxpayer expense. Opposition demands audit. Donwald claims it&apos;s &apos;classy and necessary.&apos;</description>
+      <content:encoded><![CDATA[<p>The High Council Chambers underwent unexpected renovations this week as Lord Donwald ordered the installation of solid gold toilet fixtures in all executive restrooms. The expenditure, totaling approximately two hundred thousand gold pieces, was approved through an emergency spending decree that bypassed the usual budgetary review process. Opposition councilors are demanding an audit, calling the purchase an egregious waste of public funds during a time of economic uncertainty.</p>
+
+<p>Lord Donwald defended the expenditure during a brief interview, stating that the previous fixtures were 'disgusting and beneath the dignity of the High Council.' He argued that visiting dignitaries from other kingdoms expect a certain level of luxury when conducting business with Waterdeep. 'It's about respect,' he stated while polishing a golden faucet. 'When the Czar of Damara visits, he should not have to sit on porcelain like a common merchant. Gold is classy and necessary for international relations.'</p>
+
+<p>The Merchant Guild has expressed concern that the spending sets a dangerous precedent for unchecked executive power. They note that the same funds could have repaired three bridges, funded a school for young wizards, or provided healing potions to a thousand needy families. 'Our roads are crumbling while the High Lord polishes his throne,' stated one guild representative. The Party of the Blue Donkey has filed a formal complaint with the Inquisitors, requesting an investigation into potential violations of spending laws.</p>
+
+<p>Public reaction has been mixed. Supporters of the administration argue that projecting strength and wealth is important for maintaining the kingdom's reputation on the international stage. They point out that other kingdoms have similarly luxurious council chambers and that Waterdeep should not appear weak by comparison. However, common citizens struggling with rising costs view the purchase as tone-deaf and insulting to their hardships.</p>
+
+<p>The Gazette recommends all visitors to the Council Chambers bring polishing cloths if they wish to use the facilities. Fingerprints show prominently on gold surfaces. Until the audit is complete, the toilets remain in use, though guards have been posted to prevent souvenir hunting. Your tax gold at work, literally.</p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Archmage Joebid Found Napping in Dragon Stable</title>
+      <link>https://oddmagician6.github.io/Beholders-Gazzete/a/joebid-sleeping-scandal.html</link>
+      <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/a/joebid-sleeping-scandal.html</guid>
+      <pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate>
+      <category>Politics</category>
+      <dc:creator>Gobwiz Quillnib</dc:creator>
+      <description>Former High Lord discovered resting beside wyverns. Staff claims it was a &apos;strategic retreat&apos;; critics call it concerning.</description>
+      <content:encoded><![CDATA[<p>Archmage Joebid, the former High Lord of Waterdeep, was discovered yesterday afternoon taking a nap in the royal dragon stables, curled up beside a sleeping bronze wyvern. The incident was reported by a stable hand who entered the enclosure to feed the beasts and found the elderly wizard snoring softly on a pile of hay. His staff quickly arrived to escort him away, claiming the location was chosen for a 'strategic retreat to connect with the kingdom's aerial defense forces.'</p>
+
+<p>Opposition leaders are calling the incident evidence that Joebid is no longer fit for public service, even in his retired capacity. 'How can we trust someone who falls asleep in dangerous locations?' demanded Lord Donwald during a press conference at the Golden Tower. 'The dragon stables are no place for a former head of state. What if the wyvern had woken up hungry?' Supporters of Joebid counter that the incident is being blown out of proportion and that the archmage was merely inspecting the facilities before taking a brief rest.</p>
+
+<p>Medical wizards who have examined Joebid report that he is in good health for his age, though they acknowledge that his stamina has decreased in recent years. They recommend he limit public appearances to morning hours when he is most alert. The Archmage's office has announced a new schedule that includes mandatory nap times between engagements, arguing that rest is essential for effective governance. Critics mock the arrangement, suggesting that governing requires more wakefulness than Joebid can currently provide.</p>
+
+<p>The incident has sparked a broader debate about age limits for high office. The Party of the Blue Donkey is considering term limits and mandatory cognitive testing for candidates over a certain age. However, Joebid's allies argue that experience outweighs vitality and that younger leaders lack the wisdom gained from decades of service. Polls show the realm is divided, with older voters supporting Joebid and younger voters expressing concern about his capacity.</p>
+
+<p>Meanwhile, the dragon stable hands have reported a surge in tourism, with visitors coming to see the exact spot where the Archmage slept. Souvenir vendors are selling miniature hay bales and replica sleeping caps. The stable master is considering charging admission fees to fund dragon food purchases. The Gazette recommends all politicians schedule naps in appropriate locations, preferably their own beds. The realm deserves leaders who are awake enough to know where they are.</p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Haunted House Listed on AirBnBugbear Causes Guest Trauma</title>
+      <link>https://oddmagician6.github.io/Beholders-Gazzete/a/haunted-house-rental-guest-trauma.html</link>
+      <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/a/haunted-house-rental-guest-trauma.html</guid>
+      <pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate>
+      <category>Travel</category>
+      <dc:creator>Gobwiz Quillnib</dc:creator>
+      <description>Guests report ghosts, moving furniture, and screams at night. Host claims hauntings are &apos;part of the experience.&apos;</description>
+      <content:encoded><![CDATA[<p>A vacation rental listed on the popular booking platform AirBnBugbear has come under fire after multiple guests reported traumatic encounters with actual ghosts during their stay. The property, a Victorian-era mansion in the hills above Waterdeep, was marketed as a 'charming historic home with character.' However, guests discovered the character included poltergeists, spectral apparitions, and furniture that moves on its own at night.</p>
+
+<p>The first complaint was filed by a family who booked the house for a weekend getaway. They reported hearing footsteps in the attic, doors slamming shut on their own, and a ghostly woman weeping in the master bedroom. When they attempted to leave early, the front door locked itself and refused to open until dawn. The host, a necromancer named Mortimer, responded to the complaint by stating that hauntings are 'part of the authentic experience' and that guests should have read the fine print.</p>
+
+<p>Subsequent reviews tell similar stories. One couple reported their luggage being thrown down the stairs by invisible forces. Another guest claimed a ghost possessed their body and made them speak in ancient tongues for three hours. The platform has received dozens of refund requests, but Mortimer refuses to issue them, citing his cancellation policy which states that 'supernatural events are not grounds for reimbursement.' Legal experts are debating whether ghost activity constitutes a breach of contract or an act of god.</p>
+
+<p>AirBnBugbear has temporarily suspended the listing pending an investigation. They are considering new policies requiring hosts to disclose any known hauntings, curses, or planar anomalies in their property descriptions. Some hosts are already advertising hauntings as features, targeting thrill-seekers willing to pay premium rates for genuine paranormal activity. The trend has sparked a debate about safety standards in the vacation rental industry.</p>
+
+<p>The Gazette recommends travelers read reviews carefully and ask hosts directly about supernatural activity before booking. If you hear whispers in the walls, pack holy water and a cleric's contact information. Some experiences are best left to the dead. Your vacation should be relaxing, not a fight for survival against the undead.</p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Phantom Carriage-Style Dragon Ridership App Launches in Waterdeep</title>
+      <link>https://oddmagician6.github.io/Beholders-Gazzete/a/dragon-ridership-app.html</link>
+      <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/a/dragon-ridership-app.html</guid>
+      <pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate>
+      <category>Technology</category>
+      <dc:creator>Gobwiz Quillnib</dc:creator>
+      <description>Skip traffic by flying! Critics worry about safety and dragon welfare. First crash already reported.</description>
+      <content:encoded><![CDATA[<p>A new transportation app called DragonPool has launched in Waterdeep, allowing users to summon dragon riders for quick aerial transport. The service promises to bypass ground traffic and deliver passengers to their destinations in record time. However, safety advocates and dragon rights activists are raising concerns about the ethics of using intelligent creatures as ride-share vehicles and the inherent dangers of flying on beasts that breathe fire.</p>
+
+<p>The app works similarly to other ride-share services. Users request a dragon via their crystal ball device, and a nearby rider accepts the job. Prices vary based on demand, dragon size, and distance. Small brass dragons are the most affordable option, while ancient gold dragons command premium rates for their speed and comfort. The company claims all dragons are willing participants who receive fair compensation in gold and livestock. However, activists argue that dragons cannot truly consent to employment contracts and are being exploited for profit.</p>
+
+<p>The first crash was reported within hours of launch when a copper dragon sneezed mid-flight, dropping passengers into a fountain below. Fortunately, no serious injuries occurred, but the incident has raised questions about pilot training and safety protocols. The company states that all riders are licensed and dragons undergo regular veterinary inspections. However, there is no requirement for seat belts or emergency parachutes, which safety experts consider negligent.</p>
+
+<p>Traditional carriage drivers are protesting the service, claiming it undermines their livelihood and violates transportation regulations. They have blocked several streets to prevent dragons from landing, causing chaos in the business district. The City Council is debating whether to regulate the app or ban it entirely. Meanwhile, young adventurers are flocking to the service, posting selfies with dragons on ScrollTok and driving demand higher.</p>
+
+<p>The Gazette recommends passengers sign waivers before flying and avoid eating heavy meals before departure. Motion sickness potions are available for purchase in the app. Until regulations are established, flying dragons remains an adventurous but risky choice. Your life is in the claws of creatures that could eat you if they chose to. Proceed with caution.</p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Professional Quidditch League Doping Scandal Erupts</title>
+      <link>https://oddmagician6.github.io/Beholders-Gazzete/a/potion-sports-doping-scandal.html</link>
+      <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/a/potion-sports-doping-scandal.html</guid>
+      <pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate>
+      <category>Sports</category>
+      <dc:creator>Gobwiz Quillnib</dc:creator>
+      <description>Star players caught using enhancement potions. Championships revoked. League implements random testing.</description>
+      <content:encoded><![CDATA[<p>The Professional Quidditch League is reeling from a massive doping scandal after multiple star players were caught using illegal enhancement potions during the championship season. The investigation, led by the League's Integrity Commission, revealed that at least twelve teams had access to banned substances including Strength of the Giant, Haste Elixirs, and Eagle-Eye Drops. Several championship titles have been revoked, and players face suspensions ranging from one season to lifetime bans.</p>
+
+<p>The scandal came to light when a whistleblower from within the Alchemist Guild provided evidence of systematic potion distribution to team managers. The documents included receipts, delivery schedules, and even correspondence between team owners and underground potion brewers. 'This goes deeper than we imagined,' stated the Commission Head, a stern half-elf with a reputation for incorruptibility. 'Entire organizations were complicit in cheating the fans and undermining the spirit of competition.'</p>
+
+<p>Fans are outraged, with many demanding refunds for tickets purchased to watch tainted matches. Some have called for the dissolution of the entire league and a restart with stricter oversight. Others argue that potion use has always been part of the sport and that punishing current players for historical practices is unfair. The debate has divided the fanbase, with protests occurring outside stadium gates before every game.</p>
+
+<p>The League has announced new testing protocols, including random potion screenings before and after every match. Players found with banned substances in their systems will face immediate suspension and fines. Teams will also be penalized with loss of draft picks and salary cap reductions. The alchemists supplying the potions are being prosecuted under federal law, with penalties including transformation into toads and permanent exile from the magical community.</p>
+
+<p>Sponsors are pulling out of deals, and attendance has dropped significantly since the scandal broke. The League is considering a amnesty program for players who come forward voluntarily, but critics argue this rewards cheaters. The Gazette recommends fans enjoy the games for the sport itself, not the enhanced performances. True skill requires no potions, only practice and dedication.</p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Eyekea Furniture Store Recalls Mimic-Infested Chairs</title>
+      <link>https://oddmagician6.github.io/Beholders-Gazzete/a/mimic-furniture-recall.html</link>
+      <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/a/mimic-furniture-recall.html</guid>
+      <pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate>
+      <category>Consumer</category>
+      <dc:creator>Gobwiz Quillnib</dc:creator>
+      <description>Customers report being eaten by assembled bookshelves. Company offers full refunds and free healing potions.</description>
+      <content:encoded><![CDATA[<p>The popular flat-pack furniture retailer Eyekea has issued a massive recall after hundreds of customers reported that their assembled chairs and bookshelves were actually mimics in disguise. The incident began when a family in Waterdeep sat down for dinner only to have their chairs attempt to swallow them whole. Further investigation revealed that an entire shipment of furniture had been cursed by a rival company seeking to sabotage the retailer's grand opening.</p>
+
+<p>The company has responded swiftly, offering full refunds to all affected customers along with free healing potions for those who were bitten or partially digested. 'We deeply apologize for this unfortunate incident,' stated the CEO, a gnome with a thick accent and a clipboard. 'We have implemented new detection spells to ensure all future furniture is genuinely inanimate.' Customers are required to return the cursed items to any store location, though some report the furniture is resisting being moved and has grown legs to escape.</p>
+
+<p>Consumer protection wizards are investigating how the mimics entered the supply chain. Preliminary reports suggest the creatures were introduced at the manufacturing facility in the dwarven mountains, where security is typically tight. Some theorists believe a disgruntled employee cast a polymorph spell on the inventory as revenge for being denied a raise. The facility has been temporarily closed pending a full magical audit, leaving thousands of orders unfulfilled.</p>
+
+<p>Despite the scandal, sales remain strong due to the company's affordable prices and modern designs. Many customers argue that the risk of being eaten is worth the savings compared to traditional furniture makers. The company is capitalizing on this by marketing the chairs as 'interactive seating' with a disclaimer that bites are not covered under warranty. Insurance companies are now offering rider policies for mimic-related damages, though the premiums are steep.</p>
+
+<p>The Gazette recommends all furniture owners cast Detect Magic on their chairs before sitting down. If the wood feels warm to the touch or appears to be breathing, do not attempt to sit. Instead, contact the company's emergency hotline for immediate pickup. Until the supply chain is secured, customers may want to consider antique furniture from verified sources. Your backside will thank you.</p>]]></content:encoded>
+    </item>
+    <item>
+      <title>High Lord Donwald Clashes With Oil Lords Over Drilling Rights</title>
+      <link>https://oddmagician6.github.io/Beholders-Gazzete/a/donwald-oil-lords-dispute.html</link>
+      <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/a/donwald-oil-lords-dispute.html</guid>
+      <pubDate>Thu, 23 Apr 2026 00:00:00 +0000</pubDate>
+      <category>Politics</category>
+      <dc:creator>Gobwiz Quillnib</dc:creator>
+      <description>Energy magnates threaten to withhold fuel shipments. Donwald calls it a hoax; druids celebrate potential victory.</description>
+      <content:encoded><![CDATA[<p>Tensions between the High Council and the powerful Oil Lords of Amn have reached a boiling point after Lord Donwald announced plans to revoke drilling permits in the protected forests of the North. The energy magnates, who control the majority of the realm's combustible fuel supply, have responded by threatening to withhold shipments to key cities until the decision is reversed. The standoff has left gas stations running dry and carriage drivers scrambling for alternative power sources.</p>
+
+<p>Lord Donwald addressed the crisis from the balcony of his Golden Tower, dismissing the oil lords' threats as a 'hoax designed to manipulate the market.' He claimed that the forests contain no valuable resources and that the drilling permits were granted under corrupt circumstances during the previous administration. 'We will not allow greedy merchants to hold the kingdom hostage,' he declared to a crowd of supporters. 'Our energy independence will be achieved through superior deals and magical innovation.' Environmental druids cheered the statement, while merchants worried about the economic fallout.</p>
+
+<p>The Oil Lords Guild issued a statement calling the High Lord's actions 'economic warfare' and warned that fuel prices could triple if the dispute continues. They argue that the drilling operations employ thousands of workers and provide essential energy for heating, transportation, and industrial magic. Without their cooperation, the kingdom could face blackouts and transportation failures within weeks. Some councilors are urging Lord Donwald to negotiate, but he has refused to back down, tweeting via magical scroll that he will not be bullied by 'fake news merchants.'</p>
+
+<p>Alternative energy providers are seeing a surge in demand. Solar crystal manufacturers and wind magic specialists report record sales as citizens seek to reduce dependence on combustible fuels. However, these sources are not yet reliable enough to power the entire kingdom, particularly during winter months when sunlight is scarce. The Guild of Artificers is proposing a Manhattan-style project to develop clean energy solutions, but the research could take years and cost millions of gold pieces.</p>
+
+<p>Meanwhile, common citizens are feeling the pinch. Carriage fares have doubled, and heating costs are rising as the dispute enters its third day. Some families are stockpiling firewood and candles in preparation for potential blackouts. The opposition party is calling for an emergency session of the High Council to address the crisis, but Lord Donwald has the power to veto any legislation he disagrees with. The Gazette recommends citizens conserve energy and prepare for potential shortages. Whether this standoff ends in negotiation or catastrophe remains to be seen.</p>]]></content:encoded>
+    </item>
+    <item>
+      <title>Bards Protest New Noise Ordinance After Curfew</title>
+      <link>https://oddmagician6.github.io/Beholders-Gazzete/a/tavern-music-noise-ordinance.html</link>
+      <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/a/tavern-music-noise-ordinance.html</guid>
+      <pubDate>Wed, 22 Apr 2026 00:00:00 +0000</pubDate>
+      <category>Local</category>
+      <dc:creator>Gobwiz Quillnib</dc:creator>
+      <description>Musicians claim artistic freedom under attack. Homeowners say they cannot sleep through lute solos at 3 AM.</description>
+      <content:encoded><![CDATA[<p>The Bard's Guild of Waterdeep has organized a protest against new noise ordinances that require all tavern music to cease by midnight. The regulation, passed by the City Council last week, was intended to address complaints from residents who live above and around the entertainment districts. However, musicians argue that the curfew violates their artistic freedom and will devastate the nighttime economy that depends on evening performances and drinking patrons.</p>
+
+<p>The protest took the form of a 'silent concert' outside City Hall, where hundreds of bards gathered with their instruments but refused to play a single note. Instead, they held signs reading 'Silence is Golden, But Music is Life' and 'Our Lutes Have Rights.' The spectacle drew crowds of supporters who milled about in eerie quiet, occasionally bursting into applause for imaginary songs. The City Watch maintained order but did not intervene, as no actual noise violations occurred. Several councilors attended to hear the grievances, though they left early due to the lack of actual entertainment.</p>
+
+<p>Homeowners in the affected districts support the ordinance, claiming that the constant music makes it impossible to sleep, study, or conduct magical research that requires concentration. "I have a scrying exam tomorrow and the bard next door was playing ballads until dawn," complained one wizard. "How am I supposed to focus with drums shaking my tower walls?" They argue that musicians can still perform during reasonable hours and that midnight is a fair compromise between entertainment and rest.</p>
+
+<p>The Bard's Guild is threatening to take the issue to the High Courts, arguing that the ordinance violates constitutional protections for artistic expression. They are also considering a strike where no musician will perform in any tavern until the curfew is lifted. Tavern owners are caught in the middle, worried about losing customers if entertainment ends too early. Some are exploring magical solutions, such as soundproofing charms or illusion-based performances that do not produce actual noise. The Gazette recommends patrons enjoy their music while it lasts, as the curfew takes effect at the next full moon.</p>]]></content:encoded>
+    </item>
+    <item>
+      <title>First Gelatinous Cube Daycare Opens in Waterdeep</title>
+      <link>https://oddmagician6.github.io/Beholders-Gazzete/a/gelatinous-cube-daycare.html</link>
+      <guid isPermaLink="true">https://oddmagician6.github.io/Beholders-Gazzete/a/gelatinous-cube-daycare.html</guid>
+      <pubDate>Wed, 22 Apr 2026 00:00:00 +0000</pubDate>
+      <category>Lifestyle</category>
+      <dc:creator>Gobwiz Quillnib</dc:creator>
+      <description>Working parents rejoice as monster-friendly childcare becomes available. Safety concerns raised by traditionalists.</description>
+      <content:encoded><![CDATA[<p>A groundbreaking childcare facility opened its doors in the Adventurer's District yesterday, catering specifically to families with gelatinous cube children. The 'Slimy Sprouts Daycare' is the first of its kind in the realm, designed to accommodate the unique needs of oozes and other amorphous creatures. Working parents who have long struggled to find appropriate childcare are celebrating the opening, though some traditionalists have raised concerns about safety and zoning compliance.</p>
+
+<p>The facility features acid-resistant floors, specialized feeding stations for organic matter, and play areas filled with safe-to-digest toys. Staff members are trained in ooze behavior and equipped with protective gear to prevent accidental absorption during playtime. "Every child deserves a chance to learn and grow," stated the director, a former dungeon delver who adopted a gelatinous cube after finding it in Undermountain. "We provide a nurturing environment where they can develop their dissolving skills responsibly." Enrollment has exceeded expectations, with a waiting list forming within hours of opening.</p>
+
+<p>However, the City Zoning Board has received complaints from neighboring businesses about the potential risks of housing acidic creatures in a commercial district. One shop owner reported that a cube escaped during recess and dissolved part of his display window. The daycare claims this was an isolated incident and that additional containment measures are being implemented. Insurance companies are hesitant to provide coverage, citing the unpredictable nature of oozes and the lack of historical data on cube-related damages.</p>
+
+<p>Advocacy groups for monster rights are praising the daycare as a step toward equality and inclusion. They argue that all creatures, regardless of form, deserve access to education and socialization. Opponents counter that gelatinous cubes are inherently dangerous and should not be integrated into civilized society. The debate reflects broader tensions about the place of monstrous races in the kingdom. Until regulations are clarified, the daycare operates under a temporary permit. The Gazette recommends parents visit the facility and ask about safety protocols before enrolling their little blobs.</p>]]></content:encoded>
+    </item>
   </channel>
 </rss>
