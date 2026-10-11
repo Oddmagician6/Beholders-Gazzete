@@ -66,9 +66,9 @@ function renderFeatured(article) {
       <div>
         <span class="category-badge">${article.category || 'News'}</span>
       </div>
-      <h1 class="featured-headline">
+      <h2 class="featured-headline">
         <a href="a/${article.id}.html" style="color:inherit;">${article.title}</a>
-      </h1>
+      </h2>
       <div class="article-meta">
         <span>✍️ <strong>${article.author || 'The Gazette Staff'}</strong></span>
         <span>📅 ${formatDate(article.date)}</span>

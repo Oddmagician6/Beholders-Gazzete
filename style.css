@@ -210,6 +210,8 @@ p:last-child { margin-bottom: 0; }
 
 .hero-logo {
   font-family: var(--font-display);
+  text-transform: none;
+  letter-spacing: normal;
   font-size: clamp(2rem, 5vw, 3.8rem);
   color: var(--gold-bright);
   text-shadow: 0 0 40px rgba(212,168,67,0.5), 2px 2px 0 #000;
@@ -249,6 +251,8 @@ p:last-child { margin-bottom: 0; }
 
 .page-hero-logo {
   font-family: var(--font-display);
+  text-transform: none;
+  letter-spacing: normal;
   font-size: clamp(1.6rem, 4vw, 2.8rem);
   color: var(--gold-bright);
   text-shadow: 0 0 30px rgba(212,168,67,0.4);
