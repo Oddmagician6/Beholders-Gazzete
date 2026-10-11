@@ -1,8 +1,8 @@
 /* ============================================
    DM TOOLBOX: QUEST TAB (F32)
-   A side quest from quest-engine.js (rollQuest): the giver, the job, the place,
-   a twist, a deadline, a reward scaled to the party, and sometimes a foe that
-   opens in the Encounter tab. Nothing is stored: the URL holds the quest.
+   A side quest from quest-engine.js (rollQuest): a title, the giver, the job, the place
+   and what's there, a first lead, what's in the way, a twist, what's at stake, a deadline,
+   a reward scaled to the party, and sometimes a foe that opens in the Encounter tab. Nothing is stored: the URL holds the quest.
    URL: ?tab=quest&seed=&lvl=&n=&job=
    ============================================ */
 
@@ -65,7 +65,8 @@ function renderQuest() {
     document.getElementById('quest-card').innerHTML = `
         <header class="tv-head">
             <div class="tv-tier">${j.icon} ${esc(j.label)} · party of ${q.size}, level ${q.level}</div>
-            <h3 class="qs-task">${esc(q.task)}</h3>
+            <h3 class="tv-name">${esc(q.title)}</h3>
+            <p class="qs-task">${esc(q.task)}</p>
         </header>
         <div class="tv-grid">
             <section class="tv-block">
@@ -85,15 +86,21 @@ function renderQuest() {
             <section class="tv-block">
                 <h4>📍 The job</h4>
                 <p><b class="qs-b">Where:</b> ${esc(capWord(q.place))}</p>
+                <p><b class="qs-b">What's there:</b> ${esc(q.feature)}</p>
+                <p><b class="qs-b">Where to start:</b> ${esc(q.lead)}</p>
                 <p><b class="qs-b">Deadline:</b> ${esc(q.deadline)}</p>
                 <h4 class="tv-h-gap">💰 Reward</h4>
                 <p class="qs-reward">${esc(formatCoins(q.reward.gp))} <span class="tv-npc-sub">for the party</span></p>
-                <p>${esc(q.reward.terms)}.${q.reward.bonus ? ` Plus ${esc(q.reward.bonus)}.` : ''}</p>
+                <p>${esc(questRewardText(q.reward))}</p>
             </section>
         </div>
         <section class="tv-block tv-wide">
             <h4>🌀 The twist</h4>
             <p>${esc(q.twist)}</p>
+            ${q.obstacle ? `<h4 class="tv-h-gap">🚧 In the way</h4>
+            <p>${esc(q.obstacle)}</p>` : ''}
+            <h4 class="tv-h-gap">⏳ If it fails</h4>
+            <p>${esc(q.stakes)}</p>
             <h4 class="tv-h-gap">⚔️ The foe</h4>
             ${questFoeHTML(q)}
         </section>`;
