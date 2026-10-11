@@ -263,7 +263,8 @@ function lootHTML() {
         <span class="kit-label">Coins</span>
         <p>${coins || '<span class="muted">Not a copper.</span>'}</p>
         ${valuables ? `<span class="kit-label">Gems &amp; art</span><ul class="loot-list">${valuables}</ul>` : ''}
-        ${magic ? `<span class="kit-label">Magic items</span><ul class="loot-list">${magic}</ul>` : ''}`;
+        ${magic ? `<span class="kit-label">Magic items</span><ul class="loot-list">${magic}</ul>` : ''}
+        ${coins || valuables ? `<a class="kit-split" href="${splitLink(l.coins, [...l.gems, ...l.art].reduce((t, i) => t + i.value, 0))}">🪙 Split among the party</a>` : ''}`;
 }
 
 function shopHTML() {

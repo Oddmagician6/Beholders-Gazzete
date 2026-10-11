@@ -100,6 +100,7 @@
     .loot-list li:last-child { border-bottom: none; }
     .loot-list .val { font-family: var(--font-ui); font-size: 0.78rem; color: var(--text-dim); white-space: nowrap; }
     .loot-list li.magic-li { display: block; }
+    .kit-split { display: inline-block; margin-top: 10px; font-family: var(--font-ui); font-size: 0.82rem; color: var(--gold-bright); }
     .magic-li summary { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; cursor: pointer; list-style: none; }
     .magic-li summary::-webkit-details-marker { display: none; }
     .magic-li summary > span:first-child::before { content: "▸ "; color: var(--gold-bright); }
@@ -136,7 +137,7 @@
     @media print {
       @page { margin: 12mm; }
       body { background: #fff !important; }
-      body > *:not(.kit-body), .kit-toolbar, .kit-status, .kit-options, .kit-reroll, .kit-lock, .kit-more, .kit-note { display: none !important; }
+      body > *:not(.kit-body), .kit-toolbar, .kit-status, .kit-options, .kit-reroll, .kit-lock, .kit-more, .kit-note, .kit-split { display: none !important; }
       .kit-body { padding: 0 !important; max-width: none !important; }
       .kit-print-title { display: block !important; }
       .kit-grid { display: block !important; }

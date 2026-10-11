@@ -241,6 +241,13 @@ function toggleItem(btn) {
 // ── ACTIONS ────────────────────────────────────────────────
 function regenerateLoot() { generateLoot(); }
 
+// Coins plus gems and art (what the party sells) go to the DM Toolbox splitter (F24).
+function splitLoot() {
+  if (!currentLoot) return;
+  const { coins, gems, art } = currentLoot;
+  location.href = splitLink(coins, [...gems, ...art].reduce((t, i) => t + i.value, 0));
+}
+
 function copyLoot() {
   if (!currentLoot) return;
   const { coins, gems, art, magic, totalValue } = currentLoot;

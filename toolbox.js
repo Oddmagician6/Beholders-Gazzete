@@ -5,10 +5,12 @@
    Travel (F22): weather, a road event, and the day's miles, rolled by
    travel-engine.js (rollJourney). Nothing is stored; the URL holds the trip.
    Dice and Initiative (F23): toolbox-table.js (no URL state beyond ?tab=).
+   Split (F24): the party coin splitter; the math is in coins.js (splitCoins),
+   and the URL holds the coins, the party, and the seed that picks who gets the leftover copper.
    Seeds and the shareable URL: rng.js.
    ============================================ */
 
-const TOOLBOX_TABS = ['names', 'travel', 'dice', 'init'];
+const TOOLBOX_TABS = ['names', 'travel', 'dice', 'init', 'split'];
 const KEPT_KEY = 'gazette-kept-names';
 const KEPT_MAX = 100;
 
@@ -298,10 +300,93 @@ function renderTravel(opts) {
     next.textContent = d.arrived ? '🏁 Arrived' : '▶ Next Day';
 }
 
+// ── Split (F24) ───────────────────────────────────────────
+// URL param → field id.
+const SPLIT_FIELDS = { cp: 'sp-cp', sp: 'sp-sp', ep: 'sp-ep', gp: 'sp-gp', pp: 'sp-pp', other: 'sp-other', n: 'sp-n', names: 'sp-names' };
+const SPLIT_MAX = 20;
+const SPLIT_COIN_MAX = 99999999;
+
+let split = { seed: null, result: null };
+
+function splitNames() {
+    return document.getElementById('sp-names').value.split(',')
+        .map(n => n.trim().slice(0, 40)).filter(Boolean).slice(0, SPLIT_MAX);
+}
+
+// Names, when given, set the party size.
+function splitOpts() {
+    const num = id => Math.min(SPLIT_COIN_MAX, Math.max(0, Number(document.getElementById(id).value) || 0));
+    const coins = {};
+    Object.keys(COIN_CP).forEach(k => { coins[k] = Math.floor(num('sp-' + k)); });
+    const names = splitNames();
+    const sizeEl = document.getElementById('sp-n');
+    const n = names.length || Math.min(SPLIT_MAX, Math.max(1, Math.floor(Number(sizeEl.value)) || 1));
+    return { coins, other: Math.round(num('sp-other') * 100) / 100, names, n };
+}
+
+function splitParams() {
+    const params = {};
+    Object.entries(SPLIT_FIELDS).forEach(([key, id]) => {
+        const el = document.getElementById(id);
+        params[key] = el.value.trim() !== '' && fieldValue(el) !== defaultValue(el) ? el.value.trim() : null;
+    });
+    if (splitNames().length) params.n = null;
+    params.seed = split.result && split.result.left ? split.seed : null;
+    return urlFor('split', params);
+}
+
+// push: true = new history entry, false = replace, null = leave the URL alone.
+function showSplit(push) {
+    const o = splitOpts();
+    const sizeEl = document.getElementById('sp-n');
+    sizeEl.disabled = o.names.length > 0;
+    if (o.names.length) sizeEl.value = o.names.length;
+    const total = coinsToCp(o.coins, o.other);
+    const r = splitCoins(total, o.n);
+    const lucky = r.left ? withSeed(split.seed, () => Math.floor(rand() * o.n)) : -1;
+    const who = i => o.names[i] || `Party member ${i + 1}`;
+    split.result = { ...r, total, lucky, who, names: o.names };
+    renderSplit();
+    if (push !== null) setUrlParams(splitParams(), push);
+}
+
+function renderSplit() {
+    const { total, ways, each, left, lucky, who, names } = split.result;
+    const box = document.getElementById('split-result');
+    document.getElementById('sp-reroll').disabled = !left;
+    if (!total) {
+        box.innerHTML = '<p class="split-empty">Nothing to split yet. Count the coins above.</p>';
+        return;
+    }
+    const cp = n => formatCoins(n / 100, true);
+    box.innerHTML = `
+        <div class="split-total">${cp(total)} in all, split ${ways} way${ways === 1 ? '' : 's'}</div>
+        <div class="split-each">${cp(each)}</div>
+        <div class="split-each-label">each</div>
+        ${left ? `<p class="split-left">🪙 ${left} cp left over: ${esc(who(lucky))} gets ${left === 1 ? 'it' : 'them'}.</p>` : ''}
+        ${names.length ? `<ul class="split-list">${names.map((n, i) => `
+            <li${i === lucky ? ' class="lucky"' : ''}><b>${esc(n)}</b><span>${cp(each + (i === lucky ? left : 0))}</span></li>`).join('')}</ul>` : ''}`;
+}
+
+function splitText() {
+    const { total, ways, each, left, lucky, who, names } = split.result;
+    const cp = n => formatCoins(n / 100, true);
+    const lines = [`Party split: ${cp(total)}, ${ways} way${ways === 1 ? '' : 's'}`, `Each: ${cp(each)}`];
+    if (left) lines.push(`Leftover: ${left} cp to ${who(lucky)}`);
+    names.forEach((n, i) => lines.push(`  ${n}: ${cp(each + (i === lucky ? left : 0))}`));
+    return lines.join('\n');
+}
+
+function clearSplit() {
+    Object.values(SPLIT_FIELDS).forEach(id => { const el = document.getElementById(id); el.value = defaultValue(el); });
+    showSplit(true);
+}
+
 // ── URL ───────────────────────────────────────────────────
 // Names: ?for=<type>&seed=. Travel: ?tab=travel&climate=&season=&terrain=&pace=&hours=&ride=&miles=&day=&seed=
 function tabParams(tab) {
     if (tab === 'dice' || tab === 'init') return urlFor(tab, {});
+    if (tab === 'split') return splitParams();
     return tab === 'travel' ? travelParams() : nameParams();
 }
 
@@ -312,6 +397,15 @@ function applyUrl() {
     const p = urlParams();
     const seed = parseSeed(p.get('seed'));
     if (tab === 'dice' || tab === 'init') return true;   // nothing to roll; their state is in localStorage
+    if (tab === 'split') {
+        Object.entries(SPLIT_FIELDS).forEach(([key, id]) => {
+            const el = document.getElementById(id);
+            if (!setFieldValue(el, p.get(key))) el.value = defaultValue(el);
+        });
+        split.seed = seed || newSeed();
+        showSplit(seed ? null : false);   // a link without a seed gets one, so it can be shared
+        return true;
+    }
     if (tab === 'travel') {
         Object.entries(TRAVEL_FIELDS).forEach(([key, id]) => {
             const el = document.getElementById(id);
@@ -348,6 +442,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showTab(tab);
         if (tab === 'travel' && !travel.seed) { travel = { seed: newSeed(), day: 1, days: [] }; showJourney(null); }
         if (tab === 'names' && !names.seed) rollNamesFor(newSeed(), null);
+        if (tab === 'split' && !split.seed) { split.seed = newSeed(); showSplit(null); }
         setUrlParams(tabParams(tab), true);
     }));
     document.getElementById('roll-names').addEventListener('click', () => rollNamesFor());
@@ -376,6 +471,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('tr-link').addEventListener('click', () =>
         copyPageLink(ok => flash('travel-status', ok ? '🔗 Link copied. It replays this journey up to today.' : '⚠️ Copy blocked by the browser.')));
+
+    Object.values(SPLIT_FIELDS).forEach(id => document.getElementById(id).addEventListener('input', () => showSplit(false)));
+    document.getElementById('sp-reroll').addEventListener('click', () => { split.seed = newSeed(); showSplit(true); });
+    document.getElementById('sp-clear').addEventListener('click', clearSplit);
+    document.getElementById('sp-copy').addEventListener('click', () => {
+        if (split.result && split.result.total) copyText(splitText(), 'split-status', 'the split');
+        else flash('split-status', 'Nothing to split yet.');
+    });
+    document.getElementById('sp-link').addEventListener('click', () =>
+        copyPageLink(ok => flash('split-status', ok ? '🔗 Link copied. It opens this same split.' : '⚠️ Copy blocked by the browser.')));
 
     if (!applyUrl()) rollFresh();
     // Back/Forward step through earlier rolls and days.
