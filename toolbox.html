@@ -326,6 +326,14 @@
     .dt-carouse li.dt-good { border-left-color: #5a9e5a; }
     .dt-carouse li.dt-bad { border-left-color: var(--crimson-bright); }
     .dt-carouse li.dt-odd { border-left-color: #7a6ab0; }
+    .dt-carouse li.dt-quiet { border-left-color: rgba(201,160,64,0.25); color: var(--text-mid); }
+    .dt-roll { font-family: var(--font-ui); font-size: 0.8rem; color: var(--gold-bright); white-space: nowrap; margin-right: 4px; }
+    .dt-scene { margin: 10px 0 0; }
+    .dt-scene div { padding: 3px 0; }
+    .dt-scene dt { display: inline; font-family: var(--font-ui); font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; margin-right: 6px; }
+    .dt-scene dd { display: inline; margin: 0; font-family: 'IM Fell English', serif; font-size: 1rem; color: var(--text-bright); }
+    .dt-check { display: flex; align-items: center; gap: 6px; align-self: flex-end; padding-bottom: 9px; font-family: var(--font-ui); font-size: 0.8rem; color: var(--text-mid); cursor: pointer; }
+    .dt-length .dt-check input { display: inline-block; width: auto; margin: 0; padding: 0; }
     .dt-more { font-family: var(--font-ui); font-size: 0.78rem; color: var(--text-dim); margin: 4px 0 0; }
     .dt-add-bar { text-align: center; margin: 4px 0 18px; }
     #dt-total { margin-top: 0; }
@@ -708,23 +716,24 @@
     <section class="tool-panel" id="tab-down" role="tabpanel" hidden>
       <div class="tool-card">
         <h2 class="tool-h">🏡 Downtime Tracker</h2>
-        <p class="tool-intro">How long is the break between adventures? Pick each character's lifestyle and what they do with the time, and see what it costs in gold, silver, and copper.</p>
+        <p class="tool-intro">How long is the break between adventures? Pick each character's lifestyle and what they do with the time, and see what it costs in gold, silver, and copper, plus where they stay and what happens each week.</p>
         <div class="dt-length">
           <label>Weeks <input type="number" id="dt-weeks" min="0" max="52" step="1" value="1" inputmode="numeric"></label>
           <label>Extra days <input type="number" id="dt-days" min="0" max="364" step="1" value="0" inputmode="numeric"></label>
+          <label class="dt-check"><input type="checkbox" id="dt-events" checked> Week by week</label>
         </div>
         <div id="dt-chars"></div>
         <div class="dt-add-bar"><button type="button" class="btn" id="dt-add">➕ Add a Character</button></div>
         <div class="split-result" id="dt-total" aria-live="polite"></div>
         <div class="tool-toolbar">
-          <button type="button" class="btn btn-gold" id="dt-reroll">🍻 Reroll Carousing</button>
+          <button type="button" class="btn btn-gold" id="dt-reroll">🎲 Reroll the Weeks</button>
           <button type="button" class="btn" id="dt-copy">📋 Copy</button>
           <button type="button" class="btn" id="dt-link">🔗 Copy Link</button>
           <button type="button" class="btn" id="dt-clear">🧹 Clear</button>
         </div>
         <p class="tool-status" id="downtime-status" role="status" aria-live="polite"></p>
       </div>
-      <p class="tool-note">Lifestyle costs and the crafting, working, researching, and recuperating rules follow the System Reference Document 5.1 (CC-BY 4.0). Lines tagged <em>ruling</em> fill gaps the SRD leaves; carousing is a Gazette house rule with our own outcome tables.<br>The party stays in this browser, and the address bar holds it too, so 🔗 Copy Link shares it (opening a shared link replaces the party saved here). Up to 8 characters and a year of downtime.</p>
+      <p class="tool-note">Lifestyle costs and the crafting, working, researching, and recuperating rules follow the System Reference Document 5.1 (CC-BY 4.0). Lines tagged <em>ruling</em> fill gaps the SRD leaves; carousing, training, and gambling are Gazette house rules with our own tables, and so are the weekly events (turn them off with <em>Week by week</em>).<br>The party stays in this browser, and the address bar holds it too, so 🔗 Copy Link shares it (opening a shared link replaces the party saved here). Up to 8 characters and a year of downtime.</p>
     </section>
   </main>
 
