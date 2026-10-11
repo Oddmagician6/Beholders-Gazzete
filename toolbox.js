@@ -10,10 +10,11 @@
    Encounter (F25): toolbox-encounter.js; the URL holds the party and the monsters.
    Tavern (F26): toolbox-tavern.js; the URL holds the seed, the quality, and the rumor.
    Downtime (F28): toolbox-downtime.js; the URL holds the party, the length, and the carousing seed.
+   Quest (F32): toolbox-quest.js; the URL holds the seed, the party level and size, and the job.
    Seeds and the shareable URL: rng.js.
    ============================================ */
 
-const TOOLBOX_TABS = ['names', 'tavern', 'travel', 'dice', 'init', 'split', 'enc', 'down'];
+const TOOLBOX_TABS = ['names', 'tavern', 'quest', 'travel', 'dice', 'init', 'split', 'enc', 'down'];
 const KEPT_KEY = 'gazette-kept-names';
 const KEPT_MAX = 100;
 
@@ -393,6 +394,7 @@ function tabParams(tab) {
     if (tab === 'enc') return encParams();
     if (tab === 'tavern') return tavParams();
     if (tab === 'down') return downParams();
+    if (tab === 'quest') return questParams();
     return tab === 'travel' ? travelParams() : nameParams();
 }
 
@@ -406,6 +408,7 @@ function applyUrl() {
     if (tab === 'enc') { applyEncUrl(p); return true; }
     if (tab === 'tavern') return applyTavUrl(p);
     if (tab === 'down') return applyDownUrl(p);
+    if (tab === 'quest') return applyQuestUrl(p);
     if (tab === 'split') {
         Object.entries(SPLIT_FIELDS).forEach(([key, id]) => {
             const el = document.getElementById(id);
@@ -435,6 +438,7 @@ function applyUrl() {
 function rollFresh() {
     if (currentTab() === 'travel') newJourney(false);
     else if (currentTab() === 'tavern') rollTavernFor(newSeed(), false);
+    else if (currentTab() === 'quest') rollQuestFor(newSeed(), false);
     else rollNamesFor(newSeed(), false);
 }
 
@@ -445,6 +449,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEncounter();
     setupTavern();
     setupDowntime();
+    setupQuest();
     loadKept();
     renderKept();
 
@@ -456,6 +461,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (tab === 'travel' && !travel.seed) { travel = { seed: newSeed(), day: 1, days: [] }; showJourney(null); }
         if (tab === 'names' && !names.seed) rollNamesFor(newSeed(), null);
         if (tab === 'tavern' && !tavern.seed) rollTavernFor(newSeed(), null);
+        if (tab === 'quest' && !quest.seed) rollQuestFor(newSeed(), null);
         if (tab === 'split' && !split.seed) { split.seed = newSeed(); showSplit(null); }
         if (tab === 'down' && !dt.seed) initDowntime(null);
         setUrlParams(tabParams(tab), true);
