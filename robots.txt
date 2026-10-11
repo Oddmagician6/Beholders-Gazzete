@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://oddmagician6.github.io/Beholders-Gazzete/sitemap.xml
+Sitemap: https://gazette.ashforgestudio.com/sitemap.xml

@@ -7,7 +7,7 @@
 // (then running the export) installs a new cache; old caches are deleted on activate.
 // Cache keys drop the query string (?seed=, ?t=, ?id= ...): pages rebuild their state from the URL.
 
-const VERSION = 'b7917f88c904';
+const VERSION = 'e0cbb709951e';
 const STATIC = 'gazette-static-' + VERSION;
 const PAGES = 'gazette-pages';
 const FONTS = 'gazette-fonts';
@@ -125,7 +125,7 @@ function offlinePage() {
   const tools = [
     ['session-kit.html', 'DM Session Kit'], ['npc-generator.html', 'Town Square (NPCs)'],
     ['loot-generator.html', 'Vault of Wonders (loot)'], ['shop.html', "Merchant's Row (shops)"],
-    ['rumors.html', 'The Tavern (rumors)'], ['spellbook.html', 'Spellbook'], ['economy.html', 'Market Exchange']
+    ['rumors.html', 'The Tavern (rumors)'], ['toolbox.html', 'DM Toolbox (names)'], ['spellbook.html', 'Spellbook'], ['economy.html', 'Market Exchange']
   ];
   const links = tools.map(([href, name]) => `<li><a href="${BASE}${href}">${name}</a></li>`).join('');
   const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
