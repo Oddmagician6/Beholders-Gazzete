@@ -97,7 +97,7 @@ function render() {
     const rows = shopPrices(shop).map(p => `<tr>
             <td class="item">${esc(p.name)}</td>
             <td class="num">${p.qty > 1 ? '×' + p.qty : '1'}</td>
-            <td class="num price">${formatCoins(p.price)}</td>
+            <td class="num price">${wasPrice(p) ? `<s class="was">${formatCoins(p.listPrice)}</s>` : ''}${formatCoins(p.price)}</td>
             <td class="num chg">${changeHTML(p.change)}</td>
         </tr>`).join('');
     const mins = Math.max(1, Math.round(msToNextPriceBell() / 60000));

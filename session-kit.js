@@ -248,7 +248,7 @@ function lootHTML() {
     const coins = Object.entries(l.coins).filter(([, v]) => v > 0)
         .map(([t, v]) => `${lootData.coins[t].icon} ${v.toLocaleString()} ${t}`).join(' · ');
     const valuables = [...l.gems, ...l.art]
-        .map(i => `<li><span>${esc(i.name)}</span><span class="val">${i.value.toLocaleString()} gp</span></li>`).join('');
+        .map(i => `<li><span>${esc(i.name)}</span><span class="val">${formatCoins(i.value)}</span></li>`).join('');
     // SRD items (magic-items-data.js) open to their text; the rest are name-only.
     const magic = l.magic.map(m => {
         const row = `<span>${esc(m.name)}${m.attune ? ' <span class="val">(attunement)</span>' : ''}</span><span class="rarity rarity-${m.rarity}">${m.rarity.replace('-', ' ')}</span>`;
@@ -264,7 +264,29 @@ function lootHTML() {
         <p>${coins || '<span class="muted">Not a copper.</span>'}</p>
         ${valuables ? `<span class="kit-label">Gems &amp; art</span><ul class="loot-list">${valuables}</ul>` : ''}
         ${magic ? `<span class="kit-label">Magic items</span><ul class="loot-list">${magic}</ul>` : ''}
-        ${coins || valuables ? `<a class="kit-split" href="${splitLink(l.coins, [...l.gems, ...l.art].reduce((t, i) => t + i.value, 0))}">🪙 Split among the party</a>` : ''}`;
+        ${coins || valuables ? `<a class="kit-split" href="${splitLink(l.coins, lootValuables(l), kitParty())}">🪙 Split among the party</a>` : ''}`;
+}
+
+// Gems and art are split with the coins; magic items aren't (F24, F29).
+function lootValuables(l) {
+    return [...l.gems, ...l.art].reduce((t, i) => t + i.value, 0);
+}
+
+// Party size for the loot split, kept with the saved kit (not in the URL; it changes no roll).
+function kitParty() {
+    return partySize(kit.party);
+}
+
+function setupParty() {
+    const el = document.getElementById('loot-party');
+    for (let n = 1; n <= SPLIT_MAX_WAYS; n++) el.add(new Option(`Party of ${n}`, n));
+    el.value = kitParty();
+    el.addEventListener('change', () => {
+        kit.party = partySize(el.value);
+        saveKit();
+        const link = document.querySelector('#loot-out .kit-split');
+        if (link && kit.loot) link.href = splitLink(kit.loot.coins, lootValuables(kit.loot), kit.party);
+    });
 }
 
 function shopHTML() {
@@ -322,8 +344,10 @@ function kitText() {
         lines.push(`LOOT (${l.kind === 'hoard' ? 'hoard' : 'pocket'}, CR ${l.cr}): ${lootValue(l)}`);
         const coins = Object.entries(l.coins).filter(([, v]) => v > 0).map(([t, v]) => `${v.toLocaleString()} ${t}`).join(', ');
         if (coins) lines.push(`Coins: ${coins}`);
-        [...l.gems, ...l.art].forEach(i => lines.push(`- ${i.name} (${i.value} gp)`));
+        [...l.gems, ...l.art].forEach(i => lines.push(`- ${i.name} (${formatCoins(i.value)})`));
         l.magic.forEach(m => lines.push(`- ${m.name} [${m.rarity}]${m.attune ? ' (attunement)' : ''}`));
+        const split = splitLine(l.coins, lootValuables(l), kitParty());
+        if (split) lines.push(`${split}${l.magic.length ? ' (magic items not included)' : ''}`);
         lines.push('');
     }
     if (kit.shop) lines.push('SHOP', ...shopTextLines(kit.shop, KIT_SHOP_ROWS));
@@ -340,6 +364,7 @@ function copyKit() {
 document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('year').textContent = new Date().getFullYear();
     loadKit();
+    setupParty();
 
     document.getElementById('roll-all').addEventListener('click', rollAll);
     document.getElementById('copy-kit').addEventListener('click', copyKit);

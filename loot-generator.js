@@ -162,7 +162,7 @@ function displayLoot() {
           <span class="item-name">${g.name}</span>
           <span class="item-rarity rarity-common">Gem</span>
         </div>
-        <div class="item-value">💰 ${g.value.toLocaleString()} gp</div>
+        <div class="item-value">💰 ${formatCoins(g.value)}</div>
       </div>`
     ).join('');
   }
@@ -176,7 +176,7 @@ function displayLoot() {
           <span class="item-name">${a.name}</span>
           <span class="item-rarity rarity-uncommon">Art</span>
         </div>
-        <div class="item-value">💰 ${a.value.toLocaleString()} gp</div>
+        <div class="item-value">💰 ${formatCoins(a.value)}</div>
       </div>`
     ).join('');
   }
@@ -245,7 +245,11 @@ function regenerateLoot() { generateLoot(); }
 function splitLoot() {
   if (!currentLoot) return;
   const { coins, gems, art } = currentLoot;
-  location.href = splitLink(coins, [...gems, ...art].reduce((t, i) => t + i.value, 0));
+  location.href = splitLink(coins, [...gems, ...art].reduce((t, i) => t + i.value, 0), lootPartySize());
+}
+
+function lootPartySize() {
+  return partySize(document.getElementById('party-size').value);
 }
 
 function copyLoot() {
@@ -253,17 +257,21 @@ function copyLoot() {
   const { coins, gems, art, magic, totalValue } = currentLoot;
   let txt = '🏆 TREASURE LOOT 🏆\n\n';
   const priceless = magic.some(m => m.rarity === 'artifact') ? ' + priceless artifact' : '';
-  txt += `Total Value: ~${formatCoins(totalValue)}${priceless}\n\n`;
+  txt += `Total Value: ~${formatCoins(totalValue)}${priceless}\n`;
+  // The same coins, gems, and art the Split button sends (F29).
+  const split = splitLine(coins, [...gems, ...art].reduce((t, i) => t + i.value, 0), lootPartySize());
+  if (split) txt += `${split}${magic.length ? ' (magic items not included)' : ''}\n`;
+  txt += '\n';
 
   const coinLines = Object.entries(coins).filter(([,v]) => v > 0)
     .map(([t,v]) => `  ${v.toLocaleString()} ${lootData.coins[t].name}`).join('\n');
   if (coinLines) txt += `🪙 CURRENCY:\n${coinLines}\n\n`;
 
   if (gems.length) {
-    txt += '💎 GEMS:\n' + gems.map(g => `  • ${g.name} (${g.value} gp)`).join('\n') + '\n\n';
+    txt += '💎 GEMS:\n' + gems.map(g => `  • ${g.name} (${formatCoins(g.value)})`).join('\n') + '\n\n';
   }
   if (art.length) {
-    txt += '🎨 ART OBJECTS:\n' + art.map(a => `  • ${a.name} (${a.value} gp)`).join('\n') + '\n\n';
+    txt += '🎨 ART OBJECTS:\n' + art.map(a => `  • ${a.name} (${formatCoins(a.value)})`).join('\n') + '\n\n';
   }
   if (magic.length) {
     txt += '✨ MAGIC ITEMS:\n' + magic.map(m =>

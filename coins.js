@@ -29,10 +29,25 @@ function splitCoins(totalCp, ways) {
   return { ways: n, each, left: totalCp - each * n };
 }
 
+// Party size for loot splits (loot page and Session Kit); the Toolbox splitter defaults to 4 too.
+const SPLIT_DEFAULT_WAYS = 4, SPLIT_MAX_WAYS = 20;
+function partySize(value) {
+  return Math.min(SPLIT_MAX_WAYS, Math.max(1, Math.floor(Number(value)) || SPLIT_DEFAULT_WAYS));
+}
+
 // A DM Toolbox link that opens the splitter prefilled (loot page and Session Kit).
-function splitLink(coins, extraGp) {
+function splitLink(coins, extraGp, ways) {
   const q = new URLSearchParams({ tab: 'split' });
   Object.keys(COIN_CP).forEach(k => { if (coins[k] > 0) q.set(k, Math.floor(coins[k])); });
   if (extraGp > 0) q.set('other', Math.round(extraGp * 100) / 100);
+  if (ways && partySize(ways) !== SPLIT_DEFAULT_WAYS) q.set('n', partySize(ways));
   return 'toolbox.html?' + q.toString();
+}
+
+// "Split 4 ways: 52 gp 3 sp each, 2 cp left over" for copied loot text (F29); '' when there's nothing.
+function splitLine(coins, extraGp, ways) {
+  const { ways: n, each, left } = splitCoins(coinsToCp(coins, extraGp), partySize(ways));
+  if (!each && !left) return '';
+  const share = each ? formatCoins(each / 100, true) + ' each' : 'not a copper each';
+  return `Split ${n} way${n === 1 ? '' : 's'}: ${share}${left ? `, ${left} cp left over` : ''}`;
 }

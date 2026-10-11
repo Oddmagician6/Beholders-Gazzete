@@ -191,15 +191,18 @@ function rollShop(opts = {}) {
 }
 
 // Live prices for a shop's stock at time t (default now), with wealth markup and any haggle result.
+// listPrice is the price before the haggle (the same as price when there's none).
 function shopPrices(shop, t = Date.now()) {
     const byId = Object.fromEntries(MARKET_ITEMS.map(i => [i.id, i]));
-    const mod = SHOP_WEALTH[shop.wealth].markup * (shop.haggle ? shop.haggle.priceMod : 1);
+    const markup = SHOP_WEALTH[shop.wealth].markup;
+    const mod = markup * (shop.haggle ? shop.haggle.priceMod : 1);
+    const coins = gp => Math.max(0.01, Math.round(gp * 100) / 100);
     return shop.stock.filter(s => byId[s.id]).map(s => {
         const item = byId[s.id];
         const now = marketPrice(item, t), dayAgo = marketPrice(item, t - MARKET_DAY_MS);
         return {
             ...s, name: item.name, category: item.category,
-            price: Math.max(0.01, Math.round(now * mod * 100) / 100),
+            price: coins(now * mod), listPrice: coins(now * markup),
             change: Math.round((now - dayAgo) / dayAgo * 1000) / 10
         };
     });
@@ -230,6 +233,11 @@ function haggleDiceText(h) {
     return `d20 ${h.d20} ${h.bonus < 0 ? '−' : '+'} ${Math.abs(h.bonus)} = ${h.total} vs DC ${h.dc}`;
 }
 
+// A haggle moved this price enough to show in coins (F30).
+function wasPrice(p) {
+    return formatCoins(p.listPrice) !== formatCoins(p.price);
+}
+
 // Plain-text shop for Copy Shop / Copy Kit. limit caps the stock lines (the kit shows fewer).
 function shopTextLines(shop, limit = Infinity) {
     const def = SHOP_TYPES[shop.type], k = shop.keeper;
@@ -243,7 +251,7 @@ function shopTextLines(shop, limit = Infinity) {
     ];
     if (shop.haggle) lines.push(`Haggled: ${shop.haggle.outcome} (${haggleDiceText(shop.haggle)})`);
     lines.push('Stock:');
-    prices.slice(0, limit).forEach(p => lines.push(`- ${p.name}${p.qty > 1 ? ` ×${p.qty}` : ''}: ${formatCoins(p.price)}`));
+    prices.slice(0, limit).forEach(p => lines.push(`- ${p.name}${p.qty > 1 ? ` ×${p.qty}` : ''}: ${formatCoins(p.price)}${wasPrice(p) ? ` (was ${formatCoins(p.listPrice)})` : ''}`));
     if (prices.length > limit) lines.push(`- …and ${prices.length - limit} more`);
     return lines;
 }

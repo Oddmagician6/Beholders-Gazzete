@@ -188,6 +188,16 @@
       text-transform: uppercase; cursor: pointer; transition: all var(--transition);
     }
     .action-btn:hover { background: var(--gold-glow); color: var(--gold-bright); border-color: var(--gold-mid); }
+    /* Party size for the split line in copied text and the Split button (F29). */
+    .party-size {
+      display: inline-flex; align-items: center; gap: 8px; padding: 4px 6px 4px 14px;
+      border: var(--border-gold); border-radius: var(--radius-sm); color: var(--text-mid);
+      font-family: var(--font-head); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .party-size input {
+      width: 3.6em; padding: 4px 6px; background: var(--bg-raised); border: var(--border-gold);
+      border-radius: var(--radius-sm); color: var(--text-bright); font-family: var(--font-ui); font-size: 0.85rem;
+    }
 
     /* ── VAULT ─────────────────────────────────────────────── */
     .saved-loot { background: var(--bg-card); border: var(--border-gold); border-radius: var(--radius-md); padding: 28px; margin-top: 28px; }
@@ -210,6 +220,7 @@
       .generate-btn { padding: 14px 32px; font-size: 0.95rem; width: 100%; }
       .loot-actions { flex-direction: column; }
       .action-btn { width: 100%; text-align: center; }
+      .party-size { justify-content: center; }
     }
   </style>
 </head>
@@ -437,6 +448,7 @@
         </div>
 
         <div class="loot-actions">
+          <label class="party-size" title="Used by Copy to Clipboard and Split among the Party">👥 Party size <input type="number" id="party-size" min="1" max="20" step="1" value="4" inputmode="numeric"></label>
           <button class="action-btn" id="copy-btn"  onclick="copyLoot()">📋 Copy to Clipboard</button>
           <button class="action-btn" id="link-btn"  onclick="copyLink()">🔗 Copy Link</button>
           <button class="action-btn" id="split-btn" onclick="splitLoot()">🪙 Split among the Party</button>
