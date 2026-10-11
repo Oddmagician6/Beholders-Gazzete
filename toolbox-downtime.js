@@ -1,0 +1,215 @@
+/* ============================================
+   DM TOOLBOX: DOWNTIME TAB (F28)
+   Each character's lifestyle and downtime activity for a stretch of weeks and days,
+   worked out by downtime-engine.js (downtimeFor). The party is remembered in
+   localStorage (gazette-downtime) and also lives in the URL, so a link shares it.
+   URL: ?tab=down&wk=<weeks>&d=<days>&c=<life~act~val~done~help~work~name>&c=…&seed=
+   (seed only when someone is carousing; it picks the carousing outcomes).
+   ============================================ */
+
+const DOWNTIME_KEY = 'gazette-downtime';
+const DOWNTIME_MAX_CHARS = 8;
+const DT_VALUE_MAX = 1000000;
+
+let dt = { seed: null, chars: [], results: [] };
+
+function dtBlankChar() {
+    return { name: '', life: 'modest', act: 'none', val: '', done: '', help: '0', work: 'trade' };
+}
+
+function dtNum(v, max) {
+    const n = Math.round((Number(v) || 0) * 100) / 100;
+    return Math.min(max, Math.max(0, n));
+}
+
+// A character as stored and shared: unknown keys fall back to the defaults.
+function dtClean(c) {
+    const b = dtBlankChar();
+    return {
+        name: String(c.name || '').slice(0, 40),
+        life: DOWNTIME_LIFESTYLES[c.life] ? c.life : b.life,
+        act: DOWNTIME_ACTIVITIES[c.act] ? c.act : b.act,
+        val: c.val === '' || c.val === undefined ? '' : String(dtNum(c.val, DT_VALUE_MAX)),
+        done: c.done === '' || c.done === undefined ? '' : String(dtNum(c.done, DT_VALUE_MAX)),
+        help: String(Math.min(DOWNTIME_MAX_CHARS - 1, Math.floor(dtNum(c.help, 99)))),
+        work: DOWNTIME_WORK[c.work] ? c.work : b.work
+    };
+}
+
+function dtEncode(c) {
+    return [c.life, c.act, c.val, c.done, c.help === '0' ? '' : c.help, c.work === 'trade' ? '' : c.work, c.name].join('~');
+}
+
+function dtDecode(s) {
+    const p = String(s).split('~');
+    return dtClean({ life: p[0], act: p[1], val: p[2] || '', done: p[3] || '', help: p[4] || '0', work: p[5] || 'trade', name: p.slice(6).join('~') });
+}
+
+function dtCarousing() {
+    return dt.chars.some(c => c.act === 'carouse');
+}
+
+function dtDays() {
+    return downtimeDays(document.getElementById('dt-weeks').value, document.getElementById('dt-days').value);
+}
+
+function downParams() {
+    const wk = document.getElementById('dt-weeks'), d = document.getElementById('dt-days');
+    return urlFor('down', {
+        wk: wk.value.trim() !== '' && wk.value !== defaultValue(wk) ? wk.value.trim() : null,
+        d: d.value.trim() !== '' && d.value !== defaultValue(d) ? d.value.trim() : null,
+        c: dt.chars.map(dtEncode),
+        seed: dtCarousing() ? dt.seed : null
+    });
+}
+
+// ── Storage ───────────────────────────────────────────────
+function saveDowntime() {
+    try {
+        localStorage.setItem(DOWNTIME_KEY, JSON.stringify({
+            weeks: document.getElementById('dt-weeks').value, days: document.getElementById('dt-days').value,
+            chars: dt.chars, seed: dt.seed
+        }));
+    } catch (e) {}
+}
+
+function loadDowntime() {
+    try {
+        const s = JSON.parse(localStorage.getItem(DOWNTIME_KEY));
+        if (s && Array.isArray(s.chars) && s.chars.length) return s;
+    } catch (e) {}
+    return null;
+}
+
+// ── Rows ──────────────────────────────────────────────────
+function dtOptions(table, selected, label) {
+    return Object.entries(table).map(([k, t]) =>
+        `<option value="${k}"${k === selected ? ' selected' : ''}>${esc(label ? label(k, t) : `${t.icon ? t.icon + ' ' : ''}${t.label}`)}</option>`).join('');
+}
+
+function lifeLabel(k, t) {
+    const day = k === 'wretched' ? 'free' : `${formatCoins(t.gp)}${k === 'aristocratic' ? '+' : ''} a day, ${formatCoins(t.gp * 7)}${k === 'aristocratic' ? '+' : ''} a week`;
+    return `${t.icon} ${t.label} (${day})`;
+}
+
+function buildDowntimeRows() {
+    document.getElementById('dt-chars').innerHTML = dt.chars.map((c, i) => `
+        <div class="dt-char" data-i="${i}">
+            <div class="dt-fields">
+                <label class="dt-f-name">Character <input type="text" class="dt-name" maxlength="40" autocomplete="off" placeholder="Character ${i + 1}" value="${esc(c.name)}"></label>
+                <label>Lifestyle <select class="dt-life">${dtOptions(DOWNTIME_LIFESTYLES, c.life, lifeLabel)}</select></label>
+                <label>Activity <select class="dt-act">${dtOptions(DOWNTIME_ACTIVITIES, c.act)}</select></label>
+                <label class="dt-only" data-for="craft">Item's value (gp) <input type="number" class="dt-val" min="0" max="${DT_VALUE_MAX}" step="0.01" inputmode="decimal" placeholder="e.g. 50" value="${esc(c.val)}"></label>
+                <label class="dt-only" data-for="craft">Done so far (gp) <input type="number" class="dt-done" min="0" max="${DT_VALUE_MAX}" step="0.01" inputmode="decimal" placeholder="0" value="${esc(c.done)}"></label>
+                <label class="dt-only" data-for="craft">Helpers <input type="number" class="dt-help" min="0" max="${DOWNTIME_MAX_CHARS - 1}" step="1" inputmode="numeric" value="${esc(c.help)}"></label>
+                <label class="dt-only dt-f-wide" data-for="work">Work <select class="dt-work">${dtOptions(DOWNTIME_WORK, c.work)}</select></label>
+            </div>
+            <button type="button" class="dt-remove" aria-label="Remove this character" title="Remove"${dt.chars.length === 1 ? ' hidden' : ''}>✕</button>
+            <div class="dt-res" aria-live="polite"></div>
+        </div>`).join('');
+    document.getElementById('dt-add').disabled = dt.chars.length >= DOWNTIME_MAX_CHARS;
+}
+
+function readDowntimeRows() {
+    dt.chars = [...document.querySelectorAll('#dt-chars .dt-char')].map(row => {
+        const v = cls => row.querySelector('.' + cls).value;
+        return dtClean({ name: v('dt-name').trim(), life: v('dt-life'), act: v('dt-act'), val: v('dt-val'), done: v('dt-done'), help: v('dt-help'), work: v('dt-work') });
+    });
+}
+
+// ── Results ───────────────────────────────────────────────
+const DT_SRC = { SRD: ['SRD', ' srd'], ruling: ['ruling', ''], house: ['house rule', ' house'] };
+
+function renderDowntimeResults() {
+    const days = dtDays();
+    const rows = document.querySelectorAll('#dt-chars .dt-char');
+    let party = 0;
+    dt.results.forEach((r, i) => {
+        const c = dt.chars[i], row = rows[i];
+        party += r.totalGp;
+        row.querySelectorAll('.dt-only').forEach(el => { el.hidden = el.dataset.for !== c.act; });
+        const parts = [`living ${formatCoins(r.lifeGp)}`];
+        if (r.extraGp) parts.push(`${c.act === 'craft' ? 'materials' : c.act === 'research' ? 'research' : 'carousing'} ${formatCoins(r.extraGp)}`);
+        row.querySelector('.dt-res').innerHTML = `
+            <div class="dt-cost"><b>${esc(formatCoins(r.totalGp))}</b><span>for ${days} day${days === 1 ? '' : 's'}${r.extraGp ? ` (${esc(parts.join(' + '))})` : ''}</span></div>
+            ${r.craft && r.craft.value ? `<div class="dt-bar" role="progressbar" aria-label="Crafting progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round((r.craft.done + r.craft.made) / r.craft.value * 100)}"><span style="width:${Math.round((r.craft.done + r.craft.made) / r.craft.value * 100)}%"></span></div>` : ''}
+            ${r.lines.length ? `<ul class="dt-lines">${r.lines.map(l => `<li>${esc(l.text)}<span class="fx-src${DT_SRC[l.src][1]}">${DT_SRC[l.src][0]}</span></li>`).join('')}</ul>` : ''}
+            ${r.carouse && r.carouse.outcomes.length ? `<ol class="dt-carouse">${r.carouse.outcomes.map((o, wk) => `<li class="dt-${o.k}"><b>Week ${wk + 1}</b> ${esc(o.t)}</li>`).join('')}</ol>
+                ${r.carouse.weeks > r.carouse.outcomes.length ? `<p class="dt-more">…and ${r.carouse.weeks - r.carouse.outcomes.length} more weeks of carousing. Roll those at the table.</p>` : ''}` : ''}`;
+    });
+    document.getElementById('dt-total').innerHTML = `
+        <div class="split-total">Party total for ${days} day${days === 1 ? '' : 's'} of downtime</div>
+        <div class="split-each">${esc(formatCoins(Math.round(party * 100) / 100))}</div>
+        ${dt.chars.length > 1 ? `<ul class="split-list">${dt.chars.map((c, i) => `
+            <li><b>${esc(c.name || `Character ${i + 1}`)}</b><span>${esc(formatCoins(dt.results[i].totalGp))}</span></li>`).join('')}</ul>` : ''}`;
+    document.getElementById('dt-reroll').disabled = !dtCarousing();
+}
+
+// push: true = new history entry, false = replace, null = leave the URL alone.
+function showDowntime(push) {
+    readDowntimeRows();
+    const days = dtDays();
+    dt.results = dt.chars.map((c, i) => downtimeFor(c, days, dt.seed, i));
+    renderDowntimeResults();
+    saveDowntime();
+    if (push !== null) setUrlParams(downParams(), push);
+}
+
+function setDowntime(state) {
+    const wk = document.getElementById('dt-weeks'), d = document.getElementById('dt-days');
+    if (!setFieldValue(wk, state.weeks)) wk.value = defaultValue(wk);
+    if (!setFieldValue(d, state.days)) d.value = defaultValue(d);
+    dt.chars = (state.chars && state.chars.length ? state.chars : [dtBlankChar()]).slice(0, DOWNTIME_MAX_CHARS).map(dtClean);
+    dt.seed = parseSeed(state.seed) || newSeed();
+    buildDowntimeRows();
+}
+
+// First visit to the tab with no party in the URL: the saved party, or one blank character.
+function initDowntime(push) {
+    setDowntime(loadDowntime() || {});
+    showDowntime(push);
+}
+
+function applyDownUrl(p) {
+    const cs = p.getAll('c');
+    if (!cs.length) { initDowntime(false); return true; }
+    setDowntime({ weeks: p.get('wk'), days: p.get('d'), chars: cs.map(dtDecode), seed: p.get('seed') });
+    showDowntime(p.get('seed') || !dtCarousing() ? null : false);
+    return true;
+}
+
+function clearDowntime() {
+    setDowntime({});
+    showDowntime(true);
+}
+
+function setupDowntime() {
+    const box = document.getElementById('dt-chars');
+    box.addEventListener('input', () => showDowntime(false));
+    box.addEventListener('change', e => { if (e.target.tagName === 'SELECT') showDowntime(false); });
+    box.addEventListener('click', e => {
+        const btn = e.target.closest('.dt-remove');
+        if (!btn) return;
+        readDowntimeRows();
+        dt.chars.splice(Number(btn.closest('.dt-char').dataset.i), 1);
+        buildDowntimeRows();
+        showDowntime(true);
+    });
+    ['dt-weeks', 'dt-days'].forEach(id => document.getElementById(id).addEventListener('input', () => showDowntime(false)));
+    document.getElementById('dt-add').addEventListener('click', () => {
+        readDowntimeRows();
+        if (dt.chars.length >= DOWNTIME_MAX_CHARS) return;
+        const last = dt.chars[dt.chars.length - 1];
+        dt.chars.push({ ...dtBlankChar(), life: last ? last.life : 'modest' });
+        buildDowntimeRows();
+        showDowntime(true);
+        const names = box.querySelectorAll('.dt-name');
+        names[names.length - 1].focus();
+    });
+    document.getElementById('dt-reroll').addEventListener('click', () => { dt.seed = newSeed(); showDowntime(true); });
+    document.getElementById('dt-clear').addEventListener('click', clearDowntime);
+    document.getElementById('dt-copy').addEventListener('click', () =>
+        copyText(downtimeText(dt.chars, dt.results, dtDays()), 'downtime-status', 'the downtime'));
+    document.getElementById('dt-link').addEventListener('click', () =>
+        copyPageLink(ok => flash('downtime-status', ok ? '🔗 Link copied. It opens this party and its downtime.' : '⚠️ Copy blocked by the browser.')));
+}

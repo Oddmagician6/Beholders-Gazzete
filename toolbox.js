@@ -9,10 +9,11 @@
    and the URL holds the coins, the party, and the seed that picks who gets the leftover copper.
    Encounter (F25): toolbox-encounter.js; the URL holds the party and the monsters.
    Tavern (F26): toolbox-tavern.js; the URL holds the seed, the quality, and the rumor.
+   Downtime (F28): toolbox-downtime.js; the URL holds the party, the length, and the carousing seed.
    Seeds and the shareable URL: rng.js.
    ============================================ */
 
-const TOOLBOX_TABS = ['names', 'tavern', 'travel', 'dice', 'init', 'split', 'enc'];
+const TOOLBOX_TABS = ['names', 'tavern', 'travel', 'dice', 'init', 'split', 'enc', 'down'];
 const KEPT_KEY = 'gazette-kept-names';
 const KEPT_MAX = 100;
 
@@ -391,6 +392,7 @@ function tabParams(tab) {
     if (tab === 'split') return splitParams();
     if (tab === 'enc') return encParams();
     if (tab === 'tavern') return tavParams();
+    if (tab === 'down') return downParams();
     return tab === 'travel' ? travelParams() : nameParams();
 }
 
@@ -403,6 +405,7 @@ function applyUrl() {
     if (tab === 'dice' || tab === 'init') return true;   // nothing to roll; their state is in localStorage
     if (tab === 'enc') { applyEncUrl(p); return true; }
     if (tab === 'tavern') return applyTavUrl(p);
+    if (tab === 'down') return applyDownUrl(p);
     if (tab === 'split') {
         Object.entries(SPLIT_FIELDS).forEach(([key, id]) => {
             const el = document.getElementById(id);
@@ -441,6 +444,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupTravelForm();
     setupEncounter();
     setupTavern();
+    setupDowntime();
     loadKept();
     renderKept();
 
@@ -453,6 +457,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (tab === 'names' && !names.seed) rollNamesFor(newSeed(), null);
         if (tab === 'tavern' && !tavern.seed) rollTavernFor(newSeed(), null);
         if (tab === 'split' && !split.seed) { split.seed = newSeed(); showSplit(null); }
+        if (tab === 'down' && !dt.seed) initDowntime(null);
         setUrlParams(tabParams(tab), true);
     }));
     document.getElementById('roll-names').addEventListener('click', () => rollNamesFor());
