@@ -155,20 +155,11 @@ function rollInit(mod) {
     return rollDie(20) + mod;
 }
 
-function addCombatants(e) {
-    e.preventDefault();
-    const v = id => document.getElementById(id).value;
-    const name = v('ia-name').trim().replace(/\s+/g, ' ').slice(0, 36);
-    if (!name) return;
-    const mod = Math.max(-10, Math.min(20, num(v('ia-mod')) ?? 0));
-    const fixed = num(v('ia-init'));
-    const hp = num(v('ia-hp'));
-    const ac = num(v('ia-ac'));
-    let count = Math.max(1, Math.min(20, num(v('ia-count')) ?? 1));
-    if (fight.list.length + count > INIT_MAX) {
-        count = INIT_MAX - fight.list.length;
-        if (count < 1) { flash('init-status', `⚠️ The tracker holds ${INIT_MAX} combatants.`); return; }
-    }
+// Adds count combatants (numbered when more than one) and returns them; [] when the tracker is full.
+// Also used by the Encounter tab (toolbox-encounter.js). The caller saves and renders.
+function addToFight({ name, mod = 0, fixed = null, hp = null, ac = null, count = 1 }) {
+    count = Math.min(count, INIT_MAX - fight.list.length);
+    if (count < 1) return [];
     // Numbering carries on from any "Goblin 2" already in the fight.
     const base = name.replace(/\s+\d+$/, '');
     const taken = fight.list.map(c => c.name.match(new RegExp('^' + base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ' (\\d+)$', 'i'))).filter(Boolean).map(m => Number(m[1]));
@@ -183,6 +174,19 @@ function addCombatants(e) {
         fight.list.push(c);
         added.push(c);
     }
+    return added;
+}
+
+function addCombatants(e) {
+    e.preventDefault();
+    const v = id => document.getElementById(id).value;
+    const name = v('ia-name').trim().replace(/\s+/g, ' ').slice(0, 36);
+    if (!name) return;
+    const added = addToFight({
+        name, mod: Math.max(-10, Math.min(20, num(v('ia-mod')) ?? 0)), fixed: num(v('ia-init')),
+        hp: num(v('ia-hp')), ac: num(v('ia-ac')), count: Math.max(1, Math.min(20, num(v('ia-count')) ?? 1))
+    });
+    if (!added.length) { flash('init-status', `⚠️ The tracker holds ${INIT_MAX} combatants.`); return; }
     sortFight();
     saveFight();
     renderFight();

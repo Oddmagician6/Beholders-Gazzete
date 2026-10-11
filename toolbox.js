@@ -7,10 +7,11 @@
    Dice and Initiative (F23): toolbox-table.js (no URL state beyond ?tab=).
    Split (F24): the party coin splitter; the math is in coins.js (splitCoins),
    and the URL holds the coins, the party, and the seed that picks who gets the leftover copper.
+   Encounter (F25): toolbox-encounter.js; the URL holds the party and the monsters.
    Seeds and the shareable URL: rng.js.
    ============================================ */
 
-const TOOLBOX_TABS = ['names', 'travel', 'dice', 'init', 'split'];
+const TOOLBOX_TABS = ['names', 'travel', 'dice', 'init', 'split', 'enc'];
 const KEPT_KEY = 'gazette-kept-names';
 const KEPT_MAX = 100;
 
@@ -387,6 +388,7 @@ function clearSplit() {
 function tabParams(tab) {
     if (tab === 'dice' || tab === 'init') return urlFor(tab, {});
     if (tab === 'split') return splitParams();
+    if (tab === 'enc') return encParams();
     return tab === 'travel' ? travelParams() : nameParams();
 }
 
@@ -397,6 +399,7 @@ function applyUrl() {
     const p = urlParams();
     const seed = parseSeed(p.get('seed'));
     if (tab === 'dice' || tab === 'init') return true;   // nothing to roll; their state is in localStorage
+    if (tab === 'enc') { applyEncUrl(p); return true; }
     if (tab === 'split') {
         Object.entries(SPLIT_FIELDS).forEach(([key, id]) => {
             const el = document.getElementById(id);
@@ -432,6 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('year').textContent = new Date().getFullYear();
     setupNamePicker();
     setupTravelForm();
+    setupEncounter();
     loadKept();
     renderKept();
 
