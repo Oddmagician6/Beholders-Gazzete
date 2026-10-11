@@ -4,10 +4,11 @@
    Names (F21): tavern and shop names, rolled by names-data.js (rollPlaceNames).
    Travel (F22): weather, a road event, and the day's miles, rolled by
    travel-engine.js (rollJourney). Nothing is stored; the URL holds the trip.
+   Dice and Initiative (F23): toolbox-table.js (no URL state beyond ?tab=).
    Seeds and the shareable URL: rng.js.
    ============================================ */
 
-const TOOLBOX_TABS = ['names', 'travel'];
+const TOOLBOX_TABS = ['names', 'travel', 'dice', 'init'];
 const KEPT_KEY = 'gazette-kept-names';
 const KEPT_MAX = 100;
 
@@ -300,6 +301,7 @@ function renderTravel(opts) {
 // ── URL ───────────────────────────────────────────────────
 // Names: ?for=<type>&seed=. Travel: ?tab=travel&climate=&season=&terrain=&pace=&hours=&ride=&miles=&day=&seed=
 function tabParams(tab) {
+    if (tab === 'dice' || tab === 'init') return urlFor(tab, {});
     return tab === 'travel' ? travelParams() : nameParams();
 }
 
@@ -309,6 +311,7 @@ function applyUrl() {
     showTab(tab);
     const p = urlParams();
     const seed = parseSeed(p.get('seed'));
+    if (tab === 'dice' || tab === 'init') return true;   // nothing to roll; their state is in localStorage
     if (tab === 'travel') {
         Object.entries(TRAVEL_FIELDS).forEach(([key, id]) => {
             const el = document.getElementById(id);
