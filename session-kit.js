@@ -298,13 +298,16 @@ function setupParty() {
     });
 }
 
+// The shop details the kit panel has room for (Copy Kit gets them all).
+const KIT_SHOP_DETAILS = ['Services', 'Buying', 'On sale', 'Ask about'];
+
 function shopHTML() {
     const s = kit.shop;
     if (!s) return '';
     const def = SHOP_TYPES[s.type], k = s.keeper;
     const prices = shopPrices(s);
     const rows = prices.slice(0, KIT_SHOP_ROWS).map(p =>
-        `<li><span>${esc(p.name)}${p.qty > 1 ? ` <span class="val">×${p.qty}</span>` : ''}</span><span class="val">${formatCoins(p.price)}</span></li>`).join('');
+        `<li><span>${esc(p.name)}${p.qty > 1 ? ` <span class="val">×${p.qty}</span>` : ''}${p.sale ? ' <span class="val">(sale)</span>' : ''}</span><span class="val">${formatCoins(p.price)}</span></li>`).join('');
     const more = prices.length > KIT_SHOP_ROWS ? `<p class="muted">…and ${prices.length - KIT_SHOP_ROWS} more on the shelves.</p>` : '';
     return `<div class="shop-head">
             <div>
@@ -315,6 +318,8 @@ function shopHTML() {
                 <p><em>"${esc(s.greeting)}"</em></p>
                 <span class="kit-label">Quirk</span>
                 <p>${esc(s.quirk)}</p>
+                ${shopDetailLines(s).filter(([label]) => KIT_SHOP_DETAILS.includes(label))
+                    .map(([label, text]) => `<p class="kit-find"><strong>${esc(label)}:</strong> ${esc(text)}</p>`).join('')}
             </div>
             <div>
                 <span class="kit-label">For sale (live market prices)</span>

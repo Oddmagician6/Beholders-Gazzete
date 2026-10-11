@@ -75,6 +75,16 @@ function keeperHTML(k) {
     </div>`;
 }
 
+// The place, services, buying, sale, sold out, and a job (shop-engine.js). Older saved shops have none.
+function aboutHTML() {
+    const lines = shopDetailLines(shop);
+    if (!lines.length) return '';
+    return `<section class="shop-about">
+        <h2 class="shop-h">About the Shop</h2>
+        <dl>${lines.map(([label, text]) => `<div class="about-row${label === 'Ask about' ? ' about-job' : ''}"><dt>${esc(label)}</dt><dd>${esc(text)}</dd></div>`).join('')}</dl>
+    </section>`;
+}
+
 function haggleHTML() {
     const h = shop.haggle;
     const result = h ? `${esc(h.outcome)}<span class="dice">${esc(haggleDiceText(h))}</span>` : '';
@@ -95,7 +105,7 @@ function render() {
     if (!shop) { card.innerHTML = '<p class="muted">The shutters creak open…</p>'; return; }
     const def = SHOP_TYPES[shop.type];
     const rows = shopPrices(shop).map(p => `<tr>
-            <td class="item">${esc(p.name)}</td>
+            <td class="item">${esc(p.name)}${p.sale ? ' <span class="sale-tag">Sale</span>' : ''}</td>
             <td class="num">${p.qty > 1 ? '×' + p.qty : '1'}</td>
             <td class="num price">${wasPrice(p) ? `<s class="was">${formatCoins(p.listPrice)}</s>` : ''}${formatCoins(p.price)}</td>
             <td class="num chg">${changeHTML(p.change)}</td>
@@ -118,7 +128,8 @@ function render() {
                 <p class="stock-note">Live from the <a href="economy.html">Market Exchange</a>${shop.wealth === 'wealthy' ? ', plus a prosperous-shop markup' : shop.wealth === 'poor' ? ', minus a humble-shop discount' : ''}. Next price bell in ${mins} min.</p>
                 ${haggleHTML()}
             </div>
-        </div>`;
+        </div>
+        ${aboutHTML()}`;
     const btn = document.getElementById('haggle-btn');
     if (btn) btn.addEventListener('click', haggle);
     schedulePriceBell();

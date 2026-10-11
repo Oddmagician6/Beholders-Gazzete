@@ -371,7 +371,12 @@ const NAME_TABLES = {
         { weight: 3, make: (t) => `The ${randomArray(t.nouns)} ${randomArray(t.places)}` },
         { weight: 3, make: (t) => `${randomArray(NAME_TABLES.spots)} ${randomArray(t.places)}` },
         { weight: 3, make: (t) => possessive(t) },
-        { weight: 3, make: (t) => `The ${randomArray(t.nouns)} ${randomArray(NAME_TABLES.preps)} ${randomArray(NAME_TABLES.settings)}` },
+        { weight: 3, make: (t) => {
+            const noun = randomArray(t.nouns), prep = randomArray(NAME_TABLES.preps), setting = randomArray(NAME_TABLES.settings);
+            // "in a" needs a countable setting and "an" before a vowel (The Skull in an Attic, never "in a Rain").
+            if (prep === 'in a') return /^(Rain|Mist|Fog|Snow|Stairs|Rafters|Moon)$/.test(setting) ? '' : `The ${noun} in ${/^[AEIOU]/.test(setting) ? 'an' : 'a'} ${setting}`;
+            return `The ${noun} ${prep} ${setting}`;
+        } },
         { weight: 3, make: (t) => counted(t) },
         { weight: 2, make: (t) => `${randomArray(NAME_TABLES.pairs)} ${randomArray(t.places)}` },
         { weight: 1, make: (t) => `Ye Olde ${randomArray(t.nouns)} ${randomArray(t.places)}` },
