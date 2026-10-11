@@ -51,7 +51,7 @@ function changeHTML(pct) {
 }
 
 function keeperHTML(k) {
-    const hair = k.hairLabel === 'Scales' || k.hair === 'Bald' ? k.hair : `${k.hair} hair`;
+    const hair = k.hairLook || (k.hairLabel === 'Scales' || k.hair === 'Bald' ? k.hair : `${k.hair} hair`);
     return `<div class="keeper">
         <h2 class="shop-h">Shopkeeper</h2>
         <div class="keeper-title">

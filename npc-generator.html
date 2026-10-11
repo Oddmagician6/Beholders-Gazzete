@@ -592,7 +592,11 @@
         .lock-btn:hover, .lock-btn:focus-visible { opacity: 0.9; }
         .lock-btn[aria-pressed="true"] { opacity: 1; border-color: var(--gold-mid); background: var(--gold-glow); }
         .lock-btn.corner { position: absolute; top: 6px; right: 6px; }
-        .personality-item, .appearance-item, .secret-box, .quest-box { position: relative; }
+        .personality-item, .appearance-item, .secret-box, .quest-box, .impression-box { position: relative; }
+        .npc-alignment { font-family: var(--font-ui); font-size: 0.85rem; color: var(--gold-bright); margin-top: 8px; letter-spacing: 0.04em; }
+        .impression-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .impression-label { display: block; font-family: var(--font-ui); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gold-mid); margin: 0 24px 6px 0; }
+        @media (max-width: 600px) { .impression-grid { grid-template-columns: 1fr; } }
         .lock-hint { font-family: var(--font-ui); font-size: 0.78rem; color: var(--text-dim); text-align: center; margin-top: 14px; }
         .lock-clear { background: none; border: none; color: var(--gold-bright); cursor: pointer; font: inherit; text-decoration: underline; padding: 0 4px; }
         .lock-clear[hidden] { display: none; }
@@ -972,6 +976,24 @@
                             <button type="button" class="lock-btn" data-lock="identity" aria-pressed="false" title="Lock name, race, and gender" aria-label="Lock name, race, and gender">🔓</button>
                         </div>
                         <div class="npc-profession"><span id="npc-profession-display">Profession</span> <button type="button" class="lock-btn" data-lock="job" aria-pressed="false" title="Lock profession" aria-label="Lock profession">🔓</button></div>
+                        <div class="npc-alignment"><span id="npc-alignment-display">-</span> <button type="button" class="lock-btn" data-lock="alignment" aria-pressed="false" title="Lock alignment" aria-label="Lock alignment">🔓</button></div>
+                    </div>
+                </div>
+
+                <!-- First Impression -->
+                <div class="npc-section" id="impression-section">
+                    <h3>👀 First Impression</h3>
+                    <div class="impression-grid">
+                        <div class="relationship-box impression-box">
+                            <span class="impression-label">When you meet them</span>
+                            <button type="button" class="lock-btn corner" data-lock="doing" aria-pressed="false" title="Lock what they're doing" aria-label="Lock what they're doing">🔓</button>
+                            <p id="npc-doing">-</p>
+                        </div>
+                        <div class="relationship-box impression-box">
+                            <span class="impression-label">🎒 In their pockets</span>
+                            <button type="button" class="lock-btn corner" data-lock="pockets" aria-pressed="false" title="Lock pockets" aria-label="Lock pockets">🔓</button>
+                            <p id="npc-pockets">-</p>
+                        </div>
                     </div>
                 </div>
 

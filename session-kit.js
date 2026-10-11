@@ -206,6 +206,7 @@ function rumorHTML() {
 }
 
 function hairText(n) {
+    if (n.hairLook) return n.hairLook;
     return n.hairLabel === 'Scales' || n.hair === 'Bald' ? n.hair : `${n.hair} hair`;
 }
 
@@ -224,6 +225,8 @@ function npcHTML() {
         </div>
         <div class="npc-stats">${stats}</div>
         <div class="npc-combat">❤️ HP ${n.hp} · 🛡️ AC ${n.ac} · 👟 ${esc(n.speed)}</div>
+        ${n.doing ? `<span class="kit-label">When you meet them</span>
+        <p>${esc(n.doing)}</p>` : ''}
         <span class="kit-label">Looks</span>
         <p>${[n.build, hair, `${n.eyes} eyes`, n.feature].map(esc).join(' · ')}</p>
         <span class="kit-label">Trait · Flaw</span>
@@ -333,6 +336,7 @@ function kitText() {
             'NPC', `${n.name}: ${cap(n.race)}, ${n.age}, ${n.profession}`,
             `STR ${s.str} | DEX ${s.dex} | CON ${s.con} | INT ${s.int} | WIS ${s.wis} | CHA ${s.cha}`,
             `HP ${n.hp} | AC ${n.ac} | Speed ${n.speed}`,
+            ...(n.doing ? [`When you meet them: ${n.doing}`] : []),
             `Looks: ${n.build} · ${hairText(n)} · ${n.eyes} eyes · ${n.feature}`,
             `Trait: ${n.trait} · Flaw: ${n.flaw}`,
             `Voice: ${n.voice}. "${n.dialogue}"`,

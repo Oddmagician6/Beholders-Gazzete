@@ -17,7 +17,8 @@ const locks = new Set();
 // A kept part: its seed, plus the resolved values it was rolled with, so it replays
 // the same whatever the pickers say now.
 function pinOf(npc, part) {
-    const extra = { identity: [npc.race, npc.gender], age: [npc.ageBucket], job: [npc.professionCategory] }[part] || [];
+    const extra = { identity: [npc.race, npc.gender], age: [npc.ageBucket], job: [npc.professionCategory] }[part]
+        || (NPC_JOB_PARTS.includes(part) ? [(npc.partCategories && npc.partCategories[part]) || npc.professionCategory] : []);
     return { seed: npc.seeds[part], extra };
 }
 
@@ -33,6 +34,7 @@ function generateNPC(seed = newSeed(), push = true, pinned = null) {
     if (pinned.identity) [rollOpts.race, rollOpts.gender] = pinned.identity.extra;
     if (pinned.age) [rollOpts.age] = pinned.age.extra;
     if (pinned.job) [rollOpts.professionType] = pinned.job.extra;
+    rollOpts.partCategory = Object.fromEntries(NPC_JOB_PARTS.filter(p => pinned[p] && pinned[p].extra.length).map(p => [p, pinned[p].extra[0]]));
     const seeds = Object.fromEntries(NPC_PARTS.map(part => [part, pinned[part] ? pinned[part].seed : deriveSeed(seed, part)]));
     currentNPC = { ...rollNPC(rollOpts, seeds), seed, seeds, rolledWith: opts };
     if (push !== null) setUrlParams(npcParams(), push);
@@ -61,6 +63,12 @@ function displayNPC(includeStats, includeSecrets, includeQuest) {
     document.getElementById('npc-age-display').textContent = currentNPC.age;
     document.getElementById('npc-gender-display').textContent = currentNPC.gender.charAt(0).toUpperCase() + currentNPC.gender.slice(1);
     document.getElementById('npc-profession-display').textContent = currentNPC.profession;
+    // Alignment, first impression, and pockets came later; older saves don't have them.
+    document.getElementById('npc-alignment-display').parentElement.hidden = !currentNPC.alignment;
+    document.getElementById('npc-alignment-display').textContent = currentNPC.alignment || '';
+    document.getElementById('impression-section').hidden = !currentNPC.doing;
+    document.getElementById('npc-doing').textContent = currentNPC.doing || '';
+    document.getElementById('npc-pockets').textContent = pocketsText(currentNPC);
 
     // Stats
     document.getElementById('stats-section').style.display = includeStats ? 'block' : 'none';
@@ -85,7 +93,7 @@ function displayNPC(includeStats, includeSecrets, includeQuest) {
 
     // Appearance
     document.getElementById('npc-build').textContent = currentNPC.build;
-    document.getElementById('npc-hair').textContent = currentNPC.hair;
+    document.getElementById('npc-hair').textContent = currentNPC.beard ? `${currentNPC.hair}, with ${currentNPC.beard}` : currentNPC.hair;
     document.getElementById('npc-hair-label').textContent = currentNPC.hairLabel || 'Hair';
     document.getElementById('npc-eyes').textContent = currentNPC.eyes;
     document.getElementById('npc-feature').textContent = currentNPC.feature;
@@ -107,6 +115,19 @@ function displayNPC(includeStats, includeSecrets, includeQuest) {
 
     // Relationships
     document.getElementById('npc-relationship-text').textContent = currentNPC.relationship;
+}
+
+// "a tin whistle, a dried frog; purse: 3 gp, 4 sp"
+function pocketsText(npc) {
+    const items = (npc.pockets || []).join(', ');
+    const out = [items && items.charAt(0).toUpperCase() + items.slice(1), npc.purse && `Purse: ${npc.purse}`].filter(Boolean);
+    return out.join('. ');
+}
+
+// Hair for running text; saves from before hairLook build it the old way.
+function hairText(npc) {
+    if (npc.hairLook) return npc.hairLook;
+    return npc.hairLabel === 'Scales' || npc.hair === 'Bald' ? npc.hair : `${npc.hair} hair`;
 }
 
 function animateCard() {
@@ -149,7 +170,9 @@ function parseLock(token) {
         identity: () => extra.length === 2 && NPC_RACES.includes(extra[0]) && NPC_GENDERS.includes(extra[1]),
         age: () => extra.length === 1 && ['young', 'adult', 'middle', 'old', 'ancient'].includes(extra[0]),
         job: () => extra.length === 1 && Object.hasOwn(npcData.professions, extra[0])
-    }[part] || (() => extra.length === 0);
+    }[part] || (NPC_JOB_PARTS.includes(part)
+        ? () => extra.length === 0 || (extra.length === 1 && Object.hasOwn(npcData.professions, extra[0]))
+        : () => extra.length === 0);
     return valid() ? [part, { seed, extra }] : null;
 }
 
@@ -202,8 +225,11 @@ function copyNPC() {
 
     const text = `
 ${currentNPC.name} (${currentNPC.race}, ${currentNPC.profession})
-Age: ${currentNPC.age} | Gender: ${currentNPC.gender}
-
+Age: ${currentNPC.age} | Gender: ${currentNPC.gender}${currentNPC.alignment ? ` | ${currentNPC.alignment}` : ''}
+${currentNPC.doing ? `
+WHEN YOU MEET THEM: ${currentNPC.doing}
+POCKETS: ${pocketsText(currentNPC)}
+` : ''}
 STATS: STR ${currentNPC.stats.str} | DEX ${currentNPC.stats.dex} | CON ${currentNPC.stats.con} | INT ${currentNPC.stats.int} | WIS ${currentNPC.stats.wis} | CHA ${currentNPC.stats.cha}
 HP: ${currentNPC.hp} | AC: ${currentNPC.ac} | Speed: ${currentNPC.speed}
 
@@ -214,7 +240,7 @@ Bond: ${currentNPC.bond}
 Flaw: ${currentNPC.flaw}
 Quirks: ${currentNPC.quirks.join(', ')}
 
-APPEARANCE: ${currentNPC.build}, ${currentNPC.hairLabel === 'Scales' || currentNPC.hair === 'Bald' ? currentNPC.hair : currentNPC.hair + ' hair'}, ${currentNPC.eyes} eyes
+APPEARANCE: ${currentNPC.build}, ${hairText(currentNPC)}, ${currentNPC.eyes} eyes
 Feature: ${currentNPC.feature}
 Clothing: ${currentNPC.clothing}
 
@@ -321,19 +347,20 @@ function sheetBlock(npc) {
     const cap = s => String(s ?? '').charAt(0).toUpperCase() + String(s ?? '').slice(1);
     const line = (label, value) => value ? `<p><strong>${label}:</strong> ${esc(value)}</p>` : '';
     const s = npc.stats || {};
-    const hairLabel = npc.hairLabel || 'Hair';
     return `
         <div class="sheet-npc">
             <h4>${esc(npc.name)}</h4>
-            <div class="sheet-sub">${esc([cap(npc.race), cap(npc.gender), npc.age, npc.profession].filter(Boolean).join(' · '))}</div>
+            <div class="sheet-sub">${esc([cap(npc.race), cap(npc.gender), npc.age, npc.profession, npc.alignment].filter(Boolean).join(' · '))}</div>
             ${showStats && npc.stats ? `<div class="sheet-stats">
                 ${['str', 'dex', 'con', 'int', 'wis', 'cha'].map(k => `<span><strong>${k.toUpperCase()}</strong> ${esc(s[k])}</span>`).join('')}
                 <span><strong>HP</strong> ${esc(npc.hp)}</span><span><strong>AC</strong> ${esc(npc.ac)}</span><span><strong>Speed</strong> ${esc(npc.speed)}</span>
             </div>` : ''}
+            ${line('Meet them', npc.doing)}
             ${line('Trait', npc.trait)}${line('Ideal', npc.ideal)}${line('Bond', npc.bond)}${line('Flaw', npc.flaw)}
             ${line('Quirks', (npc.quirks || []).join('; '))}
-            ${line('Look', [npc.build, npc.hair && `${hairLabel.toLowerCase()}: ${npc.hair}`, npc.eyes && `${npc.eyes} eyes`, npc.feature].filter(Boolean).join(', '))}
+            ${line('Look', [npc.build, npc.hair && hairText(npc), npc.eyes && `${npc.eyes} eyes`, npc.feature].filter(Boolean).join(', '))}
             ${line('Clothing', npc.clothing)}
+            ${line('Pockets', npc.doing ? pocketsText(npc) : '')}
             ${line('Voice', npc.voice)}
             ${npc.dialogue ? `<p><strong>Says:</strong> “${esc(npc.dialogue)}”</p>` : ''}
             ${showSecrets ? line('Secret', npc.secret) : ''}

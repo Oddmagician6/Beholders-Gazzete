@@ -191,7 +191,7 @@ function rollShop(opts = {}) {
 
     return {
         type, wealth,
-        name: rollShopName(type, keeper.name),
+        name: rollShopName(type, keeper.firstName || keeper.name),
         keeper,
         greeting: randomArray(def.greetings),
         quirk: randomArray(SHOP_QUIRKS),

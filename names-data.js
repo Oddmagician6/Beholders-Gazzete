@@ -473,7 +473,7 @@ function rollPlaceNames(type, count = 10) {
     const seen = new Set();
     for (let tries = 0; out.length < count && tries < count * 25; tries++) {
         const t = types.includes(type) ? type : randomArray(types);
-        const owner = rollNames(1)[0].name;
+        const owner = rollNames(1)[0].first;
         const name = rollShopName(t, owner);
         if (seen.has(name)) continue;
         seen.add(name);

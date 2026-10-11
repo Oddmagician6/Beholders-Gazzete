@@ -172,7 +172,7 @@ function rollTavern(seed, opts = {}) {
     const part = (label, fn) => withSeed(deriveSeed(seed, label), fn);
 
     const owner = part('owner', () => ({ ...rollNPC(), role: randomArray(TAVERN_OWNER_ROLES) }));
-    const name = part('name', () => rollShopName('tavern', owner.name));
+    const name = part('name', () => rollShopName('tavern', owner.firstName || owner.name));
 
     // Always drawn, so a picked quality doesn't shift any other part.
     const rolledTier = part('tier', () => {
