@@ -1,7 +1,7 @@
 /* ============================================
    DM SESSION KIT
    A crier headline, one rumor, one NPC, one loot roll, and a shop on a page.
-   Rollers: npc-data.js (rollNPC), loot-engine.js (rollTreasure), rumors.json,
+   Rollers: npc-data.js (rollNPC), loot-engine.js (rollTreasure), rumors.json (dealt by rumor-deck.js),
    town-crier.js (articles.json), shop-engine.js (rollShop, live market prices).
    Seeds and the shareable URL: rng.js.
    ============================================ */
@@ -71,12 +71,9 @@ function rollCrier(id) {
 function rollRumor(idx) {
     if (!rumorPool.length) return;
     if (!rumorPool[idx]) {
-        const cat = opt('rumor-category');
-        const pool = rumorPool.map((r, i) => i).filter(i => cat === 'all' || rumorPool[i].category === cat);
-        if (!pool.length) return;
-        // Avoid repeating the rumor already on screen when there's a choice.
-        const others = pool.length > 1 && kit.rumor ? pool.filter(i => rumorPool[i].text !== kit.rumor.text) : pool;
-        idx = others[Math.floor(rand() * others.length)];
+        // Deal from the same per-category deck as the Tavern (rumor-deck.js): no repeats until it runs out.
+        idx = dealRumor(rumorPool, rumorPool.length, opt('rumor-category'), kit.rumorIdx ?? -1).idx;
+        if (idx < 0) return;
     }
     kit.rumor = rumorPool[idx];
     kit.rumorIdx = idx;

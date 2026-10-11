@@ -40,13 +40,12 @@ function generateRumor() {
         return;
     }
 
-    // Filter by category (indexes, so the pick can go in the URL)
-    const pool = allRumors.rumors.map((r, i) => i)
-        .filter(i => currentCategory === 'all' || allRumors.rumors[i].category === currentCategory);
-
-    // Pick random rumor (rand() from rng.js)
-    currentIdx = pool[Math.floor(rand() * pool.length)];
+    // Deal from the category's deck (rumor-deck.js): no repeats until it runs out
+    const deal = dealRumor(allRumors.rumors, baseCount, currentCategory, currentIdx);
+    if (deal.idx < 0) return;
+    currentIdx = deal.idx;
     const rumor = allRumors.rumors[currentIdx];
+    updateDeckCount(deal.reshuffled);
 
     // Display rumor
     displayRumor(rumor);
@@ -57,6 +56,21 @@ function generateRumor() {
 
     // Animate
     animateDisplay();
+}
+
+// ── Deck counter: "N of M left in the deck" ─────────────
+function updateDeckCount(reshuffled) {
+    const { left, total } = rumorDeckCount(allRumors.rumors, baseCount, currentCategory);
+    if (!total) return;
+    document.getElementById('deck-left').textContent = reshuffled
+        ? `The deck ran dry, so the bard reshuffled. ${left} of ${total} left.`
+        : left ? `${left} of ${total} rumors left in this deck.` : `All ${total} told. The next draw reshuffles the deck.`;
+    document.getElementById('deck-count').hidden = false;
+}
+
+function reshuffleDeck() {
+    reshuffleRumorDeck(baseCount, currentCategory);
+    updateDeckCount();
 }
 
 // ── Shareable link: ?rumor=<index in rumors.json> ─────────
@@ -254,6 +268,9 @@ function addRumor() {
     // Clear input
     document.getElementById('new-rumor-text').value = '';
 
+    addToRumorDecks(allRumors.rumors, baseCount, allRumors.rumors.length - 1);
+    updateDeckCount();
+
     status.textContent = 'Added to tonight\'s mill. It can now come up when you draw rumors, until you refresh the page.';
 
     // Display it (reader-added rumors stay out of the URL)
@@ -275,6 +292,7 @@ function setupCategoryButtons() {
             btn.classList.add('active');
             // Set current category
             currentCategory = btn.dataset.category;
+            updateDeckCount();
         });
     });
 }
@@ -310,6 +328,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupCategoryButtons();
     document.getElementById('rumor-link').addEventListener('click', copyLink);
     document.getElementById('next-btn').addEventListener('click', revealFollowup);
+    document.getElementById('deck-shuffle').addEventListener('click', reshuffleDeck);
+    updateDeckCount();
     applyUrl();
     // Back/Forward step through earlier draws.
     window.addEventListener('popstate', applyUrl);

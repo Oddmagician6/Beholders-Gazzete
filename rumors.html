@@ -167,6 +167,14 @@
         .rumor-link { display: block; margin: 14px auto 0; font-size: 0.85rem; }
         .rumor-link[hidden] { display: none; }
 
+        /* Rumor deck (F20): "N of M left" under the draw button */
+        .deck-count { margin: 12px 0 0; color: #888; font-size: 0.85rem; }
+        .deck-count[hidden] { display: none; }
+        .deck-shuffle {
+            background: none; border: none; padding: 2px 4px; margin-left: 6px;
+            color: #d4af37; font: inherit; text-decoration: underline; cursor: pointer;
+        }
+
         /* Follow-up rumor (F19): "What happened next…" */
         .rumor-next { margin-top: 18px; text-align: center; }
         .rumor-next[hidden], .next-text[hidden], .next-btn[hidden] { display: none; }
@@ -509,6 +517,7 @@
       <li><a href="loot-generator.html">💎 Loot</a></li>
       <li><a href="spellbook.html">📖 Spellbook</a></li>
       <li><a href="session-kit.html">🎲 Session Kit</a></li>
+      <li><a href="toolbox.html">🧰 Toolbox</a></li>
       <li><a href="glossary.html">👥 Who's Who</a></li>
       <li><a href="about.html">📜 About</a></li>
     </ul>
@@ -559,6 +568,10 @@
                 <button class="generate-btn" onclick="generateRumor()">
                     🎲 Generate Rumor
                 </button>
+                <p class="deck-count" id="deck-count" hidden>
+                    <span id="deck-left" aria-live="polite"></span>
+                    <button type="button" class="deck-shuffle" id="deck-shuffle">🔀 Shuffle</button>
+                </p>
                 
                 <div class="rumor-display" id="rumor-display">
                     <div class="rumor-placeholder">
@@ -652,6 +665,7 @@
 
     <script src="rng.js"></script>
     <script src="town-crier.js"></script>
+    <script src="rumor-deck.js"></script>
     <script src="rumors.js"></script>
   <script>
   // ── Mobile nav toggle ─────────────────────────────────
