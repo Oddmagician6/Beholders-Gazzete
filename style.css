@@ -762,7 +762,7 @@ footer::before {
   .card { padding: 18px; }
 }
 
-/* Formspree forms (raven-form.js) */
+/* Subscribe and contact forms (raven-form.js) */
 .raven-status { margin-top: 10px; font-size: 0.85rem; min-height: 1em; }
 .raven-ok { color: var(--gold-bright); }
 .raven-err { color: #e07a6a; }
