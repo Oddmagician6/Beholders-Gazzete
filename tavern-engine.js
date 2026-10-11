@@ -53,12 +53,12 @@ const TAVERN_DISHES = {
 
 // House drinks by tier (original). Priced off the tier's mug of ale.
 const TAVERN_DRINKS = {
-    squalid: ['Bilgewater Brown', 'Gutrot (a clear liquid)', 'Tuesday\'s Ale', 'Puddle Porter'],
-    poor: ['Turnip moonshine', 'Small beer', 'Sour cider', 'Mule-Kick Mead'],
-    modest: ['Dwarven stout', 'Halfling harvest cider', 'Honey mead', 'Red ale on tap', 'Hot mulled cider'],
-    comfortable: ['Barrel-aged dark ale', 'Spiced winter wine', 'Elderflower mead', 'Gnomish fizzy lager', 'Plum brandy'],
-    wealthy: ['Elven summerwine', 'Dwarven fire whiskey', 'Chilled pear brandy', 'Imported sparkling wine'],
-    aristocratic: ['Hundred-year elven vintage', 'Liquid starlight (a cordial)', 'Celestial mead, by the thimble', 'Wine older than the city']
+    squalid: ['Bilgewater Brown', 'Gutrot (a clear liquid)', 'Tuesday\'s Ale', 'Puddle Porter', 'Barrel-bottom bitter', 'Swamp gin (it is green)'],
+    poor: ['Turnip moonshine', 'Small beer', 'Sour cider', 'Mule-Kick Mead', 'Watered wine', 'Nettle beer'],
+    modest: ['Dwarven stout', 'Halfling harvest cider', 'Honey mead', 'Red ale on tap', 'Hot mulled cider', 'Blackberry wine', 'Orcish smoked porter'],
+    comfortable: ['Barrel-aged dark ale', 'Spiced winter wine', 'Elderflower mead', 'Gnomish fizzy lager', 'Plum brandy', 'Halfling pipeweed ale', 'Mountain cherry cordial'],
+    wealthy: ['Elven summerwine', 'Dwarven fire whiskey', 'Chilled pear brandy', 'Imported sparkling wine', 'Honeyed tea with a shot of something', 'Desert date wine'],
+    aristocratic: ['Hundred-year elven vintage', 'Liquid starlight (a cordial)', 'Celestial mead, by the thimble', 'Wine older than the city', 'Frost giant ice wine', 'Phoenix-ember brandy (served warm)']
 };
 
 // A stay or a plate for "about" a price: ±25%, rounded to the copper.
@@ -109,7 +109,13 @@ const TAVERN_QUIRKS = [
     'Payment is accepted in coin, trade, or a good song, at the barkeep\'s whim.',
     'A trapdoor behind the bar opens onto an old smugglers\' tunnel. The watch pretends not to know.',
     'The menu is written on the wall in chalk, and the prices change when the owner is in a mood.',
-    'Gnomish clockwork taps pour the ale. One of them pours only on the third try.'
+    'Gnomish clockwork taps pour the ale. One of them pours only on the third try.',
+    'The previous owner is buried under the hearthstone, at their own request.',
+    'Every drink comes with a free fortune, written by the cook. The fortunes are threats.',
+    'A rowboat hangs from the ceiling, and someone sleeps in it most nights.',
+    'The house rule: whoever starts a fight cleans up after it, under supervision.',
+    'There is no menu. The cook brings what the cook feels you need.',
+    'A tame raven steals shiny things and keeps them in a nest above the bar. The nest is worth a fortune.'
 ];
 
 const TAVERN_SCENES = {
@@ -141,17 +147,25 @@ const TAVERN_TONIGHT = [
     'Card night. The stakes are high, and somebody is cheating.',
     'A local noble is slumming it and pretending nobody recognizes them.',
     'The owner is celebrating a birthday. The first drink is free, the singing is not optional.',
-    'A troupe of actors is rehearsing a play about the party. It is not flattering.'
+    'A troupe of actors is rehearsing a play about the party. It is not flattering.',
+    'A tax collector is drinking alone, and everyone is being very polite to him.',
+    'A storm has knocked out the road, and a lord, a bandit, and a priest are sharing a table.',
+    'A cooking contest: three cooks, one judge, and a lot of nervous tasters.',
+    'Someone has bet the whole room they can catch the cellar rat by midnight.',
+    'Two old adventurers are arguing about who really killed the dragon, with diagrams.',
+    'A funeral wake is turning into the best party the town has seen all year.'
 ];
 
 const TAVERN_HABITS = [
     'always at the end of the bar', 'in the corner booth, back to the wall', 'by the fire, boots off',
     'at the dice table, losing', 'on the same stool every night since it opened', 'near the door, watching who comes in',
     'holding court at the long table', 'nursing one drink all night', 'helping behind the bar when it gets busy',
-    'asleep by the hearth more often than not', 'at the window, waiting for someone', 'telling the same story to anyone new'
+    'asleep by the hearth more often than not', 'at the window, waiting for someone', 'telling the same story to anyone new',
+    'playing chess against anyone, and winning', 'sketching the other patrons', 'arguing politics with the cook',
+    'feeding scraps to the house cat', 'writing letters they never send', 'buying drinks for strangers, for reasons'
 ];
 
-const TAVERN_OWNER_ROLES = ['Owner and barkeep', 'Innkeeper', 'Proprietor', 'Owner and cook', 'Landlord', 'Owner (inherited it, regrets it)'];
+const TAVERN_OWNER_ROLES = ['Owner and barkeep', 'Innkeeper', 'Proprietor', 'Owner and cook', 'Landlord', 'Owner (inherited it, regrets it)', 'Owner (won it in a card game)', 'Retired adventurer and owner', 'Co-owner (the other one is never in)'];
 
 // opts: { quality: tier key or 'random' }. Returns the tavern without a rumor.
 function rollTavern(seed, opts = {}) {

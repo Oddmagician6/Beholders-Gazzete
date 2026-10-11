@@ -56,7 +56,7 @@ const npcData = {
         merchant: ["Apothecary", "Bookseller", "Clothier", "Gem Merchant", "General Store Owner", "Grocer", "Herb Seller", "Jeweler", "Livestock Trader", "Map Maker", "Potion Seller", "Scroll Merchant", "Spice Trader", "Tailor", "Weapon Smith", "Wine Merchant"],
         guard: ["City Guard", "Gate Keeper", "Harbormaster", "Herald", "Judge", "Lawyer", "Magistrate", "Marshal", "Night Watch", "Prison Guard", "Royal Guard", "Sheriff", "Soldier", "Tax Collector", "Town Crier", "Warden"],
         magic: ["Alchemist", "Arcane Scholar", "Artificer", "Diviner", "Enchanter", "Hedge Wizard", "Illusionist", "Magical Tutor", "Necromancer", "Oracle", "Sage", "Scrivener", "Sorcerer", "Spellbook Seller", "Transmuter", "Witch"],
-        criminal: ["Assassin", "Burglar", "Con Artist", "Counterfeiter", "Fence", "Gang Leader", "Hacker", "Informant", "Pickpocket", "Pirate", "Poacher", "Racketeer", "Saboteur", "Smuggler", "Spy", "Thief"],
+        criminal: ["Assassin", "Burglar", "Con Artist", "Counterfeiter", "Fence", "Gang Leader", "Highwayman", "Informant", "Pickpocket", "Pirate", "Poacher", "Racketeer", "Saboteur", "Smuggler", "Spy", "Thief"],
         noble: ["Baron", "Baroness", "Count", "Countess", "Duke", "Duchess", "Earl", "Heir", "Knight", "Lady", "Lord", "Mayor", "Prince", "Princess", "Viscount", "Viscountess"],
         religious: ["Acolyte", "Chaplain", "Cleric", "Deacon", "Druid", "Exorcist", "Friar", "High Priest", "Inquisitor", "Missionary", "Monk", "Nun", "Paladin", "Priest", "Prophet", "Shaman"],
         adventurer: ["Barbarian", "Bard", "Fighter", "Monk", "Paladin", "Ranger", "Rogue", "Sorcerer", "Warlock", "Wizard", "Artificer", "Druid", "Cleric"]
@@ -228,7 +228,10 @@ const npcData = {
         "Dramatic", "Robotic", "Ethereal", 
         "Guttural", "Melodic", "Crackling", 
         "Echoey", "Muffled", "Clear as bell", 
-        "Slurred", "Precise", "Unpredictable"
+        "Slurred", "Precise", "Unpredictable",
+        "Sing-song", "Clipped and military", "Wheezy", "Honeyed",
+        "Thick regional accent", "Rapid-fire", "Gentle", "Hoarse from shouting",
+        "Posh and drawling", "Always slightly too loud"
     ],
 
     // SECRETS
@@ -242,7 +245,12 @@ const npcData = {
         "Is addicted to a magical substance", "Has an illegitimate child", 
         "Faked their own death", "Is immortal and watches friends die", 
         "Can speak with animals but hides it", "Is afraid of their own power", 
-        "Made a promise they can't keep", "Knows where a treasure is buried"
+        "Made a promise they can't keep", "Knows where a treasure is buried",
+        "Is two halflings in a long coat", "Was once engaged to a dragon in disguise",
+        "Runs an underground fighting ring", "Is the anonymous author of a scandalous ballad",
+        "Has a twin nobody knows about", "Is slowly turning into a tree",
+        "Burned down their old village by mistake", "Reads other people's letters",
+        "Is a lycanthrope who has never hurt anyone (yet)", "Secretly writes for the Beholder's Gazette"
     ],
 
     // QUEST HOOKS
@@ -256,7 +264,12 @@ const npcData = {
         "Found a map but can't read it", "Dreams are coming true (literally)", 
         "Item they sold is now needed back", "Someone knows their secret", 
         "Needs a bodyguard for a public event", "Child has been kidnapped", 
-        "Property is being foreclosed", "Haunted by a specific ghost"
+        "Property is being foreclosed", "Haunted by a specific ghost",
+        "Wants a rival's prize pig stolen before the fair", "Needs a stand-in at their own wedding",
+        "Their shop's sign keeps getting stolen", "Inherited a key to a door they can't find",
+        "Hears knocking from inside the walls", "Lost a bet and owes a fey a firstborn",
+        "Needs a rare ingredient from a dangerous place", "Wants proof their spouse is a doppelganger",
+        "Their familiar ran away with valuable notes", "Needs someone to win a contest for them"
     ],
 
     // RELATIONSHIPS
@@ -270,7 +283,12 @@ const npcData = {
         "Enemy of a local noble", "Protected by a dragon", 
         "Informant for the city watch", "Member of a religious cult", 
         "Business partner with a dwarf", "Rival merchant", 
-        "Former prisoner", "Godchild of a deity"
+        "Former prisoner", "Godchild of a deity",
+        "Ex-spouse of the guard captain", "Owes the local temple a large tithe",
+        "Pen pal of a foreign prince", "Childhood friend of a notorious pirate",
+        "Landlord to half the street", "Banned from the local tavern",
+        "Sponsor of a struggling bard", "Teaches the mayor's children",
+        "Sworn enemy of a goose", "Engaged to someone they've never met"
     ]
 };
 

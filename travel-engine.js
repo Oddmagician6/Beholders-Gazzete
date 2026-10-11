@@ -236,7 +236,21 @@ const ROAD_EVENTS = [
     { k: 'camp', t: 'Night visitor', d: 'Something circles the camp after dark. In the morning there are small bare footprints around the bedrolls, one ration missing, and a strange one left in its place, wrapped in a leaf.' },
     { k: 'camp', t: 'The leaky tent', w: ['wet'], d: 'The tent leaks. Everyone wakes damp and cranky, and the bard wakes with a new song about it.' },
     { k: 'camp', t: 'Stargazing', w: ['clear'], d: 'A clear night and a sky full of stars. The wizard points out a constellation that wasn\'t there last year.' },
-    { k: 'camp', t: 'Snowed in', w: ['snow'], d: 'The camp wakes to a foot of fresh snow and has to dig out before breakfast. Somebody builds a snow-golem. It is a little too lifelike.' }
+    { k: 'camp', t: 'Snowed in', w: ['snow'], d: 'The camp wakes to a foot of fresh snow and has to dig out before breakfast. Somebody builds a snow-golem. It is a little too lifelike.' },
+    // More (added 2026-10-11)
+    { k: 'travelers', t: 'A lost circus wagon', terr: ['road', 'plains', 'forest'], d: 'A painted circus wagon has lost the rest of its troupe. The driver is a bear in a hat, and the bear is clearly in charge.' },
+    { k: 'travelers', t: 'Tax collector, alone', terr: ['road', 'plains', 'hills'], d: 'A tax collector with a heavy strongbox and no guards asks to travel with the party. Several people along the road would like a word with him.' },
+    { k: 'travelers', t: 'A gnome on a giant tortoise', d: 'A gnome riding a giant tortoise is heading the same way, very slowly. She has been on the road for six years and has excellent gossip.' },
+    { k: 'obstacle', t: 'A toll goat', terr: ['hills', 'mountains', 'road'], d: 'A huge goat stands in the narrowest part of the path and will not move. It eats one item from each traveler that passes, by its own rules.' },
+    { k: 'obstacle', t: 'Wasps in the pass', w: ['hot', 'clear'], terr: ['hills', 'forest', 'plains'], d: 'A wasp nest the size of a barrel hangs over the trail. Passing quietly is a DC 12 Dexterity (Stealth) check for the whole party.' },
+    { k: 'obstacle', t: 'Sandstorm wall', terr: ['desert'], d: 'A brown wall of sand rolls across the horizon. Shelter now, or lose the trail and half a day.' },
+    { k: 'discovery', t: 'A message in a bottle', terr: ['swamp', 'road', 'plains', 'forest'], d: 'A bottle in a stream holds a plea for help, dated next week.' },
+    { k: 'discovery', t: 'The overgrown orchard', terr: ['forest', 'hills', 'plains'], d: 'An orchard gone wild, heavy with fruit no one has picked in decades. The scarecrow has been recently repainted.' },
+    { k: 'discovery', t: 'Dragon-scorched village', terr: ['hills', 'plains', 'mountains'], d: 'The houses are glass-black and long cold. The well still works, and someone has been drawing from it.' },
+    { k: 'omen', t: 'Owl at noon', d: 'A white owl watches the party from a branch at midday, then flies off in the direction they are headed.' },
+    { k: 'omen', t: 'The weeping stone', w: ['wet'], d: 'A boulder by the path drips water from two hollows like eyes. The water is warm, and salty.' },
+    { k: 'camp', t: 'Too many fireflies', w: ['clear'], terr: ['forest', 'swamp', 'jungle', 'plains'], d: 'Thousands of fireflies gather around the camp and blink in a pattern. The wizard swears it is spelling something.' },
+    { k: 'camp', t: 'The midnight trader', d: 'A cloaked figure arrives at the fire after midnight with a pack of goods and no light. Prices are fair, and payment is a memory.' }
 ];
 
 const QUIET_DAYS = [
@@ -245,7 +259,13 @@ const QUIET_DAYS = [
     'Plenty of road and very few people.',
     'Uneventful. The bard runs out of songs around noon and starts again from the top.',
     'The most exciting event of the day is lunch.',
-    'A peaceful day. The kind they\'ll miss later.'
+    'A peaceful day. The kind they\'ll miss later.',
+    'Good weather, good road, good company. Nobody trusts it.',
+    'The party passes a farmer who waves. That is the whole day.',
+    'Long hours of walking. Someone starts a game of I Spy and regrets it.',
+    'A quiet day, spent arguing about where to camp.',
+    'The road is empty. The miles go by. Boots wear a little thinner.',
+    'Nothing at all, unless you count the very judgmental cow.'
 ];
 
 // ── Helpers (all through rand()) ─────────────────────────

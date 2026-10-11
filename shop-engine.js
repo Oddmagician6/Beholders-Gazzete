@@ -127,7 +127,17 @@ const SHOP_QUIRKS = [
     'One shelf is roped off with a note: "Reserved for the Baron. Do not ask."',
     'The shopkeeper\'s child runs the till and drives a harder bargain.',
     'There is a "lost and found" bin full of single boots.',
-    'The mirror by the door shows customers about a second late.'
+    'The mirror by the door shows customers about a second late.',
+    'Every item has a handwritten tag with its life story. Some tags are longer than the item.',
+    'The shopkeeper hums constantly and stops only to state a price.',
+    'A tiny brass bell on the counter summons an even tinier assistant.',
+    'The display window has held the same dusty helmet for years. It is not for sale.',
+    'A ledger by the door lists customers banned for life. The list is long and oddly specific.',
+    'Free tea for anyone who listens to the shopkeeper\'s war story. It is a long war.',
+    'The shop is far bigger on the inside than the outside, and the shopkeeper won\'t discuss it.',
+    'Coins paid are tested with a bite, then a sniff, then a long stare.',
+    'A notice reads "Closed for lunch" no matter the hour. The door is open anyway.',
+    'The shopkeeper names every item they sell and says a quiet goodbye at the counter.'
 ];
 
 // Quantity on hand: cheap things come in piles, expensive things one at a time.

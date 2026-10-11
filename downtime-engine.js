@@ -61,7 +61,10 @@ const CAROUSE_OUTCOMES = {
         { k: 'odd', t: 'You have a new tattoo. Nobody, including the tattoo artist, can say what it is supposed to be.' },
         { k: 'odd', t: 'You are now the owner of a goat. The goat has not been told it is owned.' },
         { k: 'odd', t: 'You agreed to be best man (or maid of honor) at a wedding next tenday. You do not know either party.' },
-        { k: 'odd', t: 'A street preacher is convinced you are the prophesied one. He has started following you around.' }
+        { k: 'odd', t: 'A street preacher is convinced you are the prophesied one. He has started following you around.' },
+        { k: 'good', t: 'A dockhand you bought a drink for turns out to run the night shift. Your cargo now goes through without anyone looking.' },
+        { k: 'bad', t: 'You got into a knife-throwing contest and lost. The scar is small, but the story told about it is not.' },
+        { k: 'odd', t: 'You woke up as the new captain of a small, leaky fishing boat. The crew of two is delighted.' }
     ],
     middle: [
         { k: 'good', t: 'You make friends with a guild journeyman who can get you trade goods at a tenth off for the next month.' },
@@ -75,6 +78,9 @@ const CAROUSE_OUTCOMES = {
         { k: 'odd', t: 'You joined a secret society. The password is "turnip." You have no memory of what the society does.' },
         { k: 'odd', t: 'You are engaged. Your betrothed is lovely, very enthusiastic, and has already told their parents.' },
         { k: 'odd', t: 'A gnome inventor bought you drinks all night and now considers you a business partner in a flying bathtub.' },
+        { k: 'good', t: 'You helped a lost courier find the right guildhall. The guild sends a thank-you, a discount, and a standing invitation.' },
+        { k: 'bad', t: 'You loaned a new friend 2d6 gp for a sure thing. The sure thing was not sure, and the friend has left town.' },
+        { k: 'odd', t: 'You won a raffle. The prize is a share in a racehorse that has never finished a race.' },
         { k: 'odd', t: 'You entered a pie-eating contest and won a trophy shaped like a pie. It is real silver and smells faintly of pie.' }
     ],
     high: [
@@ -89,7 +95,10 @@ const CAROUSE_OUTCOMES = {
         { k: 'odd', t: 'You were briefly crowned King or Queen of the Masquerade. The crown is real and someone wants it back.' },
         { k: 'odd', t: 'A fortune teller at the gala read your palm, went pale, and refused your coin.' },
         { k: 'odd', t: 'You commissioned a portrait of yourself while tipsy. It is enormous. The painter delivers next week, with the bill.' },
-        { k: 'odd', t: 'You agreed to adopt a noble family\'s prize-winning peacock. It is loud, vain, and now yours.' }
+        { k: 'odd', t: 'You agreed to adopt a noble family\'s prize-winning peacock. It is loud, vain, and now yours.' },
+        { k: 'good', t: 'A retired general enjoyed your company and offers you the use of her library and her cellar, in that order.' },
+        { k: 'bad', t: 'You mistook a famous poet\'s new work for a drinking song and sang along. The poet will not forget.' },
+        { k: 'odd', t: 'You agreed to a masked dance with a stranger who left at midnight and one glass slipper. The slipper is your size.' }
     ]
 };
 

@@ -12,73 +12,77 @@ const NAME_TABLES = {
         'Rusty', 'Gilded', 'Crooked', 'Singing', 'Drunken', 'Honest', 'Wandering', 'Silver',
         'Copper', 'Sleeping', 'Laughing', 'One-Eyed', 'Lucky', 'Bent', 'Golden', 'Iron',
         'Weeping', 'Prancing', 'Leaky', 'Grumpy', 'Polite', 'Dancing', 'Moonlit', 'Smoky',
-        'Last', 'Second-Best', 'Bashful', 'Cursed', 'Thrifty', 'Wobbly', 'Velvet', 'Stubborn'
+        'Last', 'Second-Best', 'Bashful', 'Cursed', 'Thrifty', 'Wobbly', 'Velvet', 'Stubborn',
+        'Merry', 'Hollow', 'Brass', 'Restless', 'Gentle', 'Howling', 'Frosty', 'Hidden',
+        'Patched', 'Sunken', 'Scarlet', 'Tipsy', 'Jolly', 'Haunted', 'Humble', 'Feral'
     ],
     types: {
         tavern: {
             label: 'Tavern or Inn', icon: '🍺', pairPrefix: 'The ',
             nouns: ['Dragon', 'Pony', 'Boar', 'Stag', 'Griffon', 'Flagon', 'Tankard', 'Goblet', 'Hound', 'Mermaid',
                 'Kraken', 'Rooster', 'Owlbear', 'Hog', 'Badger', 'Crown', 'Anchor', 'Kettle', 'Lute', 'Unicorn',
-                'Goat', 'Wyvern', 'Troll', 'Mimic', 'Bard', 'Hearth', 'Ogre', 'Raven', 'Fiddle', 'Toad'],
-            places: ['Inn', 'Tavern', 'Taproom', 'Alehouse', 'Rest', 'Lodge', 'Public House', 'Brewhouse', 'Hearth', 'Mead Hall'],
+                'Goat', 'Wyvern', 'Troll', 'Mimic', 'Bard', 'Hearth', 'Ogre', 'Raven', 'Fiddle', 'Toad',
+                'Swan', 'Bear', 'Lantern', 'Cask', 'Fox', 'Salmon', 'Basilisk', 'Harp', 'Wheel', 'Gargoyle'],
+            places: ['Inn', 'Tavern', 'Taproom', 'Alehouse', 'Rest', 'Lodge', 'Public House', 'Brewhouse', 'Hearth', 'Mead Hall', 'Cellar', 'Snug'],
             puns: ['The Long Rest', 'The Short Rest (Two-Drink Minimum)', 'Inn Over Your Head', 'Ale & Farewell',
                 'The Natural Twenty', 'The Rolled-a-One', 'Hops & Hit Points', 'Brews Your Own Adventure',
                 'The Tavern on the Grim', 'The Last Resort', 'Mead Me Halfway', 'The Critical Sip',
-                'Pint of No Return', 'The Saving Throw-Up', 'Bottoms Up & Dungeons Down']
+                'Pint of No Return', 'The Saving Throw-Up', 'Bottoms Up & Dungeons Down',
+                'Advantage on Ale', 'The Tipsy Tarrasque', 'Inn-itiative', 'Rest Assured', 'The Bard Did It']
         },
         general: {
             label: 'General Store', icon: '🏪',
-            nouns: ['Barrel', 'Lantern', 'Satchel', 'Crate', 'Candle', 'Ladle', 'Bucket', 'Coil of Rope'],
-            places: ['Goods', 'Sundries', 'Supply', 'Provisions', 'Trading Post', 'Mercantile'],
-            puns: ['Everything But the Kitchen Sink (Sink Sold Separately)', 'Rope, Soap & Hope', 'Ten-Foot Pole Position', 'Bags of Not-Quite-Holding']
+            nouns: ['Barrel', 'Lantern', 'Satchel', 'Crate', 'Candle', 'Ladle', 'Bucket', 'Coil of Rope', 'Spade', 'Pack Mule', 'Tinderbox', 'Wheelbarrow'],
+            places: ['Goods', 'Sundries', 'Supply', 'Provisions', 'Trading Post', 'Mercantile', 'Dry Goods', 'Outfitters'],
+            puns: ['Everything But the Kitchen Sink (Sink Sold Separately)', 'Rope, Soap & Hope', 'Ten-Foot Pole Position', 'Bags of Not-Quite-Holding', 'Adventurer\'s Starter Pack (Some Assembly)', 'Ten Feet of Everything', 'Torch Song Supplies']
         },
         blacksmith: {
             label: 'Blacksmith & Armorer', icon: '⚒️',
-            nouns: ['Anvil', 'Hammer', 'Forge', 'Tongs', 'Ember', 'Bellows', 'Horseshoe', 'Rivet'],
-            places: ['Forge', 'Smithy', 'Ironworks', 'Anvil', 'Armory', 'Metalworks'],
-            puns: ['Forged About It', 'Hilt the Spot', 'Steel Yourself', 'Pointy End Out', 'Iron Out the Details']
+            nouns: ['Anvil', 'Hammer', 'Forge', 'Tongs', 'Ember', 'Bellows', 'Horseshoe', 'Rivet', 'Chainmail', 'Slag', 'Iron Boot', 'Sword Blank'],
+            places: ['Forge', 'Smithy', 'Ironworks', 'Anvil', 'Armory', 'Metalworks', 'Steelworks', 'Hammerhall'],
+            puns: ['Forged About It', 'Hilt the Spot', 'Steel Yourself', 'Pointy End Out', 'Iron Out the Details', 'Mail Order', 'Strike While It\'s Hot', 'Shield Me Tender']
         },
         bowyer: {
             label: 'Bowyer & Fletcher', icon: '🏹',
-            nouns: ['Arrow', 'Quiver', 'Fletching', 'Bowstring', 'Yew', 'Bullseye', 'Goose Feather', 'Target'],
-            places: ['Bows', 'Fletchery', 'Archery', 'Quivers', 'Range'],
-            puns: ['Quiver With Excitement', 'Right on Target', 'String Theory', 'Point Taken', 'Bolt From the Blue']
+            nouns: ['Arrow', 'Quiver', 'Fletching', 'Bowstring', 'Yew', 'Bullseye', 'Goose Feather', 'Target', 'Longbow', 'Crossbow', 'Stag', 'Ash Stave'],
+            places: ['Bows', 'Fletchery', 'Archery', 'Quivers', 'Range', 'Bowyers', 'Shafts & Strings'],
+            puns: ['Quiver With Excitement', 'Right on Target', 'String Theory', 'Point Taken', 'Bolt From the Blue', 'Arrow-gant Prices', 'Fletch Me If You Can', 'The Long Shot']
         },
         alchemist: {
             label: 'Alchemist & Apothecary', icon: '⚗️',
-            nouns: ['Cauldron', 'Retort', 'Vial', 'Mortar', 'Toad', 'Mandrake', 'Flask', 'Bubbling Pot'],
-            places: ['Elixirs', 'Apothecary', 'Remedies', 'Tinctures', 'Brews', 'Alchemy'],
-            puns: ['Potions Pending', 'Brew-Ha-Ha', 'Side Effects May Vary', 'Mostly Not Poison', 'The Philter Bubble']
+            nouns: ['Cauldron', 'Retort', 'Vial', 'Mortar', 'Toad', 'Mandrake', 'Flask', 'Bubbling Pot', 'Nightshade', 'Snail', 'Beaker', 'Moth'],
+            places: ['Elixirs', 'Apothecary', 'Remedies', 'Tinctures', 'Brews', 'Alchemy', 'Draughts', 'Herbarium'],
+            puns: ['Potions Pending', 'Brew-Ha-Ha', 'Side Effects May Vary', 'Mostly Not Poison', 'The Philter Bubble', 'Shake Well Before Dying', 'The Cure-ious Cauldron', 'Elixir Sure?']
         },
         arcane: {
             label: 'Arcane Emporium', icon: '🔮',
-            nouns: ['Owl', 'Wand', 'Grimoire', 'Crystal', 'Star', 'Familiar', 'Rune', 'Hourglass'],
-            places: ['Arcana', 'Emporium', 'Curios', 'Scrolls', 'Enchantments', 'Wonders'],
-            puns: ['Wand-erlust', 'Hex & the City', 'Spell-Check', 'No Refunds on Fireballs', 'Abra-Kadeal']
+            nouns: ['Owl', 'Wand', 'Grimoire', 'Crystal', 'Star', 'Familiar', 'Rune', 'Hourglass', 'Moon', 'Comet', 'Scroll', 'Candle'],
+            places: ['Arcana', 'Emporium', 'Curios', 'Scrolls', 'Enchantments', 'Wonders', 'Mysteries', 'Spellcraft'],
+            puns: ['Wand-erlust', 'Hex & the City', 'Spell-Check', 'No Refunds on Fireballs', 'Abra-Kadeal', 'Mage Against the Machine', 'Scroll With It', 'Rune Your Day']
         },
         stable: {
             label: 'Stable & Wainwright', icon: '🐴',
-            nouns: ['Horseshoe', 'Saddle', 'Mare', 'Stallion', 'Hayloft', 'Bridle', 'Mule', 'Wagon Wheel'],
-            places: ['Stables', 'Livery', 'Paddock', 'Wainwrights', 'Carts & Carriages'],
-            puns: ['Neigh-borhood Livery', 'Hold Your Horses', 'Stable Genius', 'Whoa There', 'Mane Street Stables']
+            nouns: ['Horseshoe', 'Saddle', 'Mare', 'Stallion', 'Hayloft', 'Bridle', 'Mule', 'Wagon Wheel', 'Pony', 'Carriage', 'Ox', 'Hay Bale'],
+            places: ['Stables', 'Livery', 'Paddock', 'Wainwrights', 'Carts & Carriages', 'Coaching House', 'Corral'],
+            puns: ['Neigh-borhood Livery', 'Hold Your Horses', 'Stable Genius', 'Whoa There', 'Mane Street Stables', 'Unbridled Joy', 'Cart Before the Horse', 'Stirrup Trouble']
         },
         provisioner: {
             label: 'Grocer & Provisioner', icon: '🧀',
-            nouns: ['Ham', 'Turnip', 'Cheese Wheel', 'Loaf', 'Pickle', 'Sausage', 'Cabbage', 'Herring'],
-            places: ['Larder', 'Provisions', 'Pantry', 'Grocery', 'Market Stall', 'Victuals'],
-            puns: ['Lettuce Pray', 'The Grate Cheese Wheel', 'Rations & Rationalizations', 'Pickled Adventurer (Not Literally)', 'Hearth & Hardtack']
+            nouns: ['Ham', 'Turnip', 'Cheese Wheel', 'Loaf', 'Pickle', 'Sausage', 'Cabbage', 'Herring', 'Onion', 'Apple', 'Ham Hock', 'Honeycomb'],
+            places: ['Larder', 'Provisions', 'Pantry', 'Grocery', 'Market Stall', 'Victuals', 'Greengrocer', 'Storehouse'],
+            puns: ['Lettuce Pray', 'The Grate Cheese Wheel', 'Rations & Rationalizations', 'Pickled Adventurer (Not Literally)', 'Hearth & Hardtack', 'Thyme & Again', 'Hardtack & Hard Bargains', 'Better Than Rations']
         },
         tinker: {
             label: "Tinker's Workshop", icon: '⚙️',
-            nouns: ['Cog', 'Gear', 'Spring', 'Lens', 'Gadget', 'Widget', 'Clockwork Mouse', 'Wrench'],
-            places: ['Workshop', 'Tinkery', 'Contraptions', 'Gadgets', 'Tools & Trinkets', 'Clockworks'],
-            puns: ['Cog-nitive Dissonance', 'Some Assembly Required', 'Nuts & Bolts & Nuts', 'Spring Loaded', 'Gear Pressure']
+            nouns: ['Cog', 'Gear', 'Spring', 'Lens', 'Gadget', 'Widget', 'Clockwork Mouse', 'Wrench', 'Rivet', 'Sprocket', 'Pocket Watch', 'Tin Bird'],
+            places: ['Workshop', 'Tinkery', 'Contraptions', 'Gadgets', 'Tools & Trinkets', 'Clockworks', 'Mechanics', 'Repairs'],
+            puns: ['Cog-nitive Dissonance', 'Some Assembly Required', 'Nuts & Bolts & Nuts', 'Spring Loaded', 'Gear Pressure', 'Wind Me Up', 'Fixed (Mostly)', 'The Tick & the Tock']
         },
         curio: {
             label: 'Curio & Pawn', icon: '🗝️',
-            nouns: ['Magpie', 'Raven', 'Trinket', 'Dusty Shelf', 'Locked Chest', 'Cracked Mirror', 'Monkey Paw', 'Odd Sock'],
-            places: ['Curiosities', 'Pawn', 'Oddities', 'Bric-a-Brac', 'Secondhand Goods', 'Finds'],
-            puns: ['No Questions Asked', 'Previously Adventured', 'One Owner, Recently Deceased', 'Finders Keepers', 'Pawn Star']
+            nouns: ['Magpie', 'Raven', 'Trinket', 'Dusty Shelf', 'Locked Chest', 'Cracked Mirror', 'Monkey Paw', 'Odd Sock', 'Old Boot', 'Skull', 'Pocket Watch', 'Glass Eye'],
+            places: ['Curiosities', 'Pawn', 'Oddities', 'Bric-a-Brac', 'Secondhand Goods', 'Finds', 'Treasures', 'Antiques'],
+            puns: ['No Questions Asked', 'Previously Adventured', 'One Owner, Recently Deceased', 'Finders Keepers', 'Pawn Star', 'Haunted (Discounted)', 'Previously Cursed', 'Yesterday\'s Loot']
         }
     },
     // {adj} {noun} / {noun} & {noun} / {owner}'s {place} / {adj} {noun} {place} / pun
