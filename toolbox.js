@@ -2,10 +2,12 @@
    DM TOOLBOX
    Small table tools on one page, one tab each (?tab=).
    Names (F21): tavern and shop names, rolled by names-data.js (rollPlaceNames).
+   Travel (F22): weather, a road event, and the day's miles, rolled by
+   travel-engine.js (rollJourney). Nothing is stored; the URL holds the trip.
    Seeds and the shareable URL: rng.js.
    ============================================ */
 
-const TOOLBOX_TABS = ['names'];
+const TOOLBOX_TABS = ['names', 'travel'];
 const KEPT_KEY = 'gazette-kept-names';
 const KEPT_MAX = 100;
 
@@ -164,28 +166,186 @@ function clearKept() {
     flash('names-status', `🧹 Cleared ${count} kept name${count === 1 ? '' : 's'}.`);
 }
 
-// ── URL: ?tab=&for=<type>&seed= ───────────────────────────
+// ── Travel (F22) ──────────────────────────────────────────
+const TRAVEL_MAX_DAYS = 60;
+// URL param → field id. Season is always written (its default follows today's date).
+const TRAVEL_FIELDS = { climate: 'tr-climate', season: 'tr-season', terrain: 'tr-terrain', pace: 'tr-pace', hours: 'tr-hours', ride: 'tr-ride', miles: 'tr-miles' };
+
+let travel = { seed: null, day: 1, days: [] };
+
+function seasonNow() {
+    const m = new Date().getMonth();
+    return m >= 2 && m <= 4 ? 'spring' : m >= 5 && m <= 7 ? 'summer' : m >= 8 && m <= 10 ? 'autumn' : 'winter';
+}
+
+function setupTravelForm() {
+    const fill = (id, table, def) => {
+        const sel = document.getElementById(id);
+        Object.entries(table).forEach(([key, t]) => sel.add(new Option(`${t.icon ? t.icon + ' ' : ''}${t.label}`, key, key === def, key === def)));
+    };
+    fill('tr-climate', TRAVEL_CLIMATES, 'temperate');
+    fill('tr-season', TRAVEL_SEASONS, seasonNow());
+    fill('tr-terrain', TRAVEL_TERRAIN, 'road');
+    const paces = {};
+    Object.entries(TRAVEL_PACES).forEach(([k, p]) => { paces[k] = { label: `${p.label} (${p.mph} mph, ${p.day} miles a day)` }; });
+    fill('tr-pace', paces, 'normal');
+    const hours = {};
+    for (let h = 1; h <= 12; h++) hours[h] = { label: h === 8 ? '8 hours (a full day)' : h > 8 ? `${h} hours (forced march)` : `${h} hour${h === 1 ? '' : 's'}` };
+    fill('tr-hours', hours, '8');
+}
+
+function travelOpts() {
+    const v = id => document.getElementById(id).value;
+    return {
+        climate: v('tr-climate'), season: v('tr-season'), terrain: v('tr-terrain'), pace: v('tr-pace'),
+        hours: Number(v('tr-hours')), gallop: v('tr-ride') === '1',
+        miles: Math.min(5000, Math.max(0, Math.round(Number(v('tr-miles')) || 0)))
+    };
+}
+
+function travelParams() {
+    const params = { seed: travel.seed, day: travel.day > 1 ? travel.day : null };
+    Object.entries(TRAVEL_FIELDS).forEach(([key, id]) => {
+        const el = document.getElementById(id);
+        params[key] = key === 'season' || fieldValue(el) !== defaultValue(el) ? el.value : null;
+    });
+    if (params.miles === '0' || params.miles === '') params.miles = null;
+    return urlFor('travel', params);
+}
+
+// Rebuild days 1..day from the seed and the form. push: true = new history entry,
+// false = replace, null = leave the URL alone (it already says this).
+function showJourney(push) {
+    const opts = travelOpts();
+    document.getElementById('tr-miles').value = opts.miles;
+    travel.days = rollJourney(travel.seed, opts, Math.min(TRAVEL_MAX_DAYS, Math.max(1, travel.day)));
+    travel.day = travel.days.length;   // stops at the day the party arrived
+    renderTravel(opts);
+    if (push !== null) setUrlParams(travelParams(), push);
+}
+
+function newJourney(push = true) {
+    travel = { seed: newSeed(), day: 1, days: [] };
+    showJourney(push);
+}
+
+function nextDay() {
+    const last = travel.days[travel.days.length - 1];
+    if (!last || last.arrived || travel.day >= TRAVEL_MAX_DAYS) return;
+    travel.day++;
+    showJourney(true);
+}
+
+function renderTravel(opts) {
+    const d = travel.days[travel.days.length - 1];
+    const w = d.weather;
+    const ev = ROAD_EVENT_KINDS[d.event.k];
+    const goal = opts.miles;
+    const progress = goal ? Math.min(100, Math.round(d.covered / goal * 100)) : 0;
+    const left = goal ? Math.round((goal - d.covered) * 10) / 10 : 0;
+    const perDay = travelDistance(opts, null).miles;   // a day without bad weather
+    const daysLeft = left > 0 && perDay > 0 ? Math.ceil(left / perDay) : 0;
+
+    document.getElementById('travel-day').innerHTML = `
+        <div class="day-head">
+            <h3>Day ${d.day}</h3>
+            <span class="day-where">${TRAVEL_TERRAIN[opts.terrain].icon} ${esc(TRAVEL_TERRAIN[opts.terrain].label)} · ${esc(TRAVEL_CLIMATES[opts.climate].label)} · ${esc(TRAVEL_SEASONS[opts.season].label)}</span>
+        </div>
+        ${goal ? `<div class="day-progress" role="progressbar" aria-label="Journey progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${progress}"><span style="width:${progress}%"></span></div>` : ''}
+        <div class="day-grid">
+            <section class="day-block day-weather">
+                <h4>Weather</h4>
+                <div class="wx-head">
+                    <span class="wx-icon" aria-hidden="true">${WEATHER_KINDS[w.kind].icon}</span>
+                    <div>
+                        <div class="wx-title">${esc(weatherHeadline(w))}</div>
+                        <p class="wx-detail">${esc(weatherDetail(w))}</p>
+                    </div>
+                </div>
+                <p class="day-flavor">${esc(w.flavor)}</p>
+                ${w.effects.length ? `<ul class="day-fx">${w.effects.map(f => `<li>${esc(f.text)}<span class="fx-src${f.src === 'SRD' ? ' srd' : ''}">${f.src === 'SRD' ? 'SRD' : 'ruling'}</span></li>`).join('')}</ul>` : ''}
+            </section>
+            <section class="day-block">
+                <h4>${ev.icon} ${esc(ev.label)}</h4>
+                ${d.event.k === 'quiet' ? '' : `<p class="ev-title">${esc(d.event.t)}</p>`}
+                <p class="ev-text">${esc(d.event.d)}</p>
+                ${d.event.hook ? `<p class="ev-hook"><strong>Hook:</strong> ${esc(d.event.hook)}</p>` : ''}
+            </section>
+            <section class="day-block">
+                <h4>🥾 Distance</h4>
+                <div class="dist-miles">${d.today}<small>miles today</small></div>
+                <p class="dist-sum">${esc(TRAVEL_PACES[d.dist.pace].label)} pace, ${d.dist.hours} hour${d.dist.hours === 1 ? '' : 's'} on the road.
+                    ${goal ? `${d.covered} of ${goal} miles${d.arrived ? '' : `; about ${daysLeft} more day${daysLeft === 1 ? '' : 's'} at this pace`}.` : `${d.covered} miles since setting out.`}</p>
+                ${d.dist.notes.length || d.dist.forced.length ? `<ul class="dist-notes">
+                    ${d.dist.notes.map(n => `<li>${esc(n)}</li>`).join('')}
+                    ${d.dist.forced.map(f => `<li>Forced march, hour ${f.hour}: each traveler makes a DC ${f.dc} Constitution save or gains one level of exhaustion.</li>`).join('')}
+                </ul>` : ''}
+                ${d.arrived ? `<p class="day-arrived">🏁 The party arrives on day ${d.day}.</p>` : ''}
+            </section>
+        </div>`;
+
+    const earlier = travel.days.slice(0, -1);
+    document.getElementById('travel-log').hidden = !earlier.length;
+    document.getElementById('travel-log-list').innerHTML = earlier.slice().reverse().map(e => `
+        <li><button type="button" class="log-day" data-day="${e.day}" title="Go back to day ${e.day}">
+            <b>Day ${e.day}</b>
+            <span>${WEATHER_KINDS[e.weather.kind].icon} ${esc(weatherHeadline(e.weather))} · ${e.today} mi · ${ROAD_EVENT_KINDS[e.event.k].icon} ${esc(e.event.k === 'quiet' ? 'Quiet day' : e.event.t)}</span>
+        </button></li>`).join('');
+
+    const next = document.getElementById('tr-next');
+    next.disabled = d.arrived || d.day >= TRAVEL_MAX_DAYS;
+    next.textContent = d.arrived ? '🏁 Arrived' : '▶ Next Day';
+}
+
+// ── URL ───────────────────────────────────────────────────
+// Names: ?for=<type>&seed=. Travel: ?tab=travel&climate=&season=&terrain=&pace=&hours=&ride=&miles=&day=&seed=
+function tabParams(tab) {
+    return tab === 'travel' ? travelParams() : nameParams();
+}
+
 // Rebuild the page from the address bar. Returns true when it held a roll.
 function applyUrl() {
     const tab = currentTab();
     showTab(tab);
     const p = urlParams();
+    const seed = parseSeed(p.get('seed'));
+    if (tab === 'travel') {
+        Object.entries(TRAVEL_FIELDS).forEach(([key, id]) => {
+            const el = document.getElementById(id);
+            if (!setFieldValue(el, p.get(key))) el.value = defaultValue(el);
+        });
+        if (!seed) return false;
+        travel = { seed, day: Math.max(1, parseInt(p.get('day'), 10) || 1), days: [] };
+        showJourney(null);
+        return true;
+    }
     const sel = document.getElementById('name-for');
     if (!setFieldValue(sel, p.get('for'))) sel.value = defaultValue(sel);
-    const seed = parseSeed(p.get('seed'));
     if (seed) { rollNamesFor(seed, null); return true; }
     return false;
+}
+
+// A first roll for the tab on screen, replacing the URL (no new history entry).
+function rollFresh() {
+    if (currentTab() === 'travel') newJourney(false);
+    else rollNamesFor(newSeed(), false);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('year').textContent = new Date().getFullYear();
     setupNamePicker();
+    setupTravelForm();
     loadKept();
     renderKept();
 
+    // Each tab keeps its roll in memory; the first visit to a tab rolls one.
     document.querySelectorAll('.tool-tab').forEach(b => b.addEventListener('click', () => {
-        showTab(b.dataset.tab);
-        setUrlParams(b.dataset.tab === 'names' ? nameParams() : urlFor(b.dataset.tab, {}), true);
+        const tab = b.dataset.tab;
+        if (tab === currentTab()) return;
+        showTab(tab);
+        if (tab === 'travel' && !travel.seed) { travel = { seed: newSeed(), day: 1, days: [] }; showJourney(null); }
+        if (tab === 'names' && !names.seed) rollNamesFor(newSeed(), null);
+        setUrlParams(tabParams(tab), true);
     }));
     document.getElementById('roll-names').addEventListener('click', () => rollNamesFor());
     document.getElementById('name-for').addEventListener('change', () => rollNamesFor());
@@ -197,7 +357,24 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('names-link').addEventListener('click', () =>
         copyPageLink(ok => flash('names-status', ok ? '🔗 Link copied. It rolls these same ten names.' : '⚠️ Copy blocked by the browser.')));
 
-    if (!applyUrl()) rollNamesFor(newSeed(), false);
-    // Back/Forward step through earlier rolls.
-    window.addEventListener('popstate', () => { if (!applyUrl()) rollNamesFor(newSeed(), false); });
+    document.getElementById('tr-new').addEventListener('click', () => newJourney());
+    document.getElementById('tr-next').addEventListener('click', nextDay);
+    // A new climate, terrain, or pace replays the same trip (same seed and day).
+    Object.values(TRAVEL_FIELDS).forEach(id => document.getElementById(id).addEventListener('change', () => showJourney(false)));
+    document.getElementById('travel-log-list').addEventListener('click', e => {
+        const btn = e.target.closest('.log-day');
+        if (!btn) return;
+        travel.day = Number(btn.dataset.day);
+        showJourney(true);
+    });
+    document.getElementById('tr-copy').addEventListener('click', () => {
+        const d = travel.days[travel.days.length - 1];
+        if (d) copyText(travelDayText(d, travelOpts()), 'travel-status', `day ${d.day}`);
+    });
+    document.getElementById('tr-link').addEventListener('click', () =>
+        copyPageLink(ok => flash('travel-status', ok ? '🔗 Link copied. It replays this journey up to today.' : '⚠️ Copy blocked by the browser.')));
+
+    if (!applyUrl()) rollFresh();
+    // Back/Forward step through earlier rolls and days.
+    window.addEventListener('popstate', () => { if (!applyUrl()) rollFresh(); });
 });
