@@ -3,7 +3,8 @@
    Build a fight from the SRD 5.1 monsters (monsters-data.js), rate it against the
    party's SRD 5.2 XP budget (encounter-engine.js), and send it to the Initiative tab
    (addToFight in toolbox-table.js). Nothing is stored: the URL holds the party and the monsters.
-   URL: ?tab=enc&party=4x3&party=1x5&m=goblin.4&m=bugbear.1&diff=moderate&type=
+   URL: ?tab=enc&party=4x3&party=1x5&m=goblin.4&m=bugbear.1&diff=moderate&type=&env=&band=&pack=&seed=
+   (env/band: the roll pickers; pack: the group a roll landed on; seed: the scene).
    ============================================ */
 
 const ENC_MAX_GROUPS = 6;
@@ -12,7 +13,7 @@ const ENC_MAX_COUNT = 40;
 const ENC_PICKER_ROWS = 40;
 const ENC_DEFAULT_PARTY = [{ count: 4, level: 3 }];
 
-let enc = { party: ENC_DEFAULT_PARTY.map(g => ({ ...g })), list: [] };
+let enc = { party: ENC_DEFAULT_PARTY.map(g => ({ ...g })), list: [], seed: null, band: null };
 
 function clampInt(v, lo, hi, def) {
     const n = parseInt(v, 10);
@@ -34,6 +35,10 @@ function setupEncounterForm() {
         const sel = document.getElementById(id);
         types.forEach(t => sel.add(new Option(typeName(t), t)));
     });
+    const env = document.getElementById('en-env');
+    ENC_HABITAT_KEYS.forEach(k => env.add(new Option(`${ENC_HABITATS[k].icon} ${ENC_HABITATS[k].label}`, k)));
+    const band = document.getElementById('en-band');
+    [...ENC_BANDS].sort((a, b) => a.label.localeCompare(b.label)).forEach(b => band.add(new Option(`${b.icon} ${b.label}`, b.key)));
     const crSel = document.getElementById('en-cr');
     [...new Set(MONSTERS.map(m => m.cr))].forEach(cr => crSel.add(new Option(`CR ${cr}`, cr)));
 }
@@ -137,6 +142,28 @@ function renderEncounter() {
         ${level ? `<p class="en-desc">${esc(level.text)}</p>` : ''}
         ${encounterNotes(enc.list, budget).map(n => `<p class="en-note">⚠️ ${esc(n)}</p>`).join('')}`;
     ['en-send', 'en-copy'].forEach(id => { document.getElementById(id).disabled = !enc.list.length; });
+    renderScene();
+}
+
+// ── Scene ─────────────────────────────────────────────────
+function encScene() {
+    if (!enc.list.length || !enc.seed) return null;
+    return rollEncounterScene(enc.list, enc.seed, { habitat: document.getElementById('en-env').value, band: enc.band, level: encBudget().avgLevel });
+}
+
+function renderScene() {
+    const box = document.getElementById('en-scene');
+    const s = encScene();
+    box.hidden = !s;
+    if (!s) { box.innerHTML = ''; return; }
+    const loot = s.loot.startsWith('hoard:') ? '🏆 Roll Their Hoard' : '💰 Roll What They Carry';
+    box.innerHTML = `
+        <div class="en-scene-head"><h4 class="en-scene-title">${esc(s.title)}</h4></div>
+        <dl class="dt-scene">${encSceneLines(s).map(([label, text]) => `<div><dt>${esc(label)}</dt><dd>${esc(text)}</dd></div>`).join('')}</dl>
+        <div class="tool-toolbar en-scene-bar">
+            <button type="button" class="btn" id="en-rescene">🎲 New Scene</button>
+            <a class="btn" href="${esc(encLootLink(s))}">${loot}</a>
+        </div>`;
 }
 
 function onEncListClick(e) {
@@ -154,6 +181,9 @@ function onEncListClick(e) {
 
 // push: true = new history entry, false = replace, null = leave the URL alone.
 function encChanged(push) {
+    if (enc.band && !encBandFits(ENC_BAND_BY_KEY[enc.band], enc.list)) enc.band = null;
+    if (enc.list.length && !enc.seed) enc.seed = newSeed();
+    if (!enc.list.length) { enc.seed = null; enc.band = null; }
     renderEncounter();
     if (document.getElementById('en-cr').value === 'party') renderPicker();
     if (push !== null) setUrlParams(encParams(), push);
@@ -161,10 +191,17 @@ function encChanged(push) {
 
 function rollEncounterFor() {
     const diff = document.getElementById('en-diff').value;
-    const type = document.getElementById('en-roll-type').value;
-    const list = withSeed(newSeed(), () => rollEncounter(encBudget(), diff, type));
-    if (!list.length) { flash('enc-status', '⚠️ No monsters of that type fit this budget. Try another type or a higher difficulty.'); return; }
-    enc.list = list;
+    const opts = {
+        type: document.getElementById('en-roll-type').value,
+        habitat: document.getElementById('en-env').value,
+        band: document.getElementById('en-band').value
+    };
+    const seed = newSeed();
+    const res = withSeed(seed, () => rollThemedEncounter(encBudget(), diff, opts));
+    if (!res.list.length) { flash('enc-status', '⚠️ No monsters fit those choices and this budget. Try another type, group, or habitat, or a higher difficulty.'); return; }
+    enc.list = res.list;
+    enc.band = res.band;
+    enc.seed = seed;
     encChanged(true);
 }
 
@@ -177,6 +214,11 @@ function encounterText() {
         `Party: ${enc.party.map(g => `${g.count} × level ${g.level}`).join(', ')} (Low ${budget.low.toLocaleString('en-US')} / Moderate ${budget.moderate.toLocaleString('en-US')} / High ${budget.high.toLocaleString('en-US')} XP)`
     ];
     enc.list.forEach(e => lines.push(`  ${e.count} × ${e.m.name} (CR ${e.m.cr}, ${e.m.xp.toLocaleString('en-US')} XP each; AC ${e.m.ac}, HP ${e.m.hp})`));
+    const s = encScene();
+    if (s) {
+        lines.push('', s.title.toUpperCase());
+        encSceneLines(s).forEach(([label, text]) => lines.push(`${label}: ${text}`));
+    }
     return lines.join('\n');
 }
 
@@ -196,7 +238,7 @@ function sendToInitiative() {
 }
 
 function clearEncounter() {
-    enc = { party: ENC_DEFAULT_PARTY.map(g => ({ ...g })), list: [] };
+    enc = { party: ENC_DEFAULT_PARTY.map(g => ({ ...g })), list: [], seed: null, band: null };
     renderParty();
     encChanged(true);
 }
@@ -209,7 +251,11 @@ function encParams() {
         party: enc.party.map(g => `${g.count}x${g.level}`),
         m: enc.list.map(e => `${e.m.id}.${e.count}`),
         diff: fieldValue(diff) === defaultValue(diff) ? null : diff.value,
-        type: type.value || null
+        type: type.value || null,
+        env: document.getElementById('en-env').value || null,
+        band: document.getElementById('en-band').value || null,
+        pack: enc.band,
+        seed: enc.list.length ? enc.seed : null
     });
 }
 
@@ -224,13 +270,18 @@ function applyEncUrl(p) {
         const m = MONSTER_BY_ID[id];
         if (m && enc.list.length < ENC_MAX_KINDS && !enc.list.some(e => e.m === m)) enc.list.push({ m, count: clampInt(n, 1, ENC_MAX_COUNT, 1) });
     });
-    ['diff', 'type'].forEach(k => {
-        const el = document.getElementById(k === 'diff' ? 'en-diff' : 'en-roll-type');
+    const FIELDS = { diff: 'en-diff', type: 'en-roll-type', env: 'en-env', band: 'en-band' };
+    Object.entries(FIELDS).forEach(([k, id]) => {
+        const el = document.getElementById(id);
         if (!setFieldValue(el, p.get(k))) el.value = defaultValue(el);
     });
+    enc.band = ENC_BAND_BY_KEY[p.get('pack')] ? p.get('pack') : null;
+    enc.seed = parseSeed(p.get('seed'));
     renderParty();
     renderPicker();
-    renderEncounter();
+    // A link without a scene seed (older links, quest links) gets one, so it can be shared.
+    if (enc.list.length && !enc.seed) encChanged(false);
+    else encChanged(null);
 }
 
 function setupEncounter() {
@@ -261,7 +312,14 @@ function setupEncounter() {
         if (btn) addMonster(MONSTER_BY_ID[btn.dataset.id]);
     });
     document.getElementById('en-list').addEventListener('click', onEncListClick);
-    ['en-diff', 'en-roll-type'].forEach(id => document.getElementById(id).addEventListener('change', () => setUrlParams(encParams(), false)));
+    ['en-diff', 'en-roll-type', 'en-band'].forEach(id => document.getElementById(id).addEventListener('change', () => setUrlParams(encParams(), false)));
+    // The habitat also sets where the current fight happens.
+    document.getElementById('en-env').addEventListener('change', () => { renderScene(); setUrlParams(encParams(), false); });
+    document.getElementById('en-scene').addEventListener('click', e => {
+        if (!e.target.closest('#en-rescene')) return;
+        enc.seed = newSeed();
+        encChanged(true);
+    });
     document.getElementById('en-roll').addEventListener('click', rollEncounterFor);
     document.getElementById('en-send').addEventListener('click', sendToInitiative);
     document.getElementById('en-copy').addEventListener('click', () => copyText(encounterText(), 'enc-status', 'the encounter'));

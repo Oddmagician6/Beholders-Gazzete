@@ -243,6 +243,12 @@
     .en-count button:hover { color: var(--gold-bright); border-color: var(--gold-mid); }
     .en-sub { font-family: var(--font-ui); font-size: 0.82rem; color: var(--text-mid); text-align: right; white-space: nowrap; }
     .en-roll-bar { margin: 16px 0 10px; }
+    .en-scene { border: 1px solid rgba(201,160,64,0.25); border-radius: var(--radius-sm); padding: 14px 16px; margin: 14px 0 0; }
+    .en-scene-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+    .en-scene-title { font-family: 'IM Fell English', serif; font-size: 1.35rem; font-weight: 400; color: var(--gold-bright); margin: 0; overflow-wrap: anywhere; }
+    .en-scene .dt-scene dd { font-size: 0.98rem; }
+    .en-scene-bar { margin: 12px 0 0; }
+    .en-scene-bar .btn { font-size: 0.78rem; padding: 6px 12px; }
     .en-filters { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
     .en-filters label { font-family: var(--font-ui); font-size: 0.75rem; color: var(--text-dim); min-width: 0; }
     .en-filters input, .en-filters select { display: block; width: 100%; box-sizing: border-box; margin-top: 4px; padding: 8px 9px; font-size: 0.88rem; }
@@ -620,6 +626,7 @@
         <div class="en-meter" id="en-meter" aria-live="polite"></div>
         <ol class="en-list" id="en-list"></ol>
         <p class="dice-empty" id="en-empty">No monsters yet. Pick some below, or roll an encounter.</p>
+        <section class="en-scene" id="en-scene" aria-live="polite" hidden></section>
         <div class="tool-toolbar en-roll-bar">
           <label for="en-diff" class="sr-only">Difficulty to roll</label>
           <select id="en-diff">
@@ -629,6 +636,13 @@
           </select>
           <label for="en-roll-type" class="sr-only">Monster type to roll</label>
           <select id="en-roll-type"><option value="" selected>Any monster type</option></select>
+          <label for="en-env" class="sr-only">Where the fight happens</label>
+          <select id="en-env"><option value="" selected>🗺️ Anywhere</option></select>
+          <label for="en-band" class="sr-only">Group of foes</label>
+          <select id="en-band">
+            <option value="" selected>Any group of foes</option>
+            <option value="none">Mixed: any monsters, no group</option>
+          </select>
           <button type="button" class="btn btn-gold" id="en-roll">🎲 Roll an Encounter</button>
         </div>
         <div class="tool-toolbar">
@@ -653,7 +667,7 @@
         <ul class="en-results" id="en-results"></ul>
         <p class="en-results-note" id="en-results-note"></p>
       </div>
-      <p class="tool-note">Difficulty uses the XP Budget per Character table from the System Reference Document 5.2 (CC-BY 4.0): each character adds their level's Low, Moderate, and High numbers, and the monsters' XP is spent against them. The warnings under the meter are the Gazette's advice. Monsters and their CR, XP, AC, HP, and Dex come from the System Reference Document 5.1 (CC-BY 4.0).<br>Rolled encounters never use a monster above the party's level and stop at two creatures per character. The address bar holds the party and the monsters, so 🔗 Copy Link shares the fight. Send to Initiative rolls each monster's initiative with its Dex modifier.</p>
+      <p class="tool-note">Difficulty uses the XP Budget per Character table from the System Reference Document 5.2 (CC-BY 4.0): each character adds their level's Low, Moderate, and High numbers, and the monsters' XP is spent against them. The warnings under the meter are the Gazette's advice. Monsters and their CR, XP, AC, HP, and Dex come from the System Reference Document 5.1 (CC-BY 4.0).<br>Rolled encounters never use a monster above the party's level and stop at two creatures per character. Most rolls keep to one group of foes that belong together (goblins with their wolves, a cult with its imps), and the habitat picker keeps the leader to monsters that live there. Every fight gets a scene: where it happens, what the foes are doing, who notices whom, distance, light, the ground, a leader, tactics, morale, a price to parley, and sometimes a twist. Hazard DCs and damage follow the party's level (damage from the SRD 5.1 Damage Severity by Level table); the habitats, groups, and scenes are the Gazette's own. 🎲 New Scene redraws it without touching the monsters. The address bar holds the party and the monsters, so 🔗 Copy Link shares the fight. Send to Initiative rolls each monster's initiative with its Dex modifier.</p>
     </section>
 
     <section class="tool-panel" id="tab-init" role="tabpanel" hidden>
