@@ -130,7 +130,7 @@ function displayLoot() {
   const hasArtifact = loot.magic.some(m => m.rarity === 'artifact');
   document.getElementById('total-value').textContent  = hasArtifact && !loot.totalValue
     ? 'Priceless'
-    : loot.totalValue.toLocaleString() + ' gp' + (hasArtifact ? ' + priceless' : '');
+    : formatCoins(loot.totalValue) + (hasArtifact ? ' + priceless' : '');
   const coinSum = Object.values(loot.coins).reduce((a,b) => a+b, 0);
   document.getElementById('total-coins').textContent  = coinSum.toLocaleString();
   document.getElementById('total-gems').textContent   = (loot.gems.length + loot.art.length).toString();
@@ -148,7 +148,7 @@ function displayLoot() {
           <div class="coin-icon">${info.icon}</div>
           <div class="coin-amount">${amount.toLocaleString()}</div>
           <div class="coin-type">${info.name}</div>
-          <div class="coin-value">= ${(amount * info.value).toFixed(1)} gp</div>
+          <div class="coin-value">= ${formatCoins(amount * info.value)}</div>
         </div>`;
       }).join('');
   }
@@ -215,7 +215,7 @@ function displayLoot() {
       <p><strong>Coins:</strong> ${coinSum.toLocaleString()} total pieces</p>
       <p><strong>Valuables:</strong> ${loot.gems.length} gems, ${loot.art.length} art objects</p>
       <p><strong>Magic Items:</strong> ${loot.magic.length} items found</p>
-      <p><strong>Total GP Equivalent:</strong> ${loot.totalValue.toLocaleString()} gp${hasArtifact ? ' (plus artifacts, which have no market price)' : ''}</p>
+      <p><strong>Total Value:</strong> ${formatCoins(loot.totalValue)}${hasArtifact ? ' (plus artifacts, which have no market price)' : ''}</p>
     `;
   }
 
@@ -246,7 +246,7 @@ function copyLoot() {
   const { coins, gems, art, magic, totalValue } = currentLoot;
   let txt = '🏆 TREASURE LOOT 🏆\n\n';
   const priceless = magic.some(m => m.rarity === 'artifact') ? ' + priceless artifact' : '';
-  txt += `Total Value: ~${totalValue.toLocaleString()} gp${priceless}\n\n`;
+  txt += `Total Value: ~${formatCoins(totalValue)}${priceless}\n\n`;
 
   const coinLines = Object.entries(coins).filter(([,v]) => v > 0)
     .map(([t,v]) => `  ${v.toLocaleString()} ${lootData.coins[t].name}`).join('\n');
@@ -303,7 +303,7 @@ function renderSaved() {
 
   container.innerHTML = saved.map((loot, i) => `
     <div class="saved-item" onclick="loadSaved(${i})">
-      <h4>Hoard #${i + 1} — ${loot.totalValue.toLocaleString()} gp</h4>
+      <h4>Hoard #${i + 1} — ${formatCoins(loot.totalValue)}</h4>
       <p>${loot.magic.length} magic · ${loot.gems.length + loot.art.length} valuables · ${loot.tab}</p>
       <div class="saved-meta">${new Date(loot.generatedAt).toLocaleDateString()}</div>
     </div>

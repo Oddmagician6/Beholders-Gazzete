@@ -102,7 +102,7 @@ function totalGP(coins, gems, art, magic) {
   gems.forEach(g  => t += g.value);
   art.forEach(a   => t += a.value);
   magic.forEach(m => t += m.value);
-  return Math.floor(t);
+  return Math.round(t * 100) / 100;
 }
 
 // ── TABLE ROLLS ────────────────────────────────────────────

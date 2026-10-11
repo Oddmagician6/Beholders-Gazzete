@@ -239,7 +239,7 @@ function npcHTML() {
 function lootValue(l) {
     const priceless = l.magic.some(m => m.rarity === 'artifact');
     if (priceless && !l.totalValue) return 'Priceless';
-    return `${l.totalValue.toLocaleString()} gp${priceless ? ' + priceless' : ''}`;
+    return `${formatCoins(l.totalValue)}${priceless ? ' + priceless' : ''}`;
 }
 
 function lootHTML() {

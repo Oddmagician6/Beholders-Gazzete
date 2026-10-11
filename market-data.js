@@ -341,14 +341,3 @@ function marketSnapshot(t = Date.now()) {
              changePercent: Math.round((currentPrice - dayAgo) / dayAgo * 10000) / 100 };
   });
 }
-
-// 52.37 gp, 1,250 gp, 4 sp 6 cp, 6 cp
-function formatCoins(gp) {
-  if (gp >= 1) {
-    return gp >= 1000
-      ? Math.round(gp).toLocaleString('en-US') + ' gp'
-      : gp.toFixed(2).replace(/\.00$/, '') + ' gp';
-  }
-  const cp = Math.round(gp * 100), sp = Math.floor(cp / 10), rem = cp % 10;
-  return [sp ? sp + ' sp' : '', rem || !sp ? rem + ' cp' : ''].filter(Boolean).join(' ');
-}
