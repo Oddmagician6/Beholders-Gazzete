@@ -252,6 +252,7 @@ function renderTravel(opts) {
     const d = travel.days[travel.days.length - 1];
     const w = d.weather;
     const ev = ROAD_EVENT_KINDS[d.event.k];
+    const moon = MOON_PHASES[d.sky.phase];
     const goal = opts.miles;
     const progress = goal ? Math.min(100, Math.round(d.covered / goal * 100)) : 0;
     const left = goal ? Math.round((goal - d.covered) * 10) / 10 : 0;
@@ -264,7 +265,8 @@ function renderTravel(opts) {
             <span class="day-where">${TRAVEL_TERRAIN[opts.terrain].icon} ${esc(TRAVEL_TERRAIN[opts.terrain].label)} · ${esc(TRAVEL_CLIMATES[opts.climate].label)} · ${esc(TRAVEL_SEASONS[opts.season].label)}</span>
         </div>
         ${goal ? `<div class="day-progress" role="progressbar" aria-label="Journey progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${progress}"><span style="width:${progress}%"></span></div>` : ''}
-        <div class="day-grid">
+        <p class="day-scene">${esc(d.scene)}</p>
+        <div class="day-grid${d.camp ? ' with-camp' : ''}">
             <section class="day-block day-weather">
                 <h4>Weather</h4>
                 <div class="wx-head">
@@ -276,24 +278,35 @@ function renderTravel(opts) {
                 </div>
                 <p class="day-flavor">${esc(w.flavor)}</p>
                 ${w.effects.length ? `<ul class="day-fx">${w.effects.map(f => `<li>${esc(f.text)}<span class="fx-src${f.src === 'SRD' ? ' srd' : ''}">${f.src === 'SRD' ? 'SRD' : 'ruling'}</span></li>`).join('')}</ul>` : ''}
+                <p class="day-sky"><span aria-hidden="true">${moon.icon}</span> ${esc(moon.label)} · about ${d.sky.daylight} hours of daylight</p>
+                ${d.sign ? `<p class="day-sign"><strong>🌅 Signs for tomorrow:</strong> ${esc(d.sign)}</p>` : ''}
             </section>
             <section class="day-block">
                 <h4>${ev.icon} ${esc(ev.label)}</h4>
                 ${d.event.k === 'quiet' ? '' : `<p class="ev-title">${esc(d.event.t)}</p>`}
                 <p class="ev-text">${esc(d.event.d)}</p>
                 ${d.event.hook ? `<p class="ev-hook"><strong>Hook:</strong> ${esc(d.event.hook)}</p>` : ''}
+                ${d.find ? `<p class="ev-find"><strong>🪶 By the way:</strong> ${esc(d.find)}</p>` : ''}
             </section>
+            ${d.camp ? `<section class="day-block">
+                <h4>🏕️ Tonight</h4>
+                <p class="ev-text">The party camps ${esc(d.camp.site)}.</p>
+                ${d.camp.note ? `<p class="camp-note ${d.camp.note.good ? 'good' : 'bad'}">${d.camp.note.good ? '👍' : '👎'} ${esc(d.camp.note.t)}</p>` : ''}
+                ${d.camp.watch ? `<p class="ev-hook"><strong>${esc(d.camp.watch.when)}:</strong> ${esc(d.camp.watch.t)}</p>` : ''}
+            </section>` : ''}
             <section class="day-block">
                 <h4>🥾 Distance</h4>
                 <div class="dist-miles">${d.today}<small>miles today</small></div>
                 <p class="dist-sum">${esc(TRAVEL_PACES[d.dist.pace].label)} pace, ${d.dist.hours} hour${d.dist.hours === 1 ? '' : 's'} on the road.
                     ${goal ? `${d.covered} of ${goal} miles${d.arrived ? '' : `; about ${daysLeft} more day${daysLeft === 1 ? '' : 's'} at this pace`}.` : `${d.covered} miles since setting out.`}</p>
-                ${d.dist.notes.length || d.dist.forced.length ? `<ul class="dist-notes">
+                ${d.dist.notes.length || d.dist.forced.length || d.sky.effect ? `<ul class="dist-notes">
                     ${d.dist.notes.map(n => `<li>${esc(n)}</li>`).join('')}
                     ${d.dist.forced.map(f => `<li>Forced march, hour ${f.hour}: each traveler makes a DC ${f.dc} Constitution save or gains one level of exhaustion.</li>`).join('')}
+                    ${d.sky.effect ? `<li>${esc(d.sky.effect)}</li>` : ''}
                 </ul>` : ''}
                 ${d.arrived ? `<p class="day-arrived">🏁 The party arrives on day ${d.day}.</p>` : ''}
             </section>
+
         </div>`;
 
     const earlier = travel.days.slice(0, -1);

@@ -86,6 +86,13 @@
     .day-block { min-width: 0; }
     .day-block h4 { font-family: var(--font-head); font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold-mid); margin: 0 0 8px; }
     .day-weather { grid-row: span 2; }
+    .with-camp .day-weather { grid-row: auto; }
+    .day-scene { font-family: 'IM Fell English', serif; font-style: italic; color: var(--text-mid); margin: 0 0 16px; }
+    .day-sky { font-family: var(--font-ui); font-size: 0.82rem; color: var(--text-mid); margin: 12px 0 0; }
+    .day-sign { font-size: 0.9rem; color: var(--text-mid); margin: 8px 0 0; }
+    .day-sign strong, .ev-find strong { color: var(--gold-bright); }
+    .ev-find { color: var(--text-mid); font-size: 0.9rem; margin: 10px 0 0; padding-top: 8px; border-top: 1px dashed rgba(201,160,64,0.18); }
+    .camp-note { font-size: 0.9rem; color: var(--text-mid); margin: 6px 0 0; }
     .wx-head { display: flex; gap: 12px; align-items: center; }
     .wx-icon { font-size: 2.4rem; line-height: 1; }
     .wx-title { font-family: 'IM Fell English', serif; font-size: 1.3rem; color: var(--text-bright); }
@@ -520,7 +527,7 @@
     <section class="tool-panel" id="tab-travel" role="tabpanel" hidden>
       <div class="tool-card">
         <h2 class="tool-h">🗺️ Weather &amp; Travel Day</h2>
-        <p class="tool-intro">Pick the land and the season, then take the road one day at a time: the weather, what happens on the way, and how far the party gets.</p>
+        <p class="tool-intro">Pick the land and the season, then take the road one day at a time: the land and the weather, what happens on the way, how far the party gets, where they camp, and what the sky says about tomorrow.</p>
         <div class="travel-form">
           <label>Climate <select id="tr-climate"></select></label>
           <label>Season <select id="tr-season"></select></label>
@@ -548,7 +555,7 @@
           <ol id="travel-log-list"></ol>
         </div>
       </div>
-      <p class="tool-note">Distances follow the travel pace rules of the System Reference Document 5.1 (CC-BY 4.0): pace, difficult terrain, forced marches, and galloping. Effects marked <em>ruling</em> are the Gazette's suggestions, not official rules.<br>Journey length 0 means an open road with no destination. The address bar holds the journey's seed and the day, so 🔗 Copy Link shares the whole trip so far, and Back steps to the day before. Changing the pace or hours keeps the weather.</p>
+      <p class="tool-note">Distances follow the travel pace rules of the System Reference Document 5.1 (CC-BY 4.0): pace, difficult terrain, forced marches, and galloping. Hours on the road after sunset use its vision and light rules (a full moon in a clear sky gives dim light). Daylight hours and the moon are the Gazette's rough reckoning. Effects marked <em>ruling</em> are the Gazette's suggestions, not official rules.<br>Journey length 0 means an open road with no destination. The address bar holds the journey's seed and the day, so 🔗 Copy Link shares the whole trip so far, and Back steps to the day before. Changing the pace or hours keeps the weather.</p>
     </section>
 
     <section class="tool-panel" id="tab-dice" role="tabpanel" hidden>
