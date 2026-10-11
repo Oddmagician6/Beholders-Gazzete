@@ -68,7 +68,7 @@ function applyTavUrl(p) {
 // ── Render ────────────────────────────────────────────────
 function priceRows(items) {
     return items.map(i => `
-        <li><span class="tv-item">${esc(i.name)}${i.special ? ' <em class="tv-special">house special</em>' : ''}</span>
+        <li><span class="tv-item">${esc(i.name)}${i.special ? ' <em class="tv-special">house special</em>' : ''}${i.known ? ' <em class="tv-special">known for it</em>' : ''}</span>
             <span class="tv-dots" aria-hidden="true"></span>
             <span class="tv-price">${esc(formatCoins(i.gp))}</span></li>`).join('');
 }
@@ -97,8 +97,9 @@ function renderTavern() {
     document.getElementById('tavern-card').innerHTML = `
         <header class="tv-head">
             <h3 class="tv-name">${esc(tv.name)}</h3>
-            <div class="tv-tier">${t.icon} ${esc(t.label)} tavern &amp; inn</div>
-            <p class="tv-scene">${esc(tv.scene.look)}. You hear ${esc(tv.scene.sound)}, and the place smells of ${esc(tv.scene.smell)}.</p>
+            <div class="tv-tier">${t.icon} ${esc(t.label)} ${esc(tv.kind.label)} · ${esc(tv.kind.where)}</div>
+            <p class="tv-scene">${esc(tavernSceneText(tv.scene))}</p>
+            <p class="tv-small tv-history"><b>The sign:</b> ${esc(tv.sign)}. ${esc(tv.history)}</p>
         </header>
         <div class="tv-grid">
             <section class="tv-block">
@@ -113,6 +114,13 @@ function renderTavern() {
                 <p>${esc(o.trait)}. ${esc(o.voice)}.</p>
                 <p class="tv-quote">"${esc(o.dialogue)}"</p>
                 <p class="tv-secret"><b>Secret:</b> ${esc(o.secret)}</p>
+                <ul class="tv-regulars tv-staff">${tv.staff.map(s => `
+                    <li>
+                        <div class="tv-npc-name">${s.portraitIcon} ${esc(s.name)}</div>
+                        <div class="tv-npc-sub">${npcSub(s, s.role)}</div>
+                        <p>${esc(capWord(s.note))}.</p>
+                    </li>`).join('')}
+                </ul>
             </section>
             <section class="tv-block">
                 <h4>🪑 The regulars</h4>
@@ -120,7 +128,7 @@ function renderTavern() {
                     <li>
                         <div class="tv-npc-name">${r.portraitIcon} ${esc(r.name)}</div>
                         <div class="tv-npc-sub">${npcSub(r, r.profession)}</div>
-                        <p>Found ${esc(r.habit)}. ${esc(r.trait)}.</p>
+                        <p>Found ${esc(r.habit)}. ${esc(r.trait)}.${r.tie ? ` ${esc(capWord(r.tie))}.` : ''}</p>
                         ${i === 0 ? `<p class="tv-hook"><b>Has work:</b> ${esc(r.questHook)}</p>` : ''}
                     </li>`).join('')}
                 </ul>
@@ -141,8 +149,12 @@ function renderTavern() {
         <section class="tv-block tv-wide">
             <h4>✨ The quirk</h4>
             <p>${esc(tv.quirk)}</p>
+            <p><b class="qs-b">House rule:</b> ${esc(tv.rule)}</p>
             <h4 class="tv-h-gap">🎻 Tonight</h4>
             <p>${esc(tv.tonight)}</p>
+            ${tv.trouble ? `<p class="tv-secret"><b>Trouble brewing:</b> ${esc(tv.trouble)}</p>` : ''}
+            <h4 class="tv-h-gap">🎲 The game in the corner</h4>
+            <p><b class="qs-b">${esc(tv.game.name)}</b>, ${esc(formatCoins(tv.game.stake))} a hand. ${esc(tv.game.how)}</p>
             <h4 class="tv-h-gap">👂 Overheard at the bar</h4>
             <div id="tavern-rumor">${rumorBlock()}</div>
         </section>`;

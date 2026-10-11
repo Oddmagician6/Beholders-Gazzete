@@ -281,6 +281,9 @@
     .tv-next p { margin-top: 6px; }
     .tv-muted { color: var(--text-dim) !important; }
     .tv-actions { margin-bottom: 8px; }
+    .tv-history { max-width: 620px; margin: 8px auto 0 !important; }
+    .tv-history b { color: var(--text-mid); font-weight: 600; }
+    .tv-staff { margin-top: 10px; padding-top: 8px; border-top: 1px dashed rgba(201,160,64,0.18); }
     /* Quest (F32): reuses the tavern card styles. */
     .qs-task { font-family: 'IM Fell English', serif; font-size: 1.12rem; color: var(--text-bright); margin: 8px auto 0; max-width: 640px; line-height: 1.4; overflow-wrap: anywhere; }
     .qs-b { color: var(--text-bright); font-weight: 600; }
@@ -468,7 +471,7 @@
     <section class="tool-panel" id="tab-tavern" role="tabpanel" hidden>
       <div class="tool-card">
         <h2 class="tool-h">🍺 Tavern &amp; Inn</h2>
-        <p class="tool-intro">A whole tavern in one roll: the sign, the owner, the regulars, the menu and the rooms, a quirk, and a rumor from the bar.</p>
+        <p class="tool-intro">A whole tavern in one roll: what kind of place it is and where, the sign and its history, the owner, the staff, and the regulars, the menu and the rooms, a quirk, a house rule, a game, trouble brewing, and a rumor from the bar.</p>
         <div class="tool-toolbar">
           <label class="sr-only" for="tv-quality">Quality</label>
           <select id="tv-quality">
@@ -485,7 +488,7 @@
         </div>
         <p class="tool-status" id="tavern-status" role="status" aria-live="polite"></p>
       </div>
-      <p class="tool-note">Quality follows the lifestyle levels of the System Reference Document 5.1 (CC-BY 4.0), and so do the prices of ale, wine, bread, cheese, meat, banquets, a day's meals, a night's stay, and stabling. House dishes, drinks, and baths are the Gazette's, priced to match.<br>Rumors come from the same deck as <a href="rumors.html">the Tavern</a>, so you won't hear one twice until the deck runs out. The address bar holds the tavern and its rumor, so 🔗 Copy Link shares both. A new quality keeps the same owner, regulars, and sign.</p>
+      <p class="tool-note">Quality follows the lifestyle levels of the System Reference Document 5.1 (CC-BY 4.0), and so do the prices of ale, wine, bread, cheese, meat, banquets, a day's meals, a night's stay, and stabling. House dishes, drinks, and baths are the Gazette's, priced to match.<br>Rumors come from the same deck as <a href="rumors.html">the Tavern</a>, so you won't hear one twice until the deck runs out. The address bar holds the tavern and its rumor, so 🔗 Copy Link shares both. A new quality keeps the same owner, staff, regulars, and sign; the kind of place, the menu, the rooms, and the stakes follow the quality.</p>
     </section>
 
     <section class="tool-panel" id="tab-quest" role="tabpanel" hidden>
