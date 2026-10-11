@@ -66,9 +66,14 @@ function typeLabel(type) {
 
 function setupNamePicker() {
     const sel = document.getElementById('name-for');
-    Object.entries(NAME_TABLES.types).forEach(([key, t]) => {
-        if (key === 'tavern') return;   // already the first option
-        sel.add(new Option(`${t.icon} ${t.label}`, key));
+    NAME_TABLES.groups.forEach(group => {
+        const og = document.createElement('optgroup');
+        og.label = group;
+        Object.entries(NAME_TABLES.types).forEach(([key, t]) => {
+            if (key === 'tavern' || t.group !== group) return;   // tavern is already the first option
+            og.appendChild(new Option(`${t.icon} ${t.label}`, key));
+        });
+        if (og.children.length) sel.appendChild(og);
     });
 }
 
