@@ -151,6 +151,14 @@
     .item-type { font-family: var(--font-head); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); background: var(--bg-dark); border: var(--border-gold); border-radius: 2px; padding: 2px 8px; }
     .attune-badge { font-family: var(--font-head); font-size: 0.58rem; letter-spacing: 0.06em; text-transform: uppercase; color: #e0c050; background: rgba(224,192,80,0.1); border: 1px solid rgba(224,192,80,0.4); border-radius: 2px; padding: 2px 8px; }
     .item-value { font-family: var(--font-head); font-size: 0.72rem; color: var(--gold-dim); }
+    .magic-card.expanded { grid-column: 1 / -1; }
+    .item-toggle { background: none; border: none; color: var(--gold-bright); font-family: var(--font-ui); font-size: 0.72rem; letter-spacing: 0.05em; cursor: pointer; padding: 0; margin-top: 10px; }
+    .item-desc { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(201,160,64,0.25); font-size: 0.86rem; color: var(--text-dim); line-height: 1.65; }
+    .magic-card.expanded .item-desc { display: block; }
+    .item-desc p { margin: 0 0 0.6em; }
+    .item-desc .item-srd-type { font-style: italic; }
+    .item-desc table { width: 100%; border-collapse: collapse; font-size: 0.78rem; margin: 0 0 0.6em; }
+    .item-desc th, .item-desc td { border: 1px solid rgba(201,160,64,0.25); padding: 3px 6px; text-align: left; vertical-align: top; }
     .item-rarity { font-family: var(--font-head); font-size: 0.56rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 2px; white-space: nowrap; flex-shrink: 0; }
     .rarity-common    { background: #6b6b6b; color: #fff; }
     .rarity-uncommon  { background: #2d7a2d; color: #fff; }
@@ -456,6 +464,7 @@
       <div class="footer-logo">💎 The Vault of Wonders</div>
       <p class="footer-tagline">A Division of The Beholder's Gazette</p>
       <p class="footer-quip">Remember: divide loot fairly, or the bard will write a song about you. An unflattering one.</p>
+      <p class="footer-quip">Magic item text from the SRD 5.1, used under <a href="about.html#credits">CC-BY 4.0</a>. Items outside the SRD are listed by name only.</p>
       <div class="footer-links">
         <a href="index.html">Home</a>
         <a href="archive.html">Archive</a>
@@ -473,6 +482,7 @@
   <script src="rng.js"></script>
   <script src="loot-data.js"></script>
   <script src="loot-engine.js"></script>
+  <script src="magic-items-data.js"></script>
   <script src="loot-generator.js"></script>
   <script>
   // ── Mobile nav toggle ─────────────────────────────────

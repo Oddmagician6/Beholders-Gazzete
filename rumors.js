@@ -106,6 +106,29 @@ function displayRumor(rumor) {
 
     // Update truth meter
     updateTruthMeter(rumor.truth);
+    showFollowup(rumor);
+}
+
+// Rumor chains: rumors.json entries carry a `followup` that pays the rumor off.
+// It stays hidden until asked for; reader-added rumors have none.
+function showFollowup(rumor) {
+    const box = document.getElementById('rumor-next');
+    const btn = document.getElementById('next-btn');
+    const text = document.getElementById('next-text');
+    box.hidden = !rumor.followup;
+    text.hidden = true;
+    btn.hidden = false;
+    btn.setAttribute('aria-expanded', 'false');
+    text.innerHTML = rumor.followup
+        ? `<span class="next-when">A week later…</span>${escapeHTML(rumor.followup)}`
+        : '';
+}
+
+function revealFollowup() {
+    document.getElementById('next-text').hidden = false;
+    const btn = document.getElementById('next-btn');
+    btn.setAttribute('aria-expanded', 'true');
+    btn.hidden = true;
 }
 
 // Update truth meter
@@ -286,6 +309,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadRecent();
     setupCategoryButtons();
     document.getElementById('rumor-link').addEventListener('click', copyLink);
+    document.getElementById('next-btn').addEventListener('click', revealFollowup);
     applyUrl();
     // Back/Forward step through earlier draws.
     window.addEventListener('popstate', applyUrl);

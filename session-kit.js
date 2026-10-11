@@ -204,7 +204,8 @@ function rumorHTML() {
         <div class="kit-tags">
             <span class="kit-tag">${RUMOR_CATEGORIES[r.category] || esc(r.category)}</span>
             <span class="kit-tag">${truthText(r.truth)}</span>
-        </div>`;
+        </div>
+        ${r.followup ? `<details class="rumor-next"><summary>📜 What happened next…</summary><p>${esc(r.followup)}</p></details>` : ''}`;
 }
 
 function hairText(n) {
@@ -251,8 +252,14 @@ function lootHTML() {
         .map(([t, v]) => `${lootData.coins[t].icon} ${v.toLocaleString()} ${t}`).join(' · ');
     const valuables = [...l.gems, ...l.art]
         .map(i => `<li><span>${esc(i.name)}</span><span class="val">${i.value.toLocaleString()} gp</span></li>`).join('');
-    const magic = l.magic
-        .map(m => `<li><span>${esc(m.name)}${m.attune ? ' <span class="val">(attunement)</span>' : ''}</span><span class="rarity rarity-${m.rarity}">${m.rarity.replace('-', ' ')}</span></li>`).join('');
+    // SRD items (magic-items-data.js) open to their text; the rest are name-only.
+    const magic = l.magic.map(m => {
+        const row = `<span>${esc(m.name)}${m.attune ? ' <span class="val">(attunement)</span>' : ''}</span><span class="rarity rarity-${m.rarity}">${m.rarity.replace('-', ' ')}</span>`;
+        const info = magicItemInfo(m.name);
+        if (!info) return `<li>${row}</li>`;
+        return `<li class="magic-li"><details><summary>${row}</summary>
+            <div class="item-desc"><p class="item-srd-type">${esc(info.meta)}</p>${formatSrdText(info.text)}</div></details></li>`;
+    }).join('');
     const kind = l.kind === 'hoard' ? 'Treasure hoard' : 'Pocket loot';
     return `<div class="loot-total">${lootValue(l)}</div>
         <div class="npc-sub">${kind}, CR ${esc(l.cr)}</div>
@@ -296,7 +303,9 @@ function kitText() {
         lines.push('TOWN CRIER', `${c.opener} ${c.title}`, `(${new URL(crierHref(c.id), location.href).href})`, '');
     }
     if (r) {
-        lines.push('RUMOR', `"${r.text}"`, `${(RUMOR_CATEGORIES[r.category] || r.category).replace(/^\S+\s/, '')} · ${truthText(r.truth)}`, '');
+        lines.push('RUMOR', `"${r.text}"`, `${(RUMOR_CATEGORIES[r.category] || r.category).replace(/^\S+\s/, '')} · ${truthText(r.truth)}`);
+        if (r.followup) lines.push(`What happened next: ${r.followup}`);
+        lines.push('');
     }
     if (n) {
         const s = n.stats;
@@ -359,6 +368,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (kit.rumor && !(rumorPool[kit.rumorIdx] && rumorPool[kit.rumorIdx].text === kit.rumor.text)) {
         kit.rumorIdx = rumorPool.findIndex(r => r.text === kit.rumor.text);
     }
+    // Saves from before rumor chains (F19) lack the follow-up; take the current entry.
+    if (kit.rumor && rumorPool[kit.rumorIdx]) kit.rumor = rumorPool[kit.rumorIdx];
 
     // A shared link wins over the saved kit.
     if (!applyUrl(urlParams())) {

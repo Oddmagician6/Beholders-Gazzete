@@ -167,6 +167,17 @@
         .rumor-link { display: block; margin: 14px auto 0; font-size: 0.85rem; }
         .rumor-link[hidden] { display: none; }
 
+        /* Follow-up rumor (F19): "What happened next…" */
+        .rumor-next { margin-top: 18px; text-align: center; }
+        .rumor-next[hidden], .next-text[hidden], .next-btn[hidden] { display: none; }
+        .next-btn { font-size: 0.9rem; }
+        .next-text {
+            margin-top: 14px; padding: 16px 20px; text-align: left;
+            background: rgba(201,160,64,0.08); border-left: 3px solid var(--accent-gold); border-radius: 4px;
+            font-family: 'MedievalSharp', cursive; font-size: 1.1rem; line-height: 1.6; color: var(--text-color);
+        }
+        .next-text .next-when { display: block; font-family: 'Cinzel', serif; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-gold); margin-bottom: 4px; }
+
         .generate-btn {
             background: linear-gradient(145deg, var(--accent-red), #a33);
             color: #fff;
@@ -561,6 +572,11 @@
                     <div class="truth-bar">
                         <div class="truth-fill" id="truth-fill"></div>
                     </div>
+                </div>
+
+                <div class="rumor-next" id="rumor-next" hidden>
+                    <button type="button" class="btn next-btn" id="next-btn" aria-expanded="false">📜 What happened next…</button>
+                    <div class="next-text" id="next-text" hidden></div>
                 </div>
 
                 <button type="button" class="btn rumor-link" id="rumor-link" hidden>🔗 Copy Link</button>

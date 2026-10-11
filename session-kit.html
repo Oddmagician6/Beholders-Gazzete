@@ -78,6 +78,9 @@
     .kit-panel.crier .kit-tags { margin-top: 8px; }
 
     .rumor-quote { font-size: 1.12rem; color: var(--text-bright); font-style: italic; line-height: 1.5; }
+    .rumor-next { margin-top: 10px; font-size: 0.88rem; }
+    .rumor-next summary { cursor: pointer; color: var(--gold-bright); font-family: var(--font-ui); font-size: 0.78rem; letter-spacing: 0.04em; }
+    .rumor-next p { margin: 6px 0 0; padding-left: 10px; border-left: 2px solid var(--gold-mid); color: var(--text-mid); line-height: 1.5; }
     .kit-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
     .kit-tag { font-family: var(--font-ui); font-size: 0.72rem; padding: 3px 8px; border-radius: 3px; border: 1px solid var(--gold-dim); color: var(--gold-bright); background: rgba(212,168,67,0.08); }
 
@@ -92,9 +95,19 @@
 
     .loot-total { font-family: var(--font-head); font-size: 1.35rem; color: var(--gold-bright); }
     .loot-list { list-style: none; padding: 0; margin: 0; }
-    .loot-list li { padding: 4px 0; border-bottom: 1px dashed rgba(201,160,64,0.18); display: flex; justify-content: space-between; gap: 10px; }
+    .loot-list li { padding: 4px 0; border-bottom: 1px dashed rgba(201,160,64,0.18); display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
     .loot-list li:last-child { border-bottom: none; }
     .loot-list .val { font-family: var(--font-ui); font-size: 0.78rem; color: var(--text-dim); white-space: nowrap; }
+    .loot-list li.magic-li { display: block; }
+    .magic-li summary { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; cursor: pointer; list-style: none; }
+    .magic-li summary::-webkit-details-marker { display: none; }
+    .magic-li summary > span:first-child::before { content: "▸ "; color: var(--gold-bright); }
+    .magic-li details[open] summary > span:first-child::before { content: "▾ "; }
+    .item-desc { margin: 6px 0 4px; font-size: 0.84rem; color: var(--text-dim); line-height: 1.6; }
+    .item-desc p { margin: 0 0 0.5em; }
+    .item-desc .item-srd-type { font-style: italic; }
+    .item-desc table { width: 100%; border-collapse: collapse; font-size: 0.76rem; margin: 0 0 0.5em; }
+    .item-desc th, .item-desc td { border: 1px solid rgba(201,160,64,0.25); padding: 3px 6px; text-align: left; vertical-align: top; }
     .rarity { font-family: var(--font-ui); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 6px; border-radius: 3px; color: #fff; white-space: nowrap; }
     .rarity-common    { background: #6b6b6b; }
     .rarity-uncommon  { background: #2d7a2d; }
@@ -331,6 +344,7 @@
       <div class="footer-logo">👁️ The Beholder's Gazette</div>
       <p class="footer-tagline">Published by the Bard's Guild of Journalism</p>
       <p class="footer-quip">No dice were harmed in the making of this kit. Several were lost under the couch.</p>
+      <p class="footer-quip">Magic item text from the SRD 5.1, used under <a href="about.html#credits">CC-BY 4.0</a>.</p>
       <div class="footer-links">
         <a href="index.html">Home</a>
         <a href="archive.html">Archive</a>
@@ -352,6 +366,7 @@
   <script src="shop-engine.js"></script>
   <script src="loot-data.js"></script>
   <script src="loot-engine.js"></script>
+  <script src="magic-items-data.js"></script>
   <script src="town-crier.js"></script>
   <script src="session-kit.js"></script>
   <script>

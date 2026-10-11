@@ -190,6 +190,7 @@ function displayLoot() {
   if (loot.magic.length) {
     document.getElementById('magic-grid').innerHTML = loot.magic.map(item => {
       const rarityClass = item.rarity.replace(' ', '-');
+      const info = magicItemInfo(item.name);
       return `<div class="magic-card">
         <div class="item-header">
           <span class="item-name">${item.name}</span>
@@ -200,6 +201,8 @@ function displayLoot() {
           ${item.attune ? '<span class="attune-badge">⚡ Attunement</span>' : ''}
         </div>
         <div class="item-value">${item.value > 0 ? '💰 ~' + item.value.toLocaleString() + ' gp' : '✨ Priceless'}</div>
+        ${info ? `<button type="button" class="item-toggle" aria-expanded="false" onclick="toggleItem(this)">Read item ▼</button>
+        <div class="item-desc"><p class="item-srd-type">${info.meta}</p>${formatSrdText(info.text)}</div>` : ''}
       </div>`;
     }).join('');
   }
@@ -226,6 +229,13 @@ function displayLoot() {
   });
 
   el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// SRD text on a magic card (magic-items-data.js); the card spans the grid row while open.
+function toggleItem(btn) {
+  const open = btn.closest('.magic-card').classList.toggle('expanded');
+  btn.textContent = open ? 'Show less ▲' : 'Read item ▼';
+  btn.setAttribute('aria-expanded', open);
 }
 
 // ── ACTIONS ────────────────────────────────────────────────
