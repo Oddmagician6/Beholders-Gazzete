@@ -1,9 +1,9 @@
 /* homepage.css — page-specific overrides only */
 /* All base styles live in style.css */
 
-/* Hero uses Unsplash castle image */
+/* Hero: the Gazette newsroom (img/hero-home.webp) */
 .hero {
-  background-image: url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1920&q=80');
+  background-image: url('img/hero-home.webp');
   background-attachment: fixed;
 }
 

@@ -195,6 +195,10 @@ p:last-child { margin-bottom: 0; }
   position: absolute; inset: 0;
   background: linear-gradient(180deg, rgba(14,13,11,0.75) 0%, rgba(14,13,11,0.93) 70%, rgba(14,13,11,1) 100%);
 }
+/* Our own hero art (img/hero-*.webp) is already dark, so it needs a lighter veil. */
+.hero .hero-overlay, .page-hero.photo .page-hero-overlay {
+  background: linear-gradient(180deg, rgba(14,13,11,0.45) 0%, rgba(14,13,11,0.62) 55%, rgba(14,13,11,0.92) 88%, rgba(14,13,11,1) 100%);
+}
 
 .hero-content, .page-hero-content {
   position: relative;

@@ -1,3 +1,6 @@
 # Newsroom tooling: desk agents, skills, and reference docs (writers, canon, coverage log)
 .claude/
 newsroom/
+
+# Original PNGs for the hero images (the site serves the WebP copies in img/)
+Website images/
