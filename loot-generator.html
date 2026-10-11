@@ -169,6 +169,17 @@
     .rarity-artifact  { background: #8b1a1a; color: #fff; }
     .rarity-Gem       { background: #2d6a6a; color: #fff; }
     .rarity-Art       { background: #5a4a2d; color: #fff; }
+    .rarity-goods     { background: #4a5a2d; color: #fff; }
+    /* Gem looks, art notes, and magic item flavor */
+    .item-look { font-family: var(--font-body); font-style: italic; font-size: 0.84rem; color: var(--text-dim); line-height: 1.5; margin: 0 0 8px; }
+    /* The find: where it was, how it was kept, lock, trap, story */
+    .find-list { margin: 0; display: grid; gap: 10px; }
+    .find-row { display: grid; grid-template-columns: 7.5em 1fr; gap: 12px; align-items: baseline; }
+    .find-row dt { font-family: var(--font-head); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-mid); }
+    .find-row dd { margin: 0; font-family: var(--font-body); font-size: 0.92rem; color: var(--text-mid); line-height: 1.55; }
+    .find-row.find-trap dd { color: #e09070; }
+    .trinkets-list { margin: 0; padding-left: 1.2em; columns: 2 260px; column-gap: 28px; }
+    .trinkets-list li { font-family: var(--font-body); font-size: 0.9rem; color: var(--text-mid); line-height: 1.5; margin-bottom: 6px; break-inside: avoid; }
 
     /* ── NOTES ─────────────────────────────────────────────── */
     .loot-notes {
@@ -221,6 +232,7 @@
       .loot-actions { flex-direction: column; }
       .action-btn { width: 100%; text-align: center; }
       .party-size { justify-content: center; }
+      .find-row { grid-template-columns: 1fr; gap: 2px; }
     }
   </style>
 </head>
@@ -284,7 +296,7 @@
 
       <!-- Individual Tab -->
       <div class="tab-content active" id="tab-individual">
-        <p class="tab-desc">Loot for a single monster or small encounter (DMG p.133). Scales with Challenge Rating.</p>
+        <p class="tab-desc">Loot for a single monster or small encounter (DMG p.133), scaled by Challenge Rating: who carried it, how they kept it, and what else was in their pockets.</p>
         <div class="control-grid">
           <div class="control-group">
             <label for="ind-cr">Challenge Rating</label>
@@ -303,12 +315,18 @@
               <option value="stingy">Stingy (−50%)</option>
             </select>
           </div>
+          <div class="control-group">
+            <label for="ind-source">Carried By</label>
+            <select id="ind-source">
+              <option value="random">🎲 Random</option>
+            </select>
+          </div>
         </div>
       </div>
 
       <!-- Hoard Tab -->
       <div class="tab-content" id="tab-hoard">
-        <p class="tab-desc">A full treasure hoard — lair or encounter total (DMG p.133). Generous by default.</p>
+        <p class="tab-desc">A full treasure hoard, lair or encounter total (DMG p.133): where it lay, its lock and trap, trade goods, and the story of who left it.</p>
         <div class="control-grid">
           <div class="control-group">
             <label for="hoard-cr">Challenge Rating</label>
@@ -332,6 +350,12 @@
               <option value="normal">Normal</option>
               <option value="generous">Generous (+50%)</option>
               <option value="stingy">Stingy (−50%)</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label for="hoard-source">Found In</label>
+            <select id="hoard-source">
+              <option value="random">🎲 Random</option>
             </select>
           </div>
         </div>
@@ -393,6 +417,7 @@
         <div class="checkbox-row"><input type="checkbox" id="custom-gems"  checked><label for="custom-gems">💎 Include Gems</label></div>
         <div class="checkbox-row"><input type="checkbox" id="custom-art"   checked><label for="custom-art">🎨 Include Art Objects</label></div>
         <div class="checkbox-row"><input type="checkbox" id="custom-magic" checked><label for="custom-magic">✨ Include Magic Items</label></div>
+        <div class="checkbox-row"><input type="checkbox" id="custom-goods" checked><label for="custom-goods">📦 Include Trade Goods</label></div>
       </div>
 
       <!-- Generate Button -->
@@ -413,13 +438,18 @@
             <span class="summary-value" id="total-coins">0</span>
           </div>
           <div class="summary-card">
-            <span class="summary-label">Gems & Art</span>
+            <span class="summary-label">Valuables</span>
             <span class="summary-value" id="total-gems">0</span>
           </div>
           <div class="summary-card">
             <span class="summary-label">Magic Items</span>
             <span class="summary-value" id="total-magic">0</span>
           </div>
+        </div>
+
+        <div class="loot-section" id="find-section">
+          <h3>📜 The Find</h3>
+          <dl class="find-list" id="find-list"></dl>
         </div>
 
         <div class="loot-section" id="coins-section">
@@ -437,9 +467,19 @@
           <div class="items-grid" id="art-grid"></div>
         </div>
 
+        <div class="loot-section" id="goods-section">
+          <h3>📦 Trade Goods</h3>
+          <div class="items-grid" id="goods-grid"></div>
+        </div>
+
         <div class="loot-section" id="magic-section">
           <h3>✨ Magic Items</h3>
           <div class="magic-grid" id="magic-grid"></div>
+        </div>
+
+        <div class="loot-section" id="trinkets-section">
+          <h3>🧷 Odds &amp; Ends</h3>
+          <ul class="trinkets-list" id="trinkets-list"></ul>
         </div>
 
         <div class="loot-notes">

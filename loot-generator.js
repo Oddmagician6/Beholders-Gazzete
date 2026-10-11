@@ -58,6 +58,7 @@ function generateLoot(seed = newSeed(), push = true) {
   let coins = { cp:0, sp:0, ep:0, gp:0, pp:0 };
   let gems  = [], art = [], magic = [];
   let magicNote = '';
+  let found = null; // rollTreasure/decorateTreasure result: the treasure plus the find
 
   const luckSelect = { individual: 'ind-luck', hoard: 'hoard-luck' }[currentTab];
   const luck = (luckSelect && document.getElementById(luckSelect) || { value: 'normal' }).value;
@@ -67,14 +68,14 @@ function generateLoot(seed = newSeed(), push = true) {
 
     case 'individual': {
       const cr = document.getElementById('ind-cr').value;
-      ({ coins, gems, art, magic } = rollTreasure('individual', cr, luckMult));
+      found = rollTreasure('individual', cr, luckMult, true, document.getElementById('ind-source').value);
       break;
     }
 
     case 'hoard': {
       const cr  = document.getElementById('hoard-cr').value;
       const inc = document.getElementById('hoard-magic').value !== 'no';
-      ({ coins, gems, art, magic } = rollTreasure('hoard', cr, luckMult, inc));
+      found = rollTreasure('hoard', cr, luckMult, inc, document.getElementById('hoard-source').value);
       break;
     }
 
@@ -84,6 +85,7 @@ function generateLoot(seed = newSeed(), push = true) {
       const cnt    = Math.min(20, Math.max(1, parseInt(document.getElementById('magic-count').value) || 1));
       // Pick from the pool already filtered by rarity and type, so you get exactly cnt items.
       magic = Array.from({ length: cnt }, () => getMagicItem(rarity, mtype)).filter(Boolean);
+      magic.forEach(m => { const f = magicFlavor(m); if (f) m.flavor = f; });
       if (!magic.length) {
         const sel = id => document.getElementById(id).selectedOptions[0].textContent;
         magicNote = `The vault holds no ${sel('magic-type').toLowerCase()} items of ${rarity === 'random' ? 'any' : sel('magic-rarity').toLowerCase()} rarity. Try another combination.`;
@@ -101,13 +103,17 @@ function generateLoot(seed = newSeed(), push = true) {
         const cnt = roll(1, 3);
         magic = generateMagicItems(t.magicTable, cnt);
       }
+      found = decorateTreasure({ coins, gems, art, magic }, 'individual', cr,
+        { luckMult, goods: document.getElementById('custom-goods').checked });
       break;
     }
   } });
 
+  if (found) ({ coins, gems, art, magic } = found);
   currentLoot = {
+    ...(found || {}),
     coins, gems, art, magic, magicNote,
-    totalValue: totalGP(coins, gems, art, magic),
+    totalValue: found ? found.totalValue : totalGP(coins, gems, art, magic),
     tab: currentTab,
     seed,
     fields: changedFields(currentTab),
@@ -133,7 +139,14 @@ function displayLoot() {
     : formatCoins(loot.totalValue) + (hasArtifact ? ' + priceless' : '');
   const coinSum = Object.values(loot.coins).reduce((a,b) => a+b, 0);
   document.getElementById('total-coins').textContent  = coinSum.toLocaleString();
-  document.getElementById('total-gems').textContent   = (loot.gems.length + loot.art.length).toString();
+  const goods = loot.goods || [], trinkets = loot.trinkets || [];
+  document.getElementById('total-gems').textContent   = (loot.gems.length + loot.art.length + goods.length).toString();
+
+  // The find: who carried it or where it lay, how it was kept, lock, trap, story (older saves have none)
+  const find = lootFindLines(loot);
+  document.getElementById('find-section').style.display = find.length ? 'block' : 'none';
+  document.getElementById('find-list').innerHTML = find.map(([label, text]) =>
+    `<div class="find-row${label === 'Trapped' ? ' find-trap' : ''}"><dt>${label}</dt><dd>${esc(text)}</dd></div>`).join('');
   document.getElementById('total-magic').textContent  = loot.magic.length.toString();
 
   // Coins
@@ -162,6 +175,7 @@ function displayLoot() {
           <span class="item-name">${g.name}</span>
           <span class="item-rarity rarity-common">Gem</span>
         </div>
+        ${g.look ? `<p class="item-look">${esc(g.look)}</p>` : ''}
         <div class="item-value">💰 ${formatCoins(g.value)}</div>
       </div>`
     ).join('');
@@ -176,7 +190,22 @@ function displayLoot() {
           <span class="item-name">${a.name}</span>
           <span class="item-rarity rarity-uncommon">Art</span>
         </div>
+        ${a.note ? `<p class="item-look">${esc(a.note)}</p>` : ''}
         <div class="item-value">💰 ${formatCoins(a.value)}</div>
+      </div>`
+    ).join('');
+  }
+
+  // Trade goods
+  document.getElementById('goods-section').style.display = goods.length ? 'block' : 'none';
+  if (goods.length) {
+    document.getElementById('goods-grid').innerHTML = goods.map(g =>
+      `<div class="item-card">
+        <div class="item-header">
+          <span class="item-name">${esc(g.name)}</span>
+          <span class="item-rarity rarity-goods">Goods</span>
+        </div>
+        <div class="item-value">💰 ${formatCoins(g.value)}</div>
       </div>`
     ).join('');
   }
@@ -200,6 +229,7 @@ function displayLoot() {
           <span class="item-type">${item.type}</span>
           ${item.attune ? '<span class="attune-badge">⚡ Attunement</span>' : ''}
         </div>
+        ${item.flavor ? `<p class="item-look">${esc(item.flavor)}</p>` : ''}
         <div class="item-value">${item.value > 0 ? '💰 ~' + item.value.toLocaleString() + ' gp' : '✨ Priceless'}</div>
         ${info ? `<button type="button" class="item-toggle" aria-expanded="false" onclick="toggleItem(this)">Read item ▼</button>
         <div class="item-desc"><p class="item-srd-type">${info.meta}</p>${formatSrdText(info.text)}</div>` : ''}
@@ -207,13 +237,17 @@ function displayLoot() {
     }).join('');
   }
 
+  // Odds and ends (no value)
+  document.getElementById('trinkets-section').style.display = trinkets.length ? 'block' : 'none';
+  document.getElementById('trinkets-list').innerHTML = trinkets.map(t => `<li>${esc(lootCap(t))}</li>`).join('');
+
   // Notes
   const noteEl = document.getElementById('loot-notes-content');
   if (noteEl) {
     noteEl.innerHTML = `
       <p><strong>Method:</strong> ${currentTab.charAt(0).toUpperCase() + currentTab.slice(1)} Treasure</p>
       <p><strong>Coins:</strong> ${coinSum.toLocaleString()} total pieces</p>
-      <p><strong>Valuables:</strong> ${loot.gems.length} gems, ${loot.art.length} art objects</p>
+      <p><strong>Valuables:</strong> ${loot.gems.length} gems, ${loot.art.length} art objects${goods.length ? `, ${goods.length} lot${goods.length === 1 ? '' : 's'} of trade goods` : ''}</p>
       <p><strong>Magic Items:</strong> ${loot.magic.length} items found</p>
       <p><strong>Total Value:</strong> ${formatCoins(loot.totalValue)}${hasArtifact ? ' (plus artifacts, which have no market price)' : ''}</p>
     `;
@@ -241,11 +275,10 @@ function toggleItem(btn) {
 // ── ACTIONS ────────────────────────────────────────────────
 function regenerateLoot() { generateLoot(); }
 
-// Coins plus gems and art (what the party sells) go to the DM Toolbox splitter (F24).
+// Coins plus gems, art, and trade goods (what the party sells) go to the DM Toolbox splitter (F24).
 function splitLoot() {
   if (!currentLoot) return;
-  const { coins, gems, art } = currentLoot;
-  location.href = splitLink(coins, [...gems, ...art].reduce((t, i) => t + i.value, 0), lootPartySize());
+  location.href = splitLink(currentLoot.coins, lootSellValue(currentLoot), lootPartySize());
 }
 
 function lootPartySize() {
@@ -255,28 +288,38 @@ function lootPartySize() {
 function copyLoot() {
   if (!currentLoot) return;
   const { coins, gems, art, magic, totalValue } = currentLoot;
+  const goods = currentLoot.goods || [], trinkets = currentLoot.trinkets || [];
   let txt = '🏆 TREASURE LOOT 🏆\n\n';
   const priceless = magic.some(m => m.rarity === 'artifact') ? ' + priceless artifact' : '';
   txt += `Total Value: ~${formatCoins(totalValue)}${priceless}\n`;
-  // The same coins, gems, and art the Split button sends (F29).
-  const split = splitLine(coins, [...gems, ...art].reduce((t, i) => t + i.value, 0), lootPartySize());
+  // The same coins, gems, art, and goods the Split button sends (F29).
+  const split = splitLine(coins, lootSellValue(currentLoot), lootPartySize());
   if (split) txt += `${split}${magic.length ? ' (magic items not included)' : ''}\n`;
   txt += '\n';
+
+  const find = lootFindLines(currentLoot);
+  if (find.length) txt += '📜 THE FIND:\n' + find.map(([label, text]) => `  ${label}: ${text}`).join('\n') + '\n\n';
 
   const coinLines = Object.entries(coins).filter(([,v]) => v > 0)
     .map(([t,v]) => `  ${v.toLocaleString()} ${lootData.coins[t].name}`).join('\n');
   if (coinLines) txt += `🪙 CURRENCY:\n${coinLines}\n\n`;
 
   if (gems.length) {
-    txt += '💎 GEMS:\n' + gems.map(g => `  • ${g.name} (${formatCoins(g.value)})`).join('\n') + '\n\n';
+    txt += '💎 GEMS:\n' + gems.map(g => `  • ${g.name} (${formatCoins(g.value)})${g.look ? ': ' + g.look : ''}`).join('\n') + '\n\n';
   }
   if (art.length) {
-    txt += '🎨 ART OBJECTS:\n' + art.map(a => `  • ${a.name} (${formatCoins(a.value)})`).join('\n') + '\n\n';
+    txt += '🎨 ART OBJECTS:\n' + art.map(a => `  • ${a.name} (${formatCoins(a.value)})${a.note ? '. ' + a.note : ''}`).join('\n') + '\n\n';
+  }
+  if (goods.length) {
+    txt += '📦 TRADE GOODS:\n' + goods.map(g => `  • ${g.name} (${formatCoins(g.value)})`).join('\n') + '\n\n';
   }
   if (magic.length) {
     txt += '✨ MAGIC ITEMS:\n' + magic.map(m =>
-      `  • ${m.name} [${m.rarity}]${m.attune ? ' (Attunement Required)' : ''}`
-    ).join('\n') + '\n';
+      `  • ${m.name} [${m.rarity}]${m.attune ? ' (Attunement Required)' : ''}${m.flavor ? '\n    ' + m.flavor : ''}`
+    ).join('\n') + '\n\n';
+  }
+  if (trinkets.length) {
+    txt += '🧷 ODDS & ENDS:\n' + trinkets.map(t => `  • ${lootCap(t)}`).join('\n') + '\n';
   }
 
   navigator.clipboard.writeText(txt)
@@ -319,7 +362,7 @@ function renderSaved() {
   container.innerHTML = saved.map((loot, i) => `
     <div class="saved-item" onclick="loadSaved(${i})">
       <h4>Hoard #${i + 1} — ${formatCoins(loot.totalValue)}</h4>
-      <p>${loot.magic.length} magic · ${loot.gems.length + loot.art.length} valuables · ${loot.tab}</p>
+      <p>${loot.magic.length} magic · ${loot.gems.length + loot.art.length + (loot.goods || []).length} valuables · ${loot.tab}${LOOT_SOURCES[loot.source] ? ' · ' + LOOT_SOURCES[loot.source].label.toLowerCase() : ''}</p>
       <div class="saved-meta">${new Date(loot.generatedAt).toLocaleDateString()}</div>
     </div>
   `).join('');
@@ -347,11 +390,25 @@ function flashBtn(id, text) {
   setTimeout(() => btn.textContent = orig, 2000);
 }
 
+// Text from the tables goes into HTML.
+function esc(s) {
+  return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+}
+
+// "Carried by" / "Found in" pickers: Random plus the sources in loot-engine.js.
+function setupSourcePickers() {
+  [['ind-source', 'individual'], ['hoard-source', 'hoard']].forEach(([id, kind]) => {
+    const el = document.getElementById(id);
+    lootSourcesFor(kind).forEach(([key, s]) => el.add(new Option(`${s.icon} ${s.label}`, key)));
+  });
+}
+
 // ── INIT ───────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
   renderSaved();
+  setupSourcePickers();
   applyUrl(false);
   // Back/Forward step through earlier rolls.
   window.addEventListener('popstate', () => applyUrl(null));

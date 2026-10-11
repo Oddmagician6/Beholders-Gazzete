@@ -250,8 +250,12 @@ function lootHTML() {
     if (!l) return '';
     const coins = Object.entries(l.coins).filter(([, v]) => v > 0)
         .map(([t, v]) => `${lootData.coins[t].icon} ${v.toLocaleString()} ${t}`).join(' · ');
-    const valuables = [...l.gems, ...l.art]
+    const valuables = [...l.gems, ...l.art, ...(l.goods || [])]
         .map(i => `<li><span>${esc(i.name)}</span><span class="val">${formatCoins(i.value)}</span></li>`).join('');
+    // Where it was and how it was kept (loot-engine.js); kits saved before this have none.
+    const find = lootFindLines(l).filter(([label]) => label !== 'Coins')
+        .map(([label, text]) => `<p class="kit-find"><strong>${label}:</strong> ${esc(text)}</p>`).join('');
+    const odds = (l.trinkets || []).map(t => esc(t)).join('; ');
     // SRD items (magic-items-data.js) open to their text; the rest are name-only.
     const magic = l.magic.map(m => {
         const row = `<span>${esc(m.name)}${m.attune ? ' <span class="val">(attunement)</span>' : ''}</span><span class="rarity rarity-${m.rarity}">${m.rarity.replace('-', ' ')}</span>`;
@@ -263,16 +267,18 @@ function lootHTML() {
     const kind = l.kind === 'hoard' ? 'Treasure hoard' : 'Pocket loot';
     return `<div class="loot-total">${lootValue(l)}</div>
         <div class="npc-sub">${kind}, CR ${esc(l.cr)}</div>
+        ${find}
         <span class="kit-label">Coins</span>
         <p>${coins || '<span class="muted">Not a copper.</span>'}</p>
-        ${valuables ? `<span class="kit-label">Gems &amp; art</span><ul class="loot-list">${valuables}</ul>` : ''}
+        ${valuables ? `<span class="kit-label">Gems, art &amp; goods</span><ul class="loot-list">${valuables}</ul>` : ''}
         ${magic ? `<span class="kit-label">Magic items</span><ul class="loot-list">${magic}</ul>` : ''}
+        ${odds ? `<span class="kit-label">Odds &amp; ends</span><p>${lootCap(odds)}.</p>` : ''}
         ${coins || valuables ? `<a class="kit-split" href="${splitLink(l.coins, lootValuables(l), kitParty())}">🪙 Split among the party</a>` : ''}`;
 }
 
-// Gems and art are split with the coins; magic items aren't (F24, F29).
+// Gems, art, and trade goods are split with the coins; magic items aren't (F24, F29).
 function lootValuables(l) {
-    return [...l.gems, ...l.art].reduce((t, i) => t + i.value, 0);
+    return lootSellValue(l);
 }
 
 // Party size for the loot split, kept with the saved kit (not in the URL; it changes no roll).
@@ -347,9 +353,11 @@ function kitText() {
     if (l) {
         lines.push(`LOOT (${l.kind === 'hoard' ? 'hoard' : 'pocket'}, CR ${l.cr}): ${lootValue(l)}`);
         const coins = Object.entries(l.coins).filter(([, v]) => v > 0).map(([t, v]) => `${v.toLocaleString()} ${t}`).join(', ');
-        if (coins) lines.push(`Coins: ${coins}`);
-        [...l.gems, ...l.art].forEach(i => lines.push(`- ${i.name} (${formatCoins(i.value)})`));
+        lootFindLines(l).filter(([label]) => label !== 'Coins').forEach(([label, text]) => lines.push(`${label}: ${text}`));
+        if (coins) lines.push(`Coins: ${coins}${l.coinNote ? `. ${l.coinNote}` : ''}`);
+        [...l.gems, ...l.art, ...(l.goods || [])].forEach(i => lines.push(`- ${i.name} (${formatCoins(i.value)})`));
         l.magic.forEach(m => lines.push(`- ${m.name} [${m.rarity}]${m.attune ? ' (attunement)' : ''}`));
+        if ((l.trinkets || []).length) lines.push(`Odds & ends: ${l.trinkets.join('; ')}`);
         const split = splitLine(l.coins, lootValuables(l), kitParty());
         if (split) lines.push(`${split}${l.magic.length ? ' (magic items not included)' : ''}`);
         lines.push('');
