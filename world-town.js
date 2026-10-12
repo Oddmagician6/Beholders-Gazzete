@@ -5,15 +5,20 @@
    open on the Factions tab), its taverns (Toolbox Tavern) and shops (Shop page), laws
    and customs, trouble, rumors, and a quest hook (Toolbox Quest). "Use the Pantheon
    tab's gods" links a pantheon, and then the temple and the factions follow its gods.
+   A town opened from a Continent tab marker stands in that realm (cont=…&ctown=): its
+   rule follows the realm's kinds of government, and it knows its climate and exports.
    Nothing is stored: the URL holds the town.
    URL: ?tab=town&seed=&size=&setting=&wealth=&gods=&gsize=&gshape=&gnaming=
+        &cont=&csize=&cland=&cnat=&ctown=<town number on the map>
    ============================================ */
 
 const TOWN_FIELDS = { size: 'town-size', setting: 'town-setting', wealth: 'town-wealth' };
 // The linked pantheon's URL keys → its option names (the same keys the Calendar uses).
 const TOWN_GOD_KEYS = { gsize: 'size', gshape: 'shape', gnaming: 'naming' };
+// The linked continent's URL keys → its option names (the Continent tab's own keys).
+const TOWN_CONT_KEYS = { csize: 'size', cland: 'land', cnat: 'nations' };
 
-let townState = { seed: null, data: null, factions: null, gods: null, pantheon: null };
+let townState = { seed: null, data: null, factions: null, gods: null, pantheon: null, cont: null, realm: null };
 let townRumorList = [];
 
 function townOpts() {
@@ -22,7 +27,7 @@ function townOpts() {
 }
 
 function townCtx() {
-    return { factions: townState.factions, pantheon: townState.pantheon };
+    return { factions: townState.factions, pantheon: townState.pantheon, realm: townState.realm };
 }
 
 function townParams() {
@@ -35,6 +40,10 @@ function townParams() {
     const g = townState.gods;
     params.gods = g ? g.seed : null;
     Object.entries(TOWN_GOD_KEYS).forEach(([key, opt]) => { params[key] = g && g[opt] !== 'random' ? g[opt] : null; });
+    const cs = townState.realm ? townState.cont : null;
+    params.cont = cs ? cs.seed : null;
+    Object.entries(TOWN_CONT_KEYS).forEach(([key, opt]) => { params[key] = cs && cs[opt] !== 'random' ? cs[opt] : null; });
+    params.ctown = cs ? cs.town + 1 : null;
     return worldUrlFor('town', params);
 }
 
@@ -43,10 +52,18 @@ function townSetPantheon(g) {
     townState.pantheon = g ? rollPantheon(g.seed, g) : null;
 }
 
+// The continent a town stands on: { seed, size, land, nations, town } → { c, t, nat } (or null).
+function townSetRealm(cs) {
+    townState.cont = cs;
+    const c = cs ? contCached(cs.seed, cs) : null;
+    const t = c ? c.towns[cs.town] : null;
+    townState.realm = t ? { c, t, nat: c.nations[t.nation] } : null;
+}
+
 // push: true = new history entry, false = replace, null = leave the URL alone.
 function rollTownFor(seed = newSeed(), push = true) {
     townState.seed = seed;
-    townState.data = rollTown(seed, townOpts());
+    townState.data = rollTown(seed, { ...townOpts(), govs: townState.realm ? townState.realm.t.govs : null });
     townState.factions = townFactions(townState.data);
     renderTown();
     if (push !== null) setUrlParams(townParams(), push);
@@ -61,6 +78,10 @@ function applyTownUrl(p) {
     const g = gods ? { seed: gods } : null;
     if (g) Object.entries(TOWN_GOD_KEYS).forEach(([key, opt]) => { g[opt] = p.get(key) || 'random'; });
     townSetPantheon(g);
+    const cont = parseSeed(p.get('cont'));
+    const cs = cont ? { seed: cont, town: (parseInt(p.get('ctown'), 10) || 0) - 1 } : null;
+    if (cs) Object.entries(TOWN_CONT_KEYS).forEach(([key, opt]) => { cs[opt] = p.get(key) || 'random'; });
+    townSetRealm(cs && cs.town >= 0 ? cs : null);
     const seed = parseSeed(p.get('seed'));
     if (!seed) return false;
     rollTownFor(seed, null);
@@ -146,6 +167,25 @@ function townGodsHTML(t, ctx) {
     </div>`;
 }
 
+function townContinentLink() {
+    const cs = townState.cont;
+    const params = new URLSearchParams({ tab: 'continent', seed: cs.seed });
+    Object.values(TOWN_CONT_KEYS).forEach(opt => { if (cs[opt] !== 'random') params.set(opt, cs[opt]); });
+    return 'worldbuilder.html?' + params.toString();
+}
+
+function townRealmHTML(t) {
+    const r = townState.realm;
+    if (!r) return '';
+    const moved = t.name !== r.t.name;
+    return `<div class="wb-today">
+        <p>🗺️ ${esc(moved ? 'This town stands' : `${t.name} stands`)} in ${esc(r.nat.name)}, on the map of ${esc(r.c.name)}.</p>
+        <p class="wb-small">Its rule follows the realm's ways${moved ? '. A new place renamed it, so it no longer matches its marker on the map' : '; its size, place, and times came from the map, and you can still change them'}.</p>
+        <button type="button" class="btn" id="town-unrealm">✕ Take it off the map</button>
+        <a class="btn" href="${esc(townContinentLink())}">🗺️ Back to the map</a>
+    </div>`;
+}
+
 function townFactionsHTML(t, ctx) {
     const w = ctx.factions;
     if (!w) return `<p class="wb-small">A hamlet has no factions to speak of. Everyone is related, and that's politics enough.</p>`;
@@ -182,6 +222,7 @@ function renderTown() {
             <h3 class="wb-name">${esc(t.name)}</h3>
             <p class="wb-sub">${esc(townSummary(t))}</p>
         </header>
+        ${townRealmHTML(t)}
         ${townGodsHTML(t, ctx)}
         <section class="wb-block wb-wide">
             <h4>🏘️ At a glance</h4>
@@ -245,9 +286,11 @@ function setupTown() {
     Object.values(TOWN_FIELDS).forEach(id => document.getElementById(id).addEventListener('change', () => {
         if (townState.seed) rollTownFor(townState.seed, false);
     }));
-    document.getElementById('town-roll').addEventListener('click', () => rollTownFor());
+    // A new town is a new place: it leaves the map behind.
+    document.getElementById('town-roll').addEventListener('click', () => { townSetRealm(null); rollTownFor(); });
     document.getElementById('town-card').addEventListener('click', e => {
         if (e.target.closest('#town-link-gods')) { townLinkPantheon(true); return; }
+        if (e.target.closest('#town-unrealm')) { townSetRealm(null); rollTownFor(townState.seed, false); return; }
         if (e.target.closest('#town-unlink')) townLinkPantheon(false);
     });
     document.getElementById('town-copy').addEventListener('click', () => {

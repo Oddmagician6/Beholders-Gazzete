@@ -349,7 +349,7 @@ function townNpc(seed, cat, age) {
 }
 
 // ── The roll ─────────────────────────────────────────────
-// opts: { size, setting, wealth }, each a key or 'random'.
+// opts: { size, setting, wealth }, each a key or 'random'; govs: preferred TOWN_GOVS keys (optional).
 function rollTown(seed, opts = {}) {
     const part = (label, fn) => withSeed(deriveSeed(seed, label), fn);
     const sub = label => deriveSeed(seed, label);
@@ -386,7 +386,11 @@ function rollTown(seed, opts = {}) {
     }));
 
     // Government and leader (the leader keeps their seed when the size changes, if the government fits).
-    t.gov = part('gov.' + size, () => townPick(TOWN_GOVS.filter(g => g.sizes.includes(size))).key);
+    const govFits = TOWN_GOVS.filter(g => g.sizes.includes(size));
+    t.gov = part('gov.' + size, () => townPick(govFits).key);
+    // A realm on the Continent tab asks for its own kinds of rule (opts.govs), where they fit the size.
+    const govWanted = Array.isArray(opts.govs) ? govFits.filter(g => opts.govs.includes(g.key)) : [];
+    if (govWanted.length && !govWanted.some(g => g.key === t.gov)) t.gov = part('gov.realm.' + size, () => townPick(govWanted).key);
     const gov = TOWN_GOVS.find(g => g.key === t.gov);
     // Nobody runs a town at seventeen: a leader is at least an adult.
     const leaderAge = gov.age || part('leader.age', () => townPick(['adult', 'middle', 'middle', 'old']));
@@ -557,6 +561,14 @@ function townGovText(t, ctx) {
     return `${gov.label}. ${how}`;
 }
 
+// The realm a town stands in on the Continent tab's map: { c, t, nat } (continent-engine.js).
+function townRealmText(r) {
+    const nat = r.nat, G = CONT_GOVS[nat.gov];
+    const cap = r.t.capital ? `; this is its capital` : `; the capital is ${r.c.towns[nat.capital].name}`;
+    return `${facCap(nat.name)}, ${G.a} under ${nat.ruler.title} ${nat.ruler.npc.name}${cap}. `
+        + `${CONT_CLIMATES[r.c.map.climate[r.t.cell]].label} climate. The realm exports ${nat.exports.join(' and ')}.`;
+}
+
 // The town at a glance, as [label, text] pairs.
 function townLines(t, ctx) {
     const god = townDeity(t, ctx);
@@ -567,6 +579,7 @@ function townLines(t, ctx) {
         ['Known for', facCap(t.known) + '.'],
         ['Folk', townFolkText(t)],
         ['Times', TOWN_WEALTH[t.wealth].about],
+        ...(ctx.realm ? [['Realm', townRealmText(ctx.realm)]] : []),
         ['Founded', `About ${t.founded.years} years ago, by ${t.founded.by}. ${t.founded.since}`],
         ['Rule', townGovText(t, ctx)],
         ['In charge', `${t.leader.title} ${townPersonLine(t.leader)}. ${t.leader.style}`],

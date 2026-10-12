@@ -526,6 +526,15 @@ function siteFightList(f) {
 
 // ── The roll ──────────────────────────────────────────────
 // opts: { kind, size: 'random'|small|medium|large, level 1-20, party 1-8 }
+// A site's name, from its seed and kind (the Continent tab names its places with this).
+function siteNameFor(seed, kind) {
+    const K = SITE_KINDS[kind];
+    return withSeed(deriveSeed(seed, 'name.' + kind), () => {
+        const root = hisRoot(new Set());
+        return sitePick(K.names).replace('{Root}', root).replace('{Epithet}', sitePick(K.epithets)).replace('{Adj}', sitePick(K.adjs));
+    });
+}
+
 function rollSite(seed, opts = {}) {
     const part = (label, fn) => withSeed(deriveSeed(seed, label), fn);
     const drawn = part('options', () => ({ kind: sitePick(SITE_KIND_KEYS), size: siteWeighted([['medium', 5], ['small', 3], ['large', 3]]) }));
@@ -538,10 +547,7 @@ function rollSite(seed, opts = {}) {
     const budget = partyBudget([{ count: party, level }]);
 
     const n = part('count.' + size, () => Z.min + Math.floor(rand() * (Z.max - Z.min + 1)));
-    const name = part('name.' + kind, () => {
-        const root = hisRoot(new Set());
-        return sitePick(K.names).replace('{Root}', root).replace('{Epithet}', sitePick(K.epithets)).replace('{Adj}', sitePick(K.adjs));
-    });
+    const name = siteNameFor(seed, kind);
     const map = part(`layout.${kind}.${n}`, () => siteLayout(K, n));
     const count = map.cells.length;
 

@@ -20,18 +20,20 @@ const NB_KINDS = {
     history: { icon: '📜', label: 'History' },
     town: { icon: '🏘️', label: 'Town' },
     sites: { icon: '🏚️', label: 'Site' },
+    continent: { icon: '🗺️', label: 'Continent' },
     npc: { icon: '🎭', label: 'NPC' }
 };
 // Saved links may only point at these pages, with a plain query string.
 const NB_HREF = /^(worldbuilder|npc-generator)\.html(\?[A-Za-z0-9_.~%+=&*-]*)?$/;
 const NB_LIMITS = { entries: 500, title: 120, sub: 400, notes: 4000, name: 80, href: 2000, links: 60, file: 2000000 };
 // The options that make two rolls with one seed different, per kind (its own URL keys).
-const NB_SIG_KEYS = { pantheon: ['size', 'shape', 'naming'], factions: ['count', 'focus', 'scale'] };
+const NB_SIG_KEYS = { pantheon: ['size', 'shape', 'naming'], factions: ['count', 'focus', 'scale'], continent: ['size', 'land', 'nations'] };
 // URL keys that name another tab's roll: the seed key, and its option keys → that kind's keys.
 const NB_USES = {
     gods: { kind: 'pantheon', keys: { gsize: 'size', gshape: 'shape', gnaming: 'naming' } },
     facs: { kind: 'factions', keys: { fcount: 'count', ffocus: 'focus', fscale: 'scale' } },
-    his: { kind: 'history', keys: { hages: 'ages', hspan: 'span', hstart: 'start' } }
+    his: { kind: 'history', keys: { hages: 'ages', hspan: 'span', hstart: 'start' } },
+    cont: { kind: 'continent', keys: { csize: 'size', cland: 'land', cnat: 'nations' } }
 };
 
 const nbListeners = [];
