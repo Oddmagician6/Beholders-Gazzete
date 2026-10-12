@@ -64,11 +64,18 @@ function paramsQuery(params) {
 
 // Write params into the address bar. push = new history entry (so Back undoes a reroll).
 // An array value repeats the param (?lock=a&lock=b).
-function setUrlParams(params, push = true) {
+// state: a roll the URL can't hold (a reader-added rumor, a save from before links), kept in
+// history.state so Back/Forward can show it again.
+function setUrlParams(params, push = true, state = null) {
     const qs = paramsQuery(params);
     const url = location.pathname + (qs ? '?' + qs : '') + location.hash;
-    if (url === location.pathname + location.search + location.hash) return;
-    history[push ? 'pushState' : 'replaceState'](null, '', url);
+    if (url === location.pathname + location.search + location.hash) {
+        // Same address: a new state still gets its own entry (two reader rumors in a row).
+        if (state && push) history.pushState(state, '', url);
+        else if (state || history.state) history.replaceState(state, '', url);
+        return;
+    }
+    history[push ? 'pushState' : 'replaceState'](state, '', url);
 }
 
 // The value a <select> starts with, so defaults can stay out of the URL.

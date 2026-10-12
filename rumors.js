@@ -76,18 +76,26 @@ function reshuffleDeck() {
 // ── Shareable link: ?rumor=<index in rumors.json> ─────────
 function syncUrl(push) {
     const shareable = currentIdx >= 0 && currentIdx < baseCount;
-    setUrlParams(shareable ? { rumor: currentIdx } : {}, push);
+    // A reader-added rumor can't go in a link, so its history entry carries it instead.
+    setUrlParams(shareable ? { rumor: currentIdx } : {}, push, shareable ? null : { reader: currentIdx });
     document.getElementById('rumor-link').hidden = !shareable;
 }
 
-// Show the rumor named in the address bar. Returns false when there isn't one.
+// Show the rumor named in the address bar (or, on Back/Forward, a reader-added one kept
+// in the history entry). Returns false when there isn't one.
 function applyUrl() {
     const v = urlParams().get('rumor');
-    const idx = /^\d+$/.test(v || '') ? Number(v) : -1;
-    if (idx < 0 || idx >= baseCount) return false;
+    let idx = /^\d+$/.test(v || '') ? Number(v) : -1;
+    const shareable = idx >= 0 && idx < baseCount;
+    if (!shareable) {
+        // Reader rumors last until a refresh, so an older entry can point past the end.
+        const reader = history.state && history.state.reader;
+        if (v !== null || !Number.isInteger(reader) || reader < baseCount || !allRumors.rumors[reader]) return false;
+        idx = reader;
+    }
     currentIdx = idx;
     displayRumor(allRumors.rumors[idx]);
-    document.getElementById('rumor-link').hidden = false;
+    document.getElementById('rumor-link').hidden = !shareable;
     animateDisplay();
     return true;
 }

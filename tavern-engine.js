@@ -577,11 +577,11 @@ function tavernText(tv, rumor) {
         tavernSceneText(tv.scene),
         `The sign: ${tv.sign}. ${tv.history}`,
         '',
-        `${tv.owner.role}: ${tavernNpcLine(tv.owner)}. ${tv.owner.trait}. Voice: ${tv.owner.voice}. Secret: ${tv.owner.secret}`,
+        `${tv.owner.role}: ${tavernNpcLine(tv.owner)}. ${tv.owner.trait}. Voice: ${tv.owner.voice}. "${tv.owner.dialogue}" Secret: ${tv.owner.secret}`,
         'Staff:',
         ...tv.staff.map(s => `  ${s.role}: ${tavernNpcLine(s)}, ${s.note}.`),
         'Regulars:',
-        ...tv.regulars.map(r => `  ${tavernNpcLine(r)}, ${r.profession.toLowerCase()}, ${r.habit}. ${r.trait}.${r.tie ? ` ${tavernCap(r.tie)}.` : ''}`),
+        ...tv.regulars.map((r, i) => `  ${tavernNpcLine(r)}, ${r.profession.toLowerCase()}, ${r.habit}. ${r.trait}.${r.tie ? ` ${tavernCap(r.tie)}.` : ''}${i === 0 && r.questHook ? ` Has work: ${r.questHook}${/[.!?]$/.test(r.questHook) ? '' : '.'}` : ''}`),
         '',
         'Food:', ...tv.menu.food.map(i => '  ' + price(i)),
         'Drink:', ...tv.menu.drink.map(i => '  ' + price(i)),
@@ -595,5 +595,6 @@ function tavernText(tv, rumor) {
     ];
     if (tv.trouble) lines.push(`Trouble: ${tv.trouble}`);
     if (rumor) lines.push(`Overheard: "${rumor.text}"`);
+    if (rumor && rumor.followup) lines.push(`What happened next: ${rumor.followup}`);
     return lines.join('\n');
 }

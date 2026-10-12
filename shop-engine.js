@@ -313,6 +313,11 @@ function wasPrice(p) {
     return formatCoins(p.listPrice) !== formatCoins(p.price);
 }
 
+// The keeper's hair as running text; keepers rolled before hairLook build it the old way.
+function shopKeeperHair(k) {
+    return k.hairLook || (k.hairLabel === 'Scales' || k.hair === 'Bald' ? k.hair : `${k.hair} hair`);
+}
+
 // Plain-text shop for Copy Shop / Copy Kit. limit caps the stock lines (the kit shows fewer).
 function shopTextLines(shop, limit = Infinity) {
     const def = SHOP_TYPES[shop.type], k = shop.keeper;
@@ -320,7 +325,10 @@ function shopTextLines(shop, limit = Infinity) {
     const lines = [
         `${shop.name}`,
         `${def.label} · ${SHOP_WEALTH[shop.wealth].label}`,
-        `Keeper: ${k.name}, ${k.race.charAt(0).toUpperCase() + k.race.slice(1)} ${k.profession}. ${k.trait}. WIS ${k.stats.wis}, CHA ${k.stats.cha}.`,
+        `Keeper: ${k.name}, ${k.race.charAt(0).toUpperCase() + k.race.slice(1)} ${k.profession}, ${k.age}. ${k.trait}. Flaw: ${k.flaw}. WIS ${k.stats.wis}, CHA ${k.stats.cha}.`,
+        `Looks: ${[k.build, shopKeeperHair(k), `${k.eyes} eyes`, k.feature].join(' · ')}`,
+        `Voice: ${k.voice}`,
+        `Secret: ${k.secret}`,
         `"${shop.greeting}"`,
         `Quirk: ${shop.quirk}`,
         ...shopDetailLines(shop).map(([label, text]) => `${label}: ${text}`)

@@ -378,8 +378,17 @@ function renderSaved() {
 function loadSaved(i) {
   try {
     const saved = readLoot();
-    if (saved[i]) { currentLoot = saved[i]; displayLoot(); setUrlParams(lootParams(), true); }
+    // A hoard saved before links has no seed; its history entry carries it instead.
+    if (saved[i]) { currentLoot = saved[i]; displayLoot(); setUrlParams(lootParams(), true, currentLoot.seed ? null : { loot: currentLoot }); }
   } catch(e) {}
+}
+
+// Back/Forward onto an entry with no seed: a hoard saved before links, or the empty page.
+function showUnlinkedLoot() {
+  const loot = history.state && history.state.loot;
+  if (loot && typeof loot === 'object') { currentLoot = loot; displayLoot(); return; }
+  currentLoot = null;
+  document.getElementById('loot-display').style.display = 'none';
 }
 
 function clearSaved() {
@@ -418,5 +427,5 @@ document.addEventListener('DOMContentLoaded', () => {
   setupSourcePickers();
   applyUrl(false);
   // Back/Forward step through earlier rolls.
-  window.addEventListener('popstate', () => applyUrl(null));
+  window.addEventListener('popstate', () => { if (!applyUrl(null)) showUnlinkedLoot(); });
 });

@@ -968,6 +968,7 @@ function pantheonText(p, cal) {
     const out = [];
     out.push(panCap(p.name));
     out.push(panSummary(p));
+    out.push(PAN_SHAPES[p.shape].about);
     out.push(`Home: ${panCap(p.home)}.`);
     out.push(`In the beginning: ${p.creation}`);
     out.push(`After death: ${p.afterlife}`);

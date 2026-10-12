@@ -1009,7 +1009,7 @@ function calendarText(cal) {
     out.push(`Year ${cal.year.toLocaleString('en-US')} ${cal.era.abbr}, ${cal.yearName}. ${cal.era.note}`);
     out.push(...calTodayLines(cal));
     out.push('');
-    out.push(`A year of ${calYearDays(cal)} days: ${cal.months.length} months, a ${cal.week.names.length}-day week, ${cal.moons.length} moon${cal.moons.length === 1 ? '' : 's'}. ${CAL_STARTS[cal.start].text} Naming: ${st.label}.`);
+    out.push(`A year of ${calYearDays(cal)} days: ${cal.months.length} months, a ${cal.week.names.length}-day week, ${cal.moons.length} moon${cal.moons.length === 1 ? '' : 's'}. ${CAL_STARTS[cal.start].text} Naming: ${st.label}. ${st.about}`);
     out.push(`The week: ${cal.week.names.join(', ')}. ${cal.week.names[cal.week.rest]} is the day of rest; ${cal.week.names[cal.week.market]} is market day.`);
     if (cal.gap) out.push(`${calCap(cal.gap.name)}: ${cal.gap.days} day${cal.gap.days === 1 ? '' : 's'} after ${cal.months[cal.gap.after].name} that belong${cal.gap.days === 1 ? 's' : ''} to no month and no week. ${cal.gap.custom}`);
     out.push('');

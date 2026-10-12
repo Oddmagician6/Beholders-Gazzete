@@ -222,6 +222,10 @@ function copyLink() {
 
 function copyNPC() {
     if (!currentNPC) return;
+    // Same "include" boxes as the card and Print Selected.
+    const showStats = document.getElementById('include-stats').checked;
+    const showSecrets = document.getElementById('include-secrets').checked;
+    const showQuest = showSecrets && document.getElementById('include-quest').checked;
 
     const text = `
 ${currentNPC.name} (${currentNPC.race}, ${currentNPC.profession})
@@ -230,10 +234,10 @@ ${currentNPC.doing ? `
 WHEN YOU MEET THEM: ${currentNPC.doing}
 POCKETS: ${pocketsText(currentNPC)}
 ` : ''}
-STATS: STR ${currentNPC.stats.str} | DEX ${currentNPC.stats.dex} | CON ${currentNPC.stats.con} | INT ${currentNPC.stats.int} | WIS ${currentNPC.stats.wis} | CHA ${currentNPC.stats.cha}
+${showStats ? `STATS: STR ${currentNPC.stats.str} | DEX ${currentNPC.stats.dex} | CON ${currentNPC.stats.con} | INT ${currentNPC.stats.int} | WIS ${currentNPC.stats.wis} | CHA ${currentNPC.stats.cha}
 HP: ${currentNPC.hp} | AC: ${currentNPC.ac} | Speed: ${currentNPC.speed}
 
-PERSONALITY:
+` : ''}PERSONALITY:
 Trait: ${currentNPC.trait}
 Ideal: ${currentNPC.ideal}
 Bond: ${currentNPC.bond}
@@ -247,9 +251,7 @@ Clothing: ${currentNPC.clothing}
 VOICE: ${currentNPC.voice}
 DIALOGUE: "${currentNPC.dialogue}"
 
-SECRET: ${currentNPC.secret}
-QUEST: ${currentNPC.questHook}
-RELATIONSHIP: ${currentNPC.relationship}
+${showSecrets ? `SECRET: ${currentNPC.secret}\n` : ''}${showQuest ? `QUEST: ${currentNPC.questHook}\n` : ''}RELATIONSHIP: ${currentNPC.relationship}
 `.trim();
 
     navigator.clipboard.writeText(text).then(() => {
@@ -432,9 +434,24 @@ function loadSavedNPC(index) {
         currentNPC = saved[index];
         locks.clear();
         displayNPC(true, true, true);
-        setUrlParams(npcParams(), true);
+        // An NPC saved before links has no seed; its history entry carries it instead.
+        setUrlParams(npcParams(), true, currentNPC.seed ? null : { npc: currentNPC });
         document.getElementById('npc-card').scrollIntoView({ behavior: 'smooth' });
     }
+}
+
+// Back/Forward onto an entry with no seed: a saved NPC from before links, or the empty page.
+function showUnlinkedNPC() {
+    const npc = history.state && history.state.npc;
+    locks.clear();
+    if (npc && typeof npc === 'object') {
+        currentNPC = npc;
+        displayNPC(true, true, true);
+        return;
+    }
+    currentNPC = null;
+    renderLocks();
+    document.getElementById('npc-card').style.display = 'none';
 }
 
 function clearSaved() {
@@ -468,5 +485,5 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('afterprint', () => document.body.classList.remove('printing-sheet'));
     applyUrl(false);
     // Back/Forward step through earlier rolls.
-    window.addEventListener('popstate', () => applyUrl(null));
+    window.addEventListener('popstate', () => { if (!applyUrl(null)) showUnlinkedNPC(); });
 });

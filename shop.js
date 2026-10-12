@@ -51,7 +51,7 @@ function changeHTML(pct) {
 }
 
 function keeperHTML(k) {
-    const hair = k.hairLook || (k.hairLabel === 'Scales' || k.hair === 'Bald' ? k.hair : `${k.hair} hair`);
+    const hair = shopKeeperHair(k);
     return `<div class="keeper">
         <h2 class="shop-h">Shopkeeper</h2>
         <div class="keeper-title">
@@ -176,13 +176,14 @@ function copyLink() {
 }
 
 // ── Actions ───────────────────────────────────────────────
-function roll() {
+// push: false on the first visit, so the page doesn't start with an empty history entry.
+function roll(push = true) {
     const opts = { type: document.getElementById('shop-type').value, wealth: document.getElementById('shop-wealth').value };
     const seed = newSeed();
     shop = { ...withSeed(seed, () => rollShop(opts)), seed, rolledWith: opts };
     render();
     saveShop();
-    setUrlParams(shopParams(), true);
+    setUrlParams(shopParams(), push);
     document.getElementById('shop-card').animate?.([{ opacity: 0.2 }, { opacity: 1 }], { duration: 300 });
 }
 
@@ -212,10 +213,10 @@ document.addEventListener('DOMContentLoaded', () => {
     Object.entries(SHOP_WEALTH).forEach(([k, w]) => wealthSel.add(new Option(w.label, k)));
 
     loadShop();
-    document.getElementById('roll-shop').addEventListener('click', roll);
+    document.getElementById('roll-shop').addEventListener('click', () => roll());
     document.getElementById('copy-shop').addEventListener('click', copyShop);
     document.getElementById('copy-link').addEventListener('click', copyLink);
-    [typeSel, wealthSel].forEach(el => el.addEventListener('change', roll));
+    [typeSel, wealthSel].forEach(el => el.addEventListener('change', () => roll()));
 
     // A shared link wins over the saved shop.
     if (applyUrl() || shop) {
@@ -223,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
         saveShop();
         setUrlParams(shopParams(), false);
     } else {
-        roll();
+        roll(false);
     }
 
     // Back/Forward step through earlier shops (haggles aren't replayed).

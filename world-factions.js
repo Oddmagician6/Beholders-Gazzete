@@ -154,7 +154,7 @@ function facGodsHTML(w) {
     if (facState.pantheon) {
         return `<div class="wb-today">
             <p>⛪ The faithful here follow the gods of ${esc(facState.pantheon.name)}.</p>
-            <p class="wb-small">${followers ? `${followers} of these factions follow one of its gods.` : 'None of these factions follows a god, but a reroll might.'}</p>
+            <p class="wb-small">${followers ? `${followers} of these factions ${followers === 1 ? 'follows' : 'follow'} one of its gods.` : 'None of these factions follows a god, but a reroll might.'}</p>
             <button type="button" class="btn" id="fac-unlink">✕ Use made-up gods instead</button>
         </div>`;
     }
