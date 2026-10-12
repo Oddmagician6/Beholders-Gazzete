@@ -151,6 +151,12 @@ p:last-child { margin-bottom: 0; }
 
 .main-nav a:hover::after, .main-nav a.active::after { left: 0; right: 0; }
 
+/* 12 links: tighten as the screen narrows so the bar stays on one row down to ~1150px */
+.main-nav ul { max-width: 1600px; }
+@media (max-width: 1600px) { .main-nav a { padding: 16px 14px; } }
+@media (max-width: 1420px) { .main-nav a { padding: 16px 10px; letter-spacing: 0.05em; } }
+@media (max-width: 1260px) { .main-nav a { padding: 16px 7px; letter-spacing: 0.03em; } }
+
 /* ── TICKER ─────────────────────────────────────────────── */
 .ticker-wrap {
   width: 100%;
