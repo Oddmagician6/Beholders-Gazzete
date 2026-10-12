@@ -5,10 +5,13 @@
      WORLD_TABS[id] = { params() → URL params, apply(urlParams) → true if it held a roll,
                         fresh(push) → a first roll, rolled() → true once it has one }
    Calendar (F33): world-calendar.js, rolled by calendar-engine.js.
+   Pantheon (F34): world-pantheon.js, rolled by pantheon-engine.js; its holy days can go on the calendar.
+   Factions (F35): world-factions.js, rolled by faction-engine.js (leaders from npc-data.js); can follow the pantheon's gods.
+   History (F36): world-history.js, rolled by history-engine.js; can name the pantheon's gods and date the factions.
    Seeds and the shareable URL: rng.js.
    ============================================ */
 
-const WORLD_TAB_ORDER = ['calendar'];
+const WORLD_TAB_ORDER = ['calendar', 'pantheon', 'factions', 'history'];
 const WORLD_TABS = {};
 
 function esc(text) {
@@ -48,6 +51,14 @@ function worldUrlFor(tab, params) {
     return { ...(tab === WORLD_TAB_ORDER[0] ? {} : { tab }), ...params };
 }
 
+// Show another tab (rolling it on a first visit) and put its roll in the address bar.
+function switchWorldTab(tab) {
+    if (tab === currentWorldTab()) return;
+    showWorldTab(tab);
+    if (!WORLD_TABS[tab].rolled()) WORLD_TABS[tab].fresh(null);
+    setUrlParams(WORLD_TABS[tab].params(), true);
+}
+
 // Rebuild the page from the address bar. Returns true when it held a roll.
 function applyWorldUrl() {
     const tab = currentWorldTab();
@@ -60,13 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     Object.values(WORLD_TABS).forEach(t => t.setup && t.setup());
 
     // Each tab keeps its roll in memory; the first visit to a tab rolls one.
-    document.querySelectorAll('.tool-tab').forEach(b => b.addEventListener('click', () => {
-        const tab = b.dataset.tab;
-        if (tab === currentWorldTab()) return;
-        showWorldTab(tab);
-        if (!WORLD_TABS[tab].rolled()) WORLD_TABS[tab].fresh(null);
-        setUrlParams(WORLD_TABS[tab].params(), true);
-    }));
+    document.querySelectorAll('.tool-tab').forEach(b => b.addEventListener('click', () => switchWorldTab(b.dataset.tab)));
 
     if (!applyWorldUrl()) WORLD_TABS[currentWorldTab()].fresh(false);
     // Back/Forward step through earlier rolls.

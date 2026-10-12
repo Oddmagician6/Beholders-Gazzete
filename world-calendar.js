@@ -3,12 +3,37 @@
    A world calendar from calendar-engine.js (rollCalendar): the reckoning, today's date,
    the week, the seasons, the moons, every month with its festival, and a month view
    with moon phases and festival days. Nothing is stored: the URL holds the calendar.
-   URL: ?seed=&style=&months=&week=&moons=&climate=&view=<month number>
+   A pantheon from the Pantheon tab can be linked (gods=<its seed> plus its options),
+   and then every god's holy day is listed and marked in the month view.
+   URL: ?seed=&style=&months=&week=&moons=&climate=&view=<month number>&gods=&gsize=&gshape=&gnaming=
    ============================================ */
 
 const CAL_FIELDS = { style: 'cal-style', months: 'cal-months', week: 'cal-week', moons: 'cal-moons', climate: 'cal-climate' };
 
-let calState = { seed: null, data: null, view: 0 };
+// The linked pantheon's URL keys → its option names.
+const CAL_GOD_KEYS = { gsize: 'size', gshape: 'shape', gnaming: 'naming' };
+
+let calState = { seed: null, data: null, view: 0, gods: null, pantheon: null };
+
+// The pantheon these holy days come from: { seed, size, shape, naming }, or null.
+function calLinkedPantheon() {
+    return calState.gods;
+}
+
+function calSetPantheon(g) {
+    calState.gods = g;
+    calState.pantheon = g ? rollPantheon(g.seed, g) : null;
+}
+
+// Link a pantheon (or null to unlink) and redraw both tabs.
+function calLinkPantheon(g) {
+    calSetPantheon(g);
+    if (calState.data) {
+        renderCalendar();
+        if (currentWorldTab() === 'calendar') setUrlParams(calParams(), false);
+    }
+    if (WORLD_TABS.pantheon && WORLD_TABS.pantheon.rolled()) WORLD_TABS.pantheon.refresh();
+}
 
 function calOpts() {
     const v = id => document.getElementById(id).value;
@@ -24,6 +49,9 @@ function calParams() {
     params.seed = calState.seed;
     const c = calState.data;
     params.view = c && calState.view !== c.today.month ? calState.view + 1 : null;
+    const g = calState.gods;
+    params.gods = g ? g.seed : null;
+    Object.entries(CAL_GOD_KEYS).forEach(([key, opt]) => { params[key] = g && g[opt] !== 'random' ? g[opt] : null; });
     return worldUrlFor('calendar', params);
 }
 
@@ -37,6 +65,8 @@ function rollCalendarFor(seed = newSeed(), push = true, keepView = false) {
     calState.view = keepView && prev < n ? prev : calState.data.today.month;
     renderCalendar();
     if (push !== null) setUrlParams(calParams(), push);
+    // A linked pantheon shows this calendar's dates for its holy days (and drops them once unlinked).
+    if (WORLD_TABS.pantheon && WORLD_TABS.pantheon.rolled()) WORLD_TABS.pantheon.refresh();
 }
 
 function applyCalUrl(p) {
@@ -44,6 +74,10 @@ function applyCalUrl(p) {
         const el = document.getElementById(id);
         if (!setFieldValue(el, p.get(key))) el.value = defaultValue(el);
     });
+    const gods = parseSeed(p.get('gods'));
+    const g = gods ? { seed: gods } : null;
+    if (g) Object.entries(CAL_GOD_KEYS).forEach(([key, opt]) => { g[opt] = p.get(key) || 'random'; });
+    calSetPantheon(g);
     const seed = parseSeed(p.get('seed'));
     if (!seed) return false;
     rollCalendarFor(seed, null);
@@ -53,6 +87,40 @@ function applyCalUrl(p) {
         renderCalendar();
     }
     return true;
+}
+
+// ── Holy days ─────────────────────────────────────────────
+// The linked pantheon's holy days this year, in date order: [{ i, god, month, day }].
+function calHolyDays(c) {
+    const p = calState.pantheon;
+    if (!p) return [];
+    return p.gods.map((god, i) => ({ i, god, ...(panHolyDate(god, c) || {}) }))
+        .filter(h => h.month !== undefined)
+        .sort((a, b) => a.month - b.month || a.day - b.day);
+}
+
+function calHolyText(c) {
+    const holy = calHolyDays(c);
+    if (!holy.length) return '';
+    const out = ['', '', `Holy days (${calCap(calState.pantheon.name)}):`];
+    holy.forEach(h => out.push(`- The ${calOrdinal(h.day)} of ${c.months[h.month].name}: ${calCap(h.god.holyName)}, for ${h.god.name} (${panHolyWhen(h.god.holy)}). ${h.god.rite}`));
+    return out.join('\n');
+}
+
+function calPantheonLink() {
+    const g = calState.gods;
+    const params = new URLSearchParams({ tab: 'pantheon', seed: g.seed });
+    ['size', 'shape', 'naming'].forEach(k => { if (g[k] !== 'random') params.set(k, g[k]); });
+    return 'worldbuilder.html?' + params.toString();
+}
+
+function calHolyHTML(c) {
+    const holy = calHolyDays(c);
+    return `<section class="wb-block wb-wide">
+        <h4>⛪ Holy days of ${esc(calState.pantheon.name)}</h4>
+        <ul class="wb-list">${holy.map(h => `<li><b>${esc(calCap(h.god.holyName))}</b> <span class="wb-tag">${PAN_DOMAINS[h.god.domain].icon} ${esc(h.god.name)}</span><br>The ${calOrdinal(h.day)} of ${esc(c.months[h.month].name)}: ${esc(panHolyWhen(h.god.holy))}.</li>`).join('')}</ul>
+        <p class="wb-holy-actions"><a class="btn" href="${esc(calPantheonLink())}">⛪ Open the pantheon</a> <button type="button" class="btn" id="cal-unlink">✕ Take the holy days off</button></p>
+    </section>`;
 }
 
 // ── Render ────────────────────────────────────────────────
@@ -115,6 +183,7 @@ function calMonthsHTML(c) {
 function calMonthViewHTML(c) {
     const i = calState.view, m = c.months[i], f = m.festival, w = c.week.names.length;
     const fl = calFestivalLines(c, i);
+    const holy = calHolyDays(c).filter(h => h.month === i);
     const first = calWeekday(c, c.year, i, 1);
     const cells = [];
     for (let k = 0; k < first; k++) cells.push('<div class="wb-pad" aria-hidden="true"></div>');
@@ -133,8 +202,11 @@ function calMonthViewHTML(c) {
             if (p % 2 === 0 && calMoonPhase(c.moons[0], abs - 1) !== p) ph = `<span class="ph" title="${esc(c.moons[0].name)}: ${esc(MOON_PHASES[p].label)}">${MOON_PHASES[p].icon}</span>`;
         }
         const others = c.moons.slice(1).filter(mo => calMoonPhase(mo, abs) === 4 && calMoonPhase(mo, abs - 1) !== 4);
-        const title = [fest ? fl.name : '', ...others.map(mo => `${mo.name} full`)].filter(Boolean).join('; ');
-        cells.push(`<div class="${cls.join(' ')}"${title ? ` title="${esc(title)}"` : ''}><b>${d}</b>${ph}${fest ? `<span class="fi" aria-label="${esc(fl.name)}">${fl.icon}</span>` : ''}${others.map(mo => `<span class="mo">🌕 ${esc(mo.name)}</span>`).join('')}</div>`);
+        const holyHere = holy.filter(h => h.day === d);
+        if (holyHere.length) cls.push('holy');
+        const title = [fest ? fl.name : '', ...holyHere.map(h => `${calCap(h.god.holyName)} (${h.god.name})`), ...others.map(mo => `${mo.name} full`)].filter(Boolean).join('; ');
+        const marks = (fest ? fl.icon : '') + (holyHere.length ? '✨' : '');
+        cells.push(`<div class="${cls.join(' ')}"${title ? ` title="${esc(title)}"` : ''}><b>${d}</b>${ph}${marks ? `<span class="fi" aria-label="${esc(title)}">${marks}</span>` : ''}${holyHere.map(h => `<span class="mo">✨ ${esc(h.god.name)}</span>`).join('')}${others.map(mo => `<span class="mo">🌕 ${esc(mo.name)}</span>`).join('')}</div>`);
     }
     const heads = c.week.names.map((n, k) => `<div class="wb-wd${k === c.week.rest ? ' rest' : ''}" title="${esc(n)}">${esc(n.slice(0, 3))}</div>`).join('');
     const gap = c.gap && c.gap.after === i
@@ -145,12 +217,20 @@ function calMonthViewHTML(c) {
             <button type="button" class="btn wb-arrow" data-step="1" aria-label="Next month">▶</button>
         </div>
         <div class="wb-days" style="grid-template-columns: repeat(${w}, minmax(0, 1fr));">${heads}${cells.join('')}</div>
-        <p class="wb-legend">${c.moons[0] ? `Moon icons: ${esc(c.moons[0].name)}'s new, quarter, and full moons. ` : ''}${fl.icon} festival days. The outlined day is today.</p>
+        <p class="wb-legend">${c.moons[0] ? `Moon icons: ${esc(c.moons[0].name)}'s new, quarter, and full moons. ` : ''}${fl.icon} festival days.${calState.pantheon ? ' ✨ holy days.' : ''} The outlined day is today.</p>
         ${gap}
         <section class="wb-fest">
             <h4>${fl.icon} ${esc(fl.name)}</h4>
             <dl class="wb-dl">${fl.lines.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
-        </section>`;
+        </section>
+        ${holy.map(h => `<section class="wb-fest">
+            <h4>✨ ${esc(calCap(h.god.holyName))}</h4>
+            <dl class="wb-dl">
+                <div><dt>When</dt><dd>The ${calOrdinal(h.day)} of ${esc(m.name)}: ${esc(panHolyWhen(h.god.holy))}</dd></div>
+                <div><dt>Whose</dt><dd>${esc(calCap(h.god.name))}, ${esc(h.god.epithet)} (${esc(PAN_DOMAINS[h.god.domain].label)})</dd></div>
+                <div><dt>What happens</dt><dd>${esc(h.god.rite)}</dd></div>
+            </dl>
+        </section>`).join('')}`;
 }
 
 function renderCalendar() {
@@ -184,6 +264,7 @@ function renderCalendar() {
             <h4>${c.moons.length === 1 ? '🌙 The moon' : '🌙 The moons'}</h4>
             ${calMoonsHTML(c)}
         </section>
+        ${calState.pantheon ? calHolyHTML(c) : ''}
         <section class="wb-block wb-wide">
             <h4>🗓️ The months</h4>
             ${calMonthsHTML(c)}
@@ -229,10 +310,14 @@ function setupCalendar() {
         const m = e.target.closest('.wb-mbtn');
         if (m) { showCalMonth(Number(m.dataset.month)); document.getElementById('cal-month').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
         const a = e.target.closest('.wb-arrow');
-        if (a) showCalMonth(calState.view + Number(a.dataset.step), `.wb-arrow[data-step="${a.dataset.step}"]`);
+        if (a) { showCalMonth(calState.view + Number(a.dataset.step), `#cal-month .wb-arrow[data-step="${a.dataset.step}"]`); return; }
+        if (e.target.closest('#cal-unlink')) {
+            calLinkPantheon(null);
+            flash('cal-status', 'The holy days are off the calendar.');
+        }
     });
     document.getElementById('cal-copy').addEventListener('click', () => {
-        if (calState.data) copyText(calendarText(calState.data), 'cal-status', 'the calendar');
+        if (calState.data) copyText(calendarText(calState.data) + calHolyText(calState.data), 'cal-status', 'the calendar');
     });
     document.getElementById('cal-print').addEventListener('click', printCalendar);
     window.addEventListener('afterprint', () => document.body.classList.remove('print-cal'));
