@@ -7,7 +7,7 @@
 // (then running the export) installs a new cache; old caches are deleted on activate.
 // Cache keys drop the query string (?seed=, ?t=, ?id= ...): pages rebuild their state from the URL.
 
-const VERSION = '041f97b44e4c';
+const VERSION = 'ee3ddca8c150';
 const STATIC = 'gazette-static-' + VERSION;
 const PAGES = 'gazette-pages';
 const FONTS = 'gazette-fonts';
@@ -18,7 +18,7 @@ const PRECACHE = [
   'economy.html', 'shop.html', 'session-kit.html', 'toolbox.html', 'worldbuilder.html',
   // Styles and scripts
   'style.css', 'homepage.css', 'economy-page.css', 'sw-register.js',
-  'rng.js', 'npc-data.js', 'npc-generator.js', 'loot-data.js', 'loot-engine.js', 'loot-generator.js', 'magic-items-data.js',
+  'rng.js', 'npc-data.js', 'npc-statblock.js', 'npc-generator.js', 'loot-data.js', 'loot-engine.js', 'loot-generator.js', 'magic-items-data.js',
   'coins.js', 'market-data.js', 'economy-full.js', 'names-data.js', 'shop-engine.js', 'shop.js',
   'town-crier.js', 'rumor-deck.js', 'rumors.js', 'session-kit.js', 'travel-engine.js', 'dice-engine.js', 'dice-fab.js', 'toolbox.js', 'toolbox-table.js', 'monsters-data.js', 'encounter-engine.js', 'toolbox-encounter.js', 'tavern-engine.js', 'toolbox-tavern.js', 'downtime-engine.js', 'toolbox-downtime.js', 'quest-engine.js', 'toolbox-quest.js', 'calendar-engine.js', 'pantheon-engine.js', 'worldbuilder.js', 'world-calendar.js', 'world-pantheon.js', 'faction-engine.js', 'world-factions.js', 'history-engine.js', 'world-history.js', 'town-engine.js', 'world-town.js', 'site-engine.js', 'world-sites.js', 'continent-engine.js', 'world-continent.js', 'notebook.js', 'world-notebook.js', 'spells-data.js', 'script.js', 'raven-form.js', 'nav.js',
   // Data

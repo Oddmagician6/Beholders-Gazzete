@@ -2,14 +2,15 @@
    COMPREHENSIVE NPC GENERATOR
    ============================================ */
 
-// Data and the roller live in npc-data.js (shared with the Session Kit).
+// Data and the roller live in npc-data.js (shared with the Session Kit); the stat
+// block comes from npc-statblock.js.
 
 // ==================== NPC GENERATION ====================
 
 let currentNPC = null;
 
 // URL param -> picker. The pickers plus a seed (rng.js) rebuild the same NPC.
-const NPC_FIELDS = { race: 'npc-race', profession: 'npc-profession', age: 'npc-age', gender: 'npc-gender' };
+const NPC_FIELDS = { race: 'npc-race', profession: 'npc-profession', age: 'npc-age', gender: 'npc-gender', cls: 'npc-class', level: 'npc-level' };
 
 // Locked parts (NPC_PARTS in npc-data.js) keep their seed when the rest rerolls.
 const locks = new Set();
@@ -17,7 +18,8 @@ const locks = new Set();
 // A kept part: its seed, plus the resolved values it was rolled with, so it replays
 // the same whatever the pickers say now.
 function pinOf(npc, part) {
-    const extra = { identity: [npc.race, npc.gender], age: [npc.ageBucket], job: [npc.professionCategory] }[part]
+    const extra = { identity: [npc.race, npc.gender], age: [npc.ageBucket], job: [npc.professionCategory],
+        stats: npc.block ? [npc.block.cls, npc.block.level] : [] }[part]
         || (NPC_JOB_PARTS.includes(part) ? [(npc.partCategories && npc.partCategories[part]) || npc.professionCategory] : []);
     return { seed: npc.seeds[part], extra };
 }
@@ -36,7 +38,13 @@ function generateNPC(seed = newSeed(), push = true, pinned = null) {
     if (pinned.job) [rollOpts.professionType] = pinned.job.extra;
     rollOpts.partCategory = Object.fromEntries(NPC_JOB_PARTS.filter(p => pinned[p] && pinned[p].extra.length).map(p => [p, pinned[p].extra[0]]));
     const seeds = Object.fromEntries(NPC_PARTS.map(part => [part, pinned[part] ? pinned[part].seed : deriveSeed(seed, part)]));
-    currentNPC = { ...rollNPC(rollOpts, seeds), seed, seeds, rolledWith: opts };
+    const npc = { ...rollNPC(rollOpts, seeds), seed, seeds, rolledWith: opts };
+    // The stat block follows the stats seed, so the stats lock keeps it; a kept block
+    // also keeps its class and level.
+    const force = { cls: opts.cls, level: parseInt(opts.level, 10) };
+    if (pinned.stats && pinned.stats.extra.length === 2) [force.cls, force.level] = [pinned.stats.extra[0], +pinned.stats.extra[1]];
+    npc.block = withSeed(deriveSeed(seeds.stats, 'block'), () => rollStatBlock(npc, force));
+    currentNPC = npc;
     if (push !== null) setUrlParams(npcParams(), push);
 
     displayNPC(
@@ -72,17 +80,7 @@ function displayNPC(includeStats, includeSecrets, includeQuest) {
 
     // Stats
     document.getElementById('stats-section').style.display = includeStats ? 'block' : 'none';
-    if (includeStats) {
-        document.getElementById('stat-str').textContent = currentNPC.stats.str;
-        document.getElementById('stat-dex').textContent = currentNPC.stats.dex;
-        document.getElementById('stat-con').textContent = currentNPC.stats.con;
-        document.getElementById('stat-int').textContent = currentNPC.stats.int;
-        document.getElementById('stat-wis').textContent = currentNPC.stats.wis;
-        document.getElementById('stat-cha').textContent = currentNPC.stats.cha;
-        document.getElementById('npc-hp').textContent = currentNPC.hp;
-        document.getElementById('npc-ac').textContent = currentNPC.ac;
-        document.getElementById('npc-speed').textContent = currentNPC.speed;
-    }
+    if (includeStats) renderStatBlock(currentNPC);
 
     // Personality
     document.getElementById('npc-trait').textContent = currentNPC.trait;
@@ -115,6 +113,114 @@ function displayNPC(includeStats, includeSecrets, includeQuest) {
 
     // Relationships
     document.getElementById('npc-relationship-text').textContent = currentNPC.relationship;
+}
+
+// ==================== STAT BLOCK ====================
+
+// Saves from before stat blocks keep the old quick stats (abilities, HP, AC, speed).
+function renderStatBlock(npc) {
+    const b = npc.block;
+    const stats = b ? b.stats : npc.stats;
+    ['str', 'dex', 'con', 'int', 'wis', 'cha'].forEach(k => {
+        document.getElementById(`stat-${k}`).textContent = stats[k];
+        document.getElementById(`mod-${k}`).textContent = b ? `(${sbSigned(npcMod(stats[k]))})` : '';
+    });
+    document.getElementById('sb-head').hidden = !b;
+    document.getElementById('npc-combat-legacy').hidden = !!b;
+    const core = document.getElementById('sb-core');
+    const body = document.getElementById('sb-body');
+    if (!b) {
+        document.getElementById('npc-hp').textContent = npc.hp;
+        document.getElementById('npc-ac').textContent = npc.ac;
+        document.getElementById('npc-speed').textContent = npc.speed;
+        core.innerHTML = body.innerHTML = '';
+        return;
+    }
+    document.getElementById('sb-title').textContent = b.title;
+    document.getElementById('sb-type').textContent = b.typeLine;
+    core.innerHTML = `
+        <span><strong>Armor Class</strong> ${b.ac}${b.acText ? ` (${esc(b.acText)})` : ''}</span>
+        <span><strong>Hit Points</strong> ${b.hp} (${esc(b.hitDice)})</span>
+        <span><strong>Speed</strong> ${esc(b.speed)}</span>`;
+
+    const prop = (label, list) => list.length ? `<p><strong>${label}</strong> ${esc(list.join(', '))}</p>` : '';
+    const feats = list => list.map(f => `<p class="sb-feat"><strong>${esc(f.name)}.</strong> ${esc(f.text)}</p>`).join('');
+    const section = (title, list) => list.length ? `<div class="sb-section"><h4>${title}</h4>${feats(list)}</div>` : '';
+    body.innerHTML = `
+        <div class="sb-props">
+            ${prop('Saving Throws', b.saves)}${prop('Skills', b.skills)}${prop('Damage Resistances', b.resist)}
+            ${prop('Senses', b.senses)}${prop('Languages', b.langs)}
+            <p><strong>Challenge</strong> <span class="sb-cr" title="A rough guide for a classed NPC, not an official rating">≈ ${esc(b.cr)} (${b.xp.toLocaleString()} XP)</span>
+                &nbsp; <strong>Proficiency Bonus</strong> +${b.prof}</p>
+        </div>
+        ${section('Traits', b.traits)}
+        ${spellcastingHtml(npc)}
+        ${section('Actions', b.actions)}
+        ${section('Bonus Actions', b.bonusActions)}
+        ${section('Reactions', b.reactions)}
+        <div class="sb-section"><h4>Equipment</h4>
+            <p class="sb-feat">${esc(b.gear.join(', ').replace(/^./, c => c.toUpperCase()))}.${b.magicItem ? ` <strong>Magic item:</strong> ${esc(b.magicItem)}.` : ''}</p>
+        </div>`;
+}
+
+function spellSlug(name) {
+    return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+function spellcastingHtml(npc) {
+    const s = npc.block.spellcasting;
+    if (!s) return '';
+    const [he, his] = sbPronouns(npc.gender);
+    const cap = w => w.charAt(0).toUpperCase() + w.slice(1);
+    const all = s.lines.flatMap(l => l.spells);
+    const lines = s.lines.map(l => `<li><span class="sb-lvl">${esc(l.label)}:</span> ${l.spells.map(n =>
+        `<button type="button" class="sb-spell" data-spell="${esc(n)}" aria-expanded="false">${esc(n)}</button>${(l.marked || []).includes(n) ? '<span class="sb-mark">*</span>' : ''}`).join(', ')}</li>`).join('');
+    const marked = s.lines.some(l => (l.marked || []).length);
+    const listName = `${npc.firstName || npc.name}'s spells`.slice(0, 40);
+    const book = `spellbook.html?${paramsQuery({ spells: all.map(spellSlug).join('.'), list: listName })}`;
+    const verb = he === 'they' ? 'have' : 'has';
+    return `<div class="sb-section"><h4>Spellcasting</h4>
+        <p class="sb-feat"><strong>Spellcasting.</strong> ${esc(npc.firstName || npc.name)} is a ${sbOrdinal(npc.block.level)}-level spellcaster.
+            ${cap(his)} spellcasting ability is ${s.ability} (spell save DC ${s.dc}, ${sbSigned(s.attack)} to hit with spell attacks).
+            ${cap(he)} ${verb} the following ${npc.block.cls.toLowerCase()} spells ${s.prepared ? 'prepared' : 'known'}${s.note ? ` and ${s.note.replace('its', his)}` : ''}:</p>
+        <ul class="sb-spells">${lines}</ul>
+        ${marked ? `<p class="sb-note">* ${esc(s.markWhy)}</p>` : ''}
+        <div class="sb-spell-detail" id="sb-spell-detail" hidden></div>
+        <a class="sb-book" href="${esc(book)}">📖 Open these spells in the Spellbook</a>
+    </div>`;
+}
+
+// Spell text: paragraphs, ***bold*** run-ins, and "| a | b |" tables (same format as the Spellbook).
+function spellTextHtml(text) {
+    const out = [];
+    let rows = [];
+    const flush = () => {
+        if (!rows.length) return;
+        const cells = rows.filter(r => !/^\|[\s:|-]+\|$/.test(r)).map(r => r.replace(/^\||\|$/g, '').split('|').map(c => esc(c.trim())));
+        out.push(`<table>${cells.map((c, i) => `<tr>${c.map(x => i ? `<td>${x}</td>` : `<th>${x}</th>`).join('')}</tr>`).join('')}</table>`);
+        rows = [];
+    };
+    String(text || '').split('\n').forEach(line => {
+        if (line.trim().startsWith('|')) { rows.push(line.trim()); return; }
+        flush();
+        if (line.trim()) out.push(`<p>${esc(line).replace(/\*\*\*(.+?)\*\*\*/g, '<strong>$1</strong>')}</p>`);
+    });
+    flush();
+    return out.join('');
+}
+
+function showSpell(btn) {
+    const box = document.getElementById('sb-spell-detail');
+    const open = btn.getAttribute('aria-expanded') === 'true';
+    document.querySelectorAll('.sb-spell[aria-expanded="true"]').forEach(b => b.setAttribute('aria-expanded', 'false'));
+    const sp = !open && typeof SPELLS_DATA !== 'undefined' && SPELLS_DATA.find(s => s.name === btn.dataset.spell);
+    if (!sp) { box.hidden = true; return; }
+    btn.setAttribute('aria-expanded', 'true');
+    const level = sp.level === 0 ? `${sp.school} cantrip` : `${sbOrdinal(sp.level)}-level ${sp.school.toLowerCase()}${sp.ritual ? ' (ritual)' : ''}`;
+    box.innerHTML = `<h5>${esc(sp.name)}</h5>
+        <p class="sb-spell-meta">${esc(level)} · ${esc(sp.cast)} · ${esc(sp.range)} · ${esc(sp.components)} · ${esc(sp.duration)}</p>
+        ${spellTextHtml(sp.desc)}${sp.higher ? `<p><strong>At Higher Levels.</strong> ${esc(sp.higher)}</p>` : ''}`;
+    box.hidden = false;
 }
 
 // "a tin whistle, a dried frog; purse: 3 gp, 4 sp"
@@ -169,7 +275,8 @@ function parseLock(token) {
     const valid = {
         identity: () => extra.length === 2 && NPC_RACES.includes(extra[0]) && NPC_GENDERS.includes(extra[1]),
         age: () => extra.length === 1 && ['young', 'adult', 'middle', 'old', 'ancient'].includes(extra[0]),
-        job: () => extra.length === 1 && Object.hasOwn(npcData.professions, extra[0])
+        job: () => extra.length === 1 && Object.hasOwn(npcData.professions, extra[0]),
+        stats: () => extra.length === 0 || (extra.length === 2 && Object.hasOwn(SB_CLASSES, extra[0]) && /^\d+$/.test(extra[1]) && +extra[1] >= 1 && +extra[1] <= 20)
     }[part] || (NPC_JOB_PARTS.includes(part)
         ? () => extra.length === 0 || (extra.length === 1 && Object.hasOwn(npcData.professions, extra[0]))
         : () => extra.length === 0);
@@ -234,10 +341,13 @@ ${currentNPC.doing ? `
 WHEN YOU MEET THEM: ${currentNPC.doing}
 POCKETS: ${pocketsText(currentNPC)}
 ` : ''}
-${showStats ? `STATS: STR ${currentNPC.stats.str} | DEX ${currentNPC.stats.dex} | CON ${currentNPC.stats.con} | INT ${currentNPC.stats.int} | WIS ${currentNPC.stats.wis} | CHA ${currentNPC.stats.cha}
+${showStats ? (currentNPC.block ? `STAT BLOCK
+${statBlockText(currentNPC.block)}
+
+` : `STATS: STR ${currentNPC.stats.str} | DEX ${currentNPC.stats.dex} | CON ${currentNPC.stats.con} | INT ${currentNPC.stats.int} | WIS ${currentNPC.stats.wis} | CHA ${currentNPC.stats.cha}
 HP: ${currentNPC.hp} | AC: ${currentNPC.ac} | Speed: ${currentNPC.speed}
 
-` : ''}PERSONALITY:
+`) : ''}PERSONALITY:
 Trait: ${currentNPC.trait}
 Ideal: ${currentNPC.ideal}
 Bond: ${currentNPC.bond}
@@ -284,7 +394,7 @@ function saveToNotebook() {
     const r = nbAdd({
         kind: 'npc',
         title: currentNPC.name,
-        sub: [cap(currentNPC.race), currentNPC.profession].filter(Boolean).join(' ') + (currentNPC.trait ? `. ${currentNPC.trait}` : ''),
+        sub: [cap(currentNPC.race), currentNPC.profession].filter(Boolean).join(' ') + (currentNPC.block ? `, ${currentNPC.block.title.replace(/ \(.*\)$/, '')}` : '') + (currentNPC.trait ? `. ${currentNPC.trait}` : ''),
         href: 'npc-generator.html?' + paramsQuery(npcParams())
     });
     say(!r ? '⚠️ Storage is off' : r.full ? '⚠️ Notebook is full' : r.existed ? '📓 Already saved' : '✅ Saved to the notebook');
@@ -330,7 +440,7 @@ function renderSavedNPCs() {
                 aria-label="Pick ${esc(npc.name)} for printing" onclick="event.stopPropagation()" onchange="togglePicked(this)">
             <div class="saved-text">
                 <h4>${esc(npc.name)}</h4>
-                <p>${esc(npc.race)} ${esc(npc.profession)}</p>
+                <p>${esc(npc.race)} ${esc(npc.profession)}${npc.block ? ` · ${esc(npc.block.title.replace(/ \(.*\)$/, ''))}` : ''}</p>
                 <div class="saved-meta">${new Date(npc.generatedAt).toLocaleDateString()}</div>
             </div>
         </div>`;
@@ -371,7 +481,7 @@ function sheetBlock(npc) {
         <div class="sheet-npc">
             <h4>${esc(npc.name)}</h4>
             <div class="sheet-sub">${esc([cap(npc.race), cap(npc.gender), npc.age, npc.profession, npc.alignment].filter(Boolean).join(' · '))}</div>
-            ${showStats && npc.stats ? `<div class="sheet-stats">
+            ${showStats && npc.block ? sheetStatBlock(npc.block) : showStats && npc.stats ? `<div class="sheet-stats">
                 ${['str', 'dex', 'con', 'int', 'wis', 'cha'].map(k => `<span><strong>${k.toUpperCase()}</strong> ${esc(s[k])}</span>`).join('')}
                 <span><strong>HP</strong> ${esc(npc.hp)}</span><span><strong>AC</strong> ${esc(npc.ac)}</span><span><strong>Speed</strong> ${esc(npc.speed)}</span>
             </div>` : ''}
@@ -386,6 +496,22 @@ function sheetBlock(npc) {
             ${showSecrets ? line('Secret', npc.secret) : ''}
             ${showQuest ? line('Quest hook', npc.questHook) : ''}
             ${line('Relationship', npc.relationship)}
+        </div>`;
+}
+
+// The cast sheet's short stat block: numbers, attacks, and spells; traits by name only.
+function sheetStatBlock(b) {
+    const line = (label, value) => value ? `<p><strong>${label}:</strong> ${esc(value)}</p>` : '';
+    return `<div class="sheet-sb">
+            <p><strong>${esc(b.title)}</strong></p>
+            <div class="sheet-stats">
+                ${['str', 'dex', 'con', 'int', 'wis', 'cha'].map(k => `<span><strong>${k.toUpperCase()}</strong> ${esc(b.stats[k])}</span>`).join('')}
+                <span><strong>AC</strong> ${esc(b.ac)}</span><span><strong>HP</strong> ${esc(b.hp)}</span><span><strong>Speed</strong> ${esc(b.speed)}</span>
+            </div>
+            ${line('Saves', b.saves.join(', '))}${line('Skills', b.skills.join(', '))}
+            ${line('Traits', [...b.traits, ...b.bonusActions, ...b.reactions].map(f => f.name).join(', '))}
+            ${b.actions.map(a => `<p><strong>${esc(a.name)}.</strong> ${esc(a.text)}</p>`).join('')}
+            ${b.spellcasting ? `<p><strong>Spells</strong> (DC ${b.spellcasting.dc}, ${esc(sbSigned(b.spellcasting.attack))}): ${esc(b.spellcasting.lines.map(l => `${l.label.replace(/ \(.*\)$/, '')}: ${l.spells.join(', ')}`).join('; '))}</p>` : ''}
         </div>`;
 }
 
@@ -479,6 +605,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!chip) return;
         const n = rolledNames[+chip.dataset.i];
         copyText(n.name, ok => nameStatus(ok ? `📋 Copied “${n.name}”.` : 'Copy failed. Your browser blocked clipboard access.'));
+    });
+    document.getElementById('sb-body').addEventListener('click', e => {
+        const btn = e.target.closest('.sb-spell');
+        if (btn) showSpell(btn);
     });
     document.getElementById('select-all-saved').addEventListener('click', selectAllSaved);
     document.getElementById('print-saved').addEventListener('click', printSelected);
