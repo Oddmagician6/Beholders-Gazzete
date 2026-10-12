@@ -560,7 +560,7 @@ function downtimeFor(c, days, seed, i = 0, opts = {}) {
         const bonus = Math.min(GAMBLE_MAX_BONUS, Math.floor(Math.max(0, Number(c.done) || 0)));
         const game = DOWNTIME_GAMES[c.work] || DOWNTIME_GAMES.dice;
         out.gamble = { stake, bonus, game, rolls: [], net: 0 };
-        lines.push({ text: `${game.label}: each week, a ${game.check} check (DC ${game.dc}). Beat the DC by 5 to win the stake, make it to win half; miss by up to 4 to lose half, or by more to lose it all. A natural 20 wins double; a natural 1 loses the stake.`, src: 'house' });
+        lines.push({ text: `${game.label}: each week, ${/^[AEIOU]/.test(game.check) ? 'an' : 'a'} ${game.check} check (DC ${game.dc}). Beat the DC by 5 to win the stake, make it to win half; miss by up to 4 to lose half, or by more to lose it all. A natural 20 wins double; a natural 1 loses the stake.`, src: 'house' });
         if (!stake) lines.push({ text: 'Enter a weekly stake to roll the games.', src: 'ruling' });
         else {
             for (let wk = 0; wk < weeksTotal; wk++) {

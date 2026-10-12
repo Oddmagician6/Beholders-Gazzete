@@ -491,7 +491,7 @@ const PAN_CAMP_NAMES = {
 // Feuds: {a} and {b} are god names.
 const PAN_FEUD_WHY = [
     '{a} stole {b}\'s {thing} at the beginning of the world and has never given it back.',
-    '{b} cheated {a} at dice for the {prize}, and {a} can prove it.',
+    '{b} cheated {a} at dice for {prize}, and {a} can prove it.',
     'Both claim to have made the first {made}.',
     '{a} once loved {b}, and {b} laughed.',
     '{a} killed {b}\'s favorite mortal, a hero whose tomb is still a shrine.',

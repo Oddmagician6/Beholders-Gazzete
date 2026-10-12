@@ -90,7 +90,7 @@ function panGodHTML(p, i, cal) {
             <button type="button" class="btn wb-arrow" data-step="1" aria-label="Next god">▶</button>
         </div>
         <dl class="wb-dl">${panGodLines(p, i, cal).map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
-        <p class="pan-links"><a class="btn" href="${esc(panPriestLink(p, i))}">🎭 Meet one of the ${esc(g.priests)}</a></p>`;
+        <p class="pan-links"><a class="btn" href="${esc(panPriestLink(p, i))}">🎭 Meet one of the ${esc(g.priests.replace(/^the /, ''))}</a></p>`;
 }
 
 // Every god in full, for printing.

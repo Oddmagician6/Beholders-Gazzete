@@ -740,7 +740,7 @@
             .control-grid { grid-template-columns: repeat(2, 1fr); }
             .stats-grid { grid-template-columns: repeat(3, 1fr); }
             .personality-grid, .appearance-grid { grid-template-columns: 1fr; }
-            .npc-header { flex-direction: column; text-align: center; }
+            .npc-header { flex-direction: column; flex-wrap: nowrap; text-align: center; }
             .npc-portrait { margin: 0 auto; }
             .npc-basics { justify-content: center; }
             .tool-container { padding: 25px; }
@@ -752,6 +752,10 @@
             .control-grid { grid-template-columns: 1fr; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .npc-hero-logo { font-size: 1.8rem; }
+            .npc-identity { min-width: 0; }
+            .npc-name { font-size: 1.5rem; overflow-wrap: anywhere; }
+            .npc-section { padding: 18px; }
+            .npc-section h3 { font-size: 1rem; gap: 8px; }
             .generate-btn { width: 100%; }
             .npc-actions { flex-direction: column; }
             .action-btn { width: 100%; }
@@ -770,7 +774,14 @@
                 border-color: #999 !important;
             }
             #npc-card .npc-name { font-size: 1.8rem !important; }
-            #npc-card .npc-section { break-inside: avoid; margin-bottom: 14px !important; padding-bottom: 10px !important; }
+            /* A printed page is under 768px wide, so undo the phone layout. */
+            #npc-card .npc-header { flex-direction: row !important; text-align: left !important; margin-bottom: 16px !important; padding-bottom: 12px !important; }
+            #npc-card .npc-portrait { margin: 0 !important; }
+            #npc-card .npc-basics { justify-content: flex-start !important; }
+            #npc-card .stats-grid { grid-template-columns: repeat(6, 1fr) !important; }
+            #npc-card .personality-grid, #npc-card .appearance-grid, #npc-card .impression-grid { grid-template-columns: 1fr 1fr !important; }
+            #npc-card .npc-section { break-inside: avoid; margin-bottom: 14px !important; padding: 12px 14px 8px !important; }
+            #npc-card .npc-section h3 { margin-bottom: 10px !important; padding-bottom: 6px !important; }
             #npc-card .stat-box, #npc-card .personality-item, #npc-card .appearance-item,
             #npc-card .dialogue-box, #npc-card .secret-box, #npc-card .quest-box, #npc-card .relationship-box {
                 border: 1px solid #bbb !important; padding: 6px 8px !important;

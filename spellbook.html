@@ -67,7 +67,7 @@
     .spell-card[data-school="Enchantment"]  { --school-color: #c940a0; }
     .spell-card::before { background: var(--school-color, var(--gold-bright)); }
     .spell-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px; }
-    .spell-name { font-family: var(--font-head); font-size: 1.05rem; color: var(--text-bright); flex: 1; line-height: 1.3; }
+    .spell-name { font-family: var(--font-head); font-size: 1.05rem; color: var(--text-bright); flex: 1; min-width: 0; line-height: 1.3; }
     .spell-level-badge {
       font-family: var(--font-head); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em;
       padding: 3px 8px; border-radius: 3px; white-space: nowrap;
@@ -628,7 +628,7 @@
         <div class="spell-card${fav ? ' is-fav' : ''}" data-school="${s.school}">
           <div class="spell-header">
             <div class="spell-name">
-              ${s.name}
+              ${s.name.replace(/\//g, '/<wbr>')}
               ${s.concentration ? '<span class="concentration-pip" title="Requires Concentration"></span>' : ''}
               ${s.ritual ? '<span style="font-size:0.6rem;color:var(--gold-mid);margin-left:4px;" title="Can be cast as a ritual">(R)</span>' : ''}
             </div>

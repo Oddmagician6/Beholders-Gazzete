@@ -133,7 +133,7 @@
     .coin-type { font-family: var(--font-head); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-top: 4px; }
     .coin-value { font-family: var(--font-ui); font-size: 0.72rem; color: var(--gold-dim); margin-top: 3px; }
 
-    .items-grid, .magic-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 12px; }
+    .items-grid, .magic-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 12px; }
     .item-card {
       background: var(--bg-raised); border: var(--border-gold);
       border-radius: var(--radius-sm); padding: 16px;
@@ -147,7 +147,7 @@
     }
     .magic-card:hover { box-shadow: 0 0 16px var(--gold-glow); transform: translateY(-2px); }
     .item-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
-    .item-name { font-family: var(--font-head); color: var(--gold-bright); font-size: 0.9rem; line-height: 1.3; }
+    .item-name { font-family: var(--font-head); color: var(--gold-bright); font-size: 0.9rem; line-height: 1.3; min-width: 0; overflow-wrap: anywhere; }
     .item-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
     .item-type { font-family: var(--font-head); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); background: var(--bg-dark); border: var(--border-gold); border-radius: 2px; padding: 2px 8px; }
     .attune-badge { font-family: var(--font-head); font-size: 0.58rem; letter-spacing: 0.06em; text-transform: uppercase; color: #e0c050; background: rgba(224,192,80,0.1); border: 1px solid rgba(224,192,80,0.4); border-radius: 2px; padding: 2px 8px; }
@@ -227,7 +227,11 @@
     .dm-tip p { font-family: var(--font-body); font-style: italic; color: var(--gold-dim); font-size: 0.9rem; margin: 0; }
 
     @media (max-width: 600px) {
-      .tool-container { padding: 20px; }
+      .loot-body { padding: 36px 16px; }
+      .tool-container { padding: 16px; }
+      .loot-display { padding: 16px; }
+      .loot-section { padding: 14px; }
+      .item-card, .magic-card { padding: 12px; }
       .generate-btn { padding: 14px 32px; font-size: 0.95rem; width: 100%; }
       .loot-actions { flex-direction: column; }
       .action-btn { width: 100%; text-align: center; }

@@ -111,7 +111,7 @@ function rollDice(formula, mode = 'normal') {
 // "4d6kh3 [6, 5, 4, (2)] + 3", with dropped dice in parentheses.
 function diceDetail(r) {
     return r.parts.map((p, i) => {
-        const sign = p.sign < 0 ? ' − ' : i ? ' + ' : '';
+        const sign = p.sign < 0 ? (i ? ' − ' : '−') : i ? ' + ' : '';
         if (!p.rolls.length) return sign + p.text;
         return `${sign}${p.text} [${p.rolls.map(x => (x.kept ? x.v : `(${x.v})`)).join(', ')}]`;
     }).join('');

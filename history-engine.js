@@ -159,7 +159,7 @@ const HIS_KINDS = {
         faith: ['Golden temples to {god} rose in every city.', 'It was the high age of the faith of {god}.'],
         legacies: [
             ['ruin', 'The library at {site}, sealed when the age ended, with its books still inside.', 'A scholar wants the party to bring back one book, and only one.'],
-            ['relic', 'The {god}-crowned harp, whose music made enemies lay down their swords.', 'A bard has it, and does not know what it is.'],
+            ['relic', 'The harp of {god}, whose music made enemies lay down their swords.', 'A bard has it, and does not know what it is.'],
             ['ruin', 'A wizard\'s tower at {site} that still floats a few feet off the ground.', 'Its door opened last month for the first time in centuries.'],
             ['custom', 'The great songs of the age, which every bard must know.', 'One of the songs is a map, and somebody has worked it out.']
         ],
