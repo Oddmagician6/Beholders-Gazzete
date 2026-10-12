@@ -74,7 +74,8 @@ function getMagicItem(rarity, type = 'any') {
   if (!pool.length) return null;
   const item = lootPick(pool);
   return {
-    name:      item.name,
+    // A generic item ("Potion of Resistance") comes out as one of its SRD kinds.
+    name:      item.variants ? lootPick(item.variants) : item.name,
     rarity,
     type:      item.type,
     attune:    item.attune || false,

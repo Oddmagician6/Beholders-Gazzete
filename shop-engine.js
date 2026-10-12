@@ -42,7 +42,7 @@ const SHOP_TYPES = {
         keepers: ['Alchemist', 'Apothecary', 'Herbalist', 'Potion Seller'],
         categories: ['consumables'],
         ids: ['alchemist-s-supplies', 'herbalism-kit', 'poisoner-s-kit', 'medicine-kit', 'vial', 'bottle-glass', 'perfume-vial', 'oil-flask', 'soap', 'spices-pound'],
-        exclude: ['scroll-of-protection', 'spell-scroll-cantrip', 'spell-scroll-1st-level', 'spell-scroll-2nd-level', 'spell-scroll-3rd-level', 'spell-scroll-4th-level', 'spell-scroll-5th-level'],
+        exclude: ['spell-scroll-cantrip', 'spell-scroll-1st-level', 'spell-scroll-2nd-level', 'spell-scroll-3rd-level', 'spell-scroll-4th-level', 'spell-scroll-5th-level'],
         count: [8, 14],
         greetings: ["Don't touch the green one. Or the other green one.", "Side effects are part of the experience.", "Everything's labeled. Some labels are even accurate.", "Smell that? No? Good. Keep it that way.", "Explosions are a sign of progress."]
     },
@@ -51,7 +51,7 @@ const SHOP_TYPES = {
         keepers: ['Scroll Merchant', 'Enchanter', 'Hedge Wizard', 'Arcanist'],
         categories: ['magic-items'],
         ids: ['spell-scroll-cantrip', 'spell-scroll-1st-level', 'spell-scroll-2nd-level', 'spell-scroll-3rd-level', 'spell-scroll-4th-level',
-              'spell-scroll-5th-level', 'scroll-of-protection', 'component-pouch', 'spellbook', 'ink-1-ounce-bottle', 'parchment-sheet', 'potion-of-invisibility'],
+              'spell-scroll-5th-level', 'component-pouch', 'spellbook', 'ink-1-ounce-bottle', 'parchment-sheet', 'potion-of-invisibility'],
         exclude: [],
         count: [6, 10],
         greetings: ["Browse with your eyes. The last fellow who browsed with his hands is the umbrella stand now.", "All sales final. Some curses also final.", "Yes, the owl is for sale. No, the owl has not agreed to that.", "The shop finds the customer. You're welcome.", "Don't read anything out loud. Anything."]
@@ -145,7 +145,7 @@ const SHOP_TYPES = {
         keepers: ['Acolyte', 'Temple Quartermaster', 'Almoner', 'Lay Healer'],
         categories: [],
         ids: ['holy-water', 'healer-s-kit', 'antitoxin-vial', 'antidote', 'potion-of-healing', 'potion-of-greater-healing', 'candle', 'robes', 'bell',
-              'scroll-of-protection', 'medicine-kit', 'spell-scroll-1st-level', 'spell-scroll-2nd-level', 'blanket', 'rations-1-day', 'soap', 'bread-loaf', 'wine-bottle'],
+              'medicine-kit', 'spell-scroll-1st-level', 'spell-scroll-2nd-level', 'blanket', 'rations-1-day', 'soap', 'bread-loaf', 'wine-bottle'],
         exclude: [],
         count: [6, 10],
         greetings: ["Blessings upon you. Donations upon the plate.", "The holy water is holy. The price is merely fair.", "Wounded? Cursed? Possessed? Take a number.", "The god sees all purchases. Especially the returns."]
