@@ -1136,6 +1136,7 @@
                     <button class="action-btn" onclick="copyNPC()">📋 Copy to Clipboard</button>
                     <button class="action-btn" id="copy-link-btn" onclick="copyLink()">🔗 Copy Link</button>
                     <button class="action-btn" onclick="saveNPC()">💾 Save to Grimoire</button>
+                    <button class="action-btn" id="notebook-btn" onclick="saveToNotebook()">📓 Save to Notebook</button>
                     <button class="action-btn" onclick="document.body.classList.remove('printing-sheet'); window.print()">🖨️ Print Card</button>
                     <button class="action-btn" onclick="regenerateNPC()">🔄 Regenerate</button>
                 </div>
@@ -1158,6 +1159,7 @@
                 <button class="btn" onclick="clearSaved()" style="width: 100%; margin-top: 15px; font-size: 0.85rem;">
                     🗑️ Clear Grimoire
                 </button>
+                <p class="saved-hint">📓 Building a world? <a href="worldbuilder.html?tab=notebook">The campaign notebook</a> keeps the NPCs you save there next to your towns, gods, and factions, with notes.</p>
             </div>
             <div id="print-sheet"></div>
 
@@ -1191,6 +1193,7 @@
 
     <script src="rng.js"></script>
     <script src="npc-data.js"></script>
+    <script src="notebook.js"></script>
     <script src="npc-generator.js"></script>
   <script>
   // ── Mobile nav toggle ─────────────────────────────────

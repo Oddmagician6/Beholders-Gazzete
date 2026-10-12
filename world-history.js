@@ -221,5 +221,9 @@ WORLD_TABS.history = {
     params: hisParams,
     apply: applyHisUrl,
     fresh: push => rollHistoryFor(newSeed(), push),
-    rolled: () => !!hisState.seed
+    rolled: () => !!hisState.seed,
+    entry: () => {
+        const h = hisState.data;
+        return { title: `From ${h.list[0].name} to ${h.list[h.list.length - 1].name}`, sub: hisSummary(h) };
+    }
 };

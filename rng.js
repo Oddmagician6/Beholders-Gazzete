@@ -56,11 +56,16 @@ function urlParams() {
     return new URLSearchParams(location.search);
 }
 
+// The query string for params (no "?"); empty values stay out.
+function paramsQuery(params) {
+    const pairs = Object.entries(params).flatMap(([k, v]) => (Array.isArray(v) ? v : [v]).map(x => [k, x]));
+    return new URLSearchParams(pairs.filter(([, v]) => v !== null && v !== undefined && v !== '')).toString();
+}
+
 // Write params into the address bar. push = new history entry (so Back undoes a reroll).
 // An array value repeats the param (?lock=a&lock=b).
 function setUrlParams(params, push = true) {
-    const pairs = Object.entries(params).flatMap(([k, v]) => (Array.isArray(v) ? v : [v]).map(x => [k, x]));
-    const qs = new URLSearchParams(pairs.filter(([, v]) => v !== null && v !== undefined && v !== '')).toString();
+    const qs = paramsQuery(params);
     const url = location.pathname + (qs ? '?' + qs : '') + location.hash;
     if (url === location.pathname + location.search + location.hash) return;
     history[push ? 'pushState' : 'replaceState'](null, '', url);

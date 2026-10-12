@@ -274,6 +274,21 @@ function saveNPC() {
     alert('NPC saved to favorites!');
 }
 
+// The Worldbuilder's campaign notebook (notebook.js) keeps the NPC's link, not the NPC.
+function saveToNotebook() {
+    const btn = document.getElementById('notebook-btn');
+    const say = text => { btn.textContent = text; setTimeout(() => { btn.textContent = '📓 Save to Notebook'; }, 2500); };
+    if (!currentNPC || !currentNPC.seed) { say('⚠️ Reroll to save this one'); return; }
+    const cap = s => String(s || '').charAt(0).toUpperCase() + String(s || '').slice(1);
+    const r = nbAdd({
+        kind: 'npc',
+        title: currentNPC.name,
+        sub: [cap(currentNPC.race), currentNPC.profession].filter(Boolean).join(' ') + (currentNPC.trait ? `. ${currentNPC.trait}` : ''),
+        href: 'npc-generator.html?' + paramsQuery(npcParams())
+    });
+    say(!r ? '⚠️ Storage is off' : r.full ? '⚠️ Notebook is full' : r.existed ? '📓 Already saved' : '✅ Saved to the notebook');
+}
+
 // Grimoire NPCs ticked for Print Selected, by savedKey().
 const pickedSaved = new Set();
 

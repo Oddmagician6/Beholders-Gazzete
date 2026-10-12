@@ -243,5 +243,10 @@ WORLD_TABS.factions = {
     params: facParams,
     apply: applyFacUrl,
     fresh: push => rollFactionsFor(newSeed(), push),
-    rolled: () => !!facState.seed
+    rolled: () => !!facState.seed,
+    entry: () => {
+        const w = facState.data;
+        const ctx = facCtx(), place = facCap(FAC_SCALES[w.scale].place.replace(/^the /, ''));
+        return { title: `${place}: ${facCap(facName(w, 0, ctx))} and ${w.factions.length - 1} more`, sub: facSummary(w, ctx) };
+    }
 };

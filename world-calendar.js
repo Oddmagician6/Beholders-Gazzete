@@ -330,5 +330,10 @@ WORLD_TABS.calendar = {
     params: calParams,
     apply: applyCalUrl,
     fresh: push => rollCalendarFor(newSeed(), push),
-    rolled: () => !!calState.seed
+    rolled: () => !!calState.seed,
+    // How the Notebook files this roll.
+    entry: () => {
+        const c = calState.data;
+        return { title: calCap(c.era.name), sub: `Year ${c.year.toLocaleString('en-US')} ${c.era.abbr}, ${c.yearName}. ${c.months.length} months, ${c.moons.length} moon${c.moons.length === 1 ? '' : 's'}.` };
+    }
 };

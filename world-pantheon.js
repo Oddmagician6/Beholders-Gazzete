@@ -215,6 +215,7 @@ WORLD_TABS.pantheon = {
     apply: applyPanUrl,
     fresh: push => rollPantheonFor(newSeed(), push),
     rolled: () => !!panState.seed,
+    entry: () => ({ title: panCap(panState.data.name), sub: panSummary(panState.data) }),
     // The Calendar tab calls this when its link changes, so the dates here stay right.
     refresh: () => renderPantheon()
 };

@@ -3,17 +3,20 @@
    Worldbuilding tools on one page, one tab each (?tab=). Each tab lives in its own
    world-<tool>.js and registers itself in WORLD_TABS:
      WORLD_TABS[id] = { params() → URL params, apply(urlParams) → true if it held a roll,
-                        fresh(push) → a first roll, rolled() → true once it has one }
+                        fresh(push) → a first roll, rolled() → true once it has one,
+                        entry() → { title, sub } for the Notebook }
    Calendar (F33): world-calendar.js, rolled by calendar-engine.js.
    Pantheon (F34): world-pantheon.js, rolled by pantheon-engine.js; its holy days can go on the calendar.
    Factions (F35): world-factions.js, rolled by faction-engine.js (leaders from npc-data.js); can follow the pantheon's gods.
    History (F36): world-history.js, rolled by history-engine.js; can name the pantheon's gods and date the factions.
    Town (F37): world-town.js, rolled by town-engine.js; links out to the NPC page, the Factions tab, the Toolbox
    (Tavern, Quest), and the Shop page, and its temple can follow the pantheon's gods.
+   Notebook (F38): world-notebook.js, kept by notebook.js. Every tab's 📓 Save to Notebook
+   button (data-save="<tab>") files the roll on screen through that tab's entry() → { title, sub }.
    Seeds and the shareable URL: rng.js.
    ============================================ */
 
-const WORLD_TAB_ORDER = ['calendar', 'pantheon', 'factions', 'history', 'town'];
+const WORLD_TAB_ORDER = ['calendar', 'pantheon', 'factions', 'history', 'town', 'notebook'];
 const WORLD_TABS = {};
 
 function esc(text) {
@@ -61,6 +64,17 @@ function switchWorldTab(tab) {
     setUrlParams(WORLD_TABS[tab].params(), true);
 }
 
+// File the roll on a tab in the Notebook (its link rebuilds it).
+function saveWorldTab(tab, statusId) {
+    const t = WORLD_TABS[tab];
+    if (!t.rolled()) return;
+    const r = nbAdd({ kind: tab, ...t.entry(), href: 'worldbuilder.html?' + paramsQuery(t.params()) });
+    if (!r) flash(statusId, "⚠️ This browser won't keep a notebook (storage is off).");
+    else if (r.full) flash(statusId, '⚠️ The notebook is full. Remove an entry first.');
+    else if (r.existed) flash(statusId, '📓 This one is already in the notebook.');
+    else flash(statusId, `📓 Saved to the notebook${r.linked ? `, linked to ${r.linked} saved ${r.linked === 1 ? 'entry' : 'entries'}` : ''}.`);
+}
+
 // Rebuild the page from the address bar. Returns true when it held a roll.
 function applyWorldUrl() {
     const tab = currentWorldTab();
@@ -74,6 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Each tab keeps its roll in memory; the first visit to a tab rolls one.
     document.querySelectorAll('.tool-tab').forEach(b => b.addEventListener('click', () => switchWorldTab(b.dataset.tab)));
+    document.querySelectorAll('[data-save]').forEach(b => b.addEventListener('click', () =>
+        saveWorldTab(b.dataset.save, b.closest('.tool-card').querySelector('.tool-status').id)));
 
     if (!applyWorldUrl()) WORLD_TABS[currentWorldTab()].fresh(false);
     // Back/Forward step through earlier rolls.

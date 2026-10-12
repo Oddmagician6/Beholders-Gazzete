@@ -270,5 +270,6 @@ WORLD_TABS.town = {
     params: townParams,
     apply: applyTownUrl,
     fresh: push => rollTownFor(newSeed(), push),
-    rolled: () => !!townState.seed
+    rolled: () => !!townState.seed,
+    entry: () => ({ title: townState.data.name, sub: townSummary(townState.data) })
 };
