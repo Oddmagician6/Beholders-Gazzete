@@ -122,14 +122,19 @@
     <ul>
       <li><a href="index.html">🏠 Home</a></li>
       <li><a href="economy.html">💰 Economy</a></li>
-      <li><a href="shop.html">🏪 Shops</a></li>
-      <li><a href="rumors.html">🍺 Tavern</a></li>
-      <li><a href="npc-generator.html">🎭 Town Square</a></li>
-      <li><a href="loot-generator.html">💎 Loot</a></li>
-      <li><a href="spellbook.html">📖 Spellbook</a></li>
-      <li><a href="session-kit.html">🎲 Session Kit</a></li>
-      <li><a href="toolbox.html">🧰 Toolbox</a></li>
-      <li><a href="worldbuilder.html">🗺️ Worldbuilder</a></li>
+      <li class="nav-group">
+        <button type="button" class="nav-group-toggle" aria-expanded="false" aria-controls="nav-tools">🛠️ DM Tools<span class="nav-caret" aria-hidden="true">▾</span></button>
+        <ul class="nav-sub" id="nav-tools">
+          <li><a href="shop.html">🏪 Shops</a></li>
+          <li><a href="rumors.html">🍺 Tavern</a></li>
+          <li><a href="npc-generator.html">🎭 Town Square</a></li>
+          <li><a href="loot-generator.html">💎 Loot</a></li>
+          <li><a href="spellbook.html">📖 Spellbook</a></li>
+          <li><a href="session-kit.html">🎲 Session Kit</a></li>
+          <li><a href="toolbox.html">🧰 Toolbox</a></li>
+          <li><a href="worldbuilder.html">🗺️ Worldbuilder</a></li>
+        </ul>
+      </li>
       <li><a href="glossary.html" class="active">👥 Who's Who</a></li>
       <li><a href="about.html">📜 About</a></li>
     </ul>
@@ -263,31 +268,6 @@
             document.getElementById('writer-grid').innerHTML = '<p class="realm-empty">The newsroom scroll could not be loaded.</p>';
         });
     </script>
-  <script>
-  // ── Mobile nav toggle ─────────────────────────────────
-  (function() {
-    const btn = document.getElementById('nav-hamburger');
-    const ul  = document.querySelector('.main-nav ul');
-    if (!btn || !ul) return;
-    btn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      const open = ul.classList.toggle('nav-open');
-      btn.textContent = open ? '✕' : '☰';
-      btn.setAttribute('aria-expanded', open);
-    });
-    ul.addEventListener('click', function(e) {
-      if (e.target.tagName === 'A') {
-        ul.classList.remove('nav-open');
-        btn.textContent = '☰';
-      }
-    });
-    document.addEventListener('click', function(e) {
-      if (!e.target.closest('.main-nav')) {
-        ul.classList.remove('nav-open');
-        btn.textContent = '☰';
-      }
-    });
-  })();
-  </script>
+  <script src="nav.js"></script>
 </body>
 </html>

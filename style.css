@@ -114,7 +114,7 @@ p:last-child { margin-bottom: 0; }
   isolation: isolate;
 }
 
-.main-nav ul {
+.main-nav > ul {
   display: flex;
   justify-content: center;
   list-style: none;
@@ -123,7 +123,8 @@ p:last-child { margin-bottom: 0; }
   margin: 0 auto;
 }
 
-.main-nav a {
+.main-nav a,
+.nav-group-toggle {
   display: block;
   padding: 16px 20px;
   font-family: var(--font-head);
@@ -135,7 +136,8 @@ p:last-child { margin-bottom: 0; }
   position: relative;
 }
 
-.main-nav a::after {
+.main-nav a::after,
+.nav-group-toggle::after {
   content: '';
   position: absolute;
   bottom: 0; left: 50%; right: 50%;
@@ -144,18 +146,68 @@ p:last-child { margin-bottom: 0; }
   transition: all var(--transition);
 }
 
-.main-nav a:hover, .main-nav a.active {
+.main-nav a:hover, .main-nav a.active,
+.nav-group-toggle:hover, .nav-group.open > .nav-group-toggle,
+.nav-group:has(a.active) > .nav-group-toggle {
   color: var(--gold-bright);
   background: rgba(212,168,67,0.06);
 }
 
-.main-nav a:hover::after, .main-nav a.active::after { left: 0; right: 0; }
+.main-nav a:hover::after, .main-nav a.active::after,
+.nav-group-toggle:hover::after, .nav-group.open > .nav-group-toggle::after,
+.nav-group:has(a.active) > .nav-group-toggle::after { left: 0; right: 0; }
 
-/* 12 links: tighten as the screen narrows so the bar stays on one row down to ~1150px */
-.main-nav ul { max-width: 1600px; }
-@media (max-width: 1600px) { .main-nav a { padding: 16px 14px; } }
-@media (max-width: 1420px) { .main-nav a { padding: 16px 10px; letter-spacing: 0.05em; } }
-@media (max-width: 1260px) { .main-nav a { padding: 16px 7px; letter-spacing: 0.03em; } }
+/* ── "DM Tools" dropdown (nav.js) ────────────────────────── */
+.nav-group { position: relative; }
+.nav-group-toggle {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  line-height: inherit;
+}
+/* drawn chevron (the ▾ glyph is hidden: the heading font renders it as a dot) */
+.nav-caret {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin: 0 2px 3px 8px;
+  font-size: 0;
+  vertical-align: middle;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform var(--transition);
+}
+.nav-group.open .nav-caret { transform: translateY(3px) rotate(-135deg); }
+
+.nav-sub {
+  display: none;
+  list-style: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 210px;
+  padding: 6px 0;
+  background: linear-gradient(180deg, #1a1712 0%, #0e0d0b 100%);
+  border: 1px solid var(--gold-dim);
+  border-top: 2px solid var(--gold-bright);
+  border-radius: 0 0 6px 6px;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.85);
+  z-index: 210;
+}
+.nav-group.open > .nav-sub { display: block; }
+@media (hover: hover) and (min-width: 769px) {
+  .nav-group:hover > .nav-sub { display: block; }
+  .nav-group:hover .nav-caret { transform: translateY(3px) rotate(-135deg); }
+}
+.main-nav .nav-sub a {
+  padding: 11px 20px 11px 18px;
+  white-space: nowrap;
+  border-left: 3px solid transparent;
+}
+.main-nav .nav-sub a::after { display: none; }
+.main-nav .nav-sub a:hover, .main-nav .nav-sub a.active { border-left-color: var(--gold-bright); }
 
 /* ── TICKER ─────────────────────────────────────────────── */
 .ticker-wrap {
@@ -747,7 +799,7 @@ footer::before {
     z-index: 200;
   }
 
-  .main-nav ul {
+  .main-nav > ul {
     display: none;               /* hidden until toggled */
     flex-direction: column;
     width: 100%;
@@ -763,7 +815,7 @@ footer::before {
     animation: fadeInDown 0.2s ease;
   }
 
-  .main-nav ul.nav-open {
+  .main-nav > ul.nav-open {
     display: flex;               /* shown when toggled */
   }
 
@@ -772,14 +824,35 @@ footer::before {
   }
   .main-nav li:last-child { border-bottom: none; }
 
-  .main-nav a {
+  .main-nav a,
+  .nav-group-toggle {
     padding: 14px 24px;
     font-size: 0.82rem;
   }
-  .main-nav a::after { display: none; }
+  .main-nav a::after, .nav-group-toggle::after { display: none; }
   .main-nav a:hover, .main-nav a.active {
     border-left: 3px solid var(--gold-bright);
     padding-left: 21px;
+  }
+
+  /* DM Tools: an expandable group inside the menu */
+  .nav-group-toggle { width: 100%; text-align: left; }
+  .nav-group-toggle:hover { border-left: 3px solid var(--gold-bright); padding-left: 21px; }
+  .nav-sub {
+    position: static;
+    transform: none;
+    min-width: 0;
+    padding: 0 0 6px;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: rgba(0,0,0,0.25);
+  }
+  .main-nav .nav-sub li { border-bottom: 0; }
+  .main-nav .nav-sub a { padding: 11px 24px 11px 44px; border-left: 0; }
+  .main-nav .nav-sub a:hover, .main-nav .nav-sub a.active {
+    border-left: 3px solid var(--gold-bright);
+    padding-left: 41px;
   }
 }
 
