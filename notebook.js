@@ -19,6 +19,7 @@ const NB_KINDS = {
     factions: { icon: '🏛️', label: 'Factions' },
     history: { icon: '📜', label: 'History' },
     town: { icon: '🏘️', label: 'Town' },
+    sites: { icon: '🏚️', label: 'Site' },
     npc: { icon: '🎭', label: 'NPC' }
 };
 // Saved links may only point at these pages, with a plain query string.
@@ -29,7 +30,8 @@ const NB_SIG_KEYS = { pantheon: ['size', 'shape', 'naming'], factions: ['count',
 // URL keys that name another tab's roll: the seed key, and its option keys → that kind's keys.
 const NB_USES = {
     gods: { kind: 'pantheon', keys: { gsize: 'size', gshape: 'shape', gnaming: 'naming' } },
-    facs: { kind: 'factions', keys: { fcount: 'count', ffocus: 'focus', fscale: 'scale' } }
+    facs: { kind: 'factions', keys: { fcount: 'count', ffocus: 'focus', fscale: 'scale' } },
+    his: { kind: 'history', keys: { hages: 'ages', hspan: 'span', hstart: 'start' } }
 };
 
 const nbListeners = [];

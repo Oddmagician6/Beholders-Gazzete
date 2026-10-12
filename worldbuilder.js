@@ -11,12 +11,14 @@
    History (F36): world-history.js, rolled by history-engine.js; can name the pantheon's gods and date the factions.
    Town (F37): world-town.js, rolled by town-engine.js; links out to the NPC page, the Factions tab, the Toolbox
    (Tavern, Quest), and the Shop page, and its temple can follow the pantheon's gods.
+   Sites (F39): world-sites.js, rolled by site-engine.js (foes from encounter-engine.js); its fights open in
+   the Toolbox, its hoard in the Loot generator, and its story can come from the history.
    Notebook (F38): world-notebook.js, kept by notebook.js. Every tab's 📓 Save to Notebook
    button (data-save="<tab>") files the roll on screen through that tab's entry() → { title, sub }.
    Seeds and the shareable URL: rng.js.
    ============================================ */
 
-const WORLD_TAB_ORDER = ['calendar', 'pantheon', 'factions', 'history', 'town', 'notebook'];
+const WORLD_TAB_ORDER = ['calendar', 'pantheon', 'factions', 'history', 'town', 'sites', 'notebook'];
 const WORLD_TABS = {};
 
 function esc(text) {

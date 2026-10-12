@@ -122,7 +122,19 @@ function hisAgeHTML(h, i, ctx) {
             <h4>${HIS_KINDS[age.kind].icon} ${esc(hisCap(age.name))}<small>${esc(HIS_KINDS[age.kind].label)} · age ${i + 1} of ${h.list.length}</small></h4>
             <button type="button" class="btn wb-arrow" data-step="1" aria-label="Later age">▶</button>
         </div>
-        ${hisDl(hisAgeLines(h, i, ctx))}`;
+        ${hisDl(hisAgeLines(h, i, ctx))}
+        <p class="pan-links"><a class="btn" href="${esc(hisSiteLink(h, i))}">🏚️ Explore a ruin from this age</a></p>`;
+}
+
+// The Sites tab, on a site built in age i of this history (its own seed per age, so it stays put).
+function hisSiteLink(h, i) {
+    const params = new URLSearchParams({ tab: 'sites', seed: deriveSeed(h.seed, 'site.' + i), his: h.seed });
+    Object.entries(HIS_FIELDS).forEach(([key, id]) => {
+        const el = document.getElementById(id);
+        if (fieldValue(el) !== defaultValue(el)) params.set('h' + key, el.value);
+    });
+    params.set('hage', i + 1);
+    return 'worldbuilder.html?' + params.toString();
 }
 
 function hisAllHTML(h, ctx) {
