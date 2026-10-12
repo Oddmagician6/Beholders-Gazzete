@@ -327,10 +327,18 @@ function copyLoot() {
     .catch(() => alert('Copy failed — check browser permissions.'));
 }
 
+// Drop anything that isn't a saved hoard object, so a damaged save can't break the page.
+function readLoot() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('gazette_loot') || '[]');
+    return Array.isArray(saved) ? saved.filter(l => l && typeof l === 'object' && !Array.isArray(l)) : [];
+  } catch(e) { return []; }
+}
+
 function saveLoot() {
   if (!currentLoot) return;
   try {
-    const saved = JSON.parse(localStorage.getItem('gazette_loot') || '[]');
+    const saved = readLoot();
     saved.unshift(currentLoot);
     if (saved.length > 20) saved.pop();
     localStorage.setItem('gazette_loot', JSON.stringify(saved));
@@ -351,8 +359,7 @@ function exportLoot() {
 
 function renderSaved() {
   const container = document.getElementById('saved-list');
-  let saved = [];
-  try { saved = JSON.parse(localStorage.getItem('gazette_loot') || '[]'); } catch(e) {}
+  const saved = readLoot();
 
   if (!saved.length) {
     container.innerHTML = '<p style="color:var(--text-dim);font-style:italic;text-align:center;padding:20px;">Your vault is empty, adventurer.</p>';
@@ -362,7 +369,7 @@ function renderSaved() {
   container.innerHTML = saved.map((loot, i) => `
     <div class="saved-item" onclick="loadSaved(${i})">
       <h4>Hoard #${i + 1} — ${formatCoins(loot.totalValue)}</h4>
-      <p>${loot.magic.length} magic · ${loot.gems.length + loot.art.length + (loot.goods || []).length} valuables · ${loot.tab}${LOOT_SOURCES[loot.source] ? ' · ' + LOOT_SOURCES[loot.source].label.toLowerCase() : ''}</p>
+      <p>${(loot.magic || []).length} magic · ${(loot.gems || []).length + (loot.art || []).length + (loot.goods || []).length} valuables · ${loot.tab}${LOOT_SOURCES[loot.source] ? ' · ' + LOOT_SOURCES[loot.source].label.toLowerCase() : ''}</p>
       <div class="saved-meta">${new Date(loot.generatedAt).toLocaleDateString()}</div>
     </div>
   `).join('');
@@ -370,7 +377,7 @@ function renderSaved() {
 
 function loadSaved(i) {
   try {
-    const saved = JSON.parse(localStorage.getItem('gazette_loot') || '[]');
+    const saved = readLoot();
     if (saved[i]) { currentLoot = saved[i]; displayLoot(); setUrlParams(lootParams(), true); }
   } catch(e) {}
 }

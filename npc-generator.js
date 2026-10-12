@@ -263,8 +263,7 @@ RELATIONSHIP: ${currentNPC.relationship}
 function saveNPC() {
     if (!currentNPC) return;
 
-    let saved = localStorage.getItem('saved_npcs');
-    saved = saved ? JSON.parse(saved) : [];
+    const saved = readSaved();
 
     saved.unshift(currentNPC);
     if (saved.length > 20) saved.pop();
@@ -293,7 +292,11 @@ function saveToNotebook() {
 const pickedSaved = new Set();
 
 function readSaved() {
-    try { return JSON.parse(localStorage.getItem('saved_npcs')) || []; } catch (e) { return []; }
+    // Drop anything that isn't a saved NPC object, so a damaged save can't break the page.
+    try {
+        const saved = JSON.parse(localStorage.getItem('saved_npcs'));
+        return Array.isArray(saved) ? saved.filter(n => n && typeof n === 'object' && !Array.isArray(n)) : [];
+    } catch (e) { return []; }
 }
 
 function savedKey(npc, index) {
@@ -423,8 +426,7 @@ function nameStatus(msg) {
 }
 
 function loadSavedNPC(index) {
-    let saved = localStorage.getItem('saved_npcs');
-    saved = saved ? JSON.parse(saved) : [];
+    const saved = readSaved();
 
     if (saved[index]) {
         currentNPC = saved[index];
