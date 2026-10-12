@@ -11,10 +11,11 @@
    Tavern (F26): toolbox-tavern.js; the URL holds the seed, the quality, and the rumor.
    Downtime (F28): toolbox-downtime.js; the URL holds the party, the length, and the carousing seed.
    Quest (F32): toolbox-quest.js; the URL holds the seed, the party level and size, and the job.
+   Clocks (F41): toolbox-clocks.js (no URL state beyond ?tab=; the clocks are in localStorage).
    Seeds and the shareable URL: rng.js.
    ============================================ */
 
-const TOOLBOX_TABS = ['names', 'tavern', 'quest', 'travel', 'dice', 'init', 'split', 'enc', 'down'];
+const TOOLBOX_TABS = ['names', 'tavern', 'quest', 'travel', 'dice', 'init', 'split', 'enc', 'down', 'clocks'];
 const KEPT_KEY = 'gazette-kept-names';
 const KEPT_MAX = 100;
 
@@ -407,7 +408,7 @@ function clearSplit() {
 // ── URL ───────────────────────────────────────────────────
 // Names: ?for=<type>&seed=. Travel: ?tab=travel&climate=&season=&terrain=&pace=&hours=&ride=&miles=&day=&seed=
 function tabParams(tab) {
-    if (tab === 'dice' || tab === 'init') return urlFor(tab, {});
+    if (tab === 'dice' || tab === 'init' || tab === 'clocks') return urlFor(tab, {});
     if (tab === 'split') return splitParams();
     if (tab === 'enc') return encParams();
     if (tab === 'tavern') return tavParams();
@@ -422,7 +423,7 @@ function applyUrl() {
     showTab(tab);
     const p = urlParams();
     const seed = parseSeed(p.get('seed'));
-    if (tab === 'dice' || tab === 'init') return true;   // nothing to roll; their state is in localStorage
+    if (tab === 'dice' || tab === 'init' || tab === 'clocks') return true;   // nothing to roll; their state is in localStorage
     if (tab === 'enc') { applyEncUrl(p); return true; }
     if (tab === 'tavern') return applyTavUrl(p);
     if (tab === 'down') return applyDownUrl(p);

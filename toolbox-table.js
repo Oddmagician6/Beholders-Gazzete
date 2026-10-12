@@ -11,8 +11,9 @@
 const INIT_KEY = 'gazette-initiative';
 const INIT_FOLLOW_KEY = 'gazette-init-follow';
 const INIT_MAX = 40;
-const SRD_CONDITIONS = ['Blinded', 'Charmed', 'Deafened', 'Exhaustion', 'Frightened', 'Grappled', 'Incapacitated',
-    'Invisible', 'Paralyzed', 'Petrified', 'Poisoned', 'Prone', 'Restrained', 'Stunned', 'Unconscious'];
+// The SRD 5.1 conditions, from rules-data.js (the Rules page uses the same list).
+const SRD_CONDITIONS = Object.keys(SRD_CONDITION_TEXT);
+const condTip = k => SRD_CONDITION_TEXT[k].join(' ');
 
 // Two clicks: the first arms the button for a few seconds.
 function armedClick(btn, label, action) {
@@ -325,7 +326,7 @@ function renderFight(scroll = false) {
                     ${c.conds.map(k => `<button type="button" class="init-cond" data-id="${c.id}" data-cond="${k}" title="Remove ${k}">${k} ✕</button>`).join('')}
                     <details class="init-cond-add" data-id="${c.id}"${openConds === c.id ? ' open' : ''}>
                         <summary>+ condition</summary>
-                        <div class="init-cond-menu">${SRD_CONDITIONS.map(k => `<button type="button" data-id="${c.id}" data-cond="${k}" class="${c.conds.includes(k) ? 'on' : ''}" aria-pressed="${c.conds.includes(k)}">${k}</button>`).join('')}</div>
+                        <div class="init-cond-menu">${SRD_CONDITIONS.map(k => `<button type="button" data-id="${c.id}" data-cond="${k}" title="${esc(condTip(k))}" class="${c.conds.includes(k) ? 'on' : ''}" aria-pressed="${c.conds.includes(k)}">${k}</button>`).join('')}</div>
                     </details>
                 </div>
             </div>
