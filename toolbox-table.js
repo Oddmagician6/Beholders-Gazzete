@@ -3,10 +3,13 @@
    Dice tab: formula roller, advantage/disadvantage, ability scores, and the
    shared roll history (dice-engine.js).
    Initiative tab: the fight, kept in localStorage INIT_KEY so a refresh keeps it.
+   A combatant that is an SRD monster (sent from the Encounter tab, or added by its
+   name) keeps its monster id and opens its stat block (toolbox-statblock.js).
    Loads after toolbox.js (uses its esc() and flash()).
    ============================================ */
 
 const INIT_KEY = 'gazette-initiative';
+const INIT_FOLLOW_KEY = 'gazette-init-follow';
 const INIT_MAX = 40;
 const SRD_CONDITIONS = ['Blinded', 'Charmed', 'Deafened', 'Exhaustion', 'Frightened', 'Grappled', 'Incapacitated',
     'Invisible', 'Paralyzed', 'Petrified', 'Poisoned', 'Prone', 'Restrained', 'Stunned', 'Unconscious'];
@@ -118,6 +121,17 @@ function setupDice() {
 // ── Initiative ────────────────────────────────────────────
 let fight = { round: 1, turn: null, nextId: 1, list: [] };
 let openConds = null;   // id whose condition menu is open, kept across re-renders
+let openBlocks = new Set();   // ids whose stat block is open (this page only)
+let autoBlock = null;   // the id whose block opened because its turn came up
+
+function monsterNamed(name) {
+    const key = name.replace(/\s+\d+$/, '').toLowerCase();
+    return MONSTERS.find(m => m.name.toLowerCase() === key) || null;
+}
+
+function followTurns() {
+    try { return localStorage.getItem(INIT_FOLLOW_KEY) !== 'off'; } catch (e) { return true; }
+}
 
 function num(v) {
     return v === '' || v === null || v === undefined || !isFinite(Number(v)) ? null : Math.round(Number(v));
@@ -130,6 +144,7 @@ function loadFight() {
             const list = saved.list.filter(c => c && typeof c.name === 'string' && typeof c.id === 'number').map(c => ({
                 id: c.id, name: c.name.slice(0, 40), init: num(c.init) ?? 0, mod: num(c.mod) ?? 0,
                 hp: num(c.hp), max: num(c.max), ac: num(c.ac),
+                monster: typeof c.monster === 'string' && Object.hasOwn(MONSTER_BY_ID, c.monster) ? c.monster : null,
                 conds: Array.isArray(c.conds) ? c.conds.filter(x => SRD_CONDITIONS.includes(x)) : []
             }));
             fight = {
@@ -157,7 +172,7 @@ function rollInit(mod) {
 
 // Adds count combatants (numbered when more than one) and returns them; [] when the tracker is full.
 // Also used by the Encounter tab (toolbox-encounter.js). The caller saves and renders.
-function addToFight({ name, mod = 0, fixed = null, hp = null, ac = null, count = 1 }) {
+function addToFight({ name, mod = 0, fixed = null, hp = null, ac = null, count = 1, monster = null }) {
     count = Math.min(count, INIT_MAX - fight.list.length);
     if (count < 1) return [];
     // Numbering carries on from any "Goblin 2" already in the fight.
@@ -169,7 +184,7 @@ function addToFight({ name, mod = 0, fixed = null, hp = null, ac = null, count =
         const c = {
             id: fight.nextId++, name: count > 1 || taken.length ? `${base} ${++n}` : name,
             init: fixed !== null && count === 1 ? fixed : rollInit(mod), mod,
-            hp: hp !== null ? Math.max(0, hp) : null, max: hp !== null ? Math.max(0, hp) : null, ac, conds: []
+            hp: hp !== null ? Math.max(0, hp) : null, max: hp !== null ? Math.max(0, hp) : null, ac, monster, conds: []
         };
         fight.list.push(c);
         added.push(c);
@@ -182,15 +197,20 @@ function addCombatants(e) {
     const v = id => document.getElementById(id).value;
     const name = v('ia-name').trim().replace(/\s+/g, ' ').slice(0, 36);
     if (!name) return;
+    // An SRD monster's name brings its stat block, and fills a blank HP or AC and a bonus left at 0.
+    const m = monsterNamed(name);
+    const mod = num(v('ia-mod')) ?? 0;
     const added = addToFight({
-        name, mod: Math.max(-10, Math.min(20, num(v('ia-mod')) ?? 0)), fixed: num(v('ia-init')),
-        hp: num(v('ia-hp')), ac: num(v('ia-ac')), count: Math.max(1, Math.min(20, num(v('ia-count')) ?? 1))
+        name, mod: Math.max(-10, Math.min(20, m && mod === 0 ? m.dex : mod)), fixed: num(v('ia-init')),
+        hp: num(v('ia-hp')) ?? (m ? m.hp : null), ac: num(v('ia-ac')) ?? (m ? m.ac : null),
+        count: Math.max(1, Math.min(20, num(v('ia-count')) ?? 1)), monster: m ? m.id : null
     });
     if (!added.length) { flash('init-status', `⚠️ The tracker holds ${INIT_MAX} combatants.`); return; }
     sortFight();
     saveFight();
     renderFight();
-    flash('init-status', added.length === 1 ? `➕ ${added[0].name} rolls in at ${added[0].init}.` : `➕ Added ${added.length}: ${added.map(c => `${c.name} (${c.init})`).join(', ')}.`);
+    flash('init-status', (added.length === 1 ? `➕ ${added[0].name} rolls in at ${added[0].init}.` : `➕ Added ${added.length}: ${added.map(c => `${c.name} (${c.init})`).join(', ')}.`)
+        + (m ? ' 📜 Click the name for its stat block.' : ''));
     document.getElementById('ia-name').value = '';
     document.getElementById('ia-mod').value = '0';
     document.getElementById('ia-init').value = '';
@@ -204,6 +224,17 @@ function current() {
     return fight.list.findIndex(c => c.id === fight.turn);
 }
 
+// With "follow" on, the monster whose turn it is shows its stat block; the one the turn
+// left closes again unless it was opened by hand.
+function followTurn() {
+    if (autoBlock !== null) openBlocks.delete(autoBlock);
+    autoBlock = null;
+    const c = fight.list.find(x => x.id === fight.turn);
+    if (!followTurns() || !c || !c.monster || openBlocks.has(c.id)) return;
+    openBlocks.add(c.id);
+    autoBlock = c.id;
+}
+
 function nextTurn() {
     if (!fight.list.length) return;
     const i = current();
@@ -211,6 +242,7 @@ function nextTurn() {
     else if (i === fight.list.length - 1) { fight.turn = fight.list[0].id; fight.round++; }
     else fight.turn = fight.list[i + 1].id;
     saveFight();
+    followTurn();
     renderFight(true);
 }
 
@@ -221,7 +253,14 @@ function prevTurn() {
     else if (fight.round > 1) { fight.round--; fight.turn = fight.list[fight.list.length - 1].id; }
     else fight.turn = null;
     saveFight();
+    followTurn();
     renderFight(true);
+}
+
+function toggleFightBlock(id) {
+    if (!openBlocks.delete(id)) openBlocks.add(id);
+    if (autoBlock === id) autoBlock = null;
+    renderFight();
 }
 
 function removeCombatant(id) {
@@ -234,8 +273,10 @@ function removeCombatant(id) {
         fight.turn = next && next.id !== id ? next.id : null;
     }
     fight.list.splice(i, 1);
+    openBlocks.delete(id);
     if (!fight.list.length) { fight.round = 1; fight.turn = null; }
     saveFight();
+    followTurn();
     renderFight();
 }
 
@@ -276,7 +317,8 @@ function renderFight(scroll = false) {
             <div class="init-score"><input type="number" class="init-val" data-id="${c.id}" value="${c.init}" min="-10" max="50" aria-label="Initiative for ${esc(c.name)}"></div>
             <div class="init-main">
                 <div class="init-top">
-                    <span class="init-who">${esc(c.name)}</span>
+                    ${c.monster ? `<button type="button" class="sb-toggle" data-act="sb" data-id="${c.id}" aria-expanded="${openBlocks.has(c.id)}" title="Show or hide the stat block"><span class="init-who sb-name">${esc(c.name)}</span> <span class="sb-hint" aria-hidden="true">📜</span></button>`
+                        : `<span class="init-who">${esc(c.name)}</span>`}
                     <span class="init-meta">${c.ac !== null ? `🛡️ AC ${c.ac} · ` : ''}bonus ${c.mod >= 0 ? '+' + c.mod : '−' + -c.mod}${down ? ' · 💀 down' : ''}</span>
                 </div>
                 <div class="init-conds">
@@ -295,8 +337,14 @@ function renderFight(scroll = false) {
                 <button type="button" data-act="heal" data-id="${c.id}" title="Heal" aria-label="Heal ${esc(c.name)}">+</button>`}
             </div>
             <button type="button" class="init-x" data-act="remove" data-id="${c.id}" title="Remove" aria-label="Remove ${esc(c.name)}">✕</button>
+            ${c.monster && openBlocks.has(c.id) ? `<div class="sb-box">${monsterBlockHtml(MONSTER_BY_ID[c.monster])}</div>` : ''}
         </li>`;
     }).join('');
+    // Open blocks say "Loading…" until the data arrives, then draw again.
+    if (!blocksReady() && fight.list.some(c => c.monster && openBlocks.has(c.id))) {
+        loadMonsterBlocks().then(() => renderFight())
+            .catch(() => flash('init-status', '⚠️ The stat blocks did not load. Check the connection and try again.'));
+    }
     if (scroll) {
         const row = list.querySelector('.init-row.current');
         if (row) row.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
@@ -304,10 +352,13 @@ function renderFight(scroll = false) {
 }
 
 function onFightClick(e) {
+    const spell = e.target.closest('.sb-spell');
+    if (spell) { sbSpellClick(spell, spell.closest('.init-row')); return; }
     const b = e.target.closest('button[data-id]');
     if (!b) return;
     const id = Number(b.dataset.id);
-    if (b.dataset.cond) toggleCond(id, b.dataset.cond);
+    if (b.dataset.act === 'sb') toggleFightBlock(id);
+    else if (b.dataset.cond) toggleCond(id, b.dataset.cond);
     else if (b.dataset.act === 'dmg') changeHp(id, -1);
     else if (b.dataset.act === 'heal') changeHp(id, 1);
     else if (b.dataset.act === 'remove') removeCombatant(id);
@@ -317,6 +368,15 @@ function setupInitiative() {
     loadFight();
     renderFight();
     document.getElementById('init-add').addEventListener('submit', addCombatants);
+    const names = document.getElementById('ia-monsters');
+    names.innerHTML = MONSTERS.map(m => `<option value="${esc(m.name)}"></option>`).join('');
+    const follow = document.getElementById('init-follow');
+    follow.checked = followTurns();
+    follow.addEventListener('change', () => {
+        try { localStorage.setItem(INIT_FOLLOW_KEY, follow.checked ? 'on' : 'off'); } catch (e) {}
+        followTurn();
+        renderFight();
+    });
     document.getElementById('init-next').addEventListener('click', nextTurn);
     document.getElementById('init-prev').addEventListener('click', prevTurn);
     const list = document.getElementById('init-list');
@@ -347,6 +407,7 @@ function setupInitiative() {
         fight.round = 1;
         fight.turn = null;
         saveFight();
+        followTurn();
         renderFight();
         flash('init-status', '🎲 Everyone rolled again. Start combat when ready.');
     });
@@ -361,6 +422,8 @@ function setupInitiative() {
         if (!fight.list.length) return;
         armedClick(clear, '🧹 Clear All', () => {
             fight = { round: 1, turn: null, nextId: 1, list: [] };
+            openBlocks = new Set();
+            autoBlock = null;
             saveFight();
             renderFight();
             flash('init-status', '🧹 The battlefield is empty.');

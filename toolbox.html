@@ -233,7 +233,7 @@
     .en-desc { font-size: 0.9rem; color: var(--text-mid); margin: 8px 0 0; }
     .en-note { font-family: var(--font-ui); font-size: 0.8rem; color: var(--text-mid); margin: 6px 0 0; }
     .en-list, .en-results { list-style: none; margin: 0; padding: 0; }
-    .en-list li { display: grid; grid-template-columns: 1fr auto 80px auto; gap: 10px; align-items: center; padding: 8px 2px; border-bottom: 1px dashed rgba(201,160,64,0.18); }
+    .en-list > li { display: grid; grid-template-columns: 1fr auto 80px auto; gap: 10px; align-items: center; padding: 8px 2px; border-bottom: 1px dashed rgba(201,160,64,0.18); }
     .en-row-main { min-width: 0; }
     .en-name { font-family: 'IM Fell English', serif; font-size: 1.08rem; color: var(--text-bright); overflow-wrap: anywhere; }
     .en-meta { display: block; font-family: var(--font-ui); font-size: 0.72rem; color: var(--text-dim); }
@@ -259,6 +259,38 @@
     .en-pick .en-meta { grid-column: 1; }
     .en-plus { grid-column: 2; grid-row: 1 / span 2; font-size: 0.9rem; }
     .en-results-note { font-family: var(--font-ui); font-size: 0.75rem; color: var(--text-dim); margin: 6px 0 0; text-align: center; }
+
+    /* Monster stat blocks: open under their row in the Encounter and Initiative tabs. */
+    .sb-toggle { background: none; border: none; padding: 0; margin: 0; text-align: left; cursor: pointer; color: inherit; font: inherit; }
+    .sb-toggle .sb-name { border-bottom: 1px dotted var(--gold-dim); }
+    .sb-toggle:hover .sb-name, .sb-toggle:focus-visible .sb-name, .sb-toggle[aria-expanded="true"] .sb-name { color: var(--gold-bright); border-bottom-style: solid; }
+    .sb-toggle:focus-visible { outline: 2px solid var(--gold-mid); outline-offset: 2px; }
+    .sb-hint { font-size: 0.8rem; opacity: 0.7; }
+    .sb-box { grid-column: 1 / -1; border: 1px solid var(--gold-dim); border-left: 3px solid var(--gold-mid); border-radius: var(--radius-sm); background: rgba(0,0,0,0.18); padding: 12px 16px; margin: 4px 0 6px; min-width: 0; }
+    .sb-box .sb-type { font-style: italic; color: var(--text-dim); font-size: 0.92rem; margin: 0 0 8px; }
+    .sb-box .sb-core { display: flex; flex-wrap: wrap; gap: 4px 22px; padding: 8px 0; border-top: 1px solid var(--gold-dim); border-bottom: 1px solid var(--gold-dim); font-size: 0.93rem; color: var(--text-mid); }
+    .sb-box strong { color: var(--gold-bright); font-family: var(--font-ui); font-weight: 700; }
+    .sb-box .sb-abil { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; padding: 10px 0; text-align: center; font-size: 0.9rem; color: var(--text-mid); }
+    .sb-box .sb-abil b { display: block; font-family: var(--font-ui); font-size: 0.72rem; color: var(--gold-bright); letter-spacing: 0.05em; }
+    .sb-box .sb-props { padding: 8px 0 2px; border-top: 1px solid var(--gold-dim); }
+    .sb-box .sb-props p { margin: 0 0 4px; font-size: 0.9rem; line-height: 1.5; color: var(--text-mid); }
+    .sb-box .sb-section h4 { font-family: var(--font-head); font-size: 1rem; color: var(--gold-bright); border-bottom: 1px solid var(--gold-dim); padding-bottom: 4px; margin: 14px 0 8px; }
+    .sb-box .sb-feat { margin: 0 0 7px; font-size: 0.92rem; line-height: 1.55; color: var(--text-mid); }
+    .sb-box .sb-feat > strong { color: var(--text-bright); font-family: inherit; font-style: italic; }
+    .sb-box .sb-spells { list-style: none; padding: 0; margin: 4px 0 8px; }
+    .sb-box .sb-spells li { margin: 0 0 4px; font-size: 0.92rem; line-height: 1.6; color: var(--text-mid); }
+    .sb-box .sb-lvl { color: var(--text-bright); }
+    .sb-box .sb-spell { background: none; border: none; border-bottom: 1px dotted var(--gold-dim); padding: 0; color: var(--gold-bright); font: inherit; font-style: italic; cursor: pointer; }
+    .sb-box .sb-spell:hover, .sb-box .sb-spell:focus-visible, .sb-box .sb-spell[aria-expanded="true"] { color: var(--text-bright); border-bottom-style: solid; outline: none; }
+    .sb-box .sb-note { font-size: 0.85rem; color: var(--text-dim); margin: 0; }
+    .sb-box .sb-spell-detail { background: rgba(0,0,0,0.3); border: 1px solid var(--gold-dim); border-left: 3px solid var(--gold-mid); border-radius: 6px; padding: 12px 14px; margin: 8px 0; font-size: 0.88rem; line-height: 1.55; color: var(--text-mid); }
+    .sb-box .sb-spell-detail[hidden] { display: none; }
+    .sb-box .sb-spell-detail h5 { font-family: var(--font-head); font-size: 1rem; color: var(--gold-bright); margin: 0 0 2px; }
+    .sb-box .sb-spell-meta { font-style: italic; color: var(--text-dim); margin: 0 0 8px; }
+    .sb-box .sb-spell-detail p { margin: 0 0 6px; }
+    .sb-box .sb-spell-detail table { border-collapse: collapse; margin: 6px 0; font-size: 0.84rem; }
+    .sb-box .sb-spell-detail td, .sb-box .sb-spell-detail th { border: 1px solid var(--gold-dim); padding: 3px 8px; }
+    .sb-box .sb-book { display: inline-block; margin-top: 4px; font-family: var(--font-ui); font-size: 0.85rem; color: var(--gold-bright); }
 
     /* Tavern (F26) */
     .tavern-card { border: 1px solid var(--gold-dim); border-radius: var(--radius-sm); padding: 22px; background: rgba(0,0,0,0.18); margin-bottom: 18px; }
@@ -369,7 +401,9 @@
       .split-names { grid-column: 1 / -1; }
       .split-each { font-size: 1.6rem; }
       .dt-roll { white-space: normal; }
-      .en-list li { grid-template-columns: 1fr auto auto; }
+      .en-list > li { grid-template-columns: 1fr auto auto; }
+      .sb-box { padding: 10px 12px; }
+      .sb-box .sb-abil { grid-template-columns: repeat(3, 1fr); }
       .en-sub { grid-column: 1; grid-row: 2; text-align: left; }
       .en-filters { grid-template-columns: 1fr 1fr; }
       .en-filters label:first-child { grid-column: 1 / -1; }
@@ -622,7 +656,7 @@
     <section class="tool-panel" id="tab-enc" role="tabpanel" hidden>
       <div class="tool-card">
         <h2 class="tool-h">👹 Encounter Builder</h2>
-        <p class="tool-intro">Set up the party, add monsters, and see how hard the fight is. When it looks right, send it to the Initiative tab.</p>
+        <p class="tool-intro">Set up the party, add monsters, and see how hard the fight is. Click a monster's name for its full stat block. When it looks right, send it to the Initiative tab.</p>
 
         <h3 class="en-h">👥 The party</h3>
         <ul class="en-party" id="en-party"></ul>
@@ -654,6 +688,7 @@
         </div>
         <div class="tool-toolbar">
           <button type="button" class="btn btn-gold" id="en-send">⚔️ Send to Initiative</button>
+          <button type="button" class="btn" id="en-sb-all" aria-pressed="false">📜 Show Stat Blocks</button>
           <button type="button" class="btn" id="en-copy">📋 Copy</button>
           <button type="button" class="btn" id="en-link">🔗 Copy Link</button>
           <button type="button" class="btn" id="en-clear">🧹 Clear</button>
@@ -680,9 +715,10 @@
     <section class="tool-panel" id="tab-init" role="tabpanel" hidden>
       <div class="tool-card">
         <h2 class="tool-h">⚔️ Initiative Tracker</h2>
-        <p class="tool-intro">Add everyone in the fight, then step through the turns. It survives a refresh.</p>
+        <p class="tool-intro">Add everyone in the fight, then step through the turns. Click a monster's name for its stat block. It survives a refresh.</p>
         <form class="init-add" id="init-add">
-          <label class="init-name">Name <input type="text" id="ia-name" maxlength="40" placeholder="Goblin" required autocomplete="off"></label>
+          <label class="init-name">Name <input type="text" id="ia-name" maxlength="40" placeholder="Goblin" required autocomplete="off" list="ia-monsters"></label>
+          <datalist id="ia-monsters"></datalist>
           <label>Init bonus <input type="number" id="ia-mod" value="0" min="-10" max="20" step="1"></label>
           <label>Initiative <input type="number" id="ia-init" min="-10" max="50" step="1" placeholder="roll"></label>
           <label>HP <input type="number" id="ia-hp" min="0" max="9999" step="1" placeholder="—"></label>
@@ -690,7 +726,7 @@
           <label>How many <input type="number" id="ia-count" value="1" min="1" max="20" step="1"></label>
           <button type="submit" class="btn btn-gold">➕ Add</button>
         </form>
-        <p class="init-hint">Leave Initiative blank to roll d20 + bonus. Several of the same creature are numbered (Goblin 1, Goblin 2…) and roll separately.</p>
+        <p class="init-hint">Leave Initiative blank to roll d20 + bonus. Several of the same creature are numbered (Goblin 1, Goblin 2…) and roll separately. An SRD monster's name brings its stat block (click the name), and fills a blank HP and AC and a bonus left at 0.</p>
         <div class="tool-toolbar init-bar">
           <button type="button" class="btn" id="init-prev">◀ Back</button>
           <span class="init-round" id="init-round">Round 1</span>
@@ -704,6 +740,7 @@
           <button type="button" class="btn" id="init-defeated">💀 Remove the Fallen</button>
           <button type="button" class="btn" id="init-clear">🧹 Clear All</button>
         </div>
+        <label class="dice-fab-toggle"><input type="checkbox" id="init-follow" checked> Open each monster's stat block when its turn comes up</label>
       </div>
       <p class="tool-note">The tracker stays in this browser, so a refresh or a closed tab won't lose the fight, and it never leaves your device.<br>Order: highest initiative first; ties go to the higher bonus. Type a number in a creature's HP box and press − to damage or + to heal. Conditions are the SRD 5.1 list (CC-BY 4.0).</p>
     </section>
@@ -788,6 +825,8 @@
   <script src="travel-engine.js"></script>
   <script src="monsters-data.js"></script>
   <script src="encounter-engine.js"></script>
+  <script src="spell-detail.js"></script>
+  <script src="toolbox-statblock.js"></script>
   <script src="dice-engine.js"></script>
   <script src="downtime-engine.js"></script>
   <script src="quest-engine.js"></script>

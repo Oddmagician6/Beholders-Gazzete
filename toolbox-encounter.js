@@ -3,6 +3,8 @@
    Build a fight from the SRD 5.1 monsters (monsters-data.js), rate it against the
    party's SRD 5.2 XP budget (encounter-engine.js), and send it to the Initiative tab
    (addToFight in toolbox-table.js). Nothing is stored: the URL holds the party and the monsters.
+   Each monster's SRD stat block opens under its row; the stat blocks (monster-statblocks.js)
+   and spell text (spells-data.js) load the first time one is needed.
    URL: ?tab=enc&party=4x3&party=1x5&m=goblin.4&m=bugbear.1&diff=moderate&type=&env=&band=&pack=&seed=
    (env/band: the roll pickers; pack: the group a roll landed on; seed: the scene).
    ============================================ */
@@ -13,7 +15,7 @@ const ENC_MAX_COUNT = 40;
 const ENC_PICKER_ROWS = 40;
 const ENC_DEFAULT_PARTY = [{ count: 4, level: 3 }];
 
-let enc = { party: ENC_DEFAULT_PARTY.map(g => ({ ...g })), list: [], seed: null, band: null };
+let enc = { party: ENC_DEFAULT_PARTY.map(g => ({ ...g })), list: [], seed: null, band: null, open: new Set() };
 
 function clampInt(v, lo, hi, def) {
     const n = parseInt(v, 10);
@@ -117,7 +119,7 @@ function renderEncounter() {
     box.innerHTML = enc.list.map((e, i) => `
         <li data-i="${i}">
             <div class="en-row-main">
-                <span class="en-name">${esc(e.m.name)}</span>
+                <button type="button" class="sb-toggle" aria-expanded="${enc.open.has(e.m.id)}" title="Show or hide the stat block"><span class="en-name sb-name">${esc(e.m.name)}</span> <span class="sb-hint" aria-hidden="true">📜</span></button>
                 <span class="en-meta">CR ${e.m.cr} · ${fmt(e.m.xp)} XP each · AC ${e.m.ac} · HP ${e.m.hp} · Init ${e.m.dex >= 0 ? '+' : ''}${e.m.dex}</span>
             </div>
             <div class="en-count">
@@ -127,7 +129,12 @@ function renderEncounter() {
             </div>
             <span class="en-sub">${fmt(e.m.xp * e.count)} XP</span>
             <button type="button" class="en-x" aria-label="Remove ${esc(e.m.name)}" title="Remove">✕</button>
+            ${enc.open.has(e.m.id) ? `<div class="sb-box">${monsterBlockHtml(e.m)}</div>` : ''}
         </li>`).join('');
+    const allBtn = document.getElementById('en-sb-all');
+    const allOpen = enc.list.length > 0 && enc.list.every(e => enc.open.has(e.m.id));
+    allBtn.textContent = allOpen ? '📜 Hide Stat Blocks' : '📜 Show Stat Blocks';
+    allBtn.setAttribute('aria-pressed', allOpen);
 
     // The meter runs a quarter past the High budget, or further when the fight is bigger.
     const scale = Math.max(budget.high * 1.25, xp) || 1;
@@ -141,8 +148,29 @@ function renderEncounter() {
         </div>
         ${level ? `<p class="en-desc">${esc(level.text)}</p>` : ''}
         ${encounterNotes(enc.list, budget).map(n => `<p class="en-note">⚠️ ${esc(n)}</p>`).join('')}`;
-    ['en-send', 'en-copy'].forEach(id => { document.getElementById(id).disabled = !enc.list.length; });
+    ['en-send', 'en-copy', 'en-sb-all'].forEach(id => { document.getElementById(id).disabled = !enc.list.length; });
     renderScene();
+}
+
+// ── Stat blocks (toolbox-statblock.js) ────────────────────
+// Open blocks say "Loading…" until the data arrives, then draw again.
+function showBlocks() {
+    if (blocksReady()) return;
+    loadMonsterBlocks().then(renderEncounter)
+        .catch(() => flash('enc-status', '⚠️ The stat blocks did not load. Check the connection and try again.'));
+}
+
+function toggleBlock(id) {
+    if (!enc.open.delete(id)) enc.open.add(id);
+    renderEncounter();
+    showBlocks();
+}
+
+function toggleAllBlocks() {
+    const allOpen = enc.list.every(e => enc.open.has(e.m.id));
+    enc.open = allOpen ? new Set() : new Set(enc.list.map(e => e.m.id));
+    renderEncounter();
+    showBlocks();
 }
 
 // ── Scene ─────────────────────────────────────────────────
@@ -168,10 +196,12 @@ function renderScene() {
 
 function onEncListClick(e) {
     const btn = e.target.closest('button');
-    const li = e.target.closest('li');
+    const li = e.target.closest('.en-list > li');
     if (!btn || !li) return;
     const i = Number(li.dataset.i);
     const entry = enc.list[i];
+    if (btn.classList.contains('sb-spell')) { sbSpellClick(btn, li); return; }
+    if (btn.classList.contains('sb-toggle')) { toggleBlock(entry.m.id); return; }
     if (btn.classList.contains('en-more')) entry.count = Math.min(ENC_MAX_COUNT, entry.count + 1);
     else if (btn.classList.contains('en-minus')) { if (--entry.count < 1) enc.list.splice(i, 1); }
     else if (btn.classList.contains('en-x')) enc.list.splice(i, 1);
@@ -184,6 +214,7 @@ function encChanged(push) {
     if (enc.band && !encBandFits(ENC_BAND_BY_KEY[enc.band], enc.list)) enc.band = null;
     if (enc.list.length && !enc.seed) enc.seed = newSeed();
     if (!enc.list.length) { enc.seed = null; enc.band = null; }
+    enc.open = new Set([...enc.open].filter(id => enc.list.some(e => e.m.id === id)));
     renderEncounter();
     if (document.getElementById('en-cr').value === 'party') renderPicker();
     if (push !== null) setUrlParams(encParams(), push);
@@ -219,6 +250,7 @@ function encounterText() {
         lines.push('', s.title.toUpperCase());
         encSceneLines(s).forEach(([label, text]) => lines.push(`${label}: ${text}`));
     }
+    if (blocksReady()) enc.list.forEach(e => lines.push('', monsterBlockText(e.m)));
     return lines.join('\n');
 }
 
@@ -226,7 +258,7 @@ function encounterText() {
 function sendToInitiative() {
     if (!enc.list.length) return;
     const want = enc.list.reduce((t, e) => t + e.count, 0);
-    const added = enc.list.flatMap(e => addToFight({ name: e.m.name, mod: e.m.dex, hp: e.m.hp, ac: e.m.ac, count: e.count }));
+    const added = enc.list.flatMap(e => addToFight({ name: e.m.name, mod: e.m.dex, hp: e.m.hp, ac: e.m.ac, count: e.count, monster: e.m.id }));
     document.querySelector('.tool-tab[data-tab="init"]').click();
     if (!added.length) { flash('init-status', `⚠️ The tracker holds ${INIT_MAX} combatants. Clear some first.`); return; }
     sortFight();
@@ -238,7 +270,7 @@ function sendToInitiative() {
 }
 
 function clearEncounter() {
-    enc = { party: ENC_DEFAULT_PARTY.map(g => ({ ...g })), list: [], seed: null, band: null };
+    enc = { party: ENC_DEFAULT_PARTY.map(g => ({ ...g })), list: [], seed: null, band: null, open: new Set() };
     renderParty();
     encChanged(true);
 }
@@ -322,7 +354,10 @@ function setupEncounter() {
     });
     document.getElementById('en-roll').addEventListener('click', rollEncounterFor);
     document.getElementById('en-send').addEventListener('click', sendToInitiative);
-    document.getElementById('en-copy').addEventListener('click', () => copyText(encounterText(), 'enc-status', 'the encounter'));
+    // Copy adds the stat blocks, loading them first if none has been opened yet.
+    document.getElementById('en-copy').addEventListener('click', () => loadMonsterBlocks().catch(() => {})
+        .then(() => copyText(encounterText(), 'enc-status', blocksReady() ? 'the encounter and its stat blocks' : 'the encounter')));
+    document.getElementById('en-sb-all').addEventListener('click', toggleAllBlocks);
     document.getElementById('en-link').addEventListener('click', () =>
         copyPageLink(ok => flash('enc-status', ok ? '🔗 Link copied. It opens this party and these monsters.' : '⚠️ Copy blocked by the browser.')));
     document.getElementById('en-clear').addEventListener('click', clearEncounter);
