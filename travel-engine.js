@@ -1139,6 +1139,15 @@ function travelDistance(opts, weather) {
     return { pace: opts.pace, mph: pace.mph, hours, gallop: !!opts.gallop, difficult, miles: Math.round(miles * 10) / 10, notes, forced };
 }
 
+// Whole hours on the road to cover some miles at a day's pace (the gallop hour comes first).
+function travelHoursFor(miles, dist) {
+    const slow = dist.difficult ? 2 : 1;
+    const rate = dist.mph / slow;
+    const first = dist.gallop ? 8 / slow : rate;
+    if (miles <= first) return 1;
+    return Math.min(dist.hours, 1 + Math.ceil((miles - first) / rate - 1e-9));
+}
+
 // ── A whole journey ──────────────────────────────────────
 // opts: { climate, season, terrain, pace, hours, gallop, miles (total, 0 = open road) }
 // Returns days 1..n, stopping early on the day the party arrives.
@@ -1158,13 +1167,15 @@ function rollJourney(seed, opts, days) {
         const event = withSeed(deriveSeed(seed, 'e' + k), () => rollRoadEvent(opts.terrain, weather, used));
         const scene = withSeed(deriveSeed(seed, 'v' + k), () => rollScene(opts.terrain, opts.season));
         const find = withSeed(deriveSeed(seed, 'f' + k), () => rollFind(opts.terrain, weather));
-        const dist = travelDistance(opts, weather);
-        const sky = travelSky(opts, moonStart + k - 1, weather, dist.hours);
+        let dist = travelDistance(opts, weather);
         let today = dist.miles;
         const goal = Number(opts.miles) || 0;
         if (goal && covered + today >= goal) today = Math.round((goal - covered) * 10) / 10;
         covered = Math.round((covered + today) * 10) / 10;
         const arrived = !!goal && covered >= goal;
+        // The last day is shorter: count only the hours it takes to arrive (for forced-march saves and the dark).
+        if (arrived && today < dist.miles) dist = travelDistance({ ...opts, hours: travelHoursFor(today, dist) }, weather);
+        const sky = travelSky(opts, moonStart + k - 1, weather, dist.hours);
         // Arriving means a bed in town: no camp and no forecast.
         const camp = arrived ? null : withSeed(deriveSeed(seed, 'c' + k), () => rollCamp(opts.terrain, weather, event.k === 'camp'));
         const tomorrow = arrived ? null : weatherOn(k + 1);

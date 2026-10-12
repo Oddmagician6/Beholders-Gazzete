@@ -291,7 +291,7 @@ const TOWN_TROUBLES = [
     'Bandits have closed the road, and food prices have doubled.', 'A debt collector from the capital has arrived to call in the town\'s loans.',
     'Graves in the old cemetery have been dug up, but nothing taken.', 'Strangers in grey have been buying up every house in {district}.',
     'The harvest failed, and someone is hoarding grain.', 'A child claims to have seen a dragon over the hills, and the sheep agree.',
-    '{faction} is buying up debts all over town, and nobody knows why.', 'Every dog in town has started howling at the same spot in {district}.',
+    '{faction} {faction:is|are} buying up debts all over town, and nobody knows why.', 'Every dog in town has started howling at the same spot in {district}.',
     'A traveling preacher is stirring up the crowds against {faction}.', 'The bridge in {district} is cracking, and nobody will pay to fix it.'];
 
 // ── Helpers ──────────────────────────────────────────────
@@ -528,9 +528,9 @@ function townFactionName(t, ctx, draw) {
 
 // Fill {faction}, {district}, {leader} in a line. draw: a 0-1 number that picks the faction.
 function townFill(text, t, ctx, draw = 0, districtDraw = 0) {
-    const fac = townFactionName(t, ctx, draw);
-    return text
-        .replace(/\{faction\}/g, fac || 'a gang from out of town')
+    const fac = townFactionName(t, ctx, draw) || 'a gang from out of town';
+    return facAgree(text, 'faction', fac)
+        .replace(/\{faction\}/g, fac)
         .replace(/\{district\}/g, t.districts[Math.floor(districtDraw * t.districts.length)].name)
         .replace(/\{leader\}/g, t.leader.title.toLowerCase());
 }

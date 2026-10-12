@@ -4,14 +4,14 @@
    ============================================================ */
 
 // ── UTILITIES ──────────────────────────────────────────────
-const roll = (min, max) => Math.floor(rand() * (max - min + 1)) + min;
-const pick  = arr => arr[Math.floor(rand() * arr.length)];
-const d100  = ()   => roll(1, 100);
+const lootRoll = (min, max) => Math.floor(rand() * (max - min + 1)) + min;
+const lootPick = arr => arr[Math.floor(rand() * arr.length)];
+const lootD100 = () => lootRoll(1, 100);
 
 // Safely resolve a coin entry: [min,max] or 0
 function resolveCoin(entry, multiplier = 1, luckMult = 1) {
   if (!entry || entry === 0) return 0;
-  if (Array.isArray(entry)) return Math.floor(roll(entry[0], entry[1]) * multiplier * luckMult);
+  if (Array.isArray(entry)) return Math.floor(lootRoll(entry[0], entry[1]) * multiplier * luckMult);
   return 0;
 }
 
@@ -32,23 +32,23 @@ function generateCoins(table, luckMult = 1) {
 
 // ── GEM GENERATION ─────────────────────────────────────────
 function generateGems(chance, tier, countRange, luckMult = 1) {
-  if (d100() > chance) return [];
-  const count = Math.max(1, Math.floor(roll(countRange[0], countRange[1]) * luckMult));
+  if (lootD100() > chance) return [];
+  const count = Math.max(1, Math.floor(lootRoll(countRange[0], countRange[1]) * luckMult));
   const pool  = lootData.gems[tier] || lootData.gems['10'];
   const value = parseInt(tier);
   return Array.from({ length: count }, () => ({
-    name: pick(pool), value, type: 'gem'
+    name: lootPick(pool), value, type: 'gem'
   }));
 }
 
 // ── ART GENERATION ─────────────────────────────────────────
 function generateArt(chance, tier, countRange, luckMult = 1) {
-  if (d100() > chance) return [];
-  const count = Math.max(1, Math.floor(roll(countRange[0], countRange[1]) * luckMult));
+  if (lootD100() > chance) return [];
+  const count = Math.max(1, Math.floor(lootRoll(countRange[0], countRange[1]) * luckMult));
   const pool  = lootData.art[tier] || lootData.art['25'];
   const value = parseInt(tier);
   return Array.from({ length: count }, () => ({
-    name: pick(pool), value, type: 'art'
+    name: lootPick(pool), value, type: 'art'
   }));
 }
 
@@ -72,7 +72,7 @@ function getMagicItem(rarity, type = 'any') {
   }
   const pool = magicPool(rarity, type);
   if (!pool.length) return null;
-  const item = pick(pool);
+  const item = lootPick(pool);
   return {
     name:      item.name,
     rarity,
@@ -122,13 +122,13 @@ function rollTreasure(kind, cr, luckMult = 1, includeMagic = true, source = 'ran
   if (kind === 'hoard') {
     gems = generateGems(t.gemChance, t.gemTier, [2, 8], luckMult);
     art  = generateArt (t.artChance, t.artTier, [1, 6], luckMult);
-    if (includeMagic && d100() <= t.magicChance) {
-      magic = generateMagicItems(t.magicTable, roll(t.magicCount[0], t.magicCount[1]));
+    if (includeMagic && lootD100() <= t.magicChance) {
+      magic = generateMagicItems(t.magicTable, lootRoll(t.magicCount[0], t.magicCount[1]));
     }
   } else {
-    gems = d100() <= t.gemChance ? generateGems(100, t.gemTier, [2, 6], luckMult) : [];
-    art  = d100() <= t.artChance ? generateArt (100, t.artTier, [1, 4], luckMult) : [];
-    if (includeMagic && d100() <= t.magicChance) magic = generateMagicItems(t.magicTable, 1);
+    gems = lootD100() <= t.gemChance ? generateGems(100, t.gemTier, [2, 6], luckMult) : [];
+    art  = lootD100() <= t.artChance ? generateArt (100, t.artTier, [1, 4], luckMult) : [];
+    if (includeMagic && lootD100() <= t.magicChance) magic = generateMagicItems(t.magicTable, 1);
   }
   return decorateTreasure({ coins, gems, art, magic }, kind, cr, { luckMult, source });
 }
@@ -487,55 +487,55 @@ const lootCap = s => s.charAt(0).toUpperCase() + s.slice(1);
 const aOrAn = w => (/^[aeiou]/i.test(w) ? 'an ' : 'a ') + w;
 const pluralWord = w => /(s|x|z|ch|sh)$/.test(w) ? w + 'es' : w + 's';
 function lootFill(s) {
-  return s.replace(/\{name\}/g, () => pick(LOOT_NAMES))
-    .replace(/\{initials\}/g, () => String.fromCharCode(65 + roll(0, 25)) + '. ' + String.fromCharCode(65 + roll(0, 25)) + '.')
-    .replace(/\{years\}/g, () => roll(2, 40) * 10)
-    .replace(/\{count\}/g, () => roll(3, 9));
+  return s.replace(/\{name\}/g, () => lootPick(LOOT_NAMES))
+    .replace(/\{initials\}/g, () => String.fromCharCode(65 + lootRoll(0, 25)) + '. ' + String.fromCharCode(65 + lootRoll(0, 25)) + '.')
+    .replace(/\{years\}/g, () => lootRoll(2, 40) * 10)
+    .replace(/\{count\}/g, () => lootRoll(3, 9));
 }
 const lootWeighted = list => { let r = rand() * list.reduce((t, x) => t + x[1], 0); return list.find(x => (r -= x[1]) < 0) || list[list.length - 1]; };
 // Pick from the source's own list (with that chance) or the generic one.
-const fromSource = (own, generic, chance) => own && own.length && rand() < chance ? pick(own) : pick(generic);
+const fromSource = (own, generic, chance) => own && own.length && rand() < chance ? lootPick(own) : lootPick(generic);
 
 function gemLook(g) {
   const v = g.value;
   const band = v <= 10 ? 'low' : v <= 100 ? 'mid' : v <= 1000 ? 'high' : 'top';
-  const cut = pick(/Pearl/.test(g.name) ? GEM_CUTS.pearl : GEM_CUTS[band === 'top' ? 'high' : band]);
-  const parts = [GEM_COLORS[g.name] || 'an unusual color', cut, pick(GEM_SIZES[band])];
-  if (rand() < 0.3) parts.push(lootFill(pick(GEM_EXTRAS)));
+  const cut = lootPick(/Pearl/.test(g.name) ? GEM_CUTS.pearl : GEM_CUTS[band === 'top' ? 'high' : band]);
+  const parts = [GEM_COLORS[g.name] || 'an unusual color', cut, lootPick(GEM_SIZES[band])];
+  if (rand() < 0.3) parts.push(lootFill(lootPick(GEM_EXTRAS)));
   return lootCap(parts.join(', '));
 }
 
 // A gem name for setting into art: lowercased, without notes like "(small)".
 function artGem(band, plural) {
-  const tier = pick(ART_GEM_TIERS[band]);
-  const name = pick(lootData.gems[tier].filter(n => !n.includes('('))).toLowerCase();
+  const tier = lootPick(ART_GEM_TIERS[band]);
+  const name = lootPick(lootData.gems[tier].filter(n => !n.includes('('))).toLowerCase();
   return plural ? pluralWord(name) : aOrAn(name);
 }
 
 function composeArt(value) {
   const band = ART_TIER_BAND[value] ?? 0;
-  if (rand() < 0.25) return pick(ART_PICTURES[band]) + ' of ' + pick(ART_SUBJECTS) + pick(ART_ARTISTS);
+  if (rand() < 0.25) return lootPick(ART_PICTURES[band]) + ' of ' + lootPick(ART_SUBJECTS) + lootPick(ART_ARTISTS);
   const objects = ART_OBJECTS.filter(([, b]) => b <= band).map(([o]) => o);
-  const decor = pick(ART_DECOR[band])
-    .replace('{subject}', () => pick(ART_SUBJECTS))
-    .replace('{subject}', () => pick(ART_SUBJECTS))
+  const decor = lootPick(ART_DECOR[band])
+    .replace('{subject}', () => lootPick(ART_SUBJECTS))
+    .replace('{subject}', () => lootPick(ART_SUBJECTS))
     .replace('{gems}', () => artGem(band, true))
     .replace('{gem}', () => artGem(band, false));
-  return `${pick(ART_MATERIALS[band])} ${pick(objects)} ${decor}`;
+  return `${lootPick(ART_MATERIALS[band])} ${lootPick(objects)} ${decor}`;
 }
 
 // Looks for a magic item: potions and scrolls always, most other items, never artifacts.
 function magicFlavor(m) {
   if (m.rarity === 'artifact') return '';
   if (m.type === 'potion') {
-    return lootCap(`${pick(POTION_TEXTURES)} ${pick(POTION_COLORS)} liquid ${pick(POTION_BOTTLES)}; ${pick(POTION_NOTES)}.`);
+    return lootCap(`${lootPick(POTION_TEXTURES)} ${lootPick(POTION_COLORS)} liquid ${lootPick(POTION_BOTTLES)}; ${lootPick(POTION_NOTES)}.`);
   }
   if (m.type === 'scroll') {
-    const tie = pick(SCROLL_TIES);
-    return `Written in ${pick(SCROLL_INKS)} on ${pick(SCROLL_PAPERS)}${tie ? ', ' + tie : ''}.`;
+    const tie = lootPick(SCROLL_TIES);
+    return `Written in ${lootPick(SCROLL_INKS)} on ${lootPick(SCROLL_PAPERS)}${tie ? ', ' + tie : ''}.`;
   }
   if (rand() < 0.3) return '';
-  return `Made by ${pick(MAGIC_MAKERS)}. ${lootFill(pick(MAGIC_QUIRKS))}`;
+  return `Made by ${lootPick(MAGIC_MAKERS)}. ${lootFill(lootPick(MAGIC_QUIRKS))}`;
 }
 
 function lootGoodsLot(kind, cr, source, luckMult) {
@@ -548,19 +548,19 @@ function lootGoodsLot(kind, cr, source, luckMult) {
     (g.unit || prefs.includes(id)) && g.gp * g.qty[0] <= target && target <= g.gp * most(g));
   if (!fits.length) return null;
   const own = fits.filter(([id]) => prefs.includes(id));
-  const [id, g] = own.length && rand() < 0.7 ? pick(own) : pick(fits);
+  const [id, g] = own.length && rand() < 0.7 ? lootPick(own) : lootPick(fits);
   const qty = Math.min(most(g), Math.max(g.qty[0], Math.round(target / g.gp)));
   const value = Math.round(qty * g.gp * 100) / 100;
   const name = g.unit
-    ? `${g.name} ${pick(g.packs)}, ${qty.toLocaleString()} ${g.unit}`
-    : `${qty} ${qty === 1 ? g.name[0] : g.name[1]}, ${pick(LIVESTOCK_WHERE)}`;
+    ? `${g.name} ${lootPick(g.packs)}, ${qty.toLocaleString()} ${g.unit}`
+    : `${qty} ${qty === 1 ? g.name[0] : g.name[1]}, ${lootPick(LIVESTOCK_WHERE)}`;
   return { name, id, qty, value, type: 'goods' };
 }
 
 function lootTrap(cr) {
-  const t = pick(LOOT_TRAPS);
+  const t = lootPick(LOOT_TRAPS);
   const [sev, , dcs] = lootWeighted(TRAP_SEVERITY);
-  const dc = roll(dcs[0], dcs[1]);
+  const dc = lootRoll(dcs[0], dcs[1]);
   const find = `DC ${dc} Wisdom (Perception) to spot, DC ${dc} Dexterity check with thieves' tools to disarm.`;
   const effect = t.dmg
     ? `DC ${dc} ${t.save} saving throw or take ${TRAP_DAMAGE[cr][sev]} ${t.dmg} damage${t.from ? ' ' + t.from : ''}${t.after ? ' ' + t.after : ''}; half damage on a success${t.after ? ' and no other effect' : ''}.`
@@ -575,20 +575,20 @@ const LOCKABLE = /chest|box|case|cabinet|drawer|coffin|sarcophag|vault|strongroo
 function decorateTreasure(t, kind, cr, opts = {}) {
   const luckMult = opts.luckMult || 1;
   const ids = lootSourcesFor(kind).map(([id]) => id);
-  const sourceId = ids.includes(opts.source) ? opts.source : pick(ids);
+  const sourceId = ids.includes(opts.source) ? opts.source : lootPick(ids);
   const src = LOOT_SOURCES[sourceId];
   const hoard = kind === 'hoard';
 
   t.gems.forEach(g => { g.look = gemLook(g); });
   t.art.forEach(a => {
     if (rand() < 0.5) a.name = composeArt(String(a.value));
-    if (rand() < 0.35) a.note = lootFill(pick(ART_NOTES));
+    if (rand() < 0.35) a.note = lootFill(lootPick(ART_NOTES));
   });
   t.magic.forEach(m => { const f = magicFlavor(m); if (f) m.flavor = f; });
 
   t.goods = [];
   if (opts.goods !== false) {
-    const lots = hoard ? (rand() < 0.6 ? roll(1, cr === '17+' ? 3 : 2) : 0) : (rand() < 0.25 ? 1 : 0);
+    const lots = hoard ? (rand() < 0.6 ? lootRoll(1, cr === '17+' ? 3 : 2) : 0) : (rand() < 0.25 ? 1 : 0);
     for (let i = 0; i < lots; i++) {
       const lot = lootGoodsLot(kind, cr, src, luckMult);
       if (lot && !t.goods.some(g => g.id === lot.id)) t.goods.push(lot);
@@ -596,7 +596,7 @@ function decorateTreasure(t, kind, cr, opts = {}) {
   }
 
   const trinkets = [];
-  const nTrinkets = hoard ? roll(1, 3) : lootWeighted([[0, 20], [1, 55], [2, 25]])[0];
+  const nTrinkets = hoard ? lootRoll(1, 3) : lootWeighted([[0, 20], [1, 55], [2, 25]])[0];
   for (let tries = 0; trinkets.length < nTrinkets && tries < 10; tries++) {
     const s = lootFill(fromSource(src.trinkets, LOOT_TRINKETS, 0.6));
     if (!trinkets.includes(s)) trinkets.push(s);
@@ -611,14 +611,14 @@ function decorateTreasure(t, kind, cr, opts = {}) {
     if (rand() < (hoard ? 0.7 : 0.25)) {
       const [lo, hi] = LOOT_LOCK_DC[cr];
       const dc = rand() < 0.5 ? lo : hi;
-      t.lock = { dc, text: `DC ${dc} Dexterity check with thieves' tools to pick, or DC ${Math.min(30, dc + 5)} Strength to force. ${pick(LOOT_LOCK_KEYS)}` };
+      t.lock = { dc, text: `DC ${dc} Dexterity check with thieves' tools to pick, or DC ${Math.min(30, dc + 5)} Strength to force. ${lootPick(LOOT_LOCK_KEYS)}` };
     }
     if (rand() < (hoard ? 0.35 : 0.08)) t.trap = lootTrap(cr);
   }
 
   const hasCoins = Object.values(t.coins).some(v => v > 0);
-  t.coinNote = hasCoins && (hoard || rand() < 0.4) ? `${pick(LOOT_COIN_AGES)}; ${lootFill(pick(LOOT_COIN_DETAILS))}.` : '';
-  t.story = hoard ? `${lootFill(pick(src.owners))} ${lootFill(pick(src.hooks))}` : '';
+  t.coinNote = hasCoins && (hoard || rand() < 0.4) ? `${lootPick(LOOT_COIN_AGES)}; ${lootFill(lootPick(LOOT_COIN_DETAILS))}.` : '';
+  t.story = hoard ? `${lootFill(lootPick(src.owners))} ${lootFill(lootPick(src.hooks))}` : '';
 
   t.totalValue = totalGP(t.coins, t.gems, t.art, t.magic, t.goods);
   return t;

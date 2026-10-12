@@ -99,7 +99,7 @@ const FAC_TYPES = {
         ],
         wants: [
             'Find out who is selling unsealed {thing} and make them stop, gently or not.',
-            'Escort a cart of {thing} through country where {rival} has been making trouble.',
+            'Escort a cart of {thing} through country where {rival} {rival:has|have} been making trouble.',
             'Recover a stolen ledger before the council sees what is in it.',
             'Stand guard at the guildhall during a vote that might turn into a brawl.',
             'Persuade a stubborn master to sign the new price list.',
@@ -188,7 +188,7 @@ const FAC_TYPES = {
         ],
         wants: [
             'Fetch a "family heirloom" from a crypt outside town. Don\'t open the box.',
-            'Find a runaway member before {rival} does.',
+            'Find a runaway member before {rival} {rival:does|do}.',
             'Deliver a sealed letter to a councilor\'s house at midnight.',
             'Guard a meeting in the woods; ask no questions.',
             'Steal a book from the temple library. It belongs to them, they say.',
@@ -493,7 +493,7 @@ const FAC_TYPES = {
             'Clear the undead from the old cemetery.',
             'Find a priest who went into the catacombs and did not come out.',
             'Investigate a "miracle" in a nearby village before word spreads.',
-            'Bring back proof that {rival} is up to no good.',
+            'Bring back proof that {rival} {rival:is|are} up to no good.',
             'Guard the temple on the night of the holy day.'
         ],
         perks: ['healing at a discount', 'a blessing of {god} before the next fight', 'a bed at any temple of {god}', 'holy water by the barrel'],
@@ -709,16 +709,16 @@ const FAC_MOTIVES = [
 ];
 
 const FAC_RIVAL_WHY = [
-    '{a} blames {b} for a fire that burned down their old hall.',
+    '{a} {a:blames|blame} {b} for a fire that burned down their old hall.',
     '{a} and {b} both claim the same piece of {place}, and neither has the paperwork.',
     'A member of {b} killed a member of {a} in a duel; neither side accepts the verdict.',
-    '{b} owes {a} a great deal of money and has decided not to pay it.',
-    '{a} wants something {b} keeps locked away.',
+    '{b} {b:owes|owe} {a} a great deal of money and {b:has|have} decided not to pay it.',
+    '{a} {a:wants|want} something {b} {b:keeps|keep} locked away.',
     'They were one group once, and split over who should lead.',
-    '{a} thinks {b} is behind the recent disappearances.',
+    '{a} {a:thinks|think} {b} {b:is|are} behind the recent disappearances.',
     'They are courting the same patron, and only one will win.',
     'Each has a spy in the other, and both know it.',
-    '{b} took a contract that {a} believes was theirs.',
+    '{b} took a contract that {a} {a:believes|believe} was theirs.',
     'An old insult at a feast, which neither side will say out loud.',
     'Their leaders were once close friends, which made it worse.'
 ];
@@ -732,13 +732,13 @@ const FAC_RIVAL_HEAT = [
 ];
 const FAC_ALLY_WHY = [
     'A marriage between their leaders\' families ties them together.',
-    '{a} hides money for {b}, and keeps a small cut.',
+    '{a} {a:hides|hide} money for {b}, and {a:keeps|keep} a small cut.',
     'An old debt of honor neither has forgotten.',
-    '{a} supplies {b} with what it needs, at a discount.',
+    '{a} {a:supplies|supply} {b} with what {b:it needs|they need}, at a discount.',
     'They fought side by side once and have not forgotten it.',
     'Their leaders meet in secret every new moon.',
     'Pure convenience; either would sell the other out for the right price.',
-    '{b} owes {a} a favor, and {a} hasn\'t called it in yet.',
+    '{b} {b:owes|owe} {a} a favor, and {a} {a:hasn\'t|haven\'t} called it in yet.',
     'They share an enemy, and that is enough.',
     'A member of {a} saved the life of {b}\'s leader.'
 ];
@@ -818,7 +818,9 @@ function facRollFaction(seed, i, type, prev) {
             .replace('{Thing}', () => facPick(t.things || ['Dawn']));
         if (type === 'house') {
             const npc = f.leader.npc;
-            f.nameRaw = npc.race === 'dragonborn' && npc.surname ? `Clan ${npc.surname}` : `House ${npc.surname || facPick(t.fallback)}`;
+            // An epithet ("the Loud") isn't a family name: the house is named for its head instead.
+            f.nameRaw = /^the /.test(npc.surname || '') ? `the House of ${npc.firstName} ${npc.surname}`
+                : npc.race === 'dragonborn' && npc.surname ? `Clan ${npc.surname}` : `House ${npc.surname || facPick(t.fallback)}`;
         }
         if (!takenNames.has(f.nameRaw)) break;
     }
@@ -954,13 +956,28 @@ function facName(w, i, ctx) {
         .replace('{Leader}', f.leader.npc.firstName);
 }
 
+// Whether a faction name takes a plural verb: "the Grey Moths think", "the Order of the Dawn thinks".
+// The head noun is the last word before any " of ".
+function facIsPlural(name) {
+    const head = name.replace(/^the /i, '').split(' of ')[0];
+    if (/^(House|Clan) /.test(head)) return false;
+    if (/^Those /.test(head)) return true;
+    return /([^s]s|men|^Children|Kin|Faithful)$/.test(head);
+}
+
+// Pick {key:singular|plural} by the name standing in for {key}.
+function facAgree(text, key, name) {
+    const plural = facIsPlural(name);
+    return text.replace(new RegExp(`\\{${key}:([^|}]*)\\|([^}]*)\\}`, 'g'), (m, one, many) => plural ? many : one);
+}
+
 // Fill a table line: {place}, {thing}, {god}, {rival}, {leader}, {Leader} (the leader's title).
 function facFill(text, w, i, ctx) {
     const f = w.factions[i];
     const god = facDeity(f, ctx && ctx.pantheon);
     const rivals = facRivalsOf(w, i);
     const rival = rivals.length ? facName(w, rivals[0], ctx) : 'their rivals';
-    return text
+    return facAgree(text, 'rival', rival)
         .replace(/\{place\}/g, FAC_SCALES[w.scale].place)
         .replace(/\{thing\}/g, f.craft ? f.craft[1] : 'their trade')
         .replace(/\{god\}/g, god ? god.name : 'their god')
@@ -1029,7 +1046,7 @@ function facLieutenantLines(w, i, ctx) {
 
 function facTieText(w, t, ctx, kind) {
     const a = facName(w, t.a, ctx), b = facName(w, t.b, ctx);
-    const why = t.why.replace(/\{a\}/g, a).replace(/\{b\}/g, b).replace(/\{place\}/g, FAC_SCALES[w.scale].place);
+    const why = facAgree(facAgree(t.why, 'a', a), 'b', b).replace(/\{a\}/g, a).replace(/\{b\}/g, b).replace(/\{place\}/g, FAC_SCALES[w.scale].place);
     return kind === 'rival' ? `${facCap(why)} ${t.heat}` : facCap(why);
 }
 

@@ -100,7 +100,7 @@ function generateLoot(seed = newSeed(), push = true) {
       if (document.getElementById('custom-gems').checked)  gems  = generateGems(100, t.gemTier, [1,6], luckMult);
       if (document.getElementById('custom-art').checked)   art   = generateArt (100, t.artTier, [1,4], luckMult);
       if (document.getElementById('custom-magic').checked) {
-        const cnt = roll(1, 3);
+        const cnt = lootRoll(1, 3);
         magic = generateMagicItems(t.magicTable, cnt);
       }
       found = decorateTreasure({ coins, gems, art, magic }, 'individual', cr,
