@@ -1,12 +1,15 @@
 /* ============================================================
    THE BEHOLDER'S GAZETTE — HOMEPAGE SCRIPT
-   Loads articles.json, renders featured + grid, sidebar economy
+   Loads articles.json, renders sections, featured + grid, sidebar economy
    ============================================================ */
 
 console.log('%c👁️ The Beholder\'s Gazette', 'font-family:serif;font-size:18px;color:#d4a843;background:#0e0d0b;padding:8px 16px;');
 
-let allArticles = [];
+let latest = [];          // every article, newest first
+let allArticles = [];     // what the grid is showing: all but the featured story, or one section
 let displayedCount = 6;
+let desks = [];           // newsroom desks from glossary.json: { id, name, short, icon, color, categories }
+let section = 'all';      // the section bar's pick: 'all' or a desk id
 
 /* ── INIT ────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
@@ -33,20 +36,27 @@ function setDateBanner() {
 /* ── ARTICLE LOADING ─────────────────────────────────────── */
 async function loadArticles() {
   try {
-    const res = await fetch('articles.json?t=' + Date.now());
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
+    const [data, glossary] = await Promise.all([
+      fetch('articles.json?t=' + Date.now()).then(res => { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); }),
+      // Desk names, icons and colors. Without them the page still works, with plain tags.
+      fetch('glossary.json?t=' + Date.now()).then(r => r.json()).catch(() => ({ writers: [] })),
+    ]);
+    desks = (glossary.writers || []).map(w => ({
+      id: w.desk_id, name: w.desk, short: w.desk_short || w.desk, icon: w.desk_icon || w.avatar || '📰',
+      color: /^#[0-9a-f]{3,8}$/i.test(w.desk_color || '') ? w.desk_color : '', categories: w.categories || [],
+    }));
 
-    const articles = (data.articles || []).sort((a, b) => new Date(b.date) - new Date(a.date));
-    if (!articles.length) throw new Error('No articles found');
+    // Newest first. Same-day articles keep file order, matching export-articles.ps1's pre-render.
+    latest = (data.articles || []).map((a, i) => ({ a, i }))
+      .sort((x, y) => new Date(y.a.date) - new Date(x.a.date) || x.i - y.i).map(x => x.a);
+    if (!latest.length) throw new Error('No articles found');
 
-    const featured = articles[0];
-    allArticles = articles.slice(1);
-    displayedCount = 6;
+    const wanted = new URLSearchParams(location.search).get('section');
+    if (wanted && desks.some(d => d.id === wanted)) section = wanted;
 
-    renderFeatured(featured);
-    renderGrid();
-    renderTicker(articles.slice(0, 8));
+    renderSections();
+    showSection();
+    renderTicker(latest.slice(0, 8));
 
   } catch (err) {
     console.error('Failed to load articles:', err);
@@ -57,6 +67,82 @@ async function loadArticles() {
   }
 }
 
+/* ── SECTIONS ────────────────────────────────────────────── */
+// Every article belongs to the desk whose categories include its category.
+function deskOf(a) { return desks.find(d => d.categories.includes(a.category)); }
+
+function deskStyle(d) { return d && d.color ? ` style="--desk:${d.color}"` : ''; }
+
+// Category tag: colored by desk, with the desk's icon, linking to that desk's section.
+// export-articles.ps1 writes the same markup into the pre-rendered cards.
+function deskTag(a, cls = 'card-tag') {
+  const d = deskOf(a);
+  const label = esc(a.category || 'News');
+  if (!d) return `<span class="${cls}">${label}</span>`;
+  return `<a class="${cls}" href="archive.html?section=${encodeURIComponent(d.id)}" data-section="${esc(d.id)}"${deskStyle(d)} title="More from ${esc(d.name)}"><span class="desk-icon" aria-hidden="true">${d.icon}</span>${label}</a>`;
+}
+
+// Section bar. export-articles.ps1 pre-renders the same chips, linking to the archive for no-JS visitors.
+function renderSections() {
+  const el = document.getElementById('section-bar');
+  if (!el || !desks.length) return;
+  const counts = {};
+  latest.forEach(a => { const d = deskOf(a); if (d) counts[d.id] = (counts[d.id] || 0) + 1; });
+  const chip = (id, href, label, d) => {
+    const on = id === section;
+    return `<a class="section-chip${on ? ' active' : ''}" href="${href}" data-section="${esc(id)}"${on ? ' aria-current="true"' : ''}${deskStyle(d)}>${label}</a>`;
+  };
+  el.innerHTML = '<span class="section-bar-label">Sections</span>' +
+    chip('all', 'index.html', '<span aria-hidden="true">📰</span> All news') +
+    desks.map(d => chip(d.id, `archive.html?section=${encodeURIComponent(d.id)}`,
+      `<span aria-hidden="true">${d.icon}</span> ${esc(d.short)}<span class="n">${counts[d.id] || 0}</span>`, d)).join('');
+}
+
+// 'all' shows the featured story with the rest below it. A desk hides the featured story and lists
+// every article from that desk, so the page reads as that section's front.
+function showSection() {
+  const d = desks.find(x => x.id === section);
+  const featured = document.getElementById('featured-article');
+  const welcome = document.getElementById('welcome-section');
+  const title = document.getElementById('grid-title');
+  const archive = document.getElementById('archive-link');
+
+  if (d) {
+    allArticles = latest.filter(a => deskOf(a) === d);
+    if (featured) featured.hidden = true;
+    if (welcome) welcome.hidden = true;
+    if (title) title.textContent = `${d.icon} ${d.name}`;
+    if (archive) { archive.href = `archive.html?section=${encodeURIComponent(d.id)}`; archive.textContent = `📚 Every ${d.name} scroll in the archive →`; }
+  } else {
+    renderFeatured(latest[0]);
+    allArticles = latest.slice(1);
+    if (featured) featured.hidden = false;
+    if (welcome) welcome.hidden = false;
+    if (title) title.textContent = '📰 More News';
+    if (archive) { archive.href = 'archive.html'; archive.textContent = '📚 Browse the full archive, by month and desk →'; }
+  }
+  displayedCount = 6;
+  renderGrid();
+}
+
+function pickSection(id) {
+  section = desks.some(d => d.id === id) ? id : 'all';
+  renderSections();
+  showSection();
+  // Keep the pick in the URL so a section front can be shared or bookmarked
+  history.replaceState(null, '', location.pathname + (section === 'all' ? '' : '?section=' + encodeURIComponent(section)));
+  document.getElementById('section-bar')?.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+// Section chips and category tags filter the page in place. Their hrefs are the no-JS fallback,
+// and a modified click (new tab) still follows them.
+document.addEventListener('click', e => {
+  const link = e.target.closest('#section-bar [data-section], #article-grid [data-section], #featured-article [data-section]');
+  if (!link || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || e.button) return;
+  e.preventDefault();
+  pickSection(link.dataset.section);
+});
+
 function renderFeatured(article) {
   const el = document.getElementById('featured-article');
   if (!el || !article) return;
@@ -64,7 +150,7 @@ function renderFeatured(article) {
   el.innerHTML = `
     <div class="featured-article">
       <div>
-        <span class="category-badge">${article.category || 'News'}</span>
+        ${deskTag(article, 'category-badge')}
       </div>
       <h2 class="featured-headline">
         <a href="a/${article.id}.html" style="color:inherit;">${article.title}</a>
@@ -89,19 +175,23 @@ function renderGrid() {
   const visible = allArticles.slice(0, displayedCount);
 
   if (!visible.length) {
-    el.innerHTML = '<p style="color:var(--text-dim);text-align:center;padding:40px;grid-column:1/-1;">No more scrolls in the archives.</p>';
+    const msg = section === 'all' ? 'No more scrolls in the archives.' : 'No scrolls from this desk yet. The quill is being sharpened.';
+    el.innerHTML = `<p style="color:var(--text-dim);text-align:center;padding:40px;grid-column:1/-1;">${msg}</p>`;
     return;
   }
 
-  el.innerHTML = visible.map((a, i) => `
-    <article class="card" style="animation-delay:${i * 0.08}s">
-      <div class="card-tag">${a.category || 'News'}</div>
+  el.innerHTML = visible.map((a, i) => {
+    const d = deskOf(a);
+    return `
+    <article class="card" style="animation-delay:${i * 0.08}s;${d && d.color ? `--desk:${d.color}` : ''}">
+      ${deskTag(a)}
       <h3><a href="a/${a.id}.html">${a.title}</a></h3>
       <p>${a.excerpt || stripTags(a.content).substring(0, 110) + '…'}</p>
       <div class="card-date">📅 ${formatDate(a.date)}</div>
       <a href="a/${a.id}.html" class="btn" style="font-size:0.68rem;padding:7px 14px;margin-top:14px;">📜 Read Scroll</a>
     </article>
-  `).join('');
+  `;
+  }).join('');
 
   // Load More button
   const existing = el.querySelector('.load-more-wrap');
@@ -130,23 +220,18 @@ function loadMore() {
 }
 
 /* ── TICKER ──────────────────────────────────────────────── */
-// Latest headlines, each linking to its article. Keeps the placeholder text if articles fail to load.
-const TICKER_ICONS = {
-  Politics:'👑', Elections:'🗳️', Legislation:'📜', International:'🌍', Economy:'💰', Finance:'💰',
-  Business:'🏪', Labor:'⚒️', Technology:'🔮', Health:'🧪', Transport:'🐴', Sports:'🏆',
-  Environment:'🌿', Scandal:'🕯️', 'Creature Features':'🐉', 'Tavern Tales':'🍺',
-};
-
+// Latest headlines, each linking to its article and marked with its desk's icon.
+// Keeps the placeholder text if articles fail to load.
 function renderTicker(articles) {
   const el = document.getElementById('news-ticker');
   if (!el || !articles.length) return;
 
   el.textContent = '';
   articles.forEach((a, i) => {
-    if (i) el.append('  •  ');
+    if (i) el.append('  •  ');
     const link = document.createElement('a');
     link.href = `a/${a.id}.html`;
-    link.textContent = `${TICKER_ICONS[a.category] || '📰'} ${stripTags(a.title)}`;
+    link.textContent = `${deskOf(a)?.icon || '📰'} ${stripTags(a.title)}`;
     el.append(link);
   });
 
@@ -234,6 +319,10 @@ function stripTags(html) {
 function readTime(html) {
   const words = stripTags(html || '').split(/\s+/).length;
   return Math.max(1, Math.ceil(words / 200));
+}
+
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
 function errorBox(msg) {

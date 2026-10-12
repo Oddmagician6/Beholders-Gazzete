@@ -70,6 +70,10 @@
       border-radius: 3px;
       margin-bottom: 18px;
     }
+    /* Desk color and a link to the desk's section (export-articles.ps1 / deskTag below) */
+    .article-category-badge[style*="--desk"] { background: var(--desk); }
+    a.article-category-badge:hover { filter: brightness(1.12); }
+    .article-category-badge .desk-icon { margin-right: 6px; letter-spacing: 0; }
     .article-hero-title {
       font-family: var(--font-display);
       font-size: clamp(1.5rem, 4vw, 2.6rem);
@@ -301,7 +305,7 @@
   <section class="article-hero">
     <div class="article-hero-overlay"></div>
     <div class="article-hero-content">
-      <div class="article-category-badge" id="article-category">Sports</div>
+      <div id="article-category"><a class="article-category-badge" href="archive.html?section=local" data-section="local" style="--desk:#f48fb1" title="More from Local, Crime &amp; Oddities"><span class="desk-icon" aria-hidden="true">🏘️</span>Sports</a></div>
       <h1 class="article-hero-title" id="article-title">Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee</h1>
       <div class="article-hero-meta">
         <span>✍️ <strong id="article-author"><a href="desk/skritch-mudwhistle.html" style="color:inherit;">🦎 Skritch Mudwhistle</a></strong></span>
@@ -413,20 +417,20 @@
     <div class="article-related">
       <h3>📰 More From the Gazette</h3>
       <div class="article-grid" id="related-articles">
-        <article class="card">
-          <div class="card-tag">Sports</div>
-          <h3><a href="a/potion-sports-doping-scandal.html">Professional Quidditch League Doping Scandal Erupts</a></h3>
+        <article class="card" style="--desk:#f48fb1">
+          <a class="card-tag" href="archive.html?section=local" data-section="local" style="--desk:#f48fb1" title="More from Local, Crime &amp; Oddities"><span class="desk-icon" aria-hidden="true">🏘️</span>Sports</a>
+          <h3><a href="a/potion-sports-doping-scandal.html">Professional Squidditch League Doping Scandal Erupts</a></h3>
           <p>Star players caught using enhancement potions. Championships revoked. League implements random testing.</p>
           <a href="a/potion-sports-doping-scandal.html" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">&#x1F4DC; Read Scroll</a>
         </article>
-        <article class="card">
-          <div class="card-tag">Local Chaos</div>
+        <article class="card" style="--desk:#f48fb1">
+          <a class="card-tag" href="archive.html?section=local" data-section="local" style="--desk:#f48fb1" title="More from Local, Crime &amp; Oddities"><span class="desk-icon" aria-hidden="true">🏘️</span>Local Chaos</a>
           <h3><a href="a/bull-moose-skate-park-five-hours-wardens-sleep.html">Bull Moose Trapped in Skate Park; Wardens Cast Sleep</a></h3>
           <p>A bull moose spent five hours stuck in a skate park bowl in Montanor until wardens cast Sleep. Skritch was there. Allegedly.</p>
           <a href="a/bull-moose-skate-park-five-hours-wardens-sleep.html" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">&#x1F4DC; Read Scroll</a>
         </article>
-        <article class="card">
-          <div class="card-tag">Local Chaos</div>
+        <article class="card" style="--desk:#f48fb1">
+          <a class="card-tag" href="archive.html?section=local" data-section="local" style="--desk:#f48fb1" title="More from Local, Crime &amp; Oddities"><span class="desk-icon" aria-hidden="true">🏘️</span>Local Chaos</a>
           <h3><a href="a/city-watch-stops-sofa-riding-two-enchanted-skates.html">Watch Pulls Over Two Men Riding a Sofa on Enchanted Skates</a></h3>
           <p>Carlotta&#39;s Ford Watch stopped a full-size couch rolling down South Tryst Street on two glowing skate-boards, and then issued a safety reminder. Skritch was not there, but he knows a guy.</p>
           <a href="a/city-watch-stops-sofa-riding-two-enchanted-skates.html" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">&#x1F4DC; Read Scroll</a>
@@ -512,7 +516,7 @@
         if (!article) return showNotFound();
 
         document.title = article.title + ' | The Beholder\'s Gazette';
-        document.getElementById('article-category').textContent  = article.category || 'News';
+        setCategory(article);
         document.getElementById('article-title').textContent     = article.title;
         document.getElementById('article-author').textContent    = article.author || 'The Gazette Staff';
         linkAuthor(article.author);
@@ -535,13 +539,10 @@
     async function loadRelated(articles, current) {
       const el = document.getElementById('related-articles');
       if (el.children.length) return;
-      const deskOf = {};
-      try {
-        const g = await fetch('glossary.json?t=' + Date.now()).then(r => r.json());
-        (g.writers || []).forEach(w => (w.categories || []).forEach(c => { deskOf[c] = w.desk_id; }));
-      } catch (e) {}
-      const desk = deskOf[current.category];
-      const score = a => a.category === current.category ? 2 : desk && deskOf[a.category] === desk ? 1 : 0;
+      const desks = await loadDesks();
+      const deskOf = c => desks[c] && desks[c].desk_id;
+      const desk = deskOf(current.category);
+      const score = a => a.category === current.category ? 2 : desk && deskOf(a.category) === desk ? 1 : 0;
       const related = articles.map((a, i) => ({ a, i }))
         .filter(x => x.a.id !== current.id)
         .sort((x, y) => y.a.date.localeCompare(x.a.date) || y.i - x.i)
@@ -550,13 +551,40 @@
         .slice(0, 3).map(x => x.a);
       if (!related.length) { el.innerHTML = '<p style="color:var(--text-dim);text-align:center;">No more scrolls found.</p>'; return; }
       el.innerHTML = related.map(a => `
-        <article class="card">
-          <div class="card-tag">${esc(a.category || 'News')}</div>
+        <article class="card"${deskStyle(desks[a.category])}>
+          ${deskTag(a, desks)}
           <h3><a href="a/${a.id}.html">${esc(a.title)}</a></h3>
           <p>${esc(a.excerpt)}</p>
           <a href="a/${a.id}.html" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">📜 Read Scroll</a>
         </article>
       `).join('');
+    }
+
+    // Desk writers from glossary.json, keyed by the categories their desk covers (fetched once).
+    let desksPromise;
+    function loadDesks() {
+      desksPromise = desksPromise || fetch('glossary.json?t=' + Date.now()).then(r => r.json()).then(g => {
+        const byCategory = {};
+        (g.writers || []).forEach(w => (w.categories || []).forEach(c => { byCategory[c] = w; }));
+        return byCategory;
+      }).catch(() => ({}));
+      return desksPromise;
+    }
+
+    function deskStyle(w) { return w && /^#[0-9a-f]{3,8}$/i.test(w.desk_color || '') ? ` style="--desk:${w.desk_color}"` : ''; }
+
+    // Category tag colored by desk, linking to the desk's section (same markup as export-articles.ps1)
+    function deskTag(a, desks, cls = 'card-tag') {
+      const w = desks[a.category];
+      const label = esc(a.category || 'News');
+      if (!w) return `<span class="${cls}">${label}</span>`;
+      return `<a class="${cls}" href="archive.html?section=${encodeURIComponent(w.desk_id)}"${deskStyle(w)} title="More from ${esc(w.desk)}"><span class="desk-icon" aria-hidden="true">${esc(w.desk_icon || '')}</span>${label}</a>`;
+    }
+
+    async function setCategory(article) {
+      const el = document.getElementById('article-category');
+      const desks = await loadDesks();
+      el.innerHTML = deskTag(article, desks, 'article-category-badge');
     }
 
     // Handout: the article as an in-world newspaper clipping. Printing the page prints only this
@@ -606,7 +634,7 @@
           <a href="index.html" class="btn" style="margin-top:20px;">Return Home</a>
         </div>`;
       document.getElementById('article-title').textContent    = 'Article Not Found';
-      document.getElementById('article-category').textContent = 'Error';
+      document.getElementById('article-category').innerHTML = '<span class="article-category-badge">Error</span>';
     }
 
     // Turn the byline into a link to the writer's desk page (desk writers only).

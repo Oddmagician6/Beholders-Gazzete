@@ -422,6 +422,18 @@ p:last-child { margin-bottom: 0; }
   margin-bottom: 13px;
 }
 
+/* Desk sections: each desk's color (writers.json → glossary.json desk_color) is set inline as --desk
+   on a card or tag. Cards get a stripe in it; tags link to the desk's section of the archive. */
+.card[style*="--desk"]::before { opacity: 1; height: 3px; background: var(--desk); }
+.card-tag[style*="--desk"], .card[style*="--desk"] .card-tag {
+  color: var(--desk);
+  border-color: color-mix(in srgb, var(--desk) 55%, transparent);
+  background: color-mix(in srgb, var(--desk) 12%, transparent);
+}
+a.card-tag { transition: background var(--transition); }
+a.card-tag:hover { background: color-mix(in srgb, var(--desk, var(--gold-bright)) 26%, transparent); }
+.card-tag .desk-icon { margin-right: 5px; letter-spacing: 0; }
+
 .card h3 { font-size: 1.05rem; margin-bottom: 10px; color: var(--text-bright); line-height: 1.4; }
 .card h3 a:hover { color: var(--gold-bright); }
 .card p { font-size: 0.86rem; color: var(--text-dim); margin-bottom: 16px; line-height: 1.65; }

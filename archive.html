@@ -47,6 +47,9 @@
         }
         .chip.active, .chip:hover { background: var(--gold-mid); color: var(--bg-deep); border-color: var(--gold-mid); }
         .chip .n { opacity: .7; margin-left: 4px; }
+        /* Desk colors (glossary.json desk_color) */
+        .chip[style*="--desk"] { border-color: color-mix(in srgb, var(--desk) 55%, transparent); }
+        .chip[style*="--desk"].active, .chip[style*="--desk"]:hover { background: var(--desk); border-color: var(--desk); color: #000; }
         .ar-count { font-family: var(--font-ui); font-size: .85rem; color: var(--text-dim); margin-bottom: 26px; }
         .ar-count a { color: var(--gold-bright); }
 
@@ -64,6 +67,9 @@
             display: inline-block; font-family: var(--font-ui); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase;
             color: var(--bg-deep); background: var(--gold-mid); padding: 2px 8px; border-radius: var(--radius-sm); margin-bottom: 6px;
         }
+        .ar-tag[style*="--desk"] { background: var(--desk); }
+        a.ar-tag:hover { filter: brightness(1.12); }
+        .ar-tag .desk-icon { margin-right: 5px; letter-spacing: 0; }
         .ar-item h3 { font-size: 1.08rem; line-height: 1.4; margin-bottom: 6px; }
         .ar-item h3 a { color: var(--text-bright); }
         .ar-item h3 a:hover { color: var(--gold-bright); }
@@ -160,6 +166,7 @@
 
     // Sections are the newsroom desks; each article lands in the desk that covers its category.
     function deskOf(a) { return desks.find(d => d.categories.includes(a.category)); }
+    function deskStyle(d) { return d && /^#[0-9a-f]{3,8}$/i.test(d.color || '') ? ` style="--desk:${d.color}"` : ''; }
 
     function matches(a) {
         if (section !== 'all' && a.desk?.id !== section) return false;
@@ -171,9 +178,9 @@
         const counts = {};
         articles.forEach(a => { if (a.desk) counts[a.desk.id] = (counts[a.desk.id] || 0) + 1; });
         const chip = (id, label, n) =>
-            `<button class="chip ${id === section ? 'active' : ''}" data-section="${esc(id)}" aria-pressed="${id === section}">${label}<span class="n">${n}</span></button>`;
+            `<button class="chip ${id === section ? 'active' : ''}" data-section="${esc(id)}" aria-pressed="${id === section}"${deskStyle(desks.find(d => d.id === id))}>${label}<span class="n">${n}</span></button>`;
         document.getElementById('ar-chips').innerHTML = chip('all', 'All desks', articles.length) +
-            desks.filter(d => counts[d.id]).map(d => chip(d.id, `${esc(d.avatar)} ${esc(d.name)}`, counts[d.id])).join('');
+            desks.filter(d => counts[d.id]).map(d => chip(d.id, `${esc(d.icon)} ${esc(d.name)}`, counts[d.id])).join('');
     }
 
     function render() {
@@ -203,7 +210,7 @@
               <article class="ar-item">
                 <div class="ar-day"><b>${day(a.date).getDate()}</b><span>${day(a.date).toLocaleDateString('en-US', { weekday: 'short' })}</span></div>
                 <div>
-                  <span class="ar-tag">${esc(a.category || 'News')}</span>
+                  ${a.desk ? `<a class="ar-tag" href="archive.html?section=${encodeURIComponent(a.desk.id)}" data-section="${esc(a.desk.id)}"${deskStyle(a.desk)} title="More from ${esc(a.desk.name)}"><span class="desk-icon" aria-hidden="true">${esc(a.desk.icon)}</span>${esc(a.category)}</a>` : `<span class="ar-tag">${esc(a.category || 'News')}</span>`}
                   <h3><a href="a/${encodeURIComponent(a.id)}.html">${esc(a.title)}</a></h3>
                   <p class="ar-excerpt">${esc(a.excerpt)}</p>
                   <div class="ar-byline">✍️ ${a.desk && a.desk.writer === a.author ? `<a href="desk/${encodeURIComponent(a.desk.writerId)}.html">${esc(a.author)}</a>` : esc(a.author || 'The Gazette Staff')}${a.desk ? ` · ${esc(a.desk.name)}` : ''}</div>
@@ -228,7 +235,14 @@
     });
     search.addEventListener('input', () => { shown = PAGE; render(); syncUrl(); });
     document.getElementById('ar-list').addEventListener('click', e => {
-        if (e.target.id === 'ar-more') { shown += PAGE; render(); }
+        if (e.target.id === 'ar-more') { shown += PAGE; render(); return; }
+        // A category tag narrows the list to its desk
+        const tag = e.target.closest('.ar-tag[data-section]');
+        if (!tag || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+        e.preventDefault();
+        section = tag.dataset.section; shown = PAGE;
+        renderChips(); render(); syncUrl();
+        window.scrollTo({ top: document.getElementById('ar-chips').getBoundingClientRect().top + scrollY - 80, behavior: 'smooth' });
     });
     document.getElementById('ar-count').addEventListener('click', e => {
         if (e.target.id !== 'ar-reset') return;
@@ -241,7 +255,7 @@
         fetch('articles.json?t=' + Date.now()).then(r => r.json()),
         fetch('glossary.json?t=' + Date.now()).then(r => r.json()).catch(() => ({ writers: [] }))
     ]).then(([data, g]) => {
-        desks = (g.writers || []).map(w => ({ id: w.desk_id, name: w.desk, avatar: w.avatar, categories: w.categories || [], writer: w.name, writerId: w.id }));
+        desks = (g.writers || []).map(w => ({ id: w.desk_id, name: w.desk, icon: w.desk_icon || w.avatar, color: w.desk_color, categories: w.categories || [], writer: w.name, writerId: w.id }));
         // Newest first. Same-day articles keep reverse file order, since new ones are appended at the end.
         articles = (data.articles || []).map((a, i) => ({ ...a, i }))
             .sort((a, b) => b.date.localeCompare(a.date) || b.i - a.i)

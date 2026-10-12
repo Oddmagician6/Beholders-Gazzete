@@ -24,6 +24,38 @@
   border-radius: 3px;
   margin-bottom: 14px;
 }
+.category-badge[style*="--desk"] { background: var(--desk); }
+a.category-badge:hover { filter: brightness(1.12); }
+
+/* Section bar: one chip per desk (pre-rendered by export-articles.ps1; script.js filters the grid in place) */
+.container > main { min-width: 0; } /* let the bar scroll inside the column instead of widening the page */
+.section-bar {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  margin: 0 0 30px; padding: 14px 16px;
+  background: var(--bg-dark); border: var(--border-gold); border-radius: var(--radius-md);
+}
+.section-bar-label {
+  font-family: var(--font-head); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-dim); margin-right: 4px;
+}
+.section-chip {
+  --desk: var(--gold-bright);
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 13px; border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--desk) 55%, transparent);
+  background: color-mix(in srgb, var(--desk) 10%, transparent);
+  color: var(--text-bright); font-family: var(--font-ui); font-size: 0.84rem; white-space: nowrap;
+  transition: background var(--transition), color var(--transition);
+}
+.section-chip:hover { background: color-mix(in srgb, var(--desk) 24%, transparent); color: var(--text-bright); }
+.section-chip.active, .section-chip[aria-current="true"] { background: var(--desk); border-color: var(--desk); color: #000; }
+.section-chip .n { opacity: 0.65; font-size: 0.76rem; }
+@media (max-width: 600px) {
+  /* One swipeable row instead of four wrapped ones */
+  .section-bar { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-bottom: 22px; padding: 12px; }
+  .section-bar::-webkit-scrollbar { display: none; }
+  .section-bar-label { display: none; }
+}
 
 /* Archive link under the article grid */
 .archive-link { text-align: center; margin-top: 28px; font-family: var(--font-ui); font-size: 0.92rem; }

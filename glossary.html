@@ -136,7 +136,7 @@
   </nav>
     <div class="ticker-wrap">
         <div class="ticker">
-            ✍️ NEWSROOM: Eight writers, eight desks, zero agreement &nbsp;&bull;&nbsp;
+            ✍️ NEWSROOM: Nine writers, nine desks, zero agreement &nbsp;&bull;&nbsp;
             🏛️ "Promises Made: many. Promises Kept: see page 9" &nbsp;&bull;&nbsp;
             🍞 Loaf Index holding steady (Barnaby is not) &nbsp;&bull;&nbsp;
             🦎 Skritch reports this ticker is allegedly scrolling
@@ -187,7 +187,8 @@
 
     const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     const TYPE_LABELS = { person:'People', party:'Factions', country:'Realms', city:'Cities', place:'Places',
-                          company:'Guilds & Companies', agency:'Agencies', institution:'Institutions', product:'Wares', ip:'Tales & Works' };
+                          company:'Guilds & Companies', agency:'Agencies', institution:'Institutions', product:'Wares', ip:'Tales & Works',
+                          organization:'Guilds & Orders', creature:'Creatures', item:'Relics & Curios', event:'Events' };
     const artLinks = list => list.length
         ? list.map(a => `<li><a href="a/${encodeURIComponent(a.id)}.html">${esc(a.title)}</a></li>`).join('')
         : '<li class="empty">No dispatches filed yet.</li>';

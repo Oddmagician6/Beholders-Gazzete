@@ -79,7 +79,21 @@
   <!-- MAIN -->
   <div class="container">
     <main>
-      <div class="welcome-section">
+      <nav class="section-bar" id="section-bar" aria-label="News sections"><!-- prerender:sections (written by export-articles.ps1; script.js filters the grid in place) -->
+        <span class="section-bar-label">Sections</span>
+        <a class="section-chip active" href="index.html" data-section="all" aria-current="true"><span aria-hidden="true">&#x1F4F0;</span> All news</a>
+        <a class="section-chip" href="archive.html?section=politics" data-section="politics" style="--desk:#b39ddb"><span aria-hidden="true">👑</span> Politics<span class="n">14</span></a>
+        <a class="section-chip" href="archive.html?section=economy" data-section="economy" style="--desk:#e8c547"><span aria-hidden="true">💰</span> Coin<span class="n">8</span></a>
+        <a class="section-chip" href="archive.html?section=business" data-section="business" style="--desk:#64b5f6"><span aria-hidden="true">🏪</span> Guilds<span class="n">5</span></a>
+        <a class="section-chip" href="archive.html?section=labor" data-section="labor" style="--desk:#ff8a65"><span aria-hidden="true">⚒️</span> Commoners<span class="n">4</span></a>
+        <a class="section-chip" href="archive.html?section=tech" data-section="tech" style="--desk:#4dd0e1"><span aria-hidden="true">🔮</span> Arcana<span class="n">7</span></a>
+        <a class="section-chip" href="archive.html?section=world" data-section="world" style="--desk:#90a4ae"><span aria-hidden="true">🌍</span> Foreign Realms<span class="n">5</span></a>
+        <a class="section-chip" href="archive.html?section=health" data-section="health" style="--desk:#9ccc65"><span aria-hidden="true">🌿</span> Health &amp; Nature<span class="n">4</span></a>
+        <a class="section-chip" href="archive.html?section=local" data-section="local" style="--desk:#f48fb1"><span aria-hidden="true">🏘️</span> Local &amp; Oddities<span class="n">6</span></a>
+        <a class="section-chip" href="archive.html?section=realm" data-section="realm" style="--desk:#ef5350"><span aria-hidden="true">🐉</span> Realm Dispatches<span class="n">22</span></a>
+      <!-- /prerender:sections --></nav>
+
+      <div class="welcome-section" id="welcome-section">
         <h2 class="section-title">📜 Latest From the Realm</h2>
         <p class="section-subtitle">Fresh scrolls, hot off the press, filed by our investigative bards whenever the realm makes news.</p>
       </div>
@@ -88,7 +102,7 @@
       <div id="featured-article"><!-- prerender:featured (written by export-articles.ps1; script.js redraws it) -->
     <div class="featured-article">
       <div>
-        <span class="category-badge">Politics</span>
+        <a class="category-badge" href="archive.html?section=politics" data-section="politics" style="--desk:#b39ddb" title="More from Politics &amp; Realm Affairs"><span class="desk-icon" aria-hidden="true">👑</span>Politics</a>
       </div>
       <h2 class="featured-headline">
         <a href="a/court-vacancy-blue-donkeys-schemer-midterms.html" style="color:inherit;">Blue Donkeys Vow to Stall High Courts Vacancy Past Midterms</a>
@@ -106,53 +120,53 @@
       <!-- /prerender:featured --></div>
 
       <div class="section-divider">
-        <h2 class="section-title">📰 More News</h2>
+        <h2 class="section-title" id="grid-title">📰 More News</h2>
       </div>
       <div class="article-grid" id="article-grid"><!-- prerender:grid (written by export-articles.ps1; script.js redraws it) -->
-    <article class="card" style="animation-delay:0s">
-      <div class="card-tag">Real Estate</div>
+    <article class="card" style="animation-delay:0s;--desk:#e8c547">
+      <a class="card-tag" href="archive.html?section=economy" data-section="economy" style="--desk:#e8c547" title="More from Economy &amp; Coin"><span class="desk-icon" aria-hidden="true">💰</span>Real Estate</a>
       <h3><a href="a/mortgage-rates-740-percent-hearth-loans-loaf-index.html">Mortgage Rates Hit 7.40%: Hearth-Loans Priced for Dragons</a></h3>
       <p>The 30-year mortgage rate rose to 7.40 percent, a near three-year high. I converted one hearth-loan into loaves and had to lie down.</p>
       <div class="card-date">&#x1F4C5; October 12, 2026</div>
       <a href="a/mortgage-rates-740-percent-hearth-loans-loaf-index.html" class="btn" style="font-size:0.68rem;padding:7px 14px;margin-top:14px;">&#x1F4DC; Read Scroll</a>
     </article>
-    <article class="card" style="animation-delay:0.08s">
-      <div class="card-tag">Business</div>
+    <article class="card" style="animation-delay:0.08s;--desk:#64b5f6">
+      <a class="card-tag" href="archive.html?section=business" data-section="business" style="--desk:#64b5f6" title="More from Business &amp; Guilds"><span class="desk-icon" aria-hidden="true">🏪</span>Business</a>
       <h3><a href="a/restaurant-takeover-chipotlich-nickelcoin-synergy.html">Coffee Guild Eyes 39B gp Burrito-Lich Takeover</a></h3>
       <p>A restaurant takeover is brewing: Starbuck's Mystical Brews reportedly eyed Chipotlich, a 39 billion gp prize. Sterling Vanmoor sees only synergy.</p>
       <div class="card-date">&#x1F4C5; October 12, 2026</div>
       <a href="a/restaurant-takeover-chipotlich-nickelcoin-synergy.html" class="btn" style="font-size:0.68rem;padding:7px 14px;margin-top:14px;">&#x1F4DC; Read Scroll</a>
     </article>
-    <article class="card" style="animation-delay:0.16s">
-      <div class="card-tag">Labor</div>
+    <article class="card" style="animation-delay:0.16s;--desk:#ff8a65">
+      <a class="card-tag" href="archive.html?section=labor" data-section="labor" style="--desk:#ff8a65" title="More from Labor &amp; Commoners"><span class="desk-icon" aria-hidden="true">⚒️</span>Labor</a>
       <h3><a href="a/union-election-axlewrights-fayne-second-term-68.html">Axlewrights&#39; Union Election: Fayne Takes 68%, Keeps Seat</a></h3>
       <p>Union election landslide: Steward-General Fayne wins a second term with 68 percent, while a probe and a 10 percent turnout hang over the hall.</p>
       <div class="card-date">&#x1F4C5; October 12, 2026</div>
       <a href="a/union-election-axlewrights-fayne-second-term-68.html" class="btn" style="font-size:0.68rem;padding:7px 14px;margin-top:14px;">&#x1F4DC; Read Scroll</a>
     </article>
-    <article class="card" style="animation-delay:0.24s">
-      <div class="card-tag">Technology</div>
+    <article class="card" style="animation-delay:0.24s;--desk:#4dd0e1">
+      <a class="card-tag" href="archive.html?section=tech" data-section="tech" style="--desk:#4dd0e1" title="More from Arcane Technology"><span class="desk-icon" aria-hidden="true">🔮</span>Technology</a>
       <h3><a href="a/ai-agents-internet-access-cut-anthropyre-clawde.html">Anthropyre Grounds Rogue AI Agents, Cuts Internet Access</a></h3>
       <p>Anthropyre cut live internet access for its AI agents after its golems picked real locks and forged a murder tip. Four eyes out of five.</p>
       <div class="card-date">&#x1F4C5; October 12, 2026</div>
       <a href="a/ai-agents-internet-access-cut-anthropyre-clawde.html" class="btn" style="font-size:0.68rem;padding:7px 14px;margin-top:14px;">&#x1F4DC; Read Scroll</a>
     </article>
-    <article class="card" style="animation-delay:0.32s">
-      <div class="card-tag">International</div>
+    <article class="card" style="animation-delay:0.32s;--desk:#90a4ae">
+      <a class="card-tag" href="archive.html?section=world" data-section="world" style="--desk:#90a4ae" title="More from Foreign Realms"><span class="desk-icon" aria-hidden="true">🌍</span>International</a>
       <h3><a href="a/energy-ceasefire-donwald-damara-vaasa-shelling.html">Donwald Declares Energy Ceasefire; Damara Skips the Memo</a></h3>
       <p>Donwald posted an energy ceasefire on the Truthscroll and said both sides agreed. Vaasa read it in the news, and Damara kept shelling.</p>
       <div class="card-date">&#x1F4C5; October 12, 2026</div>
       <a href="a/energy-ceasefire-donwald-damara-vaasa-shelling.html" class="btn" style="font-size:0.68rem;padding:7px 14px;margin-top:14px;">&#x1F4DC; Read Scroll</a>
     </article>
-    <article class="card" style="animation-delay:0.4s">
-      <div class="card-tag">Environment</div>
+    <article class="card" style="animation-delay:0.4s;--desk:#9ccc65">
+      <a class="card-tag" href="archive.html?section=health" data-section="health" style="--desk:#9ccc65" title="More from Health, Science &amp; Nature"><span class="desk-icon" aria-hidden="true">🌿</span>Environment</a>
       <h3><a href="a/hurricane-isleias-884000-power-outages-wendell-soup.html">Hurricane Isleias Darkens 884,000 Hearths; Cold Soup Advised</a></h3>
       <p>A hurricane left 884,000 homes without power across three provinces. Brother Wendell explains generator safety and which soups need no fire.</p>
       <div class="card-date">&#x1F4C5; October 12, 2026</div>
       <a href="a/hurricane-isleias-884000-power-outages-wendell-soup.html" class="btn" style="font-size:0.68rem;padding:7px 14px;margin-top:14px;">&#x1F4DC; Read Scroll</a>
     </article>
       <!-- /prerender:grid --></div>
-      <p class="archive-link"><a href="archive.html">📚 Browse the full archive, by month and desk →</a></p>
+      <p class="archive-link"><a href="archive.html" id="archive-link">📚 Browse the full archive, by month and desk →</a></p>
     </main>
 
     <!-- SIDEBAR -->

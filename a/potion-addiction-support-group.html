@@ -70,6 +70,10 @@
       border-radius: 3px;
       margin-bottom: 18px;
     }
+    /* Desk color and a link to the desk's section (export-articles.ps1 / deskTag below) */
+    .article-category-badge[style*="--desk"] { background: var(--desk); }
+    a.article-category-badge:hover { filter: brightness(1.12); }
+    .article-category-badge .desk-icon { margin-right: 6px; letter-spacing: 0; }
     .article-hero-title {
       font-family: var(--font-display);
       font-size: clamp(1.5rem, 4vw, 2.6rem);
@@ -301,7 +305,7 @@
   <section class="article-hero">
     <div class="article-hero-overlay"></div>
     <div class="article-hero-content">
-      <div class="article-category-badge" id="article-category">Health</div>
+      <div id="article-category"><a class="article-category-badge" href="archive.html?section=health" data-section="health" style="--desk:#9ccc65" title="More from Health, Science &amp; Nature"><span class="desk-icon" aria-hidden="true">🌿</span>Health</a></div>
       <h1 class="article-hero-title" id="article-title">Potion Addiction Support Group Forms in Lower City</h1>
       <div class="article-hero-meta">
         <span>✍️ <strong id="article-author">Gobwiz Quillnib</strong></span>
@@ -403,23 +407,23 @@
     <div class="article-related">
       <h3>📰 More From the Gazette</h3>
       <div class="article-grid" id="related-articles">
-        <article class="card">
-          <div class="card-tag">Health</div>
+        <article class="card" style="--desk:#9ccc65">
+          <a class="card-tag" href="archive.html?section=health" data-section="health" style="--desk:#9ccc65" title="More from Health, Science &amp; Nature"><span class="desk-icon" aria-hidden="true">🌿</span>Health</a>
           <h3><a href="a/red-spot-fever-tops-4080-as-disease-council-runs-short-of-clerics.html">Red-Spot Fever Tops 4,080 Cases as Disease Council Runs Short of Clerics</a></h3>
           <p>Nu Yarrow declares a statewide disaster while the Clerics&#39; Disease Council counts cases with a third fewer counters. Brother Wendell has barley, cots, and some questions about the new scale.</p>
           <a href="a/red-spot-fever-tops-4080-as-disease-council-runs-short-of-clerics.html" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">&#x1F4DC; Read Scroll</a>
         </article>
-        <article class="card">
-          <div class="card-tag">Health</div>
+        <article class="card" style="--desk:#9ccc65">
+          <a class="card-tag" href="archive.html?section=health" data-section="health" style="--desk:#9ccc65" title="More from Health, Science &amp; Nature"><span class="desk-icon" aria-hidden="true">🌿</span>Health</a>
           <h3><a href="a/healing-minister-opens-infirmary-to-hunt-curses-in-pox-vials.html">Healing Minister Opens Infirmary to Hunt for Curses in Pox Vials</a></h3>
           <p>Friends, the Ministry of Humours &amp; Healing has opened a brand-new infirmary, and it is not for the sick. It is for looking very hard at the medicine.</p>
           <a href="a/healing-minister-opens-infirmary-to-hunt-curses-in-pox-vials.html" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">&#x1F4DC; Read Scroll</a>
         </article>
-        <article class="card">
-          <div class="card-tag">Health</div>
-          <h3><a href="a/resurrection-insurance-premiums.html">Resurrection Insurance Premiums Skyrocket</a></h3>
-          <p>Necromancer monopoly drives up costs. Clerics demand better working conditions. Dead waitlists grow longer.</p>
-          <a href="a/resurrection-insurance-premiums.html" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">&#x1F4DC; Read Scroll</a>
+        <article class="card" style="--desk:#9ccc65">
+          <a class="card-tag" href="archive.html?section=health" data-section="health" style="--desk:#9ccc65" title="More from Health, Science &amp; Nature"><span class="desk-icon" aria-hidden="true">🌿</span>Environment</a>
+          <h3><a href="a/hurricane-isleias-884000-power-outages-wendell-soup.html">Hurricane Isleias Darkens 884,000 Hearths; Cold Soup Advised</a></h3>
+          <p>A hurricane left 884,000 homes without power across three provinces. Brother Wendell explains generator safety and which soups need no fire.</p>
+          <a href="a/hurricane-isleias-884000-power-outages-wendell-soup.html" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">&#x1F4DC; Read Scroll</a>
         </article>
       </div>
     </div>
@@ -502,7 +506,7 @@
         if (!article) return showNotFound();
 
         document.title = article.title + ' | The Beholder\'s Gazette';
-        document.getElementById('article-category').textContent  = article.category || 'News';
+        setCategory(article);
         document.getElementById('article-title').textContent     = article.title;
         document.getElementById('article-author').textContent    = article.author || 'The Gazette Staff';
         linkAuthor(article.author);
@@ -525,13 +529,10 @@
     async function loadRelated(articles, current) {
       const el = document.getElementById('related-articles');
       if (el.children.length) return;
-      const deskOf = {};
-      try {
-        const g = await fetch('glossary.json?t=' + Date.now()).then(r => r.json());
-        (g.writers || []).forEach(w => (w.categories || []).forEach(c => { deskOf[c] = w.desk_id; }));
-      } catch (e) {}
-      const desk = deskOf[current.category];
-      const score = a => a.category === current.category ? 2 : desk && deskOf[a.category] === desk ? 1 : 0;
+      const desks = await loadDesks();
+      const deskOf = c => desks[c] && desks[c].desk_id;
+      const desk = deskOf(current.category);
+      const score = a => a.category === current.category ? 2 : desk && deskOf(a.category) === desk ? 1 : 0;
       const related = articles.map((a, i) => ({ a, i }))
         .filter(x => x.a.id !== current.id)
         .sort((x, y) => y.a.date.localeCompare(x.a.date) || y.i - x.i)
@@ -540,13 +541,40 @@
         .slice(0, 3).map(x => x.a);
       if (!related.length) { el.innerHTML = '<p style="color:var(--text-dim);text-align:center;">No more scrolls found.</p>'; return; }
       el.innerHTML = related.map(a => `
-        <article class="card">
-          <div class="card-tag">${esc(a.category || 'News')}</div>
+        <article class="card"${deskStyle(desks[a.category])}>
+          ${deskTag(a, desks)}
           <h3><a href="a/${a.id}.html">${esc(a.title)}</a></h3>
           <p>${esc(a.excerpt)}</p>
           <a href="a/${a.id}.html" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">📜 Read Scroll</a>
         </article>
       `).join('');
+    }
+
+    // Desk writers from glossary.json, keyed by the categories their desk covers (fetched once).
+    let desksPromise;
+    function loadDesks() {
+      desksPromise = desksPromise || fetch('glossary.json?t=' + Date.now()).then(r => r.json()).then(g => {
+        const byCategory = {};
+        (g.writers || []).forEach(w => (w.categories || []).forEach(c => { byCategory[c] = w; }));
+        return byCategory;
+      }).catch(() => ({}));
+      return desksPromise;
+    }
+
+    function deskStyle(w) { return w && /^#[0-9a-f]{3,8}$/i.test(w.desk_color || '') ? ` style="--desk:${w.desk_color}"` : ''; }
+
+    // Category tag colored by desk, linking to the desk's section (same markup as export-articles.ps1)
+    function deskTag(a, desks, cls = 'card-tag') {
+      const w = desks[a.category];
+      const label = esc(a.category || 'News');
+      if (!w) return `<span class="${cls}">${label}</span>`;
+      return `<a class="${cls}" href="archive.html?section=${encodeURIComponent(w.desk_id)}"${deskStyle(w)} title="More from ${esc(w.desk)}"><span class="desk-icon" aria-hidden="true">${esc(w.desk_icon || '')}</span>${label}</a>`;
+    }
+
+    async function setCategory(article) {
+      const el = document.getElementById('article-category');
+      const desks = await loadDesks();
+      el.innerHTML = deskTag(article, desks, 'article-category-badge');
     }
 
     // Handout: the article as an in-world newspaper clipping. Printing the page prints only this
@@ -596,7 +624,7 @@
           <a href="index.html" class="btn" style="margin-top:20px;">Return Home</a>
         </div>`;
       document.getElementById('article-title').textContent    = 'Article Not Found';
-      document.getElementById('article-category').textContent = 'Error';
+      document.getElementById('article-category').innerHTML = '<span class="article-category-badge">Error</span>';
     }
 
     // Turn the byline into a link to the writer's desk page (desk writers only).

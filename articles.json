@@ -33,7 +33,7 @@
     {
       "id": "dungeon-delvers-unionize",
       "title": "Dungeon Delvers Unionize",
-      "category": "Labor",
+      "category": "Adventurers",
       "author": "Thorin Ironforge",
       "date": "2024-01-12",
       "excerpt": "\"We demand hazard pay for traps,\" says union rep. \"And dental for when we bite into cursed coins.\"",
@@ -43,7 +43,7 @@
     {
       "id": "teleportation-circle-glitches",
       "title": "New Teleportation Circle App Glitches",
-      "category": "Technology",
+      "category": "Arcane Mishaps",
       "author": "Zara Spellweaver",
       "date": "2024-01-11",
       "excerpt": "Users report arriving 5 feet to the left of their destination, frequently inside walls. Developers call it a 'feature.'",
@@ -53,7 +53,7 @@
     {
       "id": "unauthorized-tower-expansion",
       "title": "High Wizard Fined for Unauthorized Tower Expansion",
-      "category": "Zoning",
+      "category": "Arcane Mishaps",
       "author": "Gobwiz Quillnib",
       "date": "2026-04-13",
       "excerpt": "Planning committee claims the extra dimension violates spatial zoning laws. Wizard argues 'it's bigger on the inside' is a loophole.",
@@ -87,7 +87,7 @@
       "author": "Gobwiz Quillnib",
       "date": "2026-04-16",
       "excerpt": "The price of healing potions doubles. Merchant Princes blame supply chain goblins; Wizards blame greed.",
-      "content": "<p>The economy of the realms is in a state of chaotic flux as the Federal Reserve of Waterdeep continues to print gold leaf at an alarming rate, causing the value of the standard gold piece to plummet faster than a rogue with a failed levitate spell. Commoners visiting the marketplaces report that the price of basic necessities, such as bread, milk, and healing potions, has doubled in the last quarter alone. The Merchant Princes of Amn, who control the majority of the trade networks, claim that the inflation is due to supply chain goblins sabotaging the caravans, though many economists suspect it is simply a case of too much magic chasing too few goods.</p><p>Wizard of Social Gold Bernie Sanders has taken to the town squares, preaching that the hoard of wealth held by the top one percent of dragon-kings should be redistributed to the struggling peasantry. He argues that no single individual should possess enough gold to buy a small kingdom while children go hungry in the streets. The Merchant Princes counter that such redistribution would violate the sacred laws of capitalism and cause the economy to collapse into a heap of rusted copper. They threaten to move their operations to the untaxed zones of the Outer Planes if taxes are raised any higher.</p><p>Meanwhile, the housing market has become completely inaccessible to the average adventurer. The cost of renting a small room in a safe neighborhood now requires a monthly income equivalent to slaying a mature dragon. Young mages are forced to live in their parents' basements well into their forties, delaying their quests for glory and marriage. The High Lord of the Realm has promised to address the issue, but his proposed solutions involve complex financial instruments that sound suspiciously like illusion spells designed to make the numbers look better without actually changing anything.</p><p>Local alchemists are struggling to source ingredients for their potions as the cost of herbs and minerals rises daily. Some have resorted to using substitute ingredients that have unpleasant side effects, such as turning the drinker's skin blue for a week. The unrest is growing, with protests forming outside the banks where the gold is minted. The city guard has been placed on high alert, fearing that the frustration of the populace might boil over into riots. Until the flow of gold is stabilized, the common folk remain trapped in a dungeon of their own economic making.</p>",
+      "content": "<p>The economy of the realms is in a state of chaotic flux as the Federal Reserve of Waterdeep continues to print gold leaf at an alarming rate, causing the value of the standard gold piece to plummet faster than a rogue with a failed levitate spell. Commoners visiting the marketplaces report that the price of basic necessities, such as bread, milk, and healing potions, has doubled in the last quarter alone. The Merchant Princes of Amn, who control the majority of the trade networks, claim that the inflation is due to supply chain goblins sabotaging the caravans, though many economists suspect it is simply a case of too much magic chasing too few goods.</p><p>Councilor Bernard Sanderling, the Wizard of Social Gold, has taken to the town squares, preaching that the hoard of wealth held by the top one percent of dragon-kings should be redistributed to the struggling peasantry. He argues that no single individual should possess enough gold to buy a small kingdom while children go hungry in the streets. The Merchant Princes counter that such redistribution would violate the sacred laws of capitalism and cause the economy to collapse into a heap of rusted copper. They threaten to move their operations to the untaxed zones of the Outer Planes if taxes are raised any higher.</p><p>Meanwhile, the housing market has become completely inaccessible to the average adventurer. The cost of renting a small room in a safe neighborhood now requires a monthly income equivalent to slaying a mature dragon. Young mages are forced to live in their parents' basements well into their forties, delaying their quests for glory and marriage. The High Lord of the Realm has promised to address the issue, but his proposed solutions involve complex financial instruments that sound suspiciously like illusion spells designed to make the numbers look better without actually changing anything.</p><p>Local alchemists are struggling to source ingredients for their potions as the cost of herbs and minerals rises daily. Some have resorted to using substitute ingredients that have unpleasant side effects, such as turning the drinker's skin blue for a week. The unrest is growing, with protests forming outside the banks where the gold is minted. The city guard has been placed on high alert, fearing that the frustration of the populace might boil over into riots. Until the flow of gold is stabilized, the common folk remain trapped in a dungeon of their own economic making.</p>",
       "featured": false
     },
     {
@@ -113,7 +113,7 @@
     {
       "id": "candlekeep-ink-imp-riot",
       "title": "Candlekeep Librarians Battle Ink Imp Rebellion",
-      "category": "Local Chaos",
+      "category": "Monster Watch",
       "author": "Gobwiz Quillnib",
       "date": "2026-04-17",
       "excerpt": "Mischievous imps have stolen all the blue ink. Scribes are forced to write in beet juice. The Head Librarian is not amused.",
@@ -123,7 +123,7 @@
     {
       "id": "red-dragon-vegan-diet",
       "title": "Ancient Red Dragon Announces Vegan Lifestyle",
-      "category": "Creature Features",
+      "category": "Monster Watch",
       "author": "Gobwiz Quillnib",
       "date": "2026-04-17",
       "excerpt": "Ignis the Incinerator says meat is 'out of style'. Local farmers confused by demand for giant cabbages instead of cattle.",
@@ -133,7 +133,7 @@
     {
       "id": "yawning-portal-levitation-ale",
       "title": "Patrons Float to Ceiling After Ale Mishap",
-      "category": "Tavern Tales",
+      "category": "Arcane Mishaps",
       "author": "Gobwiz Quillnib",
       "date": "2026-04-17",
       "excerpt": "The Yawning Portal's new brew causes zero-gravity effects. Bartender claims it's a feature, not a bug. Cleanup is difficult.",
@@ -143,7 +143,7 @@
     {
       "id": "polymorph-pet-contest-chaos",
       "title": "Annual Pet Contest Ends in Polymorph Chaos",
-      "category": "Events",
+      "category": "Arcane Mishaps",
       "author": "Gobwiz Quillnib",
       "date": "2026-04-17",
       "excerpt": "Judges accidentally cast wild magic. Cats are now dogs, dogs are now chickens. Owners distraught but amused.",
@@ -153,7 +153,7 @@
     {
       "id": "weather-wizard-union-strike",
       "title": "Weather Wizards Union Go on Strike",
-      "category": "Labor",
+      "category": "Guild Notices",
       "author": "Gobwiz Quillnib",
       "date": "2026-04-17",
       "excerpt": "No rain permits issued this week. Farmers angry. Clouds are forming shapes of picket signs.",
@@ -163,7 +163,7 @@
     {
       "id": "dungeon-accessibility-regulations",
       "title": "Adventurer's Guild Mandates Ramps for Gelatinous Cubes",
-      "category": "Regulations",
+      "category": "Guild Notices",
       "author": "Gobwiz Quillnib",
       "date": "2026-04-18",
       "excerpt": "New dungeon safety laws require wide corridors. Delvers complain stealth is impossible with construction crews everywhere.",
@@ -173,7 +173,7 @@
     {
       "id": "cursed-sword-recall-notice",
       "title": "Mass Recall Issued for 'Whiner +1' Magic Swords",
-      "category": "Product Safety",
+      "category": "Arcane Mishaps",
       "author": "Gobwiz Quillnib",
       "date": "2026-04-18",
       "excerpt": "The blades scream constantly during combat. Manufacturers offer free mute spells. Paladins return them in droves.",
@@ -183,7 +183,7 @@
     {
       "id": "bard-college-plagiarism-scandal",
       "title": "College of Valor Accused of Song Plagiarism",
-      "category": "Education",
+      "category": "Guild Notices",
       "author": "Gobwiz Quillnib",
       "date": "2026-04-18",
       "excerpt": "Famous ballad found to be written by a mute kobold. Dean resigns. Students demand tuition refund in gold.",
@@ -193,7 +193,7 @@
     {
       "id": "healing-potion-watering-down",
       "title": "Healing Potions Found to be Watered Down",
-      "category": "Health",
+      "category": "Adventurers",
       "author": "Gobwiz Quillnib",
       "date": "2026-04-18",
       "excerpt": "Alchemists caught adding tap water to red vials. Adventurers report feeling only slightly less dead. Investigation ongoing.",
@@ -203,7 +203,7 @@
     {
       "id": "mimic-mailbox-infestation",
       "title": "Mimic Infestation Hits Suburban Mailboxes",
-      "category": "Public Safety",
+      "category": "Monster Watch",
       "author": "Gobwiz Quillnib",
       "date": "2026-04-18",
       "excerpt": "Residents bitten while checking bills. Postal service issues armored gloves. Mimics demand stamp payment.",
@@ -243,7 +243,7 @@
     {
       "id": "bag-of-holding-housing-crisis",
       "title": "Landlords Renting Out Bags of Holding as Apartments",
-      "category": "Real Estate",
+      "category": "Arcane Mishaps",
       "author": "Gobwiz Quillnib",
       "date": "2026-04-19",
       "excerpt": "Tenants complain of lack of windows and air. Safety violations cited after a sneeze ejects a family into the Astral Plane.",
@@ -253,7 +253,7 @@
     {
       "id": "elemental-fire-heatwave",
       "title": "Elemental Fire Leak Causes Unseasonable Heatwave",
-      "category": "Environment",
+      "category": "Arcane Mishaps",
       "author": "Gobwiz Quillnib",
       "date": "2026-04-19",
       "excerpt": "Druids protest Artificer factories. City sells cooling charms at inflated prices. Crops wilting in the fields.",
@@ -283,7 +283,7 @@
     {
       "id": "druidic-tree-planting-initiative",
       "title": "Druids Plant Trees That Bite Back",
-      "category": "Environment",
+      "category": "Monster Watch",
       "author": "Gobwiz Quillnib",
       "date": "2026-04-20",
       "excerpt": "Reforestation project goes awry. Saplings identified as aggressive mimic variants. City orders immediate containment.",
@@ -293,7 +293,7 @@
     {
       "id": "resurrection-insurance-premiums",
       "title": "Resurrection Insurance Premiums Skyrocket",
-      "category": "Health",
+      "category": "Adventurers",
       "author": "Gobwiz Quillnib",
       "date": "2026-04-20",
       "excerpt": "Necromancer monopoly drives up costs. Clerics demand better working conditions. Dead waitlists grow longer.",
@@ -302,7 +302,7 @@
     },
     {
       "id": "broomstick-traffic-congestion",
-      "category": "Transport",
+      "category": "Arcane Mishaps",
       "title": "Broomstick Traffic Jams Ground Commuters",
       "author": "Gobwiz Quillnib",
       "date": "2026-04-20",
@@ -343,7 +343,7 @@
     {
       "id": "owlbear-migration-flight-paths",
       "title": "Owlbear Migration Grounds All Flying Brooms",
-      "category": "Transport",
+      "category": "Monster Watch",
       "author": "Gobwiz Quillnib",
       "date": "2026-04-21",
       "excerpt": "Seasonal nesting blocks air corridors. Commuters forced to walk. Airlines offer refund vouchers.",
@@ -356,8 +356,8 @@
       "category": "Lifestyle",
       "author": "Gobwiz Quillnib",
       "date": "2026-04-21",
-      "excerpt": "Cherry burst and mountain dew variants hit shelves. Clerics warn against casual consumption. Sugar rush side effects reported.",
-      "content": "<p>The alchemical industry is targeting a new demographic with the launch of healing potion soda flavors. Major manufacturers have released variants such as Cherry Burst, Mountain Dew, and Zero Sugar Healing Lite, marketed as lifestyle beverages for the health-conscious adventurer. The drinks contain diluted healing magic, enough to cure a headache or soothe a bruise, but not enough to close a mortal wound. The marketing campaign features famous heroes enjoying the drinks after slaying monsters, suggesting that hydration is key to survival. Sales have skyrocketed among younger generations who view potions as trendy accessories.</p>\n\n<p>However, the Clerical Council has issued a warning against the casual consumption of magical beverages. They argue that healing magic is a sacred gift from the gods and should not be commodified as a soft drink. \"You do not see us selling bottles of divine smite at the corner store,\" stated a high priest during a press conference. They worry that normalizing potion consumption will lead to dependency and reduce the reverence for divine magic. There are also concerns about the side effects of the additives used to create the flavors. Several consumers have reported jitteriness, glowing skin, and occasional levitation after drinking too many cans.</p>\n\n<p>Nutritionists are pointing out the high sugar content in the regular versions, which can lead to mana diabetes if consumed excessively. The Zero Sugar versions use artificial sweeteners that have been linked to minor curses, such as bad luck or temporary color blindness. Despite the warnings, the products remain popular, with vending machines appearing in dungeons and taverns across the realm. Some adventurers use them as mixers for cocktails, creating dangerous concoctions that combine alcohol with healing magic. The effects of such mixtures are unknown and potentially volatile.</p>\n\n<p>The Guild of Alchemists is debating whether to regulate the flavorings, but the industry lobby is powerful and wealthy. They argue that making healing accessible to everyone is a positive development, even if it comes in a can. Meanwhile, traditional potion brewers are losing market share and are protesting outside the factories. They claim that mass-produced potions lack the quality and care of hand-brewed vials. The Gazette recommends sticking to traditional red vials for actual healing and treating the sodas as novelty items. Your health is too important to gamble on flavored magic.</p>",
+      "excerpt": "Cherry burst and Mountain Dwarf variants hit shelves. Clerics warn against casual consumption. Sugar rush side effects reported.",
+      "content": "<p>The alchemical industry is targeting a new demographic with the launch of healing potion soda flavors. Major manufacturers have released variants such as Cherry Burst, Mountain Dwarf, and Zero Sugar Healing Lite, marketed as lifestyle beverages for the health-conscious adventurer. The drinks contain diluted healing magic, enough to cure a headache or soothe a bruise, but not enough to close a mortal wound. The marketing campaign features famous heroes enjoying the drinks after slaying monsters, suggesting that hydration is key to survival. Sales have skyrocketed among younger generations who view potions as trendy accessories.</p>\n\n<p>However, the Clerical Council has issued a warning against the casual consumption of magical beverages. They argue that healing magic is a sacred gift from the gods and should not be commodified as a soft drink. \"You do not see us selling bottles of divine smite at the corner store,\" stated a high priest during a press conference. They worry that normalizing potion consumption will lead to dependency and reduce the reverence for divine magic. There are also concerns about the side effects of the additives used to create the flavors. Several consumers have reported jitteriness, glowing skin, and occasional levitation after drinking too many cans.</p>\n\n<p>Nutritionists are pointing out the high sugar content in the regular versions, which can lead to mana diabetes if consumed excessively. The Zero Sugar versions use artificial sweeteners that have been linked to minor curses, such as bad luck or temporary color blindness. Despite the warnings, the products remain popular, with vending machines appearing in dungeons and taverns across the realm. Some adventurers use them as mixers for cocktails, creating dangerous concoctions that combine alcohol with healing magic. The effects of such mixtures are unknown and potentially volatile.</p>\n\n<p>The Guild of Alchemists is debating whether to regulate the flavorings, but the industry lobby is powerful and wealthy. They argue that making healing accessible to everyone is a positive development, even if it comes in a can. Meanwhile, traditional potion brewers are losing market share and are protesting outside the factories. They claim that mass-produced potions lack the quality and care of hand-brewed vials. The Gazette recommends sticking to traditional red vials for actual healing and treating the sodas as novelty items. Your health is too important to gamble on flavored magic.</p>",
       "featured": false
     },
     {
@@ -393,7 +393,7 @@
     {
       "id": "gelatinous-cube-daycare",
       "title": "First Gelatinous Cube Daycare Opens in Waterdeep",
-      "category": "Lifestyle",
+      "category": "Monster Watch",
       "author": "Gobwiz Quillnib",
       "date": "2026-04-22",
       "excerpt": "Working parents rejoice as monster-friendly childcare becomes available. Safety concerns raised by traditionalists.",
@@ -432,12 +432,12 @@
     },
     {
       "id": "potion-sports-doping-scandal",
-      "title": "Professional Quidditch League Doping Scandal Erupts",
+      "title": "Professional Squidditch League Doping Scandal Erupts",
       "category": "Sports",
       "author": "Gobwiz Quillnib",
       "date": "2026-04-23",
       "excerpt": "Star players caught using enhancement potions. Championships revoked. League implements random testing.",
-      "content": "<p>The Professional Quidditch League is reeling from a massive doping scandal after multiple star players were caught using illegal enhancement potions during the championship season. The investigation, led by the League's Integrity Commission, revealed that at least twelve teams had access to banned substances including Strength of the Giant, Haste Elixirs, and Eagle-Eye Drops. Several championship titles have been revoked, and players face suspensions ranging from one season to lifetime bans.</p>\n\n<p>The scandal came to light when a whistleblower from within the Alchemist Guild provided evidence of systematic potion distribution to team managers. The documents included receipts, delivery schedules, and even correspondence between team owners and underground potion brewers. 'This goes deeper than we imagined,' stated the Commission Head, a stern half-elf with a reputation for incorruptibility. 'Entire organizations were complicit in cheating the fans and undermining the spirit of competition.'</p>\n\n<p>Fans are outraged, with many demanding refunds for tickets purchased to watch tainted matches. Some have called for the dissolution of the entire league and a restart with stricter oversight. Others argue that potion use has always been part of the sport and that punishing current players for historical practices is unfair. The debate has divided the fanbase, with protests occurring outside stadium gates before every game.</p>\n\n<p>The League has announced new testing protocols, including random potion screenings before and after every match. Players found with banned substances in their systems will face immediate suspension and fines. Teams will also be penalized with loss of draft picks and salary cap reductions. The alchemists supplying the potions are being prosecuted under federal law, with penalties including transformation into toads and permanent exile from the magical community.</p>\n\n<p>Sponsors are pulling out of deals, and attendance has dropped significantly since the scandal broke. The League is considering a amnesty program for players who come forward voluntarily, but critics argue this rewards cheaters. The Gazette recommends fans enjoy the games for the sport itself, not the enhanced performances. True skill requires no potions, only practice and dedication.</p>",
+      "content": "<p>The Professional Squidditch League is reeling from a massive doping scandal after multiple star players were caught using illegal enhancement potions during the championship season. The investigation, led by the League's Integrity Commission, revealed that at least twelve teams had access to banned substances including Strength of the Giant, Haste Elixirs, and Eagle-Eye Drops. Several championship titles have been revoked, and players face suspensions ranging from one season to lifetime bans.</p>\n\n<p>The scandal came to light when a whistleblower from within the Alchemist Guild provided evidence of systematic potion distribution to team managers. The documents included receipts, delivery schedules, and even correspondence between team owners and underground potion brewers. 'This goes deeper than we imagined,' stated the Commission Head, a stern half-elf with a reputation for incorruptibility. 'Entire organizations were complicit in cheating the fans and undermining the spirit of competition.'</p>\n\n<p>Fans are outraged, with many demanding refunds for tickets purchased to watch tainted matches. Some have called for the dissolution of the entire league and a restart with stricter oversight. Others argue that potion use has always been part of the sport and that punishing current players for historical practices is unfair. The debate has divided the fanbase, with protests occurring outside stadium gates before every game.</p>\n\n<p>The League has announced new testing protocols, including random potion screenings before and after every match. Players found with banned substances in their systems will face immediate suspension and fines. Teams will also be penalized with loss of draft picks and salary cap reductions. The alchemists supplying the potions are being prosecuted under federal law, with penalties including transformation into toads and permanent exile from the magical community.</p>\n\n<p>Sponsors are pulling out of deals, and attendance has dropped significantly since the scandal broke. The League is considering a amnesty program for players who come forward voluntarily, but critics argue this rewards cheaters. The Gazette recommends fans enjoy the games for the sport itself, not the enhanced performances. True skill requires no potions, only practice and dedication.</p>",
       "featured": false
     },
     {
@@ -493,7 +493,7 @@
     {
       "id": "flying-mount-parking-crisis",
       "title": "Flying Mount Parking Crisis Grips Tower District",
-      "category": "Transport",
+      "category": "Monster Watch",
       "author": "Gobwiz Quillnib",
       "date": "2026-04-23",
       "excerpt": "No space for griffins and pegasi. Vehicles towed by giant eagles. Fines issued for illegal cloud parking.",
@@ -503,7 +503,7 @@
     {
       "id": "sentient-broom-strike",
       "title": "Sentient Brooms Demand Voting Rights",
-      "category": "Civil Rights",
+      "category": "Arcane Mishaps",
       "author": "Gobwiz Quillnib",
       "date": "2026-04-23",
       "excerpt": "Enchanted cleaning implements organize protest. Wizards dismiss demands; philosophers debate personhood.",

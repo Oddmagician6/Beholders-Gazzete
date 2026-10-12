@@ -70,6 +70,10 @@
       border-radius: 3px;
       margin-bottom: 18px;
     }
+    /* Desk color and a link to the desk's section (export-articles.ps1 / deskTag below) */
+    .article-category-badge[style*="--desk"] { background: var(--desk); }
+    a.article-category-badge:hover { filter: brightness(1.12); }
+    .article-category-badge .desk-icon { margin-right: 6px; letter-spacing: 0; }
     .article-hero-title {
       font-family: var(--font-display);
       font-size: clamp(1.5rem, 4vw, 2.6rem);
@@ -301,7 +305,7 @@
   <section class="article-hero">
     <div class="article-hero-overlay"></div>
     <div class="article-hero-content">
-      <div class="article-category-badge" id="article-category">International</div>
+      <div id="article-category"><a class="article-category-badge" href="archive.html?section=world" data-section="world" style="--desk:#90a4ae" title="More from Foreign Realms"><span class="desk-icon" aria-hidden="true">🌍</span>International</a></div>
       <h1 class="article-hero-title" id="article-title">Donwald Declares Energy Ceasefire; Damara Skips the Memo</h1>
       <div class="article-hero-meta">
         <span>✍️ <strong id="article-author"><a href="desk/grashka-ironjaw.html" style="color:inherit;">⚔️ Grashka Ironjaw</a></strong></span>
@@ -407,20 +411,20 @@
     <div class="article-related">
       <h3>📰 More From the Gazette</h3>
       <div class="article-grid" id="related-articles">
-        <article class="card">
-          <div class="card-tag">International</div>
+        <article class="card" style="--desk:#90a4ae">
+          <a class="card-tag" href="archive.html?section=world" data-section="world" style="--desk:#90a4ae" title="More from Foreign Realms"><span class="desk-icon" aria-hidden="true">🌍</span>International</a>
           <h3><a href="a/laurel-committee-skips-donwald-eighth-time-truthscroll-erupts.html">Laurel Committee Passes Over Donwald an Eighth Time; Truthscroll Mobilizes</a></h3>
           <p>The frozen northern judges named a jurist from the south as this year&#39;s Laurel Prize winner. High Lord Donwald has declared the committee finished and says he deserved the prize eight times over.</p>
           <a href="a/laurel-committee-skips-donwald-eighth-time-truthscroll-erupts.html" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">&#x1F4DC; Read Scroll</a>
         </article>
-        <article class="card">
-          <div class="card-tag">International</div>
+        <article class="card" style="--desk:#90a4ae">
+          <a class="card-tag" href="archive.html?section=world" data-section="world" style="--desk:#90a4ae" title="More from Foreign Realms"><span class="desk-icon" aria-hidden="true">🌍</span>International</a>
           <h3><a href="a/donwald-no-siege-of-calimshan-until-ballots-counted.html">Donwald Declares No Siege of Calimshan Until the Ballots Are Counted</a></h3>
           <p>The High Lord has found the one thing that can pause a war: the election calendar. The blockade stays, and so do the bad rations.</p>
           <a href="a/donwald-no-siege-of-calimshan-until-ballots-counted.html" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">&#x1F4DC; Read Scroll</a>
         </article>
-        <article class="card">
-          <div class="card-tag">International</div>
+        <article class="card" style="--desk:#90a4ae">
+          <a class="card-tag" href="archive.html?section=world" data-section="world" style="--desk:#90a4ae" title="More from Foreign Realms"><span class="desk-icon" aria-hidden="true">🌍</span>International</a>
           <h3><a href="a/eastern-front-winter-wizards.html">Czar Vlad the Bear-Handed Freezes Trade Routes</a></h3>
           <p>The Order of the Western Shield imposes new sanctions. Czar Vlad claims the cold weather is a natural phenomenon, not a weaponized spell.</p>
           <a href="a/eastern-front-winter-wizards.html" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">&#x1F4DC; Read Scroll</a>
@@ -506,7 +510,7 @@
         if (!article) return showNotFound();
 
         document.title = article.title + ' | The Beholder\'s Gazette';
-        document.getElementById('article-category').textContent  = article.category || 'News';
+        setCategory(article);
         document.getElementById('article-title').textContent     = article.title;
         document.getElementById('article-author').textContent    = article.author || 'The Gazette Staff';
         linkAuthor(article.author);
@@ -529,13 +533,10 @@
     async function loadRelated(articles, current) {
       const el = document.getElementById('related-articles');
       if (el.children.length) return;
-      const deskOf = {};
-      try {
-        const g = await fetch('glossary.json?t=' + Date.now()).then(r => r.json());
-        (g.writers || []).forEach(w => (w.categories || []).forEach(c => { deskOf[c] = w.desk_id; }));
-      } catch (e) {}
-      const desk = deskOf[current.category];
-      const score = a => a.category === current.category ? 2 : desk && deskOf[a.category] === desk ? 1 : 0;
+      const desks = await loadDesks();
+      const deskOf = c => desks[c] && desks[c].desk_id;
+      const desk = deskOf(current.category);
+      const score = a => a.category === current.category ? 2 : desk && deskOf(a.category) === desk ? 1 : 0;
       const related = articles.map((a, i) => ({ a, i }))
         .filter(x => x.a.id !== current.id)
         .sort((x, y) => y.a.date.localeCompare(x.a.date) || y.i - x.i)
@@ -544,13 +545,40 @@
         .slice(0, 3).map(x => x.a);
       if (!related.length) { el.innerHTML = '<p style="color:var(--text-dim);text-align:center;">No more scrolls found.</p>'; return; }
       el.innerHTML = related.map(a => `
-        <article class="card">
-          <div class="card-tag">${esc(a.category || 'News')}</div>
+        <article class="card"${deskStyle(desks[a.category])}>
+          ${deskTag(a, desks)}
           <h3><a href="a/${a.id}.html">${esc(a.title)}</a></h3>
           <p>${esc(a.excerpt)}</p>
           <a href="a/${a.id}.html" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">📜 Read Scroll</a>
         </article>
       `).join('');
+    }
+
+    // Desk writers from glossary.json, keyed by the categories their desk covers (fetched once).
+    let desksPromise;
+    function loadDesks() {
+      desksPromise = desksPromise || fetch('glossary.json?t=' + Date.now()).then(r => r.json()).then(g => {
+        const byCategory = {};
+        (g.writers || []).forEach(w => (w.categories || []).forEach(c => { byCategory[c] = w; }));
+        return byCategory;
+      }).catch(() => ({}));
+      return desksPromise;
+    }
+
+    function deskStyle(w) { return w && /^#[0-9a-f]{3,8}$/i.test(w.desk_color || '') ? ` style="--desk:${w.desk_color}"` : ''; }
+
+    // Category tag colored by desk, linking to the desk's section (same markup as export-articles.ps1)
+    function deskTag(a, desks, cls = 'card-tag') {
+      const w = desks[a.category];
+      const label = esc(a.category || 'News');
+      if (!w) return `<span class="${cls}">${label}</span>`;
+      return `<a class="${cls}" href="archive.html?section=${encodeURIComponent(w.desk_id)}"${deskStyle(w)} title="More from ${esc(w.desk)}"><span class="desk-icon" aria-hidden="true">${esc(w.desk_icon || '')}</span>${label}</a>`;
+    }
+
+    async function setCategory(article) {
+      const el = document.getElementById('article-category');
+      const desks = await loadDesks();
+      el.innerHTML = deskTag(article, desks, 'article-category-badge');
     }
 
     // Handout: the article as an in-world newspaper clipping. Printing the page prints only this
@@ -600,7 +628,7 @@
           <a href="index.html" class="btn" style="margin-top:20px;">Return Home</a>
         </div>`;
       document.getElementById('article-title').textContent    = 'Article Not Found';
-      document.getElementById('article-category').textContent = 'Error';
+      document.getElementById('article-category').innerHTML = '<span class="article-category-badge">Error</span>';
     }
 
     // Turn the byline into a link to the writer's desk page (desk writers only).
