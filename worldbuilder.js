@@ -8,10 +8,12 @@
    Pantheon (F34): world-pantheon.js, rolled by pantheon-engine.js; its holy days can go on the calendar.
    Factions (F35): world-factions.js, rolled by faction-engine.js (leaders from npc-data.js); can follow the pantheon's gods.
    History (F36): world-history.js, rolled by history-engine.js; can name the pantheon's gods and date the factions.
+   Town (F37): world-town.js, rolled by town-engine.js; links out to the NPC page, the Factions tab, the Toolbox
+   (Tavern, Quest), and the Shop page, and its temple can follow the pantheon's gods.
    Seeds and the shareable URL: rng.js.
    ============================================ */
 
-const WORLD_TAB_ORDER = ['calendar', 'pantheon', 'factions', 'history'];
+const WORLD_TAB_ORDER = ['calendar', 'pantheon', 'factions', 'history', 'town'];
 const WORLD_TABS = {};
 
 function esc(text) {
