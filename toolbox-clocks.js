@@ -5,6 +5,7 @@
    − and + do the same from the keyboard. Kept in localStorage CLOCKS_KEY.
    clockSvg() needs no page, so other tools (the DM screen) can draw a clock.
    Loads after toolbox.js and toolbox-table.js (uses esc(), flash(), copyText(), armedClick()).
+   The DM screen loads it too, without the tab: the tab's setup skips a page without #clk-list.
    ============================================ */
 
 const CLOCKS_KEY = 'gazette-clocks';
@@ -138,6 +139,8 @@ function clocksText() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // The DM screen loads this file for clockSvg() and cleanClock() only.
+    if (!document.getElementById('clk-list')) return;
     loadClocks();
     renderClocks();
     document.getElementById('clk-add').addEventListener('submit', addClock);

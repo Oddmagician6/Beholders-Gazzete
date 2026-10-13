@@ -156,6 +156,13 @@ const BACKUP_KEYS = [
         count: v => bkN(Object.keys(v.forms).length, 'handout')
     },
     {
+        key: 'gazette-dm-screen', tool: '🛡️ DM Screen', href: 'dm-screen.html', what: 'Screen layouts',
+        // Typed notes and picks, escaped by the page; dsClean (dm-screen-data.js) trims each layout and card on load.
+        clean: v => bkWhole(v, s => bkObj(s) && Array.isArray(s.layouts) && s.layouts.length >= 1 && s.layouts.length <= 12
+            && s.layouts.every(l => bkObj(l) && Array.isArray(l.cards) && l.cards.length <= 24 && l.cards.every(c => bkObj(c) && typeof c.type === 'string')), false),
+        count: v => `${bkN(v.layouts.length, 'layout')}, ${bkN(v.layouts.reduce((n, l) => n + l.cards.length, 0), 'card')}`
+    },
+    {
         key: 'gazette-monster-draft', tool: '🐲 Monster Maker', href: 'monster-maker.html', what: 'The monster being worked on',
         // Typed text, escaped by the page; hbClean (homebrew.js) trims it to a monster's shape.
         clean: v => bkWhole(v, d => bkObj(d) && !!hbClean(d.mon) && (d.prev === undefined || d.prev === null || (bkObj(d.prev) && !!hbClean(d.prev.mon))), false),
