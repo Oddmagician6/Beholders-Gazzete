@@ -9,7 +9,7 @@
    their tools and may.
    The notebook goes through notebook.js (nbClean, then nbMerge), so it merges into
    the one here, as the notebook's own import does. Everything else is replaced.
-   Needs notebook.js on the page.
+   Needs notebook.js and homebrew.js (hbClean, for homebrew monsters) on the page.
    ============================================ */
 
 const BK_LIMITS = { file: 5000000, depth: 12, items: 5000, keys: 500, text: 20000 };
@@ -143,6 +143,12 @@ const BACKUP_KEYS = [
         clean: v => bkWhole(v, h => bkObj(h) && bkObj(h.forms) && Object.keys(h.forms).length <= 4
             && Object.values(h.forms).every(bkObj) && (h.t === undefined || typeof h.t === 'string'), false),
         count: v => bkN(Object.keys(v.forms).length, 'handout')
+    },
+    {
+        key: 'gazette-monster-draft', tool: '🐲 Monster Maker', href: 'monster-maker.html', what: 'The monster being worked on',
+        // Typed text, escaped by the page; hbClean (homebrew.js) trims it to a monster's shape.
+        clean: v => bkWhole(v, d => bkObj(d) && !!hbClean(d.mon) && (d.prev === undefined || d.prev === null || (bkObj(d.prev) && !!hbClean(d.prev.mon))), false),
+        count: v => hbClean(v.mon).name || 'An unnamed monster'
     },
     {
         key: 'gazette-shop', tool: "🏪 Merchant's Row", href: 'shop.html', what: 'Current shop',

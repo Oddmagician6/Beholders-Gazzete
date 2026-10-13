@@ -61,7 +61,8 @@ function nbStatusSelectHTML(e) {
 // The card's top: icon, title, tag, the lines under it, and its links.
 function nbTopHTML(nb, e) {
     const k = nbKindOpt(e.kind);
-    const title = e.href ? `<a class="nb-title" href="${esc(e.href)}">${esc(e.title)}</a>` : `<span class="nb-title">${esc(e.title)}</span>`;
+    const open = nbOpenHref(e);
+    const title = open ? `<a class="nb-title" href="${esc(open)}">${esc(e.title)}</a>` : `<span class="nb-title">${esc(e.title)}</span>`;
     let lines = e.sub ? `<p class="nb-sub">${esc(e.sub)}</p>` : '';
     if (e.kind === 'session') {
         lines = `<p class="nb-sub">${e.date ? `📅 ${esc(nbDateText(e.date))} · ` : ''}${e.recap ? esc(nbShort(e.recap)) : '<i>No recap yet.</i>'}</p>`;
@@ -116,13 +117,14 @@ function nbFormHTML(e) {
 function nbEntryHTML(nb, e) {
     const others = nb.entries.filter(o => o.id !== e.id && !e.links.includes(o.id));
     const removing = nbView.removing === e.id;
-    const hand = !!NB_FIELDS[e.kind];
+    const form = nbFormHTML(e);
+    const hand = !!form;
     const filled = e.notes || e.dm || (e.kind === 'session' && e.recap);
     return `<article class="nb-entry nb-k-${esc(e.kind)}${e.kind === 'quest' ? ' nb-st-' + esc(e.status) : ''}" id="nb-e-${esc(e.id)}">
         ${nbTopHTML(nb, e)}
         <details class="nb-more" data-id="${esc(e.id)}"${nbView.open.has(e.id) ? ' open' : ''}>
             <summary>📝 ${e.kind === 'session' ? 'Log' : e.kind === 'quest' ? 'Quest' : 'Notes'}${filled ? ' ✓' : ''}${hand ? ', notes,' : ''} and links</summary>
-            ${nbFormHTML(e)}
+            ${form}
             <p class="nb-notes-h">👁️ Notes the players may see</p>
             <textarea class="nb-notes" data-id="${esc(e.id)}" data-k="notes" rows="${hand ? 2 : 3}" maxlength="${NB_LIMITS.notes}" aria-label="Notes on ${esc(e.title)} the players may see"
                 placeholder="${hand ? 'Anything else to remember…' : 'What happened here, who the party met, what you changed…'}">${esc(e.notes)}</textarea>
@@ -135,7 +137,7 @@ function nbEntryHTML(nb, e) {
                     ${others.map(o => `<option value="${esc(o.id)}">${nbKindOpt(o.kind).icon} ${esc(o.title)}</option>`).join('')}
                 </select></label>` : ''}
                 <span class="nb-row-actions">
-                    ${e.href ? `<a class="btn" href="${esc(e.href)}">Open →</a>` : ''}
+                    ${nbOpenHref(e) ? `<a class="btn" href="${esc(nbOpenHref(e))}">${e.kind === 'monster' ? '🐲 Edit in the Monster Maker' : 'Open →'}</a>` : ''}
                     <button type="button" class="btn nb-remove" data-id="${esc(e.id)}">${removing ? '⚠️ Click again to remove' : '🗑️ Remove'}</button>
                 </span>
             </div>

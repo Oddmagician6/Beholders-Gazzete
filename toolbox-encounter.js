@@ -6,6 +6,8 @@
    With no party in the URL, the party comes from the Party tab (party.js), else 4 × level 3.
    Each monster's SRD stat block opens under its row; the stat blocks (monster-statblocks.js)
    and spell text (spells-data.js) load the first time one is needed.
+   Homebrew monsters saved in the notebook (homebrew.js, ids 'hb-<entry id>') are in the
+   picker too (type 🐲 Homebrew lists only them), but never in a rolled encounter.
    URL: ?tab=enc&party=4x3&party=1x5&m=goblin.4&m=bugbear.1&diff=moderate&type=&env=&band=&pack=&seed=
    (env/band: the roll pickers; pack: the group a roll landed on; seed: the scene).
    ============================================ */
@@ -62,6 +64,7 @@ function setupEncounterForm() {
         const sel = document.getElementById(id);
         types.forEach(t => sel.add(new Option(typeName(t), t)));
     });
+    document.getElementById('en-type').add(new Option('🐲 Homebrew', 'homebrew'), 1);
     const env = document.getElementById('en-env');
     ENC_HABITAT_KEYS.forEach(k => env.add(new Option(`${ENC_HABITATS[k].icon} ${ENC_HABITATS[k].label}`, k)));
     const band = document.getElementById('en-band');
@@ -101,8 +104,8 @@ function pickerMatches() {
     const cr = document.getElementById('en-cr').value;
     const type = document.getElementById('en-type').value;
     const maxCr = Math.max(0.125, Math.floor(encBudget().avgLevel));
-    return MONSTERS.filter(m => (!q || m.name.toLowerCase().includes(q))
-        && (!type || m.type === type)
+    return [...hbRows, ...MONSTERS].filter(m => (!q || m.name.toLowerCase().includes(q))
+        && (!type || (type === 'homebrew' ? m.hb : m.type === type))
         && (!cr || (cr === 'party' ? crValue(m.cr) <= maxCr : m.cr === cr)));
 }
 
@@ -111,11 +114,12 @@ function renderPicker() {
     const shown = all.slice(0, ENC_PICKER_ROWS);
     document.getElementById('en-results').innerHTML = shown.map(m => `
         <li><button type="button" class="en-pick" data-id="${m.id}" title="Add a ${esc(m.name)}">
-            <span class="en-name">${esc(m.name)}</span>
-            <span class="en-meta">CR ${m.cr} · ${m.xp.toLocaleString('en-US')} XP · AC ${m.ac} · HP ${m.hp} · ${esc(typeName(m.type))}</span>
+            <span class="en-name">${m.hb ? '🐲 ' : ''}${esc(m.name)}</span>
+            <span class="en-meta">${m.hb ? 'Homebrew · ' : ''}CR ${m.cr} · ${m.xp.toLocaleString('en-US')} XP · AC ${m.ac} · HP ${m.hp} · ${esc(typeName(m.type))}</span>
             <span class="en-plus" aria-hidden="true">➕</span>
         </button></li>`).join('');
-    document.getElementById('en-results-note').textContent = !all.length ? 'No monsters match. Try a shorter name or another filter.'
+    document.getElementById('en-results-note').textContent = !all.length ? (document.getElementById('en-type').value === 'homebrew'
+            ? 'No homebrew yet. Make one in the Monster Maker and save it to the notebook.' : 'No monsters match. Try a shorter name or another filter.')
         : all.length > shown.length ? `Showing ${shown.length} of ${all.length}. Search or filter to narrow it down.` : `${all.length} monster${all.length === 1 ? '' : 's'}.`;
 }
 
@@ -347,6 +351,13 @@ function setupEncounter() {
     renderParty();
     renderPicker();
     renderEncounter();
+    // A homebrew monster saved, changed, or removed (here or in another tab): homebrew.js has
+    // already re-read the notebook; refresh the rows that show one.
+    nbOnChange(() => {
+        enc.list = enc.list.map(e => (e.m.hb ? { ...e, m: MONSTER_BY_ID[e.m.id] } : e)).filter(e => e.m);
+        renderPicker();
+        encChanged(null);
+    });
     partyChip(document.getElementById('en-party-chip'), { label: 'Use the Party', title: "Set the groups above to the Party tab's characters", act: encUseParty });
     const party = document.getElementById('en-party');
     party.addEventListener('input', onPartyInput);

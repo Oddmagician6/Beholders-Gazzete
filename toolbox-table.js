@@ -131,9 +131,14 @@ let openConds = null;   // id whose condition menu is open, kept across re-rende
 let openBlocks = new Set();   // ids whose stat block is open (this page only)
 let autoBlock = null;   // the id whose block opened because its turn came up
 
+// An SRD monster first, then homebrew (homebrew.js) by that name.
 function monsterNamed(name) {
     const key = name.replace(/\s+\d+$/, '').toLowerCase();
-    return MONSTERS.find(m => m.name.toLowerCase() === key) || null;
+    return [...MONSTERS, ...hbRows].find(m => m.name.toLowerCase() === key) || null;
+}
+
+function fillMonsterNames() {
+    document.getElementById('ia-monsters').innerHTML = [...hbRows, ...MONSTERS].map(m => `<option value="${esc(m.name)}"></option>`).join('');
 }
 
 function followTurns() {
@@ -364,7 +369,7 @@ function renderFight(scroll = false) {
                 <button type="button" data-act="heal" data-id="${c.id}" title="Heal" aria-label="Heal ${esc(c.name)}">+</button>`}
             </div>
             <button type="button" class="init-x" data-act="remove" data-id="${c.id}" title="Remove" aria-label="Remove ${esc(c.name)}">✕</button>
-            ${c.monster && openBlocks.has(c.id) ? `<div class="sb-box">${monsterBlockHtml(MONSTER_BY_ID[c.monster])}</div>` : ''}
+            ${c.monster && openBlocks.has(c.id) ? `<div class="sb-box">${MONSTER_BY_ID[c.monster] ? monsterBlockHtml(MONSTER_BY_ID[c.monster]) : '<p class="sb-note">This homebrew monster is no longer in the notebook.</p>'}</div>` : ''}
         </li>`;
     }).join('');
     // Open blocks say "Loading…" until the data arrives, then draw again.
@@ -397,8 +402,8 @@ function setupInitiative() {
     renderFight();
     document.getElementById('init-add').addEventListener('submit', addCombatants);
     partyChip(document.getElementById('init-party'), { label: '➕ Add the Party', title: 'Add every character not already in the fight, rolling d20 + their initiative bonus', act: addPartyToFight });
-    const names = document.getElementById('ia-monsters');
-    names.innerHTML = MONSTERS.map(m => `<option value="${esc(m.name)}"></option>`).join('');
+    fillMonsterNames();
+    nbOnChange(fillMonsterNames);
     const follow = document.getElementById('init-follow');
     follow.checked = followTurns();
     follow.addEventListener('change', () => {
@@ -488,7 +493,7 @@ function addPartyToFight(list = loadParty()) {
         + (skipped ? ` ${skipped} ${skipped === 1 ? 'was' : 'were'} already in the fight.` : ''));
 }
 
-// Monsters sent from the Bestiary (?add=goblin.3, repeatable) join the saved fight once, then
+// Monsters sent from the Bestiary or the Monster Maker (?add=goblin.3, repeatable) join the saved fight once, then
 // leave the address bar so a reload or Back doesn't add them again.
 function applyInitAdds() {
     const p = urlParams();
@@ -511,9 +516,10 @@ function applyInitAdds() {
     sortFight();
     saveFight();
     renderFight();
+    const from = adds.every(s => s.startsWith(HB_PREFIX)) ? 'the Monster Maker' : 'the Bestiary';
     flash('init-status', added.length < want
-        ? `⚔️ Added ${added.length} of ${want} monsters from the Bestiary; the tracker holds ${INIT_MAX}.`
-        : `⚔️ Added ${added.length} monster${added.length === 1 ? '' : 's'} from the Bestiary. Add the party, then Start Combat.`);
+        ? `⚔️ Added ${added.length} of ${want} monsters from ${from}; the tracker holds ${INIT_MAX}.`
+        : `⚔️ Added ${added.length} monster${added.length === 1 ? '' : 's'} from ${from}. Add the party, then Start Combat.`);
 }
 
 document.addEventListener('DOMContentLoaded', () => {

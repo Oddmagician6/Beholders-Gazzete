@@ -167,47 +167,9 @@ function tablesWithRefs(tables, t) {
     return out;
 }
 
-// ── Share codes ───────────────────────────────────────────
-// 'z' + base64url(deflate-raw(JSON)) when the browser can compress, else 'b' + base64url(JSON).
-function tableB64(bytes) {
-    let s = '';
-    for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
-    return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-}
-
-function tableUnB64(text) {
-    const s = atob(text.replace(/-/g, '+').replace(/_/g, '/'));
-    return Uint8Array.from(s, c => c.charCodeAt(0));
-}
-
-// Read a stream into bytes, giving up past max (a small link can't unpack into megabytes).
-async function tableReadStream(stream, max) {
-    const reader = stream.getReader();
-    const parts = [];
-    let size = 0;
-    for (;;) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        size += value.length;
-        if (size > max) { reader.cancel(); throw new Error('too big'); }
-        parts.push(value);
-    }
-    const out = new Uint8Array(size);
-    let at = 0;
-    parts.forEach(p => { out.set(p, at); at += p.length; });
-    return out;
-}
-
+// ── Share codes (packShareCode / unpackShareCode in rng.js) ──
 async function tablesShareCode(list) {
-    const json = JSON.stringify({ v: 1, t: list.map(t => [t.name, t.src, t.die]) });
-    const bytes = new TextEncoder().encode(json);
-    let code = 'b' + tableB64(bytes);
-    if (typeof CompressionStream === 'function') {
-        try {
-            const z = await tableReadStream(new Blob([bytes]).stream().pipeThrough(new CompressionStream('deflate-raw')), bytes.length + 1024);
-            code = 'z' + tableB64(z);
-        } catch (e) {}
-    }
+    const code = await packShareCode({ v: 1, t: list.map(t => [t.name, t.src, t.die]) });
     if (code.length > TABLE_LIMITS.share) {
         throw new Error(`That's too long for a link (${code.length.toLocaleString()} characters; ${TABLE_LIMITS.share.toLocaleString()} at most). Shorten the table${list.length > 1 ? ' or the tables it rolls' : ''}.`);
     }
@@ -217,15 +179,12 @@ async function tablesShareCode(list) {
 // → a list of clean tables. Throws a reader-friendly Error.
 async function tablesFromShareCode(code) {
     const broken = new Error("That table link is broken or cut short. Ask for it again, and copy the whole link.");
-    if (typeof code !== 'string' || !/^[bz][A-Za-z0-9_-]{2,}$/.test(code) || code.length > TABLE_LIMITS.share + 10) throw broken;
-    let bytes;
-    try { bytes = tableUnB64(code.slice(1)); } catch (e) { throw broken; }
-    if (code[0] === 'z') {
-        if (typeof DecompressionStream !== 'function') throw new Error("This browser can't open compressed table links. Try a newer browser.");
-        try { bytes = await tableReadStream(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw')), TABLE_LIMITS.src * TABLE_LIMITS.shareTables * 4); } catch (e) { throw broken; }
-    }
     let data;
-    try { data = JSON.parse(new TextDecoder().decode(bytes)); } catch (e) { throw broken; }
+    try {
+        data = await unpackShareCode(code, TABLE_LIMITS.share + 10, TABLE_LIMITS.src * TABLE_LIMITS.shareTables * 4);
+    } catch (e) {
+        throw e.browser ? new Error("This browser can't open compressed table links. Try a newer browser.") : broken;
+    }
     if (!data || data.v !== 1 || !Array.isArray(data.t)) throw broken;
     const list = data.t.slice(0, TABLE_LIMITS.shareTables)
         .map(r => (Array.isArray(r) ? tableClean({ name: r[0], src: r[1], die: r[2] }) : null))

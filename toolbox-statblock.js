@@ -3,12 +3,13 @@
    The SRD 5.1 stat block of a monster (monsters-data.js id), drawn from
    monster-statblocks.js. That file and the spell text (spells-data.js) load the first
    time a stat block is needed: call loadMonsterBlocks(), then draw again.
+   A homebrew monster (homebrew.js) carries its own block in m.block, in the same shape.
    Used by the Encounter tab (toolbox-encounter.js) and the Initiative tab
    (toolbox-table.js). Spell buttons open cards through spell-detail.js.
    ============================================ */
 
 const SB_ABILITIES = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
-const SB_SECTIONS = [['tr', 'Traits'], ['ac2', 'Actions'], ['re', 'Reactions'], ['le', 'Legendary Actions']];
+const SB_SECTIONS = [['tr', 'Traits'], ['ac2', 'Actions'], ['ba', 'Bonus Actions'], ['re', 'Reactions'], ['le', 'Legendary Actions']];
 let sbLoading = null;
 
 function loadScript(src) {
@@ -72,9 +73,14 @@ function sbFeatureHtml([name, text]) {
     return `<div class="sb-feature">${out.join('')}</div>`;
 }
 
+// The block to draw: a homebrew monster's own, else the SRD one (undefined until loaded).
+function sbBlockOf(m) {
+    return m.block || (blocksReady() ? MONSTER_BLOCKS[m.id] : undefined);
+}
+
 function monsterBlockHtml(m) {
-    if (!blocksReady()) return '<p class="sb-note">Loading the stat block…</p>';
-    const b = MONSTER_BLOCKS[m.id];
+    if (!m.block && !blocksReady()) return '<p class="sb-note">Loading the stat block…</p>';
+    const b = sbBlockOf(m);
     if (!b) return '<p class="sb-note">No stat block for this monster.</p>';
     const spells = [...new Set((b.tr || []).flatMap(([, t]) => [...t.matchAll(/\[\[(.+?)\]\]/g)].map(x => x[1])))];
     const book = spells.length && `spellbook.html?${paramsQuery({ spells: spells.map(spellSlug).join('.'), list: `${m.name} spells`.slice(0, 40) })}`;
@@ -96,7 +102,7 @@ function monsterBlockHtml(m) {
 }
 
 function monsterBlockText(m) {
-    const b = MONSTER_BLOCKS[m.id];
+    const b = sbBlockOf(m);
     if (!b) return '';
     const lines = [m.name.toUpperCase(), b.t,
         `Armor Class ${b.ac} | Hit Points ${b.hp} | Speed ${b.sp}`,

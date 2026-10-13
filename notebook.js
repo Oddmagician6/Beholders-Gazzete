@@ -13,6 +13,9 @@
    carry fields of their own (NB_FIELDS): a session's number, play date, recap, NPCs met,
    loot, and open threads; a quest's status (open / done / failed), giver, and reward.
    Older entries have none of these and come through nbClean unchanged.
+   Homebrew monsters (F52) are kind 'monster': written in the Monster Maker, so no link,
+   with the whole monster in `mon` (cleaned by hbClean in homebrew.js, which every page
+   that loads this file loads too). nbOpenHref(e) is where an entry opens.
    Secret notes (F51): any entry may carry `dm` (notes for the DM only; `notes` are the ones
    players may see) and `flip` (the keys of rolled lines whose DM-only default the DM switched,
    see notebook-sheets.js). Both are written only when set, so older notebooks stay as they were.
@@ -31,7 +34,8 @@ const NB_KINDS = {
     npc: { icon: '🎭', label: 'NPC' },
     // hand: written in the notebook, so the entry may have no link.
     session: { icon: '📖', label: 'Session', hand: true },
-    quest: { icon: '❗', label: 'Quest', hand: true }
+    quest: { icon: '❗', label: 'Quest', hand: true },
+    monster: { icon: '🐲', label: 'Monster', hand: true }
 };
 const NB_QUEST_STATUS = {
     open: { icon: '🟡', label: 'Open' },
@@ -65,6 +69,10 @@ const NB_FIELDS = {
         status: v => (typeof v === 'string' && Object.hasOwn(NB_QUEST_STATUS, v) ? v : 'open'),
         giver: v => nbText(v, 200),
         reward: v => nbText(v, 400)
+    },
+    // Without homebrew.js on the page the monster passes through untouched, so nothing is lost.
+    monster: {
+        mon: v => (typeof hbClean === 'function' ? hbClean(v) : v)
     }
 };
 
@@ -127,6 +135,7 @@ function nbClean(raw) {
             && Object.hasOwn(NB_KINDS, e.kind)
             && nbHrefOk(e.kind, e.href)
             && nbText(e.title, NB_LIMITS.title)
+            && (e.kind !== 'monster' || (typeof hbClean === 'function' ? !!hbClean(e.mon) : !!e.mon))
             && nb.entries.length < NB_LIMITS.entries;
         if (!ok) { dropped++; return; }
         ids.add(e.id);
@@ -186,6 +195,11 @@ function nbNewId(nb) {
 
 function nbFind(nb, id) {
     return nb.entries.find(e => e.id === id) || null;
+}
+
+// Where an entry opens: its link, or the Monster Maker for a homebrew monster.
+function nbOpenHref(e) {
+    return e.href || (e.kind === 'monster' ? `monster-maker.html?nb=${e.id}` : '');
 }
 
 // ── Links between entries ─────────────────────────────────

@@ -103,3 +103,60 @@ function copyPageLink(onDone) {
         .then(() => onDone(true))
         .catch(() => onDone(false));
 }
+
+// ── Share codes ───────────────────────────────────────────
+// Data too big for plain URL keys (custom tables, homebrew monsters) travels as one code:
+// 'z' + base64url(deflate-raw(JSON)) when the browser has CompressionStream (async),
+// else 'b' + base64url(JSON).
+function shareB64(bytes) {
+    let s = '';
+    for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+function shareUnB64(text) {
+    const s = atob(text.replace(/-/g, '+').replace(/_/g, '/'));
+    return Uint8Array.from(s, c => c.charCodeAt(0));
+}
+
+// Read a stream into bytes, giving up past max (a small link can't unpack into megabytes).
+async function shareReadStream(stream, max) {
+    const reader = stream.getReader();
+    const parts = [];
+    let size = 0;
+    for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        size += value.length;
+        if (size > max) { reader.cancel(); throw new Error('too big'); }
+        parts.push(value);
+    }
+    const out = new Uint8Array(size);
+    let at = 0;
+    parts.forEach(p => { out.set(p, at); at += p.length; });
+    return out;
+}
+
+async function packShareCode(data) {
+    const bytes = new TextEncoder().encode(JSON.stringify(data));
+    if (typeof CompressionStream === 'function') {
+        try {
+            return 'z' + shareB64(await shareReadStream(new Blob([bytes]).stream().pipeThrough(new CompressionStream('deflate-raw')), bytes.length + 1024));
+        } catch (e) {}
+    }
+    return 'b' + shareB64(bytes);
+}
+
+// The data in a code of at most maxLen characters that unpacks to at most maxBytes.
+// Throws an Error whose `browser` is true when only an older browser is the problem.
+async function unpackShareCode(code, maxLen, maxBytes) {
+    const broken = new Error('broken share code');
+    if (typeof code !== 'string' || !/^[bz][A-Za-z0-9_-]{2,}$/.test(code) || code.length > maxLen) throw broken;
+    let bytes;
+    try { bytes = shareUnB64(code.slice(1)); } catch (e) { throw broken; }
+    if (code[0] === 'z') {
+        if (typeof DecompressionStream !== 'function') throw Object.assign(new Error('no DecompressionStream'), { browser: true });
+        try { bytes = await shareReadStream(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw')), maxBytes); } catch (e) { throw broken; }
+    }
+    try { return JSON.parse(new TextDecoder().decode(bytes)); } catch (e) { throw broken; }
+}
