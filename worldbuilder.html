@@ -263,6 +263,16 @@
     .cont-flash { animation: nb-flash 1.6s ease-out; }
     .cont-wilds { margin: 0 0 14px !important; }
     .cont-journey .tool-form { margin-bottom: 8px; }
+    /* Map export (Sites and Continent) */
+    .map-export { margin: 4px 0 10px; border: 1px solid rgba(201,160,64,0.25); border-radius: var(--radius-sm); padding: 10px 14px; }
+    .map-export summary { font-family: var(--font-ui); font-size: 0.85rem; color: var(--gold-mid); cursor: pointer; }
+    .map-export[open] summary { margin-bottom: 10px; }
+    .map-export .wb-small { margin: 0 0 12px; }
+    .map-export .tool-form { margin-bottom: 10px; }
+    .map-export-checks { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-bottom: 14px; }
+    .map-export-checks label { display: flex; align-items: center; gap: 6px; font-family: var(--font-ui); font-size: 0.8rem; color: var(--text-mid); cursor: pointer; }
+    .map-export .tool-toolbar { margin-bottom: 4px; }
+    @media print { .map-export { display: none !important; } }
     .fac-sub { font-family: var(--font-ui); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-dim); margin: 14px 0 4px; font-weight: 400; }
 
     @media (max-width: 640px) {
@@ -614,6 +624,20 @@
           <button type="button" class="btn" id="site-link">🔗 Copy Link</button>
           <button type="button" class="btn" id="site-save" data-save="sites">📓 Save to Notebook</button>
         </div>
+        <details class="map-export">
+          <summary>🗺️ Battle map for a VTT (PNG)</summary>
+          <p class="wb-small">The map as a picture on a 5-foot grid, one square to a corridor's width, ready for Owlbear Rodeo, Foundry, Roll20, or any virtual tabletop. The rooms are squared up to the grid. The file name ends in the map's size in squares (for example 52x38), the number your VTT asks for.</p>
+          <div class="tool-form">
+            <label>Pixels per square <select id="site-px"><option value="70">70 (Roll20's grid)</option><option value="100" selected>100 (Foundry's grid)</option><option value="140">140 (sharpest, biggest file)</option></select></label>
+            <label>Look <select id="site-look"><option value="parchment" selected>📜 Parchment floors</option><option value="dark">🌑 Dark, as on screen</option><option value="ink">🖨️ Black and white</option></select></label>
+          </div>
+          <div class="map-export-checks">
+            <label><input type="checkbox" id="site-grid-on" checked> Grid lines</label>
+            <label><input type="checkbox" id="site-nums-on" checked> Room numbers and ⚔ ⚠ marks</label>
+            <label><input type="checkbox" id="site-secret-on"> Secret doors (leave them off for the players' copy)</label>
+          </div>
+          <div class="tool-toolbar"><button type="button" class="btn btn-gold" id="site-png">⬇️ Download the Battle Map</button></div>
+        </details>
         <p class="tool-status" id="site-status" role="status" aria-live="polite"></p>
       </div>
       <p class="tool-note">The site tables are the Gazette's own. Its foes come from the <a href="toolbox.html?tab=enc">DM Toolbox's Encounter tab</a> (monsters from the System Reference Document 5.1, XP budgets from the SRD 5.2, both CC-BY 4.0), and every fight opens there; the hoard opens in the <a href="loot-generator.html?tab=hoard">Loot generator</a>. Trap DCs and damage follow the SRD 5.1 trap tables.<br>The address bar holds the site, so 🔗 Copy Link shares it. A new party level or size keeps the map, the rooms, and where the fights and traps are, and changes only the monsters, DCs, and damage; a new site size keeps the name, the story, and the first rooms.<br>A site can be dated to an age of the <a href="worldbuilder.html?tab=history">History tab</a>.</p>
@@ -637,6 +661,14 @@
           <button type="button" class="btn" id="cont-link">🔗 Copy Link</button>
           <button type="button" class="btn" id="cont-save" data-save="continent">📓 Save to Notebook</button>
         </div>
+        <details class="map-export">
+          <summary>🗺️ Download the map (PNG)</summary>
+          <p class="wb-small">The map as a picture, to share with your players or drop into a virtual tabletop. A journey you picked shows on it too.</p>
+          <div class="tool-form">
+            <label>Size <select id="cont-scale"><option value="2">Medium (2×)</option><option value="3" selected>Large (3×)</option><option value="4">Huge (4×)</option></select></label>
+          </div>
+          <div class="tool-toolbar"><button type="button" class="btn btn-gold" id="cont-png">⬇️ Download the Map</button></div>
+        </details>
         <p class="tool-status" id="cont-status" role="status" aria-live="polite"></p>
       </div>
       <p class="tool-note">The map and its tables are the Gazette's own. Rulers come from the <a href="npc-generator.html">Town Square</a>'s NPC generator; every town opens on the <a href="worldbuilder.html?tab=town">Town tab</a> inside its realm, every place worth the trip on the <a href="worldbuilder.html?tab=sites">Sites tab</a>, and every road or journey in the <a href="toolbox.html?tab=travel">DM Toolbox's Travel tab</a> with its terrain and miles filled in.<br>The address bar holds the map, so 🔗 Copy Link shares it. A new number of nations keeps the land; a new mix of land and sea raises or lowers the sea over the same ground; a new size is a new map.</p>
@@ -706,6 +738,7 @@
   <script src="site-engine.js"></script>
   <script src="continent-engine.js"></script>
   <script src="notebook.js"></script>
+  <script src="map-export.js"></script>
   <script src="worldbuilder.js"></script>
   <script src="world-calendar.js"></script>
   <script src="world-pantheon.js"></script>

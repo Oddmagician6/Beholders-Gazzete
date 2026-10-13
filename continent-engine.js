@@ -1166,11 +1166,18 @@ function contMapSvg(c, title, id = 'cm') {
         bands += `<line class="cm-band" x1="0" y1="${f(y)}" x2="${W}" y2="${f(y)}"/>`;
     });
     const zone = y => { const w = 1 - Math.abs(m.latAt(y / S - 0.5)) / 72; return CONT_CLIMATES.find(b => w < b.below); };
-    let bandLabels = '', lastZone = null;
+    // A band that only clips the top edge loses its name to the next one, and names at the
+    // top stand clear of the north arrow.
+    const bandAt = [];
+    let lastZone = null;
     for (let y = S; y < H - S; y += S) {
         const z = zone(y);
-        if (z !== lastZone) { bandLabels += `<text class="cm-band-label" x="${W - 6}" y="${f(y + 12)}">${esc(z.label)}</text>`; lastZone = z; }
+        if (z === lastZone) continue;
+        if (bandAt.length && y - bandAt[bandAt.length - 1].y < S * 2) bandAt.pop();
+        bandAt.push({ y, z });
+        lastZone = z;
     }
+    const bandLabels = bandAt.map(({ y, z }) => `<text class="cm-band-label" x="${y < 56 ? W - 44 : W - 6}" y="${f(y + 12)}">${esc(z.label)}</text>`).join('');
 
     // Rivers, coast, borders, roads.
     const rivers = contRiverPaths(m).map(r => `<path class="cm-river" stroke-width="${r.w}" d="${r.d}"/>`).join('');

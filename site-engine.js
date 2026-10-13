@@ -749,13 +749,24 @@ function siteText(s, ctx) {
 
 // ── The map as SVG ────────────────────────────────────────
 const SITE_CELL = { w: 112, h: 92, pad: 30 };
+// One 5-foot square on a battle map: a corridor's width.
+const SITE_SQUARE = 10;
 
 function siteAttr(text) {
     return String(text).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
-function siteCenter(c) {
-    return { x: SITE_CELL.pad + c.x * SITE_CELL.w + SITE_CELL.w / 2, y: SITE_CELL.pad + c.y * SITE_CELL.h + SITE_CELL.h / 2 };
+// snap: the middle of the nearest square, so a corridor runs down one row of squares.
+function siteCenter(c, snap = false) {
+    const x = SITE_CELL.pad + c.x * SITE_CELL.w + SITE_CELL.w / 2, y = SITE_CELL.pad + c.y * SITE_CELL.h + SITE_CELL.h / 2;
+    if (!snap) return { x, y };
+    const to = v => Math.round((v - SITE_SQUARE / 2) / SITE_SQUARE) * SITE_SQUARE + SITE_SQUARE / 2;
+    return { x: to(x), y: to(y) };
+}
+
+// A room's width or height as an odd number of squares, so its walls fall on grid lines.
+function siteSnapSize(v) {
+    return Math.max(1, Math.round((v / SITE_SQUARE - 1) / 2)) * 2 * SITE_SQUARE + SITE_SQUARE;
 }
 
 // How far a room's wall is from its center, toward a neighbor (dx, dy one of them 0).
@@ -787,18 +798,25 @@ function siteCavePath(s, i, cx, cy, rx, ry) {
     });
 }
 
-function siteMapSvg(s, title) {
+// opts (for the battle map export): snap squares the rooms up to the 5-foot grid, and grid
+// also draws it; nums: false leaves out the room numbers and the fight and trap marks;
+// secret: false leaves out the secret doors and the corridors behind them.
+function siteMapSvg(s, title, opts = {}) {
+    const { grid = false, snap = grid, nums = true, secret = true } = opts;
     const K = SITE_KINDS[s.kind];
-    const cells = s.map.cells;
+    const cells = snap ? s.map.cells.map(c => ({ ...c, w: siteSnapSize(c.w), h: siteSnapSize(c.h) })) : s.map.cells;
+    const center = c => siteCenter(c, snap);
     const cols = Math.max(...cells.map(c => c.x)) + 1, rows = Math.max(...cells.map(c => c.y)) + 1;
-    const W = cols * SITE_CELL.w + SITE_CELL.pad * 2, H = rows * SITE_CELL.h + SITE_CELL.pad * 2;
+    let W = cols * SITE_CELL.w + SITE_CELL.pad * 2, H = rows * SITE_CELL.h + SITE_CELL.pad * 2;
+    if (snap) { W = Math.ceil(W / SITE_SQUARE) * SITE_SQUARE; H = Math.ceil(H / SITE_SQUARE) * SITE_SQUARE; }
     const last = cells.length - 1;
-    let corr = '', walls = '', floors = '', doors = '', labels = '';
+    let corr = '', walls = '', fills = '', floors = '', doors = '', lines = '', labels = '';
 
     s.map.edges.forEach((e, k) => {
-        const A = cells[e.a], B = cells[e.b];
-        const pa = siteCenter(A), pb = siteCenter(B);
         const kind = s.doors[k];
+        if (kind === 'secret' && !secret) return;
+        const A = cells[e.a], B = cells[e.b];
+        const pa = center(A), pb = center(B);
         corr += `<line class="sm-corr-wall" x1="${pa.x}" y1="${pa.y}" x2="${pb.x}" y2="${pb.y}"/>`;
         floors += `<line class="sm-corr${kind === 'secret' ? ' sm-secret-corr' : ''}" x1="${pa.x}" y1="${pa.y}" x2="${pb.x}" y2="${pb.y}"/>`;
         // The door sits halfway between the two walls.
@@ -819,7 +837,7 @@ function siteMapSvg(s, title) {
     });
 
     cells.forEach((c, i) => {
-        const p = siteCenter(c);
+        const p = center(c);
         const shape = siteRoomShape(s, i);
         const cls = `sm-room${i === last ? ' sm-end' : ''}`;
         let el;
@@ -827,6 +845,9 @@ function siteMapSvg(s, title) {
         else if (shape === 'cave') el = `<path class="${cls}" d="${siteCavePath(s, i, p.x, p.y, c.w / 2, c.h / 2)}"/>`;
         else el = `<rect class="${cls}" x="${p.x - c.w / 2}" y="${p.y - c.h / 2}" width="${c.w}" height="${c.h}"/>`;
         walls += el;
+        // The room's floor again over the corridors' ends, so they stop at its wall.
+        fills += el.replace('/>', ' style="stroke:none"/>');
+        if (!nums) return;
         const r = s.rooms[i];
         const marks = (r.fight ? '⚔' : '') + (r.trap ? '⚠' : '');
         labels += `<g class="sm-key" data-room="${i + 1}" tabindex="0" role="button" aria-label="Room ${i + 1}: ${siteAttr(r.name)}">
@@ -836,7 +857,14 @@ function siteMapSvg(s, title) {
     });
 
     // The way in: an arrow from outside the map edge to room 1.
-    const p0 = siteCenter(cells[0]);
+    if (grid) {
+        let d = '';
+        for (let x = SITE_SQUARE; x < W; x += SITE_SQUARE) d += `M${x} 0V${H}`;
+        for (let y = SITE_SQUARE; y < H; y += SITE_SQUARE) d += `M0 ${y}H${W}`;
+        lines = `<path class="sm-grid" d="${d}"/>`;
+    }
+
+    const p0 = center(cells[0]);
     const r0 = siteReach(cells[0], siteRoomShape(s, 0), 0);
     const inward = K.entry === 'top' ? 1 : -1;
     const ey1 = p0.y - inward * (r0 + 22), ey2 = p0.y - inward * (r0 + 4);
@@ -845,6 +873,6 @@ function siteMapSvg(s, title) {
     return `<svg class="site-map" viewBox="0 0 ${W} ${H}" role="img" aria-label="${siteAttr(title)}" xmlns="http://www.w3.org/2000/svg">
         <defs><marker id="sm-arrow-${s.seed}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="sm-arrow" d="M0 0 L10 5 L0 10 z"/></marker></defs>
         <rect class="sm-bg" x="0" y="0" width="${W}" height="${H}"/>
-        ${corr}${walls}${floors}${doors}${entry}${labels}
+        ${corr}${walls}${floors}${fills}${doors}${lines}${entry}${labels}
     </svg>`;
 }

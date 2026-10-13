@@ -3,6 +3,7 @@
    A keyed adventure site from site-engine.js (rollSite): its story, a map (SVG), and a
    key to every room (feature, foes, trap, exits), with the hoard in the last room. Each
    fight opens in the Toolbox's Encounter tab, and the hoard in the Loot generator.
+   The map downloads as a PNG battle map on a 5-foot grid (map-export.js).
    "Use the History tab's history" dates the site to one of its ages (the History tab's
    own "Explore a ruin from this age" picks the age). Nothing is stored: the URL holds it.
    URL: ?tab=sites&seed=&kind=&size=&level=&party=
@@ -170,6 +171,69 @@ function renderSite() {
         </section>` : ''}`;
 }
 
+// ── Battle map export ─────────────────────────────────────
+// Each look goes on top of the page's own .sm- rules (the dark one, as on screen).
+const SITE_MAP_LOOKS = {
+    parchment: `.sm-bg { fill: #3a342b; }
+        .sm-corr-wall { stroke: #15120d; }
+        .sm-corr { stroke: #eadfc3; }
+        .sm-room { fill: #eadfc3; stroke: #15120d; }
+        .sm-end { fill: #e8cf8a; stroke: #15120d; }
+        .sm-door { fill: #9a6a35; stroke: #15120d; }
+        .sm-lock { fill: #f3e9cc; }
+        .sm-s, .sm-mark { fill: #8a1f1a; }
+        .sm-port, .sm-stair { stroke: #15120d; }
+        .sm-entry { stroke: #e0b448; }
+        .sm-arrow { fill: #e0b448; }
+        .sm-num-bg { fill: #fffaf0; stroke: #15120d; }
+        .sm-num { fill: #15120d; }
+        .sm-num-end { fill: #15120d; }
+        .sm-num-end + .sm-num { fill: #fffaf0; }
+        .sm-grid { fill: none; stroke: rgba(30,24,16,0.3); stroke-width: 0.6; }`,
+    dark: `.sm-bg { fill: #1b1813; }
+        .sm-grid { fill: none; stroke: rgba(240,230,200,0.16); stroke-width: 0.6; }`,
+    ink: `.sm-bg { fill: #fff; }
+        .sm-corr-wall { stroke: #000; }
+        .sm-corr { stroke: #fff; }
+        .sm-room { fill: #fff; stroke: #000; }
+        .sm-end { fill: #ddd; stroke: #000; }
+        .sm-door { fill: #fff; stroke: #000; }
+        .sm-lock, .sm-s, .sm-mark, .sm-arrow, .sm-num { fill: #000; }
+        .sm-port, .sm-stair, .sm-entry { stroke: #000; }
+        .sm-num-bg { fill: #fff; stroke: #000; }
+        .sm-num-end { fill: #000; }
+        .sm-num-end + .sm-num { fill: #fff; }
+        .sm-grid { fill: none; stroke: rgba(0,0,0,0.25); stroke-width: 0.6; }`
+};
+
+function siteStatus(text) {
+    const el = document.getElementById('site-status');
+    clearTimeout(el._t);
+    el.textContent = text;
+}
+
+async function siteDownloadMap() {
+    const s = siteState.data;
+    const btn = document.getElementById('site-png');
+    if (!s || btn.disabled) return;
+    const on = id => document.getElementById(id).checked;
+    const svg = siteMapSvg(s, `Map of ${s.name}`, { snap: true, grid: on('site-grid-on'), nums: on('site-nums-on'), secret: on('site-secret-on') });
+    const [W, H] = svg.match(/viewBox="0 0 (\d+) (\d+)"/).slice(1).map(Number);
+    const px = Number(document.getElementById('site-px').value) || 100;
+    const cols = W / SITE_SQUARE, rows = H / SITE_SQUARE;
+    const w = cols * px, h = rows * px;
+    const look = SITE_MAP_LOOKS[document.getElementById('site-look').value] || SITE_MAP_LOOKS.parchment;
+    const name = `${mapFileSlug(s.name)}-${cols}x${rows}.png`;
+    btn.disabled = true;
+    siteStatus('🗺️ Drawing the map…');
+    const ok = await mapExportPng(svg, w, h, mapPageCss('.sm-') + '\n' + look, name);
+    btn.disabled = false;
+    const n = v => v.toLocaleString('en-US');
+    siteStatus(ok
+        ? `⬇️ Saved ${name}: ${cols} × ${rows} squares (${cols * 5} × ${rows * 5} feet), ${n(w)} × ${n(h)} pixels.`
+        : '⚠️ This browser could not draw a map that big. Try fewer pixels per square.');
+}
+
 function siteGoRoom(n) {
     const el = document.getElementById('site-r' + n);
     if (!el) return;
@@ -212,6 +276,7 @@ function setupSites() {
         window.print();
     });
     window.addEventListener('afterprint', () => document.body.classList.remove('print-site'));
+    document.getElementById('site-png').addEventListener('click', siteDownloadMap);
     document.getElementById('site-link').addEventListener('click', () =>
         copyPageLink(ok => flash('site-status', ok ? '🔗 Link copied. It opens this same site.' : '⚠️ Copy blocked by the browser.')));
 }

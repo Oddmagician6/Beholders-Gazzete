@@ -5,7 +5,7 @@
    interest. Below it: a journey planner (two towns → miles and terrain, opened in the
    Toolbox's Travel tab), each nation in full, the places worth the trip (each opens on
    the Sites tab), and the roads. A town opens on the Town tab inside its realm.
-   Nothing is stored: the URL holds the map.
+   The map downloads as a PNG (map-export.js). Nothing is stored: the URL holds the map.
    URL: ?tab=continent&seed=&size=&land=&nations=
    ============================================ */
 
@@ -34,6 +34,7 @@ function rollContinentFor(seed = newSeed(), push = true) {
     contState.data = contCached(seed, contOpts());
     contState.journey = null;
     renderContinent();
+    contScaleLabels(contState.data);
     if (push !== null) setUrlParams(contParams(), push);
 }
 
@@ -166,6 +167,43 @@ function contShowJourney() {
     links.innerHTML = j ? `<a class="btn" href="${esc(contTravelLink(c, +a, +b, j))}">🧭 Travel it in the Toolbox</a>` : '';
 }
 
+// ── Map export (map-export.js) ────────────────────────────
+// The size picker shows each size in pixels for this map.
+function contScaleLabels(c) {
+    const W = c.map.cols * CONT_CELL, H = c.map.rows * CONT_CELL;
+    const names = { 2: 'Medium', 3: 'Large', 4: 'Huge' };
+    [...document.getElementById('cont-scale').options].forEach(o => {
+        const k = Number(o.value);
+        o.textContent = `${names[k]}: ${(W * k).toLocaleString('en-US')} × ${(H * k).toLocaleString('en-US')} px`;
+    });
+}
+
+function contStatus(text) {
+    const el = document.getElementById('cont-status');
+    clearTimeout(el._t);
+    el.textContent = text;
+}
+
+async function contDownloadMap() {
+    const c = contState.data;
+    const btn = document.getElementById('cont-png');
+    if (!c || btn.disabled) return;
+    const k = Number(document.getElementById('cont-scale').value) || 3;
+    const name = facCap(c.name);
+    // The journey on screen is drawn after the map, so draw it into the copy too.
+    const svg = contMapSvg(c, `Map of ${name}`, 'cmx')
+        .replace('id="cmx-journey" d=""', `id="cmx-journey" d="${contJourneyPath(c, contState.journey)}"`);
+    const W = c.map.cols * CONT_CELL, H = c.map.rows * CONT_CELL;
+    const file = `${mapFileSlug(name)}-map.png`;
+    btn.disabled = true;
+    contStatus('🗺️ Drawing the map…');
+    const ok = await mapExportPng(svg, W * k, H * k, mapPageCss('.cm-'), file);
+    btn.disabled = false;
+    contStatus(ok
+        ? `⬇️ Saved ${file}: ${(W * k).toLocaleString('en-US')} × ${(H * k).toLocaleString('en-US')} pixels.`
+        : '⚠️ This browser could not draw a map that big. Try a smaller size.');
+}
+
 function contGo(key) {
     const el = document.getElementById('cn-' + key);
     if (!el) return;
@@ -210,6 +248,7 @@ function setupContinent() {
         window.print();
     });
     window.addEventListener('afterprint', () => document.body.classList.remove('print-cont'));
+    document.getElementById('cont-png').addEventListener('click', contDownloadMap);
     document.getElementById('cont-link').addEventListener('click', () =>
         copyPageLink(ok => flash('cont-status', ok ? '🔗 Link copied. It opens this same map.' : '⚠️ Copy blocked by the browser.')));
 }
