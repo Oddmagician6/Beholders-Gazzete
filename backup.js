@@ -185,6 +185,14 @@ const BACKUP_KEYS = [
             return { value: r.nb, dropped: r.dropped };
         },
         count: v => (v.name ? `${v.name}: ` : '') + bkN(v.entries.length, 'entry', 'entries')
+    },
+    {
+        key: 'gazette-web', tool: '🗺️ Worldbuilder', href: 'worldbuilder.html?tab=web', what: 'Where the Web tab puts each entry',
+        // Entry ids and numbers only; web-graph.js's webCleanStore trims it again on load.
+        clean: v => bkWhole(v, w => bkObj(w) && bkObj(w.pos) && Object.keys(w.pos).length <= 500
+            && Object.entries(w.pos).every(([id, p]) => /^[a-z0-9]{1,16}$/.test(id) && Array.isArray(p) && p.length === 2 && p.every(Number.isFinite))
+            && bkArrOf(w.fixed, id => typeof id === 'string') && bkArrOf(w.loose, id => typeof id === 'string')),
+        count: v => bkN(Object.keys(v.pos).length, 'entry', 'entries') + (v.fixed && v.fixed.length ? `, ${v.fixed.length} placed by hand` : '')
     }
 ];
 

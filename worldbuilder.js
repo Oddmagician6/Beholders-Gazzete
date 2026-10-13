@@ -21,10 +21,11 @@
    with the Continent tab).
    Notebook (F38): world-notebook.js, kept by notebook.js. Every tab's 📓 Save to Notebook
    button (data-save="<tab>") files the roll on screen through that tab's entry() → { title, sub }.
+   Web (F56): world-web.js, the notebook drawn as entries and the lines between them (web-graph.js lays it out).
    Seeds and the shareable URL: rng.js.
    ============================================ */
 
-const WORLD_TAB_ORDER = ['calendar', 'pantheon', 'factions', 'history', 'town', 'family', 'sites', 'continent', 'maps', 'notebook'];
+const WORLD_TAB_ORDER = ['calendar', 'pantheon', 'factions', 'history', 'town', 'family', 'sites', 'continent', 'maps', 'notebook', 'web'];
 const WORLD_TABS = {};
 
 function esc(text) {
