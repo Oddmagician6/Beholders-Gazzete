@@ -168,6 +168,9 @@
     .init-who { font-family: 'IM Fell English', serif; font-size: 1.15rem; color: var(--text-bright); overflow-wrap: anywhere; }
     .init-row.current .init-who::before { content: '▶ '; color: var(--gold-bright); }
     .init-meta { font-family: var(--font-ui); font-size: 0.75rem; color: var(--text-dim); }
+    .init-reveal { font-family: var(--font-ui); font-size: 0.7rem; padding: 1px 8px; border-radius: 10px; background: none; color: var(--text-dim); border: 1px dashed var(--gold-dim); cursor: pointer; }
+    .init-reveal:hover { color: var(--gold-bright); border-color: var(--gold-mid); }
+    .init-reveal.on { color: var(--text-mid); border-style: solid; }
     .init-conds { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; margin-top: 5px; }
     .init-cond { font-family: var(--font-ui); font-size: 0.72rem; padding: 2px 8px; border-radius: 10px; background: var(--crimson); color: var(--text-bright); border: none; cursor: pointer; }
     .init-cond:hover { background: var(--crimson-bright); }
@@ -818,13 +821,15 @@
         <ol class="init-list" id="init-list"></ol>
         <p class="dice-empty" id="init-empty">No one in the fight yet. Add the party and the monsters above.</p>
         <div class="tool-toolbar init-tools">
+          <a class="btn" id="init-player-view" href="player-view.html" target="gazette-player-view" title="Open the turn order for the players in another window: drag it to a TV or second screen">📺 Player View</a>
+          <button type="button" class="btn" id="init-reveal-all" title="Show every creature's name in the player view">👁️ Reveal All Names</button>
           <button type="button" class="btn" id="init-reroll">🎲 Reroll Initiative</button>
           <button type="button" class="btn" id="init-defeated">💀 Remove the Fallen</button>
           <button type="button" class="btn" id="init-clear">🧹 Clear All</button>
         </div>
         <label class="dice-fab-toggle"><input type="checkbox" id="init-follow" checked> Open each monster's stat block when its turn comes up</label>
       </div>
-      <p class="tool-note">The tracker stays in this browser, so a refresh or a closed tab won't lose the fight, and it never leaves your device. <a href="privacy.html#backup">💾 Back up everything</a> to keep it safe.<br>Order: highest initiative first; ties go to the higher bonus. Type a number in a creature's HP box and press − to damage or + to heal. Conditions are the SRD 5.1 list (CC-BY 4.0); hover one for a summary, or see them all on the <a href="rules.html#conditions">Rules</a> page.</p>
+      <p class="tool-note">The tracker stays in this browser, so a refresh or a closed tab won't lose the fight, and it never leaves your device. <a href="privacy.html#backup">💾 Back up everything</a> to keep it safe.<br>Order: highest initiative first; ties go to the higher bonus. Type a number in a creature's HP box and press − to damage or + to heal. Conditions are the SRD 5.1 list (CC-BY 4.0); hover one for a summary, or see them all on the <a href="rules.html#conditions">Rules</a> page.<br>📺 Player View opens the turn order in a second window for the players: the round, whose turn it is, conditions, and health as a word (Healthy, Bloodied, Down), never HP or AC. Creatures show as "Unknown creature A" until you click 🙈 Name hidden on their row. It works in this browser on this computer (drag the window to a TV or second screen), with no server and no internet needed.</p>
     </section>
     <section class="tool-panel" id="tab-clocks" role="tabpanel" hidden>
       <div class="tool-card">
@@ -945,6 +950,7 @@
   <script src="quest-engine.js"></script>
   <script src="rules-data.js"></script>
   <script src="party.js"></script>
+  <script src="init-view.js"></script>
   <script src="toolbox.js"></script>
   <script src="toolbox-table.js"></script>
   <script src="toolbox-encounter.js"></script>

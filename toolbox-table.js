@@ -8,6 +8,9 @@
    ?tab=init&add=<monster id>.<count> (the Bestiary's links) adds monsters to the saved fight once.
    ➕ Add the Party (party.js) adds the Party tab's characters as player characters (pc: true):
    their passive Perception shows, and at 0 HP they stay in the fight for their death saves.
+   📺 Player View (F47) opens player-view.html: init-view.js turns the fight into what the players
+   may see, and saveFight() posts it on INIT_VIEW_CHANNEL. Other creatures' names stay hidden
+   there until the DM reveals them (shown: true; 🙈/👁️ on each row).
    Loads after toolbox.js (uses its esc() and flash()).
    ============================================ */
 
@@ -149,7 +152,7 @@ function loadFight() {
                 id: c.id, name: c.name.slice(0, 40), init: num(c.init) ?? 0, mod: num(c.mod) ?? 0,
                 hp: num(c.hp), max: num(c.max), ac: num(c.ac),
                 monster: typeof c.monster === 'string' && Object.hasOwn(MONSTER_BY_ID, c.monster) ? c.monster : null,
-                pc: c.pc === true, pp: num(c.pp),
+                pc: c.pc === true, pp: num(c.pp), shown: c.shown === true,
                 conds: Array.isArray(c.conds) ? c.conds.filter(x => SRD_CONDITIONS.includes(x)) : []
             }));
             fight = {
@@ -165,6 +168,14 @@ function loadFight() {
 
 function saveFight() {
     try { localStorage.setItem(INIT_KEY, JSON.stringify(fight)); } catch (e) {}
+    postPlayerView();
+}
+
+// The player view window (player-view.html) hears every change, and asks for the fight when it opens.
+let viewChannel = null;
+try { viewChannel = new BroadcastChannel(INIT_VIEW_CHANNEL); } catch (e) {}
+function postPlayerView() {
+    if (viewChannel) try { viewChannel.postMessage({ type: 'view', view: initPlayerView(fight) }); } catch (e) {}
 }
 
 function sortFight() {
@@ -190,7 +201,7 @@ function addToFight({ name, mod = 0, fixed = null, hp = null, ac = null, count =
         const c = {
             id: fight.nextId++, name: count > 1 || taken.length ? `${base} ${++n}` : name,
             init: fixed !== null && count === 1 ? fixed : rollInit(mod), mod,
-            hp: hp !== null ? Math.max(0, hp) : null, max: hp !== null ? Math.max(0, hp) : null, ac, monster, pc, pp, conds: []
+            hp: hp !== null ? Math.max(0, hp) : null, max: hp !== null ? Math.max(0, hp) : null, ac, monster, pc, pp, shown: false, conds: []
         };
         fight.list.push(c);
         added.push(c);
@@ -301,6 +312,15 @@ function changeHp(id, sign) {
     if (again) again.focus();
 }
 
+// Shows or hides a creature's name in the player view.
+function toggleShown(id) {
+    const c = fight.list.find(x => x.id === id);
+    if (!c || c.pc) return;
+    c.shown = !c.shown;
+    saveFight();
+    renderFight();
+}
+
 function toggleCond(id, cond) {
     const c = fight.list.find(x => x.id === id);
     if (!c) return;
@@ -325,6 +345,7 @@ function renderFight(scroll = false) {
                 <div class="init-top">
                     ${c.monster ? `<button type="button" class="sb-toggle" data-act="sb" data-id="${c.id}" aria-expanded="${openBlocks.has(c.id)}" title="Show or hide the stat block"><span class="init-who sb-name">${esc(c.name)}</span> <span class="sb-hint" aria-hidden="true">📜</span></button>`
                         : `<span class="init-who">${esc(c.name)}</span>`}
+                    ${c.pc ? '' : `<button type="button" class="init-reveal${c.shown ? ' on' : ''}" data-act="reveal" data-id="${c.id}" aria-pressed="${c.shown}" title="${c.shown ? 'The player view shows this name. Click to hide it again.' : 'The player view calls this one an unknown creature. Click to show its name.'}">${c.shown ? '👁️ Name shown' : '🙈 Name hidden'}</button>`}
                     <span class="init-meta">${c.pc ? '👤 PC · ' : ''}${c.ac !== null ? `🛡️ AC ${c.ac} · ` : ''}bonus ${c.mod >= 0 ? '+' + c.mod : '−' + -c.mod}${c.pp !== null ? ` · 👁️ passive ${c.pp}` : ''}${down ? (c.pc ? ' · 🩸 death saves' : ' · 💀 down') : ''}</span>
                 </div>
                 <div class="init-conds">
@@ -368,6 +389,7 @@ function onFightClick(e) {
     else if (b.dataset.act === 'dmg') changeHp(id, -1);
     else if (b.dataset.act === 'heal') changeHp(id, 1);
     else if (b.dataset.act === 'remove') removeCombatant(id);
+    else if (b.dataset.act === 'reveal') toggleShown(id);
 }
 
 function setupInitiative() {
@@ -418,6 +440,16 @@ function setupInitiative() {
         renderFight();
         flash('init-status', '🎲 Everyone rolled again. Start combat when ready.');
     });
+    document.getElementById('init-reveal-all').addEventListener('click', () => {
+        const hidden = fight.list.filter(c => !c.pc && !c.shown);
+        if (!hidden.length) { flash('init-status', fight.list.some(c => !c.pc) ? '👁️ Every name is already shown.' : 'There are no creatures to reveal.'); return; }
+        hidden.forEach(c => { c.shown = true; });
+        saveFight();
+        renderFight();
+        flash('init-status', `👁️ The player view now names ${hidden.map(c => c.name).join(', ')}.`);
+    });
+    // A player view that just opened asks for the fight.
+    if (viewChannel) viewChannel.addEventListener('message', e => { if (e.data && e.data.type === 'hello') postPlayerView(); });
     document.getElementById('init-defeated').addEventListener('click', () => {
         // Player characters at 0 HP are making death saves, so they stay.
         const fallen = fight.list.filter(c => !c.pc && c.hp !== null && c.hp <= 0);
