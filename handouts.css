@@ -1,0 +1,138 @@
+/* ============================================
+   HANDOUT SHEETS (F48): the parchment look of the F27 article handout, for the
+   sheets handoutSheetHtml() (handout-engine.js) draws. .ho-ink is a plain white
+   sheet that saves printer ink. Needs style.css for the font variables.
+   ============================================ */
+
+.ho-sheet {
+  --ho-ink: #2b2318;
+  --ho-dark: #1d170f;
+  --ho-line: rgba(43, 35, 24, 0.5);
+  background: #f1e4c3;
+  background-image:
+    radial-gradient(ellipse at 15% 10%, rgba(255,250,235,0.55), transparent 55%),
+    radial-gradient(ellipse at 85% 90%, rgba(150,110,50,0.22), transparent 60%),
+    radial-gradient(ellipse at 50% 50%, transparent 60%, rgba(120,85,35,0.28) 100%);
+  color: var(--ho-ink);
+  box-shadow: inset 0 0 0 1px rgba(80,55,20,0.25), 0 6px 24px rgba(0,0,0,0.45);
+  font-family: var(--font-body);
+  margin: 0 auto;
+  overflow-wrap: anywhere;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.ho-sheet p { color: var(--ho-ink); }
+.ho-sheet.ho-ink { background: #fff; background-image: none; box-shadow: inset 0 0 0 2px #2b2318; }
+.ho-faint { opacity: 0.5; }
+.ho-rule { width: 60%; margin: 12px auto 8px; border-top: 3px double var(--ho-ink); }
+
+/* ── Wanted poster ── */
+.ho-wanted { max-width: 520px; padding: 26px 30px 22px; text-align: center; }
+.ho-wanted-head {
+  font-family: var(--font-display); font-weight: 700; color: var(--ho-dark);
+  font-size: clamp(2.6rem, 11vw, 4.4rem); line-height: 1; letter-spacing: 0.06em; text-transform: uppercase;
+  border-bottom: 3px double var(--ho-ink); padding-bottom: 6px;
+}
+.ho-wanted-terms {
+  font-family: var(--font-head); font-weight: 700; font-size: clamp(1rem, 4vw, 1.35rem);
+  letter-spacing: 0.22em; text-transform: uppercase; margin: 8px 0 12px;
+}
+.ho-portrait {
+  width: 62%; aspect-ratio: 4 / 5; margin: 0 auto 14px; border: 2px solid var(--ho-ink);
+  box-shadow: inset 0 0 0 5px rgba(241,228,195,0.6), inset 0 0 0 6px var(--ho-line);
+  display: flex; align-items: flex-end; justify-content: center;
+}
+.ho-ink .ho-portrait { box-shadow: inset 0 0 0 5px #fff, inset 0 0 0 6px #999; }
+.ho-portrait span { font-family: var(--font-head); font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; opacity: 0.55; padding-bottom: 8px; }
+.ho-wanted-name { font-family: var(--font-head); font-weight: 900; font-size: clamp(1.4rem, 5.5vw, 2rem); line-height: 1.15; color: var(--ho-dark); }
+.ho-wanted-alias { font-style: italic; font-size: 1.02rem; margin-top: 2px; }
+.ho-wanted-label { font-family: var(--font-head); font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; }
+.ho-wanted-crime { font-size: 1.15rem; line-height: 1.35; margin: 4px 0 10px; }
+.ho-wanted-look { font-size: 0.92rem; line-height: 1.4; font-style: italic; margin: 0 4px 12px; }
+.ho-wanted-reward {
+  font-family: var(--font-head); font-weight: 900; color: var(--ho-dark);
+  font-size: clamp(1.5rem, 6vw, 2.2rem); border-top: 3px double var(--ho-ink); border-bottom: 3px double var(--ho-ink);
+  padding: 6px 0 8px; margin-top: 4px;
+}
+.ho-wanted-reward span { display: block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; }
+.ho-wanted-paid { font-size: 0.9rem; margin-top: 8px; }
+.ho-wanted-issuer { font-family: var(--font-head); font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; margin-top: 12px; opacity: 0.85; }
+
+/* ── Letter and sealed note ── */
+.ho-letter { max-width: 620px; padding: 34px 40px 30px; position: relative; font-size: 1.08rem; line-height: 1.55; }
+.ho-letter p { margin: 0 0 0.8em; }
+.ho-letter-to { font-style: italic; }
+.ho-letter-re { font-family: var(--font-head); font-size: 0.8rem; letter-spacing: 0.06em; border-bottom: 1px solid var(--ho-line); padding-bottom: 6px; }
+.ho-letter-sign { margin: 1.4em 0 0 auto; width: max-content; max-width: 70%; text-align: left; }
+.ho-letter-sign p { margin: 0; }
+.ho-letter-close { font-style: italic; }
+.ho-letter-from { font-family: var(--font-display); font-size: 1.35rem; margin-top: 4px !important; color: var(--ho-dark); }
+.ho-letter-title { font-size: 0.88rem; opacity: 0.8; }
+.ho-seal { display: block; width: 78px; height: 78px; margin: 14px 0 0 6px; filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.35)); }
+.ho-note { max-width: 400px; padding: 26px 26px 20px; font-size: 1rem; font-style: italic; transform: rotate(-0.6deg); }
+.ho-note::before, .ho-note::after { content: ''; position: absolute; left: 0; right: 0; border-top: 1px dashed rgba(80,55,20,0.28); }
+.ho-note::before { top: 33%; }
+.ho-note::after { top: 66%; }
+.ho-note .ho-letter-re { font-style: normal; }
+.ho-note .ho-seal { margin: 12px auto 0; }
+
+/* ── Bounty board ── */
+.ho-board {
+  max-width: 900px; padding: 22px 22px 28px;
+  background: #6b4a2b;
+  background-image: repeating-linear-gradient(90deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 120px),
+    linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.18));
+  box-shadow: inset 0 0 0 6px #4a311b, 0 6px 24px rgba(0,0,0,0.45);
+}
+.ho-board-title {
+  text-align: center; font-family: var(--font-display); font-weight: 700; color: #f1e4c3;
+  font-size: clamp(1.4rem, 5vw, 2.2rem); margin: 4px 0 18px; text-shadow: 0 2px 2px rgba(0,0,0,0.5);
+}
+.ho-board-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 22px 18px; align-items: start; }
+.ho-notice {
+  position: relative; background: #f1e4c3; color: #2b2318; padding: 20px 16px 14px; transform: rotate(var(--tilt, 0deg));
+  background-image: radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(120,85,35,0.25) 100%);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.45);
+}
+.ho-pin { position: absolute; top: 6px; left: 50%; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #e66, #8b1d1d); box-shadow: 0 1px 2px rgba(0,0,0,0.6); }
+.ho-notice-head { font-family: var(--font-head); font-weight: 900; font-size: 1.08rem; line-height: 1.2; text-align: center; margin-bottom: 6px; }
+.ho-notice-text { font-size: 0.95rem; line-height: 1.4; margin: 0 0 6px; }
+.ho-notice-reward { font-family: var(--font-head); font-weight: 700; font-size: 0.95rem; text-align: center; border-top: 1px solid rgba(43,35,24,0.45); padding-top: 5px; }
+.ho-notice-contact { font-style: italic; font-size: 0.86rem; text-align: center; margin-top: 4px; }
+.ho-board.ho-ink { background: #fff; background-image: none; box-shadow: inset 0 0 0 2px #2b2318; }
+.ho-board.ho-ink .ho-board-title { color: #1d170f; text-shadow: none; }
+.ho-board.ho-ink .ho-notice { background: #fff; background-image: none; box-shadow: none; border: 1.5px solid #2b2318; }
+.ho-board.ho-ink .ho-pin { background: #2b2318; box-shadow: none; }
+
+/* ── Price list ── */
+.ho-prices { max-width: 560px; padding: 30px 36px 24px; }
+.ho-prices-name { text-align: center; font-family: var(--font-display); font-weight: 700; color: var(--ho-dark); font-size: clamp(1.5rem, 5.5vw, 2.2rem); line-height: 1.15; }
+.ho-prices-sub { text-align: center; font-family: var(--font-head); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; margin-top: 6px; border-bottom: 3px double var(--ho-ink); padding-bottom: 8px; }
+.ho-prices-note { text-align: center; font-style: italic; margin: 10px 0 4px; }
+.ho-prices-list { list-style: none; margin: 14px 0 0; padding: 0; }
+.ho-prices-list li { display: flex; align-items: baseline; gap: 6px; padding: 3px 0; font-size: 1.02rem; }
+.ho-item { flex: 0 1 auto; }
+.ho-item em { font-size: 0.82rem; }
+.ho-dots { flex: 1 1 20px; border-bottom: 2px dotted var(--ho-line); transform: translateY(-4px); min-width: 20px; }
+.ho-price { flex: 0 0 auto; font-family: var(--font-head); font-weight: 700; font-size: 0.95rem; white-space: nowrap; }
+.ho-prices-foot { text-align: center; font-family: var(--font-head); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; border-top: 3px double var(--ho-ink); margin-top: 14px; padding-top: 7px; opacity: 0.85; }
+
+@media (max-width: 600px) {
+  .ho-wanted, .ho-prices { padding: 20px 16px 18px; }
+  .ho-letter { padding: 24px 18px 22px; font-size: 1rem; }
+  .ho-letter-sign { max-width: 100%; }
+  .ho-board { padding: 16px 12px 20px; }
+  .ho-board-grid { grid-template-columns: 1fr; }
+}
+
+@media print {
+  .ho-sheet { box-shadow: none; max-width: none; }
+  .ho-sheet.ho-ink { box-shadow: inset 0 0 0 1.5pt #2b2318; }
+  .ho-sheet { break-inside: avoid; }
+  .ho-wanted { width: 6.4in; }
+  .ho-portrait { width: 48%; }
+  .ho-prices { width: 6.4in; }
+  .ho-letter { width: 6.8in; }
+  .ho-note { width: 4.6in; transform: none; }
+  .ho-board-grid { grid-template-columns: repeat(3, 1fr); }
+  .ho-notice, .ho-board-grid > * { break-inside: avoid; }
+}

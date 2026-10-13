@@ -132,6 +132,13 @@ const BACKUP_KEYS = [
         count: () => '1 kit'
     },
     {
+        key: 'gazette-handouts', tool: '📜 Handout Maker', href: 'handouts.html', what: 'Handouts',
+        // Typed text, escaped by the page; handoutClean() trims each handout to its shape on load.
+        clean: v => bkWhole(v, h => bkObj(h) && bkObj(h.forms) && Object.keys(h.forms).length <= 4
+            && Object.values(h.forms).every(bkObj) && (h.t === undefined || typeof h.t === 'string'), false),
+        count: v => bkN(Object.keys(v.forms).length, 'handout')
+    },
+    {
         key: 'gazette-shop', tool: "🏪 Merchant's Row", href: 'shop.html', what: 'Current shop',
         clean: v => bkWhole(v, s => bkObj(s) && (s.shop === undefined || s.shop === null || bkObj(s.shop))),
         count: v => v.shop && typeof v.shop.name === 'string' ? v.shop.name : 'No shop'

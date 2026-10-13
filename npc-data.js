@@ -843,3 +843,34 @@ function rollNPC(opts = {}, seeds = null) {
         generatedAt: new Date().toISOString()
     };
 }
+
+// ── Town Square links: ?seed=&race=…&lock=<part>.<seed>[.<values>] ──
+// The NPC page and the handout maker (F48) replay them with these two.
+// lock= token -> [part, { seed, extra }], or null if it doesn't make sense. statsOk(extra)
+// checks a kept stat block's [class, level]; the NPC page passes one that knows the classes.
+function parseNpcLock(token, statsOk = ([c, l]) => /^[A-Za-z]{1,20}$/.test(c) && /^\d+$/.test(l) && +l >= 1 && +l <= 20) {
+    const [part, seed, ...extra] = String(token).split('.');
+    if (!NPC_PARTS.includes(part) || !parseSeed(seed)) return null;
+    const valid = {
+        identity: () => extra.length === 2 && NPC_RACES.includes(extra[0]) && NPC_GENDERS.includes(extra[1]),
+        age: () => extra.length === 1 && NPC_AGE_BUCKETS.includes(extra[0]),
+        job: () => extra.length === 1 && Object.hasOwn(npcData.professions, extra[0]),
+        stats: () => extra.length === 0 || (extra.length === 2 && statsOk(extra))
+    }[part] || (NPC_JOB_PARTS.includes(part)
+        ? () => extra.length === 0 || (extra.length === 1 && Object.hasOwn(npcData.professions, extra[0]))
+        : () => extra.length === 0);
+    return valid() ? [part, { seed, extra }] : null;
+}
+
+// fields: the pickers { race, profession, age, gender } (a value or 'random').
+// pinned: { part: { seed, extra } } for kept parts; the rest roll from the base seed.
+// Returns the NPC (no stat block) with its seed and part seeds.
+function rollNpcPinned(fields, seed, pinned = {}) {
+    const rollOpts = { race: fields.race, professionType: fields.profession, age: fields.age, gender: fields.gender };
+    if (pinned.identity) [rollOpts.race, rollOpts.gender] = pinned.identity.extra;
+    if (pinned.age) [rollOpts.age] = pinned.age.extra;
+    if (pinned.job) [rollOpts.professionType] = pinned.job.extra;
+    rollOpts.partCategory = Object.fromEntries(NPC_JOB_PARTS.filter(p => pinned[p] && pinned[p].extra.length).map(p => [p, pinned[p].extra[0]]));
+    const seeds = Object.fromEntries(NPC_PARTS.map(part => [part, pinned[part] ? pinned[part].seed : deriveSeed(seed, part)]));
+    return { ...rollNPC(rollOpts, seeds), seed, seeds };
+}

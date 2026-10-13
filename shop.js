@@ -216,6 +216,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('roll-shop').addEventListener('click', () => roll());
     document.getElementById('copy-shop').addEventListener('click', copyShop);
     document.getElementById('copy-link').addEventListener('click', copyLink);
+    // The Handout Maker (F48) rebuilds this shop from its link as a price list.
+    document.getElementById('shop-handout').addEventListener('click', () => {
+        if (!shop || !shop.seed) { setStatus('This shop was rolled before shareable links. Roll a new one to make a handout.'); return; }
+        location.href = 'handouts.html?' + paramsQuery({ t: 'prices', from: 'shop', ...shopParams() });
+    });
     [typeSel, wealthSel].forEach(el => el.addEventListener('change', () => roll()));
 
     // A shared link wins over the saved shop.

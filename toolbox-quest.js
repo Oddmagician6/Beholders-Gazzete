@@ -143,6 +143,12 @@ function setupQuest() {
     });
     document.getElementById('qs-print').addEventListener('click', printQuest);
     window.addEventListener('afterprint', () => document.body.classList.remove('print-quest'));
+    // The Handout Maker (F48) rebuilds the quest from its link: a bounty board first, a letter one click away.
+    document.getElementById('qs-handout').addEventListener('click', () => {
+        if (!quest.seed) return;
+        const { tab, ...p } = questParams();
+        location.href = 'handouts.html?' + paramsQuery({ t: 'board', from: 'quest', ...p });
+    });
     document.getElementById('qs-link').addEventListener('click', () =>
         copyPageLink(ok => flash('quest-status', ok ? '🔗 Link copied. It opens this same quest.' : '⚠️ Copy blocked by the browser.')));
 }

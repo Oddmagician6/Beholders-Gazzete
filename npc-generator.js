@@ -32,13 +32,8 @@ function generateNPC(seed = newSeed(), push = true, pinned = null) {
         if (currentNPC && currentNPC.seeds) locks.forEach(part => { pinned[part] = pinOf(currentNPC, part); });
     }
     const opts = Object.fromEntries(Object.entries(NPC_FIELDS).map(([k, id]) => [k, document.getElementById(id).value]));
-    const rollOpts = { race: opts.race, professionType: opts.profession, age: opts.age, gender: opts.gender };
-    if (pinned.identity) [rollOpts.race, rollOpts.gender] = pinned.identity.extra;
-    if (pinned.age) [rollOpts.age] = pinned.age.extra;
-    if (pinned.job) [rollOpts.professionType] = pinned.job.extra;
-    rollOpts.partCategory = Object.fromEntries(NPC_JOB_PARTS.filter(p => pinned[p] && pinned[p].extra.length).map(p => [p, pinned[p].extra[0]]));
-    const seeds = Object.fromEntries(NPC_PARTS.map(part => [part, pinned[part] ? pinned[part].seed : deriveSeed(seed, part)]));
-    const npc = { ...rollNPC(rollOpts, seeds), seed, seeds, rolledWith: opts };
+    const npc = { ...rollNpcPinned(opts, seed, pinned), rolledWith: opts };
+    const seeds = npc.seeds;
     // The stat block follows the stats seed, so the stats lock keeps it; a kept block
     // also keeps its class and level.
     const force = { cls: opts.cls, level: parseInt(opts.level, 10) };
@@ -235,19 +230,9 @@ function npcParams() {
     return p;
 }
 
-// lock= token -> [part, { seed, extra }], or null if it doesn't make sense.
+// lock= token -> [part, { seed, extra }], or null if it doesn't make sense (parseNpcLock, npc-data.js).
 function parseLock(token) {
-    const [part, seed, ...extra] = String(token).split('.');
-    if (!NPC_PARTS.includes(part) || !parseSeed(seed)) return null;
-    const valid = {
-        identity: () => extra.length === 2 && NPC_RACES.includes(extra[0]) && NPC_GENDERS.includes(extra[1]),
-        age: () => extra.length === 1 && ['young', 'adult', 'middle', 'old', 'ancient'].includes(extra[0]),
-        job: () => extra.length === 1 && Object.hasOwn(npcData.professions, extra[0]),
-        stats: () => extra.length === 0 || (extra.length === 2 && Object.hasOwn(SB_CLASSES, extra[0]) && /^\d+$/.test(extra[1]) && +extra[1] >= 1 && +extra[1] <= 20)
-    }[part] || (NPC_JOB_PARTS.includes(part)
-        ? () => extra.length === 0 || (extra.length === 1 && Object.hasOwn(npcData.professions, extra[0]))
-        : () => extra.length === 0);
-    return valid() ? [part, { seed, extra }] : null;
+    return parseNpcLock(token, ([cls, level]) => Object.hasOwn(SB_CLASSES, cls) && /^\d+$/.test(level) && +level >= 1 && +level <= 20);
 }
 
 // Roll the NPC named in the address bar. Returns false when there's no seed in it.
@@ -365,6 +350,17 @@ function saveToNotebook() {
         href: 'npc-generator.html?' + paramsQuery(npcParams())
     });
     say(!r ? '⚠️ Storage is off' : r.full ? '⚠️ Notebook is full' : r.existed ? '📓 Already saved' : '✅ Saved to the notebook');
+}
+
+// The Handout Maker (F48) rebuilds this NPC from its link: a wanted poster first, a letter one click away.
+function makeHandout() {
+    if (!currentNPC || !currentNPC.seed) {
+        const btn = document.getElementById('handout-btn');
+        btn.textContent = '⚠️ Reroll to make one';
+        setTimeout(() => { btn.textContent = '📜 Make a Handout'; }, 2500);
+        return;
+    }
+    location.href = 'handouts.html?' + paramsQuery({ t: 'wanted', from: 'npc', ...npcParams() });
 }
 
 // Grimoire NPCs ticked for Print Selected, by savedKey().
