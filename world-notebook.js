@@ -12,6 +12,7 @@
    roll rebuilt from its link by notebook-sheets.js with its secrets left out; switch any
    line either way, and the entry remembers it (flip).
    Map pins (F53): a continent's card counts its pins; search and Copy All read them too.
+   Families (F55): search reads every name, title, note, and secret; Copy All lists the family.
    Your own maps (F54): removing a map's entry (or clearing the notebook) deletes its picture
    from map-store.js's IndexedDB too, and Export says the pictures aren't in the file.
    Nothing here rolls, and the URL holds only the tab: the notebook lives in this browser.
@@ -29,7 +30,8 @@ function nbMatches(e, kind, status, q) {
     if (kind !== 'all' && e.kind !== kind) return false;
     if (status !== 'all' && (e.kind !== 'quest' || e.status !== status)) return false;
     if (!q) return true;
-    return [e.title, e.sub, e.notes, e.dm, e.giver, e.reward, e.recap, e.npcs, e.loot, e.threads, ...(e.pins || []).flatMap(p => [p.name, p.note])]
+    const fam = e.fam ? [...e.fam.people.flatMap(p => [p.name, p.title, p.note]), ...e.fam.scandals.map(s => famScandalText(e.fam, s))] : [];
+    return [e.title, e.sub, e.notes, e.dm, e.giver, e.reward, e.recap, e.npcs, e.loot, e.threads, ...(e.pins || []).flatMap(p => [p.name, p.note]), ...fam]
         .filter(Boolean).join(' ').toLowerCase().includes(q);
 }
 
@@ -473,6 +475,8 @@ function nbAsText(nb) {
             const to = p.to && nbFind(nb, p.to);
             out.push(`Pin ${n + 1}${p.name ? ': ' + p.name : ''}${p.note ? '. ' + p.note : ''}${to ? ` (see ${to.title})` : ''}`);
         });
+        if (e.fam) e.fam.people.forEach(p => out.push(`- ${p.name}: ${famPersonLine(e.fam, p)}${p.note ? ' Note: ' + p.note : ''}`));
+        if (e.fam && e.fam.scandals.length) out.push('Family secrets: ' + e.fam.scandals.map(s => famScandalText(e.fam, s)).join(' '));
         const linked = e.links.map(l => nbFind(nb, l)).filter(Boolean).map(o => o.title);
         if (linked.length) out.push('Linked to: ' + linked.join('; '));
         if (e.href) out.push(new URL(e.href, location.href).href);

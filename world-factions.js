@@ -4,7 +4,8 @@
    a city, or a kingdom, one faction's full page (leader and lieutenants open on the
    NPC page), and the rivalries and alliances between them. "Use the Pantheon tab's
    gods" links a pantheon, and then temples, orders, and some cults and houses follow
-   one of its gods. Nothing is stored: the URL holds the factions.
+   one of its gods. Nothing is stored: the URL holds the factions. Each leader's 🌳 button rolls
+   their family on the Families tab (F55).
    URL: ?tab=factions&seed=&count=&focus=&scale=&faction=<number>&gods=&gsize=&gshape=&gnaming=
    ============================================ */
 
@@ -116,6 +117,16 @@ function facRosterHTML(w, ctx) {
     }).join('')}</div>`;
 }
 
+// The Families tab (F55), built around this faction's leader, linked back to these factions.
+function facFamilyLink(w, i, ctx) {
+    const f = w.factions[i], p = facParams();
+    return famRootLink(f.leader, {
+        title: f.leader.title,
+        house: f.type === 'house' ? facCap(facName(w, i, ctx)) : '',
+        extra: { facs: facState.seed, fcount: p.count, ffocus: p.focus, fscale: p.scale }
+    });
+}
+
 function facPeopleLinks(f) {
     const people = [f.leader, ...f.lieutenants];
     return `<p class="pan-links">${people.map(p => `<a class="btn" href="${esc(facNpcLink(p))}">🎭 ${esc(p.npc.firstName)}</a>`).join(' ')}</p>`;
@@ -133,6 +144,7 @@ function facOneHTML(w, i, ctx) {
         <h5 class="fac-sub">The people around the ${esc(f.leader.title.toLowerCase())}</h5>
         ${facDl(facLieutenantLines(w, i, ctx))}
         ${facPeopleLinks(f)}
+        <p class="pan-links"><a class="btn" href="${esc(facFamilyLink(w, i, ctx))}">🌳 ${f.type === 'house' ? "The House's Family Tree" : `${esc(f.leader.npc.firstName)}'s Family Tree`}</a></p>
         ${god && god.linked ? `<p class="pan-links"><a class="btn" href="${esc(facPantheonLink(god))}">⛪ Read about ${esc(god.name)}</a></p>` : ''}`;
 }
 

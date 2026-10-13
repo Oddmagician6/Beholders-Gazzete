@@ -9,6 +9,8 @@
    it is "<part head>|<label>". Rooms, foes, traps, stat blocks, and treasure never
    make a sheet at all. The entry's own summary and notes lead every sheet; its DM-only
    notes never do. Sessions and quests have no roll: their own fields are the sheet.
+   A family (F55) keeps its people in the entry: one line each (keyed by person id, so a
+   rename keeps its switch), their notes and the family's secrets DM-only.
    Needs the Worldbuilder page: every engine, and each tab's _FIELDS and _KEYS maps.
    ============================================ */
 
@@ -265,6 +267,17 @@ function nbSheet(e) {
     if (e.pins && e.pins.length) {
         parts.push({ head: 'Pins on the map', lines: e.pins.map((p, n) =>
             ({ key: `Pins on the map|${p.id}`, label: `${n + 1}. ${pinLabel(p, n)}`, text: p.note || 'Marked on the map.', dm: true })) });
+    }
+    if (e.fam && typeof famPersonLine === 'function') {
+        const fam = e.fam;
+        parts.push({ head: 'The family', lines: fam.people.flatMap(p => [
+            { key: `The family|${p.id}`, label: p.name, text: famPersonLine(fam, p), dm: false },
+            ...(p.note ? [{ key: `The family|${p.id}|note`, label: `About ${p.name.split(' ')[0]}`, text: p.note, dm: true }] : [])
+        ]) });
+        if (fam.scandals.length) {
+            parts.push({ head: 'Family secrets', lines: fam.scandals.map(s =>
+                ({ key: `Family secrets|${hashString(s.text + '|' + s.who.join(','))}`, label: 'Secret', text: famScandalText(fam, s), dm: true })) });
+        }
     }
     return { parts, broken: rolled === null };
 }

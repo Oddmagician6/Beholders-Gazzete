@@ -7,6 +7,7 @@
    tab's gods" links a pantheon, and then the temple and the factions follow its gods.
    A town opened from a Continent tab marker stands in that realm (cont=…&ctown=): its
    rule follows the realm's kinds of government, and it knows its climate and exports.
+   A town ruled by a noble has a 🌳 button for the ruling family (the Families tab, F55).
    Nothing is stored: the URL holds the town.
    URL: ?tab=town&seed=&size=&setting=&wealth=&gods=&gsize=&gshape=&gnaming=
         &cont=&csize=&cland=&cnat=&ctown=<town number on the map>
@@ -227,7 +228,8 @@ function renderTown() {
         <section class="wb-block wb-wide">
             <h4>🏘️ At a glance</h4>
             ${townDl(townLines(t, ctx))}
-            <p class="pan-links">${people.map(p => townNpcBtn(p)).join(' ')}</p>
+            <p class="pan-links">${people.map(p => townNpcBtn(p)).join(' ')}${t.leader.cat === 'noble'
+                ? ` <a class="btn" href="${esc(famRootLink(t.leader, { title: t.leader.title }))}">🌳 The Ruling Family</a>` : ''}</p>
         </section>
         <section class="wb-block wb-wide">
             <h4>🗺️ ${t.districts.length === 1 ? 'The place' : `${t.districts.length} districts`}</h4>

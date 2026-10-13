@@ -4,13 +4,15 @@
    world-<tool>.js and registers itself in WORLD_TABS:
      WORLD_TABS[id] = { params() → URL params, apply(urlParams) → true if it held a roll,
                         fresh(push) → a first roll, rolled() → true once it has one,
-                        entry() → { title, sub } for the Notebook }
+                        entry() → { title, sub } for the Notebook, save(statusId)? its own 📓 Save }
    Calendar (F33): world-calendar.js, rolled by calendar-engine.js.
    Pantheon (F34): world-pantheon.js, rolled by pantheon-engine.js; its holy days can go on the calendar.
    Factions (F35): world-factions.js, rolled by faction-engine.js (leaders from npc-data.js); can follow the pantheon's gods.
    History (F36): world-history.js, rolled by history-engine.js; can name the pantheon's gods and date the factions.
    Town (F37): world-town.js, rolled by town-engine.js; links out to the NPC page, the Factions tab, the Toolbox
    (Tavern, Quest), and the Shop page, and its temple can follow the pantheon's gods.
+   Families (F55): world-family.js, rolled by family-engine.js and drawn by family-tree.js; edits keep the
+   whole family in the Notebook. The Factions and Town tabs link to a leader's family.
    Sites (F39): world-sites.js, rolled by site-engine.js (foes from encounter-engine.js); its fights open in
    the Toolbox, its hoard in the Loot generator, and its story can come from the history.
    Continent (F40): world-continent.js, rolled by continent-engine.js; its towns open on the Town tab inside their
@@ -22,7 +24,7 @@
    Seeds and the shareable URL: rng.js.
    ============================================ */
 
-const WORLD_TAB_ORDER = ['calendar', 'pantheon', 'factions', 'history', 'town', 'sites', 'continent', 'maps', 'notebook'];
+const WORLD_TAB_ORDER = ['calendar', 'pantheon', 'factions', 'history', 'town', 'family', 'sites', 'continent', 'maps', 'notebook'];
 const WORLD_TABS = {};
 
 function esc(text) {
@@ -74,6 +76,7 @@ function switchWorldTab(tab) {
 function saveWorldTab(tab, statusId) {
     const t = WORLD_TABS[tab];
     if (!t.rolled()) return;
+    if (t.save) { t.save(statusId); return; }
     const r = nbAdd({ kind: tab, ...t.entry(), href: 'worldbuilder.html?' + paramsQuery(t.params()) });
     if (!r) flash(statusId, "⚠️ This browser won't keep a notebook (storage is off).");
     else if (r.full) flash(statusId, '⚠️ The notebook is full. Remove an entry first.');

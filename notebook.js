@@ -24,6 +24,10 @@
    Without map-pins.js on the page they pass through untouched, like a monster without homebrew.js.
    Your own maps (F54) are kind 'map': uploaded on the Maps tab, so no link; the picture lives in
    IndexedDB under the entry's id (map-store.js), and the entry keeps the name, notes, and pins.
+   Family trees (F55) are kind 'family', with the whole family in `fam` (family-tree.js, cleaned by
+   famClean, which every page that loads this file loads too). A rolled family keeps its roll's link
+   as well, so the Families tab finds it again; a family started by hand has no link. Its people may
+   point at NPC entries (`to`), kept to entries that exist like pins.
    The page side lives in world-notebook.js. Needs rng.js (paramsQuery) on the page.
    ============================================ */
 
@@ -41,7 +45,8 @@ const NB_KINDS = {
     session: { icon: '📖', label: 'Session', hand: true },
     quest: { icon: '❗', label: 'Quest', hand: true },
     monster: { icon: '🐲', label: 'Monster', hand: true },
-    map: { icon: '🖼️', label: 'Map', hand: true }
+    map: { icon: '🖼️', label: 'Map', hand: true },
+    family: { icon: '🌳', label: 'Family', hand: true }
 };
 // Kinds whose entry can hold pins on its map (F53, F54).
 const NB_PIN_KINDS = { continent: true, map: true };
@@ -54,7 +59,10 @@ const NB_QUEST_STATUS = {
 const NB_HREF = /^(worldbuilder|npc-generator|toolbox)\.html(\?[A-Za-z0-9_.~%+=&*-]*)?$/;
 const NB_LIMITS = { entries: 500, title: 120, sub: 400, notes: 4000, name: 80, href: 2000, links: 60, flips: 400, flip: 300, file: 2000000 };
 // The options that make two rolls with one seed different, per kind (its own URL keys).
-const NB_SIG_KEYS = { pantheon: ['size', 'shape', 'naming'], factions: ['count', 'focus', 'scale'], continent: ['size', 'land', 'nations'] };
+const NB_SIG_KEYS = {
+    pantheon: ['size', 'shape', 'naming'], factions: ['count', 'focus', 'scale'], continent: ['size', 'land', 'nations'],
+    family: ['gens', 'size', 'race', 'root', 'rcat', 'rage', 'rtitle', 'house']
+};
 // URL keys that name another tab's roll: the seed key, and its option keys → that kind's keys.
 const NB_USES = {
     gods: { kind: 'pantheon', keys: { gsize: 'size', gshape: 'shape', gnaming: 'naming' } },
@@ -81,6 +89,10 @@ const NB_FIELDS = {
     // Without homebrew.js on the page the monster passes through untouched, so nothing is lost.
     monster: {
         mon: v => (typeof hbClean === 'function' ? hbClean(v) : v)
+    },
+    // The same for a family without family-tree.js.
+    family: {
+        fam: v => (typeof famClean === 'function' ? famClean(v) : v)
     }
 };
 
@@ -144,6 +156,7 @@ function nbClean(raw) {
             && nbHrefOk(e.kind, e.href)
             && nbText(e.title, NB_LIMITS.title)
             && (e.kind !== 'monster' || (typeof hbClean === 'function' ? !!hbClean(e.mon) : !!e.mon))
+            && (e.kind !== 'family' || (typeof famClean === 'function' ? !!famClean(e.fam) : !!e.fam))
             && nb.entries.length < NB_LIMITS.entries;
         if (!ok) { dropped++; return; }
         ids.add(e.id);
@@ -162,10 +175,11 @@ function nbClean(raw) {
             ...(NB_PIN_KINDS[e.kind] && Array.isArray(e.pins) && e.pins.length ? { pins: e.pins } : {})
         });
     });
-    // Links only to entries that made it, never to itself, each once. Pins open only entries that made it too.
+    // Links only to entries that made it, never to itself, each once. Pins and family members open only entries that made it too.
     nb.entries.forEach(e => {
         e.links = [...new Set(e.links)].filter(l => l !== e.id && ids.has(l)).slice(0, NB_LIMITS.links);
         if (e.pins) nbSetPins(e, e.pins, ids);
+        if (e.fam && typeof famSetLinks === 'function') famSetLinks(e.fam, ids, e.id);
     });
     return { nb, dropped };
 }
@@ -209,9 +223,11 @@ function nbFind(nb, id) {
     return nb.entries.find(e => e.id === id) || null;
 }
 
-// Where an entry opens: its link, the Monster Maker for a homebrew monster, or the Maps tab for your own map.
+// Where an entry opens: its link, the Monster Maker for a homebrew monster, the Maps tab for your own map,
+// or the Families tab for a family started by hand.
 function nbOpenHref(e) {
-    return e.href || (e.kind === 'monster' ? `monster-maker.html?nb=${e.id}` : e.kind === 'map' ? `worldbuilder.html?tab=maps&map=${e.id}` : '');
+    return e.href || (e.kind === 'monster' ? `monster-maker.html?nb=${e.id}` : e.kind === 'map' ? `worldbuilder.html?tab=maps&map=${e.id}`
+        : e.kind === 'family' ? `worldbuilder.html?tab=family&fam=${e.id}` : '');
 }
 
 // ── Links between entries ─────────────────────────────────
@@ -259,6 +275,7 @@ function nbRemove(nb, id) {
     nb.entries.forEach(e => {
         e.links = e.links.filter(l => l !== id);
         (e.pins || []).forEach(p => { if (p.to === id) p.to = ''; });
+        if (e.fam) e.fam.people.forEach(p => { if (p.to === id) p.to = ''; });
     });
 }
 
@@ -339,6 +356,8 @@ function nbMerge(nb, incoming) {
             if (e.notes && !same.notes.includes(e.notes)) same.notes = nbText(same.notes ? `${same.notes}\n\n${e.notes}` : e.notes, NB_LIMITS.notes);
             if (e.dm && !(same.dm || '').includes(e.dm)) same.dm = nbText(same.dm ? `${same.dm}\n\n${e.dm}` : e.dm, NB_LIMITS.notes);
             if (e.flip) same.flip = nbFlips([...(same.flip || []), ...e.flip]);
+            // A family keeps whichever copy was edited last.
+            if (e.fam && same.fam && (e.fam.edited || '') > (same.fam.edited || '')) { same.fam = e.fam; same.sub = e.sub; }
             merged++;
             return;
         }
@@ -356,6 +375,14 @@ function nbMerge(nb, incoming) {
         const have = into.pins && into.pins !== e.pins ? into.pins : [];
         const fresh = e.pins.filter(p => !have.some(h => h.id === p.id)).map(p => ({ ...p, to: map[p.to] || '' }));
         nbSetPins(into, [...have, ...fresh], new Set(nb.entries.map(x => x.id)));
+    });
+    // Family members open the same NPC entries under their ids here.
+    const here = new Set(nb.entries.map(x => x.id));
+    incoming.entries.forEach(e => {
+        const into = map[e.id] && nbFind(nb, map[e.id]);
+        if (!into || !into.fam || into.fam !== e.fam) return;
+        into.fam = { ...e.fam, people: e.fam.people.map(p => ({ ...p, to: (p.to && map[p.to]) || '' })) };
+        if (typeof famSetLinks === 'function') famSetLinks(into.fam, here, into.id);
     });
     if (!nb.name && incoming.name) nb.name = incoming.name;
     return { added, merged, full, ids: map };
