@@ -921,3 +921,14 @@ footer::before {
 .party-chip-use:hover { border-color: var(--gold-mid); background: rgba(201,160,64,0.12); }
 .party-chip-edit { color: var(--gold-bright); }
 @media print { .party-chip { display: none !important; } }
+
+/* "How it works" section under a tool: plain HTML, so search engines read what the tool does */
+.tool-guide { max-width: 860px; margin: 40px auto 8px; padding: 24px 28px; background: var(--bg-card); border: var(--border-gold); border-radius: var(--radius-md); color: var(--text-mid); line-height: 1.65; text-align: left; }
+.tool-guide h2 { font-family: var(--font-head); color: var(--gold-bright); font-size: 1.25rem; margin: 0 0 10px; }
+.tool-guide h3 { font-family: var(--font-head); color: var(--gold-mid); font-size: 1rem; margin: 18px 0 6px; }
+.tool-guide p { margin: 0 0 10px; }
+.tool-guide ul { margin: 0 0 10px; padding-left: 22px; }
+.tool-guide li { margin-bottom: 6px; }
+.tool-guide a { color: var(--gold-bright); }
+@media (max-width: 600px) { .tool-guide { padding: 18px 16px; } }
+@media print { .tool-guide { display: none !important; } }
