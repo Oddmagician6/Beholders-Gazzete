@@ -7,7 +7,7 @@
 // (then running the export) installs a new cache; old caches are deleted on activate.
 // Cache keys drop the query string (?seed=, ?t=, ?id= ...): pages rebuild their state from the URL.
 
-const VERSION = '373a9cbc6828';
+const VERSION = 'a30623c98312';
 const STATIC = 'gazette-static-' + VERSION;
 const PAGES = 'gazette-pages';
 const FONTS = 'gazette-fonts';
@@ -15,12 +15,12 @@ const FONTS = 'gazette-fonts';
 const PRECACHE = [
   // Tool pages
   'npc-generator.html', 'loot-generator.html', 'rumors.html', 'spellbook.html',
-  'economy.html', 'shop.html', 'session-kit.html', 'toolbox.html', 'worldbuilder.html', 'rules.html', 'bestiary.html',
+  'economy.html', 'shop.html', 'session-kit.html', 'toolbox.html', 'worldbuilder.html', 'rules.html', 'bestiary.html', 'privacy.html',
   // Styles and scripts
   'style.css', 'homepage.css', 'economy-page.css', 'sw-register.js',
   'rng.js', 'npc-data.js', 'npc-statblock.js', 'spell-detail.js', 'npc-generator.js', 'loot-data.js', 'loot-engine.js', 'loot-generator.js', 'magic-items-data.js',
   'coins.js', 'market-data.js', 'economy-full.js', 'names-data.js', 'shop-engine.js', 'shop.js',
-  'town-crier.js', 'rumor-deck.js', 'rumors.js', 'session-kit.js', 'travel-engine.js', 'dice-engine.js', 'dice-fab.js', 'toolbox.js', 'toolbox-table.js', 'monsters-data.js', 'monster-statblocks.js', 'toolbox-statblock.js', 'encounter-engine.js', 'toolbox-encounter.js', 'tavern-engine.js', 'toolbox-tavern.js', 'downtime-engine.js', 'toolbox-downtime.js', 'quest-engine.js', 'toolbox-quest.js', 'toolbox-clocks.js', 'rules-data.js', 'rules.js', 'bestiary.js', 'calendar-engine.js', 'pantheon-engine.js', 'worldbuilder.js', 'world-calendar.js', 'world-pantheon.js', 'faction-engine.js', 'world-factions.js', 'history-engine.js', 'world-history.js', 'town-engine.js', 'world-town.js', 'site-engine.js', 'world-sites.js', 'continent-engine.js', 'world-continent.js', 'notebook.js', 'world-notebook.js', 'spells-data.js', 'script.js', 'raven-form.js', 'nav.js',
+  'town-crier.js', 'rumor-deck.js', 'rumors.js', 'session-kit.js', 'travel-engine.js', 'dice-engine.js', 'dice-fab.js', 'toolbox.js', 'toolbox-table.js', 'monsters-data.js', 'monster-statblocks.js', 'toolbox-statblock.js', 'encounter-engine.js', 'toolbox-encounter.js', 'tavern-engine.js', 'toolbox-tavern.js', 'downtime-engine.js', 'toolbox-downtime.js', 'quest-engine.js', 'toolbox-quest.js', 'toolbox-clocks.js', 'rules-data.js', 'rules.js', 'bestiary.js', 'calendar-engine.js', 'pantheon-engine.js', 'worldbuilder.js', 'world-calendar.js', 'world-pantheon.js', 'faction-engine.js', 'world-factions.js', 'history-engine.js', 'world-history.js', 'town-engine.js', 'world-town.js', 'site-engine.js', 'world-sites.js', 'continent-engine.js', 'world-continent.js', 'notebook.js', 'world-notebook.js', 'backup.js', 'spells-data.js', 'script.js', 'raven-form.js', 'nav.js',
   // Data
   'rumors.json',
   // Icons
@@ -125,7 +125,7 @@ function offlinePage() {
   const tools = [
     ['session-kit.html', 'DM Session Kit'], ['npc-generator.html', 'Town Square (NPCs)'],
     ['loot-generator.html', 'Vault of Wonders (loot)'], ['shop.html', "Merchant's Row (shops)"],
-    ['rumors.html', 'The Tavern (rumors)'], ['toolbox.html', 'DM Toolbox (names)'], ['spellbook.html', 'Spellbook'], ['bestiary.html', 'Bestiary'], ['rules.html', 'Rules Quick Reference'], ['economy.html', 'Market Exchange']
+    ['rumors.html', 'The Tavern (rumors)'], ['toolbox.html', 'DM Toolbox (names)'], ['spellbook.html', 'Spellbook'], ['bestiary.html', 'Bestiary'], ['rules.html', 'Rules Quick Reference'], ['economy.html', 'Market Exchange'], ['privacy.html#backup', 'Back up everything']
   ];
   const links = tools.map(([href, name]) => `<li><a href="${BASE}${href}">${name}</a></li>`).join('');
   const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
