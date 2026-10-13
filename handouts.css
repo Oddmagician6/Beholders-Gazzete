@@ -116,7 +116,22 @@
 .ho-price { flex: 0 0 auto; font-family: var(--font-head); font-weight: 700; font-size: 0.95rem; white-space: nowrap; }
 .ho-prices-foot { text-align: center; font-family: var(--font-head); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; border-top: 3px double var(--ho-ink); margin-top: 14px; padding-top: 7px; opacity: 0.85; }
 
+/* ── Lore sheet (F51: the notebook's Print for Players) ── */
+.ho-lore { max-width: 680px; width: 100%; box-sizing: border-box; padding: 28px 34px 24px; font-size: 1rem; line-height: 1.45; }
+.ho-lore-kind { text-align: center; font-family: var(--font-head); font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.8; }
+.ho-lore-title { text-align: center; font-family: var(--font-display); font-weight: 700; color: var(--ho-dark); font-size: clamp(1.4rem, 5vw, 2.1rem); line-height: 1.15; margin: 4px 0 0; }
+.ho-lore-part { break-inside: avoid; margin: 0 0 12px; }
+.ho-lore-part h4 { font-family: var(--font-head); font-weight: 700; font-size: 1.02rem; color: var(--ho-dark); border-bottom: 1px solid var(--ho-line); padding-bottom: 3px; margin: 16px 0 6px; }
+.ho-lore dl { margin: 0; }
+.ho-lore dl > div { margin: 0 0 6px; }
+.ho-lore dt { display: inline; font-family: var(--font-head); font-weight: 700; font-size: 0.82rem; letter-spacing: 0.04em; }
+.ho-lore dt::after { content: ': '; }
+.ho-lore dd { display: inline; margin: 0; }
+.ho-lore dd p { display: inline; margin: 0; }
+.ho-lore dd p + p::before { content: ' '; display: block; height: 0.4em; }
+
 @media (max-width: 600px) {
+  .ho-lore { padding: 20px 16px 18px; }
   .ho-wanted, .ho-prices { padding: 20px 16px 18px; }
   .ho-letter { padding: 24px 18px 22px; font-size: 1rem; }
   .ho-letter-sign { max-width: 100%; }

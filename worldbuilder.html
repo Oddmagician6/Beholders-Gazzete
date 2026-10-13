@@ -32,6 +32,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="handouts.css">
   <style>
     .page-hero { background: radial-gradient(ellipse at 25% 35%, rgba(70,120,110,0.38) 0%, transparent 45%), radial-gradient(ellipse at 78% 65%, rgba(150,110,60,0.35) 0%, transparent 50%), linear-gradient(160deg, #070b0a 0%, #12160f 40%, #0e0c08 70%, #050403 100%); }
     .world-body { max-width: 940px; margin: 0 auto; padding: 50px 24px 60px; }
@@ -202,6 +203,29 @@
     .nb-last h4 { font-family: var(--font-ui); font-size: 0.78rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold-mid); margin: 16px 0 6px; padding-top: 10px; border-top: 1px solid rgba(201,160,64,0.2); }
     .nb-last ul { margin: 0; padding-left: 20px; }
     .nb-last-actions { margin: 14px 0 0; }
+    .nb-dm { border-color: rgba(176,84,84,0.45); }
+    /* Print for players (F51): tick entries, switch lines, preview the sheets. */
+    .nb-pl { border: 1px solid var(--gold-dim); border-radius: var(--radius-sm); padding: 18px 20px; margin: 0 0 18px; background: rgba(0,0,0,0.22); }
+    .nb-pl-h { font-family: 'IM Fell English', serif; font-size: 1.5rem; font-weight: 400; color: var(--gold-bright); margin: 0 0 6px; }
+    .nb-pl p { overflow-wrap: anywhere; }
+    .nb-pl-pick { max-height: 60vh; overflow-y: auto; border: 1px solid rgba(201,160,64,0.2); border-radius: var(--radius-sm); padding: 6px 10px; margin: 10px 0; }
+    .nb-pl-item { border-bottom: 1px solid rgba(201,160,64,0.15); padding: 6px 0; }
+    .nb-pl-item:last-child { border-bottom: none; }
+    .nb-pl-tick { display: flex; gap: 8px; align-items: baseline; cursor: pointer; color: var(--text-bright); overflow-wrap: anywhere; min-width: 0; }
+    .nb-pl-tick input { flex: none; }
+    .nb-pl-choose { margin: 6px 0 4px 26px; }
+    .nb-pl-part { margin: 4px 0; }
+    .nb-pl-part summary { font-family: var(--font-ui); font-size: 0.78rem; color: var(--gold-mid); cursor: pointer; overflow-wrap: anywhere; }
+    .nb-pl-n { color: var(--text-dim); }
+    .nb-pl-lines { display: flex; flex-direction: column; gap: 4px; margin: 6px 0; }
+    .nb-pl-line { text-align: left; background: rgba(0,0,0,0.2); border: 1px solid rgba(201,160,64,0.3); border-radius: var(--radius-sm); color: var(--text-mid); font: inherit; font-size: 0.82rem; padding: 5px 8px; cursor: pointer; overflow-wrap: anywhere; }
+    .nb-pl-line b { color: var(--text-bright); font-weight: 700; }
+    .nb-pl-line:hover, .nb-pl-line:focus-visible { border-color: var(--gold-bright); }
+    .nb-pl-off { opacity: 0.6; border-style: dashed; border-color: rgba(176,84,84,0.5); }
+    .nb-pl-off b { text-decoration: line-through; text-decoration-color: rgba(176,84,84,0.7); }
+    .nb-pl-ink { font-family: var(--font-ui); font-size: 0.8rem; color: var(--text-mid); display: inline-flex; gap: 6px; align-items: center; }
+    .nb-pl-sheets { display: flex; flex-direction: column; gap: 22px; margin-top: 16px; }
+    .nb-pl-sheets:empty { display: none; }
     /* The site card */
     .site-map-wrap { border: 1px solid rgba(201,160,64,0.3); border-radius: var(--radius-sm); overflow: hidden; background: rgba(0,0,0,0.25); }
     .site-map { display: block; width: 100%; height: auto; max-height: 620px; }
@@ -461,6 +485,16 @@
       body.print-last .nb-last * { color: #000 !important; }
       body.print-last .nb-last-h { font-size: 26pt; }
       body.print-last .nb-last h4 { border-color: #999; }
+      /* Print for players (F51): only the parchment sheets. */
+      body.print-players { background: #fff !important; }
+      body.print-players > :not(main), body.print-players .tool-tabs, body.print-players .tool-panel:not(#tab-notebook),
+      body.print-players #tab-notebook .tool-card > :not(#nb-pl), body.print-players #tab-notebook .tool-note,
+      body.print-players #nb-pl > :not(#nb-pl-sheets) { display: none !important; }
+      body.print-players .world-body { padding: 0; max-width: none; }
+      body.print-players .tool-card { background: none; border: none; padding: 0; }
+      body.print-players .nb-pl { background: none; border: none; padding: 0; margin: 0; }
+      body.print-players .nb-pl-sheets { display: block; margin: 0; }
+      body.print-players .ho-lore { width: 6.8in; margin: 0 auto 0.4in; }
     }
   </style>
 </head>
@@ -724,6 +758,7 @@
           <button type="button" class="btn btn-gold" id="nb-new-session">📖 Log a Session</button>
           <button type="button" class="btn" id="nb-new-quest">❗ Add a Quest</button>
           <button type="button" class="btn" id="nb-last-btn" aria-controls="nb-last" aria-expanded="false">📣 Last Time On…</button>
+          <button type="button" class="btn" id="nb-pl-btn" aria-controls="nb-pl" aria-expanded="false">🖨️ Print for Players</button>
         </div>
         <section class="nb-last" id="nb-last" aria-label="Last time on" hidden>
           <div id="nb-last-body"></div>
@@ -733,6 +768,20 @@
             <button type="button" class="btn" id="nb-last-close">✕ Close</button>
           </div>
           <p class="tool-status" id="nb-last-status" role="status" aria-live="polite"></p>
+        </section>
+        <section class="nb-pl" id="nb-pl" aria-label="Print for players" hidden>
+          <h3 class="nb-pl-h">🖨️ Print for Players</h3>
+          <p class="wb-small">Tick what to hand out. Each roll comes back from its link with the secrets left out: 🔒 lines stay with you, 👁️ lines go to the players. Click a line to switch it; the notebook remembers. Rooms, foes, traps, and treasure never print, and neither do 🔒 DM-only notes.</p>
+          <p class="nb-count" id="nb-pl-count"></p>
+          <div class="nb-pl-pick" id="nb-pl-pick"></div>
+          <div class="tool-toolbar nb-last-actions">
+            <button type="button" class="btn btn-gold" id="nb-pl-print">🖨️ Print</button>
+            <button type="button" class="btn" id="nb-pl-copy">📋 Copy</button>
+            <label class="nb-pl-ink"><input type="checkbox" id="nb-pl-ink"> 🖋️ Ink saver</label>
+            <button type="button" class="btn" id="nb-pl-close">✕ Close</button>
+          </div>
+          <p class="tool-status" id="nb-pl-status" role="status" aria-live="polite"></p>
+          <div class="nb-pl-sheets" id="nb-pl-sheets" aria-label="The sheets the players get"></div>
         </section>
         <p class="nb-count" id="nb-count"></p>
         <div id="nb-list" aria-live="polite"></div>
@@ -745,7 +794,7 @@
         </div>
         <p class="tool-status" id="nb-status" role="status" aria-live="polite"></p>
       </div>
-      <p class="tool-note">The notebook lives in this browser only: nothing is sent anywhere, and clearing your browser's site data clears it too, so 💾 Export now and then, or <a href="privacy.html#backup">back up everything</a> the tools keep.<br>Each entry keeps the link that rolls it again, so a saved town comes back exactly as it was. Saving links a roll to the saved rolls it uses (a town or a history on a saved pantheon's gods, a history that dates saved factions); link anything else by hand under 📝 Notes and links.<br>A session holds its number, the date you played, what happened, the NPCs met, the loot handed out, and the threads left open. A quest holds its giver, its reward, and a status (🟡 open, ✅ done, ❌ failed) you change on the card. 📣 Last Time On… reads back the latest session that has a recap, with its open threads and every open quest, and prints it large enough to read aloud.<br>📂 Import adds a notebook file to this one; entries you already have keep your notes and gain the file's.</p>
+      <p class="tool-note">The notebook lives in this browser only: nothing is sent anywhere, and clearing your browser's site data clears it too, so 💾 Export now and then, or <a href="privacy.html#backup">back up everything</a> the tools keep.<br>Each entry keeps the link that rolls it again, so a saved town comes back exactly as it was. Saving links a roll to the saved rolls it uses (a town or a history on a saved pantheon's gods, a history that dates saved factions); link anything else by hand under 📝 Notes and links.<br>A session holds its number, the date you played, what happened, the NPCs met, the loot handed out, and the threads left open. A quest holds its giver, its reward, and a status (🟡 open, ✅ done, ❌ failed) you change on the card. 📣 Last Time On… reads back the latest session that has a recap, with its open threads and every open quest, and prints it large enough to read aloud.<br>Every entry has 👁️ notes the players may see and 🔒 notes for you alone. 🖨️ Print for Players turns the entries you tick into parchment handouts: faction secrets, NPC secrets and hooks, how a site was lost and who holds it now, what a ruin means today, and who really rules a town all start out 🔒, and you can switch any line either way. Export and backups keep both kinds of notes.<br>📂 Import adds a notebook file to this one; entries you already have keep your notes and gain the file's.</p>
     </section>
   </main>
 
@@ -800,6 +849,7 @@
   <script src="world-town.js"></script>
   <script src="world-sites.js"></script>
   <script src="world-continent.js"></script>
+  <script src="notebook-sheets.js"></script>
   <script src="world-notebook.js"></script>
   <script src="dice-fab.js"></script>
   <script src="nav.js"></script>

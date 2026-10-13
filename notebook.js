@@ -13,6 +13,9 @@
    carry fields of their own (NB_FIELDS): a session's number, play date, recap, NPCs met,
    loot, and open threads; a quest's status (open / done / failed), giver, and reward.
    Older entries have none of these and come through nbClean unchanged.
+   Secret notes (F51): any entry may carry `dm` (notes for the DM only; `notes` are the ones
+   players may see) and `flip` (the keys of rolled lines whose DM-only default the DM switched,
+   see notebook-sheets.js). Both are written only when set, so older notebooks stay as they were.
    The page side lives in world-notebook.js. Needs rng.js (paramsQuery) on the page.
    ============================================ */
 
@@ -37,7 +40,7 @@ const NB_QUEST_STATUS = {
 };
 // Saved links may only point at these pages, with a plain query string.
 const NB_HREF = /^(worldbuilder|npc-generator|toolbox)\.html(\?[A-Za-z0-9_.~%+=&*-]*)?$/;
-const NB_LIMITS = { entries: 500, title: 120, sub: 400, notes: 4000, name: 80, href: 2000, links: 60, file: 2000000 };
+const NB_LIMITS = { entries: 500, title: 120, sub: 400, notes: 4000, name: 80, href: 2000, links: 60, flips: 400, flip: 300, file: 2000000 };
 // The options that make two rolls with one seed different, per kind (its own URL keys).
 const NB_SIG_KEYS = { pantheon: ['size', 'shape', 'naming'], factions: ['count', 'focus', 'scale'], continent: ['size', 'land', 'nations'] };
 // URL keys that name another tab's roll: the seed key, and its option keys → that kind's keys.
@@ -94,6 +97,18 @@ function nbFields(kind, raw) {
     return Object.fromEntries(Object.entries(spec).map(([k, fn]) => [k, fn(Object.hasOwn(src, k) ? src[k] : undefined)]));
 }
 
+// Switched line keys (F51): plain strings, each once.
+function nbFlips(v) {
+    if (!Array.isArray(v)) return [];
+    return [...new Set(v.filter(k => typeof k === 'string' && k.length <= NB_LIMITS.flip && !/[\u0000-\u001F\u007F]/.test(k)))].slice(0, NB_LIMITS.flips);
+}
+
+// The DM-only notes and switched lines (F51), only when an entry has them.
+function nbSecretFields(raw) {
+    const dm = nbText(raw.dm, NB_LIMITS.notes), flip = nbFlips(raw.flip);
+    return { ...(dm ? { dm } : {}), ...(flip.length ? { flip } : {}) };
+}
+
 // A link to a tool page, or no link at all for a hand-written kind.
 function nbHrefOk(kind, href) {
     return typeof href === 'string' && href.length <= NB_LIMITS.href && (NB_HREF.test(href) || (href === '' && !!NB_KINDS[kind].hand));
@@ -125,7 +140,8 @@ function nbClean(raw) {
             notes: nbText(e.notes, NB_LIMITS.notes),
             links: Array.isArray(e.links) ? e.links.filter(l => typeof l === 'string') : [],
             added: isNaN(added) ? new Date().toISOString() : added.toISOString(),
-            ...nbFields(e.kind, e)
+            ...nbFields(e.kind, e),
+            ...nbSecretFields(e)
         });
     });
     // Links only to entries that made it, never to itself, each once.
@@ -267,7 +283,7 @@ function nbParseFile(text) {
 }
 
 // Fold an imported notebook into this one. An entry whose link is already here keeps
-// the one here (and gains the imported notes); so does a hand-written entry with the same
+// the one here (and gains the imported notes, DM notes, and switched lines); so does a hand-written entry with the same
 // id and kind (the same notebook imported twice). The rest come in under fresh ids.
 // Returns { added, merged, full }.
 function nbMerge(nb, incoming) {
@@ -278,6 +294,8 @@ function nbMerge(nb, incoming) {
         if (same) {
             map[e.id] = same.id;
             if (e.notes && !same.notes.includes(e.notes)) same.notes = nbText(same.notes ? `${same.notes}\n\n${e.notes}` : e.notes, NB_LIMITS.notes);
+            if (e.dm && !(same.dm || '').includes(e.dm)) same.dm = nbText(same.dm ? `${same.dm}\n\n${e.dm}` : e.dm, NB_LIMITS.notes);
+            if (e.flip) same.flip = nbFlips([...(same.flip || []), ...e.flip]);
             merged++;
             return;
         }
