@@ -102,6 +102,12 @@ const BACKUP_KEYS = [
         count: v => bkN(v.length, 'clock')
     },
     {
+        key: 'gazette-tables', tool: '🧰 DM Toolbox', href: 'toolbox.html?tab=tables', what: 'Random tables',
+        // Typed text, escaped by the tab; tableClean() trims each table to its shape on load.
+        clean: v => bkItems(v, t => bkObj(t) && typeof t.src === 'string' && (t.name === undefined || typeof t.name === 'string'), 50, false),
+        count: v => bkN(v.length, 'table')
+    },
+    {
         key: 'gazette-party', tool: '🧰 DM Toolbox', href: 'toolbox.html?tab=party', what: 'The party',
         clean: v => bkItems(v, c => bkObj(c) && ['name', 'player', 'cls'].every(k => c[k] === undefined || typeof c[k] === 'string'), 8, false),
         count: v => bkN(v.length, 'character')

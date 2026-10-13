@@ -13,14 +13,15 @@
    Quest (F32): toolbox-quest.js; the URL holds the seed, the party level and size, and the job.
    Clocks (F41): toolbox-clocks.js (no URL state beyond ?tab=; the clocks are in localStorage).
    Party (F46): toolbox-party.js (no URL state beyond ?tab=; the party is in localStorage, kept by party.js).
+   Tables (F49): toolbox-tables.js; the tables are in localStorage, and ?t= holds a shared one.
    Split's party size starts from it: the URL always holds n (unless names set it), so a link
    without n (from the Loot page or the Session Kit) splits for the party here.
    Seeds and the shareable URL: rng.js.
    ============================================ */
 
-const TOOLBOX_TABS = ['names', 'tavern', 'quest', 'travel', 'dice', 'init', 'split', 'enc', 'down', 'clocks', 'party'];
-// Tabs whose state is all in localStorage (nothing in the URL beyond ?tab=).
-const TOOLBOX_STORED_TABS = ['dice', 'init', 'clocks', 'party'];
+const TOOLBOX_TABS = ['names', 'tavern', 'quest', 'travel', 'dice', 'init', 'split', 'enc', 'down', 'clocks', 'party', 'tables'];
+// Tabs whose state is all in localStorage (nothing in the URL beyond ?tab=, except a shared table's ?t=).
+const TOOLBOX_STORED_TABS = ['dice', 'init', 'clocks', 'party', 'tables'];
 const KEPT_KEY = 'gazette-kept-names';
 const KEPT_MAX = 100;
 
@@ -443,6 +444,7 @@ function applyUrl() {
     showTab(tab);
     const p = urlParams();
     const seed = parseSeed(p.get('seed'));
+    if (tab === 'tables') applyTablesUrl(p);   // a shared table, if the link holds one
     if (TOOLBOX_STORED_TABS.includes(tab)) return true;   // nothing to roll; their state is in localStorage
     if (tab === 'enc') { applyEncUrl(p); return true; }
     if (tab === 'tavern') return applyTavUrl(p);
@@ -489,6 +491,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupTavern();
     setupDowntime();
     setupQuest();
+    setupTables();
     loadKept();
     renderKept();
     document.getElementById('sp-n').value = splitPartySize();
