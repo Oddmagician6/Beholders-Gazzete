@@ -9,6 +9,10 @@
    dating saved factions) and to the ones that use it. Export writes the whole world as a
    JSON file; import only parses JSON and keeps what passes nbClean (known kinds, links to
    this site's tool pages, plain text), so nothing in a file ever runs.
+   Sessions and quests (F50) are written by hand, so their href may be empty, and they
+   carry fields of their own (NB_FIELDS): a session's number, play date, recap, NPCs met,
+   loot, and open threads; a quest's status (open / done / failed), giver, and reward.
+   Older entries have none of these and come through nbClean unchanged.
    The page side lives in world-notebook.js. Needs rng.js (paramsQuery) on the page.
    ============================================ */
 
@@ -21,10 +25,18 @@ const NB_KINDS = {
     town: { icon: '🏘️', label: 'Town' },
     sites: { icon: '🏚️', label: 'Site' },
     continent: { icon: '🗺️', label: 'Continent' },
-    npc: { icon: '🎭', label: 'NPC' }
+    npc: { icon: '🎭', label: 'NPC' },
+    // hand: written in the notebook, so the entry may have no link.
+    session: { icon: '📖', label: 'Session', hand: true },
+    quest: { icon: '❗', label: 'Quest', hand: true }
+};
+const NB_QUEST_STATUS = {
+    open: { icon: '🟡', label: 'Open' },
+    done: { icon: '✅', label: 'Done' },
+    failed: { icon: '❌', label: 'Failed' }
 };
 // Saved links may only point at these pages, with a plain query string.
-const NB_HREF = /^(worldbuilder|npc-generator)\.html(\?[A-Za-z0-9_.~%+=&*-]*)?$/;
+const NB_HREF = /^(worldbuilder|npc-generator|toolbox)\.html(\?[A-Za-z0-9_.~%+=&*-]*)?$/;
 const NB_LIMITS = { entries: 500, title: 120, sub: 400, notes: 4000, name: 80, href: 2000, links: 60, file: 2000000 };
 // The options that make two rolls with one seed different, per kind (its own URL keys).
 const NB_SIG_KEYS = { pantheon: ['size', 'shape', 'naming'], factions: ['count', 'focus', 'scale'], continent: ['size', 'land', 'nations'] };
@@ -36,6 +48,23 @@ const NB_USES = {
     cont: { kind: 'continent', keys: { csize: 'size', cland: 'land', cnat: 'nations' } }
 };
 
+// Each kind's own fields and how to clean them (always written in this order).
+const NB_FIELDS = {
+    session: {
+        num: v => nbNum(v),
+        date: v => nbDate(v),
+        recap: v => nbText(v, NB_LIMITS.notes),
+        npcs: v => nbText(v, 1000),
+        loot: v => nbText(v, 1000),
+        threads: v => nbText(v, 2000)
+    },
+    quest: {
+        status: v => (typeof v === 'string' && Object.hasOwn(NB_QUEST_STATUS, v) ? v : 'open'),
+        giver: v => nbText(v, 200),
+        reward: v => nbText(v, 400)
+    }
+};
+
 const nbListeners = [];
 
 function nbEmpty() {
@@ -44,6 +73,30 @@ function nbEmpty() {
 
 function nbText(v, max) {
     return typeof v === 'string' ? v.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').trim().slice(0, max) : '';
+}
+
+// A session number: 1 to 9999, or null.
+function nbNum(v) {
+    const n = typeof v === 'string' && /^\d{1,4}$/.test(v.trim()) ? Number(v) : v;
+    return Number.isInteger(n) && n >= 1 && n <= 9999 ? n : null;
+}
+
+// A play date as YYYY-MM-DD, or ''.
+function nbDate(v) {
+    return typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) && !isNaN(new Date(v + 'T00:00:00Z')) ? v : '';
+}
+
+// A kind's own fields from untrusted data ({} for kinds without any).
+function nbFields(kind, raw) {
+    const spec = NB_FIELDS[kind];
+    if (!spec) return {};
+    const src = raw && typeof raw === 'object' ? raw : {};
+    return Object.fromEntries(Object.entries(spec).map(([k, fn]) => [k, fn(Object.hasOwn(src, k) ? src[k] : undefined)]));
+}
+
+// A link to a tool page, or no link at all for a hand-written kind.
+function nbHrefOk(kind, href) {
+    return typeof href === 'string' && href.length <= NB_LIMITS.href && (NB_HREF.test(href) || (href === '' && !!NB_KINDS[kind].hand));
 }
 
 // A clean notebook from untrusted data (storage or an imported file).
@@ -57,7 +110,7 @@ function nbClean(raw) {
         const ok = e && typeof e === 'object'
             && typeof e.id === 'string' && /^[a-z0-9]{1,16}$/.test(e.id) && !ids.has(e.id)
             && Object.hasOwn(NB_KINDS, e.kind)
-            && typeof e.href === 'string' && e.href.length <= NB_LIMITS.href && NB_HREF.test(e.href)
+            && nbHrefOk(e.kind, e.href)
             && nbText(e.title, NB_LIMITS.title)
             && nb.entries.length < NB_LIMITS.entries;
         if (!ok) { dropped++; return; }
@@ -71,7 +124,8 @@ function nbClean(raw) {
             href: e.href,
             notes: nbText(e.notes, NB_LIMITS.notes),
             links: Array.isArray(e.links) ? e.links.filter(l => typeof l === 'string') : [],
-            added: isNaN(added) ? new Date().toISOString() : added.toISOString()
+            added: isNaN(added) ? new Date().toISOString() : added.toISOString(),
+            ...nbFields(e.kind, e)
         });
     });
     // Links only to entries that made it, never to itself, each once.
@@ -163,14 +217,15 @@ function nbRemove(nb, id) {
     nb.entries.forEach(e => { e.links = e.links.filter(l => l !== id); });
 }
 
-// Save a roll: { kind, title, sub, href }. Returns { entry, existed, linked } or null when
-// the browser won't store it. The same link twice keeps the first entry.
+// Save a roll: { kind, title, sub, href, ...that kind's fields }. Returns { entry, existed, linked }
+// or null when the browser won't store it. The same link twice keeps the first entry; a
+// hand-written entry (no link) is always new.
 function nbAdd(item) {
     const nb = nbLoad();
     const href = String(item.href || '');
-    const old = nb.entries.find(e => e.href === href);
+    const old = href && nb.entries.find(e => e.href === href);
     if (old) return { entry: old, existed: true, linked: 0 };
-    if (!NB_HREF.test(href) || !Object.hasOwn(NB_KINDS, item.kind)) return null;
+    if (!Object.hasOwn(NB_KINDS, item.kind) || !nbHrefOk(item.kind, href)) return null;
     if (nb.entries.length >= NB_LIMITS.entries) return { entry: null, full: true };
     const entry = {
         id: nbNewId(nb),
@@ -180,7 +235,8 @@ function nbAdd(item) {
         href,
         notes: '',
         links: [],
-        added: new Date().toISOString()
+        added: new Date().toISOString(),
+        ...nbFields(item.kind, item)
     };
     nb.entries.push(entry);
     const sig = nbEntrySig(entry), uses = nbEntryUses(entry);
@@ -211,13 +267,14 @@ function nbParseFile(text) {
 }
 
 // Fold an imported notebook into this one. An entry whose link is already here keeps
-// the one here (and gains the imported notes); the rest come in under fresh ids.
+// the one here (and gains the imported notes); so does a hand-written entry with the same
+// id and kind (the same notebook imported twice). The rest come in under fresh ids.
 // Returns { added, merged, full }.
 function nbMerge(nb, incoming) {
     const map = {};
     let added = 0, merged = 0, full = 0;
     incoming.entries.forEach(e => {
-        const same = nb.entries.find(x => x.href === e.href);
+        const same = nb.entries.find(x => (e.href ? x.href === e.href : !x.href && x.id === e.id && x.kind === e.kind));
         if (same) {
             map[e.id] = same.id;
             if (e.notes && !same.notes.includes(e.notes)) same.notes = nbText(same.notes ? `${same.notes}\n\n${e.notes}` : e.notes, NB_LIMITS.notes);
@@ -233,4 +290,35 @@ function nbMerge(nb, incoming) {
     incoming.entries.forEach(e => e.links.forEach(l => { if (map[e.id] && map[l]) nbLink(nb, map[e.id], map[l]); }));
     if (!nb.name && incoming.name) nb.name = incoming.name;
     return { added, merged, full };
+}
+
+// ── Sessions and quests (F50) ─────────────────────────────
+// Sessions, latest first: by number, then play date, then when they were added.
+function nbSessions(nb) {
+    return nb.entries.filter(e => e.kind === 'session')
+        .sort((a, b) => (b.num || 0) - (a.num || 0) || b.date.localeCompare(a.date) || b.added.localeCompare(a.added));
+}
+
+// The session to recap: the latest one with a recap (tonight's blank log is skipped), or null.
+function nbLastSession(nb) {
+    return nbSessions(nb).find(e => e.recap) || null;
+}
+
+function nbNextSessionNum(nb) {
+    return Math.min(9999, nb.entries.reduce((n, e) => (e.kind === 'session' && e.num > n ? e.num : n), 0) + 1);
+}
+
+// Today in this browser's time zone, as YYYY-MM-DD.
+function nbToday() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+// Set one of an entry's own fields (cleaned). A session still titled "Session N" follows its new number.
+function nbSetField(e, key, value) {
+    const spec = NB_FIELDS[e.kind];
+    if (!spec || !Object.hasOwn(spec, key)) return;
+    const v = spec[key](value);
+    if (key === 'num' && v && e.title === `Session ${e.num}`) e.title = `Session ${v}`;
+    e[key] = v;
 }

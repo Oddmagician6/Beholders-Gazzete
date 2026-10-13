@@ -3,6 +3,7 @@
    A side quest from quest-engine.js (rollQuest): a title, the giver, the job, the place
    and what's there, a first lead, what's in the way, a twist, what's at stake, a deadline,
    a reward scaled to the party, and sometimes a foe that opens in the Encounter tab. Nothing is stored: the URL holds the quest.
+   📓 Save to Notebook (F50) files its link in the campaign notebook (notebook.js) as an open quest.
    URL: ?tab=quest&seed=&lvl=&n=&job=
    A new quest (no seed in the URL) starts at the Party tab's level and size (party.js); a shared
    one keeps its own (a missing lvl or n means level 3, party of 4).
@@ -120,6 +121,26 @@ function printQuest() {
     window.print();
 }
 
+// The Worldbuilder's notebook (notebook.js, F50) keeps the quest's link as an open quest to track.
+function saveQuestToNotebook() {
+    const q = quest.data;
+    if (!q) return;
+    const g = q.giver;
+    const r = nbAdd({
+        kind: 'quest',
+        title: q.title,
+        sub: q.task,
+        href: 'toolbox.html?' + paramsQuery(questParams()),
+        status: 'open',
+        giver: [g.name, g.profession].filter(Boolean).join(', '),
+        reward: `${formatCoins(q.reward.gp)} for the party. ${questRewardText(q.reward)}`
+    });
+    if (!r) flash('quest-status', "⚠️ This browser won't keep a notebook (storage is off).");
+    else if (r.full) flash('quest-status', '⚠️ The notebook is full. Remove an entry first.');
+    else if (r.existed) flash('quest-status', '📓 This quest is already in the notebook.');
+    else flash('quest-status', '📓 Saved to the notebook as an open quest. Track it on the Worldbuilder\'s Notebook tab.');
+}
+
 function setupQuest() {
     const lvl = document.getElementById('qs-level');
     for (let n = 1; n <= 20; n++) lvl.add(new Option(`Level ${n}`, n, n === 3, n === 3));
@@ -149,6 +170,7 @@ function setupQuest() {
         const { tab, ...p } = questParams();
         location.href = 'handouts.html?' + paramsQuery({ t: 'board', from: 'quest', ...p });
     });
+    document.getElementById('qs-save').addEventListener('click', saveQuestToNotebook);
     document.getElementById('qs-link').addEventListener('click', () =>
         copyPageLink(ok => flash('quest-status', ok ? '🔗 Link copied. It opens this same quest.' : '⚠️ Copy blocked by the browser.')));
 }

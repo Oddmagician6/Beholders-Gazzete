@@ -178,6 +178,30 @@
     .nb-linkto select { display: block; width: 100%; margin-top: 4px; font-size: 0.85rem; padding: 6px 8px; }
     .nb-row-actions { display: flex; gap: 8px; flex-wrap: wrap; }
     .nb-row-actions .btn { font-size: 0.8rem; padding: 6px 12px; }
+    /* Sessions and quests (F50) */
+    .nb-new { justify-content: center; margin: 0 0 14px; }
+    .nb-meta { margin: 3px 0 0; font-family: var(--font-ui); font-size: 0.75rem; color: var(--text-dim); overflow-wrap: anywhere; }
+    .nb-qs { width: auto; margin: 0 0 0 6px; font-family: var(--font-ui); font-size: 0.72rem; padding: 2px 6px; border-radius: 999px; vertical-align: 2px; max-width: 100%; }
+    .nb-qs-done { border-color: #5f9a5f; }
+    .nb-qs-failed { border-color: #b05454; }
+    .nb-st-done { opacity: 0.75; }
+    .nb-st-done .nb-title { text-decoration: line-through; text-decoration-color: rgba(201,160,64,0.5); }
+    .nb-st-failed { border-color: rgba(176,84,84,0.45); }
+    .nb-k-session { border-left: 3px solid var(--gold-dim); }
+    .nb-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px 12px; margin: 10px 0 4px; }
+    .nb-form label { font-family: var(--font-ui); font-size: 0.75rem; color: var(--text-dim); min-width: 0; }
+    .nb-form input, .nb-form textarea { display: block; width: 100%; box-sizing: border-box; margin-top: 4px; font-size: 0.88rem; padding: 7px 9px; }
+    .nb-form textarea { resize: vertical; font-family: inherit; }
+    .nb-form .nb-wide { grid-column: 1 / -1; }
+    .nb-notes-h { font-family: var(--font-ui); font-size: 0.75rem; color: var(--text-dim); margin: 10px 0 -4px; }
+    .nb-last { border: 1px solid var(--gold-dim); border-radius: var(--radius-sm); padding: 18px 20px; margin: 0 0 18px; background: rgba(0,0,0,0.22); }
+    .nb-last-h { font-family: 'IM Fell English', serif; font-size: 1.6rem; font-weight: 400; color: var(--gold-bright); margin: 0; line-height: 1.2; overflow-wrap: anywhere; }
+    .nb-last-meta { font-family: var(--font-ui); font-size: 0.78rem; color: var(--text-dim); margin: 4px 0 12px; }
+    .nb-last p, .nb-last li { color: var(--text-bright); font-size: 1.02rem; line-height: 1.6; overflow-wrap: anywhere; }
+    .nb-last-recap p { margin: 0 0 10px; }
+    .nb-last h4 { font-family: var(--font-ui); font-size: 0.78rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold-mid); margin: 16px 0 6px; padding-top: 10px; border-top: 1px solid rgba(201,160,64,0.2); }
+    .nb-last ul { margin: 0; padding-left: 20px; }
+    .nb-last-actions { margin: 14px 0 0; }
     /* The site card */
     .site-map-wrap { border: 1px solid rgba(201,160,64,0.3); border-radius: var(--radius-sm); overflow: hidden; background: rgba(0,0,0,0.25); }
     .site-map { display: block; width: 100%; height: auto; max-height: 620px; }
@@ -426,6 +450,17 @@
       body.print-town .wb-card * { color: #000 !important; }
       body.print-town .wb-block, body.print-town .wb-dl div, body.print-town .wb-list li { border-color: #999 !important; }
       body.print-town .wb-block { break-inside: avoid; }
+      /* Last time on… (F50): only the recap, large enough to read aloud from. */
+      body.print-last { background: #fff !important; }
+      body.print-last > :not(main), body.print-last .tool-tabs, body.print-last .tool-panel:not(#tab-notebook),
+      body.print-last #tab-notebook .tool-card > :not(#nb-last), body.print-last #tab-notebook .tool-note,
+      body.print-last .nb-last-actions, body.print-last #nb-last-status { display: none !important; }
+      body.print-last .world-body { padding: 0; max-width: none; }
+      body.print-last .tool-card { background: none; border: none; padding: 0; }
+      body.print-last .nb-last { background: none; border: none; padding: 0; margin: 0; font-size: 14pt; }
+      body.print-last .nb-last * { color: #000 !important; }
+      body.print-last .nb-last-h { font-size: 26pt; }
+      body.print-last .nb-last h4 { border-color: #999; }
     }
   </style>
 </head>
@@ -436,7 +471,7 @@
     <div class="page-hero-content">
       <h1 class="page-hero-logo">🗺️ Worldbuilder</h1>
       <p class="page-hero-tagline">"Every world needs a calendar. Mostly so the bards know when to be late."</p>
-      <p class="page-hero-description">Tools for building the world around the table, not just the next session. Roll a calendar (the months, the week, the seasons, the moons, and a festival for every month) and a pantheon of gods with their temples, holy days, and grudges, the factions that run the place, the history behind it all (the ages of the world and the ruins, grudges, and relics each one left), the towns themselves, from a muddy hamlet to a metropolis, with their people, taverns, shops, and trouble, the crypts, mines, and ruined keeps where the adventures happen, mapped and keyed room by room, and the continent it all sits on, with its rivers, mountains, nations, roads, and places worth the trip. Then save the rolls you keep to the campaign notebook, with your notes and the threads between them.</p>
+      <p class="page-hero-description">Tools for building the world around the table, not just the next session. Roll a calendar (the months, the week, the seasons, the moons, and a festival for every month) and a pantheon of gods with their temples, holy days, and grudges, the factions that run the place, the history behind it all (the ages of the world and the ruins, grudges, and relics each one left), the towns themselves, from a muddy hamlet to a metropolis, with their people, taverns, shops, and trouble, the crypts, mines, and ruined keeps where the adventures happen, mapped and keyed room by room, and the continent it all sits on, with its rivers, mountains, nations, roads, and places worth the trip. Then save the rolls you keep to the campaign notebook, with your notes and the threads between them, and log each session and the quests the party takes on.</p>
     </div>
   </section>
 
@@ -678,12 +713,27 @@
     <section class="tool-panel" id="tab-notebook" role="tabpanel" hidden>
       <div class="tool-card">
         <h2 class="tool-h">📓 Campaign Notebook</h2>
-        <p class="tool-intro">Everything you save from the other tabs and the Town Square's NPCs, in one place: a link back to each roll, your notes on it, and the threads between them (the town that keeps this pantheon's gods, the history those factions came out of). Export the whole world as a file to keep it safe or carry it to another browser.</p>
+        <p class="tool-intro">Everything you save from the other tabs, the Town Square's NPCs, and the Toolbox's quests, in one place: a link back to each roll, your notes on it, and the threads between them (the town that keeps this pantheon's gods, the history those factions came out of). Log each game as a session and track the party's quests, then open the next game with 📣 Last Time On…. Export the whole world as a file to keep it safe or carry it to another browser.</p>
         <div class="tool-form">
           <label>Your world <input type="text" id="nb-name" maxlength="80" placeholder="Name your world"></label>
           <label>Show <select id="nb-kind"><option value="all" selected>📚 Everything</option></select></label>
+          <label>Quests <select id="nb-qstatus"><option value="all" selected>Any status</option></select></label>
           <label>Search <input type="text" id="nb-search" placeholder="A name or a note"></label>
         </div>
+        <div class="tool-toolbar nb-new">
+          <button type="button" class="btn btn-gold" id="nb-new-session">📖 Log a Session</button>
+          <button type="button" class="btn" id="nb-new-quest">❗ Add a Quest</button>
+          <button type="button" class="btn" id="nb-last-btn" aria-controls="nb-last" aria-expanded="false">📣 Last Time On…</button>
+        </div>
+        <section class="nb-last" id="nb-last" aria-label="Last time on" hidden>
+          <div id="nb-last-body"></div>
+          <div class="tool-toolbar nb-last-actions">
+            <button type="button" class="btn" id="nb-last-print">🖨️ Print</button>
+            <button type="button" class="btn" id="nb-last-copy">📋 Copy</button>
+            <button type="button" class="btn" id="nb-last-close">✕ Close</button>
+          </div>
+          <p class="tool-status" id="nb-last-status" role="status" aria-live="polite"></p>
+        </section>
         <p class="nb-count" id="nb-count"></p>
         <div id="nb-list" aria-live="polite"></div>
         <div class="tool-toolbar wb-actions">
@@ -695,7 +745,7 @@
         </div>
         <p class="tool-status" id="nb-status" role="status" aria-live="polite"></p>
       </div>
-      <p class="tool-note">The notebook lives in this browser only: nothing is sent anywhere, and clearing your browser's site data clears it too, so 💾 Export now and then, or <a href="privacy.html#backup">back up everything</a> the tools keep.<br>Each entry keeps the link that rolls it again, so a saved town comes back exactly as it was. Saving links a roll to the saved rolls it uses (a town or a history on a saved pantheon's gods, a history that dates saved factions); link anything else by hand under 📝 Notes and links.<br>📂 Import adds a notebook file to this one; entries you already have keep your notes and gain the file's.</p>
+      <p class="tool-note">The notebook lives in this browser only: nothing is sent anywhere, and clearing your browser's site data clears it too, so 💾 Export now and then, or <a href="privacy.html#backup">back up everything</a> the tools keep.<br>Each entry keeps the link that rolls it again, so a saved town comes back exactly as it was. Saving links a roll to the saved rolls it uses (a town or a history on a saved pantheon's gods, a history that dates saved factions); link anything else by hand under 📝 Notes and links.<br>A session holds its number, the date you played, what happened, the NPCs met, the loot handed out, and the threads left open. A quest holds its giver, its reward, and a status (🟡 open, ✅ done, ❌ failed) you change on the card. 📣 Last Time On… reads back the latest session that has a recap, with its open threads and every open quest, and prints it large enough to read aloud.<br>📂 Import adds a notebook file to this one; entries you already have keep your notes and gain the file's.</p>
     </section>
   </main>
 

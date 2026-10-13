@@ -684,10 +684,11 @@
           <button type="button" class="btn" id="qs-print">🖨️ Print</button>
           <button type="button" class="btn" id="qs-link">🔗 Copy Link</button>
           <button type="button" class="btn" id="qs-handout" title="A bounty board with this quest on it, or a letter from the quest giver">📜 Make a Handout</button>
+          <button type="button" class="btn" id="qs-save" title="Track it as an open quest in the Worldbuilder's campaign notebook">📓 Save to Notebook</button>
         </div>
         <p class="tool-status" id="quest-status" role="status" aria-live="polite"></p>
       </div>
-      <p class="tool-note">The quest tables are the Gazette's own. Rewards are a house rule that grows with the party's level and size (the SRD has no table for them). The foe comes from the SRD 5.1 monsters, chosen to suit the place and rated like the Encounter tab, and 👹 Open in Encounter takes it there to adjust or send to initiative.<br>The address bar holds the quest, so 🔗 Copy Link shares it. A new level or party size keeps the same quest and rescales the reward and the foe; a new job keeps the same quest giver.</p>
+      <p class="tool-note">The quest tables are the Gazette's own. Rewards are a house rule that grows with the party's level and size (the SRD has no table for them). The foe comes from the SRD 5.1 monsters, chosen to suit the place and rated like the Encounter tab, and 👹 Open in Encounter takes it there to adjust or send to initiative.<br>📓 Save to Notebook files it in the <a href="worldbuilder.html?tab=notebook">campaign notebook</a> as an open quest, where you mark it done or failed and link it to your session log.<br>The address bar holds the quest, so 🔗 Copy Link shares it. A new level or party size keeps the same quest and rescales the reward and the foe; a new job keeps the same quest giver.</p>
     </section>
 
     <section class="tool-panel" id="tab-travel" role="tabpanel" hidden>
@@ -1071,6 +1072,7 @@ Or with die ranges:
   <script src="downtime-engine.js"></script>
   <script src="quest-engine.js"></script>
   <script src="rules-data.js"></script>
+  <script src="notebook.js"></script>
   <script src="party.js"></script>
   <script src="init-view.js"></script>
   <script src="toolbox.js"></script>
