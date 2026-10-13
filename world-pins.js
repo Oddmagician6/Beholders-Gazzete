@@ -40,8 +40,7 @@ function wpKeyHTML(nb, pins) {
 }
 
 function wpOpenEntry(id) {
-    switchWorldTab('notebook');
-    nbJump(id);
+    switchWorldTab('notebook').then(ok => ok && nbJump(id));
 }
 
 function pinBoard(o) {

@@ -462,7 +462,7 @@ function setupFamily() {
         if (!t) return;
         if (t.classList.contains('fam-fit')) { famState.fit = !famState.fit; renderFamily(); return; }
         if (t.classList.contains('fam-go')) { famSelect(t.dataset.go, true); return; }
-        if (t.classList.contains('fam-go-nb')) { const en = famEntry(nbLoad()); if (en) { switchWorldTab('notebook'); nbJump(en.id); } return; }
+        if (t.classList.contains('fam-go-nb')) { const en = famEntry(nbLoad()); if (en) switchWorldTab('notebook').then(ok => ok && nbJump(en.id)); return; }
         if (t.dataset.add) { famAddPerson(t.dataset.add); return; }
         if (t.classList.contains('fam-x')) {
             const i = Number(t.dataset.scandal);
@@ -472,7 +472,7 @@ function setupFamily() {
         switch (t.id) {
             case 'fam-remove': famRemoveSel(); break;
             case 'fam-npc-save': famSaveNpc(); break;
-            case 'fam-npc-go': { const { fam } = famNow(); const p = fam && famPerson(fam, famState.sel); if (p && p.to) { switchWorldTab('notebook'); nbJump(p.to); } break; }
+            case 'fam-npc-go': { const { fam } = famNow(); const p = fam && famPerson(fam, famState.sel); if (p && p.to) switchWorldTab('notebook').then(ok => ok && nbJump(p.to)); break; }
             case 'fam-head': famEdit(f => { if (!famPerson(f, famState.sel)) return false; f.root = famState.sel; }); break;
             case 'fam-back': famBack(); break;
             case 'fam-unroot': famState.root = null; famState.from = {}; rollFamilyFor(); break;

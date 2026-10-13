@@ -336,8 +336,7 @@ function webSelect(id, center = false) {
 
 function webOpenInNotebook(id) {
     if (!webState.entries.has(id)) return;
-    switchWorldTab('notebook');
-    nbJump(id);
+    switchWorldTab('notebook').then(ok => ok && nbJump(id));
 }
 
 // ── Dragging an entry ─────────────────────────────────────
