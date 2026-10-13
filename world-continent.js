@@ -6,7 +6,7 @@
    Toolbox's Travel tab), each nation in full, the places worth the trip (each opens on
    the Sites tab), and the roads. A town opens on the Town tab inside its realm.
    The map downloads as a PNG (map-export.js). The URL holds the map.
-   Pins (F53, map-pins.js): 📍 Drop Pins, then click the map to drop numbered pins, drag
+   Pins (F53, map-pins.js; the bar and list are world-pins.js's pinBoard): 📍 Drop Pins, then click the map to drop numbered pins, drag
    them about, name them, add a note, and link each to a notebook entry (a town, a site,
    a faction…), which a click on the pin then opens. Pins are kept on this map's notebook
    entry (found by its seed and options; the first pin saves the map there), so they come
@@ -16,8 +16,8 @@
 
 const CONT_FIELDS = { size: 'cont-size', land: 'cont-land', nations: 'cont-nations' };
 
-let contState = { seed: null, data: null, journey: null, pinMode: false, pinSel: '', dragging: false, removing: null, clearing: false };
-const contPinTimers = {};
+let contState = { seed: null, data: null, journey: null };
+let contBoard = null;   // the pins (world-pins.js), made in setupPins
 
 function contOpts() {
     const v = id => document.getElementById(id).value;
@@ -39,7 +39,7 @@ function rollContinentFor(seed = newSeed(), push = true) {
     contState.seed = seed;
     contState.data = contCached(seed, contOpts());
     contState.journey = null;
-    contState.pinSel = '';
+    if (contBoard) contBoard.state.sel = '';
     renderContinent();
     contScaleLabels(contState.data);
     if (push !== null) setUrlParams(contParams(), push);
@@ -129,10 +129,10 @@ function renderContinent() {
         </header>
         <section class="wb-block wb-wide">
             <h4>🗺️ The map</h4>
-            <div class="cont-pin-bar" id="cont-pin-bar"></div>
+            <div class="wb-pin-bar"></div>
             <div class="cont-map-wrap">${contMapSvg(c, `Map of ${facCap(c.name)}`)}</div>
             <p class="wb-legend">Tap a town or a numbered place to read about it. ■ a capital · ● a town · ◆ a place worth the trip · ─ ─ a road (dotted: an unkept track) · colored lands are nations, uncolored land is wild · dashed lines across the map mark the climate bands, named at the right edge · ▲ mountains · ⌒ hills · trees: forest (pines in the cold) · ≈ dunes: desert · reeds: swamp.</p>
-            <div class="cont-pins" id="cont-pins"></div>
+            <div class="wb-pins"></div>
         </section>
         <section class="wb-block wb-wide cont-journey">
             <h4>🧭 Plan a journey</h4>
@@ -155,7 +155,7 @@ function renderContinent() {
             <ul class="wb-list">${c.roads.map(r => `<li>${esc(contRoadLine(c, r))}
                 <a class="town-go" href="${esc(contTravelLink(c, r.a, r.b, r))}">Travel it →</a></li>`).join('')}</ul>
         </section>`;
-    renderPins();
+    if (contBoard) contBoard.render();
 }
 
 function contShowJourney() {
@@ -177,7 +177,7 @@ function contShowJourney() {
     links.innerHTML = j ? `<a class="btn" href="${esc(contTravelLink(c, +a, +b, j))}">🧭 Travel it in the Toolbox</a>` : '';
 }
 
-// ── Pins (F53, map-pins.js) ───────────────────────────────
+// ── Pins (F53, map-pins.js and world-pins.js) ─────────────
 // This map's notebook entry (same seed and options), or null.
 function contEntry(nb) {
     if (!contState.seed) return null;
@@ -213,190 +213,27 @@ function contEditPins(fn, quiet = false) {
     return true;
 }
 
-// The entries a pin can open: everything in the notebook but this map, by kind, then title.
-function contPinTargetsHTML(nb, self, pin) {
-    const groups = Object.keys(NB_KINDS)
-        .map(kind => [kind, nb.entries.filter(x => x.kind === kind && x !== self).sort((a, b) => a.title.localeCompare(b.title))])
-        .filter(([, list]) => list.length);
-    return `<option value="">Opens nothing</option>${groups.map(([kind, list]) => `<optgroup label="${esc(NB_KINDS[kind].label)}">${list.map(x =>
-        `<option value="${esc(x.id)}"${x.id === pin.to ? ' selected' : ''}>${NB_KINDS[kind].icon} ${esc(x.title)}</option>`).join('')}</optgroup>`).join('')}`;
-}
-
-function contPinRowHTML(nb, self, pin, n) {
-    const to = pin.to && nbFind(nb, pin.to);
-    const id = esc(pin.id);
-    return `<li class="cont-pin${pin.id === contState.pinSel ? ' cont-pin-on' : ''}" id="cn-pin-${id}" tabindex="-1">
-        <span class="site-n">${n + 1}</span>
-        <div class="cont-pin-fields">
-            <input type="text" class="cont-pin-name" data-pin="${id}" maxlength="${PIN_LIMITS.name}" value="${esc(pin.name)}" placeholder="Pin ${n + 1}" aria-label="Name of pin ${n + 1}">
-            <select class="cont-pin-to" data-pin="${id}" aria-label="What pin ${n + 1} opens">${contPinTargetsHTML(nb, self, pin)}</select>
-            <input type="text" class="cont-pin-note" data-pin="${id}" maxlength="${PIN_LIMITS.note}" value="${esc(pin.note)}" placeholder="A note: what's here, what happened" aria-label="Note on pin ${n + 1}">
-        </div>
-        <span class="cont-pin-acts">
-            ${to ? `<button type="button" class="btn cont-pin-go" data-pin="${id}">${NB_KINDS[to.kind].icon} Open →</button>` : ''}
-            <button type="button" class="btn cont-pin-del" data-pin="${id}" aria-label="Remove pin ${n + 1}">${contState.removing === pin.id ? '⚠️ Sure?' : '✕'}</button>
-        </span>
-    </li>`;
-}
-
-// One line per pin, for the printed key and the copied text.
-function contPinLine(nb, pin, n) {
-    const to = pin.to && nbFind(nb, pin.to);
-    return `${n + 1}. ${pinLabel(pin, n)}${pin.note ? `: ${pin.note}` : ''}${to ? ` (see ${to.title})` : ''}`;
-}
-
-function contPinKeyHTML(nb, pins) {
-    return pins.map((p, n) => `<li>${esc(contPinLine(nb, p, n))}</li>`).join('');
-}
-
-function contPinHint(pins) {
-    if (contState.pinMode) return 'Click or tap the map to drop a pin. Drag a pin to move it, or focus it and use the arrow keys (Shift for bigger steps).';
-    if (pins.length) return `${pins.length} ${pins.length === 1 ? 'pin' : 'pins'} on this map. A linked pin opens its notebook entry; the others open their row below.`;
-    return "Mark your own places: the party's camp, where the dragon was seen, the village that isn't on any map.";
-}
-
-// Draw the pins: on the map, the bar above it, and the list below. Keyboard focus stays where it was.
-function renderPins(nb = nbLoad()) {
-    const c = contState.data;
-    const card = document.getElementById('cont-card');
-    const svg = card.querySelector('.cont-map');
-    if (!c || !svg) return;
-    const self = contEntry(nb), pins = (self && self.pins) || [];
-    if (contState.pinSel && !pins.some(p => p.id === contState.pinSel)) contState.pinSel = '';
-    const active = document.activeElement;
-    const refocus = active && card.contains(active)
-        ? (active.dataset && active.dataset.pin ? `.${active.classList[0]}[data-pin="${active.dataset.pin}"]` : active.id ? '#' + active.id : null) : null;
-
-    const old = svg.querySelector('.cm-pins');
-    if (old) old.remove();
-    svg.insertAdjacentHTML('beforeend', pinSvg(pins, c.map.cols * CONT_CELL, c.map.rows * CONT_CELL, { cls: 'cm', sel: contState.pinSel }));
-    card.querySelector('.cont-map-wrap').classList.toggle('cont-pinning', contState.pinMode);
-
-    document.getElementById('cont-pin-bar').innerHTML = `
-        <button type="button" class="btn${contState.pinMode ? ' btn-gold' : ''}" id="cont-pin-mode" aria-pressed="${contState.pinMode}">📍 ${contState.pinMode ? 'Done Pinning' : 'Drop Pins'}</button>
-        ${contState.pinMode ? '<button type="button" class="btn" id="cont-pin-add">➕ Add a Pin</button>' : ''}
-        <span class="wb-small cont-pin-hint">${esc(contPinHint(pins))}</span>`;
-
-    const others = nb.entries.some(x => x !== self);
-    document.getElementById('cont-pins').innerHTML = pins.length ? `
-        <h5 class="cont-pins-h">📍 Your pins</h5>
-        <ol class="cont-pin-list">${pins.map((p, n) => contPinRowHTML(nb, self, p, n)).join('')}</ol>
-        <ol class="cont-pin-key">${contPinKeyHTML(nb, pins)}</ol>
-        <p class="wb-small cont-pin-foot">Pins are kept with this map in the <a href="worldbuilder.html?tab=notebook">📓 notebook</a>. They belong to the map as it is: another number of nations or mix of land and sea is another map, with pins of its own.${others ? '' : ' Save a town, a site, or a faction to the notebook, and a pin can open it.'}</p>
-        <p class="pan-links"><button type="button" class="btn" id="cont-pin-clear">${contState.clearing ? '⚠️ Click again to remove every pin' : '🗑️ Remove All Pins'}</button></p>` : '';
-
-    if (refocus) { const el = card.querySelector(refocus); if (el) el.focus({ preventScroll: true }); }
-}
-
-// Redraw only the pins on the map and the printed key (a name being typed).
-function renderMapPins(nb = nbLoad()) {
-    const c = contState.data;
-    const old = document.querySelector('#cont-card .cm-pins');
-    if (!c || !old) return;
-    const pins = contPins(nb);
-    old.outerHTML = pinSvg(pins, c.map.cols * CONT_CELL, c.map.rows * CONT_CELL, { cls: 'cm', sel: contState.pinSel });
-    const key = document.querySelector('#cont-pins .cont-pin-key');
-    if (key) key.innerHTML = contPinKeyHTML(nb, pins);
-}
-
-function contPlacePin(x, y) {
-    let n = 0;
-    const ok = contEditPins(pins => {
-        if (pins.length >= PIN_LIMITS.pins) {
-            flash('cont-status', `⚠️ A map holds ${PIN_LIMITS.pins} pins at most. Remove one first.`);
-            return false;
-        }
-        const id = pinNewId(pins);
-        pins.push({ id, x, y, name: '', note: '', to: '' });
-        contState.pinSel = id;
-        n = pins.length;
-    });
-    if (ok) flash('cont-status', `📍 Pin ${n} dropped. Name it and link it under the map.`);
-}
-
-// x and y null: a drag was called off, so put the pin back.
-function contMovePin(id, x, y) {
-    if (x === null || y === null) { renderPins(); return; }
-    contState.pinSel = id;
-    if (!contEditPins(pins => { const p = pins.find(q => q.id === id); if (!p) return false; p.x = x; p.y = y; })) renderPins();
-}
-
-// A click on a pin: its notebook entry, or (while pinning, or with no link) its row under the map.
-function contOpenPin(id, placing) {
-    const nb = nbLoad();
-    const pin = contPins(nb).find(p => p.id === id);
-    if (!pin) return;
-    const to = pin.to && nbFind(nb, pin.to);
-    if (to && !placing) { contOpenEntry(to.id); return; }
-    contState.pinSel = id;
-    renderPins(nb);
-    if (!placing) contGo('pin-' + id);
-}
-
-function contOpenEntry(id) {
-    switchWorldTab('notebook');
-    nbJump(id);
-}
-
 function setupPins(card) {
-    pinWire(card, {
+    const size = () => ({ W: contState.data.map.cols * CONT_CELL, H: contState.data.map.rows * CONT_CELL });
+    contBoard = pinBoard({
+        card,
+        rowId: 'cn-pin-',
+        status: 'cont-status',
+        ready: () => !!contState.data && !!card.querySelector('.cont-map'),
+        entry: contEntry,
+        edit: contEditPins,
         frame: () => card.querySelector('.cont-map'),
-        size: () => ({ W: contState.data.map.cols * CONT_CELL, H: contState.data.map.rows * CONT_CELL }),
-        placing: () => contState.pinMode && !!contState.data,
-        place: contPlacePin,
-        move: contMovePin,
-        open: contOpenPin,
-        dragging: on => { contState.dragging = on; }
+        size,
+        drawMap: (pins, sel, placing) => {
+            const svg = card.querySelector('.cont-map');
+            const old = svg.querySelector('.cm-pins');
+            if (old) old.remove();
+            const { W, H } = size();
+            svg.insertAdjacentHTML('beforeend', pinSvg(pins, W, H, { cls: 'cm', sel }));
+            card.querySelector('.cont-map-wrap').classList.toggle('cont-pinning', placing);
+        },
+        foot: (nb, self) => `Pins are kept with this map in the <a href="worldbuilder.html?tab=notebook">📓 notebook</a>. They belong to the map as it is: another number of nations or mix of land and sea is another map, with pins of its own.${nb.entries.some(x => x !== self) ? '' : ' Save a town, a site, or a faction to the notebook, and a pin can open it.'}`
     });
-    card.addEventListener('click', e => {
-        const t = e.target.closest('button');
-        if (!t) return;
-        if (t.id === 'cont-pin-mode') { contState.pinMode = !contState.pinMode; renderPins(); return; }
-        if (t.id === 'cont-pin-add') { contPlacePin(0.5, 0.5); return; }
-        if (t.classList.contains('cont-pin-go')) {
-            const pin = contPins().find(p => p.id === t.dataset.pin);
-            if (pin && pin.to) contOpenEntry(pin.to);
-            return;
-        }
-        if (t.classList.contains('cont-pin-del')) {
-            const id = t.dataset.pin;
-            if (contState.removing !== id) {
-                contState.removing = id;
-                renderPins();
-                setTimeout(() => { if (contState.removing === id) { contState.removing = null; renderPins(); } }, 4000);
-                return;
-            }
-            contState.removing = null;
-            contEditPins(pins => { const i = pins.findIndex(p => p.id === id); if (i < 0) return false; pins.splice(i, 1); });
-            return;
-        }
-        if (t.id === 'cont-pin-clear') {
-            if (!contState.clearing) {
-                contState.clearing = true;
-                renderPins();
-                setTimeout(() => { if (contState.clearing) { contState.clearing = false; renderPins(); } }, 4000);
-                return;
-            }
-            contState.clearing = false;
-            if (contEditPins(pins => { pins.length = 0; })) flash('cont-status', '🗑️ Every pin is gone from this map.');
-        }
-    });
-    card.addEventListener('change', e => {
-        const sel = e.target.closest('.cont-pin-to');
-        if (sel) contEditPins(pins => { const p = pins.find(q => q.id === sel.dataset.pin); if (!p) return false; p.to = sel.value; });
-    });
-    // Names and notes save as you type, without redrawing the box you're typing in.
-    card.addEventListener('input', e => {
-        const box = e.target.closest('.cont-pin-name, .cont-pin-note');
-        if (!box) return;
-        const id = box.dataset.pin, k = box.classList.contains('cont-pin-name') ? 'name' : 'note', key = id + '|' + k;
-        clearTimeout(contPinTimers[key]);
-        contPinTimers[key] = setTimeout(() => {
-            delete contPinTimers[key];
-            if (contEditPins(pins => { const p = pins.find(q => q.id === id); if (!p) return false; p[k] = box.value; }, true)) renderMapPins();
-        }, 400);
-    });
-    nbOnChange(nb => { if (contState.data && !contState.dragging) renderPins(nb); });
 }
 
 // ── Map export (map-export.js) ────────────────────────────
@@ -464,7 +301,7 @@ function setupContinent() {
     const card = document.getElementById('cont-card');
     card.addEventListener('click', e => {
         const k = e.target.closest('.cm-key');
-        if (k && !contState.pinMode) contGo(k.dataset.go);
+        if (k && !contBoard.state.mode) contGo(k.dataset.go);
     });
     card.addEventListener('keydown', e => {
         const k = e.target.closest('.cm-key');
@@ -477,7 +314,7 @@ function setupContinent() {
     document.getElementById('cont-copy').addEventListener('click', () => {
         if (!contState.data) return;
         const nb = nbLoad(), pins = contPins(nb);
-        const text = contText(contState.data) + (pins.length ? '\n\nPins:\n' + pins.map((p, n) => '  ' + contPinLine(nb, p, n)).join('\n') : '');
+        const text = contText(contState.data) + (pins.length ? '\n\nPins:\n' + pins.map((p, n) => '  ' + wpLine(nb, p, n)).join('\n') : '');
         copyText(text, 'cont-status', 'the continent');
     });
     document.getElementById('cont-print').addEventListener('click', () => {

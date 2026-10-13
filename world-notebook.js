@@ -12,6 +12,8 @@
    roll rebuilt from its link by notebook-sheets.js with its secrets left out; switch any
    line either way, and the entry remembers it (flip).
    Map pins (F53): a continent's card counts its pins; search and Copy All read them too.
+   Your own maps (F54): removing a map's entry (or clearing the notebook) deletes its picture
+   from map-store.js's IndexedDB too, and Export says the pictures aren't in the file.
    Nothing here rolls, and the URL holds only the tab: the notebook lives in this browser.
    URL: ?tab=notebook
    ============================================ */
@@ -490,7 +492,9 @@ function nbExport() {
     a.click();
     a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
-    flash('nb-status', '💾 Notebook exported. Import that file to bring the world back, here or in another browser.');
+    flash('nb-status', nb.entries.some(e => e.kind === 'map')
+        ? "💾 Notebook exported. Your maps' pins and notes are in it, but not their pictures: Back up everything (on the Privacy page) keeps those."
+        : '💾 Notebook exported. Import that file to bring the world back, here or in another browser.');
 }
 
 function nbImport(file) {
@@ -553,7 +557,9 @@ function setupNotebook() {
             if (nbView.removing === id) {
                 nbView.removing = null;
                 nbView.open.delete(id);
+                const map = nbFind(nbLoad(), id);
                 nbEdit(nb => nbRemove(nb, id));
+                if (map && map.kind === 'map' && !nbFind(nbLoad(), id)) mapDelete(id).catch(() => {});
             } else {
                 nbView.removing = id;
                 renderNotebook();
@@ -615,8 +621,11 @@ function setupNotebook() {
         }
         nbView.clearing = false;
         nbView.open.clear();
-        const name = nbLoad().name;
-        if (nbStore({ name, entries: [] })) flash('nb-status', '🗑️ Notebook cleared.');
+        const old = nbLoad();
+        if (nbStore({ name: old.name, entries: [] })) {
+            old.entries.filter(x => x.kind === 'map').forEach(x => mapDelete(x.id).catch(() => {}));
+            flash('nb-status', '🗑️ Notebook cleared.');
+        }
     });
 
     nbOnChange(nb => renderNotebook(nb));

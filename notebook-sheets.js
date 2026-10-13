@@ -13,8 +13,9 @@
    ============================================ */
 
 const nbSheetCache = new Map();
-// Kinds whose saved summary gives something away (a site's says who holds it), so it starts DM-only.
-const NB_SUB_DM = { sites: true };
+// Kinds whose saved summary gives something away (a site's says who holds it), or means nothing to
+// players (a map's is its size in pixels), so it starts DM-only.
+const NB_SUB_DM = { sites: true, map: true };
 
 // End a rolled phrase with a stop, unless it has one.
 function nbStop(s) {

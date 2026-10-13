@@ -15,12 +15,14 @@
    the Toolbox, its hoard in the Loot generator, and its story can come from the history.
    Continent (F40): world-continent.js, rolled by continent-engine.js; its towns open on the Town tab inside their
    realm, its places on the Sites tab, and its roads and journeys in the Toolbox's Travel tab.
+   Maps (F54): world-maps.js, your own map pictures (kept by map-store.js) with pins (world-pins.js, shared
+   with the Continent tab).
    Notebook (F38): world-notebook.js, kept by notebook.js. Every tab's 📓 Save to Notebook
    button (data-save="<tab>") files the roll on screen through that tab's entry() → { title, sub }.
    Seeds and the shareable URL: rng.js.
    ============================================ */
 
-const WORLD_TAB_ORDER = ['calendar', 'pantheon', 'factions', 'history', 'town', 'sites', 'continent', 'notebook'];
+const WORLD_TAB_ORDER = ['calendar', 'pantheon', 'factions', 'history', 'town', 'sites', 'continent', 'maps', 'notebook'];
 const WORLD_TABS = {};
 
 function esc(text) {

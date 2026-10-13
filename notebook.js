@@ -22,6 +22,8 @@
    Map pins (F53): a continent entry may carry `pins` (map-pins.js: numbered spots, each
    named, with a note, and maybe opening another entry), written only when it has some.
    Without map-pins.js on the page they pass through untouched, like a monster without homebrew.js.
+   Your own maps (F54) are kind 'map': uploaded on the Maps tab, so no link; the picture lives in
+   IndexedDB under the entry's id (map-store.js), and the entry keeps the name, notes, and pins.
    The page side lives in world-notebook.js. Needs rng.js (paramsQuery) on the page.
    ============================================ */
 
@@ -38,10 +40,11 @@ const NB_KINDS = {
     // hand: written in the notebook, so the entry may have no link.
     session: { icon: '📖', label: 'Session', hand: true },
     quest: { icon: '❗', label: 'Quest', hand: true },
-    monster: { icon: '🐲', label: 'Monster', hand: true }
+    monster: { icon: '🐲', label: 'Monster', hand: true },
+    map: { icon: '🖼️', label: 'Map', hand: true }
 };
-// Kinds whose entry can hold pins on its map (F53).
-const NB_PIN_KINDS = { continent: true };
+// Kinds whose entry can hold pins on its map (F53, F54).
+const NB_PIN_KINDS = { continent: true, map: true };
 const NB_QUEST_STATUS = {
     open: { icon: '🟡', label: 'Open' },
     done: { icon: '✅', label: 'Done' },
@@ -206,9 +209,9 @@ function nbFind(nb, id) {
     return nb.entries.find(e => e.id === id) || null;
 }
 
-// Where an entry opens: its link, or the Monster Maker for a homebrew monster.
+// Where an entry opens: its link, the Monster Maker for a homebrew monster, or the Maps tab for your own map.
 function nbOpenHref(e) {
-    return e.href || (e.kind === 'monster' ? `monster-maker.html?nb=${e.id}` : '');
+    return e.href || (e.kind === 'monster' ? `monster-maker.html?nb=${e.id}` : e.kind === 'map' ? `worldbuilder.html?tab=maps&map=${e.id}` : '');
 }
 
 // ── Links between entries ─────────────────────────────────
@@ -325,7 +328,7 @@ function nbParseFile(text) {
 // Fold an imported notebook into this one. An entry whose link is already here keeps
 // the one here (and gains the imported notes, DM notes, and switched lines); so does a hand-written entry with the same
 // id and kind (the same notebook imported twice). The rest come in under fresh ids.
-// Returns { added, merged, full }.
+// Returns { added, merged, full, ids } (ids: each incoming id → its id here, so a map's picture can follow it).
 function nbMerge(nb, incoming) {
     const map = {};
     let added = 0, merged = 0, full = 0;
@@ -355,7 +358,7 @@ function nbMerge(nb, incoming) {
         nbSetPins(into, [...have, ...fresh], new Set(nb.entries.map(x => x.id)));
     });
     if (!nb.name && incoming.name) nb.name = incoming.name;
-    return { added, merged, full };
+    return { added, merged, full, ids: map };
 }
 
 // ── Sessions and quests (F50) ─────────────────────────────
