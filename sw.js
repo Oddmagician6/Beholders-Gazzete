@@ -7,7 +7,7 @@
 // (then running the export) installs a new cache; old caches are deleted on activate.
 // Cache keys drop the query string (?seed=, ?t=, ?id= ...): pages rebuild their state from the URL.
 
-const VERSION = '7d75451d541d';
+const VERSION = '7328912f69d0';
 const STATIC = 'gazette-static-' + VERSION;
 const PAGES = 'gazette-pages';
 const FONTS = 'gazette-fonts';
