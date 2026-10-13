@@ -4,6 +4,8 @@
    and what's there, a first lead, what's in the way, a twist, what's at stake, a deadline,
    a reward scaled to the party, and sometimes a foe that opens in the Encounter tab. Nothing is stored: the URL holds the quest.
    URL: ?tab=quest&seed=&lvl=&n=&job=
+   A new quest (no seed in the URL) starts at the Party tab's level and size (party.js); a shared
+   one keeps its own (a missing lvl or n means level 3, party of 4).
    ============================================ */
 
 const QUEST_FIELDS = { lvl: 'qs-level', n: 'qs-size', job: 'qs-job' };
@@ -42,6 +44,7 @@ function applyQuestUrl(p) {
         if (!setFieldValue(el, p.get(key))) el.value = defaultValue(el);
     });
     const seed = parseSeed(p.get('seed'));
+    if (!seed && !p.has('lvl') && !p.has('n')) questUseParty();
     if (!seed) return false;
     rollQuestFor(seed, null);
     return true;
@@ -106,6 +109,11 @@ function renderQuest() {
         </section>`;
 }
 
+// The Party tab's level and size, when a party is saved.
+function questUseParty() {
+    return partyFillLevelSize(document.getElementById('qs-level'), document.getElementById('qs-size'));
+}
+
 function printQuest() {
     if (!quest.data) return;
     document.body.classList.add('print-quest');
@@ -119,6 +127,11 @@ function setupQuest() {
     for (let n = 1; n <= 8; n++) size.add(new Option(`Party of ${n}`, n, n === 4, n === 4));
     const job = document.getElementById('qs-job');
     Object.entries(QUEST_JOBS).forEach(([key, j]) => job.add(new Option(`${j.icon} ${j.label}`, key)));
+    questUseParty();
+    partyChip(document.getElementById('qs-party-chip'), {
+        label: 'Use the Party', title: "Set the level and party size to the Party tab's",
+        act: () => { if (questUseParty() && quest.seed) rollQuestFor(quest.seed, false); }
+    });
 
     // Same seed: a new level or size rescales the reward and the foe; a new job keeps the giver.
     Object.values(QUEST_FIELDS).forEach(id => document.getElementById(id).addEventListener('change', () => {

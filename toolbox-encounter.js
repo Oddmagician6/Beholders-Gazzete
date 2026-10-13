@@ -3,19 +3,44 @@
    Build a fight from the SRD 5.1 monsters (monsters-data.js), rate it against the
    party's SRD 5.2 XP budget (encounter-engine.js), and send it to the Initiative tab
    (addToFight in toolbox-table.js). Nothing is stored: the URL holds the party and the monsters.
+   With no party in the URL, the party comes from the Party tab (party.js), else 4 × level 3.
    Each monster's SRD stat block opens under its row; the stat blocks (monster-statblocks.js)
    and spell text (spells-data.js) load the first time one is needed.
    URL: ?tab=enc&party=4x3&party=1x5&m=goblin.4&m=bugbear.1&diff=moderate&type=&env=&band=&pack=&seed=
    (env/band: the roll pickers; pack: the group a roll landed on; seed: the scene).
    ============================================ */
 
-const ENC_MAX_GROUPS = 6;
+const ENC_MAX_GROUPS = 8;
 const ENC_MAX_KINDS = 12;
 const ENC_MAX_COUNT = 40;
 const ENC_PICKER_ROWS = 40;
 const ENC_DEFAULT_PARTY = [{ count: 4, level: 3 }];
 
-let enc = { party: ENC_DEFAULT_PARTY.map(g => ({ ...g })), list: [], seed: null, band: null, open: new Set() };
+let enc = { party: encDefaultParty(), list: [], seed: null, band: null, open: new Set() };
+let encTouched = false;   // false until the builder changes or opens a link
+
+// A first visit to the tab, untouched since the page loaded: start from the party as it is now.
+function encFirstVisit() {
+    if (encTouched) return;
+    enc.party = encDefaultParty();
+    renderParty();
+    renderEncounter();
+}
+
+// The saved party's levels (party.js), or 4 × level 3.
+function encDefaultParty() {
+    const groups = partyGroups(loadParty()).slice(0, ENC_MAX_GROUPS).map(g => ({ count: Math.min(10, g.count), level: g.level }));
+    return groups.length ? groups : ENC_DEFAULT_PARTY.map(g => ({ ...g }));
+}
+
+// The Party tab's characters replace the groups here.
+function encUseParty(list) {
+    enc.party = partyGroups(list).slice(0, ENC_MAX_GROUPS).map(g => ({ count: Math.min(10, g.count), level: g.level }));
+    if (!enc.party.length) enc.party = ENC_DEFAULT_PARTY.map(g => ({ ...g }));
+    renderParty();
+    encChanged(false);
+    flash('enc-status', `👥 The party is set to ${enc.party.map(g => `${g.count} × level ${g.level}`).join(', ')}.`);
+}
 
 function clampInt(v, lo, hi, def) {
     const n = parseInt(v, 10);
@@ -211,6 +236,7 @@ function onEncListClick(e) {
 
 // push: true = new history entry, false = replace, null = leave the URL alone.
 function encChanged(push) {
+    encTouched = true;
     if (enc.band && !encBandFits(ENC_BAND_BY_KEY[enc.band], enc.list)) enc.band = null;
     if (enc.list.length && !enc.seed) enc.seed = newSeed();
     if (!enc.list.length) { enc.seed = null; enc.band = null; }
@@ -270,7 +296,7 @@ function sendToInitiative() {
 }
 
 function clearEncounter() {
-    enc = { party: ENC_DEFAULT_PARTY.map(g => ({ ...g })), list: [], seed: null, band: null, open: new Set() };
+    enc = { party: encDefaultParty(), list: [], seed: null, band: null, open: new Set() };
     renderParty();
     encChanged(true);
 }
@@ -295,7 +321,7 @@ function applyEncUrl(p) {
     const party = p.getAll('party').map(s => s.split('x'))
         .map(([c, l]) => ({ count: clampInt(c, 1, 10, 0), level: clampInt(l, 1, 20, 0) }))
         .filter(g => g.count && g.level).slice(0, ENC_MAX_GROUPS);
-    enc.party = party.length ? party : ENC_DEFAULT_PARTY.map(g => ({ ...g }));
+    enc.party = party.length ? party : encDefaultParty();
     enc.list = [];
     p.getAll('m').forEach(s => {
         const [id, n] = s.split('.');
@@ -321,6 +347,7 @@ function setupEncounter() {
     renderParty();
     renderPicker();
     renderEncounter();
+    partyChip(document.getElementById('en-party-chip'), { label: 'Use the Party', title: "Set the groups above to the Party tab's characters", act: encUseParty });
     const party = document.getElementById('en-party');
     party.addEventListener('input', onPartyInput);
     party.addEventListener('change', onPartyInput);

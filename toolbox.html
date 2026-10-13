@@ -408,6 +408,20 @@
     .clk-mini:hover:not(:disabled) { color: var(--gold-bright); }
     .clk-x:hover:not(:disabled) { color: #e57368; }
 
+    /* Party (F46) */
+    .pt-list { list-style: none; margin: 0; padding: 0; }
+    .pt-char { position: relative; border: 1px solid var(--gold-dim); border-radius: var(--radius-sm); padding: 14px 16px 12px; background: rgba(0,0,0,0.18); margin-bottom: 12px; }
+    .pt-tools { position: absolute; top: 6px; right: 6px; display: flex; }
+    .pt-row { display: grid; gap: 10px; padding-right: 86px; }
+    .pt-who { grid-template-columns: 1.4fr 1fr 1fr; margin-bottom: 10px; }
+    .pt-stats { grid-template-columns: repeat(5, minmax(0, 1fr)); padding-right: 0; }
+    .pt-row label { font-family: var(--font-ui); font-size: 0.75rem; color: var(--text-dim); min-width: 0; }
+    .pt-row input, .pt-row select { display: block; width: 100%; box-sizing: border-box; margin-top: 4px; padding: 8px 9px; font-size: 0.92rem; }
+    .pt-row input[data-k="name"] { font-family: 'IM Fell English', serif; font-size: 1.05rem; color: var(--text-bright); }
+    .pt-line { font-family: var(--font-ui); font-size: 0.85rem; color: var(--text-mid); margin: 6px 0 0; }
+    .pt-line b { color: var(--gold-bright); }
+    .init-pc .init-who { color: #9fc79f; }
+
     .tool-note code { font-size: 0.8rem; color: var(--text-mid); }
     .tool-note { font-family: var(--font-ui); font-size: 0.75rem; color: var(--text-dim); text-align: center; margin-top: 26px; line-height: 1.6; }
     .tool-note a { color: var(--gold-bright); }
@@ -451,6 +465,11 @@
       .clk-add .clk-new-name { grid-column: 1 / -1; }
       .clk-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
       .clk-face { width: 112px; }
+      .pt-char { padding: 12px 12px 10px; }
+      .pt-row { padding-right: 0; }
+      .pt-who { grid-template-columns: 1fr 1fr; padding-right: 86px; }
+      .pt-who label:first-child { grid-column: 1 / -1; }
+      .pt-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
 
     /* Tavern print (F26): only the tavern card, in ink on paper. */
@@ -532,6 +551,7 @@
       <button type="button" class="tool-tab" role="tab" data-tab="quest" aria-selected="false" aria-controls="tab-quest">📜 Quest</button>
       <button type="button" class="tool-tab" role="tab" data-tab="travel" aria-selected="false" aria-controls="tab-travel">🗺️ Travel</button>
       <button type="button" class="tool-tab" role="tab" data-tab="dice" aria-selected="false" aria-controls="tab-dice">🎲 Dice</button>
+      <button type="button" class="tool-tab" role="tab" data-tab="party" aria-selected="false" aria-controls="tab-party">👥 Party</button>
       <button type="button" class="tool-tab" role="tab" data-tab="enc" aria-selected="false" aria-controls="tab-enc">👹 Encounter</button>
       <button type="button" class="tool-tab" role="tab" data-tab="init" aria-selected="false" aria-controls="tab-init">⚔️ Initiative</button>
       <button type="button" class="tool-tab" role="tab" data-tab="clocks" aria-selected="false" aria-controls="tab-clocks">⏳ Clocks</button>
@@ -607,6 +627,7 @@
           </select>
           <button type="button" class="btn btn-gold" id="qs-roll">📜 Roll a Quest</button>
         </div>
+        <div id="qs-party-chip"></div>
         <article class="tavern-card" id="quest-card" aria-live="polite"></article>
         <div class="tool-toolbar tv-actions">
           <button type="button" class="btn" id="qs-copy">📋 Copy</button>
@@ -692,12 +713,33 @@
       <p class="tool-note"><strong>Formulas:</strong> <code>2d6+3</code>, <code>d20-1</code>, <code>d%</code> (a d100), <code>4d6kh3</code> (keep the highest 3), <code>2d20kl1</code> (keep the lowest), <code>8d6dl2</code> (drop the lowest 2), and any mix like <code>1d8+2d6+4</code>. Advantage and disadvantage roll the first single d20 twice. Dropped dice show in (parentheses).<br>The history (last 50 rolls) stays in this browser and is shared with the floating 🎲 button (<a href="privacy.html#backup">💾 back up everything</a>). Click a past roll to roll it again.</p>
     </section>
 
+    <section class="tool-panel" id="tab-party" role="tabpanel" hidden>
+      <div class="tool-card">
+        <h2 class="tool-h">👥 The Party</h2>
+        <p class="tool-intro">Enter the player characters once. The Encounter, Initiative, Quest, Split, and Downtime tabs and the Worldbuilder's Sites tab start from this party, and you can still change their own fields for any one roll.</p>
+        <datalist id="pt-classes"></datalist>
+        <ol class="pt-list" id="pt-list"></ol>
+        <p class="dice-empty" id="pt-empty">No characters yet. Add the first one below.</p>
+        <div class="dt-add-bar"><button type="button" class="btn" id="pt-add">➕ Add a Character</button></div>
+        <div class="split-result" id="pt-sum" aria-live="polite"></div>
+        <div class="tool-toolbar">
+          <button type="button" class="btn btn-gold" id="pt-init">⚔️ Add to Initiative</button>
+          <button type="button" class="btn" id="pt-enc">👹 Build an Encounter</button>
+          <button type="button" class="btn" id="pt-copy">📋 Copy</button>
+          <button type="button" class="btn" id="pt-clear">🧹 Clear All</button>
+        </div>
+        <p class="tool-status" id="party-status" role="status" aria-live="polite"></p>
+      </div>
+      <p class="tool-note">The party stays in this browser, so a refresh or a closed tab won't lose it, and it never leaves your device. <a href="privacy.html#backup">💾 Back up everything</a> to keep it safe. Changes save as you type.<br>Each tool keeps its own party fields, and 👥 Use the Party copies this party into them. A link someone shares with you keeps the party it was made for. ⚔️ Add to Initiative rolls d20 + each character's initiative bonus; if your players roll their own, type their numbers into the tracker. Tools with one level field use the party's average level, rounded.</p>
+    </section>
+
     <section class="tool-panel" id="tab-enc" role="tabpanel" hidden>
       <div class="tool-card">
         <h2 class="tool-h">👹 Encounter Builder</h2>
         <p class="tool-intro">Set up the party, add monsters, and see how hard the fight is. Click a monster's name for its full stat block. When it looks right, send it to the Initiative tab.</p>
 
         <h3 class="en-h">👥 The party</h3>
+        <div id="en-party-chip"></div>
         <ul class="en-party" id="en-party"></ul>
         <button type="button" class="btn en-add-group" id="en-add-group">➕ Add characters of another level</button>
         <p class="en-budget" id="en-budget"></p>
@@ -755,6 +797,7 @@
       <div class="tool-card">
         <h2 class="tool-h">⚔️ Initiative Tracker</h2>
         <p class="tool-intro">Add everyone in the fight, then step through the turns. Click a monster's name for its stat block. It survives a refresh.</p>
+        <div id="init-party"></div>
         <form class="init-add" id="init-add">
           <label class="init-name">Name <input type="text" id="ia-name" maxlength="40" placeholder="Goblin" required autocomplete="off" list="ia-monsters"></label>
           <datalist id="ia-monsters"></datalist>
@@ -823,6 +866,7 @@
           <label>Gold (gp) <input type="number" id="sp-gp" min="0" max="99999999" step="1" value="0" inputmode="numeric"></label>
           <label>Platinum (pp) <input type="number" id="sp-pp" min="0" max="99999999" step="1" value="0" inputmode="numeric"></label>
         </div>
+        <div id="sp-party-chip"></div>
         <div class="split-party">
           <label>Gems, art &amp; other (gp) <input type="number" id="sp-other" min="0" max="99999999" step="0.01" value="0" inputmode="decimal"></label>
           <label>Party size <input type="number" id="sp-n" min="1" max="20" step="1" value="4" inputmode="numeric"></label>
@@ -848,6 +892,7 @@
           <label>Extra days <input type="number" id="dt-days" min="0" max="364" step="1" value="0" inputmode="numeric"></label>
           <label class="dt-check"><input type="checkbox" id="dt-events" checked> Week by week</label>
         </div>
+        <div id="dt-party-chip"></div>
         <div id="dt-chars"></div>
         <div class="dt-add-bar"><button type="button" class="btn" id="dt-add">➕ Add a Character</button></div>
         <div class="split-result" id="dt-total" aria-live="polite"></div>
@@ -899,6 +944,7 @@
   <script src="downtime-engine.js"></script>
   <script src="quest-engine.js"></script>
   <script src="rules-data.js"></script>
+  <script src="party.js"></script>
   <script src="toolbox.js"></script>
   <script src="toolbox-table.js"></script>
   <script src="toolbox-encounter.js"></script>
@@ -906,6 +952,7 @@
   <script src="toolbox-downtime.js"></script>
   <script src="toolbox-quest.js"></script>
   <script src="toolbox-clocks.js"></script>
+  <script src="toolbox-party.js"></script>
   <script src="dice-fab.js"></script>
   <script src="nav.js"></script>
 </body>

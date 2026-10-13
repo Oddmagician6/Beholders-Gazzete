@@ -908,3 +908,11 @@ footer::before {
   .dice-pop { right: 12px; left: 12px; width: auto; max-width: none; bottom: 70px; }
 }
 @media print { .dice-fab, .dice-pop { display: none !important; } }
+
+/* Party chip (F46, party.js): the saved party beside a tool's own party fields. */
+.party-chip { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 12px; margin: 0 auto 16px; padding: 7px 12px; max-width: 640px; border: 1px dashed rgba(201,160,64,0.35); border-radius: var(--radius-sm); background: rgba(0,0,0,0.15); font-family: var(--font-ui); font-size: 0.8rem; color: var(--text-dim); text-align: center; }
+.party-chip b { color: var(--text-bright); font-weight: 600; }
+.party-chip-use { background: var(--bg-deep); border: 1px solid var(--gold-dim); color: var(--gold-bright); border-radius: var(--radius-sm); padding: 4px 10px; font-family: var(--font-ui); font-size: 0.78rem; cursor: pointer; }
+.party-chip-use:hover { border-color: var(--gold-mid); background: rgba(201,160,64,0.12); }
+.party-chip-edit { color: var(--gold-bright); }
+@media print { .party-chip { display: none !important; } }

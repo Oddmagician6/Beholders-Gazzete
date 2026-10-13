@@ -7,6 +7,7 @@
    (seed whenever anything rolls: lodging, settings, and the weekly log, or carousing
    and gambling; ev=0 turns the week-by-week extras off). For gambling, the work slot
    holds the game.
+   With nothing saved and no party in the URL, the characters are the Party tab's (party.js).
    ============================================ */
 
 const DOWNTIME_KEY = 'gazette-downtime';
@@ -192,10 +193,27 @@ function setDowntime(state) {
     buildDowntimeRows();
 }
 
-// First visit to the tab with no party in the URL: the saved party, or one blank character.
+// The Party tab's characters, by name (party.js), or none.
+function dtPartyChars() {
+    return loadParty().map((m, i) => ({ ...dtBlankChar(), name: partyMemberName(m, i) }));
+}
+
+// First visit to the tab with no party in the URL: the saved downtime, the Party tab's
+// characters, or one blank character.
 function initDowntime(push) {
-    setDowntime(loadDowntime() || {});
+    setDowntime(loadDowntime() || { chars: dtPartyChars() });
     showDowntime(push);
+}
+
+// The Party tab's characters replace the rows; each keeps the lifestyle and activity of the row in its place.
+function dtUseParty(list) {
+    readDowntimeRows();
+    const last = dt.chars[dt.chars.length - 1];
+    dt.chars = list.slice(0, DOWNTIME_MAX_CHARS).map((m, i) =>
+        dtClean({ ...(dt.chars[i] || { ...dtBlankChar(), life: last ? last.life : 'modest' }), name: partyMemberName(m, i) }));
+    buildDowntimeRows();
+    showDowntime(true);
+    flash('downtime-status', `👥 ${dt.chars.length} character${dt.chars.length === 1 ? '' : 's'} from the party.`);
 }
 
 function applyDownUrl(p) {
@@ -209,11 +227,12 @@ function applyDownUrl(p) {
 }
 
 function clearDowntime() {
-    setDowntime({});
+    setDowntime({ chars: dtPartyChars() });
     showDowntime(true);
 }
 
 function setupDowntime() {
+    partyChip(document.getElementById('dt-party-chip'), { label: 'Use the Party', title: "Name the rows after the Party tab's characters", act: dtUseParty });
     const box = document.getElementById('dt-chars');
     box.addEventListener('input', () => showDowntime(false));
     box.addEventListener('change', e => { if (e.target.tagName === 'SELECT') showDowntime(false); });

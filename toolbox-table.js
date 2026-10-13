@@ -6,6 +6,8 @@
    A combatant that is an SRD monster (sent from the Encounter tab, or added by its
    name) keeps its monster id and opens its stat block (toolbox-statblock.js).
    ?tab=init&add=<monster id>.<count> (the Bestiary's links) adds monsters to the saved fight once.
+   ➕ Add the Party (party.js) adds the Party tab's characters as player characters (pc: true):
+   their passive Perception shows, and at 0 HP they stay in the fight for their death saves.
    Loads after toolbox.js (uses its esc() and flash()).
    ============================================ */
 
@@ -147,6 +149,7 @@ function loadFight() {
                 id: c.id, name: c.name.slice(0, 40), init: num(c.init) ?? 0, mod: num(c.mod) ?? 0,
                 hp: num(c.hp), max: num(c.max), ac: num(c.ac),
                 monster: typeof c.monster === 'string' && Object.hasOwn(MONSTER_BY_ID, c.monster) ? c.monster : null,
+                pc: c.pc === true, pp: num(c.pp),
                 conds: Array.isArray(c.conds) ? c.conds.filter(x => SRD_CONDITIONS.includes(x)) : []
             }));
             fight = {
@@ -174,7 +177,8 @@ function rollInit(mod) {
 
 // Adds count combatants (numbered when more than one) and returns them; [] when the tracker is full.
 // Also used by the Encounter tab (toolbox-encounter.js). The caller saves and renders.
-function addToFight({ name, mod = 0, fixed = null, hp = null, ac = null, count = 1, monster = null }) {
+// pc: a player character from the Party tab (pp: its passive Perception).
+function addToFight({ name, mod = 0, fixed = null, hp = null, ac = null, count = 1, monster = null, pc = false, pp = null }) {
     count = Math.min(count, INIT_MAX - fight.list.length);
     if (count < 1) return [];
     // Numbering carries on from any "Goblin 2" already in the fight.
@@ -186,7 +190,7 @@ function addToFight({ name, mod = 0, fixed = null, hp = null, ac = null, count =
         const c = {
             id: fight.nextId++, name: count > 1 || taken.length ? `${base} ${++n}` : name,
             init: fixed !== null && count === 1 ? fixed : rollInit(mod), mod,
-            hp: hp !== null ? Math.max(0, hp) : null, max: hp !== null ? Math.max(0, hp) : null, ac, monster, conds: []
+            hp: hp !== null ? Math.max(0, hp) : null, max: hp !== null ? Math.max(0, hp) : null, ac, monster, pc, pp, conds: []
         };
         fight.list.push(c);
         added.push(c);
@@ -315,13 +319,13 @@ function renderFight(scroll = false) {
     list.innerHTML = fight.list.map(c => {
         const down = c.hp !== null && c.hp <= 0;
         const low = c.hp !== null && c.max && c.hp > 0 && c.hp <= c.max / 2;
-        return `<li class="init-row${c.id === fight.turn ? ' current' : ''}${down ? ' down' : ''}" data-id="${c.id}"${c.id === fight.turn ? ' aria-current="true"' : ''}>
+        return `<li class="init-row${c.id === fight.turn ? ' current' : ''}${down ? ' down' : ''}${c.pc ? ' init-pc' : ''}" data-id="${c.id}"${c.id === fight.turn ? ' aria-current="true"' : ''}>
             <div class="init-score"><input type="number" class="init-val" data-id="${c.id}" value="${c.init}" min="-10" max="50" aria-label="Initiative for ${esc(c.name)}"></div>
             <div class="init-main">
                 <div class="init-top">
                     ${c.monster ? `<button type="button" class="sb-toggle" data-act="sb" data-id="${c.id}" aria-expanded="${openBlocks.has(c.id)}" title="Show or hide the stat block"><span class="init-who sb-name">${esc(c.name)}</span> <span class="sb-hint" aria-hidden="true">📜</span></button>`
                         : `<span class="init-who">${esc(c.name)}</span>`}
-                    <span class="init-meta">${c.ac !== null ? `🛡️ AC ${c.ac} · ` : ''}bonus ${c.mod >= 0 ? '+' + c.mod : '−' + -c.mod}${down ? ' · 💀 down' : ''}</span>
+                    <span class="init-meta">${c.pc ? '👤 PC · ' : ''}${c.ac !== null ? `🛡️ AC ${c.ac} · ` : ''}bonus ${c.mod >= 0 ? '+' + c.mod : '−' + -c.mod}${c.pp !== null ? ` · 👁️ passive ${c.pp}` : ''}${down ? (c.pc ? ' · 🩸 death saves' : ' · 💀 down') : ''}</span>
                 </div>
                 <div class="init-conds">
                     ${c.conds.map(k => `<button type="button" class="init-cond" data-id="${c.id}" data-cond="${k}" title="Remove ${k}">${k} ✕</button>`).join('')}
@@ -370,6 +374,7 @@ function setupInitiative() {
     loadFight();
     renderFight();
     document.getElementById('init-add').addEventListener('submit', addCombatants);
+    partyChip(document.getElementById('init-party'), { label: '➕ Add the Party', title: 'Add every character not already in the fight, rolling d20 + their initiative bonus', act: addPartyToFight });
     const names = document.getElementById('ia-monsters');
     names.innerHTML = MONSTERS.map(m => `<option value="${esc(m.name)}"></option>`).join('');
     const follow = document.getElementById('init-follow');
@@ -414,8 +419,9 @@ function setupInitiative() {
         flash('init-status', '🎲 Everyone rolled again. Start combat when ready.');
     });
     document.getElementById('init-defeated').addEventListener('click', () => {
-        const fallen = fight.list.filter(c => c.hp !== null && c.hp <= 0);
-        if (!fallen.length) { flash('init-status', 'No one is down.'); return; }
+        // Player characters at 0 HP are making death saves, so they stay.
+        const fallen = fight.list.filter(c => !c.pc && c.hp !== null && c.hp <= 0);
+        if (!fallen.length) { flash('init-status', fight.list.some(c => c.pc && c.hp === 0) ? 'No monster is down. Characters at 0 HP stay for their death saves.' : 'No one is down.'); return; }
         fallen.forEach(c => removeCombatant(c.id));
         flash('init-status', `💀 Removed ${fallen.map(c => c.name).join(', ')}.`);
     });
@@ -431,6 +437,23 @@ function setupInitiative() {
             flash('init-status', '🧹 The battlefield is empty.');
         });
     });
+}
+
+// The Party tab's characters (party.js) join the fight, skipping any whose name is already in it.
+function addPartyToFight(list = loadParty()) {
+    if (!list.length) { flash('init-status', 'No party is saved yet. Enter it on the 👥 Party tab.'); return; }
+    const here = new Set(fight.list.map(c => c.name.toLowerCase()));
+    const todo = list.map((m, i) => ({ m, name: partyMemberName(m, i).slice(0, 36) })).filter(x => !here.has(x.name.toLowerCase()));
+    const skipped = list.length - todo.length;
+    if (!todo.length) { flash('init-status', '👥 The whole party is already in the fight.'); return; }
+    const added = todo.flatMap(x => addToFight({ name: x.name, mod: x.m.init, hp: x.m.hp, ac: x.m.ac, pc: true, pp: x.m.pp }));
+    if (!added.length) { flash('init-status', `⚠️ The tracker holds ${INIT_MAX} combatants. Clear some first.`); return; }
+    sortFight();
+    saveFight();
+    renderFight();
+    flash('init-status', `👥 ${added.map(c => `${c.name} (${c.init})`).join(', ')} ${added.length === 1 ? 'rolls' : 'roll'} in.`
+        + (added.length < todo.length ? ` The tracker holds ${INIT_MAX}, so ${todo.length - added.length} didn't fit.` : '')
+        + (skipped ? ` ${skipped} ${skipped === 1 ? 'was' : 'were'} already in the fight.` : ''));
 }
 
 // Monsters sent from the Bestiary (?add=goblin.3, repeatable) join the saved fight once, then

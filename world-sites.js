@@ -7,6 +7,8 @@
    "Use the History tab's history" dates the site to one of its ages (the History tab's
    own "Explore a ruin from this age" picks the age). Nothing is stored: the URL holds it.
    URL: ?tab=sites&seed=&kind=&size=&level=&party=
+   A new site (no seed in the URL) starts at the Toolbox Party tab's level and size (party.js);
+   a shared one keeps its own (a missing level or party means level 3, 4 characters).
         &his=&hages=&hspan=&hstart=&hage=<age number>  (a linked history)
    ============================================ */
 
@@ -63,9 +65,15 @@ function applySiteUrl(p) {
     if (h) Object.entries(SITE_HIS_KEYS).forEach(([key, opt]) => { h[opt] = p.get(key) || 'random'; });
     siteSetHistory(h, (parseInt(p.get('hage'), 10) || 0) - 1);
     const seed = parseSeed(p.get('seed'));
+    if (!seed && !p.has('level') && !p.has('party')) siteUseParty();
     if (!seed) return false;
     rollSiteFor(seed, null);
     return true;
+}
+
+// The Toolbox Party tab's level and size, when a party is saved.
+function siteUseParty() {
+    return partyFillLevelSize(document.getElementById('site-level'), document.getElementById('site-party'));
 }
 
 // Link the History tab's history (rolling one there first if it has none), or unlink.
@@ -250,6 +258,11 @@ function setupSites() {
     for (let l = 1; l <= 20; l++) level.add(new Option(`Level ${l}`, String(l), l === 3, l === 3));
     const party = document.getElementById('site-party');
     for (let n = 1; n <= 8; n++) party.add(new Option(`${n} character${n === 1 ? '' : 's'}`, String(n), n === 4, n === 4));
+    siteUseParty();
+    partyChip(document.getElementById('site-party-chip'), {
+        label: 'Use the Party', title: "Set the party level and size to the Toolbox Party tab's",
+        act: () => { if (siteUseParty() && siteState.seed) rollSiteFor(siteState.seed, false); }
+    });
 
     // Same seed: a new option keeps everything it doesn't touch.
     Object.values(SITE_FIELDS).forEach(id => document.getElementById(id).addEventListener('change', () => {

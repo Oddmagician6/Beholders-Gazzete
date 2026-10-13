@@ -12,10 +12,15 @@
    Downtime (F28): toolbox-downtime.js; the URL holds the party, the length, and the carousing seed.
    Quest (F32): toolbox-quest.js; the URL holds the seed, the party level and size, and the job.
    Clocks (F41): toolbox-clocks.js (no URL state beyond ?tab=; the clocks are in localStorage).
+   Party (F46): toolbox-party.js (no URL state beyond ?tab=; the party is in localStorage, kept by party.js).
+   Split's party size starts from it: the URL always holds n (unless names set it), so a link
+   without n (from the Loot page or the Session Kit) splits for the party here.
    Seeds and the shareable URL: rng.js.
    ============================================ */
 
-const TOOLBOX_TABS = ['names', 'tavern', 'quest', 'travel', 'dice', 'init', 'split', 'enc', 'down', 'clocks'];
+const TOOLBOX_TABS = ['names', 'tavern', 'quest', 'travel', 'dice', 'init', 'split', 'enc', 'down', 'clocks', 'party'];
+// Tabs whose state is all in localStorage (nothing in the URL beyond ?tab=).
+const TOOLBOX_STORED_TABS = ['dice', 'init', 'clocks', 'party'];
 const KEPT_KEY = 'gazette-kept-names';
 const KEPT_MAX = 100;
 
@@ -347,11 +352,25 @@ function splitOpts() {
     return { coins, other: Math.round(num('sp-other') * 100) / 100, names, n };
 }
 
+// The party size a split starts from: the Party tab's (party.js), or the field's default.
+function splitPartySize() {
+    const n = loadParty().length;
+    return n ? String(n) : defaultValue(document.getElementById('sp-n'));
+}
+
+// The Party tab's characters: their number, and their names when any has one.
+function splitUseParty(list) {
+    document.getElementById('sp-n').value = list.length;
+    document.getElementById('sp-names').value = list.some(c => c.name || c.player) ? list.map((c, i) => partyMemberName(c, i).replace(/,/g, '')).join(', ') : '';
+    showSplit(false);
+    flash('split-status', `👥 Split ${list.length} way${list.length === 1 ? '' : 's'}, for the party.`);
+}
+
 function splitParams() {
     const params = {};
     Object.entries(SPLIT_FIELDS).forEach(([key, id]) => {
         const el = document.getElementById(id);
-        params[key] = el.value.trim() !== '' && fieldValue(el) !== defaultValue(el) ? el.value.trim() : null;
+        params[key] = el.value.trim() !== '' && (key === 'n' || fieldValue(el) !== defaultValue(el)) ? el.value.trim() : null;
     });
     if (splitNames().length) params.n = null;
     params.seed = split.result && split.result.left ? split.seed : null;
@@ -402,13 +421,14 @@ function splitText() {
 
 function clearSplit() {
     Object.values(SPLIT_FIELDS).forEach(id => { const el = document.getElementById(id); el.value = defaultValue(el); });
+    document.getElementById('sp-n').value = splitPartySize();
     showSplit(true);
 }
 
 // ── URL ───────────────────────────────────────────────────
 // Names: ?for=<type>&seed=. Travel: ?tab=travel&climate=&season=&terrain=&pace=&hours=&ride=&miles=&day=&seed=
 function tabParams(tab) {
-    if (tab === 'dice' || tab === 'init' || tab === 'clocks') return urlFor(tab, {});
+    if (TOOLBOX_STORED_TABS.includes(tab)) return urlFor(tab, {});
     if (tab === 'split') return splitParams();
     if (tab === 'enc') return encParams();
     if (tab === 'tavern') return tavParams();
@@ -423,7 +443,7 @@ function applyUrl() {
     showTab(tab);
     const p = urlParams();
     const seed = parseSeed(p.get('seed'));
-    if (tab === 'dice' || tab === 'init' || tab === 'clocks') return true;   // nothing to roll; their state is in localStorage
+    if (TOOLBOX_STORED_TABS.includes(tab)) return true;   // nothing to roll; their state is in localStorage
     if (tab === 'enc') { applyEncUrl(p); return true; }
     if (tab === 'tavern') return applyTavUrl(p);
     if (tab === 'down') return applyDownUrl(p);
@@ -431,7 +451,7 @@ function applyUrl() {
     if (tab === 'split') {
         Object.entries(SPLIT_FIELDS).forEach(([key, id]) => {
             const el = document.getElementById(id);
-            if (!setFieldValue(el, p.get(key))) el.value = defaultValue(el);
+            if (!setFieldValue(el, p.get(key))) el.value = key === 'n' ? splitPartySize() : defaultValue(el);
         });
         split.seed = seed || newSeed();
         showSplit(seed ? null : false);   // a link without a seed gets one, so it can be shared
@@ -471,6 +491,15 @@ document.addEventListener('DOMContentLoaded', () => {
     setupQuest();
     loadKept();
     renderKept();
+    document.getElementById('sp-n').value = splitPartySize();
+    partyChip(document.getElementById('sp-party-chip'), { label: 'Use the Party', title: "Split for the Party tab's characters, by name", act: splitUseParty });
+    // The party chips' Edit links switch tabs here instead of reloading the page.
+    document.addEventListener('click', e => {
+        if (!e.target.closest('a.party-chip-edit') || e.ctrlKey || e.metaKey || e.shiftKey) return;
+        e.preventDefault();
+        document.querySelector('.tool-tab[data-tab="party"]').click();
+        document.querySelector('.tool-tabs').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
 
     // Each tab keeps its roll in memory; the first visit to a tab rolls one.
     document.querySelectorAll('.tool-tab').forEach(b => b.addEventListener('click', () => {
@@ -480,8 +509,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (tab === 'travel' && !travel.seed) { travel = { seed: newSeed(), day: 1, days: [] }; showJourney(null); }
         if (tab === 'names' && !names.seed) rollNamesFor(newSeed(), null);
         if (tab === 'tavern' && !tavern.seed) rollTavernFor(newSeed(), null);
-        if (tab === 'quest' && !quest.seed) rollQuestFor(newSeed(), null);
-        if (tab === 'split' && !split.seed) { split.seed = newSeed(); showSplit(null); }
+        // A first visit starts from the party as it is now (it may have been entered since the page loaded).
+        if (tab === 'enc') encFirstVisit();
+        if (tab === 'quest' && !quest.seed) { questUseParty(); rollQuestFor(newSeed(), null); }
+        if (tab === 'split' && !split.seed) { document.getElementById('sp-n').value = splitPartySize(); split.seed = newSeed(); showSplit(null); }
         if (tab === 'down' && !dt.seed) initDowntime(null);
         setUrlParams(tabParams(tab), true);
     }));

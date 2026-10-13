@@ -102,6 +102,11 @@ const BACKUP_KEYS = [
         count: v => bkN(v.length, 'clock')
     },
     {
+        key: 'gazette-party', tool: '🧰 DM Toolbox', href: 'toolbox.html?tab=party', what: 'The party',
+        clean: v => bkItems(v, c => bkObj(c) && ['name', 'player', 'cls'].every(k => c[k] === undefined || typeof c[k] === 'string'), 8, false),
+        count: v => bkN(v.length, 'character')
+    },
+    {
         key: 'gazette-downtime', tool: '🧰 DM Toolbox', href: 'toolbox.html?tab=down', what: 'Downtime party',
         clean: v => bkWhole(v, d => bkObj(d) && Array.isArray(d.chars) && d.chars.length >= 1 && d.chars.length <= 8 && d.chars.every(bkObj), false),
         count: v => bkN(v.chars.length, 'character')
