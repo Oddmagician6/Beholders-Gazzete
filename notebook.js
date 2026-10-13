@@ -19,6 +19,9 @@
    Secret notes (F51): any entry may carry `dm` (notes for the DM only; `notes` are the ones
    players may see) and `flip` (the keys of rolled lines whose DM-only default the DM switched,
    see notebook-sheets.js). Both are written only when set, so older notebooks stay as they were.
+   Map pins (F53): a continent entry may carry `pins` (map-pins.js: numbered spots, each
+   named, with a note, and maybe opening another entry), written only when it has some.
+   Without map-pins.js on the page they pass through untouched, like a monster without homebrew.js.
    The page side lives in world-notebook.js. Needs rng.js (paramsQuery) on the page.
    ============================================ */
 
@@ -37,6 +40,8 @@ const NB_KINDS = {
     quest: { icon: '❗', label: 'Quest', hand: true },
     monster: { icon: '🐲', label: 'Monster', hand: true }
 };
+// Kinds whose entry can hold pins on its map (F53).
+const NB_PIN_KINDS = { continent: true };
 const NB_QUEST_STATUS = {
     open: { icon: '🟡', label: 'Open' },
     done: { icon: '✅', label: 'Done' },
@@ -150,11 +155,15 @@ function nbClean(raw) {
             links: Array.isArray(e.links) ? e.links.filter(l => typeof l === 'string') : [],
             added: isNaN(added) ? new Date().toISOString() : added.toISOString(),
             ...nbFields(e.kind, e),
-            ...nbSecretFields(e)
+            ...nbSecretFields(e),
+            ...(NB_PIN_KINDS[e.kind] && Array.isArray(e.pins) && e.pins.length ? { pins: e.pins } : {})
         });
     });
-    // Links only to entries that made it, never to itself, each once.
-    nb.entries.forEach(e => { e.links = [...new Set(e.links)].filter(l => l !== e.id && ids.has(l)).slice(0, NB_LIMITS.links); });
+    // Links only to entries that made it, never to itself, each once. Pins open only entries that made it too.
+    nb.entries.forEach(e => {
+        e.links = [...new Set(e.links)].filter(l => l !== e.id && ids.has(l)).slice(0, NB_LIMITS.links);
+        if (e.pins) nbSetPins(e, e.pins, ids);
+    });
     return { nb, dropped };
 }
 
@@ -244,7 +253,24 @@ function nbUnlink(nb, a, b) {
 
 function nbRemove(nb, id) {
     nb.entries = nb.entries.filter(e => e.id !== id);
-    nb.entries.forEach(e => { e.links = e.links.filter(l => l !== id); });
+    nb.entries.forEach(e => {
+        e.links = e.links.filter(l => l !== id);
+        (e.pins || []).forEach(p => { if (p.to === id) p.to = ''; });
+    });
+}
+
+// ── Map pins (F53) ────────────────────────────────────────
+// Put cleaned pins on an entry (ids: the entry ids a pin may open), or take the key off when there are none.
+function nbSetPins(e, pins, ids) {
+    const clean = typeof pinClean === 'function' ? pinClean(pins, ids).map(p => (p.to === e.id ? { ...p, to: '' } : p)) : pins;
+    if (Array.isArray(clean) && clean.length) e.pins = clean;
+    else delete e.pins;
+}
+
+// The saved entry for a roll (its kind, seed, and the options that change it), or null.
+function nbFindRoll(nb, kind, seed, get) {
+    const sig = nbSig(kind, seed, get);
+    return nb.entries.find(e => e.kind === kind && e.href && nbEntrySig(e) === sig) || null;
 }
 
 // Save a roll: { kind, title, sub, href, ...that kind's fields }. Returns { entry, existed, linked }
@@ -320,6 +346,14 @@ function nbMerge(nb, incoming) {
         added++;
     });
     incoming.entries.forEach(e => e.links.forEach(l => { if (map[e.id] && map[l]) nbLink(nb, map[e.id], map[l]); }));
+    // Pins come along, opening the same entries under their ids here; a pin already on the entry stays as it is.
+    incoming.entries.forEach(e => {
+        const into = map[e.id] && nbFind(nb, map[e.id]);
+        if (!into || !e.pins || !e.pins.length) return;
+        const have = into.pins && into.pins !== e.pins ? into.pins : [];
+        const fresh = e.pins.filter(p => !have.some(h => h.id === p.id)).map(p => ({ ...p, to: map[p.to] || '' }));
+        nbSetPins(into, [...have, ...fresh], new Set(nb.entries.map(x => x.id)));
+    });
     if (!nb.name && incoming.name) nb.name = incoming.name;
     return { added, merged, full };
 }

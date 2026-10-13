@@ -311,6 +311,36 @@
     .cont-flash { animation: nb-flash 1.6s ease-out; }
     .cont-wilds { margin: 0 0 14px !important; }
     .cont-journey .tool-form { margin-bottom: 8px; }
+    /* Pins (F53) */
+    .cont-pin-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 0 0 10px; }
+    .cont-pin-hint { margin: 0 !important; flex: 1 1 220px; }
+    .cont-map-wrap.cont-pinning { cursor: crosshair; outline: 2px dashed var(--gold-mid); outline-offset: 2px; }
+    .cont-map-wrap.cont-pinning .cont-map { touch-action: none; }
+    .cont-map-wrap.cont-pinning .cm-key { cursor: crosshair; }
+    .cm-pin { cursor: pointer; outline: none; }
+    .cont-pinning .cm-pin { cursor: grab; }
+    .cm-pin-head { fill: #f2c544; stroke: #2a2116; stroke-width: 1.2; stroke-linejoin: round; }
+    .cm-pin-n { font-family: system-ui, sans-serif; font-weight: 700; fill: #2a2116; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+    .cm-pin:hover .cm-pin-head, .cm-pin:focus-visible .cm-pin-head { stroke: #fff; stroke-width: 2; }
+    .cm-pin-on .cm-pin-head { fill: #fff3c4; stroke: #8a2f2a; stroke-width: 2.2; }
+    .cont-pins-h { margin: 14px 0 8px; font-family: var(--font-ui); font-size: 0.85rem; color: var(--gold-mid); }
+    .cont-pin-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+    .cont-pin { display: flex; align-items: flex-start; gap: 10px; padding: 8px 10px; border: 1px solid rgba(201,160,64,0.2); border-radius: var(--radius-sm); scroll-margin: 80px; }
+    .cont-pin:focus { outline: none; }
+    .cont-pin-on { border-color: var(--gold-mid); background: rgba(201,160,64,0.08); }
+    .cont-pin .site-n { flex: none; margin-top: 6px; }
+    .cont-pin-fields { flex: 1 1 auto; min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 6px; }
+    .cont-pin-fields input, .cont-pin-fields select { width: 100%; min-width: 0; }
+    .cont-pin-note { grid-column: 1 / -1; }
+    .cont-pin-acts { flex: none; display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+    .cont-pin-acts .btn { padding: 6px 10px; }
+    .cont-pin-key { display: none; }
+    .cont-pin-foot { margin: 10px 0 6px !important; }
+    @media (max-width: 600px) {
+      .cont-pin { flex-wrap: wrap; }
+      .cont-pin-fields { grid-template-columns: 1fr; flex-basis: calc(100% - 40px); }
+      .cont-pin-acts { width: 100%; }
+    }
     /* Map export (Sites and Continent) */
     .map-export { margin: 4px 0 10px; border: 1px solid rgba(201,160,64,0.25); border-radius: var(--radius-sm); padding: 10px 14px; }
     .map-export summary { font-family: var(--font-ui); font-size: 0.85rem; color: var(--gold-mid); cursor: pointer; }
@@ -433,7 +463,13 @@
       body.print-cont > :not(main), body.print-cont .tool-tabs, body.print-cont .tool-panel:not(#tab-continent),
       body.print-cont #tab-continent .tool-h, body.print-cont #tab-continent .tool-intro, body.print-cont #tab-continent .tool-form,
       body.print-cont #tab-continent .tool-toolbar, body.print-cont #tab-continent .tool-status, body.print-cont #tab-continent .tool-note,
-      body.print-cont .cont-journey, body.print-cont .pan-links, body.print-cont .town-go { display: none !important; }
+      body.print-cont .cont-journey, body.print-cont .pan-links, body.print-cont .town-go,
+      body.print-cont .cont-pin-bar, body.print-cont .cont-pin-list, body.print-cont .cont-pin-foot { display: none !important; }
+      body.print-cont .cont-pin-key { display: block; margin: 10px 0 0; padding-left: 0; list-style: none; columns: 2; font-size: 10pt; }
+      body.print-cont .cont-pin-key li { break-inside: avoid; margin-bottom: 3px; }
+      body.print-cont .cont-pins-h { color: #000 !important; }
+      body.print-cont .cm-pin-head { fill: #fff; stroke: #000; }
+      body.print-cont .cm-pin-n { fill: #000; }
       body.print-cont .world-body { padding: 0; max-width: none; }
       body.print-cont .tool-card { background: none; border: none; padding: 0; }
       body.print-cont .wb-card { background: none; border: 2px solid #000; color: #000; }
@@ -735,15 +771,16 @@
         </div>
         <details class="map-export">
           <summary>🗺️ Download the map (PNG)</summary>
-          <p class="wb-small">The map as a picture, to share with your players or drop into a virtual tabletop. A journey you picked shows on it too.</p>
+          <p class="wb-small">The map as a picture, to share with your players or drop into a virtual tabletop. A journey you picked shows on it too, and so do your pins unless you untick them (to keep them from the players).</p>
           <div class="tool-form">
             <label>Size <select id="cont-scale"><option value="2">Medium (2×)</option><option value="3" selected>Large (3×)</option><option value="4">Huge (4×)</option></select></label>
           </div>
+          <div class="map-export-checks"><label><input type="checkbox" id="cont-png-pins" checked> 📍 Your pins</label></div>
           <div class="tool-toolbar"><button type="button" class="btn btn-gold" id="cont-png">⬇️ Download the Map</button></div>
         </details>
         <p class="tool-status" id="cont-status" role="status" aria-live="polite"></p>
       </div>
-      <p class="tool-note">The map and its tables are the Gazette's own. Rulers come from the <a href="npc-generator.html">Town Square</a>'s NPC generator; every town opens on the <a href="worldbuilder.html?tab=town">Town tab</a> inside its realm, every place worth the trip on the <a href="worldbuilder.html?tab=sites">Sites tab</a>, and every road or journey in the <a href="toolbox.html?tab=travel">DM Toolbox's Travel tab</a> with its terrain and miles filled in.<br>The address bar holds the map, so 🔗 Copy Link shares it. A new number of nations keeps the land; a new mix of land and sea raises or lowers the sea over the same ground; a new size is a new map.</p>
+      <p class="tool-note">The map and its tables are the Gazette's own. Rulers come from the <a href="npc-generator.html">Town Square</a>'s NPC generator; every town opens on the <a href="worldbuilder.html?tab=town">Town tab</a> inside its realm, every place worth the trip on the <a href="worldbuilder.html?tab=sites">Sites tab</a>, and every road or journey in the <a href="toolbox.html?tab=travel">DM Toolbox's Travel tab</a> with its terrain and miles filled in.<br>The address bar holds the map, so 🔗 Copy Link shares it (but not your pins: they stay in your notebook, in this browser). A new number of nations keeps the land; a new mix of land and sea raises or lowers the sea over the same ground; a new size is a new map.</p>
     </section>
     <section class="tool-panel" id="tab-notebook" role="tabpanel" hidden>
       <div class="tool-card">
@@ -841,6 +878,7 @@
   <script src="continent-engine.js"></script>
   <script src="notebook.js"></script>
   <script src="homebrew.js"></script>
+  <script src="map-pins.js"></script>
   <script src="map-export.js"></script>
   <script src="party.js"></script>
   <script src="worldbuilder.js"></script>

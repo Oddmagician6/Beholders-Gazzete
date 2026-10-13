@@ -11,6 +11,7 @@
    🖨️ Print for Players prints the entries you tick as parchment sheets (handouts.css), each
    roll rebuilt from its link by notebook-sheets.js with its secrets left out; switch any
    line either way, and the entry remembers it (flip).
+   Map pins (F53): a continent's card counts its pins; search and Copy All read them too.
    Nothing here rolls, and the URL holds only the tab: the notebook lives in this browser.
    URL: ?tab=notebook
    ============================================ */
@@ -26,7 +27,7 @@ function nbMatches(e, kind, status, q) {
     if (kind !== 'all' && e.kind !== kind) return false;
     if (status !== 'all' && (e.kind !== 'quest' || e.status !== status)) return false;
     if (!q) return true;
-    return [e.title, e.sub, e.notes, e.dm, e.giver, e.reward, e.recap, e.npcs, e.loot, e.threads]
+    return [e.title, e.sub, e.notes, e.dm, e.giver, e.reward, e.recap, e.npcs, e.loot, e.threads, ...(e.pins || []).flatMap(p => [p.name, p.note])]
         .filter(Boolean).join(' ').toLowerCase().includes(q);
 }
 
@@ -72,6 +73,7 @@ function nbTopHTML(nb, e) {
         const meta = [e.giver && `🗣️ ${esc(e.giver)}`, e.reward && `💰 ${esc(e.reward)}`].filter(Boolean);
         if (meta.length) lines += `<p class="nb-meta">${meta.join(' · ')}</p>`;
     }
+    if (e.pins && e.pins.length) lines += `<p class="nb-meta">📍 ${e.pins.length} ${e.pins.length === 1 ? 'pin' : 'pins'} on the map</p>`;
     return `<div class="nb-top">
             <span class="nb-icon" aria-hidden="true">${k.icon}</span>
             <div class="nb-main">
@@ -465,6 +467,10 @@ function nbAsText(nb) {
         if (e.threads) out.push('Open threads: ' + nbLines(e.threads).join('; '));
         if (e.notes) out.push('Notes: ' + e.notes);
         if (e.dm) out.push('DM only: ' + e.dm);
+        (e.pins || []).forEach((p, n) => {
+            const to = p.to && nbFind(nb, p.to);
+            out.push(`Pin ${n + 1}${p.name ? ': ' + p.name : ''}${p.note ? '. ' + p.note : ''}${to ? ` (see ${to.title})` : ''}`);
+        });
         const linked = e.links.map(l => nbFind(nb, l)).filter(Boolean).map(o => o.title);
         if (linked.length) out.push('Linked to: ' + linked.join('; '));
         if (e.href) out.push(new URL(e.href, location.href).href);

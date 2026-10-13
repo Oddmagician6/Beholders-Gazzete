@@ -260,6 +260,11 @@ function nbSheet(e) {
     // The entry's own lines lead the sheet, ahead of the roll's untitled part.
     if (parts.length && parts[0].head === '') parts[0].lines = [...own, ...parts[0].lines.filter(l => !own.some(o => o.key === l.key) && l.text !== e.sub)];
     else if (own.length) parts.unshift({ head: '', lines: own });
+    // Map pins (F53) start DM-only: a pin is as likely to mark a secret as a sight. Keyed by pin id, so a rename keeps its switch.
+    if (e.pins && e.pins.length) {
+        parts.push({ head: 'Pins on the map', lines: e.pins.map((p, n) =>
+            ({ key: `Pins on the map|${p.id}`, label: `${n + 1}. ${pinLabel(p, n)}`, text: p.note || 'Marked on the map.', dm: true })) });
+    }
     return { parts, broken: rolled === null };
 }
 
