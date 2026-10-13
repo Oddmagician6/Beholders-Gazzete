@@ -5,6 +5,7 @@
    Initiative tab: the fight, kept in localStorage INIT_KEY so a refresh keeps it.
    A combatant that is an SRD monster (sent from the Encounter tab, or added by its
    name) keeps its monster id and opens its stat block (toolbox-statblock.js).
+   ?tab=init&add=<monster id>.<count> (the Bestiary's links) adds monsters to the saved fight once.
    Loads after toolbox.js (uses its esc() and flash()).
    ============================================ */
 
@@ -432,9 +433,38 @@ function setupInitiative() {
     });
 }
 
+// Monsters sent from the Bestiary (?add=goblin.3, repeatable) join the saved fight once, then
+// leave the address bar so a reload or Back doesn't add them again.
+function applyInitAdds() {
+    const p = urlParams();
+    const adds = p.getAll('add');
+    if (!adds.length) return;
+    p.delete('add');
+    setUrlParams(Object.fromEntries(p), false);
+    if (currentTab() !== 'init') return;
+    let want = 0;
+    const added = adds.slice(0, 12).flatMap(s => {
+        const [id, n] = s.split('.');
+        const m = Object.hasOwn(MONSTER_BY_ID, id) ? MONSTER_BY_ID[id] : null;
+        if (!m) return [];
+        const count = Math.max(1, Math.min(INIT_MAX, parseInt(n, 10) || 1));
+        want += count;
+        return addToFight({ name: m.name, mod: m.dex, hp: m.hp, ac: m.ac, count, monster: m.id });
+    });
+    if (!want) return;
+    if (!added.length) { flash('init-status', `⚠️ The tracker holds ${INIT_MAX} combatants. Clear some first.`); return; }
+    sortFight();
+    saveFight();
+    renderFight();
+    flash('init-status', added.length < want
+        ? `⚔️ Added ${added.length} of ${want} monsters from the Bestiary; the tracker holds ${INIT_MAX}.`
+        : `⚔️ Added ${added.length} monster${added.length === 1 ? '' : 's'} from the Bestiary. Add the party, then Start Combat.`);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     setupDice();
     setupInitiative();
+    applyInitAdds();
     // Another tab of the site changed the history or the fight.
     window.addEventListener('storage', e => {
         if (e.key === DICE_HISTORY_KEY) renderDiceHistory();
