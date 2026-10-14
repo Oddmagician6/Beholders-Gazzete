@@ -245,6 +245,15 @@ function nbRolledParts(e) {
     return parts;
 }
 
+// The roll's parts with the entry's reworded lines in place ([] without a roll, null when the link no longer rolls).
+function nbRolledSheet(e) {
+    const rolled = nbRolledParts(e);
+    if (!rolled) return rolled;
+    const edits = e.edits || {};
+    return rolled.map(part => ({ ...part, lines: part.lines.map(l => (Object.hasOwn(edits, l.key)
+        ? { ...l, text: edits[l.key], was: l.text, edit: true } : { ...l, edit: true })) }));
+}
+
 // The whole sheet for an entry: its own lines first (summary, hand-written fields, notes), then the roll.
 // Returns { parts, broken } — broken: the link no longer rolls.
 function nbSheet(e) {
@@ -260,10 +269,8 @@ function nbSheet(e) {
         own.push(nbLine('', 'In short', e.sub, !!NB_SUB_DM[e.kind]));
     }
     if (e.notes) own.push(nbLine('', 'Notes', e.notes));
-    const rolled = nbRolledParts(e);
-    const edits = e.edits || {};
-    const parts = (rolled || []).map(part => ({ ...part, lines: part.lines.map(l => (Object.hasOwn(edits, l.key)
-        ? { ...l, text: edits[l.key], was: l.text, edit: true } : { ...l, edit: true })) }));
+    const rolled = nbRolledSheet(e);
+    const parts = rolled || [];
     // The entry's own lines lead the sheet, ahead of the roll's untitled part.
     if (parts.length && parts[0].head === '') parts[0].lines = [...own, ...parts[0].lines.filter(l => !own.some(o => o.key === l.key) && (l.was || l.text) !== e.sub)];
     else if (own.length) parts.unshift({ head: '', lines: own });

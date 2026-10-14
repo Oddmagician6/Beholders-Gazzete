@@ -12,6 +12,8 @@
    roll rebuilt from its link by notebook-sheets.js with its secrets left out; switch any
    line either way, and the entry remembers it (flip). ✏️ rewords a rolled line in the notebook's
    copy only (edits); ↩️ puts the rolled wording back. The tabs and links still roll the original.
+   📄 Word saves the player sheets, the recap, or the whole notebook as a .docx (docx.js); every
+   📋 Copy here copies formatted text too, so a paste into Google Docs keeps headings and bold.
    Map pins (F53): a continent's card counts its pins; search and Copy All read them too.
    Families (F55): search reads every name, title, note, and secret; Copy All lists the family.
    Your own maps (F54): removing a map's entry (or clearing the notebook) deletes its picture
@@ -183,6 +185,33 @@ function nbLastText(nb) {
     return out.join('\n');
 }
 
+// The recap as a document (docx.js blocks).
+function nbLastBlocks(nb) {
+    const s = nbLastSession(nb);
+    if (!s) return [];
+    const threads = nbLines(s.threads), quests = nbOpenQuests(nb);
+    return [
+        { t: 'title', text: `Last time${nb.name ? ` on ${nb.name}` : ''}…` },
+        { t: 'kicker', text: s.title + (s.date ? ` · ${nbDateText(s.date)}` : '') },
+        { t: 'p', text: s.recap },
+        ...(s.npcs ? [{ t: 'h2', text: 'Faces from last time' }, { t: 'p', text: s.npcs }] : []),
+        ...(s.loot ? [{ t: 'h2', text: 'What you carried away' }, { t: 'p', text: s.loot }] : []),
+        ...(threads.length ? [{ t: 'h2', text: 'Still unresolved' }, ...threads.map(t => ({ t: 'li', text: t }))] : []),
+        ...(quests.length ? [{ t: 'h2', text: 'Quests still open' }, ...quests.map(q => ({ t: 'li', label: q.title, text: q.giver ? `, for ${q.giver}` : '' }))] : [])
+    ];
+}
+
+// A .docx name: the notebook's name, what's in it, and today.
+function nbDocName(nb, what) {
+    const slug = nb.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
+    return `${slug ? slug + '-' : ''}${what}-${new Date().toISOString().slice(0, 10)}.docx`;
+}
+
+// Copy as formatted text (Google Docs and Word keep it) with the plain text alongside.
+function nbRichCopy(blocks, text, statusId, what) {
+    docCopy(blocks, text).then(ok => flash(statusId, ok ? `📋 Copied ${what}. Paste into Google Docs or Word to keep the formatting.` : '⚠️ Copy blocked by the browser.'));
+}
+
 function renderLast(nb) {
     const box = document.getElementById('nb-last');
     const html = nbView.last ? nbLastHTML(nb) : '';
@@ -329,6 +358,21 @@ function nbPlayerText(nb) {
     }).join('\n\n');
 }
 
+// The player sheets as a document: one entry to a page, only the lines the players may see.
+function nbPlayerBlocks(nb) {
+    return nbPicked(nb).flatMap((e, i) => {
+        const parts = nbSheet(e).parts.map(part => ({ head: part.head, lines: part.lines.filter(l => nbShown(e, l)) })).filter(part => part.lines.length);
+        return [
+            { t: 'kicker', text: nbKindOpt(e.kind).label, page: i > 0 },
+            { t: 'h1', text: e.title },
+            ...(parts.length ? parts.flatMap(part => [
+                ...(part.head ? [{ t: 'h2', text: part.head }] : []),
+                ...part.lines.map(l => ({ t: 'p', label: `${l.label}: `, text: l.text }))
+            ]) : [{ t: 'p', text: 'Nothing here for the players yet.' }])
+        ];
+    });
+}
+
 // Redraw the panel. focus: a selector to put keyboard focus back on.
 function renderPlayers(nb, focus) {
     const box = document.getElementById('nb-pl');
@@ -342,7 +386,7 @@ function renderPlayers(nb, focus) {
     const n = nbView.pick.length;
     document.getElementById('nb-pl-count').textContent = n ? `${n} ${n === 1 ? 'entry' : 'entries'} ticked.` : 'Tick the entries to hand out.';
     document.getElementById('nb-pl-sheets').innerHTML = nbPlayerSheetsHTML(nb);
-    ['nb-pl-print', 'nb-pl-copy'].forEach(id => { document.getElementById(id).disabled = !n; });
+    ['nb-pl-print', 'nb-pl-copy', 'nb-pl-word'].forEach(id => { document.getElementById(id).disabled = !n; });
     if (focus) { const el = pick.querySelector(focus); if (el) el.focus(); }
 }
 
@@ -405,8 +449,14 @@ function setupPlayers() {
     }, true);
     document.getElementById('nb-pl-ink').addEventListener('change', e => { nbView.ink = e.target.checked; renderPlayers(nbLoad()); });
     document.getElementById('nb-pl-copy').addEventListener('click', () => {
-        const text = nbPlayerText(nbLoad());
-        if (text) copyText(text, 'nb-pl-status', 'the player sheets');
+        const nb = nbLoad(), text = nbPlayerText(nb);
+        if (text) nbRichCopy(nbPlayerBlocks(nb), text, 'nb-pl-status', 'the player sheets');
+    });
+    document.getElementById('nb-pl-word').addEventListener('click', () => {
+        const nb = nbLoad();
+        if (!nbPicked(nb).length) return;
+        docDownload(nb.name ? `${nb.name}: player handouts` : 'Player handouts', nbPlayerBlocks(nb), nbDocName(nb, 'player-handouts'));
+        flash('nb-pl-status', '📄 Saved a Word file, one entry to a page. Google Docs opens it too: upload it to Drive.');
     });
     document.getElementById('nb-pl-print').addEventListener('click', () => {
         if (!nbView.pick.length) return;
@@ -447,7 +497,7 @@ function renderNotebook(nb = nbLoad()) {
     }
     if (refocus) { const el = list.querySelector(refocus); if (el) el.focus(); }
     document.getElementById('nb-clear').textContent = nbView.clearing ? '⚠️ Click again to clear everything' : '🗑️ Clear';
-    ['nb-export', 'nb-copy', 'nb-clear'].forEach(id => { document.getElementById(id).disabled = !nb.entries.length; });
+    ['nb-export', 'nb-copy', 'nb-word', 'nb-clear'].forEach(id => { document.getElementById(id).disabled = !nb.entries.length; });
     renderLast(nb);
     renderPlayers(nb);
 }
@@ -524,33 +574,61 @@ function nbSaveField(box) {
     if (nbView.last) renderLast(nb);
 }
 
+function nbByAdded(nb) {
+    return nb.entries.slice().sort((a, b) => a.added.localeCompare(b.added));
+}
+
+// What an entry holds besides its roll, as { label, text, li } lines (label '' = a bare line; li: a list item).
+function nbEntryFacts(nb, e) {
+    const f = (label, text, li = false) => ({ label, text, li });
+    const out = [];
+    if (e.kind === 'quest') out.push(f('Status', NB_QUEST_STATUS[e.status].label));
+    if (e.sub) out.push(f('', e.sub));
+    if (e.giver) out.push(f('Giver', e.giver));
+    if (e.reward) out.push(f('Reward', e.reward));
+    if (e.date) out.push(f('Played', nbDateText(e.date)));
+    if (e.recap) out.push(f('What happened', e.recap));
+    if (e.npcs) out.push(f('NPCs met', e.npcs));
+    if (e.loot) out.push(f('Loot', e.loot));
+    if (e.threads) out.push(f('Open threads', nbLines(e.threads).join('; ')));
+    if (e.notes) out.push(f('Notes', e.notes));
+    if (e.dm) out.push(f('DM only', e.dm));
+    (e.pins || []).forEach((p, n) => {
+        const to = p.to && nbFind(nb, p.to);
+        out.push(f(`Pin ${n + 1}`, [p.name, p.note].filter(Boolean).join('. ') + (to ? ` (see ${to.title})` : ''), true));
+    });
+    if (e.fam) e.fam.people.forEach(p => out.push(f(p.name, famPersonLine(e.fam, p) + (p.note ? ' Note: ' + p.note : ''), true)));
+    if (e.fam && e.fam.scandals.length) out.push(f('Family secrets', e.fam.scandals.map(s => famScandalText(e.fam, s)).join(' ')));
+    const linked = e.links.map(l => nbFind(nb, l)).filter(Boolean).map(o => o.title);
+    if (linked.length) out.push(f('Linked to', linked.join('; ')));
+    if (e.href) out.push(f('', new URL(e.href, location.href).href));
+    return out;
+}
+
 function nbAsText(nb) {
     const out = [nb.name || 'Campaign notebook', ''];
-    nb.entries.slice().sort((a, b) => a.added.localeCompare(b.added)).forEach(e => {
+    nbByAdded(nb).forEach(e => {
         out.push(`${nbKindOpt(e.kind).label}: ${e.title}`);
-        if (e.kind === 'quest') out.push('Status: ' + NB_QUEST_STATUS[e.status].label);
-        if (e.sub) out.push(e.sub);
-        if (e.giver) out.push('Giver: ' + e.giver);
-        if (e.reward) out.push('Reward: ' + e.reward);
-        if (e.date) out.push('Played: ' + nbDateText(e.date));
-        if (e.recap) out.push('What happened: ' + e.recap);
-        if (e.npcs) out.push('NPCs met: ' + e.npcs);
-        if (e.loot) out.push('Loot: ' + e.loot);
-        if (e.threads) out.push('Open threads: ' + nbLines(e.threads).join('; '));
-        if (e.notes) out.push('Notes: ' + e.notes);
-        if (e.dm) out.push('DM only: ' + e.dm);
-        (e.pins || []).forEach((p, n) => {
-            const to = p.to && nbFind(nb, p.to);
-            out.push(`Pin ${n + 1}${p.name ? ': ' + p.name : ''}${p.note ? '. ' + p.note : ''}${to ? ` (see ${to.title})` : ''}`);
-        });
-        if (e.fam) e.fam.people.forEach(p => out.push(`- ${p.name}: ${famPersonLine(e.fam, p)}${p.note ? ' Note: ' + p.note : ''}`));
-        if (e.fam && e.fam.scandals.length) out.push('Family secrets: ' + e.fam.scandals.map(s => famScandalText(e.fam, s)).join(' '));
-        const linked = e.links.map(l => nbFind(nb, l)).filter(Boolean).map(o => o.title);
-        if (linked.length) out.push('Linked to: ' + linked.join('; '));
-        if (e.href) out.push(new URL(e.href, location.href).href);
+        nbEntryFacts(nb, e).forEach(x => out.push((x.li ? '- ' : '') + (x.label ? `${x.label}: ${x.text}` : x.text)));
         out.push('');
     });
     return out.join('\n').trim();
+}
+
+// The notebook as a document. rolls: each entry's roll too (rebuilt from its link, with your
+// rewording), its DM-only lines marked 🔒.
+function nbNotebookBlocks(nb, rolls) {
+    const blocks = [{ t: 'title', text: nb.name || 'Campaign notebook' }];
+    nbByAdded(nb).forEach(e => {
+        blocks.push({ t: 'kicker', text: nbKindOpt(e.kind).label }, { t: 'h1', text: e.title });
+        nbEntryFacts(nb, e).forEach(x => blocks.push({ t: x.li ? 'li' : 'p', label: x.label ? `${x.label}: ` : '', text: x.text }));
+        if (!rolls) return;
+        (nbRolledSheet(e) || []).forEach(part => {
+            if (part.head) blocks.push({ t: 'h2', text: part.head });
+            part.lines.forEach(l => blocks.push({ t: 'p', label: `${nbShown(e, l) ? '' : '🔒 '}${l.label}: `, text: l.text }));
+        });
+    });
+    return blocks;
 }
 
 function nbExport() {
@@ -607,8 +685,14 @@ function setupNotebook() {
     document.getElementById('nb-last-btn').addEventListener('click', nbShowLast);
     document.getElementById('nb-last-close').addEventListener('click', () => { nbView.last = false; renderLast(nbLoad()); });
     document.getElementById('nb-last-copy').addEventListener('click', () => {
-        const text = nbLastText(nbLoad());
-        if (text) copyText(text, 'nb-last-status', 'the recap');
+        const nb = nbLoad(), text = nbLastText(nb);
+        if (text) nbRichCopy(nbLastBlocks(nb), text, 'nb-last-status', 'the recap');
+    });
+    document.getElementById('nb-last-word').addEventListener('click', () => {
+        const nb = nbLoad(), blocks = nbLastBlocks(nb);
+        if (!blocks.length) return;
+        docDownload(blocks[0].text, blocks, nbDocName(nb, 'last-time-on'));
+        flash('nb-last-status', '📄 Saved a Word file. Google Docs opens it too: upload it to Drive.');
     });
     document.getElementById('nb-last-print').addEventListener('click', () => {
         document.body.classList.add('print-last');
@@ -682,7 +766,13 @@ function setupNotebook() {
     file.addEventListener('change', () => { nbImport(file.files[0]); file.value = ''; });
     document.getElementById('nb-copy').addEventListener('click', () => {
         const nb = nbLoad();
-        if (nb.entries.length) copyText(nbAsText(nb), 'nb-status', 'the notebook');
+        if (nb.entries.length) nbRichCopy(nbNotebookBlocks(nb, false), nbAsText(nb), 'nb-status', 'the notebook');
+    });
+    document.getElementById('nb-word').addEventListener('click', () => {
+        const nb = nbLoad();
+        if (!nb.entries.length) return;
+        docDownload(nb.name || 'Campaign notebook', nbNotebookBlocks(nb, true), nbDocName(nb, 'campaign-notebook'));
+        flash('nb-status', '📄 Saved the whole notebook as a Word file, every roll written out and DM-only lines marked 🔒. Google Docs opens it too: upload it to Drive.');
     });
     document.getElementById('nb-clear').addEventListener('click', () => {
         if (!nbView.clearing) {

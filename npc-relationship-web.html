@@ -1038,6 +1038,7 @@
           <div class="tool-toolbar nb-last-actions">
             <button type="button" class="btn" id="nb-last-print">🖨️ Print</button>
             <button type="button" class="btn" id="nb-last-copy">📋 Copy</button>
+            <button type="button" class="btn" id="nb-last-word">📄 Word</button>
             <button type="button" class="btn" id="nb-last-close">✕ Close</button>
           </div>
           <p class="tool-status" id="nb-last-status" role="status" aria-live="polite"></p>
@@ -1050,6 +1051,7 @@
           <div class="tool-toolbar nb-last-actions">
             <button type="button" class="btn btn-gold" id="nb-pl-print">🖨️ Print</button>
             <button type="button" class="btn" id="nb-pl-copy">📋 Copy</button>
+            <button type="button" class="btn" id="nb-pl-word">📄 Word</button>
             <label class="nb-pl-ink"><input type="checkbox" id="nb-pl-ink"> 🖋️ Ink saver</label>
             <button type="button" class="btn" id="nb-pl-close">✕ Close</button>
           </div>
@@ -1062,12 +1064,13 @@
           <button type="button" class="btn" id="nb-export">💾 Export</button>
           <button type="button" class="btn" id="nb-import">📂 Import</button>
           <button type="button" class="btn" id="nb-copy">📋 Copy All</button>
+          <button type="button" class="btn" id="nb-word">📄 Word</button>
           <button type="button" class="btn" id="nb-clear">🗑️ Clear</button>
           <input type="file" id="nb-file" accept=".json,application/json" hidden>
         </div>
         <p class="tool-status" id="nb-status" role="status" aria-live="polite"></p>
       </div>
-      <p class="tool-note">The notebook lives in this browser only: nothing is sent anywhere, and clearing your browser's site data clears it too, so 💾 Export now and then, or <a href="privacy.html#backup">back up everything</a> the tools keep.<br>Each entry keeps the link that rolls it again, so a saved town comes back exactly as it was. Saving links a roll to the saved rolls it uses (a town or a history on a saved pantheon's gods, a history that dates saved factions); link anything else by hand under 📝 Notes and links.<br>A session holds its number, the date you played, what happened, the NPCs met, the loot handed out, and the threads left open. A quest holds its giver, its reward, and a status (🟡 open, ✅ done, ❌ failed) you change on the card. 📣 Last Time On… reads back the latest session that has a recap, with its open threads and every open quest, and prints it large enough to read aloud.<br>Every entry has 👁️ notes the players may see and 🔒 notes for you alone. 🖨️ Print for Players turns the entries you tick into parchment handouts: faction secrets, NPC secrets and hooks, how a site was lost and who holds it now, what a ruin means today, and who really rules a town all start out 🔒, and you can switch any line either way. Export and backups keep both kinds of notes.<br>📂 Import adds a notebook file to this one; entries you already have keep your notes and gain the file's.</p>
+      <p class="tool-note">The notebook lives in this browser only: nothing is sent anywhere, and clearing your browser's site data clears it too, so 💾 Export now and then, or <a href="privacy.html#backup">back up everything</a> the tools keep.<br>Each entry keeps the link that rolls it again, so a saved town comes back exactly as it was. Saving links a roll to the saved rolls it uses (a town or a history on a saved pantheon's gods, a history that dates saved factions); link anything else by hand under 📝 Notes and links.<br>A session holds its number, the date you played, what happened, the NPCs met, the loot handed out, and the threads left open. A quest holds its giver, its reward, and a status (🟡 open, ✅ done, ❌ failed) you change on the card. 📣 Last Time On… reads back the latest session that has a recap, with its open threads and every open quest, and prints it large enough to read aloud.<br>Every entry has 👁️ notes the players may see and 🔒 notes for you alone. 🖨️ Print for Players turns the entries you tick into parchment handouts: faction secrets, NPC secrets and hooks, how a site was lost and who holds it now, what a ruin means today, and who really rules a town all start out 🔒, and you can switch any line either way. Export and backups keep both kinds of notes.<br>📄 Word saves the player sheets (one entry to a page), the recap, or the whole notebook (every roll written out, 🔒 lines marked) as a Word file, which Google Docs opens too. 📋 Copy keeps the headings and bold when you paste into Google Docs or Word.<br>📂 Import adds a notebook file to this one; entries you already have keep your notes and gain the file's.</p>
     </section>
     <section class="tool-panel" id="tab-web" role="tabpanel">
       <div class="tool-card">
@@ -1176,6 +1179,7 @@
   <script src="world-pins.js"></script>
   <script src="world-continent.js"></script>
   <script src="world-maps.js"></script>
+  <script src="docx.js"></script>
   <script src="notebook-sheets.js"></script>
   <script src="world-notebook.js"></script>
   <script src="world-web.js"></script>
