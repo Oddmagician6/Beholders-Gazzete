@@ -820,9 +820,10 @@ footer::before {
     box-shadow: 0 12px 40px rgba(0,0,0,0.9);
     animation: fadeInDown 0.2s ease;
     /* The nav is sticky, so a menu taller than the screen can't be reached
-       by scrolling the page; let the menu scroll on its own instead. */
-    max-height: calc(100vh - 70px);
-    max-height: calc(100dvh - 70px);
+       by scrolling the page; let the menu scroll on its own instead.
+       nav.js sets --nav-menu-max to the space left below the nav. */
+    flex-wrap: nowrap;
+    max-height: var(--nav-menu-max, calc(100vh - 70px));
     overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
@@ -834,6 +835,7 @@ footer::before {
 
   .main-nav li {
     border-bottom: 1px solid rgba(212,168,67,0.08);
+    flex-shrink: 0;
   }
   .main-nav li:last-child { border-bottom: none; }
 

@@ -34,6 +34,16 @@
     });
   });
 
+  // Fit the open mobile menu into the space below the nav so it scrolls
+  // instead of running off the bottom of the screen
+  function fitMenu() {
+    if (!ul || !ul.classList.contains('nav-open')) return;
+    const room = window.innerHeight - nav.getBoundingClientRect().bottom;
+    ul.style.setProperty('--nav-menu-max', Math.max(room, 200) + 'px');
+  }
+  window.addEventListener('resize', fitMenu);
+  window.addEventListener('scroll', fitMenu, { passive: true });
+
   if (btn && ul) {
     btn.setAttribute('aria-expanded', 'false');
     btn.addEventListener('click', function(e) {
@@ -43,6 +53,7 @@
       btn.setAttribute('aria-expanded', open);
       // On a tool page, open its group so the current page is visible
       if (open) groups.forEach(function(g) { if (g.querySelector('a.active')) setGroup(g, true); });
+      fitMenu();
     });
     // Close when a link is tapped
     ul.addEventListener('click', function(e) {
