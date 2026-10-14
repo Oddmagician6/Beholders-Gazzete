@@ -819,6 +819,13 @@ footer::before {
     z-index: 199;
     box-shadow: 0 12px 40px rgba(0,0,0,0.9);
     animation: fadeInDown 0.2s ease;
+    /* The nav is sticky, so a menu taller than the screen can't be reached
+       by scrolling the page; let the menu scroll on its own instead. */
+    max-height: calc(100vh - 70px);
+    max-height: calc(100dvh - 70px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
   }
 
   .main-nav > ul.nav-open {
