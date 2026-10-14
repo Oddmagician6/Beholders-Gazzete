@@ -91,6 +91,10 @@
       font-family: var(--font-ui);
       font-size: 0.88rem;
     }
+    .byline-portrait {
+      width: 1.9em; height: 1.9em; margin-right: .35em; vertical-align: middle; object-fit: cover;
+      border: 1px solid var(--gold-mid); border-radius: 50%;
+    }
     .article-body {
       max-width: 860px;
       margin: 0 auto;
@@ -308,7 +312,7 @@
       <div id="article-category"><a class="article-category-badge" href="archive.html?section=politics" data-section="politics" style="--desk:#b39ddb" title="More from Politics &amp; Realm Affairs"><span class="desk-icon" aria-hidden="true">👑</span>Elections</a></div>
       <h1 class="article-hero-title" id="article-title">Midterm Elections Triage: Red Oliphants Blame Donwald</h1>
       <div class="article-hero-meta">
-        <span>✍️ <strong id="article-author"><a href="desk/ottoline-vex.html" style="color:inherit;">🏛️ Ottoline Vex</a></strong></span>
+        <span>✍️ <strong id="article-author"><a href="desk/ottoline-vex.html" style="color:inherit;"><img class="byline-portrait" src="img/writer-ottoline-vex.webp" alt="" width="30" height="30">Ottoline Vex</a></strong></span>
         <span>📅 <span id="article-date">October 13, 2026</span></span>
         <span>⏱️ <span id="article-read-time">3</span> min read</span>
       </div>
@@ -656,7 +660,14 @@
                 const el = document.getElementById('article-author');
                 const a = document.createElement('a');
                 a.href = 'desk/' + encodeURIComponent(w.id) + '.html';
-                a.textContent = (w.avatar ? w.avatar + ' ' : '') + w.name;
+                if (w.portrait) {
+                    const img = document.createElement('img');
+                    img.src = w.portrait; img.alt = ''; img.className = 'byline-portrait';
+                    img.width = img.height = 30;
+                    a.append(img, w.name);
+                } else {
+                    a.textContent = (w.avatar ? w.avatar + ' ' : '') + w.name;
+                }
                 a.style.color = 'inherit';
                 el.replaceChildren(a);
             })

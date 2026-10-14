@@ -55,8 +55,9 @@
         .writer-head { display: flex; gap: 14px; align-items: center; }
         .writer-avatar {
             font-size: 2.2rem; width: 62px; height: 62px; flex: none; display: grid; place-items: center;
-            border: var(--border-gold2); border-radius: 50%; background: var(--bg-dark);
+            border: var(--border-gold2); border-radius: 50%; background: var(--bg-dark); overflow: hidden;
         }
+        .writer-avatar img { width: 100%; height: 100%; object-fit: cover; }
         .writer-name { font-family: var(--font-head); color: var(--gold-bright); font-size: 1.2rem; line-height: 1.2; }
         .writer-name a { color: inherit; }
         .writer-name a:hover { text-decoration: underline; }
@@ -211,7 +212,7 @@
         document.getElementById('writer-grid').innerHTML = g.writers.map(w => `
           <article class="writer-card" id="${esc(w.id)}">
             <div class="writer-head">
-              <div class="writer-avatar" aria-hidden="true">${esc(w.avatar || '✍️')}</div>
+              <div class="writer-avatar" aria-hidden="true">${w.portrait ? `<img src="${esc(w.portrait)}" alt="" width="62" height="62" loading="lazy">` : esc(w.avatar || '✍️')}</div>
               <div>
                 <div class="writer-name"><a href="desk/${encodeURIComponent(w.id)}.html">${esc(w.name)}</a></div>
                 <div class="writer-race">${esc(w.race_class)}</div>

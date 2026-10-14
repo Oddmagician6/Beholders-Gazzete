@@ -164,6 +164,10 @@
             font-size: 4rem;
             margin-bottom: 15px;
         }
+        .team-avatar img {
+            display: block; width: 96px; height: 96px; margin: 0 auto; object-fit: cover;
+            border: var(--border-gold2); border-radius: 50%;
+        }
         .team-card h4 {
             color: var(--gold-bright);
             font-size: 1.2rem;
@@ -261,7 +265,7 @@
     </style>
 </head>
 <body>
-    <section class="page-hero photo" style="background-image: url('img/hero-library.webp'); background-size:cover; background-position:center;">
+    <section class="page-hero photo" style="background-image: url('img/hero-mascot.webp'); background-size:cover; background-position:center;">
         <div class="page-hero-overlay"></div>
         <div class="page-hero-content">
             <h1 class="page-hero-logo">📜 About The Gazette</h1>
@@ -415,7 +419,7 @@
             <p>Behind every great publication is a team of dedicated (and slightly unhinged) individuals.</p>
             <div class="team-grid">
                 <div class="team-card">
-                    <div class="team-avatar">👁️</div>
+                    <div class="team-avatar"><img src="img/mascot-avatar.webp" alt="The Beholder, reading three newspapers at once" width="120" height="120" loading="lazy"></div>
                     <h4>The Beholder</h4>
                     <p class="role">Editor-in-Chief</p>
                     <p>Sees all truths. Especially the convenient ones.</p>
