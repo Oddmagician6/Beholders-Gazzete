@@ -12,6 +12,7 @@
                         "desk_short":  "Politics",
                         "desk_icon":  "👑",
                         "desk_color":  "#b39ddb",
+                        "desk_real":  false,
                         "categories":  [
                                            "Politics",
                                            "Elections",
@@ -69,6 +70,7 @@
                         "desk_short":  "Coin",
                         "desk_icon":  "💰",
                         "desk_color":  "#e8c547",
+                        "desk_real":  false,
                         "categories":  [
                                            "Economy",
                                            "Finance",
@@ -123,6 +125,7 @@
                         "desk_short":  "Guilds",
                         "desk_icon":  "🏪",
                         "desk_color":  "#64b5f6",
+                        "desk_real":  false,
                         "categories":  [
                                            "Business",
                                            "Consumer",
@@ -181,6 +184,7 @@
                         "desk_short":  "Commoners",
                         "desk_icon":  "⚒️",
                         "desk_color":  "#ff8a65",
+                        "desk_real":  false,
                         "categories":  [
                                            "Labor",
                                            "Social",
@@ -235,6 +239,7 @@
                         "desk_short":  "Arcana",
                         "desk_icon":  "🔮",
                         "desk_color":  "#4dd0e1",
+                        "desk_real":  false,
                         "categories":  [
                                            "Technology",
                                            "Transport"
@@ -288,6 +293,7 @@
                         "desk_short":  "Foreign Realms",
                         "desk_icon":  "🌍",
                         "desk_color":  "#90a4ae",
+                        "desk_real":  false,
                         "categories":  [
                                            "International",
                                            "Travel"
@@ -341,6 +347,7 @@
                         "desk_short":  "Health \u0026 Nature",
                         "desk_icon":  "🌿",
                         "desk_color":  "#9ccc65",
+                        "desk_real":  false,
                         "categories":  [
                                            "Health",
                                            "Environment",
@@ -396,6 +403,7 @@
                         "desk_short":  "Local \u0026 Oddities",
                         "desk_icon":  "🏘️",
                         "desk_color":  "#f48fb1",
+                        "desk_real":  false,
                         "categories":  [
                                            "Local",
                                            "Local Chaos",
@@ -455,6 +463,7 @@
                         "desk_short":  "Realm Dispatches",
                         "desk_icon":  "🐉",
                         "desk_color":  "#ef5350",
+                        "desk_real":  false,
                         "categories":  [
                                            "Dungeon Report",
                                            "Monster Watch",
@@ -484,6 +493,37 @@
                                              "title":  "Rust Monster Eats Shears at Undermaw Level Seven Opening",
                                              "date":  "2026-10-13"
                                          }
+                                     ]
+                    },
+                    {
+                        "id":  "matthias-ashmoor",
+                        "name":  "Matthias Ashmoor",
+                        "avatar":  "🔨",
+                        "portrait":  null,
+                        "race_class":  "Human artificer-smith, master of the Ashforge",
+                        "desk_id":  "multiverse",
+                        "desk":  "Across the Multiverse",
+                        "desk_short":  "Multiverse",
+                        "desk_icon":  "🌀",
+                        "desk_color":  "#7c8cf8",
+                        "desk_real":  true,
+                        "categories":  [
+                                           "TTRPG News",
+                                           "New Releases",
+                                           "Industry",
+                                           "Actual Play",
+                                           "Conventions",
+                                           "Crowdfunding"
+                                       ],
+                        "tagline":  "He builds things for adventurers. The far plane keeps sending him blueprints.",
+                        "bio":  "Matthias Ashmoor runs the Ashforge, a smithy that makes adventures, maps, and monsters to order for any party that can pay. The best ideas at his anvil come from the far plane, where whole worlds of mortals sit around tables and play at being us. Matthias follows their trade closely: their new books and games, their publishers, their conventions, the shows they make of their games. On this desk he reports it straight, under real names, because over there those names are real.",
+                        "signoff":  "— M.A., from the forge",
+                        "rivals":  [
+
+                                   ],
+                        "article_count":  0,
+                        "articles":  [
+
                                      ]
                     }
                 ],

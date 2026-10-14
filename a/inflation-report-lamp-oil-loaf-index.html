@@ -157,6 +157,7 @@
       font-family: var(--font-ui); font-size: 0.8rem; color: var(--text-dim);
       border: 1px dashed var(--gold-dim); border-radius: var(--radius-sm);
     }
+    .article-satire a { color: var(--gold-bright); }
     .share-section { margin-top: 28px; }
     .share-label {
       font-family: var(--font-head);
@@ -325,6 +326,7 @@
 
     <ul>
       <li><a href="index.html">🏠 Home</a></li>
+      <li><a href="multiverse.html">🌀 Multiverse</a></li>
       <li><a href="economy.html">💰 Economy</a></li>
       <li class="nav-group">
         <button type="button" class="nav-group-toggle" aria-expanded="false" aria-controls="nav-tools">🛠️ DM Tools<span class="nav-caret" aria-hidden="true">▾</span></button>
@@ -388,7 +390,7 @@
       <a class="btn" id="handout-preview" href="?handout">📜 Preview Handout</a>
     </div>
 
-    <p class="article-satire">📰 Satire. Not real news. This story parodies real events, and every name in it is a fictional stand-in.</p>
+    <p class="article-satire" id="article-satire">📰 Satire. Not real news. This story parodies real events, and every name in it is a fictional stand-in.</p>
 
     <hr class="article-divider">
 
@@ -554,8 +556,9 @@
       const deskOf = c => desks[c] && desks[c].desk_id;
       const desk = deskOf(current.category);
       const score = a => a.category === current.category ? 2 : desk && deskOf(a.category) === desk ? 1 : 0;
+      // Satire stories never list real-news ones (Across the Multiverse); real-news stories list their own first
       const related = articles.map((a, i) => ({ a, i }))
-        .filter(x => x.a.id !== current.id)
+        .filter(x => x.a.id !== current.id && (current.real || !x.a.real))
         .sort((x, y) => y.a.date.localeCompare(x.a.date) || y.i - x.i)
         .map((x, rank) => ({ a: x.a, s: score(x.a), rank }))
         .sort((x, y) => y.s - x.s || x.rank - y.rank)
@@ -596,7 +599,10 @@
       const el = document.getElementById('article-category');
       const desks = await loadDesks();
       el.innerHTML = deskTag(article, desks, 'article-category-badge');
+      // Real-news stories (Across the Multiverse) aren't satire, so drop the satire note (export-articles.ps1 does the same)
+      if (article.real) document.getElementById('article-satire').innerHTML = REAL_NOTE;
     }
+    const REAL_NOTE = '🌀 Real news, not satire. <a href="multiverse.html">Across the Multiverse</a> covers the tabletop hobby straight, under real names.';
 
     // Handout: the article as an in-world newspaper clipping. Printing the page prints only this
     // (body.has-handout); ?handout shows it on screen with Print and Back buttons.

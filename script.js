@@ -41,13 +41,14 @@ async function loadArticles() {
       // Desk names, icons and colors. Without them the page still works, with plain tags.
       fetch('glossary.json?t=' + Date.now()).then(r => r.json()).catch(() => ({ writers: [] })),
     ]);
-    desks = (glossary.writers || []).map(w => ({
+    // Real-news desks (Across the Multiverse) live on multiverse.html, not the satire front page
+    desks = (glossary.writers || []).filter(w => !w.desk_real).map(w => ({
       id: w.desk_id, name: w.desk, short: w.desk_short || w.desk, icon: w.desk_icon || w.avatar || '📰',
       color: /^#[0-9a-f]{3,8}$/i.test(w.desk_color || '') ? w.desk_color : '', categories: w.categories || [],
     }));
 
     // Newest first. Same-day articles keep file order, matching export-articles.ps1's pre-render.
-    latest = (data.articles || []).map((a, i) => ({ a, i }))
+    latest = (data.articles || []).filter(a => !a.real).map((a, i) => ({ a, i }))
       .sort((x, y) => new Date(y.a.date) - new Date(x.a.date) || x.i - y.i).map(x => x.a);
     if (!latest.length) throw new Error('No articles found');
 

@@ -33,7 +33,8 @@ function crierDate(s) {
 async function loadCrierPool() {
     const data = await (await fetch('articles.json')).json();
     const all = (data.articles || [])
-        .filter(a => a.id && a.title && a.date)
+        // Real-news stories (Across the Multiverse, "real": true) aren't in-world, so the crier skips them
+        .filter(a => a.id && a.title && a.date && !a.real)
         .sort((a, b) => crierDate(b.date) - crierDate(a.date));
     if (!all.length) return { pool: [], edition: null };
 
