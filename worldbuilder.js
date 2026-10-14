@@ -1,6 +1,7 @@
 /* ============================================
    WORLDBUILDER (Part 1e)
-   Worldbuilding tools on one page, one tab each (?tab=). Each tab lives in its own
+   Worldbuilding tools on one page, one tab each. Each tab also has a page of its own (tab-pages.js,
+   SEO11): its roll's address is that page, and ?tab= on an old link moves there. Each tab lives in its own
    world-<tool>.js and registers itself in WORLD_TABS:
      WORLD_TABS[id] = { params() → URL params, apply(urlParams) → true if it held a roll,
                         fresh(push) → a first roll, rolled() → true once it has one,
@@ -100,7 +101,7 @@ function copyText(text, statusId, what) {
 
 // ── Tabs ──────────────────────────────────────────────────
 function currentWorldTab() {
-    const t = urlParams().get('tab');
+    const t = urlParams().get('tab') || tabOfPage();
     return WORLD_TAB_ORDER.includes(t) ? t : WORLD_TAB_ORDER[0];
 }
 
@@ -114,9 +115,11 @@ function showWorldTab(tab) {
         b.setAttribute('aria-selected', on);
     });
     document.querySelectorAll('.tool-panel').forEach(p => { p.hidden = p.id !== 'tab-' + tab; });
+    showTabPage(tab);
 }
 
-// The URL params of the tab on screen (the default tab stays out of the URL).
+// The URL params of the tab on screen (the default tab stays out of the URL; setUrlParams moves
+// the address to the tab's own page, and a link built from these opens it there too).
 function worldUrlFor(tab, params) {
     return { ...(tab === WORLD_TAB_ORDER[0] ? {} : { tab }), ...params };
 }
@@ -158,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('year').textContent = new Date().getFullYear();
 
     // Each tab keeps its roll in memory; the first visit to a tab rolls one.
-    document.querySelectorAll('.tool-tab').forEach(b => b.addEventListener('click', () => switchWorldTab(b.dataset.tab)));
+    onTabLinks(switchWorldTab);
     document.querySelectorAll('[data-save]').forEach(b => b.addEventListener('click', () =>
         saveWorldTab(b.dataset.save, b.closest('.tool-card').querySelector('.tool-status').id)));
 

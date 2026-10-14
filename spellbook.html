@@ -69,6 +69,8 @@
     .spell-card::before { background: var(--school-color, var(--gold-bright)); }
     .spell-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px; }
     .spell-name { font-family: var(--font-head); font-size: 1.05rem; color: var(--text-bright); flex: 1; min-width: 0; line-height: 1.3; }
+    .spell-name a { color: inherit; border-bottom: 1px dotted var(--gold-dim); }
+    .spell-name a:hover, .spell-name a:focus-visible { color: var(--gold-bright); border-bottom-style: solid; }
     .spell-level-badge {
       font-family: var(--font-head); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em;
       padding: 3px 8px; border-radius: 3px; white-space: nowrap;
@@ -342,7 +344,7 @@
         <li>Send players their spell lists with 🔗 Copy Link. They can save a copy on their own phone.</li>
       </ul>
       <h3>Works with</h3>
-      <p>Spellcasters rolled in the <a href="npc-generator.html">NPC Generator</a> come with their spells, and the spells in stat blocks there and in the <a href="toolbox.html?tab=enc">Encounter Builder</a> open from this same list. Monsters that cast them are in the <a href="bestiary.html">Bestiary</a>.</p>
+      <p>Spellcasters rolled in the <a href="npc-generator.html">NPC Generator</a> come with their spells, and the spells in stat blocks there and in the <a href="dnd-encounter-builder.html">Encounter Builder</a> open from this same list. Monsters that cast them are in the <a href="bestiary.html">Bestiary</a>.</p>
     </section>
   </div>
 
@@ -653,7 +655,7 @@
         <div class="spell-card${fav ? ' is-fav' : ''}" data-school="${s.school}">
           <div class="spell-header">
             <div class="spell-name">
-              ${s.name.replace(/\//g, '/<wbr>')}
+              <a href="spell/${slugOf(s.name)}.html" title="The spell's own page">${s.name.replace(/\//g, '/<wbr>')}</a>
               ${s.concentration ? '<span class="concentration-pip" title="Requires Concentration"></span>' : ''}
               ${s.ritual ? '<span style="font-size:0.6rem;color:var(--gold-mid);margin-left:4px;" title="Can be cast as a ritual">(R)</span>' : ''}
             </div>

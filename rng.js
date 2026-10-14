@@ -66,9 +66,12 @@ function paramsQuery(params) {
 // An array value repeats the param (?lock=a&lock=b).
 // state: a roll the URL can't hold (a reader-added rumor, a save from before links), kept in
 // history.state so Back/Forward can show it again.
+// On the Toolbox and the Worldbuilder, a tab's roll goes on that tab's own page (tab-pages.js).
 function setUrlParams(params, push = true, state = null) {
+    let path = location.pathname;
+    if (typeof TAB_PAGES !== 'undefined' && TAB_PAGES) [path, params] = tabPageAddress(params);
     const qs = paramsQuery(params);
-    const url = location.pathname + (qs ? '?' + qs : '') + location.hash;
+    const url = path + (qs ? '?' + qs : '') + (path === location.pathname ? location.hash : '');
     if (url === location.pathname + location.search + location.hash) {
         // Same address: a new state still gets its own entry (two reader rumors in a row).
         if (state && push) history.pushState(state, '', url);

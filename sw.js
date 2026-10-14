@@ -7,7 +7,7 @@
 // (then running the export) installs a new cache; old caches are deleted on activate.
 // Cache keys drop the query string (?seed=, ?t=, ?id= ...): pages rebuild their state from the URL.
 
-const VERSION = '192decb80b19';
+const VERSION = 'f0526a33d05a';
 const STATIC = 'gazette-static-' + VERSION;
 const PAGES = 'gazette-pages';
 const FONTS = 'gazette-fonts';
@@ -18,7 +18,7 @@ const PRECACHE = [
   'economy.html', 'shop.html', 'session-kit.html', 'toolbox.html', 'worldbuilder.html', 'rules.html', 'bestiary.html', 'monster-maker.html', 'handouts.html', 'privacy.html', 'player-view.html', 'dm-screen.html', 'screen-view.html',
   // Styles and scripts
   'style.css', 'homepage.css', 'economy-page.css', 'handouts.css', 'sw-register.js',
-  'rng.js', 'npc-data.js', 'npc-statblock.js', 'spell-detail.js', 'npc-generator.js', 'loot-data.js', 'loot-engine.js', 'loot-generator.js', 'magic-items-data.js',
+  'rng.js', 'tab-pages.js', 'npc-data.js', 'npc-statblock.js', 'spell-detail.js', 'npc-generator.js', 'loot-data.js', 'loot-engine.js', 'loot-generator.js', 'magic-items-data.js',
   'coins.js', 'market-data.js', 'economy-full.js', 'names-data.js', 'shop-engine.js', 'shop.js', 'handout-engine.js', 'handouts.js',
   'town-crier.js', 'rumor-deck.js', 'rumors.js', 'session-kit.js', 'travel-engine.js', 'dice-engine.js', 'dice-fab.js', 'toolbox.js', 'toolbox-table.js', 'monsters-data.js', 'monster-statblocks.js', 'toolbox-statblock.js', 'encounter-engine.js', 'toolbox-encounter.js', 'tavern-engine.js', 'toolbox-tavern.js', 'downtime-engine.js', 'toolbox-downtime.js', 'quest-engine.js', 'toolbox-quest.js', 'toolbox-clocks.js', 'party.js', 'toolbox-party.js', 'table-engine.js', 'toolbox-tables.js', 'init-view.js', 'player-view.js', 'dm-screen-data.js', 'dm-screen.js', 'screen-view.js', 'rules-data.js', 'rules.js', 'bestiary.js', 'homebrew.js', 'monster-maker.js', 'calendar-engine.js', 'pantheon-engine.js', 'worldbuilder.js', 'world-calendar.js', 'world-pantheon.js', 'faction-engine.js', 'world-factions.js', 'history-engine.js', 'world-history.js', 'town-engine.js', 'world-town.js', 'family-tree.js', 'family-engine.js', 'world-family.js', 'site-engine.js', 'world-sites.js', 'continent-engine.js', 'world-pins.js', 'world-continent.js', 'world-maps.js', 'map-export.js', 'map-pins.js', 'map-store.js', 'notebook.js', 'notebook-sheets.js', 'world-notebook.js', 'web-graph.js', 'world-web.js', 'backup.js', 'spells-data.js', 'script.js', 'raven-form.js', 'nav.js',
   // Data
@@ -26,6 +26,11 @@ const PRECACHE = [
   // Icons
   'favicon.ico', 'favicon.svg', 'apple-touch-icon.png', 'site.webmanifest', 'img/icon-192.png'
 ];
+
+// The Toolbox's and the Worldbuilder's tab pages (SEO11) are copies of their hub, so offline, one
+// that was never opened falls back to the hub's saved copy (tab-pages.js opens the right tab).
+// Written by export-tools.ps1.
+const TAB_HUBS = {"tavern-name-generator.html":"toolbox.html","dnd-tavern-generator.html":"toolbox.html","dnd-side-quest-generator.html":"toolbox.html","dnd-travel-weather-generator.html":"toolbox.html","dnd-dice-roller.html":"toolbox.html","random-table-roller.html":"toolbox.html","dnd-party-tracker.html":"toolbox.html","dnd-encounter-builder.html":"toolbox.html","dnd-initiative-tracker.html":"toolbox.html","progress-clocks.html":"toolbox.html","dnd-loot-splitter.html":"toolbox.html","dnd-downtime-tracker.html":"toolbox.html","fantasy-calendar-generator.html":"worldbuilder.html","dnd-pantheon-generator.html":"worldbuilder.html","dnd-faction-generator.html":"worldbuilder.html","fantasy-history-generator.html":"worldbuilder.html","dnd-town-generator.html":"worldbuilder.html","fantasy-family-tree-generator.html":"worldbuilder.html","dnd-dungeon-generator.html":"worldbuilder.html","fantasy-map-generator.html":"worldbuilder.html","dnd-campaign-map.html":"worldbuilder.html","dnd-campaign-notebook.html":"worldbuilder.html","npc-relationship-web.html":"worldbuilder.html"};
 
 // Network-first, but seeded on install so the homepage and Town Crier work on a first offline visit
 const SEED = ['index.html', 'articles.json', 'glossary.json'];
@@ -95,6 +100,9 @@ async function networkFirst(req, key) {
   } catch (err) {
     const hit = await caches.match(key);
     if (hit) return hit;
+    const hub = TAB_HUBS[key.slice(BASE.length).replace(/\.html$/, '') + '.html'];
+    const hubHit = hub && await caches.match(BASE + hub);
+    if (hubHit) return hubHit;
     if (req.mode === 'navigate') return offlinePage();
     throw err;
   }

@@ -319,6 +319,7 @@ p:last-child { margin-bottom: 0; }
 
 /* Plain tool name under a themed hero h1 (search engines read both) */
 .hero-kicker { display: block; margin-top: 6px; font-family: var(--font-head); font-size: clamp(0.78rem, 1.6vw, 0.95rem); text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-mid); text-shadow: none; }
+.hero-kicker:empty { display: none; }
 
 .page-hero-tagline { font-style: italic; color: var(--text-mid); font-size: 1.05rem; margin-bottom: 8px; }
 .page-hero-description { color: var(--text-dim); font-size: 0.92rem; max-width: 560px; margin: 0 auto; }

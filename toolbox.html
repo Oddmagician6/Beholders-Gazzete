@@ -39,7 +39,7 @@
     /* Tabs (one per tool; the bar hides while there is only one) */
     .tool-tabs { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 30px; }
     .tool-tabs:has(> .tool-tab:only-child) { display: none; }
-    .tool-tab { font-family: var(--font-ui); font-size: 0.85rem; padding: 9px 18px; border-radius: var(--radius-sm); border: 1px solid var(--gold-dim); background: var(--bg-card); color: var(--text-mid); cursor: pointer; }
+    .tool-tab { display: inline-block; text-decoration: none; font-family: var(--font-ui); font-size: 0.85rem; padding: 9px 18px; border-radius: var(--radius-sm); border: 1px solid var(--gold-dim); background: var(--bg-card); color: var(--text-mid); cursor: pointer; }
     .tool-tab.active { background: var(--gold-mid); color: #15130f; border-color: var(--gold-mid); font-weight: 700; }
     .tool-panel[hidden] { display: none; }
 
@@ -554,7 +554,7 @@
   <section class="page-hero photo" style="background-image: url('img/hero-toolbox.webp'); background-size:cover; background-position:center;">
     <div class="page-hero-overlay"></div>
     <div class="page-hero-content">
-      <h1 class="page-hero-logo">🧰 DM Toolbox</h1>
+      <h1 class="page-hero-logo">🧰 DM Toolbox <span class="hero-kicker"></span></h1>
       <p class="page-hero-tagline">"A good DM improvises. A great DM has a list."</p>
       <p class="page-hero-description">Quick tools for the table. The tavern the party just walked into, who's drinking there, and what a room costs, the job someone offers them there, the weather on the road to the next one, a fight worth having when they get there, the dice and initiative to run it, a clock for the trouble closing in, a fair split of the loot afterwards, and what the downtime costs before the next adventure.</p>
     </div>
@@ -597,18 +597,18 @@
 
   <main class="toolbox-body">
     <div class="tool-tabs" role="tablist" aria-label="Tools">
-      <button type="button" class="tool-tab active" role="tab" data-tab="names" aria-selected="true" aria-controls="tab-names">🏷️ Names</button>
-      <button type="button" class="tool-tab" role="tab" data-tab="tavern" aria-selected="false" aria-controls="tab-tavern">🍺 Tavern</button>
-      <button type="button" class="tool-tab" role="tab" data-tab="quest" aria-selected="false" aria-controls="tab-quest">📜 Quest</button>
-      <button type="button" class="tool-tab" role="tab" data-tab="travel" aria-selected="false" aria-controls="tab-travel">🗺️ Travel</button>
-      <button type="button" class="tool-tab" role="tab" data-tab="dice" aria-selected="false" aria-controls="tab-dice">🎲 Dice</button>
-      <button type="button" class="tool-tab" role="tab" data-tab="tables" aria-selected="false" aria-controls="tab-tables">🗂️ Tables</button>
-      <button type="button" class="tool-tab" role="tab" data-tab="party" aria-selected="false" aria-controls="tab-party">👥 Party</button>
-      <button type="button" class="tool-tab" role="tab" data-tab="enc" aria-selected="false" aria-controls="tab-enc">👹 Encounter</button>
-      <button type="button" class="tool-tab" role="tab" data-tab="init" aria-selected="false" aria-controls="tab-init">⚔️ Initiative</button>
-      <button type="button" class="tool-tab" role="tab" data-tab="clocks" aria-selected="false" aria-controls="tab-clocks">⏳ Clocks</button>
-      <button type="button" class="tool-tab" role="tab" data-tab="split" aria-selected="false" aria-controls="tab-split">🪙 Split</button>
-      <button type="button" class="tool-tab" role="tab" data-tab="down" aria-selected="false" aria-controls="tab-down">🏡 Downtime</button>
+      <a class="tool-tab active" role="tab" href="tavern-name-generator.html" data-tab="names" aria-selected="true" aria-controls="tab-names">🏷️ Names</a>
+      <a class="tool-tab" role="tab" href="dnd-tavern-generator.html" data-tab="tavern" aria-selected="false" aria-controls="tab-tavern">🍺 Tavern</a>
+      <a class="tool-tab" role="tab" href="dnd-side-quest-generator.html" data-tab="quest" aria-selected="false" aria-controls="tab-quest">📜 Quest</a>
+      <a class="tool-tab" role="tab" href="dnd-travel-weather-generator.html" data-tab="travel" aria-selected="false" aria-controls="tab-travel">🗺️ Travel</a>
+      <a class="tool-tab" role="tab" href="dnd-dice-roller.html" data-tab="dice" aria-selected="false" aria-controls="tab-dice">🎲 Dice</a>
+      <a class="tool-tab" role="tab" href="random-table-roller.html" data-tab="tables" aria-selected="false" aria-controls="tab-tables">🗂️ Tables</a>
+      <a class="tool-tab" role="tab" href="dnd-party-tracker.html" data-tab="party" aria-selected="false" aria-controls="tab-party">👥 Party</a>
+      <a class="tool-tab" role="tab" href="dnd-encounter-builder.html" data-tab="enc" aria-selected="false" aria-controls="tab-enc">👹 Encounter</a>
+      <a class="tool-tab" role="tab" href="dnd-initiative-tracker.html" data-tab="init" aria-selected="false" aria-controls="tab-init">⚔️ Initiative</a>
+      <a class="tool-tab" role="tab" href="progress-clocks.html" data-tab="clocks" aria-selected="false" aria-controls="tab-clocks">⏳ Clocks</a>
+      <a class="tool-tab" role="tab" href="dnd-loot-splitter.html" data-tab="split" aria-selected="false" aria-controls="tab-split">🪙 Split</a>
+      <a class="tool-tab" role="tab" href="dnd-downtime-tracker.html" data-tab="down" aria-selected="false" aria-controls="tab-down">🏡 Downtime</a>
     </div>
 
     <section class="tool-panel" id="tab-names" role="tabpanel">
@@ -690,7 +690,7 @@
         </div>
         <p class="tool-status" id="quest-status" role="status" aria-live="polite"></p>
       </div>
-      <p class="tool-note">The quest tables are the Gazette's own. Rewards are a house rule that grows with the party's level and size (the SRD has no table for them). The foe comes from the SRD 5.1 monsters, chosen to suit the place and rated like the Encounter tab, and 👹 Open in Encounter takes it there to adjust or send to initiative.<br>📓 Save to Notebook files it in the <a href="worldbuilder.html?tab=notebook">campaign notebook</a> as an open quest, where you mark it done or failed and link it to your session log.<br>The address bar holds the quest, so 🔗 Copy Link shares it. A new level or party size keeps the same quest and rescales the reward and the foe; a new job keeps the same quest giver.</p>
+      <p class="tool-note">The quest tables are the Gazette's own. Rewards are a house rule that grows with the party's level and size (the SRD has no table for them). The foe comes from the SRD 5.1 monsters, chosen to suit the place and rated like the Encounter tab, and 👹 Open in Encounter takes it there to adjust or send to initiative.<br>📓 Save to Notebook files it in the <a href="dnd-campaign-notebook.html">campaign notebook</a> as an open quest, where you mark it done or failed and link it to your session log.<br>The address bar holds the quest, so 🔗 Copy Link shares it. A new level or party size keeps the same quest and rescales the reward and the foe; a new job keeps the same quest giver.</p>
     </section>
 
     <section class="tool-panel" id="tab-travel" role="tabpanel" hidden>
@@ -1058,7 +1058,11 @@ Or with die ranges:
     </div>
   </footer>
 
+  <!-- prerender:tab-pages -->
+  <script type="application/json" id="tab-pages">{"first":"names","hub":{"page":"toolbox.html","title":"D\u0026D DM Toolbox | The Beholder\u0027s Gazette","kicker":"","hero":"Quick tools for the table. The tavern the party just walked into, who\u0027s drinking there, and what a room costs, the job someone offers them there, the weather on the road to the next one, a fight worth having when they get there, the dice and initiative to run it, a clock for the trouble closing in, a fair split of the loot afterwards, and what the downtime costs before the next adventure."},"tabs":{"names":{"page":"tavern-name-generator.html","title":"D\u0026D Tavern \u0026 Shop Name Generator | The Beholder\u0027s Gazette","kicker":"Tavern \u0026 Shop Name Generator","hero":"Ten names a roll for the inn, the smithy, the temple, or the gambling den the party just asked about. Keep the good ones for later."},"tavern":{"page":"dnd-tavern-generator.html","title":"D\u0026D Tavern Generator | The Beholder\u0027s Gazette","kicker":"D\u0026D Tavern Generator","hero":"The sign, the owner, the regulars, the stew, the price of a room, and the trouble brewing in the corner, all in one roll."},"quest":{"page":"dnd-side-quest-generator.html","title":"D\u0026D Side Quest Generator | The Beholder\u0027s Gazette","kicker":"D\u0026D Side Quest Generator","hero":"A job for the party in one roll: the client, the place, the catch, the twist, the deadline, the pay, and a fight if it comes to that."},"travel":{"page":"dnd-travel-weather-generator.html","title":"D\u0026D Travel \u0026 Weather Generator | The Beholder\u0027s Gazette","kicker":"D\u0026D Travel \u0026 Weather Generator","hero":"Pick the land and the season, then take the road one day at a time: the weather, what happens on the way, the miles, and where the party camps."},"dice":{"page":"dnd-dice-roller.html","title":"Online D\u0026D Dice Roller | The Beholder\u0027s Gazette","kicker":"Online D\u0026D Dice Roller","hero":"Type a roll or tap a die. Advantage, disadvantage, keep-highest, drop-lowest, and a history of everything you rolled."},"tables":{"page":"random-table-roller.html","title":"D\u0026D Random Table Roller | The Beholder\u0027s Gazette","kicker":"D\u0026D Random Table Roller","hero":"Make your own roll tables: paste a list, a table with die ranges, or a markdown table, and roll it as often as you like."},"party":{"page":"dnd-party-tracker.html","title":"D\u0026D Party Tracker for DMs | The Beholder\u0027s Gazette","kicker":"D\u0026D Party Tracker","hero":"Enter the player characters once: the encounter builder, the initiative tracker, the quests, the loot split, and downtime all start from them."},"enc":{"page":"dnd-encounter-builder.html","title":"D\u0026D 5e Encounter Builder | The Beholder\u0027s Gazette","kicker":"D\u0026D 5e Encounter Builder","hero":"Set up the party, add monsters, and see how hard the fight is. Or let the dice pick a fight that fits."},"init":{"page":"dnd-initiative-tracker.html","title":"D\u0026D 5e Initiative Tracker | The Beholder\u0027s Gazette","kicker":"D\u0026D 5e Initiative Tracker","hero":"Add everyone in the fight, then step through the turns. HP, conditions, stat blocks, and a screen for the players."},"clocks":{"page":"progress-clocks.html","title":"Progress Clocks for D\u0026D | The Beholder\u0027s Gazette","kicker":"Progress Clocks for D\u0026D","hero":"Track anything that builds up over time: the guards growing suspicious, the ritual nearing completion, the rival guild closing in."},"split":{"page":"dnd-loot-splitter.html","title":"D\u0026D Loot \u0026 Coin Splitter | The Beholder\u0027s Gazette","kicker":"D\u0026D Loot \u0026 Coin Splitter","hero":"Count the coins, add what the gems and art will sell for, and split it evenly, in gold, silver, and copper."},"down":{"page":"dnd-downtime-tracker.html","title":"D\u0026D 5e Downtime Tracker | The Beholder\u0027s Gazette","kicker":"D\u0026D 5e Downtime Tracker","hero":"How long is the break between adventures? Pick each character\u0027s lifestyle and what they do with the time, and see what it costs."}}}</script>
+  <!-- /prerender:tab-pages -->
   <script src="rng.js"></script>
+  <script src="tab-pages.js"></script>
   <script src="coins.js"></script>
   <script src="npc-data.js"></script>
   <script src="names-data.js"></script>

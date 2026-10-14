@@ -1,6 +1,7 @@
 /* ============================================
    DM TOOLBOX
-   Small table tools on one page, one tab each (?tab=).
+   Small table tools on one page, one tab each. Each tab also has a page of its own (tab-pages.js,
+   SEO11): its roll's address is that page, and ?tab= on an old link moves there.
    Names (F21): tavern and shop names, rolled by names-data.js (rollPlaceNames).
    Travel (F22): weather, a road event, and the day's miles, rolled by
    travel-engine.js (rollJourney). Nothing is stored; the URL holds the trip.
@@ -47,7 +48,7 @@ function copyText(text, statusId, what) {
 
 // ── Tabs ──────────────────────────────────────────────────
 function currentTab() {
-    const t = urlParams().get('tab');
+    const t = urlParams().get('tab') || tabOfPage();
     return TOOLBOX_TABS.includes(t) ? t : TOOLBOX_TABS[0];
 }
 
@@ -58,9 +59,11 @@ function showTab(tab) {
         b.setAttribute('aria-selected', on);
     });
     document.querySelectorAll('.tool-panel').forEach(p => { p.hidden = p.id !== 'tab-' + tab; });
+    showTabPage(tab);
 }
 
-// The URL params of the tab on screen (the default tab stays out of the URL).
+// The URL params of the tab on screen (the default tab stays out of the URL; setUrlParams moves
+// the address to the tab's own page, and a link built from these opens it there too).
 function urlFor(tab, params) {
     return { ...(tab === TOOLBOX_TABS[0] ? {} : { tab }), ...params };
 }
@@ -505,8 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Each tab keeps its roll in memory; the first visit to a tab rolls one.
-    document.querySelectorAll('.tool-tab').forEach(b => b.addEventListener('click', () => {
-        const tab = b.dataset.tab;
+    onTabLinks(tab => {
         if (tab === currentTab()) return;
         showTab(tab);
         if (tab === 'travel' && !travel.seed) { travel = { seed: newSeed(), day: 1, days: [] }; showJourney(null); }
@@ -518,7 +520,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (tab === 'split' && !split.seed) { document.getElementById('sp-n').value = splitPartySize(); split.seed = newSeed(); showSplit(null); }
         if (tab === 'down' && !dt.seed) initDowntime(null);
         setUrlParams(tabParams(tab), true);
-    }));
+    });
     document.getElementById('roll-names').addEventListener('click', () => rollNamesFor());
     document.getElementById('name-for').addEventListener('change', () => rollNamesFor());
     document.getElementById('name-list').addEventListener('click', onNameListClick);

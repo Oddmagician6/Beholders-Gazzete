@@ -500,7 +500,7 @@ function applyInitAdds() {
     const adds = p.getAll('add');
     if (!adds.length) return;
     p.delete('add');
-    setUrlParams(Object.fromEntries(p), false);
+    setUrlParams(urlFor(currentTab(), Object.fromEntries(p)), false);
     if (currentTab() !== 'init') return;
     let want = 0;
     const added = adds.slice(0, 12).flatMap(s => {

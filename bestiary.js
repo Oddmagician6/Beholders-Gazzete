@@ -103,6 +103,7 @@ function blockHtml(m) {
             <button type="button" class="btn btn-gold" data-act="pick">➕ Add to Encounter List</button>
             <a class="btn" href="toolbox.html?${paramsQuery({ tab: 'init', add: `${m.id}.1` })}">🎲 Add to Initiative</a>
             <a class="btn" href="monster-maker.html?${paramsQuery({ from: m.id })}">🐲 Tweak in the Monster Maker</a>
+            <a class="btn" href="monster/${m.id}.html">📄 Its Own Page</a>
             <button type="button" class="btn" data-act="copy">📋 Copy Stat Block</button>
             <button type="button" class="btn" data-act="link">🔗 Copy Link</button>
         </div>

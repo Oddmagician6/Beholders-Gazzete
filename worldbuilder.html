@@ -41,7 +41,7 @@
     /* Tabs (one per tool; the bar hides while there is only one) */
     .tool-tabs { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 30px; }
     .tool-tabs:has(> .tool-tab:only-child) { display: none; }
-    .tool-tab { font-family: var(--font-ui); font-size: 0.85rem; padding: 9px 18px; border-radius: var(--radius-sm); border: 1px solid var(--gold-dim); background: var(--bg-card); color: var(--text-mid); cursor: pointer; }
+    .tool-tab { display: inline-block; text-decoration: none; font-family: var(--font-ui); font-size: 0.85rem; padding: 9px 18px; border-radius: var(--radius-sm); border: 1px solid var(--gold-dim); background: var(--bg-card); color: var(--text-mid); cursor: pointer; }
     .tool-tab.active { background: var(--gold-mid); color: #15130f; border-color: var(--gold-mid); font-weight: 700; }
     .tool-panel[hidden] { display: none; }
 
@@ -704,7 +704,7 @@
   <section class="page-hero">
     <div class="page-hero-overlay"></div>
     <div class="page-hero-content">
-      <h1 class="page-hero-logo">🗺️ Worldbuilder</h1>
+      <h1 class="page-hero-logo">🗺️ Worldbuilder <span class="hero-kicker"></span></h1>
       <p class="page-hero-tagline">"Every world needs a calendar. Mostly so the bards know when to be late."</p>
       <p class="page-hero-description">Tools for building the world around the table, not just the next session. Roll a calendar (the months, the week, the seasons, the moons, and a festival for every month) and a pantheon of gods with their temples, holy days, and grudges, the factions that run the place, the history behind it all (the ages of the world and the ruins, grudges, and relics each one left), the towns themselves, from a muddy hamlet to a metropolis, with their people, taverns, shops, and trouble, the family trees of the houses that rule them, the crypts, mines, and ruined keeps where the adventures happen, mapped and keyed room by room, and the continent it all sits on, with its rivers, mountains, nations, roads, and places worth the trip. Bring your own maps too, and pin them. Then save the rolls you keep to the campaign notebook, with your notes and the threads between them, log each session and the quests the party takes on, and see the whole campaign drawn as a web.</p>
     </div>
@@ -747,17 +747,17 @@
 
   <main class="world-body">
     <div class="tool-tabs" role="tablist" aria-label="Worldbuilding tools">
-      <button type="button" class="tool-tab active" role="tab" data-tab="calendar" aria-selected="true" aria-controls="tab-calendar">📅 Calendar</button>
-      <button type="button" class="tool-tab" role="tab" data-tab="pantheon" aria-selected="false" aria-controls="tab-pantheon">⛪ Pantheon</button>
-      <button type="button" class="tool-tab" role="tab" data-tab="factions" aria-selected="false" aria-controls="tab-factions">🏛️ Factions</button>
-      <button type="button" class="tool-tab" role="tab" data-tab="history" aria-selected="false" aria-controls="tab-history">📜 History</button>
-      <button type="button" class="tool-tab" role="tab" data-tab="town" aria-selected="false" aria-controls="tab-town">🏘️ Town</button>
-      <button type="button" class="tool-tab" role="tab" data-tab="family" aria-selected="false" aria-controls="tab-family">🌳 Families</button>
-      <button type="button" class="tool-tab" role="tab" data-tab="sites" aria-selected="false" aria-controls="tab-sites">🏚️ Sites</button>
-      <button type="button" class="tool-tab" role="tab" data-tab="continent" aria-selected="false" aria-controls="tab-continent">🌍 Continent</button>
-      <button type="button" class="tool-tab" role="tab" data-tab="maps" aria-selected="false" aria-controls="tab-maps">🗺️ Maps</button>
-      <button type="button" class="tool-tab" role="tab" data-tab="notebook" aria-selected="false" aria-controls="tab-notebook">📓 Notebook</button>
-      <button type="button" class="tool-tab" role="tab" data-tab="web" aria-selected="false" aria-controls="tab-web">🕸️ Web</button>
+      <a class="tool-tab active" role="tab" href="fantasy-calendar-generator.html" data-tab="calendar" aria-selected="true" aria-controls="tab-calendar">📅 Calendar</a>
+      <a class="tool-tab" role="tab" href="dnd-pantheon-generator.html" data-tab="pantheon" aria-selected="false" aria-controls="tab-pantheon">⛪ Pantheon</a>
+      <a class="tool-tab" role="tab" href="dnd-faction-generator.html" data-tab="factions" aria-selected="false" aria-controls="tab-factions">🏛️ Factions</a>
+      <a class="tool-tab" role="tab" href="fantasy-history-generator.html" data-tab="history" aria-selected="false" aria-controls="tab-history">📜 History</a>
+      <a class="tool-tab" role="tab" href="dnd-town-generator.html" data-tab="town" aria-selected="false" aria-controls="tab-town">🏘️ Town</a>
+      <a class="tool-tab" role="tab" href="fantasy-family-tree-generator.html" data-tab="family" aria-selected="false" aria-controls="tab-family">🌳 Families</a>
+      <a class="tool-tab" role="tab" href="dnd-dungeon-generator.html" data-tab="sites" aria-selected="false" aria-controls="tab-sites">🏚️ Sites</a>
+      <a class="tool-tab" role="tab" href="fantasy-map-generator.html" data-tab="continent" aria-selected="false" aria-controls="tab-continent">🌍 Continent</a>
+      <a class="tool-tab" role="tab" href="dnd-campaign-map.html" data-tab="maps" aria-selected="false" aria-controls="tab-maps">🗺️ Maps</a>
+      <a class="tool-tab" role="tab" href="dnd-campaign-notebook.html" data-tab="notebook" aria-selected="false" aria-controls="tab-notebook">📓 Notebook</a>
+      <a class="tool-tab" role="tab" href="npc-relationship-web.html" data-tab="web" aria-selected="false" aria-controls="tab-web">🕸️ Web</a>
     </div>
 
     <section class="tool-panel" id="tab-calendar" role="tabpanel">
@@ -783,7 +783,7 @@
         </div>
         <p class="tool-status" id="cal-status" role="status" aria-live="polite"></p>
       </div>
-      <p class="tool-note">The calendar tables are the Gazette's own. Festival checks use the ability checks of the System Reference Document 5.1 (CC-BY 4.0); moon phases are the same as the <a href="toolbox.html?tab=travel">Travel tool</a>'s.<br>The address bar holds the calendar, so 🔗 Copy Link shares it. A new naming style renames the months and days but keeps the festivals; a new week length or climate keeps the months; another moon keeps the ones you have.<br>Holy days from the <a href="worldbuilder.html?tab=pantheon">Pantheon tab</a> can go on the calendar too.</p>
+      <p class="tool-note">The calendar tables are the Gazette's own. Festival checks use the ability checks of the System Reference Document 5.1 (CC-BY 4.0); moon phases are the same as the <a href="dnd-travel-weather-generator.html">Travel tool</a>'s.<br>The address bar holds the calendar, so 🔗 Copy Link shares it. A new naming style renames the months and days but keeps the festivals; a new week length or climate keeps the months; another moon keeps the ones you have.<br>Holy days from the <a href="dnd-pantheon-generator.html">Pantheon tab</a> can go on the calendar too.</p>
     </section>
 
     <section class="tool-panel" id="tab-pantheon" role="tabpanel" hidden>
@@ -831,7 +831,7 @@
         </div>
         <p class="tool-status" id="fac-status" role="status" aria-live="polite"></p>
       </div>
-      <p class="tool-note">The faction tables are the Gazette's own. Leaders and lieutenants come from the <a href="npc-generator.html">Town Square</a>'s NPC generator, and each 🎭 button opens that person there in full.<br>The address bar holds the factions, so 🔗 Copy Link shares it. More factions keeps the ones you have; a new first faction changes that one (and any faction of that kind it trades places with); a new place changes only the numbers.<br>Temples and orders can follow the gods of the <a href="worldbuilder.html?tab=pantheon">Pantheon tab</a>.</p>
+      <p class="tool-note">The faction tables are the Gazette's own. Leaders and lieutenants come from the <a href="npc-generator.html">Town Square</a>'s NPC generator, and each 🎭 button opens that person there in full.<br>The address bar holds the factions, so 🔗 Copy Link shares it. More factions keeps the ones you have; a new first faction changes that one (and any faction of that kind it trades places with); a new place changes only the numbers.<br>Temples and orders can follow the gods of the <a href="dnd-pantheon-generator.html">Pantheon tab</a>.</p>
     </section>
 
     <section class="tool-panel" id="tab-history" role="tabpanel" hidden>
@@ -855,7 +855,7 @@
         </div>
         <p class="tool-status" id="his-status" role="status" aria-live="polite"></p>
       </div>
-      <p class="tool-note">The history tables are the Gazette's own; the people who mattered are named by the <a href="npc-generator.html">Town Square</a>'s name tables.<br>The address bar holds the history, so 🔗 Copy Link shares it. More ages keeps the ones you have; a new span changes only the years; a new beginning rewrites everything after it.<br>The ages can name the gods of the <a href="worldbuilder.html?tab=pantheon">Pantheon tab</a> and date the factions of the <a href="worldbuilder.html?tab=factions">Factions tab</a>.</p>
+      <p class="tool-note">The history tables are the Gazette's own; the people who mattered are named by the <a href="npc-generator.html">Town Square</a>'s name tables.<br>The address bar holds the history, so 🔗 Copy Link shares it. More ages keeps the ones you have; a new span changes only the years; a new beginning rewrites everything after it.<br>The ages can name the gods of the <a href="dnd-pantheon-generator.html">Pantheon tab</a> and date the factions of the <a href="dnd-faction-generator.html">Factions tab</a>.</p>
     </section>
     <section class="tool-panel" id="tab-town" role="tabpanel" hidden>
       <div class="tool-card">
@@ -878,7 +878,7 @@
         </div>
         <p class="tool-status" id="town-status" role="status" aria-live="polite"></p>
       </div>
-      <p class="tool-note">The town tables are the Gazette's own. Its people come from the <a href="npc-generator.html">Town Square</a>'s NPC generator, its taverns and its quest from the <a href="toolbox.html?tab=tavern">DM Toolbox</a>, its shops from the <a href="shop.html">Shop page</a>, and its rumors from the <a href="rumors.html">Tavern</a>'s rumor mill; every link opens the same one there.<br>The address bar holds the town, so 🔗 Copy Link shares it. A new size keeps the name, the temple, and the first people; a new place keeps the size and the people; new times change only the taverns, the shops, and what fines and bribes cost.<br>The temple and the factions can follow the gods of the <a href="worldbuilder.html?tab=pantheon">Pantheon tab</a>.</p>
+      <p class="tool-note">The town tables are the Gazette's own. Its people come from the <a href="npc-generator.html">Town Square</a>'s NPC generator, its taverns and its quest from the <a href="dnd-tavern-generator.html">DM Toolbox</a>, its shops from the <a href="shop.html">Shop page</a>, and its rumors from the <a href="rumors.html">Tavern</a>'s rumor mill; every link opens the same one there.<br>The address bar holds the town, so 🔗 Copy Link shares it. A new size keeps the name, the temple, and the first people; a new place keeps the size and the people; new times change only the taverns, the shops, and what fines and bribes cost.<br>The temple and the factions can follow the gods of the <a href="dnd-pantheon-generator.html">Pantheon tab</a>.</p>
     </section>
     <section class="tool-panel" id="tab-family" role="tabpanel" hidden>
       <div class="tool-card">
@@ -902,7 +902,7 @@
         </div>
         <p class="tool-status" id="fam-status" role="status" aria-live="polite"></p>
       </div>
-      <p class="tool-note">The family tables are the Gazette's own. Everyone old enough opens on the <a href="npc-generator.html">Town Square</a>'s NPC page as the same person, family name and age included, and 📓 Save as an NPC files them in your notebook, linked to the family.<br>Every faction on the <a href="worldbuilder.html?tab=factions">Factions tab</a>, and every town ruled by a noble on the <a href="worldbuilder.html?tab=town">Town tab</a>, has a 🌳 button that rolls the family around that same leader.<br>The address bar holds the rolled family, so 🔗 Copy Link shares it. Your changes live in your <a href="worldbuilder.html?tab=notebook">campaign notebook</a>: open the same link again and they come back.</p>
+      <p class="tool-note">The family tables are the Gazette's own. Everyone old enough opens on the <a href="npc-generator.html">Town Square</a>'s NPC page as the same person, family name and age included, and 📓 Save as an NPC files them in your notebook, linked to the family.<br>Every faction on the <a href="dnd-faction-generator.html">Factions tab</a>, and every town ruled by a noble on the <a href="dnd-town-generator.html">Town tab</a>, has a 🌳 button that rolls the family around that same leader.<br>The address bar holds the rolled family, so 🔗 Copy Link shares it. Your changes live in your <a href="dnd-campaign-notebook.html">campaign notebook</a>: open the same link again and they come back.</p>
     </section>
 
     <section class="tool-panel" id="tab-sites" role="tabpanel" hidden>
@@ -942,7 +942,7 @@
         </details>
         <p class="tool-status" id="site-status" role="status" aria-live="polite"></p>
       </div>
-      <p class="tool-note">The site tables are the Gazette's own. Its foes come from the <a href="toolbox.html?tab=enc">DM Toolbox's Encounter tab</a> (monsters from the System Reference Document 5.1, XP budgets from the SRD 5.2, both CC-BY 4.0), and every fight opens there; the hoard opens in the <a href="loot-generator.html?tab=hoard">Loot generator</a>. Trap DCs and damage follow the SRD 5.1 trap tables.<br>The address bar holds the site, so 🔗 Copy Link shares it. A new party level or size keeps the map, the rooms, and where the fights and traps are, and changes only the monsters, DCs, and damage; a new site size keeps the name, the story, and the first rooms.<br>A site can be dated to an age of the <a href="worldbuilder.html?tab=history">History tab</a>.</p>
+      <p class="tool-note">The site tables are the Gazette's own. Its foes come from the <a href="dnd-encounter-builder.html">DM Toolbox's Encounter tab</a> (monsters from the System Reference Document 5.1, XP budgets from the SRD 5.2, both CC-BY 4.0), and every fight opens there; the hoard opens in the <a href="loot-generator.html?tab=hoard">Loot generator</a>. Trap DCs and damage follow the SRD 5.1 trap tables.<br>The address bar holds the site, so 🔗 Copy Link shares it. A new party level or size keeps the map, the rooms, and where the fights and traps are, and changes only the monsters, DCs, and damage; a new site size keeps the name, the story, and the first rooms.<br>A site can be dated to an age of the <a href="fantasy-history-generator.html">History tab</a>.</p>
     </section>
     <section class="tool-panel" id="tab-continent" role="tabpanel" hidden>
       <div class="tool-card">
@@ -974,7 +974,7 @@
         </details>
         <p class="tool-status" id="cont-status" role="status" aria-live="polite"></p>
       </div>
-      <p class="tool-note">The map and its tables are the Gazette's own. Rulers come from the <a href="npc-generator.html">Town Square</a>'s NPC generator; every town opens on the <a href="worldbuilder.html?tab=town">Town tab</a> inside its realm, every place worth the trip on the <a href="worldbuilder.html?tab=sites">Sites tab</a>, and every road or journey in the <a href="toolbox.html?tab=travel">DM Toolbox's Travel tab</a> with its terrain and miles filled in.<br>The address bar holds the map, so 🔗 Copy Link shares it (but not your pins: they stay in your notebook, in this browser). A new number of nations keeps the land; a new mix of land and sea raises or lowers the sea over the same ground; a new size is a new map.</p>
+      <p class="tool-note">The map and its tables are the Gazette's own. Rulers come from the <a href="npc-generator.html">Town Square</a>'s NPC generator; every town opens on the <a href="dnd-town-generator.html">Town tab</a> inside its realm, every place worth the trip on the <a href="dnd-dungeon-generator.html">Sites tab</a>, and every road or journey in the <a href="dnd-travel-weather-generator.html">DM Toolbox's Travel tab</a> with its terrain and miles filled in.<br>The address bar holds the map, so 🔗 Copy Link shares it (but not your pins: they stay in your notebook, in this browser). A new number of nations keeps the land; a new mix of land and sea raises or lowers the sea over the same ground; a new size is a new map.</p>
     </section>
     <section class="tool-panel" id="tab-maps" role="tabpanel" hidden>
       <div class="tool-card">
@@ -1005,7 +1005,7 @@
         </details>
         <p class="tool-status" id="maps-status" role="status" aria-live="polite"></p>
       </div>
-      <p class="tool-note">Your maps stay in this browser: the pictures in its storage for big files (IndexedDB), the names, notes, and pins in your <a href="worldbuilder.html?tab=notebook">campaign notebook</a>. Nothing is uploaded anywhere. A picture can be a PNG, JPEG, or WebP of up to 25 MB and 16,384 pixels a side.<br>The notebook's 💾 Export carries each map's name, notes, and pins but not its picture; <a href="privacy.html#backup">💾 Back up everything</a> carries the pictures too. Removing a map from the notebook deletes its picture.<br>Pins sit at a spot on the picture, so a new version of the same map (🔁 Replace Picture) keeps them where they were, even at another size.</p>
+      <p class="tool-note">Your maps stay in this browser: the pictures in its storage for big files (IndexedDB), the names, notes, and pins in your <a href="dnd-campaign-notebook.html">campaign notebook</a>. Nothing is uploaded anywhere. A picture can be a PNG, JPEG, or WebP of up to 25 MB and 16,384 pixels a side.<br>The notebook's 💾 Export carries each map's name, notes, and pins but not its picture; <a href="privacy.html#backup">💾 Back up everything</a> carries the pictures too. Removing a map from the notebook deletes its picture.<br>Pins sit at a spot on the picture, so a new version of the same map (🔁 Replace Picture) keeps them where they were, even at another size.</p>
     </section>
     <section class="tool-panel" id="tab-notebook" role="tabpanel" hidden>
       <div class="tool-card">
@@ -1089,7 +1089,7 @@
         </div>
         <div class="wg-empty" id="web-empty" hidden>
           <p>🕸️ The notebook is empty, so there's no web yet.</p>
-          <p class="wb-small">Save rolls to the <a href="worldbuilder.html?tab=notebook">notebook</a> from any tab, link them together, and they show up here.</p>
+          <p class="wb-small">Save rolls to the <a href="dnd-campaign-notebook.html">notebook</a> from any tab, link them together, and they show up here.</p>
         </div>
         <p class="wb-legend" id="web-hint"></p>
         <section class="wg-panel" id="web-panel" aria-label="The entry you picked" aria-live="polite" hidden></section>
@@ -1101,7 +1101,7 @@
         </div>
         <p class="tool-status" id="web-status" role="status" aria-live="polite"></p>
       </div>
-      <p class="tool-note">The web is drawn from your <a href="worldbuilder.html?tab=notebook">campaign notebook</a>, in this browser: nothing is sent anywhere. Three things draw a line: a link between two entries (saving links a roll to the saved rolls it uses; link anything else under 📝 Notes and links), a pin on a continent or one of your maps that opens another entry, and a family member linked to a saved NPC.<br>The first layout comes from your entries, so the same notebook lays out the same way anywhere. After that the web keeps its shape: a new entry finds a spot beside what it's tied to, and an entry you drag stays where you put it (📌 Let It Move frees it). 🧲 Tidy Up lets everything else settle; 🔀 Start Over lays the whole web out again.<br>⬇️ Download Picture saves the entries and lines showing (after your filters) as a PNG, with every name written out.</p>
+      <p class="tool-note">The web is drawn from your <a href="dnd-campaign-notebook.html">campaign notebook</a>, in this browser: nothing is sent anywhere. Three things draw a line: a link between two entries (saving links a roll to the saved rolls it uses; link anything else under 📝 Notes and links), a pin on a continent or one of your maps that opens another entry, and a family member linked to a saved NPC.<br>The first layout comes from your entries, so the same notebook lays out the same way anywhere. After that the web keeps its shape: a new entry finds a spot beside what it's tied to, and an entry you drag stays where you put it (📌 Let It Move frees it). 🧲 Tidy Up lets everything else settle; 🔀 Start Over lays the whole web out again.<br>⬇️ Download Picture saves the entries and lines showing (after your filters) as a PNG, with every name written out.</p>
     </section>
   </main>
 
@@ -1126,7 +1126,11 @@
     </div>
   </footer>
 
+  <!-- prerender:tab-pages -->
+  <script type="application/json" id="tab-pages">{"first":"calendar","hub":{"page":"worldbuilder.html","title":"D\u0026D Worldbuilding Tools | The Beholder\u0027s Gazette","kicker":"","hero":"Tools for building the world around the table, not just the next session. Roll a calendar (the months, the week, the seasons, the moons, and a festival for every month) and a pantheon of gods with their temples, holy days, and grudges, the factions that run the place, the history behind it all (the ages of the world and the ruins, grudges, and relics each one left), the towns themselves, from a muddy hamlet to a metropolis, with their people, taverns, shops, and trouble, the family trees of the houses that rule them, the crypts, mines, and ruined keeps where the adventures happen, mapped and keyed room by room, and the continent it all sits on, with its rivers, mountains, nations, roads, and places worth the trip. Bring your own maps too, and pin them. Then save the rolls you keep to the campaign notebook, with your notes and the threads between them, log each session and the quests the party takes on, and see the whole campaign drawn as a web."},"tabs":{"calendar":{"page":"fantasy-calendar-generator.html","title":"Fantasy Calendar Generator for D\u0026D | The Beholder\u0027s Gazette","kicker":"Fantasy Calendar Generator","hero":"A whole calendar in one roll: the reckoning, the months, the week, the seasons, the moons, and a festival for every month."},"pantheon":{"page":"dnd-pantheon-generator.html","title":"D\u0026D Pantheon \u0026 God Generator | The Beholder\u0027s Gazette","kicker":"D\u0026D Pantheon \u0026 God Generator","hero":"A heaven\u0027s worth of gods in one roll, with their domains, holy days, temples, commandments, and grudges."},"factions":{"page":"dnd-faction-generator.html","title":"D\u0026D Faction Generator | The Beholder\u0027s Gazette","kicker":"D\u0026D Faction Generator","hero":"The powers of a town, a city, or a kingdom in one roll, each with a goal, a leader, a secret, rivals, and a job for the party."},"history":{"page":"fantasy-history-generator.html","title":"Fantasy World History Generator | The Beholder\u0027s Gazette","kicker":"Fantasy World History Generator","hero":"The ages of the world in one roll, each following from the last, and the ruins, grudges, and relics they left behind."},"town":{"page":"dnd-town-generator.html","title":"D\u0026D Town \u0026 City Generator | The Beholder\u0027s Gazette","kicker":"D\u0026D Town \u0026 City Generator","hero":"A whole settlement in one roll, from a muddy hamlet to a metropolis, with the people worth knowing and the trouble worth finding."},"family":{"page":"fantasy-family-tree-generator.html","title":"Fantasy Family Tree Generator | The Beholder\u0027s Gazette","kicker":"Fantasy Family Tree Generator","hero":"A noble house, or the family of anyone the party deals with, drawn as a tree. Change anyone, add or remove people, and keep it."},"sites":{"page":"dnd-dungeon-generator.html","title":"D\u0026D Dungeon Generator with Maps | The Beholder\u0027s Gazette","kicker":"D\u0026D Dungeon Generator","hero":"A keyed adventure site in one roll: its story, a map, every room keyed, the foes, the traps, and a hoard at the end."},"continent":{"page":"fantasy-map-generator.html","title":"Fantasy Continent Map Generator | The Beholder\u0027s Gazette","kicker":"Fantasy Continent Map Generator","hero":"A map of a whole continent in one roll: coasts, mountains, rivers, and climate, the nations on it, their roads, and the places worth the trip."},"maps":{"page":"dnd-campaign-map.html","title":"D\u0026D Campaign Map with Pins \u0026 Notes | The Beholder\u0027s Gazette","kicker":"Campaign Map with Pins","hero":"Bring your own map, pan and zoom around it, and pin the places that matter, each with a note and a link to your notebook."},"notebook":{"page":"dnd-campaign-notebook.html","title":"D\u0026D Campaign Notebook | The Beholder\u0027s Gazette","kicker":"D\u0026D Campaign Notebook","hero":"Everything you keep from the other tools in one place, with your notes, the threads between them, a session log, and the party\u0027s quests."},"web":{"page":"npc-relationship-web.html","title":"D\u0026D NPC Relationship Web | The Beholder\u0027s Gazette","kicker":"D\u0026D NPC Relationship Web","hero":"Your notebook drawn as a web: every saved entry, and a line wherever two of them meet. See which threads hang loose."}}}</script>
+  <!-- /prerender:tab-pages -->
   <script src="rng.js"></script>
+  <script src="tab-pages.js"></script>
   <script src="coins.js"></script>
   <script src="dice-engine.js"></script>
   <script src="notebook.js"></script>
