@@ -81,12 +81,12 @@ function pickerHtml(c, ctx) {
     }
     if (c.type === 'table') {
         const list = ctx.tables();
-        if (!list.length) return '<p class="ds-faint">No tables yet. Make one (or add the examples) on the <a href="toolbox.html?tab=tables">Toolbox\'s Tables tab</a>.</p>';
+        if (!list.length) return '<p class="ds-faint">No tables yet. Make one (or add the examples) on the <a href="toolbox?tab=tables">Toolbox\'s Tables tab</a>.</p>';
         return lab('Table', `<select data-pick="table">${optionsHtml(list.map(t => [t.id, t.name || 'Untitled table']), c.table, 'Choose a table…')}</select>`);
     }
     if (c.type === 'entry') {
         const nb = ctx.nb();
-        if (!nb.entries.length) return '<p class="ds-faint">The notebook is empty. Save rolls, sessions, or quests in the <a href="worldbuilder.html?tab=notebook">Worldbuilder\'s notebook</a>.</p>';
+        if (!nb.entries.length) return '<p class="ds-faint">The notebook is empty. Save rolls, sessions, or quests in the <a href="worldbuilder?tab=notebook">Worldbuilder\'s notebook</a>.</p>';
         const groups = Object.entries(NB_KINDS).map(([kind, k]) => {
             const list = nb.entries.filter(e => e.kind === kind);
             return list.length ? `<optgroup label="${dsEsc(`${k.icon} ${k.label}`)}">${list.map(e => `<option value="${e.id}"${e.id === c.entry ? ' selected' : ''}>${dsEsc(e.title)}</option>`).join('')}</optgroup>` : '';
@@ -136,7 +136,7 @@ function clockBody(c, ctx) {
             <span class="ds-clock-state">${full ? '⏰ Complete' : `${k.filled} / ${k.size}`}</span>
             <button type="button" class="ds-btn" data-act="clk-inc" aria-label="Fill a segment"${full ? ' disabled' : ''}>+</button>
         </div>
-        <p class="ds-links"><a href="toolbox.html?tab=clocks">⏳ All clocks</a></p>`;
+        <p class="ds-links"><a href="toolbox?tab=clocks">⏳ All clocks</a></p>`;
 }
 
 function tableBody(c, ctx) {
@@ -152,7 +152,7 @@ function tableBody(c, ctx) {
     return `<div class="ds-row">
             <button type="button" class="ds-btn ds-gold" data-act="table-roll">🎲 Roll</button>
             ${c.rolls.length ? '<button type="button" class="ds-btn" data-act="table-clear">🧹 Clear</button>' : ''}
-            <a class="ds-small-link" href="toolbox.html?tab=tables">Edit tables</a>
+            <a class="ds-small-link" href="toolbox?tab=tables">Edit tables</a>
         </div>
         ${c.rolls.length ? `<ol class="ds-results">${c.rolls.map((r, i) => `<li${i ? '' : ' class="ds-latest"'}><span class="ds-result">${dsEsc(r.t)}</span>${r.s ? `<span class="ds-steps">${dsEsc(r.s)}</span>` : ''}</li>`).join('')}</ol>` : ''}
         ${entries}`;
@@ -176,7 +176,7 @@ const DS_HEALTH = { healthy: '💚', bloodied: '🩸', down: '💀' };
 
 function initBody(ctx) {
     const f = ctx.fight();
-    const links = '<p class="ds-links"><a href="toolbox.html?tab=init">⚔️ Open the tracker</a> <a href="player-view.html" target="gazette-player-view">📺 Players\' initiative</a></p>';
+    const links = '<p class="ds-links"><a href="toolbox?tab=init">⚔️ Open the tracker</a> <a href="player-view" target="gazette-player-view">📺 Players\' initiative</a></p>';
     const blank = `<table class="ds-print-only ds-grid-table"><thead><tr><th>Init</th><th>Name</th><th>HP</th><th>Conditions</th></tr></thead><tbody>${'<tr><td></td><td></td><td></td><td></td></tr>'.repeat(10)}</tbody></table>`;
     if (!f.list.length) return `<p class="ds-faint">No fight yet. Add combatants on the Toolbox's Initiative tab, and they show up here.</p>${blank}${links}`;
     const turn = f.list.some(c => c.id === f.turn) ? f.turn : null;
@@ -198,13 +198,13 @@ function initBody(ctx) {
 
 function partyBody(ctx) {
     const party = ctx.party();
-    if (!party.length) return '<p class="ds-faint">No party yet. Enter the characters once on the <a href="toolbox.html?tab=party">Toolbox\'s Party tab</a>.</p>';
+    if (!party.length) return '<p class="ds-faint">No party yet. Enter the characters once on the <a href="toolbox?tab=party">Toolbox\'s Party tab</a>.</p>';
     const n = v => (v === null ? '' : v);
     return `<table class="ds-table"><thead><tr><th>Character</th><th>Class</th><th>AC</th><th>HP</th><th title="Passive Perception">PP</th></tr></thead><tbody>
         ${party.map((p, i) => `<tr><td>${dsEsc(partyMemberName(p, i))}${p.player && p.name ? `<span class="ds-steps">${dsEsc(p.player)}</span>` : ''}</td>
             <td>${dsEsc(p.cls)} ${p.level}</td><td>${n(p.ac)}</td><td>${n(p.hp)}</td><td>${n(p.pp)}</td></tr>`).join('')}
         </tbody></table>
-        <p class="ds-links"><a href="toolbox.html?tab=party">👥 Edit the party</a></p>`;
+        <p class="ds-links"><a href="toolbox?tab=party">👥 Edit the party</a></p>`;
 }
 
 function entryBody(c, ctx) {
@@ -232,8 +232,8 @@ function monsterBody(c) {
     if (!m) return c.m ? '<p class="ds-faint">That monster is gone (a homebrew monster removed from the notebook?). Choose another.</p>' + pickerHtml(c) : null;
     const failed = !m.block && dsUi.blocksFailed;
     const links = [
-        `<a href="toolbox.html?${paramsQuery({ tab: 'init', add: `${m.id}.1` })}">⚔️ Add to Initiative</a>`,
-        m.hb ? `<a href="monster-maker.html?nb=${dsEsc(m.id.slice(HB_PREFIX.length))}">🐲 Open in the Monster Maker</a>` : `<a href="bestiary.html?m=${dsEsc(m.id)}">🐉 Open in the Bestiary</a>`
+        `<a href="toolbox?${paramsQuery({ tab: 'init', add: `${m.id}.1` })}">⚔️ Add to Initiative</a>`,
+        m.hb ? `<a href="monster-maker?nb=${dsEsc(m.id.slice(HB_PREFIX.length))}">🐲 Open in the Monster Maker</a>` : `<a href="bestiary?m=${dsEsc(m.id)}">🐉 Open in the Bestiary</a>`
     ];
     return `${failed ? '<p class="ds-faint">⚠️ The stat blocks didn\'t load (offline?). <button type="button" class="ds-btn ds-mini" data-act="blocks-retry">Try again</button></p>' : `<div class="sb-box">${monsterBlockHtml(m)}</div>`}
         <p class="ds-links">${links.join(' ')}</p>`;

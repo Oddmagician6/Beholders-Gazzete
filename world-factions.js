@@ -90,7 +90,7 @@ function facLinkPantheon(on) {
 function facNpcLink(p) {
     const params = new URLSearchParams({ seed: p.seed, profession: p.cat });
     if (p.age) params.set('age', p.age);
-    return 'npc-generator.html?' + params.toString();
+    return 'npc-generator?' + params.toString();
 }
 
 function facPantheonLink(god) {
@@ -98,7 +98,7 @@ function facPantheonLink(god) {
     const params = new URLSearchParams({ tab: 'pantheon', seed: g.seed });
     ['size', 'shape', 'naming'].forEach(k => { if (g[k] !== 'random') params.set(k, g[k]); });
     if (god && god.index) params.set('god', god.index + 1);
-    return 'worldbuilder.html?' + params.toString();
+    return 'worldbuilder?' + params.toString();
 }
 
 function facDl(lines) {

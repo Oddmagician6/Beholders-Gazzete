@@ -6,8 +6,9 @@
 // VERSION is stamped by export-pages.ps1 from a hash of the PRECACHE files. Any change to one of them
 // (then running the export) installs a new cache; old caches are deleted on activate.
 // Cache keys drop the query string (?seed=, ?t=, ?id= ...): pages rebuild their state from the URL.
+// Links use clean addresses (about, a/<id>); keyFor maps each one to its file's key (about.html).
 
-const VERSION = '7905d4c55004';
+const VERSION = '5a17a4cec363';
 const STATIC = 'gazette-static-' + VERSION;
 const PAGES = 'gazette-pages';
 const FONTS = 'gazette-fonts';
@@ -43,6 +44,8 @@ function keyFor(url) {
   u.search = '';
   u.hash = '';
   if (u.href === BASE || u.href.endsWith('/')) u.pathname += 'index.html';
+  // Clean addresses (/about, /a/<id>) share the cache entry of their file (about.html, a/<id>.html)
+  else if (!/\.[a-z0-9]+$/i.test(u.pathname)) u.pathname += '.html';
   return u.href;
 }
 
@@ -131,9 +134,9 @@ async function staleWhileRevalidate(req, cacheName) {
 
 function offlinePage() {
   const tools = [
-    ['session-kit.html', 'DM Session Kit'], ['npc-generator.html', 'Town Square (NPCs)'],
-    ['loot-generator.html', 'Vault of Wonders (loot)'], ['shop.html', "Merchant's Row (shops)"],
-    ['rumors.html', 'The Tavern (rumors)'], ['toolbox.html', 'DM Toolbox (names)'], ['spellbook.html', 'Spellbook'], ['bestiary.html', 'Bestiary'], ['monster-maker.html', 'Monster Maker'], ['rules.html', 'Rules Quick Reference'], ['dm-screen.html', 'DM Screen'], ['handouts.html', 'Handout Maker'], ['economy.html', 'Market Exchange'], ['privacy.html#backup', 'Back up everything']
+    ['session-kit', 'DM Session Kit'], ['npc-generator', 'Town Square (NPCs)'],
+    ['loot-generator', 'Vault of Wonders (loot)'], ['shop', "Merchant's Row (shops)"],
+    ['rumors', 'The Tavern (rumors)'], ['toolbox', 'DM Toolbox (names)'], ['spellbook', 'Spellbook'], ['bestiary', 'Bestiary'], ['monster-maker', 'Monster Maker'], ['rules', 'Rules Quick Reference'], ['dm-screen', 'DM Screen'], ['handouts', 'Handout Maker'], ['economy', 'Market Exchange'], ['privacy#backup', 'Back up everything']
   ];
   const links = tools.map(([href, name]) => `<li><a href="${BASE}${href}">${name}</a></li>`).join('');
   const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
@@ -144,7 +147,7 @@ h1{font-family:Cinzel,serif;color:#d4af37}a{color:#d4af37}li{margin:.4em 0}</sty
 <h1>📜 The ravens can't reach you</h1>
 <p>You're offline, and this page wasn't saved on your device yet. The tools below work without a connection:</p>
 <ul>${links}</ul>
-<p><a href="${BASE}index.html">Back to the front page</a> (the last edition you read)</p>
+<p><a href="${BASE}">Back to the front page</a> (the last edition you read)</p>
 </main></body></html>`;
   return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
 }

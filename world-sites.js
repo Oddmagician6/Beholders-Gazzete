@@ -95,11 +95,11 @@ function siteFightLink(s, f) {
     params.set('env', SITE_KINDS[s.kind].habitat);
     if (f.band) params.set('pack', f.band);
     params.set('seed', f.seed);
-    return 'toolbox.html?' + params.toString();
+    return 'toolbox?' + params.toString();
 }
 
 function siteHoardLink(s) {
-    return 'loot-generator.html?' + new URLSearchParams({ tab: 'hoard', 'hoard-cr': s.hoard.tier, 'hoard-source': s.hoard.source, seed: s.hoard.seed }).toString();
+    return 'loot-generator?' + new URLSearchParams({ tab: 'hoard', 'hoard-cr': s.hoard.tier, 'hoard-source': s.hoard.source, seed: s.hoard.seed }).toString();
 }
 
 function siteHistoryLink(ai) {
@@ -107,7 +107,7 @@ function siteHistoryLink(ai) {
     const params = new URLSearchParams({ tab: 'history', seed: h.seed });
     Object.entries(SITE_HIS_KEYS).forEach(([key, opt]) => { if (h[opt] !== 'random') params.set(opt, h[opt]); });
     params.set('age', ai + 1);
-    return 'worldbuilder.html?' + params.toString();
+    return 'worldbuilder?' + params.toString();
 }
 
 // ── Render ────────────────────────────────────────────────

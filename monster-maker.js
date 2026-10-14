@@ -415,8 +415,8 @@ function renderSaved() {
             <span class="mm-sv-sub">${esc(hbSummary(e.mon))}</span>
             <span class="mm-sv-acts">
                 <button type="button" class="btn" data-act="open">✏️ Open</button>
-                <a class="btn" href="toolbox.html?${esc(paramsQuery({ tab: 'init', add: `${HB_PREFIX}${e.id}.1` }))}">🎲 Initiative</a>
-                <a class="btn" href="toolbox.html?${esc(paramsQuery({ tab: 'enc', m: `${HB_PREFIX}${e.id}.1` }))}">⚔️ Encounter</a>
+                <a class="btn" href="toolbox?${esc(paramsQuery({ tab: 'init', add: `${HB_PREFIX}${e.id}.1` }))}">🎲 Initiative</a>
+                <a class="btn" href="toolbox?${esc(paramsQuery({ tab: 'enc', m: `${HB_PREFIX}${e.id}.1` }))}">⚔️ Encounter</a>
                 <button type="button" class="btn" data-act="remove">🗑️ Remove</button>
             </span>
         </li>`).join('');
@@ -495,7 +495,7 @@ function sendToToolbox(tab) {
     const e = !draft.dirty && draftEntry() || saveToNotebook();
     if (!e) return;
     const id = `${HB_PREFIX}${e.id}.1`;
-    location.href = `toolbox.html?${paramsQuery(tab === 'init' ? { tab, add: id } : { tab, m: id })}`;
+    location.href = `toolbox?${paramsQuery(tab === 'init' ? { tab, add: id } : { tab, m: id })}`;
 }
 
 function copyBlock() {

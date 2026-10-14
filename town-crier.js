@@ -69,5 +69,5 @@ function crierById(pool, id) {
 }
 
 function crierHref(id) {
-    return `a/${encodeURIComponent(id)}.html`;
+    return `a/${encodeURIComponent(id)}`;
 }

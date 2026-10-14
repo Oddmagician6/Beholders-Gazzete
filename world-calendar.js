@@ -111,7 +111,7 @@ function calPantheonLink() {
     const g = calState.gods;
     const params = new URLSearchParams({ tab: 'pantheon', seed: g.seed });
     ['size', 'shape', 'naming'].forEach(k => { if (g[k] !== 'random') params.set(k, g[k]); });
-    return 'worldbuilder.html?' + params.toString();
+    return 'worldbuilder?' + params.toString();
 }
 
 function calHolyHTML(c) {
@@ -127,7 +127,7 @@ function calHolyHTML(c) {
 function calTravelLink(c) {
     const season = c.months[c.today.month].season;
     const params = new URLSearchParams({ tab: 'travel', climate: c.climate, season });
-    return 'toolbox.html?' + params.toString();
+    return 'toolbox?' + params.toString();
 }
 
 function calWeekHTML(c) {

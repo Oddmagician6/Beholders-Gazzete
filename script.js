@@ -80,7 +80,7 @@ function deskTag(a, cls = 'card-tag') {
   const d = deskOf(a);
   const label = esc(a.category || 'News');
   if (!d) return `<span class="${cls}">${label}</span>`;
-  return `<a class="${cls}" href="archive.html?section=${encodeURIComponent(d.id)}" data-section="${esc(d.id)}"${deskStyle(d)} title="More from ${esc(d.name)}"><span class="desk-icon" aria-hidden="true">${d.icon}</span>${label}</a>`;
+  return `<a class="${cls}" href="archive?section=${encodeURIComponent(d.id)}" data-section="${esc(d.id)}"${deskStyle(d)} title="More from ${esc(d.name)}"><span class="desk-icon" aria-hidden="true">${d.icon}</span>${label}</a>`;
 }
 
 // Section bar. export-articles.ps1 pre-renders the same chips, linking to the archive for no-JS visitors.
@@ -94,8 +94,8 @@ function renderSections() {
     return `<a class="section-chip${on ? ' active' : ''}" href="${href}" data-section="${esc(id)}"${on ? ' aria-current="true"' : ''}${deskStyle(d)}>${label}</a>`;
   };
   el.innerHTML = '<span class="section-bar-label">Sections</span>' +
-    chip('all', 'index.html', '<span aria-hidden="true">📰</span> All news') +
-    desks.map(d => chip(d.id, `archive.html?section=${encodeURIComponent(d.id)}`,
+    chip('all', './', '<span aria-hidden="true">📰</span> All news') +
+    desks.map(d => chip(d.id, `archive?section=${encodeURIComponent(d.id)}`,
       `<span aria-hidden="true">${d.icon}</span> ${esc(d.short)}<span class="n">${counts[d.id] || 0}</span>`, d)).join('');
 }
 
@@ -113,14 +113,14 @@ function showSection() {
     if (featured) featured.hidden = true;
     if (welcome) welcome.hidden = true;
     if (title) title.textContent = `${d.icon} ${d.name}`;
-    if (archive) { archive.href = `archive.html?section=${encodeURIComponent(d.id)}`; archive.textContent = `📚 Every ${d.name} scroll in the archive →`; }
+    if (archive) { archive.href = `archive?section=${encodeURIComponent(d.id)}`; archive.textContent = `📚 Every ${d.name} scroll in the archive →`; }
   } else {
     renderFeatured(latest[0]);
     allArticles = latest.slice(1);
     if (featured) featured.hidden = false;
     if (welcome) welcome.hidden = false;
     if (title) title.textContent = '📰 More News';
-    if (archive) { archive.href = 'archive.html'; archive.textContent = '📚 Browse the full archive, by month and desk →'; }
+    if (archive) { archive.href = 'archive'; archive.textContent = '📚 Browse the full archive, by month and desk →'; }
   }
   displayedCount = 6;
   renderGrid();
@@ -154,7 +154,7 @@ function renderFeatured(article) {
         ${deskTag(article, 'category-badge')}
       </div>
       <h2 class="featured-headline">
-        <a href="a/${article.id}.html" style="color:inherit;">${article.title}</a>
+        <a href="a/${article.id}" style="color:inherit;">${article.title}</a>
       </h2>
       <div class="article-meta">
         <span>✍️ <strong>${article.author || 'The Gazette Staff'}</strong></span>
@@ -164,7 +164,7 @@ function renderFeatured(article) {
       <div class="featured-content">
         ${article.excerpt || stripTags(article.content).substring(0, 280) + '…'}
       </div>
-      <a href="a/${article.id}.html" class="btn">📜 Read Full Scroll</a>
+      <a href="a/${article.id}" class="btn">📜 Read Full Scroll</a>
     </div>
   `;
 }
@@ -186,10 +186,10 @@ function renderGrid() {
     return `
     <article class="card" style="animation-delay:${i * 0.08}s;${d && d.color ? `--desk:${d.color}` : ''}">
       ${deskTag(a)}
-      <h3><a href="a/${a.id}.html">${a.title}</a></h3>
+      <h3><a href="a/${a.id}">${a.title}</a></h3>
       <p>${a.excerpt || stripTags(a.content).substring(0, 110) + '…'}</p>
       <div class="card-date">📅 ${formatDate(a.date)}</div>
-      <a href="a/${a.id}.html" class="btn" style="font-size:0.68rem;padding:7px 14px;margin-top:14px;">📜 Read Scroll</a>
+      <a href="a/${a.id}" class="btn" style="font-size:0.68rem;padding:7px 14px;margin-top:14px;">📜 Read Scroll</a>
     </article>
   `;
   }).join('');
@@ -231,7 +231,7 @@ function renderTicker(articles) {
   articles.forEach((a, i) => {
     if (i) el.append('  •  ');
     const link = document.createElement('a');
-    link.href = `a/${a.id}.html`;
+    link.href = `a/${a.id}`;
     link.textContent = `${deskOf(a)?.icon || '📰'} ${stripTags(a.title)}`;
     el.append(link);
   });
@@ -285,7 +285,7 @@ function renderEconomySidebar() {
   el.innerHTML = `
     <div class="economy-header">
       <span class="economy-title">💰 Realm Market Watch</span>
-      <a class="refresh-btn" href="economy.html">Full exchange →</a>
+      <a class="refresh-btn" href="economy">Full exchange →</a>
     </div>
     <div class="economy-grid">${rows}</div>
     <div class="market-trend">

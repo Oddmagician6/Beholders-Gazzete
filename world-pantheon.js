@@ -67,7 +67,7 @@ function applyPanUrl(p) {
 // ── Render ────────────────────────────────────────────────
 function panPriestLink(p, i) {
     const params = new URLSearchParams({ seed: deriveSeed(p.seed, 'priest.' + i), profession: 'religious' });
-    return 'npc-generator.html?' + params.toString();
+    return 'npc-generator?' + params.toString();
 }
 
 function panRosterHTML(p) {

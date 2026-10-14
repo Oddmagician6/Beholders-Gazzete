@@ -58,8 +58,8 @@ const NB_QUEST_STATUS = {
     done: { icon: '✅', label: 'Done' },
     failed: { icon: '❌', label: 'Failed' }
 };
-// Saved links may only point at these pages, with a plain query string.
-const NB_HREF = /^(worldbuilder|npc-generator|toolbox)\.html(\?[A-Za-z0-9_.~%+=&*-]*)?$/;
+// Saved links may only point at these pages, with a plain query string (older saves end in .html).
+const NB_HREF = /^(worldbuilder|npc-generator|toolbox)(?:\.html)?(\?[A-Za-z0-9_.~%+=&*-]*)?$/;
 const NB_LIMITS = { entries: 500, title: 120, sub: 400, notes: 4000, name: 80, href: 2000, links: 60, flips: 400, flip: 300, edits: 200, edit: 2000, file: 2000000 };
 // The options that make two rolls with one seed different, per kind (its own URL keys).
 const NB_SIG_KEYS = {
@@ -243,8 +243,8 @@ function nbFind(nb, id) {
 // Where an entry opens: its link, the Monster Maker for a homebrew monster, the Maps tab for your own map,
 // or the Families tab for a family started by hand.
 function nbOpenHref(e) {
-    return e.href || (e.kind === 'monster' ? `monster-maker.html?nb=${e.id}` : e.kind === 'map' ? `worldbuilder.html?tab=maps&map=${e.id}`
-        : e.kind === 'family' ? `worldbuilder.html?tab=family&fam=${e.id}` : '');
+    return e.href || (e.kind === 'monster' ? `monster-maker?nb=${e.id}` : e.kind === 'map' ? `worldbuilder?tab=maps&map=${e.id}`
+        : e.kind === 'family' ? `worldbuilder?tab=family&fam=${e.id}` : '');
 }
 
 // ── Links between entries ─────────────────────────────────

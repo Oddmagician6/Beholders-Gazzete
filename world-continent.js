@@ -61,15 +61,15 @@ function contTownLink(c, t) {
     const params = new URLSearchParams({ tab: 'town', seed: t.seed, size: t.size, setting: t.setting, wealth: t.wealth, cont: c.seed });
     Object.entries(TOWN_CONT_KEYS).forEach(([key, opt]) => { if (c.opts[opt] !== 'random') params.set(key, c.opts[opt]); });
     params.set('ctown', t.id + 1);
-    return 'worldbuilder.html?' + params.toString();
+    return 'worldbuilder?' + params.toString();
 }
 
 function contSiteLink(p) {
-    return 'worldbuilder.html?' + new URLSearchParams({ tab: 'sites', kind: CONT_POIS[p.kind].site, seed: p.seed }).toString();
+    return 'worldbuilder?' + new URLSearchParams({ tab: 'sites', kind: CONT_POIS[p.kind].site, seed: p.seed }).toString();
 }
 
 function contTravelLink(c, a, b, trip) {
-    return 'toolbox.html?' + new URLSearchParams({ tab: 'travel', climate: trip.climate, terrain: trip.terrain, miles: trip.miles, seed: deriveSeed(c.seed, `trip.${a}.${b}`) }).toString();
+    return 'toolbox?' + new URLSearchParams({ tab: 'travel', climate: trip.climate, terrain: trip.terrain, miles: trip.miles, seed: deriveSeed(c.seed, `trip.${a}.${b}`) }).toString();
 }
 
 // ── Render ────────────────────────────────────────────────
@@ -195,7 +195,7 @@ function contPins(nb = nbLoad()) {
 function contEditPins(fn, quiet = false) {
     let nb = nbLoad(), e = contEntry(nb), filed = false;
     if (!e) {
-        const r = nbAdd({ kind: 'continent', ...WORLD_TABS.continent.entry(), href: 'worldbuilder.html?' + paramsQuery(contParams()) });
+        const r = nbAdd({ kind: 'continent', ...WORLD_TABS.continent.entry(), href: 'worldbuilder?' + paramsQuery(contParams()) });
         if (!r || r.full) {
             flash('cont-status', r ? '⚠️ The notebook is full, and pins are kept there. Remove an entry first.' : "⚠️ This browser won't keep a notebook (storage is off), so it can't keep pins.");
             return false;
@@ -232,7 +232,7 @@ function setupPins(card) {
             svg.insertAdjacentHTML('beforeend', pinSvg(pins, W, H, { cls: 'cm', sel }));
             card.querySelector('.cont-map-wrap').classList.toggle('cont-pinning', placing);
         },
-        foot: (nb, self) => `Pins are kept with this map in the <a href="worldbuilder.html?tab=notebook">📓 notebook</a>. They belong to the map as it is: another number of nations or mix of land and sea is another map, with pins of its own.${nb.entries.some(x => x !== self) ? '' : ' Save a town, a site, or a faction to the notebook, and a pin can open it.'}`
+        foot: (nb, self) => `Pins are kept with this map in the <a href="worldbuilder?tab=notebook">📓 notebook</a>. They belong to the map as it is: another number of nations or mix of land and sea is another map, with pins of its own.${nb.entries.some(x => x !== self) ? '' : ' Save a town, a site, or a faction to the notebook, and a pin can open it.'}`
     });
 }
 

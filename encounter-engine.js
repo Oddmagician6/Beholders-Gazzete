@@ -792,5 +792,5 @@ function encLootLink(s) {
     if (s.loot.startsWith("hoard:")) { p.set("tab", "hoard"); p.set("hoard-cr", tier); p.set("hoard-source", s.loot.slice(6)); }
     else { p.set("ind-cr", tier); p.set("ind-source", s.loot); }
     p.set("seed", deriveSeed(s.seed, "loot"));
-    return "loot-generator.html?" + p.toString();
+    return "loot-generator?" + p.toString();
 }

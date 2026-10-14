@@ -114,7 +114,7 @@ function townFactionLink(t, i) {
     const z = TOWN_SIZES[t.size];
     const params = new URLSearchParams({ tab: 'factions', seed: t.factionSeed, count: z.factions, scale: z.facScale });
     if (i) params.set('faction', i + 1);
-    return 'worldbuilder.html?' + townGodParams(params).toString();
+    return 'worldbuilder?' + townGodParams(params).toString();
 }
 
 function townPantheonLink(god) {
@@ -122,22 +122,22 @@ function townPantheonLink(god) {
     const params = new URLSearchParams({ tab: 'pantheon', seed: g.seed });
     ['size', 'shape', 'naming'].forEach(k => { if (g[k] !== 'random') params.set(k, g[k]); });
     if (god && god.index) params.set('god', god.index + 1);
-    return 'worldbuilder.html?' + params.toString();
+    return 'worldbuilder?' + params.toString();
 }
 
 function townTavernLink(tv, k, rumorIdx) {
     const params = new URLSearchParams({ tab: 'tavern', q: tv.quality, seed: tv.seed });
     // Each tavern overhears one of the town's rumors.
     if (rumorIdx.length) params.set('rumor', rumorIdx[k % rumorIdx.length]);
-    return 'toolbox.html?' + params.toString();
+    return 'toolbox?' + params.toString();
 }
 
 function townShopLink(sh) {
-    return 'shop.html?' + new URLSearchParams({ seed: sh.seed, type: sh.type, wealth: sh.wealth }).toString();
+    return 'shop?' + new URLSearchParams({ seed: sh.seed, type: sh.type, wealth: sh.wealth }).toString();
 }
 
 function townQuestLink(t) {
-    return 'toolbox.html?' + new URLSearchParams({ tab: 'quest', seed: t.questSeed }).toString();
+    return 'toolbox?' + new URLSearchParams({ tab: 'quest', seed: t.questSeed }).toString();
 }
 
 // ── Render ────────────────────────────────────────────────
@@ -172,7 +172,7 @@ function townContinentLink() {
     const cs = townState.cont;
     const params = new URLSearchParams({ tab: 'continent', seed: cs.seed });
     Object.values(TOWN_CONT_KEYS).forEach(opt => { if (cs[opt] !== 'random') params.set(opt, cs[opt]); });
-    return 'worldbuilder.html?' + params.toString();
+    return 'worldbuilder?' + params.toString();
 }
 
 function townRealmHTML(t) {

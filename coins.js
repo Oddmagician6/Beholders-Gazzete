@@ -41,7 +41,7 @@ function splitLink(coins, extraGp, ways) {
   Object.keys(COIN_CP).forEach(k => { if (coins[k] > 0) q.set(k, Math.floor(coins[k])); });
   if (extraGp > 0) q.set('other', Math.round(extraGp * 100) / 100);
   if (ways && partySize(ways) !== SPLIT_DEFAULT_WAYS) q.set('n', partySize(ways));
-  return 'toolbox.html?' + q.toString();
+  return 'toolbox?' + q.toString();
 }
 
 // "Split 4 ways: 52 gp 3 sp each, 2 cp left over" for copied loot text (F29); '' when there's nothing.

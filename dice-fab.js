@@ -59,7 +59,7 @@ const DICE_FAB_KEY = 'gazette-dice-fab';
             <div class="dice-pop-result" aria-live="polite"></div>
             <ol class="dice-pop-recent"></ol>
             <div class="dice-pop-foot">
-                <a href="toolbox.html?tab=dice">Full roller &amp; history →</a>
+                <a href="toolbox?tab=dice">Full roller &amp; history →</a>
                 <button type="button" class="dice-pop-hide">Hide button</button>
             </div>`;
         document.body.append(fab, pop);

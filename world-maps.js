@@ -143,7 +143,7 @@ function renderMaps(nb = nbLoad()) {
         const n = (e.pins || []).length;
         card.innerHTML = `${head}<div class="um-empty um-dropzone">
             <p>🖼️ This map's picture isn't in this browser.</p>
-            <p class="wb-small">The notebook carries a map's name, notes, and pins, but not its picture: that comes along only in a full <a href="privacy.html#backup">backup</a>. Press 🔁 Replace Picture, or drop the picture here, to put it back${n ? `, and its ${pinsText(n)} land where they were` : ''}.</p>
+            <p class="wb-small">The notebook carries a map's name, notes, and pins, but not its picture: that comes along only in a full <a href="privacy#backup">backup</a>. Press 🔁 Replace Picture, or drop the picture here, to put it back${n ? `, and its ${pinsText(n)} land where they were` : ''}.</p>
         </div>`;
         return;
     }
@@ -434,7 +434,7 @@ function setupMapsPins(card) {
             mapsDrawPins(pins, sel);
             card.querySelector('.um-wrap').classList.toggle('um-pinning', placing);
         },
-        foot: (nb, self) => `Pins are kept with this map in the <a href="worldbuilder.html?tab=notebook">📓 notebook</a>, as spots on the picture, so a new picture of the same map (🔁 Replace Picture) keeps them where they were.${nb.entries.some(x => x !== self) ? '' : ' Save a town, a site, or a faction to the notebook, and a pin can open it.'}`
+        foot: (nb, self) => `Pins are kept with this map in the <a href="worldbuilder?tab=notebook">📓 notebook</a>, as spots on the picture, so a new picture of the same map (🔁 Replace Picture) keeps them where they were.${nb.entries.some(x => x !== self) ? '' : ' Save a town, a site, or a faction to the notebook, and a pin can open it.'}`
     });
 }
 

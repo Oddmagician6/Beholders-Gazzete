@@ -101,9 +101,9 @@ function blockHtml(m) {
         ${body}
         <div class="bst-acts">
             <button type="button" class="btn btn-gold" data-act="pick">➕ Add to Encounter List</button>
-            <a class="btn" href="toolbox.html?${paramsQuery({ tab: 'init', add: `${m.id}.1` })}">🎲 Add to Initiative</a>
-            <a class="btn" href="monster-maker.html?${paramsQuery({ from: m.id })}">🐲 Tweak in the Monster Maker</a>
-            <a class="btn" href="monster/${m.id}.html">📄 Its Own Page</a>
+            <a class="btn" href="toolbox?${paramsQuery({ tab: 'init', add: `${m.id}.1` })}">🎲 Add to Initiative</a>
+            <a class="btn" href="monster-maker?${paramsQuery({ from: m.id })}">🐲 Tweak in the Monster Maker</a>
+            <a class="btn" href="monster/${m.id}">📄 Its Own Page</a>
             <button type="button" class="btn" data-act="copy">📋 Copy Stat Block</button>
             <button type="button" class="btn" data-act="link">🔗 Copy Link</button>
         </div>
@@ -216,8 +216,8 @@ function renderPicks() {
             <button type="button" data-act="drop" aria-label="Remove ${esc(MONSTER_BY_ID[p.id].name)}">✕</button>
         </li>`).join('');
     const ms = picks.map(p => `${p.id}.${p.count}`);
-    document.getElementById('bst-to-enc').href = `toolbox.html?${paramsQuery({ tab: 'enc', m: ms })}`;
-    document.getElementById('bst-to-init').href = `toolbox.html?${paramsQuery({ tab: 'init', add: ms })}`;
+    document.getElementById('bst-to-enc').href = `toolbox?${paramsQuery({ tab: 'enc', m: ms })}`;
+    document.getElementById('bst-to-init').href = `toolbox?${paramsQuery({ tab: 'init', add: ms })}`;
 }
 
 function onPicksClick(e) {

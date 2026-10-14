@@ -83,7 +83,7 @@ function monsterBlockHtml(m) {
     const b = sbBlockOf(m);
     if (!b) return '<p class="sb-note">No stat block for this monster.</p>';
     const spells = [...new Set((b.tr || []).flatMap(([, t]) => [...t.matchAll(/\[\[(.+?)\]\]/g)].map(x => x[1])))];
-    const book = spells.length && `spellbook.html?${paramsQuery({ spells: spells.map(spellSlug).join('.'), list: `${m.name} spells`.slice(0, 40) })}`;
+    const book = spells.length && `spellbook?${paramsQuery({ spells: spells.map(spellSlug).join('.'), list: `${m.name} spells`.slice(0, 40) })}`;
     return `
         <p class="sb-type">${esc(b.t)}</p>
         <div class="sb-core">

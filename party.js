@@ -112,8 +112,8 @@ function partyChip(el, use) {
         el.innerHTML = list.length
             ? `<span class="party-chip-what">👥 Party: <b>${e(partyLabel(list))}</b></span>
                <button type="button" class="party-chip-use"${use.title ? ` title="${e(use.title)}"` : ''}>${e(use.label)}</button>
-               <a class="party-chip-edit" href="toolbox.html?tab=party">Edit</a>`
-            : `<span class="party-chip-what">👥 No party saved.</span> <a class="party-chip-edit" href="toolbox.html?tab=party">Enter your party once</a> <span class="party-chip-why">and the tools will use it.</span>`;
+               <a class="party-chip-edit" href="toolbox?tab=party">Edit</a>`
+            : `<span class="party-chip-what">👥 No party saved.</span> <a class="party-chip-edit" href="toolbox?tab=party">Enter your party once</a> <span class="party-chip-why">and the tools will use it.</span>`;
     };
     el.addEventListener('click', ev => {
         if (!ev.target.closest('.party-chip-use')) return;

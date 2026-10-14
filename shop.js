@@ -125,7 +125,7 @@ function render() {
                     <thead><tr><th>Item</th><th class="num">Qty</th><th class="num">Price</th><th class="num chg">24h</th></tr></thead>
                     <tbody>${rows}</tbody>
                 </table>
-                <p class="stock-note">Live from the <a href="economy.html">Market Exchange</a>${shop.wealth === 'wealthy' ? ', plus a prosperous-shop markup' : shop.wealth === 'poor' ? ', minus a humble-shop discount' : ''}. Next price bell in ${mins} min.</p>
+                <p class="stock-note">Live from the <a href="economy">Market Exchange</a>${shop.wealth === 'wealthy' ? ', plus a prosperous-shop markup' : shop.wealth === 'poor' ? ', minus a humble-shop discount' : ''}. Next price bell in ${mins} min.</p>
                 ${haggleHTML()}
             </div>
         </div>
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // The Handout Maker (F48) rebuilds this shop from its link as a price list.
     document.getElementById('shop-handout').addEventListener('click', () => {
         if (!shop || !shop.seed) { setStatus('This shop was rolled before shareable links. Roll a new one to make a handout.'); return; }
-        location.href = 'handouts.html?' + paramsQuery({ t: 'prices', from: 'shop', ...shopParams() });
+        location.href = 'handouts?' + paramsQuery({ t: 'prices', from: 'shop', ...shopParams() });
     });
     [typeSel, wealthSel].forEach(el => el.addEventListener('change', () => roll()));
 

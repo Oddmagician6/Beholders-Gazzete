@@ -127,9 +127,9 @@ function handoutBlank(t) {
 // from -> the handouts it can fill (the first is where its "Make a Handout" link lands)
 // and the URL keys its link uses besides the seed.
 const HANDOUT_SOURCES = {
-    npc: { icon: '🎭', label: 'NPC', fills: ['wanted', 'letter'], keys: ['race', 'profession', 'age', 'gender', 'cls', 'level', 'lock'], page: 'npc-generator.html' },
-    quest: { icon: '📜', label: 'quest', fills: ['board', 'letter'], keys: ['lvl', 'n', 'job'], page: 'toolbox.html?tab=quest' },
-    shop: { icon: '🏪', label: 'shop', fills: ['prices'], keys: ['type', 'wealth'], page: 'shop.html' }
+    npc: { icon: '🎭', label: 'NPC', fills: ['wanted', 'letter'], keys: ['race', 'profession', 'age', 'gender', 'cls', 'level', 'lock'], page: 'npc-generator' },
+    quest: { icon: '📜', label: 'quest', fills: ['board', 'letter'], keys: ['lvl', 'n', 'job'], page: 'toolbox?tab=quest' },
+    shop: { icon: '🏪', label: 'shop', fills: ['prices'], keys: ['type', 'wealth'], page: 'shop' }
 };
 
 // URLSearchParams -> { from, seed, query } with the source's own keys only, or null.

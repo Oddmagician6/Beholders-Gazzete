@@ -23,7 +23,7 @@ function tabPageName(path) {
 }
 
 function tabPagePath(tab) {
-    return location.pathname.replace(/[^/]*$/, '') + TAB_PAGES.tabs[tab].page;
+    return location.pathname.replace(/[^/]*$/, '') + tabPageName(TAB_PAGES.tabs[tab].page);
 }
 
 // The tab whose page this is, or null on the hub.

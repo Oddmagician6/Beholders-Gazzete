@@ -168,7 +168,7 @@ function spellcastingHtml(npc) {
         `<button type="button" class="sb-spell" data-spell="${esc(n)}" aria-expanded="false">${esc(n)}</button>${(l.marked || []).includes(n) ? '<span class="sb-mark">*</span>' : ''}`).join(', ')}</li>`).join('');
     const marked = s.lines.some(l => (l.marked || []).length);
     const listName = `${npc.firstName || npc.name}'s spells`.slice(0, 40);
-    const book = `spellbook.html?${paramsQuery({ spells: all.map(spellSlug).join('.'), list: listName })}`;
+    const book = `spellbook?${paramsQuery({ spells: all.map(spellSlug).join('.'), list: listName })}`;
     const verb = he === 'they' ? 'have' : 'has';
     return `<div class="sb-section"><h4>Spellcasting</h4>
         <p class="sb-feat"><strong>Spellcasting.</strong> ${esc(npc.firstName || npc.name)} is a ${sbOrdinal(npc.block.level)}-level spellcaster.
@@ -347,7 +347,7 @@ function saveToNotebook() {
         kind: 'npc',
         title: currentNPC.name,
         sub: [cap(currentNPC.race), currentNPC.profession].filter(Boolean).join(' ') + (currentNPC.block ? `, ${currentNPC.block.title.replace(/ \(.*\)$/, '')}` : '') + (currentNPC.trait ? `. ${currentNPC.trait}` : ''),
-        href: 'npc-generator.html?' + paramsQuery(npcParams())
+        href: 'npc-generator?' + paramsQuery(npcParams())
     });
     say(!r ? '⚠️ Storage is off' : r.full ? '⚠️ Notebook is full' : r.existed ? '📓 Already saved' : '✅ Saved to the notebook');
 }
@@ -360,7 +360,7 @@ function makeHandout() {
         setTimeout(() => { btn.textContent = '📜 Make a Handout'; }, 2500);
         return;
     }
-    location.href = 'handouts.html?' + paramsQuery({ t: 'wanted', from: 'npc', ...npcParams() });
+    location.href = 'handouts?' + paramsQuery({ t: 'wanted', from: 'npc', ...npcParams() });
 }
 
 // Grimoire NPCs ticked for Print Selected, by savedKey().

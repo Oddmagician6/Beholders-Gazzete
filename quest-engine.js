@@ -745,7 +745,7 @@ function questEncounterLink(q) {
     const p = new URLSearchParams({ tab: "enc", party: `${q.size}x${q.level}` });
     q.foe.list.forEach(e => p.append("m", `${e.m.id}.${e.count}`));
     if (q.foe.diff !== "moderate") p.set("diff", q.foe.diff);
-    return "toolbox.html?" + p.toString();
+    return "toolbox?" + p.toString();
 }
 
 function questFoeText(foe) {

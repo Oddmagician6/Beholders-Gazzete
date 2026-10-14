@@ -46,7 +46,7 @@ function famParams() {
 }
 
 function famHref() {
-    return 'worldbuilder.html?' + paramsQuery(worldUrlFor('family', famRollParams()));
+    return 'worldbuilder?' + paramsQuery(worldUrlFor('family', famRollParams()));
 }
 
 // The person a root= link names, or null.
@@ -212,7 +212,7 @@ function famPersonHTML(nb, fam, e) {
         </div>
         <div class="fam-rel">${famRelHTML(fam, p)}</div>
         <p class="pan-links">
-            ${p.npc ? `<a class="btn fam-npc" href="npc-generator.html?${esc(p.npc)}">🎭 Open as an NPC</a>` : ''}
+            ${p.npc ? `<a class="btn fam-npc" href="npc-generator?${esc(p.npc)}">🎭 Open as an NPC</a>` : ''}
             ${p.npc && !to ? '<button type="button" class="btn fam-npc" id="fam-npc-save">📓 Save as an NPC</button>' : ''}
             ${to ? `<button type="button" class="btn" id="fam-npc-go">🎭 ${esc(to.title)} in the Notebook</button>` : ''}
             ${p.id !== fam.root ? '<button type="button" class="btn" id="fam-head">👑 Make This the One It\'s About</button>' : ''}
@@ -390,7 +390,7 @@ function famSaveNpc() {
     const { fam } = famNow();
     const p = fam && famPerson(fam, famState.sel);
     if (!p || !p.npc) return;
-    const r = nbAdd({ kind: 'npc', title: p.name, sub: `${famCapital(p.race)}${p.title ? ', ' + p.title : ''}, of ${fam.name}`, href: 'npc-generator.html?' + p.npc });
+    const r = nbAdd({ kind: 'npc', title: p.name, sub: `${famCapital(p.race)}${p.title ? ', ' + p.title : ''}, of ${fam.name}`, href: 'npc-generator?' + p.npc });
     if (!r || r.full) { flash('fam-status', r ? '⚠️ The notebook is full. Remove an entry first.' : "⚠️ This browser won't keep a notebook (storage is off)."); return; }
     if (famEdit(f => { const q = famPerson(f, p.id); if (!q) return false; q.to = r.entry.id; }))
         flash('fam-status', `📓 ${p.name} is ${r.existed ? 'already' : 'now'} in the notebook, linked to this family.`);

@@ -134,7 +134,7 @@ function hisSiteLink(h, i) {
         if (fieldValue(el) !== defaultValue(el)) params.set('h' + key, el.value);
     });
     params.set('hage', i + 1);
-    return 'worldbuilder.html?' + params.toString();
+    return 'worldbuilder?' + params.toString();
 }
 
 function hisAllHTML(h, ctx) {

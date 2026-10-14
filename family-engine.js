@@ -580,7 +580,7 @@ function famBlank(race) {
 // A link that rolls the family of someone rolled elsewhere (a faction leader, a town's ruler).
 // p: { seed, cat, age } as facNpc makes them. o: { title, house, extra: more URL params }
 function famRootLink(p, o = {}) {
-    return 'worldbuilder.html?' + paramsQuery({
+    return 'worldbuilder?' + paramsQuery({
         tab: 'family', root: p.seed, rcat: p.cat, rage: p.age || null,
         rtitle: o.title || null, house: o.house || null, ...(o.extra || {})
     });

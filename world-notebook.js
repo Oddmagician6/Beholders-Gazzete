@@ -488,7 +488,7 @@ function renderNotebook(nb = nbLoad()) {
     if (!nb.entries.length) {
         list.innerHTML = `<div class="nb-empty">
             <p>📓 The notebook is empty.</p>
-            <p class="wb-small">Roll something on any tab and press 📓 Save to Notebook (NPCs save from the <a href="npc-generator.html">Town Square</a>, quests from the <a href="toolbox.html?tab=quest">Toolbox</a>). Saved rolls land here, where you can add notes and link them together. After a game, press 📖 Log a Session to write down what happened. Or import a notebook file below.</p>
+            <p class="wb-small">Roll something on any tab and press 📓 Save to Notebook (NPCs save from the <a href="npc-generator">Town Square</a>, quests from the <a href="toolbox?tab=quest">Toolbox</a>). Saved rolls land here, where you can add notes and link them together. After a game, press 📖 Log a Session to write down what happened. Or import a notebook file below.</p>
         </div>`;
     } else if (!shown.length) {
         list.innerHTML = '<p class="nb-empty wb-small">Nothing in the notebook matches.</p>';

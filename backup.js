@@ -77,116 +77,116 @@ function bkHoard(l) {
 // count(value) says what's in it; clean(value) returns { value, dropped } or throws why not.
 const BACKUP_KEYS = [
     {
-        key: 'saved_npcs', tool: '🎭 Town Square', href: 'npc-generator.html', what: 'Saved NPCs',
+        key: 'saved_npcs', tool: '🎭 Town Square', href: 'npc-generator', what: 'Saved NPCs',
         clean: v => bkItems(v, n => bkObj(n) && typeof n.name === 'string', 50),
         count: v => bkN(v.length, 'NPC')
     },
     {
-        key: 'gazette_loot', tool: '💎 Vault of Wonders', href: 'loot-generator.html', what: 'Saved treasure',
+        key: 'gazette_loot', tool: '💎 Vault of Wonders', href: 'loot-generator', what: 'Saved treasure',
         clean: v => bkItems(v, bkHoard, 50),
         count: v => bkN(v.length, 'hoard')
     },
     {
-        key: 'gazette-spell-lists', tool: '📖 Spellbook', href: 'spellbook.html', what: 'Spell lists',
+        key: 'gazette-spell-lists', tool: '📖 Spellbook', href: 'spellbook', what: 'Spell lists',
         clean: v => bkWhole(v, b => bkObj(b) && Array.isArray(b.lists) && b.lists.length <= 30
             && b.lists.every(l => bkObj(l) && typeof l.name === 'string' && bkArrOf(l.spells, s => typeof s === 'string')), false),
         count: v => `${bkN(v.lists.length, 'list')}, ${bkN(v.lists.reduce((n, l) => n + (l.spells || []).length, 0), 'spell')}`
     },
     {
-        key: 'gazette-bestiary-picks', tool: '🐉 Bestiary', href: 'bestiary.html', what: 'Encounter list',
+        key: 'gazette-bestiary-picks', tool: '🐉 Bestiary', href: 'bestiary', what: 'Encounter list',
         clean: v => bkItems(v, p => bkObj(p) && typeof p.id === 'string' && /^[a-z0-9-]{1,60}$/.test(p.id), 60),
         count: v => bkN(v.reduce((n, p) => n + Math.max(1, Math.round(Number(p.count)) || 1), 0), 'monster')
     },
     {
-        key: 'gazette-initiative', tool: '🧰 DM Toolbox', href: 'toolbox.html?tab=init', what: 'Initiative tracker',
+        key: 'gazette-initiative', tool: '🧰 DM Toolbox', href: 'toolbox?tab=init', what: 'Initiative tracker',
         clean: v => bkWhole(v, f => bkObj(f) && Array.isArray(f.list) && f.list.every(c => bkObj(c) && typeof c.name === 'string' && typeof c.id === 'number'), false),
         count: v => v.list.length ? `${bkN(v.list.length, 'combatant')}, round ${Math.max(1, Math.round(Number(v.round)) || 1)}` : 'No fight'
     },
     {
-        key: 'gazette-init-follow', raw: true, tool: '🧰 DM Toolbox', href: 'toolbox.html?tab=init', what: 'Open stat blocks on their turn',
+        key: 'gazette-init-follow', raw: true, tool: '🧰 DM Toolbox', href: 'toolbox?tab=init', what: 'Open stat blocks on their turn',
         clean: bkFlag,
         count: v => v === 'off' ? 'Off' : 'On'
     },
     {
-        key: 'gazette-clocks', tool: '🧰 DM Toolbox', href: 'toolbox.html?tab=clocks', what: 'Progress clocks',
+        key: 'gazette-clocks', tool: '🧰 DM Toolbox', href: 'toolbox?tab=clocks', what: 'Progress clocks',
         clean: v => bkItems(v, c => bkObj(c) && typeof c.name === 'string', 30, false),
         count: v => bkN(v.length, 'clock')
     },
     {
-        key: 'gazette-tables', tool: '🧰 DM Toolbox', href: 'toolbox.html?tab=tables', what: 'Random tables',
+        key: 'gazette-tables', tool: '🧰 DM Toolbox', href: 'toolbox?tab=tables', what: 'Random tables',
         // Typed text, escaped by the tab; tableClean() trims each table to its shape on load.
         clean: v => bkItems(v, t => bkObj(t) && typeof t.src === 'string' && (t.name === undefined || typeof t.name === 'string'), 50, false),
         count: v => bkN(v.length, 'table')
     },
     {
-        key: 'gazette-party', tool: '🧰 DM Toolbox', href: 'toolbox.html?tab=party', what: 'The party',
+        key: 'gazette-party', tool: '🧰 DM Toolbox', href: 'toolbox?tab=party', what: 'The party',
         clean: v => bkItems(v, c => bkObj(c) && ['name', 'player', 'cls'].every(k => c[k] === undefined || typeof c[k] === 'string'), 8, false),
         count: v => bkN(v.length, 'character')
     },
     {
-        key: 'gazette-downtime', tool: '🧰 DM Toolbox', href: 'toolbox.html?tab=down', what: 'Downtime party',
+        key: 'gazette-downtime', tool: '🧰 DM Toolbox', href: 'toolbox?tab=down', what: 'Downtime party',
         clean: v => bkWhole(v, d => bkObj(d) && Array.isArray(d.chars) && d.chars.length >= 1 && d.chars.length <= 8 && d.chars.every(bkObj), false),
         count: v => bkN(v.chars.length, 'character')
     },
     {
-        key: 'gazette-kept-names', tool: '🧰 DM Toolbox', href: 'toolbox.html', what: 'Kept names',
+        key: 'gazette-kept-names', tool: '🧰 DM Toolbox', href: 'toolbox', what: 'Kept names',
         clean: v => bkItems(v, k => bkObj(k) && typeof k.name === 'string', 100, false),
         count: v => bkN(v.length, 'name')
     },
     {
-        key: 'gazette-dice-history', tool: '🧰 DM Toolbox', href: 'toolbox.html?tab=dice', what: 'Dice history',
+        key: 'gazette-dice-history', tool: '🧰 DM Toolbox', href: 'toolbox?tab=dice', what: 'Dice history',
         clean: v => bkItems(v, h => bkObj(h) && typeof h.f === 'string' && typeof h.total === 'number', 50),
         count: v => bkN(v.length, 'roll')
     },
     {
-        key: 'gazette-dice-fab', raw: true, tool: '🎲 Dice button', href: 'toolbox.html?tab=dice', what: 'Floating 🎲 on the tool pages',
+        key: 'gazette-dice-fab', raw: true, tool: '🎲 Dice button', href: 'toolbox?tab=dice', what: 'Floating 🎲 on the tool pages',
         clean: bkFlag,
         count: v => v === 'off' ? 'Hidden' : 'Shown'
     },
     {
-        key: 'gazette-session-kit', tool: '🎲 Session Kit', href: 'session-kit.html', what: 'Current kit',
+        key: 'gazette-session-kit', tool: '🎲 Session Kit', href: 'session-kit', what: 'Current kit',
         clean: v => bkWhole(v, bkObj),
         count: () => '1 kit'
     },
     {
-        key: 'gazette-handouts', tool: '📜 Handout Maker', href: 'handouts.html', what: 'Handouts',
+        key: 'gazette-handouts', tool: '📜 Handout Maker', href: 'handouts', what: 'Handouts',
         // Typed text, escaped by the page; handoutClean() trims each handout to its shape on load.
         clean: v => bkWhole(v, h => bkObj(h) && bkObj(h.forms) && Object.keys(h.forms).length <= 4
             && Object.values(h.forms).every(bkObj) && (h.t === undefined || typeof h.t === 'string'), false),
         count: v => bkN(Object.keys(v.forms).length, 'handout')
     },
     {
-        key: 'gazette-dm-screen', tool: '🛡️ DM Screen', href: 'dm-screen.html', what: 'Screen layouts',
+        key: 'gazette-dm-screen', tool: '🛡️ DM Screen', href: 'dm-screen', what: 'Screen layouts',
         // Typed notes and picks, escaped by the page; dsClean (dm-screen-data.js) trims each layout and card on load.
         clean: v => bkWhole(v, s => bkObj(s) && Array.isArray(s.layouts) && s.layouts.length >= 1 && s.layouts.length <= 12
             && s.layouts.every(l => bkObj(l) && Array.isArray(l.cards) && l.cards.length <= 24 && l.cards.every(c => bkObj(c) && typeof c.type === 'string')), false),
         count: v => `${bkN(v.layouts.length, 'layout')}, ${bkN(v.layouts.reduce((n, l) => n + l.cards.length, 0), 'card')}`
     },
     {
-        key: 'gazette-monster-draft', tool: '🐲 Monster Maker', href: 'monster-maker.html', what: 'The monster being worked on',
+        key: 'gazette-monster-draft', tool: '🐲 Monster Maker', href: 'monster-maker', what: 'The monster being worked on',
         // Typed text, escaped by the page; hbClean (homebrew.js) trims it to a monster's shape.
         clean: v => bkWhole(v, d => bkObj(d) && !!hbClean(d.mon) && (d.prev === undefined || d.prev === null || (bkObj(d.prev) && !!hbClean(d.prev.mon))), false),
         count: v => hbClean(v.mon).name || 'An unnamed monster'
     },
     {
-        key: 'gazette-shop', tool: "🏪 Merchant's Row", href: 'shop.html', what: 'Current shop',
+        key: 'gazette-shop', tool: "🏪 Merchant's Row", href: 'shop', what: 'Current shop',
         clean: v => bkWhole(v, s => bkObj(s) && (s.shop === undefined || s.shop === null || bkObj(s.shop))),
         count: v => v.shop && typeof v.shop.name === 'string' ? v.shop.name : 'No shop'
     },
     {
-        key: 'gazette-rumor-deck', tool: '🍺 Tavern', href: 'rumors.html', what: 'Rumor decks (what is left to deal)',
+        key: 'gazette-rumor-deck', tool: '🍺 Tavern', href: 'rumors', what: 'Rumor decks (what is left to deal)',
         clean: v => bkWhole(v, s => bkObj(s) && Number.isInteger(s.n) && bkObj(s.decks)
             && Object.values(s.decks).every(d => Array.isArray(d) && d.every(Number.isInteger))),
         count: v => bkN(Object.keys(v.decks).length, 'deck') + ' started'
     },
     {
-        key: 'tavern_recent_rumors', tool: '🍺 Tavern', href: 'rumors.html', what: 'Recently overheard',
+        key: 'tavern_recent_rumors', tool: '🍺 Tavern', href: 'rumors', what: 'Recently overheard',
         // Reader-added rumors are typed text; the truth goes on the page as it is.
         clean: v => bkItems(v, r => bkObj(r) && typeof r.text === 'string' && (r.truth === null || r.truth === undefined || typeof r.truth === 'number'), 10, false),
         count: v => bkN(v.length, 'rumor')
     },
     {
-        key: NB_KEY, tool: '🗺️ Worldbuilder', href: 'worldbuilder.html?tab=notebook', what: 'Campaign notebook', merge: true,
+        key: NB_KEY, tool: '🗺️ Worldbuilder', href: 'worldbuilder?tab=notebook', what: 'Campaign notebook', merge: true,
         clean: v => {
             const r = nbClean(v);
             return { value: r.nb, dropped: r.dropped };
@@ -194,7 +194,7 @@ const BACKUP_KEYS = [
         count: v => (v.name ? `${v.name}: ` : '') + bkN(v.entries.length, 'entry', 'entries')
     },
     {
-        key: 'gazette-web', tool: '🗺️ Worldbuilder', href: 'worldbuilder.html?tab=web', what: 'Where the Web tab puts each entry',
+        key: 'gazette-web', tool: '🗺️ Worldbuilder', href: 'worldbuilder?tab=web', what: 'Where the Web tab puts each entry',
         // Entry ids and numbers only; web-graph.js's webCleanStore trims it again on load.
         clean: v => bkWhole(v, w => bkObj(w) && bkObj(w.pos) && Object.keys(w.pos).length <= 500
             && Object.entries(w.pos).every(([id, p]) => /^[a-z0-9]{1,16}$/.test(id) && Array.isArray(p) && p.length === 2 && p.every(Number.isFinite))
@@ -205,7 +205,7 @@ const BACKUP_KEYS = [
 
 // The map pictures row (not a localStorage key: they're in IndexedDB).
 const BK_MAPS = {
-    key: 'maps', maps: true, tool: '🗺️ Worldbuilder', href: 'worldbuilder.html?tab=maps', what: 'Map pictures',
+    key: 'maps', maps: true, tool: '🗺️ Worldbuilder', href: 'worldbuilder?tab=maps', what: 'Map pictures',
     count: v => `${bkN(v.length, 'picture')}, ${mapMb(v.reduce((n, m) => n + (m.size || 0), 0))}`
 };
 

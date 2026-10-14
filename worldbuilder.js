@@ -142,7 +142,7 @@ function saveWorldTab(tab, statusId) {
     const t = WORLD_TABS[tab];
     if (!t.rolled()) return;
     if (t.save) { t.save(statusId); return; }
-    const r = nbAdd({ kind: tab, ...t.entry(), href: 'worldbuilder.html?' + paramsQuery(t.params()) });
+    const r = nbAdd({ kind: tab, ...t.entry(), href: 'worldbuilder?' + paramsQuery(t.params()) });
     if (!r) flash(statusId, "⚠️ This browser won't keep a notebook (storage is off).");
     else if (r.full) flash(statusId, '⚠️ The notebook is full. Remove an entry first.');
     else if (r.existed) flash(statusId, '📓 This one is already in the notebook.');

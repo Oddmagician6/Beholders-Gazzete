@@ -130,7 +130,7 @@ function saveQuestToNotebook() {
         kind: 'quest',
         title: q.title,
         sub: q.task,
-        href: 'toolbox.html?' + paramsQuery(questParams()),
+        href: 'toolbox?' + paramsQuery(questParams()),
         status: 'open',
         giver: [g.name, g.profession].filter(Boolean).join(', '),
         reward: `${formatCoins(q.reward.gp)} for the party. ${questRewardText(q.reward)}`
@@ -168,7 +168,7 @@ function setupQuest() {
     document.getElementById('qs-handout').addEventListener('click', () => {
         if (!quest.seed) return;
         const { tab, ...p } = questParams();
-        location.href = 'handouts.html?' + paramsQuery({ t: 'board', from: 'quest', ...p });
+        location.href = 'handouts?' + paramsQuery({ t: 'board', from: 'quest', ...p });
     });
     document.getElementById('qs-save').addEventListener('click', saveQuestToNotebook);
     document.getElementById('qs-link').addEventListener('click', () =>
