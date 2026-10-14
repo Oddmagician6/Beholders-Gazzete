@@ -265,6 +265,14 @@
     .nb-pl-line:hover, .nb-pl-line:focus-visible { border-color: var(--gold-bright); }
     .nb-pl-off { opacity: 0.6; border-style: dashed; border-color: rgba(176,84,84,0.5); }
     .nb-pl-off b { text-decoration: line-through; text-decoration-color: rgba(176,84,84,0.7); }
+    .nb-pl-row { display: flex; gap: 4px; align-items: stretch; }
+    .nb-pl-row .nb-pl-line { flex: 1; min-width: 0; }
+    .nb-pl-edit { flex: none; background: rgba(0,0,0,0.2); border: 1px solid rgba(201,160,64,0.3); border-radius: var(--radius-sm); font-size: 0.8rem; padding: 0 8px; cursor: pointer; }
+    .nb-pl-edit:hover, .nb-pl-edit:focus-visible { border-color: var(--gold-bright); }
+    .nb-pl-mark { color: var(--gold-mid); font-size: 0.75rem; }
+    .nb-pl-editing { border: 1px solid var(--gold-bright); border-radius: var(--radius-sm); padding: 6px 8px; display: flex; flex-direction: column; gap: 6px; font-size: 0.82rem; color: var(--text-bright); }
+    .nb-pl-editing label { display: flex; flex-direction: column; gap: 4px; }
+    .nb-pl-text { width: 100%; box-sizing: border-box; font: inherit; resize: vertical; }
     .nb-pl-ink { font-family: var(--font-ui); font-size: 0.8rem; color: var(--text-mid); display: inline-flex; gap: 6px; align-items: center; }
     .nb-pl-sheets { display: flex; flex-direction: column; gap: 22px; margin-top: 16px; }
     .nb-pl-sheets:empty { display: none; }
@@ -1035,7 +1043,7 @@
         </section>
         <section class="nb-pl" id="nb-pl" aria-label="Print for players" hidden>
           <h3 class="nb-pl-h">🖨️ Print for Players</h3>
-          <p class="wb-small">Tick what to hand out. Each roll comes back from its link with the secrets left out: 🔒 lines stay with you, 👁️ lines go to the players. Click a line to switch it; the notebook remembers. Rooms, foes, traps, and treasure never print, and neither do 🔒 DM-only notes.</p>
+          <p class="wb-small">Tick what to hand out. Each roll comes back from its link with the secrets left out: 🔒 lines stay with you, 👁️ lines go to the players. Click a line to switch it, or ✏️ to put it in your own words; the notebook remembers. Rewording changes only the notebook's copy, never the roll. Rooms, foes, traps, and treasure never print, and neither do 🔒 DM-only notes.</p>
           <p class="nb-count" id="nb-pl-count"></p>
           <div class="nb-pl-pick" id="nb-pl-pick"></div>
           <div class="tool-toolbar nb-last-actions">

@@ -9,6 +9,8 @@
    it is "<part head>|<label>". Rooms, foes, traps, stat blocks, and treasure never
    make a sheet at all. The entry's own summary and notes lead every sheet; its DM-only
    notes never do. Sessions and quests have no roll: their own fields are the sheet.
+   Rolled lines carry `edit: true` (the DM may reword them); a reworded one shows the entry's
+   `edits` text and keeps the rolled wording in `was`. Pins and family lines have editors of their own.
    A family (F55) keeps its people in the entry: one line each (keyed by person id, so a
    rename keeps its switch), their notes and the family's secrets DM-only.
    Needs the Worldbuilder page: every engine, and each tab's _FIELDS and _KEYS maps.
@@ -259,9 +261,11 @@ function nbSheet(e) {
     }
     if (e.notes) own.push(nbLine('', 'Notes', e.notes));
     const rolled = nbRolledParts(e);
-    const parts = (rolled || []).map(part => ({ ...part, lines: part.lines.slice() }));
+    const edits = e.edits || {};
+    const parts = (rolled || []).map(part => ({ ...part, lines: part.lines.map(l => (Object.hasOwn(edits, l.key)
+        ? { ...l, text: edits[l.key], was: l.text, edit: true } : { ...l, edit: true })) }));
     // The entry's own lines lead the sheet, ahead of the roll's untitled part.
-    if (parts.length && parts[0].head === '') parts[0].lines = [...own, ...parts[0].lines.filter(l => !own.some(o => o.key === l.key) && l.text !== e.sub)];
+    if (parts.length && parts[0].head === '') parts[0].lines = [...own, ...parts[0].lines.filter(l => !own.some(o => o.key === l.key) && (l.was || l.text) !== e.sub)];
     else if (own.length) parts.unshift({ head: '', lines: own });
     // Map pins (F53) start DM-only: a pin is as likely to mark a secret as a sight. Keyed by pin id, so a rename keeps its switch.
     if (e.pins && e.pins.length) {

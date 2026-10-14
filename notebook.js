@@ -19,6 +19,9 @@
    Secret notes (F51): any entry may carry `dm` (notes for the DM only; `notes` are the ones
    players may see) and `flip` (the keys of rolled lines whose DM-only default the DM switched,
    see notebook-sheets.js). Both are written only when set, so older notebooks stay as they were.
+   Reworded lines: an entry may carry `edits` ({ line key: text }), the DM's own wording for rolled
+   lines of its sheet (same keys as `flip`). Only the notebook's copy changes: the link still rolls
+   the original, so the generators and shared links never see them. Written only when set.
    Map pins (F53): a continent entry may carry `pins` (map-pins.js: numbered spots, each
    named, with a note, and maybe opening another entry), written only when it has some.
    Without map-pins.js on the page they pass through untouched, like a monster without homebrew.js.
@@ -57,7 +60,7 @@ const NB_QUEST_STATUS = {
 };
 // Saved links may only point at these pages, with a plain query string.
 const NB_HREF = /^(worldbuilder|npc-generator|toolbox)\.html(\?[A-Za-z0-9_.~%+=&*-]*)?$/;
-const NB_LIMITS = { entries: 500, title: 120, sub: 400, notes: 4000, name: 80, href: 2000, links: 60, flips: 400, flip: 300, file: 2000000 };
+const NB_LIMITS = { entries: 500, title: 120, sub: 400, notes: 4000, name: 80, href: 2000, links: 60, flips: 400, flip: 300, edits: 200, edit: 2000, file: 2000000 };
 // The options that make two rolls with one seed different, per kind (its own URL keys).
 const NB_SIG_KEYS = {
     pantheon: ['size', 'shape', 'naming'], factions: ['count', 'focus', 'scale'], continent: ['size', 'land', 'nations'],
@@ -137,6 +140,19 @@ function nbSecretFields(raw) {
     return { ...(dm ? { dm } : {}), ...(flip.length ? { flip } : {}) };
 }
 
+// Reworded lines: { key: text }, keys like flip's, empty text dropped. {} when there are none.
+function nbEdits(v) {
+    if (!v || typeof v !== 'object' || Array.isArray(v)) return {};
+    const keys = nbFlips(Object.keys(v)).slice(0, NB_LIMITS.edits);
+    return Object.fromEntries(keys.map(k => [k, nbText(v[k], NB_LIMITS.edit)]).filter(([, t]) => t));
+}
+
+// The reworded lines, only when an entry has some.
+function nbEditField(raw) {
+    const edits = nbEdits(raw.edits);
+    return Object.keys(edits).length ? { edits } : {};
+}
+
 // A link to a tool page, or no link at all for a hand-written kind.
 function nbHrefOk(kind, href) {
     return typeof href === 'string' && href.length <= NB_LIMITS.href && (NB_HREF.test(href) || (href === '' && !!NB_KINDS[kind].hand));
@@ -172,6 +188,7 @@ function nbClean(raw) {
             added: isNaN(added) ? new Date().toISOString() : added.toISOString(),
             ...nbFields(e.kind, e),
             ...nbSecretFields(e),
+            ...nbEditField(e),
             ...(NB_PIN_KINDS[e.kind] && Array.isArray(e.pins) && e.pins.length ? { pins: e.pins } : {})
         });
     });
@@ -343,7 +360,7 @@ function nbParseFile(text) {
 }
 
 // Fold an imported notebook into this one. An entry whose link is already here keeps
-// the one here (and gains the imported notes, DM notes, and switched lines); so does a hand-written entry with the same
+// the one here (and gains the imported notes, DM notes, switched lines, and reworded lines); so does a hand-written entry with the same
 // id and kind (the same notebook imported twice). The rest come in under fresh ids.
 // Returns { added, merged, full, ids } (ids: each incoming id → its id here, so a map's picture can follow it).
 function nbMerge(nb, incoming) {
@@ -356,6 +373,11 @@ function nbMerge(nb, incoming) {
             if (e.notes && !same.notes.includes(e.notes)) same.notes = nbText(same.notes ? `${same.notes}\n\n${e.notes}` : e.notes, NB_LIMITS.notes);
             if (e.dm && !(same.dm || '').includes(e.dm)) same.dm = nbText(same.dm ? `${same.dm}\n\n${e.dm}` : e.dm, NB_LIMITS.notes);
             if (e.flip) same.flip = nbFlips([...(same.flip || []), ...e.flip]);
+            // Reworded lines come along where this copy still has the rolled wording.
+            if (e.edits) {
+                const edits = nbEdits({ ...e.edits, ...(same.edits || {}) });
+                if (Object.keys(edits).length) same.edits = edits;
+            }
             // A family keeps whichever copy was edited last.
             if (e.fam && same.fam && (e.fam.edited || '') > (same.fam.edited || '')) { same.fam = e.fam; same.sub = e.sub; }
             merged++;

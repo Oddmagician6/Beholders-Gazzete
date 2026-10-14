@@ -10,7 +10,8 @@
    Secret notes (F51): every entry has notes the players may see and 🔒 DM-only notes.
    🖨️ Print for Players prints the entries you tick as parchment sheets (handouts.css), each
    roll rebuilt from its link by notebook-sheets.js with its secrets left out; switch any
-   line either way, and the entry remembers it (flip).
+   line either way, and the entry remembers it (flip). ✏️ rewords a rolled line in the notebook's
+   copy only (edits); ↩️ puts the rolled wording back. The tabs and links still roll the original.
    Map pins (F53): a continent's card counts its pins; search and Copy All read them too.
    Families (F55): search reads every name, title, note, and secret; Copy All lists the family.
    Your own maps (F54): removing a map's entry (or clearing the notebook) deletes its picture
@@ -19,7 +20,7 @@
    URL: ?tab=notebook
    ============================================ */
 
-const nbView = { open: new Set(), removing: null, clearing: false, last: false, players: false, pick: [], plOpen: {}, ink: false };
+const nbView = { open: new Set(), removing: null, clearing: false, last: false, players: false, pick: [], plOpen: {}, ink: false, editing: null, draft: '' };
 const nbFieldTimers = {};
 
 function nbKindOpt(kind) {
@@ -31,7 +32,7 @@ function nbMatches(e, kind, status, q) {
     if (status !== 'all' && (e.kind !== 'quest' || e.status !== status)) return false;
     if (!q) return true;
     const fam = e.fam ? [...e.fam.people.flatMap(p => [p.name, p.title, p.note]), ...e.fam.scandals.map(s => famScandalText(e.fam, s))] : [];
-    return [e.title, e.sub, e.notes, e.dm, e.giver, e.reward, e.recap, e.npcs, e.loot, e.threads, ...(e.pins || []).flatMap(p => [p.name, p.note]), ...fam]
+    return [e.title, e.sub, e.notes, e.dm, ...Object.values(e.edits || {}), e.giver, e.reward, e.recap, e.npcs, e.loot, e.threads, ...(e.pins || []).flatMap(p => [p.name, p.note]), ...fam]
         .filter(Boolean).join(' ').toLowerCase().includes(q);
 }
 
@@ -212,8 +213,58 @@ function nbPicked(nb) {
 
 function nbPlayerLineHTML(e, line) {
     const on = nbShown(e, line);
-    return `<button type="button" class="nb-pl-line${on ? '' : ' nb-pl-off'}" data-id="${esc(e.id)}" data-key="${esc(line.key)}" aria-pressed="${on}"
-        title="${on ? 'The players see this. Click to keep it for the DM.' : 'DM only. Click to show the players.'}"><span aria-hidden="true">${on ? '👁️' : '🔒'}</span> <b>${esc(line.label)}</b> ${esc(nbShort(line.text, 90))}</button>`;
+    const data = `data-id="${esc(e.id)}" data-key="${esc(line.key)}"`;
+    if (nbView.editing === `${e.id}|${line.key}`) {
+        return `<div class="nb-pl-editing">
+            <label><b>${esc(line.label)}</b> <textarea class="nb-pl-text" ${data} rows="3" maxlength="${NB_LIMITS.edit}" aria-label="Your wording for ${esc(line.label)}">${esc(nbView.draft)}</textarea></label>
+            <span class="nb-row-actions">
+                <button type="button" class="btn btn-gold nb-pl-save" ${data}>💾 Save</button>
+                ${line.was ? `<button type="button" class="btn nb-pl-revert" ${data} title="${esc(nbShort(line.was, 200))}">↩️ Back to the roll</button>` : ''}
+                <button type="button" class="btn nb-pl-cancel">✕ Cancel</button>
+            </span>
+        </div>`;
+    }
+    const flip = `<button type="button" class="nb-pl-line${on ? '' : ' nb-pl-off'}" ${data} aria-pressed="${on}"
+        title="${on ? 'The players see this. Click to keep it for the DM.' : 'DM only. Click to show the players.'}"><span aria-hidden="true">${on ? '👁️' : '🔒'}</span> <b>${esc(line.label)}</b> ${esc(nbShort(line.text, 90))}${line.was ? ' <i class="nb-pl-mark">(reworded)</i>' : ''}</button>`;
+    if (!line.edit) return flip;
+    return `<div class="nb-pl-row">${flip}<button type="button" class="nb-pl-edit" ${data} aria-label="Reword ${esc(line.label)}" title="Reword this line (the notebook's copy only)">✏️</button></div>`;
+}
+
+// Start rewording a line: the box opens on its current wording.
+function nbStartEdit(id, key) {
+    const e = nbFind(nbLoad(), id);
+    const line = e && nbSheet(e).parts.flatMap(p => p.lines).find(l => l.key === key);
+    if (!line) return;
+    nbView.editing = `${id}|${key}`;
+    nbView.draft = line.text;
+    renderPlayers(nbLoad(), `.nb-pl-text[data-id="${CSS.escape(id)}"][data-key="${CSS.escape(key)}"]`);
+}
+
+// Save a line's wording; text that is empty or the same as the roll puts the roll back.
+function nbSaveEdit(id, key, value) {
+    const nb = nbLoad();
+    const e = nbFind(nb, id);
+    const line = e && nbSheet(e).parts.flatMap(p => p.lines).find(l => l.key === key);
+    if (!line) return;
+    const text = nbText(value, NB_LIMITS.edit), rolled = line.was || line.text;
+    const edits = { ...(e.edits || {}) };
+    if (!text || text === rolled) delete edits[key];
+    else if (!Object.hasOwn(edits, key) && Object.keys(edits).length >= NB_LIMITS.edits) { flash('nb-pl-status', '⚠️ That entry has too many reworded lines.'); return; }
+    else edits[key] = text;
+    if (Object.keys(edits).length) e.edits = edits;
+    else delete e.edits;
+    nbView.editing = null;
+    if (!nbStore(nb, true)) { flash('nb-pl-status', "⚠️ This browser won't keep a notebook (storage is off)."); return; }
+    flash('nb-pl-status', Object.hasOwn(edits, key) ? '✏️ Reworded. Only the notebook\'s copy changed.' : '↩️ Back to the rolled wording.');
+    renderPlayers(nb, `.nb-pl-edit[data-id="${CSS.escape(id)}"][data-key="${CSS.escape(key)}"]`);
+}
+
+function nbCancelEdit() {
+    const at = nbView.editing;
+    nbView.editing = null;
+    if (!at) return;
+    const i = at.indexOf('|');
+    renderPlayers(nbLoad(), `.nb-pl-edit[data-id="${CSS.escape(at.slice(0, i))}"][data-key="${CSS.escape(at.slice(i + 1))}"]`);
 }
 
 // One ticked entry's lines, part by part, each a switch.
@@ -329,7 +380,24 @@ function setupPlayers() {
     });
     pick.addEventListener('click', e => {
         const b = e.target.closest('.nb-pl-line');
-        if (b) nbFlipLine(b.dataset.id, b.dataset.key);
+        if (b) { nbFlipLine(b.dataset.id, b.dataset.key); return; }
+        const edit = e.target.closest('.nb-pl-edit');
+        if (edit) { nbStartEdit(edit.dataset.id, edit.dataset.key); return; }
+        const save = e.target.closest('.nb-pl-save');
+        if (save) { nbSaveEdit(save.dataset.id, save.dataset.key, nbView.draft); return; }
+        const revert = e.target.closest('.nb-pl-revert');
+        if (revert) { nbSaveEdit(revert.dataset.id, revert.dataset.key, ''); return; }
+        if (e.target.closest('.nb-pl-cancel')) nbCancelEdit();
+    });
+    // The wording being typed survives a redraw (another tab saving, a tick).
+    pick.addEventListener('input', e => {
+        if (e.target.classList.contains('nb-pl-text')) nbView.draft = e.target.value;
+    });
+    pick.addEventListener('keydown', e => {
+        const box = e.target.closest('.nb-pl-text');
+        if (!box) return;
+        if (e.key === 'Escape') { e.preventDefault(); nbCancelEdit(); }
+        else if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); nbSaveEdit(box.dataset.id, box.dataset.key, box.value); }
     });
     pick.addEventListener('toggle', e => {
         const d = e.target;
