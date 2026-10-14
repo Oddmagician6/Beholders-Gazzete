@@ -136,7 +136,17 @@ const npcData = {
         "Speaks only in questions when anxious", "Takes every bet", "Tells long stories with no point", "Thinks they are a great cook",
         "Treats everyone like an old friend", "Uses big words wrongly", "Very blunt", "Volunteers for everything",
         "Whistles tunelessly", "Writes poetry nobody asked for", "Always running late", "Always early and annoyed about it",
-        "Bluffs about knowing important people", "Fussy about tea", "Lives for gossip", "Unshakably calm"
+        "Bluffs about knowing important people", "Fussy about tea", "Lives for gossip", "Unshakably calm",
+        "Loves a terrible pun", "Delighted by bad weather", "Takes everything literally", "Always has a plan B, and a plan C",
+        "Mothers everyone", "Hates waste of any kind", "Treats every meal as a celebration", "Fascinated by bugs",
+        "Never forgets a debt, owed or owing", "Prefers animals to people", "Hopelessly nostalgic", "Trusts only written contracts",
+        "Lies about small things for fun", "Lost in daydreams", "Fiercely protective of friends", "Gentle with the weak, hard on the strong",
+        "Can't stand silence", "Patient as a stone", "Always hunting for a business opportunity", "Can't resist a dare",
+        "Polite to the point of absurdity", "Badly wants to be a hero", "Curious about every stranger", "Cheerfully pessimistic",
+        "Loyal to a fault", "Gives away everything they own", "Proud of their humble roots", "Talks with their mouth full",
+        "Gets along with everyone except family", "Keeps every promise, however silly", "Does everything the old way", "Draws their own maps",
+        "Never leaves a mess behind", "Collects words from other languages", "Laughs at danger, panics later", "Reads the ending of every book first",
+        "Treats rules as suggestions", "Restless after a few days in one place"
     ],
 
     ideals: [
@@ -157,7 +167,25 @@ const npcData = {
         "Respect: Respect is earned, and I've earned it", "Survival: Whatever it takes to see tomorrow",
         "Ambition: I will rise above my station", "Mercy: Even monsters deserve a chance",
         "Reputation: What people say about me matters", "Change: Nothing should stay the same forever",
-        "Duty: I do what's asked of me", "Self-improvement: I'll be better tomorrow"
+        "Duty: I do what's asked of me", "Self-improvement: I'll be better tomorrow",
+        "Hospitality: No guest leaves my door hungry", "Patience: Good things take time",
+        "Truth: A comfortable lie is still a lie", "Legacy: I'm building something that outlasts me",
+        "Adventure: Somewhere out there is a better story", "Kindness: Small mercies add up",
+        "Pragmatism: Whatever works, works", "Thrift: Waste nothing, want nothing",
+        "Excellence: Second best is first loser", "Peace: Every fight I avoid is a win",
+        "Solitude: Most problems are other people", "Country: The realm comes before me",
+        "Humility: Nobody is above scrubbing floors", "Courage: Fear is no reason to stop",
+        "Vengeance: Wrongs get paid back in kind", "Opportunity: Every crisis is a market",
+        "Hope: Tomorrow can be better than today", "Secrecy: What people don't know can't hurt me",
+        "Beauty: The world needs more lovely things", "Industry: Idle hands are wasted hands",
+        "Discipline: Routine is a kind of freedom", "Progress: The new ways will save us",
+        "Generosity: What's mine is yours", "Ancestry: My forebears are watching",
+        "Equality: No one is born better than anyone else", "Pleasure: Eat, drink, and worry tomorrow",
+        "Cunning: Brains beat brawn every time", "Stability: Don't rock the boat",
+        "Gratitude: I remember every kindness done to me", "Guild: The guild looks after its own",
+        "Wonder: Magic is the best thing in the world", "Neighborliness: Help next door before you help the world",
+        "Control: If I don't run it, it'll go wrong", "Atonement: I have a great deal to make up for",
+        "Simplicity: Fewer things, fewer troubles", "Celebration: Any excuse for a party"
     ],
 
     // {tokens} fill from npcData.fill (see fillTemplate)
@@ -178,7 +206,27 @@ const npcData = {
         "{place} is where I was happiest, and I'll go back", "I need to finish my masterwork",
         "I took the blame for my {kin}'s crime", "I'm loyal to whoever pays, until someone pays more",
         "I owe the temple for raising me", "My {thing} is the only thing I have left of home",
-        "I'm in love with {townsfolk} and too scared to say it"
+        "I'm in love with {townsfolk} and too scared to say it",
+        "I'm raising my {kin}'s children as my own", "I learned my trade from {townsfolk} and I'll never forget it",
+        "I buried something under {place} and it needs to stay buried", "My {thing} was a gift from {townsfolk}, and I'd die before selling it",
+        "I'm the only one who remembers what really happened at {place}", "I write to my {kin} every week, though they never write back",
+        "I owe the city watch for not hanging me", "I swore I'd never leave this town, and I haven't",
+        "I keep my late {kin}'s shop open exactly as they left it", "I'm searching for the bard who wrote a song about my {kin}",
+        "My old adventuring party left me behind, and I want to know why", "I keep a family recipe that's three hundred years old",
+        "I mean to marry {townsfolk}, whatever my {kin} says", "I lost {place} at cards, and I'll win it back",
+        "The local children are my responsibility, whether they like it or not", "I owe a hag a favor and dread the day she calls it in",
+        "My horse has carried me through everything, and I'd carry it if I had to", "I'm keeping a dying craft alive",
+        "I swore to guard {place} until someone relieves me, and no one has", "My {kin} vanished into the forest, and I still leave a lantern lit",
+        "Every spare coin I have goes to my {kin} in the city", "Someone in this town betrayed my {kin}, and I'll learn who",
+        "I built my house with my own hands and nobody's taking it", "I hold a letter from {townsfolk} I was told to burn, and haven't",
+        "I was the only survivor of a shipwreck, and I think that means something", "My order sent me here and I'm still waiting for new orders",
+        "I'll restore the old shrine at {place} if it takes my whole life", "A stranger once paid my debts and vanished, and I want to thank them",
+        "I'm teaching my {kin} everything I know before it's too late", "I keep the town's history, because nobody else will",
+        "I'll keep my promise to {townsfolk}, even if it ruins me", "I want my {kin} to be proud of me, just once",
+        "I belong to the sea, and I'm only ashore for now", "The gods spared me once, and I mean to deserve it",
+        "I'm hunting the beast that took my {kin}", "I have to get my {thing} back from the pawnbroker before the ticket runs out",
+        "Everyone at the tavern is family to me", "I promised my village I'd come home rich",
+        "I have a rival, and I can't stand the thought of them winning", "I owe {townsfolk} an apology I've put off for ten years"
     ],
 
     flaws: [
@@ -192,7 +240,18 @@ const npcData = {
         "Spends money as fast as they earn it", "Breaks promises", "Can't say no", "Needs to be liked",
         "Sulks for days", "Assumes the worst of everyone", "Obeys authority without question", "Picks fights with bigger people",
         "Hides from responsibility", "Fixated on an old rival", "Loses temper over small slights", "Steals small things without thinking",
-        "Believes any flattery"
+        "Believes any flattery",
+        "Faints at the sight of blood", "Exaggerates everything", "Refuses help, even when drowning", "Talks down to anyone younger",
+        "Hoards food and supplies", "Can't stand being wrong in public", "Gives up at the first setback", "Mean when drunk",
+        "Snoops through other people's things", "Flees from any confrontation", "Holds everyone to impossible standards", "Forgets promises the moment they're made",
+        "Thinks rules are for other people", "Makes enemies for fun", "Sees conspiracies everywhere", "Cheats at games, even friendly ones",
+        "Too proud to apologize", "Worries constantly", "Easily bribed", "Won't share credit or blame",
+        "Bored by anything without danger", "Covets a friend's spouse", "Will do anything to avoid being alone", "Gullible about anything magical",
+        "Mocks what they don't understand", "Keeps secrets even when it hurts people", "Plays favorites", "Overpromises and underdelivers",
+        "Treats servants like furniture", "Desperate for a parent's approval", "Talks behind people's backs", "Plans forever, never acts",
+        "Terrified of magic", "Throws money at every problem", "Won't leave their comfort zone", "Quick to blame others",
+        "Laughs at the worst moments", "Ignores every warning", "Flatters the powerful, kicks the weak", "Clings to the past",
+        "Assumes they're the smartest one in the room"
     ],
 
     // QUIRKS
@@ -214,7 +273,17 @@ const npcData = {
         "Walks backwards through doors", "Speaks to cats as equals", "Writes everything on their arm", "Pockets sugar cubes",
         "Snaps fingers to remember things", "Answers questions with older questions", "Always has a snack",
         "Recites the local laws when nervous", "Wears a hat indoors and outdoors", "Quotes their grandmother constantly",
-        "Spits before shaking hands", "Can't pass a mirror without checking it", "Keeps every receipt"
+        "Spits before shaking hands", "Can't pass a mirror without checking it", "Keeps every receipt",
+        "Hums tavern songs at funerals", "Licks a finger to test the wind", "Tallies favors on their sleeve", "Won't eat anything green",
+        "Bites every coin, even copper", "Sits on tables, never chairs", "Introduces themselves twice", "Wears a different hat every day",
+        "Only drinks warm milk", "Always smells faintly of onions", "Knocks three times on everything", "Tells fortunes nobody asked for",
+        "Sleeps with their boots on", "Sneezes when lying", "Announces which song is stuck in their head", "Gives everyone a nickname",
+        "Sniffs people on meeting them", "Always sits facing the window", "Feeds stray dogs from their pockets", "Adds \"allegedly\" to everything",
+        "Shakes hands with both hands", "Carries a spoon in their breast pocket", "Draws a little circle on every map they touch", "Ties their hair back with string",
+        "Says \"bless you\" to every cough, sneeze, and sigh", "Smells every letter before opening it", "Wears one glove", "Taps their nose when they mean something",
+        "Rubs a worry stone", "Picks their teeth with a dagger", "Pats their pockets every few minutes", "Doodles eyes on everything",
+        "Makes a holy sign at every crow", "Counts their change three times", "Never uses anyone's name", "Talks to plants and says they answer",
+        "Always takes the seat nearest the fire", "Stops mid-sentence to listen to distant sounds"
     ],
 
     // APPEARANCE
@@ -403,7 +472,14 @@ const npcData = {
         "Sing-song", "Clipped and military", "Wheezy", "Honeyed", "Thick regional accent", "Rapid-fire", "Gentle",
         "Hoarse from shouting", "Posh and drawling", "Always slightly too loud", "Lisping", "Sniffly",
         "Warm and grandmotherly", "Flat and suspicious", "Stammering", "Like a tavern storyteller", "Quiet but carrying",
-        "Breaks into song mid-sentence", "Lilting and slow", "Pinched and fussy", "Rumbling", "Chirpy"
+        "Breaks into song mid-sentence", "Lilting and slow", "Pinched and fussy", "Rumbling", "Chirpy",
+        "Creaky like an old door", "Bubbly", "Mournful", "Velvety", "Shrill", "Measured and careful",
+        "Hushed, as if someone's listening", "Reedy", "Brassy", "Gruff but kind", "Relentlessly cheerful", "Lazy drawl",
+        "Cracks on the high notes", "Clears their throat constantly", "Fast and breathless", "Croaky", "Plummy", "Lecturing",
+        "Silky and dangerous", "Childlike", "Soothing, like a lullaby", "Like gravel in a bucket", "Booming, with long pauses", "Sharp and cutting",
+        "Tremulous", "Purring", "Barking", "Wavering with age", "Throaty", "Prim and proper",
+        "Mumbles into their collar", "Every sentence sounds like a question", "Hisses every s", "Theatrical whisper", "Stern schoolteacher", "Jolly and wheezing",
+        "Laughs between sentences", "Very, very slow"
     ],
 
     // SECRETS
@@ -424,7 +500,21 @@ const npcData = {
         "Was a famous pirate under another name", "Sabotaged a rival's business", "Is a coward who took credit for a hero's deed",
         "Knows the mayor's real identity", "Is hiding a fugitive in their home", "Swapped places with their noble lookalike",
         "Has a pet mimic they pass off as a chest", "Is one bad night away from losing everything", "Was raised by wolves (actual wolves)",
-        "Rigged the town election", "Is the masked vigilante everyone talks about", "Is quietly dying and has told no one"
+        "Rigged the town election", "Is the masked vigilante everyone talks about", "Is quietly dying and has told no one",
+        "Is a priest who lost their faith years ago", "Has a second family in the next town", "Is apprenticed to a hag",
+        "Accidentally let something loose at {place}", "Murdered their business partner and took the shop", "Started the fire everyone blamed on lightning",
+        "Sells news of the town to a dragon", "Knows who poisoned the town well", "Isn't the race they claim to be; it's an illusion",
+        "Is wanted for treason in their homeland", "Still collects a pension for a {kin} who died years ago", "Hid a body under {place}",
+        "Was a famous hero's sidekick and got written out of the songs", "Has won the harvest contest six years running by cheating", "Has the real {thing} and sold everyone forgeries",
+        "Gambled away their {kin}'s inheritance", "Serves a vampire by night and remembers nothing by day", "Works as a fence for the thieves' guild",
+        "Is the missing heir to a cult's leadership", "Is cursed to tell only the truth under a full moon", "Talks to the dead, who talk back",
+        "Was born on the other side of a fairy ring", "Swapped two babies at birth, years ago", "Has a stash of gold buried in the churchyard",
+        "Stole the town's bell", "Has never been to any of the places in their stories", "Is in love with their best friend's spouse",
+        "Took bribes as a guard, and still does", "Owes their life to a necromancer and still visits", "Keeps a ghost in a jar",
+        "Hunts lycanthropes and suspects someone in town", "Was once married to {townsfolk}, and they both pretend otherwise", "Is a former cultist who escaped",
+        "Knows a tunnel under town that no one else remembers", "Sells the town's secrets to bandits", "Has a ring that grants one wish and is too scared to use it",
+        "Writes the mayor's speeches", "Can see the future, but only the bad news", "Is a polymorphed creature who forgot what they were",
+        "Sleepwalks, and wakes with muddy boots and strange coins"
     ],
 
     // QUEST HOOKS
@@ -445,7 +535,21 @@ const npcData = {
         "Wants to be taught to fight by Friday", "Needs a stolen painting stolen back", "Is offering a reward for a talking cat",
         "Their crops grow overnight and scream", "Needs a fake treasure map planted", "Wants a song written about them, and a bard to sing it",
         "Has a buyer for {thing} but needs it delivered quietly", "Needs a witness to a duel", "Wants to know who keeps leaving gifts on their doorstep",
-        "Hired the wrong adventurers last time and needs the mess cleaned up"
+        "Hired the wrong adventurers last time and needs the mess cleaned up",
+        "Needs someone to taste-test a potion. Just a sip.", "Wants their {kin} talked out of joining the army", "Lost the deed to {place} in a card game",
+        "Their well water has started to glow", "Needs a lost sheep found; it was last seen walking into a cave", "Wants a haunted mirror carried out of the house, facing away",
+        "Needs a cart of eggs delivered without breaking one", "Is being followed by a very persistent goose", "Wants to know why the birds went quiet near {place}",
+        "Needs someone to guard their {kin}'s grave for three nights", "Their scarecrow keeps moving between fields", "Needs a forged letter delivered before the real one arrives",
+        "Wants a rival's recipe stolen before the harvest fair", "Paid a wizard for a spell that hasn't worn off", "Needs a key copied without its owner knowing",
+        "Found a stranger asleep in their barn who won't wake up", "Wants an apology delivered to {townsfolk}, in person, with flowers", "Their {thing} was swapped for a fake, and they want to know when",
+        "Needs bandits cleared off the mill road before market day", "Needs a rare book returned to a library that doesn't want it back", "Wants the party to pose as their rich relatives at dinner",
+        "The bridge troll has raised the toll again", "Owes rent to a landlord who's been dead for a year", "Needs a runaway apprentice brought home, gently",
+        "Wants their lost dog found. The dog is the size of a pony.", "Needs a sealed box buried at {place} at midnight", "Their reflection moves a moment late",
+        "Needs an honest appraiser for an heirloom and trusts no one in town", "Is hosting a feast and the cook just quit", "Wants proof that {townsfolk} is a fraud",
+        "Their bees have swarmed into the old crypt", "Needs a stubborn ghost talked into moving on", "Wants a map of the caves under town",
+        "Needs to catch whoever's been milking their cows at night", "Has a letter for the party from someone they've never met", "Needs a sick {kin} carried to a healer two towns over",
+        "Wants a debt collected from a very large person", "Their shop is cursed so every customer leaves angry", "Needs a chaperone for their {kin}'s first trip to the city",
+        "Saw lights at {place} and wants someone braver to look"
     ],
 
     // RELATIONSHIPS
@@ -464,7 +568,21 @@ const npcData = {
         "Saved {townsfolk}'s life and never lets them forget it", "Estranged from their {kin}", "Lives with their {kin}, who disapproves of everything",
         "Has seven siblings and keeps track of none", "Keeps a ledger of every favor owed in town", "Was the old flame of {townsfolk}",
         "Shares a fence, and a bitter feud, with {townsfolk}", "Trains hounds for the local lord", "Is courting two people at once",
-        "Is the only one in town the cat likes", "Owes their job to {townsfolk}"
+        "Is the only one in town the cat likes", "Owes their job to {townsfolk}",
+        "Brews ale for all three of the town's rival taverns", "Is the town's most frequent juror", "Shares a pew, and a grudge, with {townsfolk}",
+        "Godparent to half the children in town", "Was squire to a knight who died in disgrace", "Pays {townsfolk} to keep quiet about something",
+        "Grew up next door to {townsfolk} and knows all their secrets", "Sworn rival of the baker across the street", "Has an arrangement with the local smugglers",
+        "Keeps bees with {townsfolk} every spring", "Leads the town choir, badly", "Is the only person who visits the old hermit",
+        "Carries letters for a merchant house in the city", "Is on a first-name basis with the local ghost", "Owes a life-debt to a goblin",
+        "Childhood sweetheart of {townsfolk}", "Was cheated by {townsfolk} and hasn't forgotten", "Distantly related to a disgraced noble family",
+        "Writes letters for people who can't", "Fosters orphans from the temple", "Is the town's unofficial matchmaker",
+        "Former cellmate of a famous thief", "Hosts a weekly supper for the town's widows", "Go-between for two feuding families",
+        "Has had a standing bet with {townsfolk} for twenty years", "Married into a family that never accepted them", "Takes orders from someone they've never seen",
+        "Stands surety for {townsfolk}'s debts", "Used to serve the local lord and left on bad terms", "Is secretly teaching {townsfolk} to read",
+        "Corresponds with a wizard in a distant tower", "Last surviving member of their guild chapter", "Rents a room to a suspicious lodger",
+        "Blames {townsfolk} for the death of their {kin}", "Quietly pays for the local orphanage", "Sells information to anyone who pays",
+        "Was nanny to the current mayor", "Fought beside {townsfolk} in a war nobody talks about", "Is the local lord's unacknowledged child",
+        "Plays chess by post with a stranger"
     ],
 
     // WHEN YOU MEET THEM (what they're doing when the party walks up)
@@ -501,7 +619,15 @@ const npcData = {
         "a spool of thread", "a seashell", "a wooden holy symbol", "a bottle cork", "a magnifying lens", "a pipe and a pouch of leaf",
         "a tiny book of bad poems", "a whetstone", "a raven feather", "a set of lockpicks", "a carved bone flute", "a fist-sized geode",
         "a knot of string nobody can untie", "a recipe for stew", "an invitation to a party last week", "a ticket for the next ferry", "a crust of bread for ducks",
-        "a scrap of a spell scroll", "a tooth-shaped pebble", "a monocle with no glass", "a thank-you note from a stranger", "a mouse (alive)", "a pair of dice, loaded"
+        "a scrap of a spell scroll", "a tooth-shaped pebble", "a monocle with no glass", "a thank-you note from a stranger", "a mouse (alive)", "a pair of dice, loaded",
+        "a button from a noble's coat", "a tiny bell with no clapper", "a snail shell full of glitter", "a horseshoe nail for luck", "a dented tin cup",
+        "a scrap of tapestry", "a love token carved from bone", "a padlock with no key", "a smooth river stone", "a child's drawing of a dragon",
+        "a bundle of tally sticks", "a small jar of honey", "an empty bird's nest", "a twist of licorice", "a broken arrowhead",
+        "a page torn from a ledger", "a wax-sealed vial of seawater", "a written list of grievances", "a wedding ring on a string", "a badge from a guild that kicked them out",
+        "a stopped pocket watch", "a hair ribbon", "a dried mushroom of unknown kind", "a bag of odd buttons", "a two-headed coin",
+        "a folded paper crane", "a pair of knucklebones", "a moth in a tiny jar", "a potion recipe that doesn't work", "a cracked hand mirror",
+        "a torn theater ticket", "a ball of yarn", "a sprig of lavender", "a compass that always points to the tavern", "a note reading \"don't trust the miller\"",
+        "a toy boat", "a string of prayer beads", "a badger's tooth", "a jar of pickled eggs", "a sketch of someone's face, unfinished"
     ],
     // Purse ranges in copper pieces, by category: [min, max]
     purses: {
