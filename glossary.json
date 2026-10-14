@@ -521,9 +521,13 @@
                         "rivals":  [
 
                                    ],
-                        "article_count":  0,
+                        "article_count":  1,
                         "articles":  [
-
+                                         {
+                                             "id":  "outside-the-wire-kickstarter-late-pledges",
+                                             "title":  "Outside the Wire Kickstarter Funds, Opens Late Pledges",
+                                             "date":  "2026-10-14"
+                                         }
                                      ]
                     }
                 ],
@@ -844,13 +848,13 @@
                                            "date":  "2026-10-10"
                                        },
                                        {
-                                           "id":  "joebid-sleeping-scandal",
-                                           "title":  "Archmage Joebid Found Napping in Dragon Stable",
+                                           "id":  "donwald-oil-lords-dispute",
+                                           "title":  "High Lord Donwald Clashes With Oil Lords Over Drilling Rights",
                                            "date":  "2026-04-23"
                                        },
                                        {
-                                           "id":  "donwald-oil-lords-dispute",
-                                           "title":  "High Lord Donwald Clashes With Oil Lords Over Drilling Rights",
+                                           "id":  "joebid-sleeping-scandal",
+                                           "title":  "Archmage Joebid Found Napping in Dragon Stable",
                                            "date":  "2026-04-23"
                                        },
                                        {
