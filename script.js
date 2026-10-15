@@ -83,6 +83,19 @@ function deskTag(a, cls = 'card-tag') {
   return `<a class="${cls}" href="archive?section=${encodeURIComponent(d.id)}" data-section="${esc(d.id)}"${deskStyle(d)} title="More from ${esc(d.name)}"><span class="desk-icon" aria-hidden="true">${d.icon}</span>${label}</a>`;
 }
 
+// Story picture: the article's own image, else its category's (img/story/<slug>.webp; small copy <slug>-sm.webp).
+// export-articles.ps1 writes the same markup into the pre-rendered cards.
+function storyPicSrc(a, small) {
+  if (a.image) return a.image;
+  const slug = String(a.category || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  return slug ? `img/story/${slug}${small ? '-sm' : ''}.webp` : '';
+}
+function storyPic(a, cls, small, lazy) {
+  const src = storyPicSrc(a, small);
+  if (!src) return '';
+  return `<a class="${cls}" href="a/${a.id}" tabindex="-1" aria-hidden="true"><img src="${esc(src)}" alt="" width="${small ? 480 : 960}" height="${small ? 320 : 640}"${lazy ? ' loading="lazy"' : ''} decoding="async" onerror="this.parentNode.remove()"></a>`;
+}
+
 // Section bar. export-articles.ps1 pre-renders the same chips, linking to the archive for no-JS visitors.
 function renderSections() {
   const el = document.getElementById('section-bar');
@@ -150,6 +163,7 @@ function renderFeatured(article) {
 
   el.innerHTML = `
     <div class="featured-article">
+      ${storyPic(article, 'featured-pic', false, false)}
       <div>
         ${deskTag(article, 'category-badge')}
       </div>
@@ -185,6 +199,7 @@ function renderGrid() {
     const d = deskOf(a);
     return `
     <article class="card" style="animation-delay:${i * 0.08}s;${d && d.color ? `--desk:${d.color}` : ''}">
+      ${storyPic(a, 'card-pic', true, true)}
       ${deskTag(a)}
       <h3><a href="a/${a.id}">${a.title}</a></h3>
       <p>${a.excerpt || stripTags(a.content).substring(0, 110) + '…'}</p>

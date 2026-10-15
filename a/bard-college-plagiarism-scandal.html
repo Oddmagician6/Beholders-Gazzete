@@ -50,7 +50,7 @@
     }
     .article-hero-overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(180deg, rgba(14,13,11,0.55) 0%, rgba(14,13,11,0.72) 60%, rgba(14,13,11,0.95) 100%);
+      background: linear-gradient(180deg, rgba(14,13,11,0.45) 0%, rgba(14,13,11,0.7) 60%, rgba(14,13,11,0.95) 100%);
     }
     .article-hero-content {
       position: relative; z-index: 2;
@@ -313,7 +313,7 @@
   </div>
 
   <!-- Article Hero -->
-  <section class="article-hero">
+  <section class="article-hero" style="background-image:url('img/story/guild-notices.webp')">
     <div class="article-hero-overlay"></div>
     <div class="article-hero-content">
       <div id="article-category"><a class="article-category-badge" href="archive?section=realm" data-section="realm" style="--desk:#ef5350" title="More from Realm Dispatches"><span class="desk-icon" aria-hidden="true">🐉</span>Guild Notices</a></div>
@@ -422,18 +422,21 @@
       <h3>📰 More From the Gazette</h3>
       <div class="article-grid" id="related-articles">
         <article class="card" style="--desk:#ef5350">
+          <a class="card-pic" href="a/dungeon-accessibility-regulations" tabindex="-1" aria-hidden="true"><img src="img/story/guild-notices-sm.webp" alt="" width="480" height="320" loading="lazy" decoding="async"></a>
           <a class="card-tag" href="archive?section=realm" data-section="realm" style="--desk:#ef5350" title="More from Realm Dispatches"><span class="desk-icon" aria-hidden="true">🐉</span>Guild Notices</a>
           <h3><a href="a/dungeon-accessibility-regulations">Adventurer&#39;s Guild Mandates Ramps for Gelatinous Cubes</a></h3>
           <p>New dungeon safety laws require wide corridors. Delvers complain stealth is impossible with construction crews everywhere.</p>
           <a href="a/dungeon-accessibility-regulations" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">&#x1F4DC; Read Scroll</a>
         </article>
         <article class="card" style="--desk:#ef5350">
+          <a class="card-pic" href="a/weather-wizard-union-strike" tabindex="-1" aria-hidden="true"><img src="img/story/guild-notices-sm.webp" alt="" width="480" height="320" loading="lazy" decoding="async"></a>
           <a class="card-tag" href="archive?section=realm" data-section="realm" style="--desk:#ef5350" title="More from Realm Dispatches"><span class="desk-icon" aria-hidden="true">🐉</span>Guild Notices</a>
           <h3><a href="a/weather-wizard-union-strike">Weather Wizards Union Go on Strike</a></h3>
           <p>No rain permits issued this week. Farmers angry. Clouds are forming shapes of picket signs.</p>
           <a href="a/weather-wizard-union-strike" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">&#x1F4DC; Read Scroll</a>
         </article>
         <article class="card" style="--desk:#ef5350">
+          <a class="card-pic" href="a/gelatinous-cube-tavern-walk-in-inspection" tabindex="-1" aria-hidden="true"><img src="img/story/monster-watch-sm.webp" alt="" width="480" height="320" loading="lazy" decoding="async"></a>
           <a class="card-tag" href="archive?section=realm" data-section="realm" style="--desk:#ef5350" title="More from Realm Dispatches"><span class="desk-icon" aria-hidden="true">🐉</span>Monster Watch</a>
           <h3><a href="a/gelatinous-cube-tavern-walk-in-inspection">Gelatinous Cube Found in Tavern Walk-In, Inspector Says</a></h3>
           <p>A gelatinous cube was found in the walk-in cooler of Brindlemoor&#39;s Sleeping Mule tavern. The inspector marked the cheese &#39;unverified.&#39;</p>
@@ -522,6 +525,8 @@
 
         document.title = article.title + ' | The Beholder\'s Gazette';
         setCategory(article);
+        const heroPic = storyPicSrc(article, false);
+        if (heroPic) document.querySelector('.article-hero').style.backgroundImage = `url('${heroPic}')`;
         document.getElementById('article-title').textContent     = article.title;
         document.getElementById('article-author').textContent    = article.author || 'The Gazette Staff';
         linkAuthor(article.author);
@@ -558,6 +563,7 @@
       if (!related.length) { el.innerHTML = '<p style="color:var(--text-dim);text-align:center;">No more scrolls found.</p>'; return; }
       el.innerHTML = related.map(a => `
         <article class="card"${deskStyle(desks[a.category])}>
+          ${storyPic(a)}
           ${deskTag(a, desks)}
           <h3><a href="a/${a.id}">${esc(a.title)}</a></h3>
           <p>${esc(a.excerpt)}</p>
@@ -575,6 +581,17 @@
         return byCategory;
       }).catch(() => ({}));
       return desksPromise;
+    }
+
+    // Story picture: the article's own image, else its category's (same markup as export-articles.ps1)
+    function storyPicSrc(a, small) {
+      if (a.image) return a.image;
+      const slug = String(a.category || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      return slug ? `img/story/${slug}${small ? '-sm' : ''}.webp` : '';
+    }
+    function storyPic(a) {
+      const src = storyPicSrc(a, true);
+      return src ? `<a class="card-pic" href="a/${a.id}" tabindex="-1" aria-hidden="true"><img src="${esc(src)}" alt="" width="480" height="320" loading="lazy" decoding="async" onerror="this.parentNode.remove()"></a>` : '';
     }
 
     function deskStyle(w) { return w && /^#[0-9a-f]{3,8}$/i.test(w.desk_color || '') ? ` style="--desk:${w.desk_color}"` : ''; }

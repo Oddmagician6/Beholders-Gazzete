@@ -76,12 +76,16 @@ function filtered(f) {
 }
 
 // ── The list ──────────────────────────────────────────────
+// Creature-type picture (swarms use the beast one); compendium-export.js uses the same files for monster pages
+function typeArt(m, small) { return `img/creature/${m.type === 'swarm' ? 'beast' : m.type}${small ? '-sm' : ''}.webp`; }
+
 function rowHtml(m) {
     const isOpen = open.has(m.id);
     const habs = habsOf(m).map(h => ENC_HABITATS[h]);
     return `
     <li class="bst-row${isOpen ? ' open' : ''}" data-id="${m.id}">
         <div class="bst-head">
+            <img class="bst-thumb" src="${typeArt(m, true)}" alt="" width="54" height="36" loading="lazy" decoding="async">
             <button type="button" class="bst-name" aria-expanded="${isOpen}" aria-controls="sb-${m.id}">
                 <span class="bst-cr">CR ${m.cr}</span> <span class="bst-title">${esc(m.name)}</span>
             </button>
@@ -97,6 +101,7 @@ function blockHtml(m) {
     const body = blocksFailed ? '<p class="sb-note">The stat blocks didn\'t load. Check your connection, then close and open this one again.</p>'
         : monsterBlockHtml(m);
     return `<div class="sb-box" id="sb-${m.id}">
+        <div class="bst-art" aria-hidden="true"><img src="${typeArt(m, false)}" alt="" width="960" height="640" decoding="async"></div>
         <h3 class="bst-sb-name">${esc(m.name)}</h3>
         ${body}
         <div class="bst-acts">

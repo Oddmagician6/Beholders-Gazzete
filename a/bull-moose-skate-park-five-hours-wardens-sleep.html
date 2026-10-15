@@ -50,7 +50,7 @@
     }
     .article-hero-overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(180deg, rgba(14,13,11,0.55) 0%, rgba(14,13,11,0.72) 60%, rgba(14,13,11,0.95) 100%);
+      background: linear-gradient(180deg, rgba(14,13,11,0.45) 0%, rgba(14,13,11,0.7) 60%, rgba(14,13,11,0.95) 100%);
     }
     .article-hero-content {
       position: relative; z-index: 2;
@@ -313,7 +313,7 @@
   </div>
 
   <!-- Article Hero -->
-  <section class="article-hero">
+  <section class="article-hero" style="background-image:url('img/story/local-chaos.webp')">
     <div class="article-hero-overlay"></div>
     <div class="article-hero-content">
       <div id="article-category"><a class="article-category-badge" href="archive?section=local" data-section="local" style="--desk:#f48fb1" title="More from Local, Crime &amp; Oddities"><span class="desk-icon" aria-hidden="true">🏘️</span>Local Chaos</a></div>
@@ -432,18 +432,21 @@
       <h3>📰 More From the Gazette</h3>
       <div class="article-grid" id="related-articles">
         <article class="card" style="--desk:#f48fb1">
+          <a class="card-pic" href="a/lottery-triple-zeros-4917-tickets-carolan-reach" tabindex="-1" aria-hidden="true"><img src="img/story/local-chaos-sm.webp" alt="" width="480" height="320" loading="lazy" decoding="async"></a>
           <a class="card-tag" href="archive?section=local" data-section="local" style="--desk:#f48fb1" title="More from Local, Crime &amp; Oddities"><span class="desk-icon" aria-hidden="true">🏘️</span>Local Chaos</a>
           <h3><a href="a/lottery-triple-zeros-4917-tickets-carolan-reach">4,917 Lottery Tickets Win on Triple Zeros in Carolan Reach</a></h3>
           <p>Lottery officials in the Carolan Reach say 4,917 tickets hit triple zeros, a 1.7 million gp bill. Skritch smells a rigged die. Allegedly.</p>
           <a href="a/lottery-triple-zeros-4917-tickets-carolan-reach" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">&#x1F4DC; Read Scroll</a>
         </article>
         <article class="card" style="--desk:#f48fb1">
+          <a class="card-pic" href="a/city-watch-stops-sofa-riding-two-enchanted-skates" tabindex="-1" aria-hidden="true"><img src="img/story/local-chaos-sm.webp" alt="" width="480" height="320" loading="lazy" decoding="async"></a>
           <a class="card-tag" href="archive?section=local" data-section="local" style="--desk:#f48fb1" title="More from Local, Crime &amp; Oddities"><span class="desk-icon" aria-hidden="true">🏘️</span>Local Chaos</a>
           <h3><a href="a/city-watch-stops-sofa-riding-two-enchanted-skates">Watch Pulls Over Two Men Riding a Sofa on Enchanted Skates</a></h3>
           <p>Carlotta&#39;s Ford Watch stopped a full-size couch rolling down South Tryst Street on two glowing skate-boards, and then issued a safety reminder. Skritch was not there, but he knows a guy.</p>
           <a href="a/city-watch-stops-sofa-riding-two-enchanted-skates" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">&#x1F4DC; Read Scroll</a>
         </article>
         <article class="card" style="--desk:#f48fb1">
+          <a class="card-pic" href="a/footbrawl-27-27-tie-overtime-commandeers-ogres" tabindex="-1" aria-hidden="true"><img src="img/story/sports-sm.webp" alt="" width="480" height="320" loading="lazy" decoding="async"></a>
           <a class="card-tag" href="archive?section=local" data-section="local" style="--desk:#f48fb1" title="More from Local, Crime &amp; Oddities"><span class="desk-icon" aria-hidden="true">🏘️</span>Sports</a>
           <h3><a href="a/footbrawl-27-27-tie-overtime-commandeers-ogres">Footbrawl Match Ends 27-27 Tie After Botched Overtime Scramble</a></h3>
           <p>A footbrawl match ended in a 27-27 tie after a quarterback ran in overtime instead of stopping the clock. A kicker was allegedly idle.</p>
@@ -532,6 +535,8 @@
 
         document.title = article.title + ' | The Beholder\'s Gazette';
         setCategory(article);
+        const heroPic = storyPicSrc(article, false);
+        if (heroPic) document.querySelector('.article-hero').style.backgroundImage = `url('${heroPic}')`;
         document.getElementById('article-title').textContent     = article.title;
         document.getElementById('article-author').textContent    = article.author || 'The Gazette Staff';
         linkAuthor(article.author);
@@ -568,6 +573,7 @@
       if (!related.length) { el.innerHTML = '<p style="color:var(--text-dim);text-align:center;">No more scrolls found.</p>'; return; }
       el.innerHTML = related.map(a => `
         <article class="card"${deskStyle(desks[a.category])}>
+          ${storyPic(a)}
           ${deskTag(a, desks)}
           <h3><a href="a/${a.id}">${esc(a.title)}</a></h3>
           <p>${esc(a.excerpt)}</p>
@@ -585,6 +591,17 @@
         return byCategory;
       }).catch(() => ({}));
       return desksPromise;
+    }
+
+    // Story picture: the article's own image, else its category's (same markup as export-articles.ps1)
+    function storyPicSrc(a, small) {
+      if (a.image) return a.image;
+      const slug = String(a.category || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      return slug ? `img/story/${slug}${small ? '-sm' : ''}.webp` : '';
+    }
+    function storyPic(a) {
+      const src = storyPicSrc(a, true);
+      return src ? `<a class="card-pic" href="a/${a.id}" tabindex="-1" aria-hidden="true"><img src="${esc(src)}" alt="" width="480" height="320" loading="lazy" decoding="async" onerror="this.parentNode.remove()"></a>` : '';
     }
 
     function deskStyle(w) { return w && /^#[0-9a-f]{3,8}$/i.test(w.desk_color || '') ? ` style="--desk:${w.desk_color}"` : ''; }

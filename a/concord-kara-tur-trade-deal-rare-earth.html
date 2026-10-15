@@ -50,7 +50,7 @@
     }
     .article-hero-overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(180deg, rgba(14,13,11,0.55) 0%, rgba(14,13,11,0.72) 60%, rgba(14,13,11,0.95) 100%);
+      background: linear-gradient(180deg, rgba(14,13,11,0.45) 0%, rgba(14,13,11,0.7) 60%, rgba(14,13,11,0.95) 100%);
     }
     .article-hero-content {
       position: relative; z-index: 2;
@@ -313,7 +313,7 @@
   </div>
 
   <!-- Article Hero -->
-  <section class="article-hero">
+  <section class="article-hero" style="background-image:url('img/story/international.webp')">
     <div class="article-hero-overlay"></div>
     <div class="article-hero-content">
       <div id="article-category"><a class="article-category-badge" href="archive?section=world" data-section="world" style="--desk:#90a4ae" title="More from Foreign Realms"><span class="desk-icon" aria-hidden="true">🌍</span>International</a></div>
@@ -436,18 +436,21 @@
       <h3>📰 More From the Gazette</h3>
       <div class="article-grid" id="related-articles">
         <article class="card" style="--desk:#90a4ae">
+          <a class="card-pic" href="a/state-of-emergency-khyberhold-zardarrin-suspends-province" tabindex="-1" aria-hidden="true"><img src="img/story/international-sm.webp" alt="" width="480" height="320" loading="lazy" decoding="async"></a>
           <a class="card-tag" href="archive?section=world" data-section="world" style="--desk:#90a4ae" title="More from Foreign Realms"><span class="desk-icon" aria-hidden="true">🌍</span>International</a>
           <h3><a href="a/state-of-emergency-khyberhold-zardarrin-suspends-province">State of Emergency Seizes Khyberhold From Jailed Chancellor</a></h3>
           <p>Sovereign Zardarrin declares a state of emergency in Khyberhold and suspends its provincial government hours before a march on Tashalabad.</p>
           <a href="a/state-of-emergency-khyberhold-zardarrin-suspends-province" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">&#x1F4DC; Read Scroll</a>
         </article>
         <article class="card" style="--desk:#90a4ae">
+          <a class="card-pic" href="a/energy-ceasefire-donwald-damara-vaasa-shelling" tabindex="-1" aria-hidden="true"><img src="img/story/international-sm.webp" alt="" width="480" height="320" loading="lazy" decoding="async"></a>
           <a class="card-tag" href="archive?section=world" data-section="world" style="--desk:#90a4ae" title="More from Foreign Realms"><span class="desk-icon" aria-hidden="true">🌍</span>International</a>
           <h3><a href="a/energy-ceasefire-donwald-damara-vaasa-shelling">Donwald Declares Energy Ceasefire; Damara Skips the Memo</a></h3>
           <p>Donwald posted an energy ceasefire on the Truthscroll and said both sides agreed. Vaasa read it in the news, and Damara kept shelling.</p>
           <a href="a/energy-ceasefire-donwald-damara-vaasa-shelling" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">&#x1F4DC; Read Scroll</a>
         </article>
         <article class="card" style="--desk:#90a4ae">
+          <a class="card-pic" href="a/laurel-committee-skips-donwald-eighth-time-truthscroll-erupts" tabindex="-1" aria-hidden="true"><img src="img/story/international-sm.webp" alt="" width="480" height="320" loading="lazy" decoding="async"></a>
           <a class="card-tag" href="archive?section=world" data-section="world" style="--desk:#90a4ae" title="More from Foreign Realms"><span class="desk-icon" aria-hidden="true">🌍</span>International</a>
           <h3><a href="a/laurel-committee-skips-donwald-eighth-time-truthscroll-erupts">Laurel Committee Passes Over Donwald an Eighth Time; Truthscroll Mobilizes</a></h3>
           <p>The frozen northern judges named a jurist from the south as this year&#39;s Laurel Prize winner. High Lord Donwald has declared the committee finished and says he deserved the prize eight times over.</p>
@@ -536,6 +539,8 @@
 
         document.title = article.title + ' | The Beholder\'s Gazette';
         setCategory(article);
+        const heroPic = storyPicSrc(article, false);
+        if (heroPic) document.querySelector('.article-hero').style.backgroundImage = `url('${heroPic}')`;
         document.getElementById('article-title').textContent     = article.title;
         document.getElementById('article-author').textContent    = article.author || 'The Gazette Staff';
         linkAuthor(article.author);
@@ -572,6 +577,7 @@
       if (!related.length) { el.innerHTML = '<p style="color:var(--text-dim);text-align:center;">No more scrolls found.</p>'; return; }
       el.innerHTML = related.map(a => `
         <article class="card"${deskStyle(desks[a.category])}>
+          ${storyPic(a)}
           ${deskTag(a, desks)}
           <h3><a href="a/${a.id}">${esc(a.title)}</a></h3>
           <p>${esc(a.excerpt)}</p>
@@ -589,6 +595,17 @@
         return byCategory;
       }).catch(() => ({}));
       return desksPromise;
+    }
+
+    // Story picture: the article's own image, else its category's (same markup as export-articles.ps1)
+    function storyPicSrc(a, small) {
+      if (a.image) return a.image;
+      const slug = String(a.category || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      return slug ? `img/story/${slug}${small ? '-sm' : ''}.webp` : '';
+    }
+    function storyPic(a) {
+      const src = storyPicSrc(a, true);
+      return src ? `<a class="card-pic" href="a/${a.id}" tabindex="-1" aria-hidden="true"><img src="${esc(src)}" alt="" width="480" height="320" loading="lazy" decoding="async" onerror="this.parentNode.remove()"></a>` : '';
     }
 
     function deskStyle(w) { return w && /^#[0-9a-f]{3,8}$/i.test(w.desk_color || '') ? ` style="--desk:${w.desk_color}"` : ''; }

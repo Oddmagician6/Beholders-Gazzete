@@ -66,7 +66,11 @@
     .spell-card[data-school="Divination"]   { --school-color: #c9a040; }
     .spell-card[data-school="Transmutation"]{ --school-color: #c97040; }
     .spell-card[data-school="Enchantment"]  { --school-color: #c940a0; }
-    .spell-card::before { background: var(--school-color, var(--gold-bright)); }
+    .spell-card::before { background: var(--school-color, var(--gold-bright)); z-index: 1; }
+    /* School picture across the top of each card (img/school/<school>-sm.webp) */
+    .spell-pic { display: block; margin: -24px -24px 16px; aspect-ratio: 3 / 1; overflow: hidden; background: var(--bg-dark); border-bottom: 1px solid color-mix(in srgb, var(--school-color, var(--gold-dim)) 60%, transparent); }
+    .spell-pic img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+    .spell-card:hover .spell-pic img { transform: scale(1.05); }
     .spell-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px; }
     .spell-name { font-family: var(--font-head); font-size: 1.05rem; color: var(--text-bright); flex: 1; min-width: 0; line-height: 1.3; }
     .spell-name a { color: inherit; border-bottom: 1px dotted var(--gold-dim); }
@@ -655,6 +659,7 @@
         const label = esc(favLabel(s.name, fav));
         return `
         <div class="spell-card${fav ? ' is-fav' : ''}" data-school="${s.school}">
+          <div class="spell-pic" aria-hidden="true"><img src="img/school/${s.school.toLowerCase()}-sm.webp" alt="" width="480" height="320" loading="lazy" decoding="async" onerror="this.parentNode.remove()"></div>
           <div class="spell-header">
             <div class="spell-name">
               <a href="spell/${slugOf(s.name)}" title="The spell's own page">${s.name.replace(/\//g, '/<wbr>')}</a>

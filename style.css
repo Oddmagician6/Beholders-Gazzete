@@ -495,6 +495,17 @@ a.card-tag:hover { background: color-mix(in srgb, var(--desk, var(--gold-bright)
 .card p { font-size: 0.86rem; color: var(--text-dim); margin-bottom: 16px; line-height: 1.65; }
 .card-date { font-family: var(--font-ui); font-size: 0.7rem; color: var(--text-dim); margin-top: 4px; }
 
+/* Story pictures: the article's own image, else its category's (img/story/<slug>.webp, small copy -sm).
+   A card's picture bleeds to its edges above the tag; the featured story's runs across its top. */
+.card-pic, .featured-pic { display: block; overflow: hidden; background: var(--bg-dark); }
+.card-pic img, .featured-pic img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+.card-pic { margin: -26px -26px 18px; aspect-ratio: 16 / 9; border-bottom: 1px solid var(--gold-dim); }
+.card:hover .card-pic img, .featured-pic:hover img { transform: scale(1.04); }
+.featured-article::before, .card::before { z-index: 1; } /* keep the badge and desk stripe over a zoomed picture */
+.featured-pic { margin: -44px -44px 26px; aspect-ratio: 21 / 9; border-bottom: var(--border-gold2); }
+@media (max-width: 768px) { .featured-pic { margin: -26px -26px 20px; aspect-ratio: 16 / 9; } }
+@media (max-width: 500px) { .card-pic { margin: -18px -18px 14px; } }
+
 /* ── BUTTONS ─────────────────────────────────────────────── */
 .btn {
   display: inline-block;

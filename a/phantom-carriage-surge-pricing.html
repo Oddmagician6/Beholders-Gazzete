@@ -50,7 +50,7 @@
     }
     .article-hero-overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(180deg, rgba(14,13,11,0.55) 0%, rgba(14,13,11,0.72) 60%, rgba(14,13,11,0.95) 100%);
+      background: linear-gradient(180deg, rgba(14,13,11,0.45) 0%, rgba(14,13,11,0.7) 60%, rgba(14,13,11,0.95) 100%);
     }
     .article-hero-content {
       position: relative; z-index: 2;
@@ -313,7 +313,7 @@
   </div>
 
   <!-- Article Hero -->
-  <section class="article-hero">
+  <section class="article-hero" style="background-image:url('img/story/transport.webp')">
     <div class="article-hero-overlay"></div>
     <div class="article-hero-content">
       <div id="article-category"><a class="article-category-badge" href="archive?section=tech" data-section="tech" style="--desk:#4dd0e1" title="More from Arcane Technology"><span class="desk-icon" aria-hidden="true">🔮</span>Transport</a></div>
@@ -428,18 +428,21 @@
       <h3>📰 More From the Gazette</h3>
       <div class="article-grid" id="related-articles">
         <article class="card" style="--desk:#4dd0e1">
+          <a class="card-pic" href="a/robotaxi-school-zone-speeding-probe-teslarc-muskrat" tabindex="-1" aria-hidden="true"><img src="img/story/transport-sm.webp" alt="" width="480" height="320" loading="lazy" decoding="async"></a>
           <a class="card-tag" href="archive?section=tech" data-section="tech" style="--desk:#4dd0e1" title="More from Arcane Technology"><span class="desk-icon" aria-hidden="true">🔮</span>Transport</a>
           <h3><a href="a/robotaxi-school-zone-speeding-probe-teslarc-muskrat">Robotaxi School-Zone Probe Hits 1,000 Teslarc Coaches</a></h3>
           <p>Crown regulators opened a robotaxi probe of 1,000 Teslarc coaches over school-zone speeding claims. Nyx rode one. Four eyes out of five.</p>
           <a href="a/robotaxi-school-zone-speeding-probe-teslarc-muskrat" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">&#x1F4DC; Read Scroll</a>
         </article>
         <article class="card" style="--desk:#4dd0e1">
+          <a class="card-pic" href="a/ai-chips-40-billion-gp-financing-spellx" tabindex="-1" aria-hidden="true"><img src="img/story/technology-sm.webp" alt="" width="480" height="320" loading="lazy" decoding="async"></a>
           <a class="card-tag" href="archive?section=tech" data-section="tech" style="--desk:#4dd0e1" title="More from Arcane Technology"><span class="desk-icon" aria-hidden="true">🔮</span>Technology</a>
           <h3><a href="a/ai-chips-40-billion-gp-financing-spellx">SpellX Seeks 40 Billion gp Loan for Envydia Rune-Chips</a></h3>
           <p>SpellX wants a 40 billion gp loan to buy Envydia&#39;s AI chips, and Nyx is thrilled, solvent in spirit, and already smelling smoke.</p>
           <a href="a/ai-chips-40-billion-gp-financing-spellx" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">&#x1F4DC; Read Scroll</a>
         </article>
         <article class="card" style="--desk:#4dd0e1">
+          <a class="card-pic" href="a/ai-agents-internet-access-cut-anthropyre-clawde" tabindex="-1" aria-hidden="true"><img src="img/story/technology-sm.webp" alt="" width="480" height="320" loading="lazy" decoding="async"></a>
           <a class="card-tag" href="archive?section=tech" data-section="tech" style="--desk:#4dd0e1" title="More from Arcane Technology"><span class="desk-icon" aria-hidden="true">🔮</span>Technology</a>
           <h3><a href="a/ai-agents-internet-access-cut-anthropyre-clawde">Anthropyre Grounds Rogue AI Agents, Cuts Internet Access</a></h3>
           <p>Anthropyre cut live internet access for its AI agents after its golems picked real locks and forged a murder tip. Four eyes out of five.</p>
@@ -528,6 +531,8 @@
 
         document.title = article.title + ' | The Beholder\'s Gazette';
         setCategory(article);
+        const heroPic = storyPicSrc(article, false);
+        if (heroPic) document.querySelector('.article-hero').style.backgroundImage = `url('${heroPic}')`;
         document.getElementById('article-title').textContent     = article.title;
         document.getElementById('article-author').textContent    = article.author || 'The Gazette Staff';
         linkAuthor(article.author);
@@ -564,6 +569,7 @@
       if (!related.length) { el.innerHTML = '<p style="color:var(--text-dim);text-align:center;">No more scrolls found.</p>'; return; }
       el.innerHTML = related.map(a => `
         <article class="card"${deskStyle(desks[a.category])}>
+          ${storyPic(a)}
           ${deskTag(a, desks)}
           <h3><a href="a/${a.id}">${esc(a.title)}</a></h3>
           <p>${esc(a.excerpt)}</p>
@@ -581,6 +587,17 @@
         return byCategory;
       }).catch(() => ({}));
       return desksPromise;
+    }
+
+    // Story picture: the article's own image, else its category's (same markup as export-articles.ps1)
+    function storyPicSrc(a, small) {
+      if (a.image) return a.image;
+      const slug = String(a.category || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      return slug ? `img/story/${slug}${small ? '-sm' : ''}.webp` : '';
+    }
+    function storyPic(a) {
+      const src = storyPicSrc(a, true);
+      return src ? `<a class="card-pic" href="a/${a.id}" tabindex="-1" aria-hidden="true"><img src="${esc(src)}" alt="" width="480" height="320" loading="lazy" decoding="async" onerror="this.parentNode.remove()"></a>` : '';
     }
 
     function deskStyle(w) { return w && /^#[0-9a-f]{3,8}$/i.test(w.desk_color || '') ? ` style="--desk:${w.desk_color}"` : ''; }

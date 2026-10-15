@@ -31,7 +31,7 @@
     }
     .article-hero-overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(180deg, rgba(14,13,11,0.55) 0%, rgba(14,13,11,0.72) 60%, rgba(14,13,11,0.95) 100%);
+      background: linear-gradient(180deg, rgba(14,13,11,0.45) 0%, rgba(14,13,11,0.7) 60%, rgba(14,13,11,0.95) 100%);
     }
     .article-hero-content {
       position: relative; z-index: 2;
@@ -484,6 +484,8 @@
 
         document.title = article.title + ' | The Beholder\'s Gazette';
         setCategory(article);
+        const heroPic = storyPicSrc(article, false);
+        if (heroPic) document.querySelector('.article-hero').style.backgroundImage = `url('${heroPic}')`;
         document.getElementById('article-title').textContent     = article.title;
         document.getElementById('article-author').textContent    = article.author || 'The Gazette Staff';
         linkAuthor(article.author);
@@ -520,6 +522,7 @@
       if (!related.length) { el.innerHTML = '<p style="color:var(--text-dim);text-align:center;">No more scrolls found.</p>'; return; }
       el.innerHTML = related.map(a => `
         <article class="card"${deskStyle(desks[a.category])}>
+          ${storyPic(a)}
           ${deskTag(a, desks)}
           <h3><a href="a/${a.id}">${esc(a.title)}</a></h3>
           <p>${esc(a.excerpt)}</p>
@@ -537,6 +540,17 @@
         return byCategory;
       }).catch(() => ({}));
       return desksPromise;
+    }
+
+    // Story picture: the article's own image, else its category's (same markup as export-articles.ps1)
+    function storyPicSrc(a, small) {
+      if (a.image) return a.image;
+      const slug = String(a.category || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      return slug ? `img/story/${slug}${small ? '-sm' : ''}.webp` : '';
+    }
+    function storyPic(a) {
+      const src = storyPicSrc(a, true);
+      return src ? `<a class="card-pic" href="a/${a.id}" tabindex="-1" aria-hidden="true"><img src="${esc(src)}" alt="" width="480" height="320" loading="lazy" decoding="async" onerror="this.parentNode.remove()"></a>` : '';
     }
 
     function deskStyle(w) { return w && /^#[0-9a-f]{3,8}$/i.test(w.desk_color || '') ? ` style="--desk:${w.desk_color}"` : ''; }

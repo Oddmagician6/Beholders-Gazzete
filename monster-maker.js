@@ -379,6 +379,9 @@ function renderAll() {
     document.getElementById('mm-dcv').placeholder = read.dc === null ? '—' : String(read.dc);
     updateAttackLines();
     // The stat block.
+    const art = `img/creature/${HB_TYPES.includes(row.type) ? row.type : row.type === 'swarm' ? 'beast' : 'monstrosity'}.webp`;
+    const artEl = document.getElementById('mm-art');
+    if (artEl.getAttribute('src') !== art) artEl.src = art;
     document.getElementById('mm-block').innerHTML = `<h3 class="mm-sb-name">${esc(row.name)}</h3>${monsterBlockHtml(row)}`;
     document.getElementById('mm-sum').innerHTML = `<span>🐲 <b>${esc(row.name)}</b> · CR ${esc(cr)} · AC ${mon.ac} · HP ${hp.avg}</span><a href="#mm-preview">📜 Stat block ↓</a>`;
     // The estimate's working.

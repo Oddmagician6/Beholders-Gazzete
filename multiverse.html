@@ -62,8 +62,12 @@
         .mv-lead {
             position: relative; background: linear-gradient(145deg, var(--bg-raised), var(--bg-card));
             border: var(--border-gold); border-left: 4px solid var(--desk); border-radius: var(--radius-md);
-            padding: 28px; margin-bottom: 30px;
+            padding: 28px; margin-bottom: 30px; overflow: hidden;
         }
+        /* Story picture across the top of the lead (img/story/<category>.webp, export-articles.ps1) */
+        .mv-lead-pic { display: block; margin: -28px -28px 22px; aspect-ratio: 21 / 9; overflow: hidden; border-bottom: var(--border-gold); }
+        .mv-lead-pic img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+        .mv-lead-pic:hover img { transform: scale(1.04); }
         .mv-lead h2 { font-size: clamp(1.35rem, 3.4vw, 1.9rem); line-height: 1.3; margin: 10px 0 12px; }
         .mv-lead h2 a { color: var(--text-bright); }
         .mv-lead h2 a:hover { color: var(--gold-bright); }
@@ -76,6 +80,7 @@
         .mv-more { text-align: center; margin-top: 30px; }
         @media (max-width: 500px) {
             .mv-intro, .mv-lead { padding: 20px; }
+            .mv-lead-pic { margin: -20px -20px 18px; aspect-ratio: 16 / 9; }
         }
     </style>
 </head>
@@ -136,6 +141,7 @@
 
         <div id="mv-list"><!-- prerender:multiverse (written by export-articles.ps1; the script below redraws it) -->
         <article class="mv-lead">
+          <a class="mv-lead-pic" href="a/outside-the-wire-kickstarter-late-pledges" tabindex="-1" aria-hidden="true"><img src="img/story/crowdfunding.webp" alt="" width="960" height="640" decoding="async"></a>
           <a class="card-tag" href="multiverse?topic=Crowdfunding" data-topic="Crowdfunding" style="--desk:#7c8cf8"><span class="desk-icon" aria-hidden="true">🌀</span>Crowdfunding</a>
           <h2><a href="a/outside-the-wire-kickstarter-late-pledges">Outside the Wire Kickstarter Funds, Opens Late Pledges</a></h2>
           <div class="mv-byline">&#x270D;&#xFE0F; Matthias Ashmoor &#xB7; &#x1F4C5; October 14, 2026</div>
@@ -185,6 +191,13 @@
         return `<a class="card-tag" href="multiverse?topic=${encodeURIComponent(a.category)}" data-topic="${esc(a.category)}" style="--desk:${esc(desk.desk_color)}"><span class="desk-icon" aria-hidden="true">${esc(desk.desk_icon)}</span>${esc(a.category)}</a>`;
     }
 
+    // Story picture: the article's own image, else its category's (same markup as export-articles.ps1)
+    function pic(a, cls, small) {
+        const slug = String(a.category || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        const src = a.image || (slug ? `img/story/${slug}${small ? '-sm' : ''}.webp` : '');
+        return src ? `<a class="${cls}" href="a/${encodeURIComponent(a.id)}" tabindex="-1" aria-hidden="true"><img src="${esc(src)}" alt="" width="${small ? 480 : 960}" height="${small ? 320 : 640}"${small ? ' loading="lazy"' : ''} decoding="async" onerror="this.parentNode.remove()"></a>` : '';
+    }
+
     function renderChips() {
         const el = document.getElementById('mv-chips');
         const counts = {};
@@ -206,6 +219,7 @@
         const [lead, ...rest] = rows;
         list.innerHTML = `
           <article class="mv-lead">
+            ${pic(lead, 'mv-lead-pic', false)}
             ${tag(lead)}
             <h2><a href="a/${encodeURIComponent(lead.id)}">${esc(lead.title)}</a></h2>
             <div class="mv-byline">✍️ ${esc(lead.author)} · 📅 ${longDate(lead.date)}</div>
@@ -214,6 +228,7 @@
           </article>` +
           (rest.length ? `<div class="article-grid">${rest.slice(0, shown).map(a => `
             <article class="card" style="--desk:${esc(desk.desk_color)}">
+              ${pic(a, 'card-pic', true)}
               ${tag(a)}
               <h3><a href="a/${encodeURIComponent(a.id)}">${esc(a.title)}</a></h3>
               <p>${esc(plain(a.excerpt))}</p>

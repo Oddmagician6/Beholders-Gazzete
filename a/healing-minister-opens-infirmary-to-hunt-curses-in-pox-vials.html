@@ -50,7 +50,7 @@
     }
     .article-hero-overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(180deg, rgba(14,13,11,0.55) 0%, rgba(14,13,11,0.72) 60%, rgba(14,13,11,0.95) 100%);
+      background: linear-gradient(180deg, rgba(14,13,11,0.45) 0%, rgba(14,13,11,0.7) 60%, rgba(14,13,11,0.95) 100%);
     }
     .article-hero-content {
       position: relative; z-index: 2;
@@ -313,7 +313,7 @@
   </div>
 
   <!-- Article Hero -->
-  <section class="article-hero">
+  <section class="article-hero" style="background-image:url('img/story/health.webp')">
     <div class="article-hero-overlay"></div>
     <div class="article-hero-content">
       <div id="article-category"><a class="article-category-badge" href="archive?section=health" data-section="health" style="--desk:#9ccc65" title="More from Health, Science &amp; Nature"><span class="desk-icon" aria-hidden="true">🌿</span>Health</a></div>
@@ -436,18 +436,21 @@
       <h3>📰 More From the Gazette</h3>
       <div class="article-grid" id="related-articles">
         <article class="card" style="--desk:#9ccc65">
+          <a class="card-pic" href="a/alfalfa-sprout-recall-barleyn-seeds" tabindex="-1" aria-hidden="true"><img src="img/story/health-sm.webp" alt="" width="480" height="320" loading="lazy" decoding="async"></a>
           <a class="card-tag" href="archive?section=health" data-section="health" style="--desk:#9ccc65" title="More from Health, Science &amp; Nature"><span class="desk-icon" aria-hidden="true">🌿</span>Health</a>
           <h3><a href="a/alfalfa-sprout-recall-barleyn-seeds">Alfalfa Sprout Recall: 76 Sick, Brother Wendell Boils Soup</a></h3>
           <p>An alfalfa sprout recall has sickened 76 across 16 provinces. Brother Wendell would like everyone to step away from the jar and put on a pot of soup.</p>
           <a href="a/alfalfa-sprout-recall-barleyn-seeds" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">&#x1F4DC; Read Scroll</a>
         </article>
         <article class="card" style="--desk:#9ccc65">
+          <a class="card-pic" href="a/bird-flu-evergreen-reach-dairy-cows-wendell" tabindex="-1" aria-hidden="true"><img src="img/story/health-sm.webp" alt="" width="480" height="320" loading="lazy" decoding="async"></a>
           <a class="card-tag" href="archive?section=health" data-section="health" style="--desk:#9ccc65" title="More from Health, Science &amp; Nature"><span class="desk-icon" aria-hidden="true">🌿</span>Health</a>
           <h3><a href="a/bird-flu-evergreen-reach-dairy-cows-wendell">Bird Flu Jumps to Evergreen Reach Cows; Soup Advised</a></h3>
           <p>Bird flu has reached dairy cows in two Evergreen Reach herds, a first for the province. The milk is thick, the cows sulk, and my ladle is out.</p>
           <a href="a/bird-flu-evergreen-reach-dairy-cows-wendell" class="btn" style="font-size:0.68rem;padding:6px 12px;margin-top:10px;">&#x1F4DC; Read Scroll</a>
         </article>
         <article class="card" style="--desk:#9ccc65">
+          <a class="card-pic" href="a/red-spot-fever-tops-4080-as-disease-council-runs-short-of-clerics" tabindex="-1" aria-hidden="true"><img src="img/story/health-sm.webp" alt="" width="480" height="320" loading="lazy" decoding="async"></a>
           <a class="card-tag" href="archive?section=health" data-section="health" style="--desk:#9ccc65" title="More from Health, Science &amp; Nature"><span class="desk-icon" aria-hidden="true">🌿</span>Health</a>
           <h3><a href="a/red-spot-fever-tops-4080-as-disease-council-runs-short-of-clerics">Red-Spot Fever Tops 4,080 Cases as Disease Council Runs Short of Clerics</a></h3>
           <p>Nu Yarrow declares a statewide disaster while the Clerics&#39; Disease Council counts cases with a third fewer counters. Brother Wendell has barley, cots, and some questions about the new scale.</p>
@@ -536,6 +539,8 @@
 
         document.title = article.title + ' | The Beholder\'s Gazette';
         setCategory(article);
+        const heroPic = storyPicSrc(article, false);
+        if (heroPic) document.querySelector('.article-hero').style.backgroundImage = `url('${heroPic}')`;
         document.getElementById('article-title').textContent     = article.title;
         document.getElementById('article-author').textContent    = article.author || 'The Gazette Staff';
         linkAuthor(article.author);
@@ -572,6 +577,7 @@
       if (!related.length) { el.innerHTML = '<p style="color:var(--text-dim);text-align:center;">No more scrolls found.</p>'; return; }
       el.innerHTML = related.map(a => `
         <article class="card"${deskStyle(desks[a.category])}>
+          ${storyPic(a)}
           ${deskTag(a, desks)}
           <h3><a href="a/${a.id}">${esc(a.title)}</a></h3>
           <p>${esc(a.excerpt)}</p>
@@ -589,6 +595,17 @@
         return byCategory;
       }).catch(() => ({}));
       return desksPromise;
+    }
+
+    // Story picture: the article's own image, else its category's (same markup as export-articles.ps1)
+    function storyPicSrc(a, small) {
+      if (a.image) return a.image;
+      const slug = String(a.category || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      return slug ? `img/story/${slug}${small ? '-sm' : ''}.webp` : '';
+    }
+    function storyPic(a) {
+      const src = storyPicSrc(a, true);
+      return src ? `<a class="card-pic" href="a/${a.id}" tabindex="-1" aria-hidden="true"><img src="${esc(src)}" alt="" width="480" height="320" loading="lazy" decoding="async" onerror="this.parentNode.remove()"></a>` : '';
     }
 
     function deskStyle(w) { return w && /^#[0-9a-f]{3,8}$/i.test(w.desk_color || '') ? ` style="--desk:${w.desk_color}"` : ''; }
