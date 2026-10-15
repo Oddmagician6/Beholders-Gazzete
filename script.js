@@ -93,7 +93,7 @@ function storyPicSrc(a, small) {
 function storyPic(a, cls, small, lazy) {
   const src = storyPicSrc(a, small);
   if (!src) return '';
-  return `<a class="${cls}" href="a/${a.id}" tabindex="-1" aria-hidden="true"><img src="${esc(src)}" alt="" width="${small ? 480 : 960}" height="${small ? 320 : 640}"${lazy ? ' loading="lazy"' : ''} decoding="async" onerror="this.parentNode.remove()"></a>`;
+  return `<a class="${cls}" href="a/${a.id}" tabindex="-1" aria-hidden="true"><img src="${esc(src)}" alt="" width="${small ? 480 : 960}" height="${small ? 320 : 640}"${lazy ? ' loading="lazy"' : ' fetchpriority="high"'} decoding="async" onerror="this.parentNode.remove()"></a>`;
 }
 
 // Section bar. export-articles.ps1 pre-renders the same chips, linking to the archive for no-JS visitors.

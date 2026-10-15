@@ -14,6 +14,7 @@
     <link rel="alternate" type="application/rss+xml" title="The Beholder&#39;s Gazette" href="feed.xml">
     <script src="sw-register.js" defer></script>
     <script>(function(h,id){if(location.hostname!==h)return;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+id;document.head.appendChild(s);window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments);};gtag('js',new Date());gtag('config',id);})('gazette.ashforgestudio.com','G-9W2HHXRTHF');</script>
+    <meta name="robots" content="max-image-preview:large">
     <link rel="canonical" href="https://gazette.ashforgestudio.com/multiverse">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="The Beholder&#39;s Gazette">
@@ -141,7 +142,7 @@
 
         <div id="mv-list"><!-- prerender:multiverse (written by export-articles.ps1; the script below redraws it) -->
         <article class="mv-lead">
-          <a class="mv-lead-pic" href="a/wild-hearth-kickstarter-pointy-hat" tabindex="-1" aria-hidden="true"><img src="img/story/crowdfunding.webp" alt="" width="960" height="640" decoding="async"></a>
+          <a class="mv-lead-pic" href="a/wild-hearth-kickstarter-pointy-hat" tabindex="-1" aria-hidden="true"><img src="img/story/crowdfunding.webp" alt="" width="960" height="640" fetchpriority="high" decoding="async"></a>
           <a class="card-tag" href="multiverse?topic=Crowdfunding" data-topic="Crowdfunding" style="--desk:#7c8cf8"><span class="desk-icon" aria-hidden="true">🌀</span>Crowdfunding</a>
           <h2><a href="a/wild-hearth-kickstarter-pointy-hat">Pointy Hat&#39;s Wild Hearth Kickstarter Passes $3.6 Million</a></h2>
           <div class="mv-byline">&#x270D;&#xFE0F; Matthias Ashmoor &#xB7; &#x1F4C5; October 15, 2026</div>
@@ -204,7 +205,7 @@
     function pic(a, cls, small) {
         const slug = String(a.category || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
         const src = a.image || (slug ? `img/story/${slug}${small ? '-sm' : ''}.webp` : '');
-        return src ? `<a class="${cls}" href="a/${encodeURIComponent(a.id)}" tabindex="-1" aria-hidden="true"><img src="${esc(src)}" alt="" width="${small ? 480 : 960}" height="${small ? 320 : 640}"${small ? ' loading="lazy"' : ''} decoding="async" onerror="this.parentNode.remove()"></a>` : '';
+        return src ? `<a class="${cls}" href="a/${encodeURIComponent(a.id)}" tabindex="-1" aria-hidden="true"><img src="${esc(src)}" alt="" width="${small ? 480 : 960}" height="${small ? 320 : 640}"${small ? ' loading="lazy"' : ' fetchpriority="high"'} decoding="async" onerror="this.parentNode.remove()"></a>` : '';
     }
 
     function renderChips() {
