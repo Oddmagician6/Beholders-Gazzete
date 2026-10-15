@@ -146,7 +146,7 @@ function townDl(lines) {
 }
 
 function townNpcBtn(p, label) {
-    return `<a class="btn" href="${esc(facNpcLink(p))}">🎭 ${esc(label || p.npc.firstName)}</a>`;
+    return `<a class="btn" href="${esc(facNpcLink(p))}">${facNpcIcon(p)} ${esc(label || p.npc.firstName)}</a>`;
 }
 
 function townGodsHTML(t, ctx) {

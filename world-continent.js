@@ -91,7 +91,7 @@ function contNationHTML(c, nat) {
         <h4><span class="cont-swatch" style="background:${nat.color}"></span>${esc(facCap(nat.name))}<span class="wb-tag">${esc(G.label)}</span></h4>
         ${contDl(contNationLines(c, nat.index))}
         <ul class="wb-list cont-towns">${towns.map(t => contTownItem(c, t)).join('')}</ul>
-        <p class="pan-links"><a class="btn" href="${esc(facNpcLink(nat.ruler))}">🎭 ${esc(nat.ruler.title)} ${esc(nat.ruler.npc.firstName)}</a></p>
+        <p class="pan-links"><a class="btn" href="${esc(facNpcLink(nat.ruler))}">${facNpcIcon(nat.ruler)} ${esc(nat.ruler.title)} ${esc(nat.ruler.npc.firstName)}</a></p>
     </section>`;
 }
 

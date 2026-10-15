@@ -21,6 +21,14 @@ const HANDOUT_TYPES = {
     prices: { icon: '🏷️', label: 'Price List' }
 };
 
+// Wanted-poster sketches in img/wanted/, one per race and gender (plus a lone half-orc),
+// as [value, label] picker options. A poster filled from an NPC picks theirs.
+const HANDOUT_LIKENESSES = [['', 'None (an empty box)'], ...[
+    ...['human', 'elf', 'dwarf', 'halfling', 'gnome', 'orc', 'tiefling', 'dragonborn', 'aasimar']
+        .flatMap(r => ['male', 'female', 'nonbinary'].map(g => [r, g])),
+    ['half-orc', 'nonbinary']
+].map(([r, g]) => [`${r}-${g}`, `${r.charAt(0).toUpperCase() + r.slice(1)}, ${g}`])];
+
 const HANDOUT_SEALS = { red: '#8b1d1d', black: '#26211c', green: '#2f5a35', blue: '#24406b', gold: '#a37c1c' };
 
 // k: field, label, max: length, area: a textarea, gp: a coin amount, check: a tick box,
@@ -33,6 +41,7 @@ const HANDOUT_FIELDS = {
         { k: 'crime', label: 'For the crime of', max: 240, area: true },
         { k: 'look', label: 'Description', max: 400, area: true },
         { k: 'portrait', label: 'Leave a box for a portrait', check: true },
+        { k: 'likeness', label: 'Sketch in the box', options: HANDOUT_LIKENESSES },
         { k: 'reward', label: 'Reward (gp)', gp: true },
         { k: 'paid', label: 'Reward note', max: 100 },
         { k: 'issuer', label: 'Issued by', max: 140 }
@@ -295,7 +304,7 @@ function handoutFromSource(t, src) {
             const [crime, tier] = randomArray(HANDOUT_CRIMES);
             h = {
                 terms: randomArray(['Dead or Alive', 'Dead or Alive', 'Alive', 'Alive, Preferably', 'For Questioning']),
-                name: n.name, alias: n.nickname || '', crime, look: hoNpcLook(n), portrait: true,
+                name: n.name, alias: n.nickname || '', crime, look: hoNpcLook(n), portrait: true, likeness: `${n.race}-${n.gender}`,
                 reward: randomArray(HANDOUT_REWARDS[tier]), paid: randomArray(HANDOUT_PAID), issuer: randomArray(HANDOUT_ISSUERS)
             };
         } else if (src.npc && t === 'letter') {
@@ -366,7 +375,9 @@ function handoutSheetHtml(h, ink = false) {
         return sheet('wanted', `
             <div class="ho-wanted-head">Wanted</div>
             ${h.terms ? `<div class="ho-wanted-terms">${hoEsc(h.terms)}</div>` : ''}
-            ${h.portrait ? '<div class="ho-portrait"><span>Likeness</span></div>' : ''}
+            ${!h.portrait ? '' : h.likeness
+                ? `<div class="ho-portrait ho-has-sketch"><img src="img/wanted/${hoEsc(h.likeness)}.webp" alt="A sketched likeness"></div>`
+                : '<div class="ho-portrait"><span>Likeness</span></div>'}
             <div class="ho-wanted-name">${hoEsc(h.name || 'Name Unknown')}</div>
             ${h.alias ? `<div class="ho-wanted-alias">also known as “${hoEsc(h.alias)}”</div>` : ''}
             ${h.crime ? `<div class="ho-rule"></div><div class="ho-wanted-label">For the crime of</div><div class="ho-wanted-crime">${hoEsc(h.crime)}</div>` : ''}

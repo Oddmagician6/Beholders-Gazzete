@@ -42,6 +42,9 @@
   display: flex; align-items: flex-end; justify-content: center;
 }
 .ho-ink .ho-portrait { box-shadow: inset 0 0 0 5px #fff, inset 0 0 0 6px #999; }
+.ho-portrait.ho-has-sketch { padding: 7px; }
+/* Multiply drops the sketch's white paper into the parchment (and leaves it white on an ink sheet). */
+.ho-portrait img { width: 100%; height: 100%; object-fit: cover; display: block; mix-blend-mode: multiply; }
 .ho-portrait span { font-family: var(--font-head); font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; opacity: 0.55; padding-bottom: 8px; }
 .ho-wanted-name { font-family: var(--font-head); font-weight: 900; font-size: clamp(1.4rem, 5.5vw, 2rem); line-height: 1.15; color: var(--ho-dark); }
 .ho-wanted-alias { font-style: italic; font-size: 1.02rem; margin-top: 2px; }

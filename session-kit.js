@@ -217,7 +217,7 @@ function npcHTML() {
         .map(k => `<div>${k.toUpperCase()}<b>${n.stats[k]}</b></div>`).join('');
     const hair = hairText(n);
     return `<div class="npc-title">
-            <span class="npc-icon" aria-hidden="true">${n.portraitIcon}</span>
+            <span class="npc-icon" aria-hidden="true">${npcFaceHtml(n)}</span>
             <div>
                 <div class="npc-name">${esc(n.name)}</div>
                 <div class="npc-sub">${esc(cap(n.race))} · ${esc(n.age)} · ${esc(n.profession)}</div>
@@ -314,7 +314,7 @@ function shopHTML() {
                 <div class="npc-name">${def.icon} ${esc(s.name)}</div>
                 <div class="npc-sub">${esc(def.label)} · ${esc(SHOP_WEALTH[s.wealth].label)}</div>
                 <span class="kit-label">Shopkeeper</span>
-                <p>${k.portraitIcon} <b>${esc(k.name)}</b>, ${esc(cap(k.race))} ${esc(k.profession)}. ${esc(k.trait)}.</p>
+                <p>${npcFaceHtml(k)} <b>${esc(k.name)}</b>, ${esc(cap(k.race))} ${esc(k.profession)}. ${esc(k.trait)}.</p>
                 <p><em>"${esc(s.greeting)}"</em></p>
                 <span class="kit-label">Quirk</span>
                 <p>${esc(s.quirk)}</p>

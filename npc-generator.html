@@ -282,6 +282,10 @@
             font-size: 4rem;
         }
 
+        /* The painted portrait fills the frame as a circle; the emoji stays as a fallback. */
+        .npc-portrait.has-img { border-radius: 50%; overflow: hidden; }
+        .npc-portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
         .npc-identity {
             flex: 1;
             min-width: 250px;
@@ -1066,6 +1070,7 @@
                 <!-- Header -->
                 <div class="npc-header">
                     <div class="npc-portrait" id="npc-portrait">
+                        <img id="portrait-img" alt="" width="120" height="120" hidden>
                         <span class="portrait-icon" id="portrait-icon">👤</span>
                     </div>
                     <div class="npc-identity">

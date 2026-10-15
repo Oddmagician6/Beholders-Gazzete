@@ -76,7 +76,7 @@ function renderQuest() {
             <section class="tv-block">
                 <h4>🗣️ Quest giver</h4>
                 <div class="tv-npc">
-                    <span class="tv-icon" aria-hidden="true">${g.portraitIcon}</span>
+                    <span class="tv-icon" aria-hidden="true">${npcFaceHtml(g)}</span>
                     <div>
                         <div class="tv-npc-name">${esc(g.name)}</div>
                         <div class="tv-npc-sub">${npcSub(g, g.profession)}</div>

@@ -768,6 +768,13 @@ footer::before {
 
 .generate-btn:active { transform: scale(0.98); }
 
+/* A rolled NPC's portrait (npcFaceHtml in npc-data.js): sized to the text around it, like the emoji it replaced. */
+.npc-face {
+  width: 1.5em; height: 1.5em; border-radius: 50%; object-fit: cover;
+  vertical-align: middle; border: 1px solid var(--gold-bright);
+}
+@media print { .npc-face { border-color: #999; } }
+
 /* ── READING PROGRESS ────────────────────────────────────── */
 .reading-progress { position: fixed; top: 0; left: 0; width: 100%; height: 3px; z-index: 1000; }
 .reading-progress-bar { height: 100%; background: linear-gradient(90deg, var(--crimson), var(--gold-bright)); width: 0%; transition: width 0.1s ease; }

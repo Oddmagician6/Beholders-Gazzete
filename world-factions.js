@@ -93,6 +93,11 @@ function facNpcLink(p) {
     return 'npc-generator?' + params.toString();
 }
 
+// A person's button icon: their portrait (by race and gender).
+function facNpcIcon(p) {
+    return npcFaceHtml(p.npc);
+}
+
 function facPantheonLink(god) {
     const g = facState.gods;
     const params = new URLSearchParams({ tab: 'pantheon', seed: g.seed });
@@ -129,7 +134,7 @@ function facFamilyLink(w, i, ctx) {
 
 function facPeopleLinks(f) {
     const people = [f.leader, ...f.lieutenants];
-    return `<p class="pan-links">${people.map(p => `<a class="btn" href="${esc(facNpcLink(p))}">🎭 ${esc(p.npc.firstName)}</a>`).join(' ')}</p>`;
+    return `<p class="pan-links">${people.map(p => `<a class="btn" href="${esc(facNpcLink(p))}">${facNpcIcon(p)} ${esc(p.npc.firstName)}</a>`).join(' ')}</p>`;
 }
 
 function facOneHTML(w, i, ctx) {

@@ -105,7 +105,7 @@ function renderTavern() {
             <section class="tv-block">
                 <h4>🧑‍🍳 Behind the bar</h4>
                 <div class="tv-npc">
-                    <span class="tv-icon" aria-hidden="true">${o.portraitIcon}</span>
+                    <span class="tv-icon" aria-hidden="true">${npcFaceHtml(o)}</span>
                     <div>
                         <div class="tv-npc-name">${esc(o.name)}</div>
                         <div class="tv-npc-sub">${npcSub(o, o.role)}</div>
@@ -116,7 +116,7 @@ function renderTavern() {
                 <p class="tv-secret"><b>Secret:</b> ${esc(o.secret)}</p>
                 <ul class="tv-regulars tv-staff">${tv.staff.map(s => `
                     <li>
-                        <div class="tv-npc-name">${s.portraitIcon} ${esc(s.name)}</div>
+                        <div class="tv-npc-name">${npcFaceHtml(s)} ${esc(s.name)}</div>
                         <div class="tv-npc-sub">${npcSub(s, s.role)}</div>
                         <p>${esc(capWord(s.note))}.</p>
                     </li>`).join('')}
@@ -126,7 +126,7 @@ function renderTavern() {
                 <h4>🪑 The regulars</h4>
                 <ul class="tv-regulars">${tv.regulars.map((r, i) => `
                     <li>
-                        <div class="tv-npc-name">${r.portraitIcon} ${esc(r.name)}</div>
+                        <div class="tv-npc-name">${npcFaceHtml(r)} ${esc(r.name)}</div>
                         <div class="tv-npc-sub">${npcSub(r, r.profession)}</div>
                         <p>Found ${esc(r.habit)}. ${esc(r.trait)}.${r.tie ? ` ${esc(capWord(r.tie))}.` : ''}</p>
                         ${i === 0 ? `<p class="tv-hook"><b>Has work:</b> ${esc(r.questHook)}</p>` : ''}

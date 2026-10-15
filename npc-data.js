@@ -767,6 +767,17 @@ const NPC_PORTRAITS = {
     gnome: '🎩', orc: '👹', tiefling: '😈', dragonborn: '🐉'
 };
 
+// The painted portrait for a race and gender (img/npc/, one per pair), or '' for anything else.
+function npcPortraitSrc(race, gender) {
+    return NPC_RACES.includes(race) && NPC_GENDERS.includes(gender) ? `img/npc/${race}-${gender}.webp` : '';
+}
+
+// A rolled NPC's face for a card or a list: a round portrait (.npc-face in style.css), or its race emoji.
+function npcFaceHtml(n) {
+    const src = npcPortraitSrc(n.race, n.gender);
+    return src ? `<img class="npc-face" src="${src}" alt="" width="40" height="40" loading="lazy">` : (n.portraitIcon || '👤');
+}
+
 // "Just a name" (F17): count names for a race and gender ('random' = any).
 // Each is { name (full), first, race, gender }. No repeats unless the pool runs dry.
 function rollNames(count = 10, opts = {}) {

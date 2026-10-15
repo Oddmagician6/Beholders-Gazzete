@@ -61,6 +61,12 @@ function displayNPC(includeStats, includeSecrets, includeQuest) {
 
     // Header
     document.getElementById('portrait-icon').textContent = currentNPC.portraitIcon;
+    const portrait = npcPortraitSrc(currentNPC.race, currentNPC.gender);
+    const portraitImg = document.getElementById('portrait-img');
+    portraitImg.hidden = !portrait;
+    if (portrait) { portraitImg.src = portrait; portraitImg.alt = `Portrait of ${currentNPC.name}`; }
+    document.getElementById('portrait-icon').hidden = !!portrait;
+    document.getElementById('npc-portrait').classList.toggle('has-img', !!portrait);
     document.getElementById('npc-name').textContent = currentNPC.name;
     document.getElementById('npc-race-display').textContent = currentNPC.race.charAt(0).toUpperCase() + currentNPC.race.slice(1);
     document.getElementById('npc-age-display').textContent = currentNPC.age;

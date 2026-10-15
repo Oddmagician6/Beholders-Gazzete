@@ -55,7 +55,7 @@ function keeperHTML(k) {
     return `<div class="keeper">
         <h2 class="shop-h">Shopkeeper</h2>
         <div class="keeper-title">
-            <span class="keeper-icon" aria-hidden="true">${k.portraitIcon}</span>
+            <span class="keeper-icon" aria-hidden="true">${npcFaceHtml(k)}</span>
             <div>
                 <div class="keeper-name">${esc(k.name)}</div>
                 <div class="keeper-sub">${esc(cap(k.race))} · ${esc(k.age)} · ${esc(k.profession)}</div>
