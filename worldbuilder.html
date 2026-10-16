@@ -356,6 +356,15 @@
     .cm-scale-t { font: 8px system-ui, sans-serif; fill: #f0e6c8; text-anchor: middle; }
     .cm-north-a { fill: #f0e6c8; stroke: #2a2116; stroke-width: 0.8; }
     .cm-north-t { font: 700 9px Georgia, serif; fill: #f0e6c8; text-anchor: middle; }
+    .cm-a-tint { opacity: 0.32; }
+    .cm-a-realm { opacity: 0.13; }
+    .cm-a-ripple { fill: none; stroke: #e4efe6; stroke-width: 6; opacity: 0.2; stroke-linejoin: round; }
+    .cm-a-hit { fill: transparent; }
+    .cm-a-badge { fill: #8a2f2a; stroke: #f0e6c8; stroke-width: 0.9; }
+    .cm-a-n { font-size: 6px; }
+    .cm-a-title { font-family: 'Cinzel', Georgia, serif; font-weight: 700; fill: #3a2414; text-anchor: middle; letter-spacing: 0.06em; }
+    .cm-key:hover .cm-a-icon, .cm-key:focus-visible .cm-a-icon { filter: drop-shadow(0 0 1.5px #e8b830) drop-shadow(0 0 1.5px #e8b830); }
+    .cm-key:hover .cm-a-badge, .cm-key:focus-visible .cm-a-badge { stroke: #e8b830; stroke-width: 1.6; }
     .cont-swatch { display: inline-block; width: 0.8em; height: 0.8em; border-radius: 2px; margin-right: 8px; vertical-align: baseline; opacity: 0.85; }
     .cont-nation { margin-bottom: 14px; scroll-margin: 20px; }
     .cont-nation h4 { font-family: 'IM Fell English', serif; font-size: 1.2rem; font-weight: 400; color: var(--text-bright); }
@@ -613,25 +622,25 @@
       body.print-cont .wb-block, body.print-cont .wb-dl div, body.print-cont .wb-list li { border-color: #999 !important; }
       body.print-cont .cont-nation, body.print-cont .cont-pois li { break-inside: avoid; }
       body.print-cont .cont-map-wrap { background: #fff; border-color: #000; break-inside: avoid; }
-      body.print-cont .cm-sea-bg { fill: #fff; }
-      body.print-cont .cm-shallow { fill: #eee; }
-      body.print-cont .cm-land { fill: #fff; stroke: #fff; }
-      body.print-cont .cm-tint, body.print-cont .cm-realm { display: none; }
-      body.print-cont .cm-coast { stroke: #000; stroke-width: 1.5; }
-      body.print-cont .cm-river { stroke: #555; }
-      body.print-cont .cm-border { stroke: #000; stroke-dasharray: 4 2; opacity: 1; }
-      body.print-cont .cm-band { stroke: #999; }
-      body.print-cont .cm-band-label, body.print-cont .cm-sea { fill: #555; }
-      body.print-cont .cm-peak, body.print-cont .cm-peak-shade, body.print-cont .cm-hill, body.print-cont .cm-dune, body.print-cont .cm-reed,
-      body.print-cont .cm-canyon, body.print-cont .cm-heath, body.print-cont .cm-grass, body.print-cont .cm-snow, body.print-cont .cm-road { stroke: #000; }
-      body.print-cont .cm-tree, body.print-cont .cm-pine, body.print-cont .cm-jungle { fill: #555; }
-      body.print-cont .cm-journey { display: none; }
-      body.print-cont .cm-capital, body.print-cont .cm-town { fill: #000; stroke: #fff; }
-      body.print-cont .cm-poi { fill: #fff; stroke: #000; }
-      body.print-cont .cm-poi-n { fill: #000; }
-      body.print-cont .cm-nation, body.print-cont .cm-town-label, body.print-cont .cm-poi-label { fill: #000; stroke: #fff; opacity: 1; }
-      body.print-cont .cm-scale-t, body.print-cont .cm-north-t { fill: #000; }
-      body.print-cont .cm-north-a, body.print-cont .cm-scale-b { fill: #fff; stroke: #000; }
+      body.print-cont .cont-map:not(.cm-atlas) .cm-sea-bg { fill: #fff; }
+      body.print-cont .cont-map:not(.cm-atlas) .cm-shallow { fill: #eee; }
+      body.print-cont .cont-map:not(.cm-atlas) .cm-land { fill: #fff; stroke: #fff; }
+      body.print-cont .cont-map:not(.cm-atlas) .cm-tint, body.print-cont .cont-map:not(.cm-atlas) .cm-realm { display: none; }
+      body.print-cont .cont-map:not(.cm-atlas) .cm-coast { stroke: #000; stroke-width: 1.5; }
+      body.print-cont .cont-map:not(.cm-atlas) .cm-river { stroke: #555; }
+      body.print-cont .cont-map:not(.cm-atlas) .cm-border { stroke: #000; stroke-dasharray: 4 2; opacity: 1; }
+      body.print-cont .cont-map:not(.cm-atlas) .cm-band { stroke: #999; }
+      body.print-cont .cont-map:not(.cm-atlas) .cm-band-label, body.print-cont .cont-map:not(.cm-atlas) .cm-sea { fill: #555; }
+      body.print-cont .cont-map:not(.cm-atlas) .cm-peak, body.print-cont .cont-map:not(.cm-atlas) .cm-peak-shade, body.print-cont .cont-map:not(.cm-atlas) .cm-hill, body.print-cont .cont-map:not(.cm-atlas) .cm-dune, body.print-cont .cont-map:not(.cm-atlas) .cm-reed,
+      body.print-cont .cont-map:not(.cm-atlas) .cm-canyon, body.print-cont .cont-map:not(.cm-atlas) .cm-heath, body.print-cont .cont-map:not(.cm-atlas) .cm-grass, body.print-cont .cont-map:not(.cm-atlas) .cm-snow, body.print-cont .cont-map:not(.cm-atlas) .cm-road { stroke: #000; }
+      body.print-cont .cont-map:not(.cm-atlas) .cm-tree, body.print-cont .cont-map:not(.cm-atlas) .cm-pine, body.print-cont .cont-map:not(.cm-atlas) .cm-jungle { fill: #555; }
+      body.print-cont .cont-map:not(.cm-atlas) .cm-journey { display: none; }
+      body.print-cont .cont-map:not(.cm-atlas) .cm-capital, body.print-cont .cont-map:not(.cm-atlas) .cm-town { fill: #000; stroke: #fff; }
+      body.print-cont .cont-map:not(.cm-atlas) .cm-poi { fill: #fff; stroke: #000; }
+      body.print-cont .cont-map:not(.cm-atlas) .cm-poi-n { fill: #000; }
+      body.print-cont .cont-map:not(.cm-atlas) .cm-nation, body.print-cont .cont-map:not(.cm-atlas) .cm-town-label, body.print-cont .cont-map:not(.cm-atlas) .cm-poi-label { fill: #000; stroke: #fff; opacity: 1; }
+      body.print-cont .cont-map:not(.cm-atlas) .cm-scale-t, body.print-cont .cont-map:not(.cm-atlas) .cm-north-t { fill: #000; }
+      body.print-cont .cont-map:not(.cm-atlas) .cm-north-a, body.print-cont .cont-map:not(.cm-atlas) .cm-scale-b { fill: #fff; stroke: #000; }
       body.print-cont .cont-swatch { border: 1px solid #000; }
       body.print-cont .site-n { border-color: #000; }
       /* Maps print (F54): the whole picture with its pins, and the key. */
@@ -981,6 +990,7 @@
           <label>Map size <select id="cont-size"><option value="random" selected>🎲 Any size</option></select></label>
           <label>Land and sea <select id="cont-land"><option value="random" selected>🎲 Any mix</option></select></label>
           <label>Nations <select id="cont-nations"><option value="random" selected>🎲 Any number</option></select></label>
+          <label>Map style <select id="cont-style"></select></label>
         </div>
         <div class="tool-toolbar">
           <button type="button" class="btn btn-gold" id="cont-roll">🌍 Roll a Continent</button>

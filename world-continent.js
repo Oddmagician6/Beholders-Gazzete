@@ -11,13 +11,20 @@
    a faction…), which a click on the pin then opens. Pins are kept on this map's notebook
    entry (found by its seed and options; the first pin saves the map there), so they come
    back whenever the same map is opened, and they print and download with it.
-   URL: ?tab=continent&seed=&size=&land=&nations=
+   Two looks (style): 🎨 Illustrated, the hand-drawn pictures in img/map, and ✒️ Classic ink,
+   the plain symbols that print well in black and white. The look is not part of the map:
+   pins and notebook entries are the same for both.
+   URL: ?tab=continent&seed=&size=&land=&nations=&style= (style: only when classic)
    ============================================ */
 
 const CONT_FIELDS = { size: 'cont-size', land: 'cont-land', nations: 'cont-nations' };
 
 let contState = { seed: null, data: null, journey: null };
 let contBoard = null;   // the pins (world-pins.js), made in setupPins
+
+function contStyle() {
+    return document.getElementById('cont-style').value;
+}
 
 function contOpts() {
     const v = id => document.getElementById(id).value;
@@ -31,6 +38,7 @@ function contParams() {
         params[key] = fieldValue(el) === defaultValue(el) ? null : el.value;
     });
     params.seed = contState.seed;
+    params.style = contStyle() === 'atlas' ? null : contStyle();
     return worldUrlFor('continent', params);
 }
 
@@ -50,6 +58,7 @@ function applyContinentUrl(p) {
         const el = document.getElementById(id);
         if (!setFieldValue(el, p.get(key))) el.value = defaultValue(el);
     });
+    document.getElementById('cont-style').value = CONT_STYLES[p.get('style')] ? p.get('style') : 'atlas';
     const seed = parseSeed(p.get('seed'));
     if (!seed) return false;
     rollContinentFor(seed, null);
@@ -116,6 +125,25 @@ function contJourneyText(c, j) {
     return `About ${j.miles.toLocaleString('en-US')} miles, ${how}. At a normal pace (24 miles a day), about ${days} day${days === 1 ? '' : 's'}${T.difficult ? ', or longer: the going is hard' : ''}.`;
 }
 
+function contLegend() {
+    const common = '─ ─ a road (dotted: an unkept track) · colored lands are nations, uncolored land is wild · dashed lines across the map mark the climate bands, named at the right edge';
+    return contStyle() === 'atlas'
+        ? `Tap a town or a numbered place to read about it. Each capital is drawn for its kind of rule (a castle for a kingdom, a cathedral for a theocracy, crystal towers for a magocracy…), and towns grow from a farmstead to a walled metropolis with their size; harbor towns sit on a pier · ${common} · mountains are snowcapped in the cold, and the odd one smokes · trees: forest (pines in the cold), palms: jungle, dunes: desert (a pool under palms: an oasis).`
+        : `Tap a town or a numbered place to read about it. ■ a capital · ● a town · ◆ a place worth the trip · ${common} · ▲ mountains · ⌒ hills · trees: forest (pines in the cold) · ≈ dunes: desert · reeds: swamp.`;
+}
+
+// Redraw the map alone in the other look (the journey and pins stay).
+function contRestyle() {
+    const c = contState.data;
+    if (!c) return;
+    const wrap = document.querySelector('#cont-card .cont-map-wrap');
+    wrap.innerHTML = contMapSvg(c, `Map of ${facCap(c.name)}`, 'cm', contStyle());
+    document.getElementById('cm-journey').setAttribute('d', contJourneyPath(c, contState.journey));
+    document.getElementById('cont-legend').innerHTML = contLegend();
+    if (contBoard) contBoard.render();
+    setUrlParams(contParams(), false);
+}
+
 function renderContinent() {
     const c = contState.data;
     if (!c) return;
@@ -130,8 +158,8 @@ function renderContinent() {
         <section class="wb-block wb-wide">
             <h4>🗺️ The map</h4>
             <div class="wb-pin-bar"></div>
-            <div class="cont-map-wrap">${contMapSvg(c, `Map of ${facCap(c.name)}`)}</div>
-            <p class="wb-legend">Tap a town or a numbered place to read about it. ■ a capital · ● a town · ◆ a place worth the trip · ─ ─ a road (dotted: an unkept track) · colored lands are nations, uncolored land is wild · dashed lines across the map mark the climate bands, named at the right edge · ▲ mountains · ⌒ hills · trees: forest (pines in the cold) · ≈ dunes: desert · reeds: swamp.</p>
+            <div class="cont-map-wrap">${contMapSvg(c, `Map of ${facCap(c.name)}`, 'cm', contStyle())}</div>
+            <p class="wb-legend" id="cont-legend">${contLegend()}</p>
             <div class="wb-pins"></div>
         </section>
         <section class="wb-block wb-wide cont-journey">
@@ -262,13 +290,13 @@ async function contDownloadMap() {
     // The journey on screen is drawn after the map, so draw it into the copy too.
     const W = c.map.cols * CONT_CELL, H = c.map.rows * CONT_CELL;
     const pins = document.getElementById('cont-png-pins').checked ? contPins() : [];
-    const svg = contMapSvg(c, `Map of ${name}`, 'cmx')
+    const svg = contMapSvg(c, `Map of ${name}`, 'cmx', contStyle())
         .replace('id="cmx-journey" d=""', `id="cmx-journey" d="${contJourneyPath(c, contState.journey)}"`)
         .replace(/<\/svg>\s*$/, `${pinSvg(pins, W, H, { cls: 'cm' })}</svg>`);
     const file = `${mapFileSlug(name)}-map.png`;
     btn.disabled = true;
     contStatus('🗺️ Drawing the map…');
-    const ok = await mapExportPng(svg, W * k, H * k, mapPageCss('.cm-'), file);
+    const ok = await mapExportPng(await mapInlineImages(svg), W * k, H * k, mapPageCss('.cm-'), file);
     btn.disabled = false;
     contStatus(ok
         ? `⬇️ Saved ${file}: ${(W * k).toLocaleString('en-US')} × ${(H * k).toLocaleString('en-US')} pixels.`
@@ -297,6 +325,9 @@ function setupContinent() {
     Object.values(CONT_FIELDS).forEach(id => document.getElementById(id).addEventListener('change', () => {
         if (contState.seed) rollContinentFor(contState.seed, false);
     }));
+    const style = document.getElementById('cont-style');
+    Object.entries(CONT_STYLES).forEach(([key, label]) => style.add(new Option(label, key)));
+    style.addEventListener('change', contRestyle);
     document.getElementById('cont-roll').addEventListener('click', () => rollContinentFor());
     const card = document.getElementById('cont-card');
     card.addEventListener('click', e => {

@@ -31,6 +31,24 @@ function mapSvgForExport(svg, w, h, css) {
     return svg.replace(/<svg\b/, `<svg width="${w}" height="${h}"`).replace(/(<svg\b[^>]*>)/, `$1<style>${css}</style>`);
 }
 
+// The SVG with each picture it links (href="img/…") written into it as a data: URL: an SVG
+// drawn as an image can't load anything outside itself. A picture that won't load is left out.
+async function mapInlineImages(svg) {
+    const hrefs = [...new Set([...svg.matchAll(/href="(img\/[^"]+)"/g)].map(m => m[1]))];
+    const urls = await Promise.all(hrefs.map(async h => {
+        try {
+            const res = await fetch(h);
+            if (!res.ok) return '';
+            const blob = await res.blob();
+            return await new Promise(ok => { const r = new FileReader(); r.onload = () => ok(r.result); r.onerror = () => ok(''); r.readAsDataURL(blob); });
+        } catch (e) {
+            return '';
+        }
+    }));
+    const map = new Map(hrefs.map((h, k) => [h, urls[k]]));
+    return svg.replace(/href="(img\/[^"]+)"/g, (m, h) => `href="${map.get(h)}"`);
+}
+
 // Draws the SVG on a canvas and resolves to a PNG blob (or `type`), or null when the browser can't
 // (most often a canvas too big for it: phones cap them lower than computers). under: a picture
 // (an ImageBitmap or a loaded <img>) to draw first, the SVG on top of it.

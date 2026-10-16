@@ -169,6 +169,29 @@ const CONT_POIS = {
 };
 const CONT_POI_KEYS = Object.keys(CONT_POIS);
 
+// ── The illustrated style (pictures in img/map, made by map-art.py) ──
+// How many symbols each terrain sheet holds (img/map/terrain/<sheet>-<n>.webp). A terrain
+// whose sheet has none yet keeps its ink marks.
+const CONT_ART_DIR = 'img/map/';
+const CONT_ART = { grass: 9, hills: 9, jungle: 9, marsh: 9, mesas: 9, moor: 9, mountains: 9, oases: 6, pines: 9,
+    'snowy-mountains': 9, trees: 9, tundra: 9, volcanoes: 6, dunes: 9, 'snowy-pines': 9 };
+// Per terrain: its main sheet, the symbol's size (SVG units), the room kept around each
+// (cells), and the share of cells that get one.
+const CONT_ART_BIOMES = {
+    mountains: { sheet: 'mountains', size: 24, gap: 1.5, keep: 0.9 }, hills: { sheet: 'hills', size: 17, gap: 1.5, keep: 0.75 },
+    forest: { sheet: 'trees', size: 14, gap: 1.05, keep: 0.95 }, jungle: { sheet: 'jungle', size: 15, gap: 1.1, keep: 0.95 },
+    desert: { sheet: 'dunes', size: 21, gap: 1.6, keep: 0.75 }, swamp: { sheet: 'marsh', size: 15, gap: 1.6, keep: 0.7 },
+    badlands: { sheet: 'mesas', size: 16, gap: 1.8, keep: 0.6 }, moor: { sheet: 'moor', size: 14, gap: 1.8, keep: 0.5 },
+    plains: { sheet: 'grass', size: 11, gap: 2.4, keep: 0.25 }, tundra: { sheet: 'tundra', size: 15, gap: 2, keep: 0.45 }
+};
+const CONT_ART_POIS = { ruin: 'ruined-keep', barrow: 'barrow', dragon: 'dragon-lair', wood: 'cursed-wood', tower: 'wizard-tower',
+    mine: 'lost-mine', temple: 'sunken-temple', fort: 'bandit-fort' };
+const CONT_ART_TOWNS = { hamlet: 19, village: 22, town: 25, city: 29, metropolis: 32 };   // icon sizes; a capital is 35
+// Ornaments: [file, width ÷ height].
+const CONT_ART_SEA = [['ship', 1.53], ['kraken', 1.65], ['whale', 1.61], ['sea-serpent', 1.79], ['galley', 1.59]];
+const CONT_ART_BANNER = 3.96, CONT_ART_EDGE = 16.5, CONT_ART_FRAME = 9;
+const CONT_STYLES = { atlas: '🎨 Illustrated', classic: '✒️ Classic ink' };
+
 // ── Small helpers ────────────────────────────────────────
 function contPick(list) {
     return list[Math.floor(rand() * list.length)];
@@ -1075,11 +1098,13 @@ function contRiverPaths(m) {
 }
 
 // Map symbols for each terrain, as path data (one path per kind).
-function contMarks(m) {
+// only: the terrains to mark (all when left out).
+function contMarks(m, only = null) {
     const d = { peak: '', peakShade: '', hill: '', tree: '', pine: '', jungle: '', dune: '', reed: '', canyon: '', heath: '', grass: '', snow: '' };
     const f = v => v.toFixed(1);
     const cells = m.landIdx.slice().sort((a, b) => a - b);
     cells.forEach(i => {
+        if (only && !only.has(m.biome[i])) return;
         const x = i % m.cols, y = (i - x) / m.cols;
         const r = contHash(x * 3 + 1, y * 7 + 2, m.jit);
         const { x: px, y: py } = contPt(m, i);
@@ -1123,10 +1148,153 @@ function contMarks(m) {
     return d;
 }
 
-// Labels that try not to sit on each other: boxes already taken.
-function contPlace(boxes, cands, W, H) {
+// ── The illustrated style ────────────────────────────────
+// The sheet a land cell's symbol comes from (null: none, or its terrain keeps ink marks).
+function contArtSheet(m, i, v) {
+    const b = m.biome[i], zone = CONT_CLIMATES[m.climate[i]].key, chill = zone === 'polar' || zone === 'cold';
+    const pick = (...names) => names.find(n => CONT_ART[n]) || null;
+    if (b === 'mountains') {
+        // Peaks count as cold for their height alone, so snowcaps go by the latitude band, plus the highest peaks anywhere.
+        const y = Math.floor(i / m.cols), w = 1 - Math.abs(m.latAt(y)) / 72;
+        const band = CONT_CLIMATES.find(z => w < z.below).key, north = band === 'polar' || band === 'cold';
+        return v < 0.05 && !north ? pick('volcanoes', 'mountains') : north || m.elev[i] > 0.88 ? pick('snowy-mountains', 'mountains') : pick('mountains');
+    }
+    if (b === 'forest') return chill ? pick('snowy-pines', 'pines') : zone === 'temperate' && v < 0.3 ? pick('pines', 'trees') : pick('trees');
+    if (b === 'desert') return v < 0.07 ? pick('oases') : pick('dunes');
+    return pick(CONT_ART_BIOMES[b].sheet);
+}
+
+// The terrain symbols, kept apart and drawn back to front. avoid: cells left clear (under a
+// town or a place). Returns { uses, sheets } (sheets: each symbol file used, for the defs).
+function contArtTerrain(m, id, avoid) {
+    const f = v => v.toFixed(1);
+    const cand = [];
+    m.landIdx.forEach(i => {
+        const B = CONT_ART_BIOMES[m.biome[i]];
+        const x = i % m.cols, y = (i - x) / m.cols;
+        const r = contHash(x * 3 + 1, y * 7 + 2, m.jit);
+        if (r > B.keep || avoid[i] || (m.river[i] && m.biome[i] !== 'mountains' && r < 0.5)) return;
+        cand.push({ i, r, B });
+    });
+    cand.sort((a, b) => a.r - b.r);
+    const near = new Map(), put = [], sheets = new Set();
+    cand.forEach(({ i, B }) => {
+        const p = contPt(m, i), cx = p.x / CONT_CELL, cy = p.y / CONT_CELL;
+        const x = i % m.cols, y = (i - x) / m.cols;
+        for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) {
+            const o = near.get((y + dy) * m.cols + x + dx);
+            if (o && Math.hypot(o.cx - cx, o.cy - cy) < Math.max(o.gap, B.gap)) return;
+        }
+        const v = contHash(x * 5 + 3, y * 11 + 1, m.jit);
+        const sheet = contArtSheet(m, i, v);
+        if (!sheet) return;
+        const key = `${sheet}-${1 + Math.floor(contHash(y * 13 + 5, x * 3 + 7, m.jit) * CONT_ART[sheet])}`;
+        near.set(i, { cx, cy, gap: B.gap });
+        sheets.add(key);
+        put.push({ key, x: p.x, y: p.y, s: B.size * (0.9 + v * 0.2) });
+    });
+    put.sort((a, b) => a.y - b.y || a.x - b.x);
+    const uses = put.map(q => `<use href="#${id}-t-${q.key}" x="${f(q.x - q.s / 2)}" y="${f(q.y - q.s * 0.8)}" width="${f(q.s)}" height="${f(q.s)}"/>`).join('');
+    return { uses, sheets };
+}
+
+// A picture from img/map, centered on (x, y), s units across at most.
+function contArtImg(file, x, y, w, h, cls = '', extra = '') {
+    const f = v => v.toFixed(1);
+    return `<image${cls ? ` class="${cls}"` : ''} href="${CONT_ART_DIR}${file}.webp" x="${f(x - w / 2)}" y="${f(y - h / 2)}" width="${f(w)}" height="${f(h)}" preserveAspectRatio="xMidYMid meet"${extra}/>`;
+}
+
+// A town's icon file and size.
+function contArtTown(c, t) {
+    if (t.capital) return { file: `place/capital-${c.nations[t.nation].gov}`, s: 35 };
+    const big = t.size === 'city' || t.size === 'metropolis';
+    if (t.setting === 'coast') return { file: big ? 'place/port-city' : 'place/port-town', s: CONT_ART_TOWNS[t.size] };
+    return { file: `place/${t.size}`, s: CONT_ART_TOWNS[t.size] };
+}
+
+// The frame, the compass, the title scroll, and the sea creatures. boxes: taken spots, which
+// these join (labels keep off them). Returns { under, frame }: under goes below the labels,
+// the frame on top of everything (its patterns use ID for the map's id prefix).
+function contArtOrnaments(c, W, H, boxes, title) {
+    const m = c.map, S = CONT_CELL, T = CONT_ART_FRAME, f = v => v.toFixed(1), esc = contEscape;
+    const landIn = b => {
+        let n = 0;
+        for (let y = Math.max(0, Math.floor(b.y / S)); y < Math.min(m.rows, Math.ceil((b.y + b.h) / S)); y++)
+            for (let x = Math.max(0, Math.floor(b.x / S)); x < Math.min(m.cols, Math.ceil((b.x + b.w) / S)); x++) n += m.land[y * m.cols + x];
+        return n;
+    };
+    let under = '';
+
+    // The compass, top right.
+    const cs = 72, compass = { x: W - T - cs - 8, y: T + 6, w: cs, h: cs };
+    boxes.push(compass);
+    under += contArtImg('ornament/compass', compass.x + cs / 2, compass.y + cs / 2, cs, cs);
+
+    // The title scroll, wherever it covers the least land.
+    const bw = Math.min(W * 0.4, 300), bh = bw / CONT_ART_BANNER;
+    const spots = [{ x: T + 8, y: T + 8 }, { x: (W - bw) / 2, y: T + 6 }, { x: W - T - 8 - bw, y: H - T - 8 - bh }, { x: (W - bw) / 2, y: H - T - 6 - bh }]
+        .map(p => ({ ...p, w: bw, h: bh }));
+    const banner = spots.reduce((a, b) => landIn(b) < landIn(a) ? b : a);
+    boxes.push(banner);
+    const fs = Math.min(bh * 0.34, bw * 0.62 / Math.max(6, title.length * 0.68));
+    under += contArtImg('ornament/banner', banner.x + bw / 2, banner.y + bh / 2, bw, bh)
+        + `<text class="cm-a-title" style="font-size:${f(fs)}px" x="${f(banner.x + bw / 2)}" y="${f(banner.y + bh * 0.47 + fs * 0.36)}">${esc(title)}</text>`;
+
+    // Sea creatures and ships out in the open water, clear of the sea names and each other.
+    const want = { small: 2, medium: 3, large: 4 }[c.size];
+    const seaCells = c.seas.map(s => s.cell);
+    const open = [];
+    for (let i = 0; i < m.n; i++) {
+        const x = i % m.cols, y = (i - x) / m.cols;
+        if (!m.ocean[i] || m.seaDist[i] < 4 || x < 4 || y < 4 || x > m.cols - 5 || y > m.rows - 5) continue;
+        if (seaCells.some(s => contCellDist(m, s, i) < 7)) continue;
+        open.push({ i, r: contHash(x * 7 + 2, y * 3 + 9, m.jit) });
+    }
+    open.sort((a, b) => a.r - b.r);
+    const hits = b => boxes.some(o => b.x < o.x + o.w && b.x + b.w > o.x && b.y < o.y + o.h && b.y + b.h > o.y);
+    const placed = [];
+    const first = Math.floor(contHash(3, 5, m.jit) * CONT_ART_SEA.length);
+    for (const { i } of open) {
+        if (placed.length >= want) break;
+        if (placed.some(j => contCellDist(m, j, i) < 16)) continue;
+        const [file, ratio] = CONT_ART_SEA[(first + placed.length) % CONT_ART_SEA.length];
+        const w = 46, h = w / ratio, p = contPt(m, i);
+        const box = { x: p.x - w / 2, y: p.y - h / 2, w, h };
+        if (hits(box)) continue;
+        boxes.push(box);
+        placed.push(i);
+        const flip = contHash(i, 17, m.jit) < 0.5 ? ` transform="translate(${f(p.x * 2)} 0) scale(-1 1)"` : '';
+        under += contArtImg(`ornament/${file}`, p.x, p.y, w, h, 'cm-a-orn', flip);
+    }
+
+    // A wind head at the west or east edge, blowing in toward the land.
+    for (const { i } of open) {
+        const x = i % m.cols;
+        if (x > 6 && x < m.cols - 7) continue;
+        const w = 40, h = w / 1.77, p = contPt(m, i);
+        const box = { x: p.x - w / 2, y: p.y - h / 2, w, h };
+        if (hits(box) || placed.some(j => contCellDist(m, j, i) < 10)) continue;
+        boxes.push(box);
+        const flip = x > m.cols / 2 ? ` transform="translate(${f(p.x * 2)} 0) scale(-1 1)"` : '';
+        under += contArtImg('ornament/wind-face', p.x, p.y, w, h, 'cm-a-orn', flip);
+        break;
+    }
+
+    // The frame: a parchment band with the vine strip on it, and a flourish at each corner.
+    const edge = `<rect width="${W}" height="${T}" fill="url(#ID-paper)"/><rect width="${W}" height="${T}" fill="url(#ID-edge)"/>`;
+    const side = `<rect width="${H}" height="${T}" fill="url(#ID-paper)"/><rect width="${H}" height="${T}" fill="url(#ID-edge)"/>`;
+    const k = T * 3.4;
+    const corner = tr => `<image href="${CONT_ART_DIR}ornament/border-corner.webp" width="${f(k)}" height="${f(k)}" preserveAspectRatio="xMidYMid meet" transform="${tr}"/>`;
+    const frame = `<g class="cm-a-frame">${edge}<g transform="translate(0 ${H - T})">${edge}</g>
+        <g transform="translate(${T} 0) rotate(90)">${side}</g><g transform="translate(${W} 0) rotate(90)">${side}</g>
+        ${corner('translate(0 0)')}${corner(`translate(${W} 0) scale(-1 1)`)}${corner(`translate(0 ${H}) scale(1 -1)`)}${corner(`translate(${W} ${H}) scale(-1 -1)`)}</g>`;
+    return { under, frame };
+}
+
+// Labels that try not to sit on each other: boxes already taken. pad: room kept at the edges.
+function contPlace(boxes, cands, W, H, pad = 2) {
     const hits = b => boxes.some(o => b.x < o.x + o.w && b.x + b.w > o.x && b.y < o.y + o.h && b.y + b.h > o.y)
-        || b.x < 2 || b.y < 2 || b.x + b.w > W - 2 || b.y + b.h > H - 2;
+        || b.x < pad || b.y < pad || b.x + b.w > W - pad || b.y + b.h > H - pad;
     const pick = cands.find(b => !hits(b)) || cands[0];
     boxes.push(pick);
     return pick;
@@ -1136,12 +1304,14 @@ function contEscape(s) {
     return String(s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
 }
 
-// The whole map as an SVG string. id: a prefix for the clip path's id.
-function contMapSvg(c, title, id = 'cm') {
+// The whole map as an SVG string. id: a prefix for the ids inside it. style: 'classic' (ink
+// symbols, the print-friendly look) or 'atlas' (the illustrated pictures in img/map).
+function contMapSvg(c, title, id = 'cm', style = 'classic') {
     const m = c.map, Z = CONT_SIZES[c.size], S = CONT_CELL;
     const W = m.cols * S, H = m.rows * S;
     const f = v => v.toFixed(1);
     const esc = contEscape;
+    const atlas = style === 'atlas', T = atlas ? CONT_ART_FRAME : 0, pad = T + 2;
 
     // Land, shallows, tints.
     const hv = m.h;
@@ -1150,9 +1320,9 @@ function contMapSvg(c, title, id = 'cm') {
     for (let i = 0; i < m.n; i++) shallowVal[i] = m.ocean[i] ? -Math.min(6, m.seaDist[i]) : 1;
     const shallow = contFillPath(m, contBlur(m, contBlur(m, shallowVal)), -2.2);
     const tints = Object.keys(CONT_BIOMES).filter(b => b !== 'plains' && m.landIdx.some(i => m.biome[i] === b))
-        .map(b => `<path class="cm-tint" fill="${CONT_BIOMES[b].color}" d="${contFillPath(m, contSoftMask(m, i => m.biome[i] === b), 0.45)}"/>`).join('');
+        .map(b => `<path class="${atlas ? 'cm-a-tint' : 'cm-tint'}" fill="${CONT_BIOMES[b].color}" d="${contFillPath(m, contSoftMask(m, i => m.biome[i] === b), 0.45)}"/>`).join('');
     const nationMasks = c.nations.map(nat => contSoftMask(m, i => m.owner[i] === nat.index));
-    const realms = c.nations.map((nat, k) => `<path class="cm-realm" fill="${nat.color}" d="${contFillPath(m, nationMasks[k], 0.5)}"/>`).join('');
+    const realms = c.nations.map((nat, k) => `<path class="${atlas ? 'cm-a-realm' : 'cm-realm'}" fill="${nat.color}" d="${contFillPath(m, nationMasks[k], 0.5)}"/>`).join('');
     const nearWater = (x, y) => [[0, 0], [1, 0], [0, 1], [1, 1]].some(([dx, dy]) => !m.land[(y + dy) * m.cols + x + dx]);
     const borders = nationMasks.map(v => contEdgePath(m, v, 0.5, nearWater)).join('');
 
@@ -1163,11 +1333,11 @@ function contMapSvg(c, title, id = 'cm') {
     CONT_CLIMATES.slice(0, -1).forEach(b => { const lat = (1 - b.below) * 72; cuts.push(lat, -lat); });
     cuts.filter(lat => yOfLat(lat) > S * 2 && yOfLat(lat) < H - S * 2).forEach(lat => {
         const y = yOfLat(lat);
-        bands += `<line class="cm-band" x1="0" y1="${f(y)}" x2="${W}" y2="${f(y)}"/>`;
+        bands += `<line class="cm-band" x1="${T}" y1="${f(y)}" x2="${W - T}" y2="${f(y)}"/>`;
     });
     const zone = y => { const w = 1 - Math.abs(m.latAt(y / S - 0.5)) / 72; return CONT_CLIMATES.find(b => w < b.below); };
     // A band that only clips the top edge loses its name to the next one, and names at the
-    // top stand clear of the north arrow.
+    // top stand clear of the north arrow (the compass, when illustrated).
     const bandAt = [];
     let lastZone = null;
     for (let y = S; y < H - S; y += S) {
@@ -1177,23 +1347,32 @@ function contMapSvg(c, title, id = 'cm') {
         bandAt.push({ y, z });
         lastZone = z;
     }
-    const bandLabels = bandAt.map(({ y, z }) => `<text class="cm-band-label" x="${y < 56 ? W - 44 : W - 6}" y="${f(y + 12)}">${esc(z.label)}</text>`).join('');
+    const clear = atlas ? T + 84 : 56;
+    const bandLabels = bandAt.map(({ y, z }) => `<text class="cm-band-label" x="${y < clear ? W - T - (atlas ? 88 : 44) : W - T - 6}" y="${f(y + 12)}">${esc(z.label)}</text>`).join('');
 
     // Rivers, coast, borders, roads.
     const rivers = contRiverPaths(m).map(r => `<path class="cm-river" stroke-width="${r.w}" d="${r.d}"/>`).join('');
     const coast = contEdgePath(m, hv, m.sea);
     const roads = c.roads.map(r => `<path class="cm-road${r.kept ? '' : ' cm-track'}" d="${contSmooth(m, r.path.map(i => contPt(m, i)))}"/>`).join('');
-    const mk = contMarks(m);
+
+    // Terrain: ink marks, or the pictures (with ink for a terrain whose pictures are still to come).
+    const avoid = new Uint8Array(m.n);
+    if (atlas) c.towns.concat(c.pois).forEach(t => { avoid[t.cell] = 1; contEach8(m, t.cell, nb => { avoid[nb] = 1; }); });
+    const art = atlas ? contArtTerrain(m, id, avoid) : null;
+    const ink = atlas ? new Set(Object.keys(CONT_ART_BIOMES).filter(b => !CONT_ART[CONT_ART_BIOMES[b].sheet])) : null;
+    const mk = contMarks(m, ink);
     const marks = `<path class="cm-peak" d="${mk.peak}"/><path class="cm-peak-shade" d="${mk.peakShade}"/><path class="cm-hill" d="${mk.hill}"/>
         <path class="cm-tree" d="${mk.tree}"/><path class="cm-pine" d="${mk.pine}"/><path class="cm-jungle" d="${mk.jungle}"/>
         <path class="cm-dune" d="${mk.dune}"/><path class="cm-reed" d="${mk.reed}"/><path class="cm-canyon" d="${mk.canyon}"/>
-        <path class="cm-heath" d="${mk.heath}"/><path class="cm-grass" d="${mk.grass}"/><path class="cm-snow" d="${mk.snow}"/>`;
+        <path class="cm-heath" d="${mk.heath}"/><path class="cm-grass" d="${mk.grass}"/><path class="cm-snow" d="${mk.snow}"/>${art ? art.uses : ''}`;
 
     // Labels: nations first, then towns, places, and seas around them.
     const boxes = [];
     let labels = '', keys = '';
-    c.towns.forEach(t => { const p = contPt(m, t.cell); boxes.push({ x: p.x - 5, y: p.y - 5, w: 10, h: 10 }); });
-    c.pois.forEach(p => { const q = contPt(m, p.cell); boxes.push({ x: q.x - 7, y: q.y - 7, w: 14, h: 14 }); });
+    const townR = t => atlas ? contArtTown(c, t).s * 0.4 : 5, poiR = atlas ? 11 : 7;
+    c.towns.forEach(t => { const p = contPt(m, t.cell), r = townR(t); boxes.push({ x: p.x - r, y: p.y - r, w: r * 2, h: r * 2 }); });
+    c.pois.forEach(p => { const q = contPt(m, p.cell); boxes.push({ x: q.x - poiR, y: q.y - poiR, w: poiR * 2, h: poiR * 2 }); });
+    const orn = atlas ? contArtOrnaments(c, W, H, boxes, facCap(c.name)) : null;
     c.nations.forEach((nat, k) => {
         const own = m.landIdx.filter(i => m.owner[i] === k);
         if (!own.length) return;
@@ -1205,59 +1384,80 @@ function contMapSvg(c, title, id = 'cm') {
         const text = nat.root.toUpperCase();
         const fs = Math.max(10, Math.min(16, 8 + Math.sqrt(own.length) / 3));
         const w = text.length * fs * 0.78 + 4;
-        const box = contPlace(boxes, [{ x: p.x - w / 2, y: p.y - fs * 0.8, w, h: fs }, { x: p.x - w / 2, y: p.y + 6, w, h: fs }, { x: p.x - w / 2, y: p.y - fs * 2, w, h: fs }], W, H);
+        const box = contPlace(boxes, [{ x: p.x - w / 2, y: p.y - fs * 0.8, w, h: fs }, { x: p.x - w / 2, y: p.y + 6, w, h: fs }, { x: p.x - w / 2, y: p.y - fs * 2, w, h: fs }], W, H, pad);
         labels += `<text class="cm-nation" style="font-size:${f(fs)}px" x="${f(box.x + box.w / 2)}" y="${f(box.y + fs * 0.82)}">${esc(text)}</text>`;
     });
     c.towns.forEach(t => {
-        const p = contPt(m, t.cell);
+        const p = contPt(m, t.cell), r = townR(t) + 1;
         const fs = t.capital ? 10 : 8.5;
         const w = t.name.length * fs * 0.52 + 2, h = fs + 1;
         const box = contPlace(boxes, [
-            { x: p.x + 6, y: p.y - h / 2, w, h }, { x: p.x - 6 - w, y: p.y - h / 2, w, h },
-            { x: p.x - w / 2, y: p.y - 6 - h, w, h }, { x: p.x - w / 2, y: p.y + 6, w, h }], W, H);
+            { x: p.x + r, y: p.y - h / 2, w, h }, { x: p.x - r - w, y: p.y - h / 2, w, h },
+            { x: p.x - w / 2, y: p.y - r - h, w, h }, { x: p.x - w / 2, y: p.y + r, w, h }], W, H, pad);
         labels += `<text class="cm-town-label${t.capital ? ' cm-cap-label' : ''}" style="font-size:${fs}px" x="${f(box.x)}" y="${f(box.y + h * 0.78)}">${esc(t.name)}</text>`;
-        const shape = t.capital
-            ? `<rect class="cm-capital" x="${f(p.x - 4.5)}" y="${f(p.y - 4.5)}" width="9" height="9"/><circle class="cm-capital-dot" cx="${f(p.x)}" cy="${f(p.y)}" r="1.8"/>`
-            : `<circle class="cm-town" cx="${f(p.x)}" cy="${f(p.y)}" r="${t.size === 'city' || t.size === 'metropolis' ? 3.8 : 3}"/>`;
+        let shape;
+        if (atlas) {
+            const { file, s } = contArtTown(c, t);
+            shape = `<circle class="cm-a-hit" cx="${f(p.x)}" cy="${f(p.y)}" r="${f(s * 0.45)}"/>${contArtImg(file, p.x, p.y, s, s, 'cm-a-icon')}`;
+        } else {
+            shape = t.capital
+                ? `<rect class="cm-capital" x="${f(p.x - 4.5)}" y="${f(p.y - 4.5)}" width="9" height="9"/><circle class="cm-capital-dot" cx="${f(p.x)}" cy="${f(p.y)}" r="1.8"/>`
+                : `<circle class="cm-town" cx="${f(p.x)}" cy="${f(p.y)}" r="${t.size === 'city' || t.size === 'metropolis' ? 3.8 : 3}"/>`;
+        }
         keys += `<g class="cm-key" tabindex="0" role="button" data-go="t${t.id}" aria-label="${esc(contTownLabel(t))}">${shape}</g>`;
     });
     c.pois.forEach((q, n) => {
         const p = contPt(m, q.cell);
         const label = facCap(q.name);
-        const fs = 8;
+        const fs = 8, r = poiR + 1;
         const w = label.length * fs * 0.5 + 2, h = fs + 1;
         const box = contPlace(boxes, [
-            { x: p.x + 8, y: p.y - h / 2, w, h }, { x: p.x - 8 - w, y: p.y - h / 2, w, h },
-            { x: p.x - w / 2, y: p.y + 8, w, h }, { x: p.x - w / 2, y: p.y - 8 - h, w, h }], W, H);
+            { x: p.x + r, y: p.y - h / 2, w, h }, { x: p.x - r - w, y: p.y - h / 2, w, h },
+            { x: p.x - w / 2, y: p.y + r, w, h }, { x: p.x - w / 2, y: p.y - r - h, w, h }], W, H, pad);
         labels += `<text class="cm-poi-label" style="font-size:${fs}px" x="${f(box.x)}" y="${f(box.y + h * 0.78)}">${esc(label)}</text>`;
-        keys += `<g class="cm-key" tabindex="0" role="button" data-go="p${q.id}" aria-label="${esc(`${n + 1}: ${label}`)}">
-            <path class="cm-poi" d="M${f(p.x)} ${f(p.y - 7)}L${f(p.x + 7)} ${f(p.y)}L${f(p.x)} ${f(p.y + 7)}L${f(p.x - 7)} ${f(p.y)}Z"/>
-            <text class="cm-poi-n" x="${f(p.x)}" y="${f(p.y + 0.5)}">${n + 1}</text></g>`;
+        const shape = atlas
+            ? `<circle class="cm-a-hit" cx="${f(p.x)}" cy="${f(p.y)}" r="10"/>${contArtImg(`place/${CONT_ART_POIS[q.kind]}`, p.x, p.y, 25, 25, 'cm-a-icon')}
+            <circle class="cm-a-badge" cx="${f(p.x + 9)}" cy="${f(p.y - 9)}" r="4.6"/><text class="cm-poi-n cm-a-n" x="${f(p.x + 9)}" y="${f(p.y - 8.7)}">${n + 1}</text>`
+            : `<path class="cm-poi" d="M${f(p.x)} ${f(p.y - 7)}L${f(p.x + 7)} ${f(p.y)}L${f(p.x)} ${f(p.y + 7)}L${f(p.x - 7)} ${f(p.y)}Z"/>
+            <text class="cm-poi-n" x="${f(p.x)}" y="${f(p.y + 0.5)}">${n + 1}</text>`;
+        keys += `<g class="cm-key" tabindex="0" role="button" data-go="p${q.id}" aria-label="${esc(`${n + 1}: ${label}`)}">${shape}</g>`;
     });
     c.seas.forEach(s => {
         const p = contPt(m, s.cell);
         const text = facCap(s.name);
         const w = text.length * 5.6;
-        const box = contPlace(boxes, [{ x: p.x - w / 2, y: p.y - 6, w, h: 11 }, { x: p.x - w / 2, y: p.y + 10, w, h: 11 }, { x: p.x - w / 2, y: p.y - 22, w, h: 11 }], W, H);
+        const box = contPlace(boxes, [{ x: p.x - w / 2, y: p.y - 6, w, h: 11 }, { x: p.x - w / 2, y: p.y + 10, w, h: 11 }, { x: p.x - w / 2, y: p.y - 22, w, h: 11 },
+            { x: p.x - w * 1.1, y: p.y - 6, w, h: 11 }, { x: p.x + w * 0.1, y: p.y - 6, w, h: 11 }, { x: p.x - w / 2, y: p.y + 26, w, h: 11 }], W, H, pad);
         labels += `<text class="cm-sea" x="${f(box.x + w / 2)}" y="${f(box.y + 9)}">${esc(text)}</text>`;
     });
 
-    // A scale bar and a north arrow.
+    // A scale bar and a north arrow (the compass, when illustrated).
     const pxPerMile = S / Z.miles;
     const barMiles = [50, 100, 150, 200, 250, 300, 400, 500].find(v => v * pxPerMile >= 70) || 500;
     const bw = barMiles * pxPerMile;
-    const scale = `<g class="cm-scale" transform="translate(14 ${H - 18})">
+    const scale = `<g class="cm-scale" transform="translate(${14 + T} ${H - 18 - T})">
         <rect class="cm-scale-a" x="0" y="0" width="${f(bw / 2)}" height="4"/><rect class="cm-scale-b" x="${f(bw / 2)}" y="0" width="${f(bw / 2)}" height="4"/>
         <text class="cm-scale-t" x="0" y="-4">0</text><text class="cm-scale-t" x="${f(bw)}" y="-4">${barMiles} miles</text></g>`;
-    const north = `<g class="cm-north" transform="translate(${W - 24} 30)">
+    const north = atlas ? '' : `<g class="cm-north" transform="translate(${W - 24} 30)">
         <path class="cm-north-a" d="M0 -14L5 4L0 0L-5 4Z"/><text class="cm-north-t" x="0" y="15">N</text></g>`;
 
-    return `<svg class="cont-map" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(title)}" xmlns="http://www.w3.org/2000/svg">
+    // The illustrated map's paper, water, and symbols, defined once and used by reference.
+    let defs = `<clipPath id="${id}-land"><path d="${landPath}"/></clipPath>`;
+    if (atlas) {
+        const tex = (name, file, size) => `<pattern id="${id}-${name}" patternUnits="userSpaceOnUse" width="${size}" height="${size}"><image href="${CONT_ART_DIR}${file}.webp" width="${size}" height="${size}"/></pattern>`;
+        defs += tex('paper', 'parchment', 180) + tex('sea', 'sea', 200) + tex('shallows', 'shallows', 160)
+            + `<pattern id="${id}-edge" patternUnits="userSpaceOnUse" width="${f(T * CONT_ART_EDGE)}" height="${T}"><image href="${CONT_ART_DIR}ornament/border-edge.webp" width="${f(T * CONT_ART_EDGE)}" height="${T}" preserveAspectRatio="none"/></pattern>`
+            + [...art.sheets].map(k => `<symbol id="${id}-t-${k}" viewBox="0 0 1 1" preserveAspectRatio="xMidYMax meet"><image href="${CONT_ART_DIR}terrain/${k}.webp" width="1" height="1" preserveAspectRatio="xMidYMax meet"/></symbol>`).join('');
+    }
+    const fill = name => atlas ? ` style="fill:url(#${id}-${name});stroke:none"` : '';   // over the classic colors
+
+    return `<svg class="cont-map${atlas ? ' cm-atlas' : ''}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(title)}" xmlns="http://www.w3.org/2000/svg">
         <title>${esc(title)}</title>
-        <defs><clipPath id="${id}-land"><path d="${landPath}"/></clipPath></defs>
-        <rect class="cm-sea-bg" x="0" y="0" width="${W}" height="${H}"/>
-        <path class="cm-shallow" d="${shallow}"/>
-        <path class="cm-land" d="${landPath}"/>
+        <defs>${defs}</defs>
+        <rect class="cm-sea-bg" x="0" y="0" width="${W}" height="${H}"${fill('sea')}/>
+        <path class="cm-shallow" d="${shallow}"${fill('shallows')}/>
+        ${atlas ? `<path class="cm-a-ripple" d="${coast}"/>` : ''}
+        <path class="cm-land" d="${landPath}"${fill('paper')}/>
         <g clip-path="url(#${id}-land)">${tints}<g class="cm-realms">${realms}</g></g>
         ${bands}
         ${rivers}
@@ -1265,12 +1465,14 @@ function contMapSvg(c, title, id = 'cm') {
         <path class="cm-border" d="${borders}"/>
         ${marks}
         ${roads}
+        ${orn ? orn.under : ''}
         <path class="cm-journey" id="${id}-journey" d=""/>
         ${keys}
         ${labels}
         ${bandLabels}
         ${scale}
         ${north}
+        ${orn ? orn.frame.replace(/#ID-/g, `#${id}-`) : ''}
     </svg>`;
 }
 
