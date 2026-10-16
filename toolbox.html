@@ -299,6 +299,9 @@
     /* Tavern (F26) */
     .tavern-card { border: 1px solid var(--gold-dim); border-radius: var(--radius-sm); padding: 22px; background: rgba(0,0,0,0.18); margin-bottom: 18px; }
     .tv-head { text-align: center; margin-bottom: 18px; }
+    /* The kind of tavern's picture (img/tavern/<kind>.webp) across the top of the card. */
+    .tv-art { margin: -22px -22px 18px; aspect-ratio: 3 / 1; overflow: hidden; border-bottom: 1px solid var(--gold-dim); border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
+    .tv-art img { display: block; width: 100%; height: 100%; object-fit: cover; }
     .tv-name { font-family: 'IM Fell English', serif; font-size: 1.9rem; font-weight: 400; color: var(--gold-bright); margin: 0; line-height: 1.2; overflow-wrap: anywhere; }
     .tv-tier { font-family: var(--font-ui); font-size: 0.8rem; color: var(--text-dim); margin: 4px 0 10px; }
     .tv-scene { font-family: 'IM Fell English', serif; font-size: 1.05rem; color: var(--text-mid); margin: 0 auto; max-width: 620px; }
@@ -502,6 +505,7 @@
       .en-filters label:first-child { grid-column: 1 / -1; }
       .en-roll-bar select { flex: 1 1 100%; }
       .tavern-card { padding: 16px 12px; }
+      .tv-art { margin: -16px -12px 14px; aspect-ratio: 2 / 1; }
       .tv-grid { grid-template-columns: 1fr; }
       .tv-name { font-size: 1.55rem; }
       .qs-task { font-size: 1.02rem; }
@@ -531,6 +535,7 @@
       body.print-tavern .tool-card { background: none; border: none; padding: 0; }
       body.print-tavern .tavern-card { background: none; border: 2px solid #000; color: #000; }
       body.print-tavern .tavern-card * { color: #000 !important; }
+      body.print-tavern .tv-art { display: none; }
       body.print-tavern .tv-block, body.print-tavern .tv-regulars li { border-color: #999; break-inside: avoid; }
       body.print-tavern .tv-dots { border-color: #777; }
       body.print-tavern .tv-tag { border-color: #777; }

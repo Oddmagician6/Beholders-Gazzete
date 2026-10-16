@@ -88,13 +88,18 @@ function rumorBlock() {
         ${r.followup ? `<details class="tv-next"><summary>📜 What happened next…</summary><p>${esc(r.followup)}</p></details>` : ''}`;
 }
 
+// The picture for a kind of tavern: its label as a file name ('tavern & inn' -> tavern-inn).
+function tavernArtSlug(label) { return label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+
 function renderTavern() {
     const tv = tavern.data;
     if (!tv) return;
     const t = TAVERN_TIERS[tv.tier];
     const o = tv.owner;
     const vacant = tv.rooms.vacant;
+    const art = `img/tavern/${tavernArtSlug(tv.kind.label)}`;
     document.getElementById('tavern-card').innerHTML = `
+        <div class="tv-art" aria-hidden="true"><img src="${art}.webp" srcset="${art}-sm.webp 480w, ${art}.webp 960w" sizes="(max-width: 1000px) 100vw, 960px" alt="" width="960" height="640" decoding="async"></div>
         <header class="tv-head">
             <h3 class="tv-name">${esc(tv.name)}</h3>
             <div class="tv-tier">${t.icon} ${esc(t.label)} ${esc(tv.kind.label)} · ${esc(tv.kind.where)}</div>

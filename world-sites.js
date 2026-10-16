@@ -154,7 +154,9 @@ function renderSite() {
     if (!s) return;
     const K = SITE_KINDS[s.kind], Z = SITE_SIZES[s.size];
     const ctx = siteCtx();
+    const art = `img/site/${s.kind}`;
     document.getElementById('site-card').innerHTML = `
+        <div class="wb-art" aria-hidden="true"><img src="${art}.webp" srcset="${art}-sm.webp 480w, ${art}.webp 960w" sizes="(max-width: 1000px) 100vw, 960px" alt="" width="960" height="640" decoding="async"></div>
         <header class="wb-head">
             <p class="wb-kicker">${K.icon} ${esc(K.label)} · ${Z.icon} ${esc(Z.label)} · ${esc(siteBandLabel(s))} · level ${s.level}, party of ${s.party}</p>
             <h3 class="wb-name">${esc(s.name)}</h3>

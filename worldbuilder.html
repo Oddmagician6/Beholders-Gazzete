@@ -102,6 +102,9 @@
     /* The calendar card */
     .wb-card { border: 1px solid var(--gold-dim); border-radius: var(--radius-sm); padding: 22px; background: rgba(0,0,0,0.18); margin-bottom: 18px; }
     .wb-head { text-align: center; margin-bottom: 18px; }
+    /* The kind of site's picture (img/site/<kind>.webp) across the top of its card. */
+    .wb-art { margin: -22px -22px 18px; aspect-ratio: 3 / 1; overflow: hidden; border-bottom: 1px solid var(--gold-dim); border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
+    .wb-art img { display: block; width: 100%; height: 100%; object-fit: cover; }
     .wb-kicker { font-family: var(--font-ui); font-size: 0.8rem; color: var(--text-dim); margin: 0 0 8px; }
     .wb-name { font-family: 'IM Fell English', serif; font-size: 1.9rem; font-weight: 400; color: var(--gold-bright); margin: 0; line-height: 1.2; overflow-wrap: anywhere; }
     .wb-sub { font-family: 'IM Fell English', serif; font-size: 1.1rem; color: var(--text-bright); margin: 6px 0 4px; }
@@ -489,6 +492,7 @@
       .world-body { padding: 36px 16px 50px; }
       .tool-card { padding: 22px 16px; }
       .wb-card { padding: 16px 12px; }
+      .wb-art { margin: -16px -12px 14px; aspect-ratio: 2 / 1; }
       .wb-grid { grid-template-columns: 1fr; }
       .wb-name { font-size: 1.55rem; }
       .wb-months .season, .wb-months th.season { display: none; }
@@ -571,7 +575,7 @@
       body.print-site > :not(main), body.print-site .tool-tabs, body.print-site .tool-panel:not(#tab-sites),
       body.print-site #tab-sites .tool-h, body.print-site #tab-sites .tool-intro, body.print-site #tab-sites .tool-form,
       body.print-site #tab-sites .tool-toolbar, body.print-site #tab-sites .tool-status, body.print-site #tab-sites .tool-note,
-      body.print-site .wb-today, body.print-site .pan-links { display: none !important; }
+      body.print-site .wb-today, body.print-site .pan-links, body.print-site .wb-art { display: none !important; }
       body.print-site .world-body { padding: 0; max-width: none; }
       body.print-site .tool-card { background: none; border: none; padding: 0; }
       body.print-site .wb-card { background: none; border: 2px solid #000; color: #000; }
