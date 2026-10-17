@@ -93,6 +93,12 @@ const BACKUP_KEYS = [
         count: v => `${bkN(v.lists.length, 'list')}, ${bkN(v.lists.reduce((n, l) => n + (l.spells || []).length, 0), 'spell')}`
     },
     {
+        key: 'gazette-characters', tool: '🧝 Character Builder', href: 'character-builder', what: 'Characters',
+        // Typed text, escaped by the page; cbClean() trims each character to its shape on load.
+        clean: v => bkItems(v, c => bkObj(c) && typeof c.id === 'string' && (c.name === undefined || typeof c.name === 'string'), 30, false),
+        count: v => bkN(v.length, 'character')
+    },
+    {
         key: 'gazette-bestiary-picks', tool: '🐉 Bestiary', href: 'bestiary', what: 'Encounter list',
         clean: v => bkItems(v, p => bkObj(p) && typeof p.id === 'string' && /^[a-z0-9-]{1,60}$/.test(p.id), 60),
         count: v => bkN(v.reduce((n, p) => n + Math.max(1, Math.round(Number(p.count)) || 1), 0), 'monster')
