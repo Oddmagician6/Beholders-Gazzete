@@ -536,8 +536,23 @@
                         "rivals":  [
 
                                    ],
-                        "article_count":  2,
+                        "article_count":  5,
                         "articles":  [
+                                         {
+                                             "id":  "paizo-13-omens-kickstarter-horror-rpg",
+                                             "title":  "Paizo\u0027s 13 Omens Horror RPG Launches on Kickstarter",
+                                             "date":  "2026-10-17"
+                                         },
+                                         {
+                                             "id":  "wizards-of-the-coast-union-recognition-vote",
+                                             "title":  "Wizards of the Coast Declines to Recognize D\u0026D Union",
+                                             "date":  "2026-10-17"
+                                         },
+                                         {
+                                             "id":  "starfinder-tech-core-starship-combat",
+                                             "title":  "Starfinder Tech Core Adds Tactical Starship Combat",
+                                             "date":  "2026-10-17"
+                                         },
                                          {
                                              "id":  "wild-hearth-kickstarter-pointy-hat",
                                              "title":  "Pointy Hat\u0027s Wild Hearth Kickstarter Passes $3.6 Million",
@@ -1499,6 +1514,11 @@
                       "appearances":  4,
                       "articles":  [
                                        {
+                                           "id":  "hidden-recording-device-openeye-boardroom-arrest",
+                                           "title":  "Hidden Recording Device Found in OpenEye Wizard Boardroom",
+                                           "date":  "2026-10-17"
+                                       },
+                                       {
                                            "id":  "ballroom-donors-330-million-gp-ivory-keep",
                                            "title":  "Ballroom Donors Cover 330 Million gp for Ivory Keep Dance Hall",
                                            "date":  "2026-10-17"
@@ -1506,11 +1526,6 @@
                                        {
                                            "id":  "chip-stocks-eight-day-slide-nasdraq",
                                            "title":  "Chip Stocks Slide Eight Days as Nasdraq Drops 4.5%",
-                                           "date":  "2026-10-17"
-                                       },
-                                       {
-                                           "id":  "hidden-recording-device-openeye-boardroom-arrest",
-                                           "title":  "Hidden Recording Device Found in OpenEye Wizard Boardroom",
                                            "date":  "2026-10-17"
                                        },
                                        {
@@ -1837,13 +1852,13 @@
                       "appearances":  3,
                       "articles":  [
                                        {
-                                           "id":  "foldable-phone-preorders-1999-gp-discord-apple",
-                                           "title":  "Foldable Phone Preorders Open at 1,999 gp; Sterling Is Sold",
+                                           "id":  "ballroom-donors-330-million-gp-ivory-keep",
+                                           "title":  "Ballroom Donors Cover 330 Million gp for Ivory Keep Dance Hall",
                                            "date":  "2026-10-17"
                                        },
                                        {
-                                           "id":  "ballroom-donors-330-million-gp-ivory-keep",
-                                           "title":  "Ballroom Donors Cover 330 Million gp for Ivory Keep Dance Hall",
+                                           "id":  "foldable-phone-preorders-1999-gp-discord-apple",
+                                           "title":  "Foldable Phone Preorders Open at 1,999 gp; Sterling Is Sold",
                                            "date":  "2026-10-17"
                                        },
                                        {
