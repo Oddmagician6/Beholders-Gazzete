@@ -307,6 +307,10 @@ p:last-child { margin-bottom: 0; }
   animation: fadeIn 2.5s ease both;
 }
 
+.hero-edition { margin: 12px 0 0; font-family: var(--font-ui); font-size: 0.82rem; animation: fadeIn 2.5s ease both; }
+.hero-edition a { color: var(--gold-mid); }
+.hero-edition a:hover, .hero-edition a:focus-visible { color: var(--gold-bright); }
+
 .page-hero-logo {
   font-family: var(--font-display);
   text-transform: none;

@@ -65,6 +65,10 @@
         .ar-day { text-align: center; font-family: var(--font-head); color: var(--gold-mid); line-height: 1.1; padding-top: 2px; }
         .ar-day b { display: block; font-size: 1.7rem; color: var(--gold-bright); }
         .ar-day span { font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; }
+        a.ar-day { border-radius: var(--radius-sm); }
+        a.ar-day:hover b, a.ar-day:focus-visible b { color: var(--text-bright); text-decoration: underline; }
+        .ar-edition { font-family: var(--font-ui); font-size: .85rem; color: var(--text-dim); margin: 0; }
+        .ar-edition a { color: var(--gold-bright); }
         .ar-tag {
             display: inline-block; font-family: var(--font-ui); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase;
             color: var(--bg-deep); background: var(--gold-mid); padding: 2px 8px; border-radius: var(--radius-sm); margin-bottom: 6px;
@@ -160,6 +164,7 @@
         <div class="ar-tools">
             <input class="ar-search" id="ar-search" type="search" placeholder="Search every scroll…" aria-label="Search the archives">
             <div class="ar-chips" id="ar-chips" role="group" aria-label="Filter by desk"></div>
+            <p class="ar-edition">📰 Click a day's date to read that day as a printed newspaper, or open <a href="edition">the newest print edition</a>.</p>
         </div>
         <p class="ar-count" id="ar-count" role="status"></p>
         <div id="ar-list"><p class="ar-empty">Dusting off the shelves…</p></div>
@@ -245,7 +250,7 @@
             <h2>${day(key + '-01').toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</h2>
             ${items.map(a => `
               <article class="ar-item">
-                <div class="ar-day"><b>${day(a.date).getDate()}</b><span>${day(a.date).toLocaleDateString('en-US', { weekday: 'short' })}</span></div>
+                ${a.real ? '<div class="ar-day">' : `<a class="ar-day" href="edition?date=${esc(a.date)}" title="This day's print edition">`}<b>${day(a.date).getDate()}</b><span>${day(a.date).toLocaleDateString('en-US', { weekday: 'short' })}</span>${a.real ? '</div>' : '</a>'}
                 <div>
                   ${a.desk ? `<a class="ar-tag" href="archive?section=${encodeURIComponent(a.desk.id)}" data-section="${esc(a.desk.id)}"${deskStyle(a.desk)} title="More from ${esc(a.desk.name)}"><span class="desk-icon" aria-hidden="true">${esc(a.desk.icon)}</span>${esc(a.category)}</a>` : `<span class="ar-tag">${esc(a.category || 'News')}</span>`}
                   <h3><a href="a/${encodeURIComponent(a.id)}">${esc(a.title)}</a></h3>
