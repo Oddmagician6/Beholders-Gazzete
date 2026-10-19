@@ -237,17 +237,17 @@ function loadMore() {
 }
 
 /* ── CLASSIFIEDS (F70) ──────────────────────────────────── */
-// Today's ads from classifieds.js: four small ones in the sidebar, and display ads
-// between grid rows (before the 5th card, then every 6th).
+// Today's ads from classifieds.js: four small ones in the sidebar, the first display ad
+// in the daily package (daily.js), and the rest between grid rows (before the 5th card, then every 6th).
 let todaysAds = null;
 function adsToday() {
-  if (todaysAds === null) todaysAds = typeof dealClassifieds === 'function' ? dealClassifieds(new Date()) : { small: [], display: [] };
+  if (todaysAds === null) todaysAds = typeof dealClassifieds === 'function' ? dealClassifieds(new Date(), 4) : { small: [], display: [] };
   return todaysAds;
 }
 
 function classifiedSlot(i) {
   if ((i - 4) % 6) return null;
-  return adsToday().display[(i - 4) / 6] || null;
+  return adsToday().display[(i - 4) / 6 + 1] || null;
 }
 
 function displayAdHtml(ad) {
