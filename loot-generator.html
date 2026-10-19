@@ -200,6 +200,8 @@
       font-family: var(--font-head); font-size: 0.68rem; letter-spacing: 0.08em;
       text-transform: uppercase; cursor: pointer; transition: all var(--transition);
     }
+    a.action-btn { text-decoration: none; display: inline-block; }
+    a.action-btn[hidden] { display: none; }
     .action-btn:hover { background: var(--gold-glow); color: var(--gold-bright); border-color: var(--gold-mid); }
     /* Party size for the split line in copied text and the Split button (F29). */
     .party-size {
@@ -289,6 +291,7 @@
           <li><a href="dnd-backstory-generator">🪶 Backstory</a></li>
           <li><a href="dnd-multiclass-calculator">🔀 Multiclass</a></li>
           <li><a href="dnd-spell-planner">🃏 Spell Prep</a></li>
+          <li><a href="dnd-character-cards">🎴 Cards</a></li>
           <li><a href="bestiary">🐉 Bestiary</a></li>
           <li><a href="monster-maker">🐲 Monster Maker</a></li>
           <li><a href="rules">📋 Rules</a></li>
@@ -530,6 +533,7 @@
           <button class="action-btn" id="link-btn"  onclick="copyLink()">🔗 Copy Link</button>
           <button class="action-btn" id="split-btn" onclick="splitLoot()">🪙 Split among the Party</button>
           <button class="action-btn" id="save-btn"  onclick="saveLoot()">💾 Save to Vault</button>
+          <a class="action-btn" id="cards-btn" href="dnd-character-cards" hidden>🎴 Item Cards</a>
           <button class="action-btn"                onclick="exportLoot()">📤 Export JSON</button>
           <button class="action-btn"                onclick="regenerateLoot()">🔄 Regenerate</button>
         </div>

@@ -237,6 +237,12 @@ function displayLoot() {
     }).join('');
   }
 
+  // Cut-out cards for the SRD items (Feature & Item Cards page)
+  const srd = [...new Set(loot.magic.map(m => magicItemInfo(m.name)).filter(Boolean).map(i => magicItemSlug(i.srdName)))];
+  const cardsBtn = document.getElementById('cards-btn');
+  cardsBtn.hidden = !srd.length;
+  cardsBtn.href = 'dnd-character-cards?items=' + srd.slice(0, 40).join(',');
+
   // Odds and ends (no value)
   document.getElementById('trinkets-section').style.display = trinkets.length ? 'block' : 'none';
   document.getElementById('trinkets-list').innerHTML = trinkets.map(t => `<li>${esc(lootCap(t))}</li>`).join('');

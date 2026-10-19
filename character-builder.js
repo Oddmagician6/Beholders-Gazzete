@@ -476,6 +476,7 @@ function renderSheet() {
         <div class="cb-sheet-btns">
           <button type="button" class="cb-btn cb-gold" data-act="levelup"${c.level >= 20 || !k ? ' disabled' : ''}>⬆️ Level Up to ${Math.min(20, c.level + 1)}</button>
           <button type="button" class="cb-btn" data-act="print">🖨️ Print</button>
+          ${k ? `<a class="cb-btn" href="dnd-character-cards?char=${encodeURIComponent(c.id)}">🎴 Cards</a>` : ''}
           <button type="button" class="cb-btn" data-act="party"${!k ? ' disabled' : ''}>👥 Add to Party</button>
           <button type="button" class="cb-btn" data-act="copy">📋 Copy Summary</button>
         </div>
@@ -919,7 +920,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('cb-q-race').innerHTML = '<option value="">Any race</option>' + CB_RACES.map(r => `<option value="${r.id}">${r.icon} ${esc(r.subraces ? r.subraces[0].name : r.name)}</option>`).join('');
 
     chars = cbLoadAll();
-    openChar(chars[0] || null);
+    const asked = new URLSearchParams(location.search).get('char'); // from the Spell Planner or the Cards page
+    openChar(chars.find(c => c.id === asked) || chars[0] || null);
 
     const panel = document.getElementById('cb-panel');
     panel.addEventListener('click', onClick);

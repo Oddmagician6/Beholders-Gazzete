@@ -447,6 +447,11 @@ function magicItemInfo(name) {
   return t ? { srdName, meta: t[0], text: t[1] } : null;
 }
 
+// An SRD item name in an address (the Feature & Item Cards page's ?items=): "Ammunition, +1" → ammunition-plus-1.
+function magicItemSlug(name) {
+  return name.toLowerCase().replace(/\+/g, 'plus-').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
 // SRD text → HTML: paragraphs, markdown tables, ***Heading.*** and **bold**.
 function formatSrdText(text) {
   const esc = t => String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
