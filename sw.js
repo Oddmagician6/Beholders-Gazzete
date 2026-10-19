@@ -8,7 +8,7 @@
 // Cache keys drop the query string (?seed=, ?t=, ?id= ...): pages rebuild their state from the URL.
 // Links use clean addresses (about, a/<id>); keyFor maps each one to its file's key (about.html).
 
-const VERSION = '67d309fe304a';
+const VERSION = '2a12847c81c2';
 const STATIC = 'gazette-static-' + VERSION;
 const PAGES = 'gazette-pages';
 const FONTS = 'gazette-fonts';
@@ -16,12 +16,12 @@ const FONTS = 'gazette-fonts';
 const PRECACHE = [
   // Tool pages
   'npc-generator.html', 'loot-generator.html', 'rumors.html', 'spellbook.html',
-  'economy.html', 'shop.html', 'session-kit.html', 'toolbox.html', 'worldbuilder.html', 'rules.html', 'bestiary.html', 'monster-maker.html', 'handouts.html', 'privacy.html', 'player-view.html', 'dm-screen.html', 'screen-view.html', 'character-builder.html',
+  'economy.html', 'shop.html', 'session-kit.html', 'toolbox.html', 'worldbuilder.html', 'rules.html', 'bestiary.html', 'monster-maker.html', 'handouts.html', 'privacy.html', 'player-view.html', 'dm-screen.html', 'screen-view.html', 'character-builder.html', 'dnd-point-buy-calculator.html',
   // Styles and scripts
   'style.css', 'homepage.css', 'economy-page.css', 'handouts.css', 'sw-register.js',
   'rng.js', 'tab-pages.js', 'npc-data.js', 'npc-statblock.js', 'spell-detail.js', 'npc-generator.js', 'loot-data.js', 'loot-engine.js', 'loot-generator.js', 'magic-items-data.js',
   'coins.js', 'market-data.js', 'economy-full.js', 'names-data.js', 'shop-engine.js', 'shop.js', 'handout-engine.js', 'handouts.js',
-  'town-crier.js', 'rumor-deck.js', 'rumors.js', 'session-kit.js', 'travel-engine.js', 'dice-engine.js', 'dice-fab.js', 'toolbox.js', 'toolbox-table.js', 'monsters-data.js', 'monster-statblocks.js', 'toolbox-statblock.js', 'encounter-engine.js', 'toolbox-encounter.js', 'tavern-engine.js', 'toolbox-tavern.js', 'downtime-engine.js', 'toolbox-downtime.js', 'quest-engine.js', 'toolbox-quest.js', 'toolbox-clocks.js', 'party.js', 'toolbox-party.js', 'table-engine.js', 'toolbox-tables.js', 'init-view.js', 'player-view.js', 'dm-screen-data.js', 'dm-screen.js', 'screen-view.js', 'rules-data.js', 'rules.js', 'bestiary.js', 'homebrew.js', 'monster-maker.js', 'calendar-engine.js', 'pantheon-engine.js', 'worldbuilder.js', 'world-calendar.js', 'world-pantheon.js', 'faction-engine.js', 'world-factions.js', 'history-engine.js', 'world-history.js', 'town-engine.js', 'world-town.js', 'family-tree.js', 'family-engine.js', 'world-family.js', 'site-engine.js', 'world-sites.js', 'continent-engine.js', 'world-pins.js', 'world-continent.js', 'world-maps.js', 'map-export.js', 'map-pins.js', 'map-store.js', 'notebook.js', 'docx.js', 'notebook-sheets.js', 'world-notebook.js', 'web-graph.js', 'world-web.js', 'backup.js', 'spells-data.js', 'character-data.js', 'character-engine.js', 'character-builder.js', 'script.js', 'raven-form.js', 'nav.js',
+  'town-crier.js', 'rumor-deck.js', 'rumors.js', 'session-kit.js', 'travel-engine.js', 'dice-engine.js', 'dice-fab.js', 'toolbox.js', 'toolbox-table.js', 'monsters-data.js', 'monster-statblocks.js', 'toolbox-statblock.js', 'encounter-engine.js', 'toolbox-encounter.js', 'tavern-engine.js', 'toolbox-tavern.js', 'downtime-engine.js', 'toolbox-downtime.js', 'quest-engine.js', 'toolbox-quest.js', 'toolbox-clocks.js', 'party.js', 'toolbox-party.js', 'table-engine.js', 'toolbox-tables.js', 'init-view.js', 'player-view.js', 'dm-screen-data.js', 'dm-screen.js', 'screen-view.js', 'rules-data.js', 'rules.js', 'bestiary.js', 'homebrew.js', 'monster-maker.js', 'calendar-engine.js', 'pantheon-engine.js', 'worldbuilder.js', 'world-calendar.js', 'world-pantheon.js', 'faction-engine.js', 'world-factions.js', 'history-engine.js', 'world-history.js', 'town-engine.js', 'world-town.js', 'family-tree.js', 'family-engine.js', 'world-family.js', 'site-engine.js', 'world-sites.js', 'continent-engine.js', 'world-pins.js', 'world-continent.js', 'world-maps.js', 'map-export.js', 'map-pins.js', 'map-store.js', 'notebook.js', 'docx.js', 'notebook-sheets.js', 'world-notebook.js', 'web-graph.js', 'world-web.js', 'backup.js', 'spells-data.js', 'character-data.js', 'character-engine.js', 'point-buy.js', 'character-builder.js', 'script.js', 'raven-form.js', 'nav.js',
   // Data
   'rumors.json',
   // Icons
@@ -136,7 +136,7 @@ function offlinePage() {
   const tools = [
     ['session-kit', 'DM Session Kit'], ['npc-generator', 'Town Square (NPCs)'],
     ['loot-generator', 'Vault of Wonders (loot)'], ['shop', "Merchant's Row (shops)"],
-    ['rumors', 'The Tavern (rumors)'], ['toolbox', 'DM Toolbox (names)'], ['spellbook', 'Spellbook'], ['character-builder', 'Character Builder'], ['bestiary', 'Bestiary'], ['monster-maker', 'Monster Maker'], ['rules', 'Rules Quick Reference'], ['dm-screen', 'DM Screen'], ['handouts', 'Handout Maker'], ['economy', 'Market Exchange'], ['privacy#backup', 'Back up everything']
+    ['rumors', 'The Tavern (rumors)'], ['toolbox', 'DM Toolbox (names)'], ['spellbook', 'Spellbook'], ['character-builder', 'Character Builder'], ['dnd-point-buy-calculator', 'Point Buy Calculator'], ['bestiary', 'Bestiary'], ['monster-maker', 'Monster Maker'], ['rules', 'Rules Quick Reference'], ['dm-screen', 'DM Screen'], ['handouts', 'Handout Maker'], ['economy', 'Market Exchange'], ['privacy#backup', 'Back up everything']
   ];
   const links = tools.map(([href, name]) => `<li><a href="${BASE}${href}">${name}</a></li>`).join('');
   const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
