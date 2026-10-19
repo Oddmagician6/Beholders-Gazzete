@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadArticles();
   renderEconomySidebar();
   startEconomyUpdates();
+  renderClassifieds();
 });
 
 function setYear() {
@@ -197,7 +198,7 @@ function renderGrid() {
 
   el.innerHTML = visible.map((a, i) => {
     const d = deskOf(a);
-    return `
+    return (i && classifiedSlot(i) ? displayAdHtml(classifiedSlot(i)) : '') + `
     <article class="card" style="animation-delay:${i * 0.08}s;${d && d.color ? `--desk:${d.color}` : ''}">
       ${storyPic(a, 'card-pic', true, true)}
       ${deskTag(a)}
@@ -233,6 +234,47 @@ function loadMore() {
   displayedCount += 6;
   renderGrid();
   document.querySelector('.load-more-wrap')?.scrollIntoView({ behavior:'smooth', block:'center' });
+}
+
+/* ── CLASSIFIEDS (F70) ──────────────────────────────────── */
+// Today's ads from classifieds.js: four small ones in the sidebar, and display ads
+// between grid rows (before the 5th card, then every 6th).
+let todaysAds = null;
+function adsToday() {
+  if (todaysAds === null) todaysAds = typeof dealClassifieds === 'function' ? dealClassifieds(new Date()) : { small: [], display: [] };
+  return todaysAds;
+}
+
+function classifiedSlot(i) {
+  if ((i - 4) % 6) return null;
+  return adsToday().display[(i - 4) / 6] || null;
+}
+
+function displayAdHtml(ad) {
+  const href = classifiedShopHref(ad) || ad.href || '';
+  const cta = ad.shop ? '🏪 Step inside' : '📜 Find out more';
+  return `
+    <aside class="display-ad" aria-label="Advertisement">
+      <span class="ad-label">Advertisement</span>
+      <h3 class="ad-head">${esc(ad.h)}</h3>
+      <p>${esc(ad.t)}</p>
+      ${href ? `<a class="btn ad-cta" href="${esc(href)}">${cta} →</a>` : ''}
+    </aside>`;
+}
+
+function renderClassifieds() {
+  const el = document.getElementById('classifieds-sidebar');
+  const ads = adsToday().small;
+  if (!el || !ads.length) return;
+  el.innerHTML = '<h4 class="widget-title">📯 Classifieds</h4>' + ads.map(ad => `
+    <div class="classified">
+      <span class="classified-kind">${CLASSIFIED_KINDS[ad.k].label}</span>
+      <h5>${esc(ad.h)}</h5>
+      <p>${esc(ad.t)}</p>
+      <p class="classified-by">${esc(ad.by)}</p>
+    </div>`).join('') +
+    '<p class="classified-note">New ads every morning. Every business here is invented.</p>';
+  el.hidden = false;
 }
 
 /* ── TICKER ──────────────────────────────────────────────── */

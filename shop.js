@@ -152,7 +152,14 @@ function shopParams() {
         const el = document.getElementById('shop-' + k);
         if (shop.rolledWith[k] !== defaultValue(el)) p[k] = shop.rolledWith[k];
     });
+    if (shop.sign) p.name = shop.sign;
     return p;
+}
+
+// A sign from a link (?name=, e.g. a Gazette classified ad): plain text, short, or null.
+function shopSign(s) {
+    s = typeof s === 'string' ? s.replace(/[\u0000-\u001f<>]/g, '').replace(/\s+/g, ' ').trim() : '';
+    return s && s.length <= 60 ? s : null;
 }
 
 // Rebuild the shop from the address bar. Returns false when there's no seed in it.
@@ -165,9 +172,11 @@ function applyUrl() {
         if (!setFieldValue(el, p.get(k))) el.value = defaultValue(el);
     });
     const opts = { type: document.getElementById('shop-type').value, wealth: document.getElementById('shop-wealth').value };
+    const sign = shopSign(p.get('name'));
     // Same shop as the saved one? Keep it, haggle and all.
-    if (!(shop && shop.seed === seed && shop.rolledWith && shop.rolledWith.type === opts.type && shop.rolledWith.wealth === opts.wealth)) {
+    if (!(shop && shop.seed === seed && shop.rolledWith && shop.rolledWith.type === opts.type && shop.rolledWith.wealth === opts.wealth && (shop.sign || null) === sign)) {
         shop = { ...withSeed(seed, () => rollShop(opts)), seed, rolledWith: opts };
+        if (sign) { shop.name = sign; shop.sign = sign; }
     }
     return true;
 }
