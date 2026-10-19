@@ -666,7 +666,7 @@ function onClick(e) {
             c.skills = []; c.tools = []; c.expertise = []; c.asi = {}; c.hpRolls = [];
             c.opts = cbBlank().opts;
             c.equip = { choice: [], picks: {} };
-            c.spells = { cantrips: [], list: [], prepared: [], arcanum: {} };
+            c.spells = { cantrips: [], list: [], prepared: [], arcanum: {}, fav: [] };
             if (had && c.gearSet && c.equipMode === 'class') { c.gear = []; c.coins = 0; c.gearSet = false; c.wear = { armor: '', shield: false }; }
             if (c.method === 'array' && c.assigned) assignByClass(c, CB_STANDARD_ARRAY);
             if (had) flash('Class changed: pick its skills, gear, and spells again.');

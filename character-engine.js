@@ -36,7 +36,7 @@ function cbBlank() {
         asi: {}, hpMode: 'avg', hpRolls: [],
         equipMode: 'class', equip: { choice: [], picks: {} }, gear: [], coins: 0, gearSet: false,
         wear: { armor: '', shield: false },
-        spells: { cantrips: [], list: [], prepared: [], arcanum: {} },
+        spells: { cantrips: [], list: [], prepared: [], arcanum: {}, fav: [] },
         updated: Date.now()
     };
 }
@@ -111,7 +111,7 @@ function cbClean(raw) {
     const w = raw.wear || {};
     c.wear = { armor: CB_ARMOR[w.armor] ? w.armor : '', shield: !!w.shield };
     const sp = raw.spells || {};
-    c.spells = { cantrips: cbIds(sp.cantrips, cbSpellOk, 12), list: cbIds(sp.list, cbSpellOk, 80), prepared: cbIds(sp.prepared, cbSpellOk, 40), arcanum: {} };
+    c.spells = { cantrips: cbIds(sp.cantrips, cbSpellOk, 12), list: cbIds(sp.list, cbSpellOk, 80), prepared: cbIds(sp.prepared, cbSpellOk, 40), arcanum: {}, fav: cbIds(sp.fav, cbSpellOk, 80) };
     [6, 7, 8, 9].forEach(lv => { const n = sp.arcanum && sp.arcanum[lv]; if (cbSpellOk(n)) c.spells.arcanum[lv] = n; });
     c.updated = Number(raw.updated) || Date.now();
     return c;
@@ -746,7 +746,7 @@ function cbFitToLevel(c) {
     if (c.cls !== 'warlock' || c.level < 3) c.opts.pact = '';
     if (c.expertise.length > cbExpertiseCount(c)) c.expertise = c.expertise.slice(0, cbExpertiseCount(c));
     const r = cbSpellRules(c);
-    if (!r) c.spells = { cantrips: [], list: [], prepared: [], arcanum: {} };
+    if (!r) c.spells = { cantrips: [], list: [], prepared: [], arcanum: {}, fav: [] };
     else {
         [6, 7, 8, 9].forEach(lv => { if (!r.arcanum.includes(lv)) delete c.spells.arcanum[lv]; });
         if (r.type !== 'book') c.spells.prepared = [];
