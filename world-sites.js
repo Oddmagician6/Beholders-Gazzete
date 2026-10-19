@@ -6,7 +6,8 @@
    The map downloads as a PNG battle map on a 5-foot grid (map-export.js).
    "Use the History tab's history" dates the site to one of its ages (the History tab's
    own "Explore a ruin from this age" picks the age). Nothing is stored: the URL holds it.
-   URL: ?tab=sites&seed=&kind=&size=&level=&party=
+   Two map styles: 🎨 Illustrated (floors, furniture, and doors from img/map) and ✒️ Classic.
+   URL: ?tab=sites&seed=&kind=&size=&level=&party=&style= (style: only when classic)
    A new site (no seed in the URL) starts at the Toolbox Party tab's level and size (party.js);
    a shared one keeps its own (a missing level or party means level 3, 4 characters).
         &his=&hages=&hspan=&hstart=&hage=<age number>  (a linked history)
@@ -23,6 +24,10 @@ function siteOpts() {
     return { kind: v('site-kind'), size: v('site-size'), level: v('site-level'), party: v('site-party') };
 }
 
+function siteStyle() {
+    return document.getElementById('site-style').value;
+}
+
 function siteCtx() {
     return { history: siteState.history, hage: siteState.hage };
 }
@@ -34,6 +39,7 @@ function siteParams() {
         params[key] = fieldValue(el) === defaultValue(el) ? null : el.value;
     });
     params.seed = siteState.seed;
+    params.style = siteStyle() === 'art' ? null : siteStyle();
     const h = siteState.his;
     params.his = h ? h.seed : null;
     Object.entries(SITE_HIS_KEYS).forEach(([key, opt]) => { params[key] = h && h[opt] !== 'random' ? h[opt] : null; });
@@ -60,6 +66,7 @@ function applySiteUrl(p) {
         const el = document.getElementById(id);
         if (!setFieldValue(el, p.get(key))) el.value = defaultValue(el);
     });
+    document.getElementById('site-style').value = SITE_STYLES[p.get('style')] ? p.get('style') : 'art';
     const his = parseSeed(p.get('his'));
     const h = his ? { seed: his } : null;
     if (h) Object.entries(SITE_HIS_KEYS).forEach(([key, opt]) => { h[opt] = p.get(key) || 'random'; });
@@ -169,8 +176,8 @@ function renderSite() {
         </section>
         <section class="wb-block wb-wide">
             <h4>🗺️ The map</h4>
-            <div class="site-map-wrap">${siteMapSvg(s, `Map of ${s.name}`)}</div>
-            <p class="wb-legend">Tap a number to jump to that room. ⚔ a fight · ⚠ a trap · ▮ a door (● locked) · S a secret door · ┄ a portcullis${K.stairs ? ' · ≡ a stair' : ''} · the arrow is the way in · the gold room holds the hoard.</p>
+            <div class="site-map-wrap">${siteMapSvg(s, `Map of ${s.name}`, { style: siteStyle() })}</div>
+            <p class="wb-legend" id="site-legend">${siteLegend(s)}</p>
         </section>
         <h4 class="site-key-h">🔑 The key</h4>
         ${s.rooms.map((_, i) => siteRoomHTML(s, i)).join('')}
@@ -181,9 +188,29 @@ function renderSite() {
         </section>` : ''}`;
 }
 
+function siteLegend(s) {
+    const K = SITE_KINDS[s.kind];
+    const tail = ' · S a secret door · the arrow is the way in · the gold room holds the hoard.';
+    return siteStyle() === 'art'
+        ? `Tap a number to jump to that room. ⚔ a fight · ⚠ a trap · each room is furnished from what's in it · the doors are drawn as they are (iron: locked)${K.portcullis ? ', with portcullises' : ''}${K.stairs ? ' · spiral stairs lead between floors' : ''}${tail}`
+        : `Tap a number to jump to that room. ⚔ a fight · ⚠ a trap · ▮ a door (● locked) · ┄ a portcullis${K.stairs ? ' · ≡ a stair' : ''}${tail}`;
+}
+
+// Redraw the map alone in the other style.
+function siteRestyle() {
+    const s = siteState.data;
+    if (s) {
+        document.querySelector('#site-card .site-map-wrap').innerHTML = siteMapSvg(s, `Map of ${s.name}`, { style: siteStyle() });
+        document.getElementById('site-legend').textContent = siteLegend(s);
+    }
+    if (siteState.seed) setUrlParams(siteParams(), false);
+}
+
 // ── Battle map export ─────────────────────────────────────
-// Each look goes on top of the page's own .sm- rules (the dark one, as on screen).
+// Each look goes on top of the page's own .sm- rules (the dark one, as on screen). art: the
+// illustrated map, whatever the style on screen.
 const SITE_MAP_LOOKS = {
+    art: `.sm-grid { fill: none; stroke: rgba(0,0,0,0.4); stroke-width: 0.6; }`,
     parchment: `.sm-bg { fill: #3a342b; }
         .sm-corr-wall { stroke: #15120d; }
         .sm-corr { stroke: #eadfc3; }
@@ -227,16 +254,18 @@ async function siteDownloadMap() {
     const btn = document.getElementById('site-png');
     if (!s || btn.disabled) return;
     const on = id => document.getElementById(id).checked;
-    const svg = siteMapSvg(s, `Map of ${s.name}`, { snap: true, grid: on('site-grid-on'), nums: on('site-nums-on'), secret: on('site-secret-on') });
+    const pick = document.getElementById('site-look').value;
+    const art = pick === 'art';
+    const svg = siteMapSvg(s, `Map of ${s.name}`, { snap: true, grid: on('site-grid-on'), nums: on('site-nums-on'), secret: on('site-secret-on'), style: art ? 'art' : 'classic' });
     const [W, H] = svg.match(/viewBox="0 0 (\d+) (\d+)"/).slice(1).map(Number);
     const px = Number(document.getElementById('site-px').value) || 100;
     const cols = W / SITE_SQUARE, rows = H / SITE_SQUARE;
     const w = cols * px, h = rows * px;
-    const look = SITE_MAP_LOOKS[document.getElementById('site-look').value] || SITE_MAP_LOOKS.parchment;
+    const look = SITE_MAP_LOOKS[pick] || SITE_MAP_LOOKS.parchment;
     const name = `${mapFileSlug(s.name)}-${cols}x${rows}.png`;
     btn.disabled = true;
     siteStatus('🗺️ Drawing the map…');
-    const ok = await mapExportPng(svg, w, h, mapPageCss('.sm-') + '\n' + look, name);
+    const ok = await mapExportPng(art ? await mapInlineImages(svg) : svg, w, h, mapPageCss('.sm-') + '\n' + look, name);
     btn.disabled = false;
     const n = v => v.toLocaleString('en-US');
     siteStatus(ok
@@ -260,6 +289,9 @@ function setupSites() {
     for (let l = 1; l <= 20; l++) level.add(new Option(`Level ${l}`, String(l), l === 3, l === 3));
     const party = document.getElementById('site-party');
     for (let n = 1; n <= 8; n++) party.add(new Option(`${n} character${n === 1 ? '' : 's'}`, String(n), n === 4, n === 4));
+    const style = document.getElementById('site-style');
+    Object.entries(SITE_STYLES).forEach(([key, label]) => style.add(new Option(label, key)));
+    style.addEventListener('change', siteRestyle);
     siteUseParty();
     partyChip(document.getElementById('site-party-chip'), {
         label: 'Use the Party', title: "Set the party level and size to the Toolbox Party tab's",

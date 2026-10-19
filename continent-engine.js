@@ -108,6 +108,8 @@ const CONT_FEUDS = [
 const CONT_TINCTURES = ['gold', 'silver', 'red', 'blue', 'green', 'black', 'purple'];
 const CONT_CHARGES = ['a stag', 'a tower', 'a crowned lion', 'three stars', 'a ship', 'a wolf\'s head', 'an oak', 'a key', 'a sun', 'a crescent moon',
     'a hammer', 'a rose', 'a serpent', 'an eagle', 'a bell', 'a sword', 'a bear', 'a lantern', 'a horse', 'a gauntlet'];
+// The tinctures as drawn on a coat of arms (contArmsSvg).
+const CONT_TINCTURE_COLORS = { gold: '#d6a62a', silver: '#ece8dc', red: '#b3261e', blue: '#1f4f9e', green: '#2e7a3a', black: '#1d1b19', purple: '#6b2f8f' };
 // Map tints for the nations (one each; muted, so terrain still shows).
 const CONT_COLORS = ['#b8432f', '#2f6db8', '#4f9a3a', '#8a3fb0', '#c08a1e', '#1f8a8a', '#b03f78', '#5a5a5a'];
 
@@ -927,6 +929,31 @@ function contNationLines(c, k) {
     ];
 }
 
+// A nation's banner ("a wolf's head in gold on red") as its parts: the charge's picture
+// (img/map/heraldry/<charge>.webp), the charge's color, and the field's.
+function contArms(nat) {
+    const [, charge, tint, field] = nat.banner.match(/^(.*) in (\w+) on (\w+)$/);
+    return { charge: charge.replace(/^an? /, '').replace(/'s\b/g, '').replace(/[^a-z]+/g, '-'),
+        tint: CONT_TINCTURE_COLORS[tint], field: CONT_TINCTURE_COLORS[field] };
+}
+
+// The coat of arms as an <svg> (100 × 120 units): the field on a shield, the charge colored
+// through a mask of its picture. id: unique on the page (the mask's id). attrs: on the <svg>.
+// A color on a color (or a metal on a metal) gets a thin edge of the other kind, so it shows.
+function contArmsSvg(nat, id, attrs = '') {
+    const a = contArms(nat);
+    const metal = c => c === CONT_TINCTURE_COLORS.gold || c === CONT_TINCTURE_COLORS.silver;
+    const edge = metal(a.tint) === metal(a.field) ? (metal(a.tint) ? '#3a2414' : CONT_TINCTURE_COLORS.silver) : '';
+    const shield = 'M5 5H95V52C95 85 73 104 50 115C27 104 5 85 5 52Z';
+    return `<svg viewBox="0 0 100 120" ${attrs}><defs><mask id="${id}" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="120">`
+        + `<image href="${CONT_ART_DIR}heraldry/${a.charge}.webp" x="21" y="18" width="58" height="68" preserveAspectRatio="xMidYMid meet"/></mask>`
+        + (edge ? `<filter id="${id}-e" x="-10%" y="-10%" width="120%" height="120%"><feMorphology in="SourceAlpha" operator="dilate" radius="2" result="d"/>`
+            + `<feFlood flood-color="${edge}" result="c"/><feComposite in="c" in2="d" operator="in" result="o"/><feMerge><feMergeNode in="o"/><feMergeNode in="SourceGraphic"/></feMerge></filter>` : '')
+        + `</defs><path d="${shield}" fill="${a.field}"/>`
+        + `<g${edge ? ` filter="url(#${id}-e)"` : ''}><rect x="0" y="0" width="100" height="120" fill="${a.tint}" mask="url(#${id})"/></g>`
+        + `<path d="${shield}" fill="none" stroke="#3a2414" stroke-width="4"/></svg>`;
+}
+
 function contPoiWhere(c, p) {
     const near = c.towns[p.near];
     return `About ${p.miles} miles ${p.dir} of ${near.name}, ${p.owner >= 0 ? 'in ' + c.nations[p.owner].name : 'in the wilds'}.`;
@@ -1384,8 +1411,12 @@ function contMapSvg(c, title, id = 'cm', style = 'classic') {
         const text = nat.root.toUpperCase();
         const fs = Math.max(10, Math.min(16, 8 + Math.sqrt(own.length) / 3));
         const w = text.length * fs * 0.78 + 4;
-        const box = contPlace(boxes, [{ x: p.x - w / 2, y: p.y - fs * 0.8, w, h: fs }, { x: p.x - w / 2, y: p.y + 6, w, h: fs }, { x: p.x - w / 2, y: p.y - fs * 2, w, h: fs }], W, H, pad);
-        labels += `<text class="cm-nation" style="font-size:${f(fs)}px" x="${f(box.x + box.w / 2)}" y="${f(box.y + fs * 0.82)}">${esc(text)}</text>`;
+        // Illustrated: the nation's arms over its name.
+        const sh = atlas ? fs * 1.7 : 0, top = atlas ? sh + 2 : 0, h = fs + top;
+        const box = contPlace(boxes, [{ x: p.x - w / 2, y: p.y - fs * 0.8 - top, w, h }, { x: p.x - w / 2, y: p.y + 6, w, h }, { x: p.x - w / 2, y: p.y - fs * 2 - top, w, h }], W, H, pad);
+        const cx = box.x + box.w / 2;
+        if (atlas) labels += contArmsSvg(nat, `${id}-arms-${k}`, `class="cm-a-arms" x="${f(cx - sh / 2.4)}" y="${f(box.y)}" width="${f(sh / 1.2)}" height="${f(sh)}"`);
+        labels += `<text class="cm-nation" style="font-size:${f(fs)}px" x="${f(cx)}" y="${f(box.y + top + fs * 0.82)}">${esc(text)}</text>`;
     });
     c.towns.forEach(t => {
         const p = contPt(m, t.cell), r = townR(t) + 1;

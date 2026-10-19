@@ -98,6 +98,7 @@ function contNationHTML(c, nat) {
     const towns = c.towns.filter(t => t.nation === nat.index);
     return `<section class="wb-block wb-wide cont-nation" id="cn-n${nat.index}">
         <h4><span class="cont-swatch" style="background:${nat.color}"></span>${esc(facCap(nat.name))}<span class="wb-tag">${esc(G.label)}</span></h4>
+        ${contArmsSvg(nat, `cn-arms-${nat.index}`, `class="cont-arms" role="img" aria-label="${esc(`The arms of ${nat.name}: ${nat.banner}`)}"`)}
         ${contDl(contNationLines(c, nat.index))}
         <ul class="wb-list cont-towns">${towns.map(t => contTownItem(c, t)).join('')}</ul>
         <p class="pan-links"><a class="btn" href="${esc(facNpcLink(nat.ruler))}">${facNpcIcon(nat.ruler)} ${esc(nat.ruler.title)} ${esc(nat.ruler.npc.firstName)}</a></p>

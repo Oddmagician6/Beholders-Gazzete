@@ -798,12 +798,124 @@ function siteCavePath(s, i, cx, cy, rx, ry) {
     });
 }
 
+// ── The illustrated map ───────────────────────────────────
+// Floors, furniture, and doors from img/map (made by map-art.py). A floor tile covers
+// 20 × 20 feet (4 squares).
+const SITE_STYLES = { art: '🎨 Illustrated', classic: '✒️ Classic' };
+const SITE_ART_DIR = 'img/map/';
+const SITE_FLOOR_TILE = SITE_SQUARE * 4;
+// Each kind's floor (and its corridors'), and its ordinary door's picture (null: drawn plain).
+const SITE_ART_KINDS = {
+    crypt: { floor: 'flagstones', door: 'iron-door', props: ['coffin', 'rubble', 'bone-pile', 'brazier', 'spider-web', 'statue', 'sarcophagus'] },
+    mine: { floor: 'cave', door: 'wooden-door', props: ['crates', 'mine-cart', 'rubble', 'barrels', 'stalagmites', 'spider-web'] },
+    tower: { floor: 'planks', door: 'wooden-door', props: ['bookshelf', 'table', 'chest', 'rug', 'brazier', 'desk'] },
+    temple: { floor: 'temple-tiles', door: 'iron-door', props: ['pillar', 'statue', 'rubble', 'brazier', 'altar', 'spider-web'] },
+    fort: { floor: 'dirt', door: 'wooden-door', props: ['barrels', 'crates', 'table', 'campfire', 'weapon-rack'] },
+    lair: { floor: 'cave', door: null, props: ['bone-pile', 'stalagmites', 'rubble', 'spider-web'] },
+    keep: { floor: 'flagstones', door: 'wooden-door', props: ['rubble', 'table', 'barrels', 'pillar', 'chest', 'weapon-rack', 'brazier'] }
+};
+// A room's own floor, by what its name and description say (first match). room: not in caves.
+const SITE_FLOOR_RULES = [
+    [/flood|water|lake|stream|wallow|baptistry|pool|wades|knee-deep|bog/, 'water'],
+    [/ossuar|bone|charnel/, 'bone'],
+    [/fungus|mushroom|herb garden|grotto/, 'mossy-cave'],
+    [/library|quarters|guest|dining|study|bedchamber|solar|lady|porter|office|barracks|mess|counting|hostel|scriptorium|refectory|cellar|infirmary|watchtower|lookout/, 'planks', 'room'],
+    [/sanctum|chapel|throne|great hall|mosaic|holy|vault of wonders|portrait|founder|entrance hall|observatory|god's mouth/, 'marble', 'room'],
+    [/yard|stables|kennel|camp|bailey|stockade|gate\b|drawbridge|sally port|breach/, 'dirt']
+];
+// Furniture by what a room's name and description say. Each match adds its pieces.
+const SITE_PROP_RULES = [
+    [/treasur|hoard|mother lode|strongroom|grave goods|fortune|loot/, 'treasure-hoard'],
+    [/bone|ossuar|charnel|skull|carcass/, 'bone-pile'],
+    [/coffin/, 'coffin'],
+    [/sarcophag|tomb|effig/, 'sarcophagus'],
+    [/altar|shrine|sanctum|offering/, 'altar'],
+    [/statue|saint|idol|mourners|effig|golem|armor that stands/, 'statue'],
+    [/\bbeds?\b|bunks?\b|cots?\b|quarters|four-poster|canopy/, 'bed'],
+    [/bedroll|camp\b|old camp/, 'bedrolls'],
+    [/books?\b|library|shelves|scriptorium/, 'bookshelf'],
+    [/desk|office|study|ledger|counting|diary|notes/, 'desk'],
+    [/table|dining|mess hall|refectory|map room|war room|guardroom|dice/, 'table'],
+    [/barrel|\bale\b|wine|kegs?\b|powder/, 'barrels'],
+    [/crates|sacks|storehouse|store\b|storeroom|tool store/, 'crates'],
+    [/cage|menagerie|kennel|stockade|canary|cells with iron/, 'cage'],
+    [/cauldron|stew|laborator|glassware|components/, 'cauldron'],
+    [/forge|smelter|smithy|furnace|hearth|candles|brazier|lamp/, 'brazier'],
+    [/cookfire|cold fire|campfire/, 'campfire'],
+    [/circle of silver|summoning|scrying/, 'magic-circle'],
+    [/\bcarts?\b|rails|ore\b/, 'mine-cart'],
+    [/pillar|column|portico|nave|hammerbeam|stalactite hall/, 'pillar'],
+    [/rubble|collaps|cave-in|landslide|fallen roof|half fallen|cracked open/, 'rubble'],
+    [/solar|lady's|lord's|guest room|apartment|rug/, 'rug'],
+    [/spider|cobweb/, 'spider-web'],
+    [/crystal|stalactite|sinkhole|cave mouth|narrow cleft/, 'stalagmites'],
+    [/throne|big chair|high-backed/, 'throne'],
+    [/weapons|armou?ry|training yard|swords|broken weapons/, 'weapon-rack'],
+    [/\bwell\b/, 'well'],
+    [/fountain|baptistry|\bbath\b/, 'fountain'],
+    [/chest|strongbox|trunks?\b|vessels/, 'chest'],
+    [/cellar|shaft|charnel pit|trapdoor/, 'trapdoor']
+];
+// Pieces drawn wide (their pictures are long and low), and pieces that lie flat under the room's number.
+const SITE_PROP_WIDE = ['altar', 'bookshelf', 'table', 'desk', 'weapon-rack'];
+const SITE_PROP_MIDDLE = ['rug', 'magic-circle'];
+
+function siteArtFloor(s, i) {
+    const K = SITE_KINDS[s.kind], r = s.rooms[i], text = `${r.name} ${r.text}`.toLowerCase();
+    const hit = SITE_FLOOR_RULES.find(([re, , only]) => re.test(text) && !(only === 'room' && siteRoomShape(s, i) === 'cave'));
+    return hit ? hit[1] : SITE_ART_KINDS[s.kind].floor;
+}
+
+// The furniture in room i: [{ file, x, y, w, h }], away from the walls its corridors come
+// through and from the number in the middle. Its own seed, so it never moves anything else.
+// c: the room's cell as drawn; round: a circle or cave (spots pulled in from the corners).
+function siteArtProps(s, i, c, p, round) {
+    const r = s.rooms[i], last = i === s.rooms.length - 1, text = `${r.name} ${r.text}`.toLowerCase();
+    const A = SITE_ART_KINDS[s.kind];
+    return withSeed(deriveSeed(s.seed, 'props.' + i), () => {
+        const own = SITE_PROP_RULES.filter(([re]) => re.test(text)).map(([, prop]) => prop);
+        const want = [...new Set((last ? ['treasure-hoard'] : []).concat(siteShuffle(own)))].slice(0, last ? 3 : 2);
+        const total = i === 0 ? 2 : c.w * c.h > 4600 ? 4 : 3;
+        siteShuffle(A.props).forEach(prop => { if (want.length < total && !want.includes(prop)) want.push(prop); });
+        // Spots: the corners, then the middles of the walls no corridor comes through.
+        const ways = new Set(s.map.edges.map(e => e.a === i ? [e.b, 1] : e.b === i ? [e.a, -1] : null).filter(Boolean)
+            .map(([j]) => { const o = s.map.cells[j], m = s.map.cells[i]; return `${Math.sign(o.x - m.x)},${Math.sign(o.y - m.y)}`; }));
+        const fx = round ? 0.24 : 0.3, fy = round ? 0.22 : 0.27, mx = round ? 0.3 : 0.34, my = round ? 0.27 : 0.3;
+        const spots = siteShuffle([[-1, -1], [1, -1], [-1, 1], [1, 1]]).concat(siteShuffle([[1, 0], [-1, 0], [0, 1], [0, -1]].filter(([dx, dy]) => !ways.has(`${dx},${dy}`))));
+        const size = Math.max(13, Math.min(20, Math.min(c.w, c.h) * 0.3));
+        const out = [];
+        want.forEach(prop => {
+            if (SITE_PROP_MIDDLE.includes(prop)) {
+                const z = Math.min(c.w, c.h) * (prop === 'rug' ? 0.5 : 0.62);
+                out.unshift({ file: prop, x: p.x, y: p.y, w: prop === 'rug' ? z * 0.75 : z, h: z });
+                return;
+            }
+            const spot = spots.shift();
+            if (!spot) return;
+            const [dx, dy] = spot;
+            const k = prop === 'treasure-hoard' ? 1.35 : 1;
+            const w = size * k * (SITE_PROP_WIDE.includes(prop) ? 1.5 : 1), h = size * k;
+            out.push({ file: prop, x: p.x + dx * c.w * (dy ? fx : mx), y: p.y + dy * c.h * (dx ? fy : my), w, h });
+        });
+        return out;
+    });
+}
+
+function siteArtImg(file, x, y, w, h, extra = '') {
+    return `<image href="${SITE_ART_DIR}${file}.webp" x="${(x - w / 2).toFixed(1)}" y="${(y - h / 2).toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" preserveAspectRatio="xMidYMid meet"${extra}/>`;
+}
+
 // opts (for the battle map export): snap squares the rooms up to the 5-foot grid, and grid
 // also draws it; nums: false leaves out the room numbers and the fight and trap marks;
 // secret: false leaves out the secret doors and the corridors behind them.
+// style: 'art' (floors, furniture, and doors from img/map) or 'classic' (flat ink).
 function siteMapSvg(s, title, opts = {}) {
-    const { grid = false, snap = grid, nums = true, secret = true } = opts;
+    const { grid = false, snap = grid, nums = true, secret = true, style = 'classic' } = opts;
     const K = SITE_KINDS[s.kind];
+    const art = style === 'art', KA = SITE_ART_KINDS[s.kind], id = `sm-${s.seed}`;
+    const used = new Set();
+    const floor = name => { used.add(name); return `url(#${id}-fl-${name})`; };
+    let props = '';
     const cells = snap ? s.map.cells.map(c => ({ ...c, w: siteSnapSize(c.w), h: siteSnapSize(c.h) })) : s.map.cells;
     const center = c => siteCenter(c, snap);
     const cols = Math.max(...cells.map(c => c.x)) + 1, rows = Math.max(...cells.map(c => c.y)) + 1;
@@ -817,8 +929,8 @@ function siteMapSvg(s, title, opts = {}) {
         if (kind === 'secret' && !secret) return;
         const A = cells[e.a], B = cells[e.b];
         const pa = center(A), pb = center(B);
-        corr += `<line class="sm-corr-wall" x1="${pa.x}" y1="${pa.y}" x2="${pb.x}" y2="${pb.y}"/>`;
-        floors += `<line class="sm-corr${kind === 'secret' ? ' sm-secret-corr' : ''}" x1="${pa.x}" y1="${pa.y}" x2="${pb.x}" y2="${pb.y}"/>`;
+        corr += `<line class="sm-corr-wall${art ? ' sm-a-wall' : ''}" x1="${pa.x}" y1="${pa.y}" x2="${pb.x}" y2="${pb.y}"/>`;
+        floors += `<line class="sm-corr${kind === 'secret' ? ' sm-secret-corr' : ''}"${art ? ` style="stroke:${floor(KA.floor)}"` : ''} x1="${pa.x}" y1="${pa.y}" x2="${pb.x}" y2="${pb.y}"/>`;
         // The door sits halfway between the two walls.
         const dx = Math.sign(B.x - A.x), dy = Math.sign(B.y - A.y);
         const ra = siteReach(A, siteRoomShape(s, e.a), dx), rb = siteReach(B, siteRoomShape(s, e.b), dx);
@@ -827,7 +939,12 @@ function siteMapSvg(s, title, opts = {}) {
         const x = pa.x + dx * off, y = pa.y + dy * off;
         const horiz = !!dx;
         const rect = (cls, len, thick) => `<rect class="${cls}" x="${(x - (horiz ? thick : len) / 2).toFixed(1)}" y="${(y - (horiz ? len : thick) / 2).toFixed(1)}" width="${horiz ? thick : len}" height="${horiz ? len : thick}"/>`;
-        if (kind === 'door' || kind === 'stuck') doors += rect('sm-door', 12, 6);
+        const pic = (file, w, h) => siteArtImg(file, x, y, w, h, horiz ? ` transform="rotate(90 ${x.toFixed(1)} ${y.toFixed(1)})"` : '');
+        if (art && (kind === 'door' || kind === 'stuck') && KA.door) doors += pic(`door/${KA.door}`, 12, 12);
+        else if (art && kind === 'locked') doors += pic('door/iron-door', 12, 12);
+        else if (art && kind === 'portcullis') doors += pic('door/portcullis', 14, 10);
+        else if (art && kind === 'stairs') doors += siteArtImg('door/spiral-stairs', x, y, 16, 16);
+        else if (kind === 'door' || kind === 'stuck') doors += rect('sm-door', 12, 6);
         else if (kind === 'locked') doors += rect('sm-door', 12, 6) + `<circle class="sm-lock" cx="${x}" cy="${y}" r="1.8"/>`;
         else if (kind === 'secret') doors += `<text class="sm-s" x="${x}" y="${y}">S</text>`;
         else if (kind === 'portcullis') doors += `<line class="sm-port" x1="${horiz ? x : x - 7}" y1="${horiz ? y - 7 : y}" x2="${horiz ? x : x + 7}" y2="${horiz ? y + 7 : y}"/>`;
@@ -839,14 +956,22 @@ function siteMapSvg(s, title, opts = {}) {
     cells.forEach((c, i) => {
         const p = center(c);
         const shape = siteRoomShape(s, i);
-        const cls = `sm-room${i === last ? ' sm-end' : ''}`;
-        let el;
-        if (shape === 'circle') el = `<circle class="${cls}" cx="${p.x}" cy="${p.y}" r="${Math.min(c.w, c.h) / 2}"/>`;
-        else if (shape === 'cave') el = `<path class="${cls}" d="${siteCavePath(s, i, p.x, p.y, c.w / 2, c.h / 2)}"/>`;
-        else el = `<rect class="${cls}" x="${p.x - c.w / 2}" y="${p.y - c.h / 2}" width="${c.w}" height="${c.h}"/>`;
-        walls += el;
+        const cls = `sm-room${i === last ? ' sm-end' : ''}${art ? ' sm-a-room' : ''}`;
+        const fill = art ? `fill:${floor(siteArtFloor(s, i))};` : '';
+        const el = st => {
+            const a = st ? ` style="${st}"` : '';
+            if (shape === 'circle') return `<circle class="${cls}"${a} cx="${p.x}" cy="${p.y}" r="${Math.min(c.w, c.h) / 2}"/>`;
+            if (shape === 'cave') return `<path class="${cls}"${a} d="${siteCavePath(s, i, p.x, p.y, c.w / 2, c.h / 2)}"/>`;
+            return `<rect class="${cls}"${a} x="${p.x - c.w / 2}" y="${p.y - c.h / 2}" width="${c.w}" height="${c.h}"/>`;
+        };
+        walls += el(fill);
         // The room's floor again over the corridors' ends, so they stop at its wall.
-        fills += el.replace('/>', ' style="stroke:none"/>');
+        fills += el(fill + 'stroke:none');
+        if (art) {
+            const d = Math.min(c.w, c.h);
+            const drawn = shape === 'circle' ? { ...c, w: d, h: d } : c;
+            props += siteArtProps(s, i, drawn, p, shape !== 'rect').map(q => siteArtImg(`prop/${q.file}`, q.x, q.y, q.w, q.h)).join('');
+        }
         if (!nums) return;
         const r = s.rooms[i];
         const marks = (r.fight ? '⚔' : '') + (r.trap ? '⚠' : '');
@@ -870,9 +995,10 @@ function siteMapSvg(s, title, opts = {}) {
     const ey1 = p0.y - inward * (r0 + 22), ey2 = p0.y - inward * (r0 + 4);
     const entry = `<line class="sm-entry" x1="${p0.x}" y1="${ey1}" x2="${p0.x}" y2="${ey2}" marker-end="url(#sm-arrow-${s.seed})"/>`;
 
-    return `<svg class="site-map" viewBox="0 0 ${W} ${H}" role="img" aria-label="${siteAttr(title)}" xmlns="http://www.w3.org/2000/svg">
-        <defs><marker id="sm-arrow-${s.seed}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="sm-arrow" d="M0 0 L10 5 L0 10 z"/></marker></defs>
-        <rect class="sm-bg" x="0" y="0" width="${W}" height="${H}"/>
-        ${corr}${walls}${floors}${fills}${doors}${lines}${entry}${labels}
+    const tiles = [...used].map(name => `<pattern id="${id}-fl-${name}" patternUnits="userSpaceOnUse" width="${SITE_FLOOR_TILE}" height="${SITE_FLOOR_TILE}"><image href="${SITE_ART_DIR}floor/${name}.webp" width="${SITE_FLOOR_TILE}" height="${SITE_FLOOR_TILE}"/></pattern>`).join('');
+    return `<svg class="site-map${art ? ' sm-art' : ''}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${siteAttr(title)}" xmlns="http://www.w3.org/2000/svg">
+        <defs>${tiles}<marker id="sm-arrow-${s.seed}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="sm-arrow" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+        <rect class="sm-bg${art ? ' sm-a-bg' : ''}" x="0" y="0" width="${W}" height="${H}"/>
+        ${corr}${walls}${floors}${fills}${props}${doors}${lines}${entry}${labels}
     </svg>`;
 }

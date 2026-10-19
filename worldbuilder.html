@@ -303,6 +303,10 @@
     .sm-key:hover .sm-num-bg, .sm-key:focus-visible .sm-num-bg { stroke: var(--gold-bright); stroke-width: 2.5; }
     .sm-num { font: 700 12px system-ui, sans-serif; fill: var(--text-bright); text-anchor: middle; dominant-baseline: central; pointer-events: none; }
     .sm-num-end + .sm-num { fill: #15130f; }
+    .sm-a-bg { fill: #16130f; }
+    .sm-a-wall { stroke: #0c0a07; }
+    .sm-a-room { stroke: #0c0a07; stroke-width: 3; }
+    .sm-a-room.sm-end { stroke: var(--gold-bright); stroke-width: 3.5; }
     .sm-mark { font: 11px system-ui, sans-serif; fill: var(--gold-bright); text-anchor: middle; dominant-baseline: central; pointer-events: none; }
     .site-key-h { font-family: var(--font-head); font-size: 0.95rem; color: var(--gold-mid); margin: 18px 0 10px; }
     .site-room { margin-bottom: 14px; scroll-margin: 20px; }
@@ -365,6 +369,8 @@
     .cm-a-title { font-family: 'Cinzel', Georgia, serif; font-weight: 700; fill: #3a2414; text-anchor: middle; letter-spacing: 0.06em; }
     .cm-key:hover .cm-a-icon, .cm-key:focus-visible .cm-a-icon { filter: drop-shadow(0 0 1.5px #e8b830) drop-shadow(0 0 1.5px #e8b830); }
     .cm-key:hover .cm-a-badge, .cm-key:focus-visible .cm-a-badge { stroke: #e8b830; stroke-width: 1.6; }
+    .cm-a-arms { pointer-events: none; }
+    .cont-arms { float: right; width: 72px; height: 86px; margin: 0 0 8px 14px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.45)); }
     .cont-swatch { display: inline-block; width: 0.8em; height: 0.8em; border-radius: 2px; margin-right: 8px; vertical-align: baseline; opacity: 0.85; }
     .cont-nation { margin-bottom: 14px; scroll-margin: 20px; }
     .cont-nation h4 { font-family: 'IM Fell English', serif; font-size: 1.2rem; font-weight: 400; color: var(--text-bright); }
@@ -595,6 +601,7 @@
       body.print-site .site-map { max-height: 9in; }
       body.print-site .sm-corr-wall, body.print-site .sm-room, body.print-site .sm-num-bg { stroke: #000; }
       body.print-site .sm-room { fill: #fff; }
+      body.print-site .sm-a-bg { fill: #fff; }
       body.print-site .sm-corr { stroke: #fff; }
       body.print-site .sm-end { fill: #ddd; }
       body.print-site .sm-door, body.print-site .sm-num-bg { fill: #fff; stroke: #000; }
@@ -953,6 +960,7 @@
           <label>Size <select id="site-size"><option value="random" selected>🎲 Any size</option></select></label>
           <label>Party level <select id="site-level"></select></label>
           <label>Party size <select id="site-party"></select></label>
+          <label>Map style <select id="site-style"></select></label>
         </div>
         <div id="site-party-chip"></div>
         <div class="tool-toolbar">
@@ -970,7 +978,7 @@
           <p class="wb-small">The map as a picture on a 5-foot grid, one square to a corridor's width, ready for Owlbear Rodeo, Foundry, Roll20, or any virtual tabletop. The rooms are squared up to the grid. The file name ends in the map's size in squares (for example 52x38), the number your VTT asks for.</p>
           <div class="tool-form">
             <label>Pixels per square <select id="site-px"><option value="70">70 (Roll20's grid)</option><option value="100" selected>100 (Foundry's grid)</option><option value="140">140 (sharpest, biggest file)</option></select></label>
-            <label>Look <select id="site-look"><option value="parchment" selected>📜 Parchment floors</option><option value="dark">🌑 Dark, as on screen</option><option value="ink">🖨️ Black and white</option></select></label>
+            <label>Look <select id="site-look"><option value="art" selected>🎨 Illustrated floors, furniture, and doors</option><option value="parchment">📜 Parchment floors</option><option value="dark">🌑 Dark, as on screen</option><option value="ink">🖨️ Black and white</option></select></label>
           </div>
           <div class="map-export-checks">
             <label><input type="checkbox" id="site-grid-on" checked> Grid lines</label>
