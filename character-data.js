@@ -247,6 +247,41 @@ const CB_GOODS = [
     ['Clothes, common', 0.5], ["Clothes, traveler's", 2], ['Clothes, fine', 15], ['Net', 1]
 ];
 
+// What each pack holds, for the Play Sheet's Unpack (F60): [name, qty]. A pack weighs its contents.
+const CB_PACK_ITEMS = {
+    "Burglar's pack": [['Backpack', 1], ['Ball bearings (bag of 1,000)', 1], ['String (10 ft.)', 1], ['Bell', 1], ['Candle', 5], ['Crowbar', 1], ['Hammer', 1], ['Piton', 10], ['Lantern, hooded', 1], ['Oil (flask)', 2], ['Rations (1 day)', 5], ['Tinderbox', 1], ['Waterskin', 1], ['Rope, hempen (50 ft.)', 1]],
+    "Diplomat's pack": [['Chest', 1], ['Map or scroll case', 2], ['Clothes, fine', 1], ['Ink (1 ounce bottle)', 1], ['Ink pen', 1], ['Lamp', 1], ['Oil (flask)', 2], ['Paper (one sheet)', 5], ['Perfume (vial)', 1], ['Sealing wax', 1], ['Soap', 1]],
+    "Dungeoneer's pack": [['Backpack', 1], ['Crowbar', 1], ['Hammer', 1], ['Piton', 10], ['Torch', 10], ['Tinderbox', 1], ['Rations (1 day)', 10], ['Waterskin', 1], ['Rope, hempen (50 ft.)', 1]],
+    "Entertainer's pack": [['Backpack', 1], ['Bedroll', 1], ['Costume clothes', 2], ['Candle', 5], ['Rations (1 day)', 5], ['Waterskin', 1], ['Disguise kit', 1]],
+    "Explorer's pack": [['Backpack', 1], ['Bedroll', 1], ['Mess kit', 1], ['Tinderbox', 1], ['Torch', 10], ['Rations (1 day)', 10], ['Waterskin', 1], ['Rope, hempen (50 ft.)', 1]],
+    "Priest's pack": [['Backpack', 1], ['Blanket', 1], ['Candle', 10], ['Tinderbox', 1], ['Alms box', 1], ['Block of incense', 2], ['Censer', 1], ['Vestments', 1], ['Rations (1 day)', 2], ['Waterskin', 1]],
+    "Scholar's pack": [['Backpack', 1], ['Book of lore', 1], ['Ink (1 ounce bottle)', 1], ['Ink pen', 1], ['Parchment (one sheet)', 10], ['Little bag of sand', 1], ['Small knife', 1]]
+};
+
+// Weight in pounds of one of each item, by gear name (SRD 5.1 equipment). Anything missing weighs
+// nothing unless the player gives it a weight; packs weigh their contents (cbItemWeight).
+const CB_WEIGHTS = {
+    Club: 2, Dagger: 1, Greatclub: 10, Handaxe: 2, Javelin: 2, 'Light hammer': 2, Mace: 4, Quarterstaff: 4, Sickle: 2, Spear: 3,
+    'Light crossbow': 5, Dart: 0.25, Shortbow: 2, Sling: 0, Battleaxe: 4, Flail: 2, Glaive: 6, Greataxe: 7, Greatsword: 6,
+    Halberd: 6, Lance: 6, Longsword: 3, Maul: 10, Morningstar: 4, Pike: 18, Rapier: 2, Scimitar: 3, Shortsword: 2, Trident: 4,
+    'War pick': 2, Warhammer: 2, Whip: 3, Blowgun: 1, 'Hand crossbow': 3, 'Heavy crossbow': 18, Longbow: 2, Net: 3,
+    'Padded armor': 8, 'Leather armor': 10, 'Studded leather': 13, 'Hide armor': 12, 'Chain shirt': 20, 'Scale mail': 45,
+    Breastplate: 20, 'Half plate': 40, 'Ring mail': 40, 'Chain mail': 55, 'Splint armor': 60, 'Plate armor': 65, Shield: 6,
+    'Arrows (20)': 1, 'Crossbow bolts (20)': 1.5, 'Sling bullets (20)': 1.5, 'Blowgun needles (50)': 1,
+    'Holy symbol': 1, 'Arcane focus (crystal)': 1, 'Component pouch': 2, 'Druidic focus (sprig of mistletoe)': 0, Spellbook: 3,
+    "Healer's kit": 3, 'Potion of healing': 0.5, Backpack: 5, Bedroll: 7, Blanket: 3, 'Rope, hempen (50 ft.)': 10, Crowbar: 5,
+    'Grappling hook': 4, 'Lantern, hooded': 2, 'Oil (flask)': 1, Torch: 1, 'Rations (1 day)': 2, Waterskin: 5, Tinderbox: 1,
+    'Caltrops (bag of 20)': 2, 'Ball bearings (bag of 1,000)': 2, 'Holy water (flask)': 1, 'Chain (10 ft.)': 10, Manacles: 6,
+    'Mirror, steel': 0.5, 'Clothes, common': 3, "Clothes, traveler's": 4, 'Clothes, fine': 6, 'Costume clothes': 4,
+    Hammer: 3, Piton: 0.25, Chest: 25, 'Map or scroll case': 1, Lamp: 1, 'Mess kit': 1, 'Book of lore': 5, 'Prayer book': 5,
+    "Alchemist's supplies": 8, "Brewer's supplies": 9, "Calligrapher's supplies": 5, "Carpenter's tools": 6, "Cartographer's tools": 6,
+    "Cobbler's tools": 5, "Cook's utensils": 8, "Glassblower's tools": 5, "Jeweler's tools": 2, "Leatherworker's tools": 5,
+    "Mason's tools": 8, "Painter's supplies": 5, "Potter's tools": 3, "Smith's tools": 8, "Tinker's tools": 10, "Weaver's tools": 5,
+    "Woodcarver's tools": 5, 'Disguise kit': 3, 'Forgery kit': 5, 'Herbalism kit': 3, "Navigator's tools": 2, "Poisoner's kit": 2,
+    "Thieves' tools": 1, 'Dragonchess set': 0.5, Bagpipes: 6, Drum: 3, Dulcimer: 10, Flute: 1, Lute: 2, Lyre: 2, Horn: 2,
+    'Pan flute': 2, Shawm: 1, Viol: 1
+};
+
 // ── Spell slots ──────────────────────────────────────────
 const CB_FULL_SLOTS = [
     [2], [3], [4, 2], [4, 3], [4, 3, 2], [4, 3, 3], [4, 3, 3, 1], [4, 3, 3, 2], [4, 3, 3, 3, 1], [4, 3, 3, 3, 2],

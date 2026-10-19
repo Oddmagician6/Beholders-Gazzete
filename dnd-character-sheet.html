@@ -95,6 +95,7 @@
     .cs-meter i { display: block; height: 100%; background: linear-gradient(90deg, #6f9a6a, #a9c27a); }
     .cs-meter.cs-low i { background: linear-gradient(90deg, #b8742f, #e5a868); }
     .cs-meter.cs-zero i { width: 0 !important; }
+    .cs-meter.cs-over i { background: linear-gradient(90deg, #8b3a32, #c25b50); }
     .cs-amount { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
     .cs-amount input { width: 84px; padding: 8px 10px; text-align: center; font-size: 1rem; }
     .cs-banner { margin: 12px 0 0; padding: 10px 12px; border-radius: var(--radius-sm); border: 1px solid #8b3a32; background: rgba(139,26,26,0.15); }
@@ -164,6 +165,19 @@
     .cs-table .cs-acts { white-space: nowrap; text-align: right; }
     .cs-scroll { overflow-x: auto; }
 
+    /* Inventory: its own row under the two columns; purse and weight beside the gear */
+    .cs-wide { margin-top: 14px; }
+    .cs-inv { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 24px; }
+    @media (min-width: 900px) { .cs-inv { grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr); align-items: start; } .cs-inv > div > h3:first-child { margin-top: 0; } }
+    .cs-coins b { font-family: var(--font-head); font-size: 1.5rem; color: var(--text-bright); }
+    .cs-add { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-end; margin-bottom: 8px; }
+    .cs-add > input { width: 110px; padding: 8px 10px; margin-top: 0; }
+    .cs-add > select { width: auto; padding: 8px 10px; margin-top: 0; }
+    .cs-field input { margin-top: 4px; padding: 8px 10px; text-transform: none; letter-spacing: 0; }
+    .cs-field.cs-narrow { flex: 0 1 90px; }
+    .cs-gear .cs-step button { width: 26px; height: 26px; }
+    .cs-table input.cs-lb { width: 66px; padding: 4px 6px; margin-top: 0; }
+
     .cs-slots { list-style: none; padding: 0; margin: 0 0 8px; }
     .cs-slots li { display: flex; align-items: center; gap: 10px; padding: 4px 0; font-family: var(--font-ui); font-size: 0.8rem; color: var(--text-mid); }
     .cs-slots li > span:first-child { min-width: 4.5em; color: var(--gold-mid); }
@@ -205,7 +219,7 @@
     <div class="page-hero-content">
       <h1 class="page-hero-logo">▶️ Play Sheet</h1>
       <p class="page-hero-tagline">"I'm fine. I have four hit points. That's plenty."</p>
-      <p class="page-hero-description">Your Character Builder character, ready for the table: take damage and heal, roll death saves, spend hit dice, tick off spell slots, rage, ki, and every other class resource, then take a short or long rest. Click any skill, save, or attack to roll it.</p>
+      <p class="page-hero-description">Your Character Builder character, ready for the table: take damage and heal, roll death saves, spend hit dice, tick off spell slots, rage, ki, and every other class resource, then take a short or long rest. Click any skill, save, or attack to roll it. Your gear, coins, magic items, and carrying weight are on it too.</p>
     </div>
   </section>
 
@@ -295,6 +309,14 @@
       <p>Click an ability for a check, its save button for a saving throw, a skill, Initiative, or an attack's Hit and Damage buttons. Advantage and Disadvantage stay on until you switch back to Normal. Crit doubles an attack's damage dice. Each roll is labeled with the character's name in the shared roll history.</p>
       <h3>Conditions and exhaustion</h3>
       <p>Tap a condition to mark it and see what it does. Exhaustion runs from 1 to 6; the sheet halves your speed at level 2 and your hit point maximum at level 4, and a long rest takes off one level. Grappled, restrained, and other conditions that stop you moving show your speed as 0.</p>
+      <h3>Inventory, coins, and carrying weight</h3>
+      <ul>
+        <li>Your starting equipment from the builder is already there. Add gear by name (the box suggests the usual kit and fills in its weight), change how many you have as you use torches and rations, and <strong>Unpack</strong> a pack such as the explorer's pack into what's inside it.</li>
+        <li>The purse keeps one total. Add or spend coins of any kind (copper, silver, electrum, gold, platinum) and it shows the total in gold, silver, and copper, so nobody has to convert.</li>
+        <li>Carrying capacity is your Strength score × 15 pounds; past it you can only push or drag the load, at 5 feet of speed. Turn on the variant encumbrance rule and you're encumbered past STR × 5 (speed −10 feet) and heavily encumbered past STR × 10 (speed −20 feet, and disadvantage on Strength, Dexterity, and Constitution rolls and on attacks). The speed on the sheet follows along.</li>
+        <li>Pick SRD magic items from the list. Those that need attunement get an Attune button, and you can be attuned to three at once. Each one links to its card with the full description.</li>
+        <li>Wear and Hold switch your armor and shield, and Armor Class changes to match. Weapons you add show up under Attacks.</li>
+      </ul>
       <h3>Works with</h3>
       <p>Edit the character (or level up) in the <a href="character-builder">Character Builder</a>; the play sheet keeps your current hit points and spent resources and trims them to the new level. Print the features as <a href="dnd-character-cards">Feature &amp; Item Cards</a>, work out hit chances with <a href="dnd-attack-calculator">Attack Math</a>, and write the session up in the <a href="dnd-player-journal">Player Journal</a>.</p>
     </section>
@@ -328,6 +350,8 @@
   <script src="spell-detail.js"></script>
   <script src="npc-data.js"></script>
   <script src="rules-data.js"></script>
+  <script src="coins.js"></script>
+  <script src="magic-items-data.js"></script>
   <script src="character-data.js"></script>
   <script src="character-engine.js"></script>
   <script src="character-play.js"></script>

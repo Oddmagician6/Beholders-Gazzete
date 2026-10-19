@@ -9,6 +9,8 @@
 
 const CB_KEY = 'gazette-characters';
 const CB_MAX = 30;
+const CB_MAX_GEAR = 150;     // gear rows per character (an unpacked pack adds a dozen)
+const CB_ATTUNE_MAX = 3;
 
 const cbRace = id => CB_RACES.find(r => r.id === id) || null;
 const cbClass = id => CB_CLASSES.find(k => k.id === id) || null;
@@ -45,7 +47,7 @@ function cbBlank() {
 // Session state for the Play Sheet (F59; rules in character-play.js). hp null = at full.
 // ds: [successes, failures]; hd and slots/pact/res count what's been used.
 function cbPlayBlank() {
-    return { hp: null, temp: 0, ds: [0, 0], hd: 0, slots: [0, 0, 0, 0, 0, 0, 0, 0, 0], pact: 0, res: {}, cond: [], exh: 0, insp: false, conc: '' };
+    return { hp: null, temp: 0, ds: [0, 0], hd: 0, slots: [0, 0, 0, 0, 0, 0, 0, 0, 0], pact: 0, res: {}, cond: [], exh: 0, insp: false, conc: '', enc: false };
 }
 
 // ── Cleaning (load, import, backup) ──────────────────────
@@ -106,13 +108,20 @@ function cbClean(raw) {
     if (eq.picks && typeof eq.picks === 'object') Object.keys(eq.picks).forEach(k => {
         if (/^\d-\d-\d$/.test(k) && (CB_WEAPONS[eq.picks[k]] || CB_INSTRUMENTS.includes(eq.picks[k]))) c.equip.picks[k] = eq.picks[k];
     });
-    c.gear = Array.isArray(raw.gear) ? raw.gear.slice(0, 80).map(g => {
+    // lb: the player's own weight for one (F60); mi: an SRD magic item; att: attuned to it.
+    c.gear = Array.isArray(raw.gear) ? raw.gear.slice(0, CB_MAX_GEAR).map(g => {
         if (!g || typeof g !== 'object') return null;
         const item = { name: cbStr(g.name, 80), qty: Math.min(9999, Math.max(1, Math.round(Number(g.qty)) || 1)) };
         if (CB_WEAPONS[g.w]) item.w = g.w;
         if (CB_ARMOR[g.a]) item.a = g.a;
+        const lb = Math.round(Number(g.lb) * 100) / 100;
+        if (g.lb !== undefined && g.lb !== null && g.lb !== '' && Number.isFinite(lb)) item.lb = Math.min(9999, Math.max(0, lb));
+        if (g.mi && (typeof MAGIC_ITEM_TEXT === 'undefined' || MAGIC_ITEM_TEXT[item.name])) item.mi = true;
+        if (item.mi && g.att) item.att = true;
         return item.name ? item : null;
     }).filter(Boolean) : [];
+    let attuned = 0;
+    c.gear.forEach(g => { if (g.att && ++attuned > CB_ATTUNE_MAX) delete g.att; });
     c.coins = Math.min(1e7, Math.max(0, Math.round(Number(raw.coins) * 100) / 100 || 0));
     c.gearSet = !!raw.gearSet;
     const w = raw.wear || {};
@@ -141,6 +150,7 @@ function cbPlayClean(raw) {
     p.exh = int(raw.exh, 6);
     p.insp = !!raw.insp;
     p.conc = cbSpellOk(raw.conc) ? raw.conc : '';
+    p.enc = !!raw.enc;
     return p;
 }
 

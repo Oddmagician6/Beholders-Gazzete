@@ -5,8 +5,10 @@
    with the character. cbResources lists the class and race resources the
    character has at its level (SRD 5.1); cbPlayFit trims the state to what the
    level allows after a level change; the rest of this file is hit points,
-   death saves, hit dice, and the two rests.
-   Needs character-data.js and character-engine.js; rolls use rollDice() (dice-engine.js).
+   death saves, hit dice, the two rests, and (F60) what the character carries:
+   weight, encumbrance, packs, magic items and attunement, and the coin purse.
+   Needs character-data.js and character-engine.js; rolls use rollDice() (dice-engine.js),
+   the purse COIN_CP (coins.js), and magic items MAGIC_ITEM_TEXT (magic-items-data.js).
    ============================================ */
 
 const CB_EXHAUSTION = ['', 'Disadvantage on ability checks.', 'Speed halved.', 'Disadvantage on attack rolls and saving throws.', 'Hit point maximum halved.', 'Speed reduced to 0.', 'Death.'];
@@ -63,11 +65,92 @@ function cbPlayHp(c, d) {
     return c.play.hp === null ? max : Math.min(max, c.play.hp);
 }
 
-// Speed after exhaustion and conditions that stop movement.
+// Speed after what's carried, exhaustion, and conditions that stop movement.
 function cbPlaySpeed(c, d) {
     const p = c.play;
     if (p.exh >= 5 || ['Grappled', 'Restrained', 'Paralyzed', 'Petrified', 'Stunned', 'Unconscious'].some(n => p.cond.includes(n))) return 0;
-    return p.exh >= 2 ? Math.floor(d.speed / 2) : d.speed;
+    const load = cbLoad(c, d).state;
+    const speed = load === 'over' ? Math.min(5, d.speed) : Math.max(0, d.speed - (load === 'heavy' ? 20 : load === 'encumbered' ? 10 : 0));
+    return p.exh >= 2 ? Math.floor(speed / 2) : speed;
+}
+
+// ── Inventory and coins (F60) ────────────────────────────
+// Pounds for one: the player's own weight, else a pack's contents, else the SRD weight (0 if unknown).
+function cbItemWeight(g) {
+    if (g.lb !== undefined) return g.lb;
+    const pack = CB_PACK_ITEMS[g.name];
+    if (pack) return Math.round(pack.reduce((t, [n, q]) => t + (CB_WEIGHTS[n] || 0) * q, 0) * 100) / 100;
+    return CB_WEIGHTS[g.name] || 0;
+}
+
+// Carrying capacity is STR × 15 lb (every SRD race is Small or Medium, so no size change).
+// The variant rule (c.play.enc): over STR × 5 is encumbered (−10 ft.), over STR × 10 heavily (−20 ft.
+// and disadvantage on STR, DEX, and CON rolls and on attacks). Past capacity you can only push or drag it.
+// → { lb, cap, state: '' | 'encumbered' | 'heavy' | 'over' }
+function cbLoad(c, d) {
+    const lb = Math.round(c.gear.reduce((t, g) => t + cbItemWeight(g) * g.qty, 0) * 100) / 100;
+    const str = d.s.str, cap = str * 15;
+    const state = lb > cap ? 'over' : c.play.enc && lb > str * 10 ? 'heavy' : c.play.enc && lb > str * 5 ? 'encumbered' : '';
+    return { lb, cap, state };
+}
+
+// Every gear name the add box knows, for its suggestions.
+function cbGearNames() {
+    const names = [...Object.values(CB_WEAPONS).map(w => w[0]), ...Object.values(CB_ARMOR).map(a => a[0]), ...CB_GOODS.map(g => g[0]),
+        ...Object.keys(CB_PACKS), ...CB_TOOLS, ...Object.keys(CB_WEIGHTS)];
+    return [...new Set(names)].sort((a, b) => a.localeCompare(b));
+}
+
+// A typed name → a gear row: weapons and armor get their ids (so they show in Attacks and AC), and
+// a known name takes its usual spelling.
+function cbGearItem(name, qty = 1) {
+    const n = cbStr(name, 80).trim(), low = n.toLowerCase();
+    if (!n) return null;
+    const w = Object.keys(CB_WEAPONS).find(id => CB_WEAPONS[id][0].toLowerCase() === low);
+    if (w) return { name: CB_WEAPONS[w][0], qty, w };
+    const a = Object.keys(CB_ARMOR).find(id => CB_ARMOR[id][0].toLowerCase() === low);
+    if (a) return { name: CB_ARMOR[a][0], qty, a };
+    return { name: cbGearNames().find(x => x.toLowerCase() === low) || n, qty };
+}
+
+// An SRD magic item's name, matched without case → its MAGIC_ITEM_TEXT key or ''.
+function cbMagicName(name) {
+    if (typeof MAGIC_ITEM_TEXT === 'undefined') return '';
+    const low = String(name).trim().toLowerCase();
+    return MAGIC_ITEM_TEXT[name] ? name : Object.keys(MAGIC_ITEM_TEXT).find(k => k.toLowerCase() === low) || '';
+}
+
+function cbNeedsAttune(g) {
+    return !!g.mi && typeof MAGIC_ITEM_TEXT !== 'undefined' && !!MAGIC_ITEM_TEXT[g.name] && /requires attunement/i.test(MAGIC_ITEM_TEXT[g.name][0]);
+}
+
+const cbAttuned = c => c.gear.filter(g => g.att).length;
+
+// Open the pack at c.gear[i] into its contents (merged with what's already there). → false if it can't.
+function cbUnpack(c, i) {
+    const g = c.gear[i], items = g && CB_PACK_ITEMS[g.name];
+    if (!items || c.gear.length + items.length > CB_MAX_GEAR) return false;
+    if (g.qty > 1) g.qty -= 1;
+    else c.gear.splice(i, 1);
+    items.forEach(([name, qty]) => cbAddGear(c.gear, { name, qty }));
+    return true;
+}
+
+// Take the row out, and stop wearing it if it was worn.
+function cbDropGear(c, i) {
+    const [g] = c.gear.splice(i, 1);
+    if (!g) return;
+    if (g.a && g.a === c.wear.armor && !c.gear.some(x => x.a === g.a)) c.wear.armor = '';
+    if (g.name === 'Shield' && !c.gear.some(x => x.name === 'Shield')) c.wear.shield = false;
+}
+
+// Add or spend n coins of one kind (cp, sp, ep, gp, pp; COIN_CP in coins.js). c.coins is kept in gp.
+// → false when spending more than the purse holds.
+function cbPurse(c, n, coin, spend) {
+    const gp = Math.round(Math.max(0, n) * COIN_CP[coin]) / 100;
+    if (spend && gp > c.coins + 1e-9) return false;
+    c.coins = Math.min(1e7, Math.max(0, Math.round((c.coins + (spend ? -gp : gp)) * 100) / 100));
+    return true;
 }
 
 // Trim the state to the character's level now (after a level change or an edit in the builder).

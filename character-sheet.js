@@ -2,7 +2,9 @@
    PLAY SHEET PAGE (F59)
    A Character Builder character at the table: hit points, death saves, hit
    dice, rests, spell slots, class resources, conditions, and rolls from the
-   sheet. Rules live in character-play.js; the session state is the
+   sheet, plus (F60) the inventory: gear with weights and encumbrance, packs,
+   SRD magic items and attunement, and the coin purse (c.gear, c.coins, the
+   same lists the builder fills). Rules live in character-play.js; the session state is the
    character's c.play, saved through cbSave (CB_KEY) on every change.
    Rolls go through rollAndRecord (dice-engine.js), so they land in the shared
    roll history with the 🎲 button and the Dice Roller.
@@ -16,6 +18,7 @@ let lastRoll = null;         // { label, r } shown in the roll bar
 let notice = null;           // { text, ok, conc: DC, endurance } after damage or a death save
 let restOpen = false;
 let longArmed = 0;
+let addForm = { name: '', qty: '1', lb: '', mi: '', n: '', coin: 'gp' };   // the Inventory boxes, kept across redraws
 
 function esc(s) {
     return String(s === undefined || s === null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -104,7 +107,9 @@ function renderRollbar() {
     const el = document.getElementById('cs-rollbar');
     if (!el || !cur) return;
     const p = cur.play;
-    const warn = [...p.cond.filter(n => ['Poisoned', 'Frightened', 'Blinded', 'Prone', 'Restrained'].includes(n)), ...(p.exh ? [`Exhaustion ${p.exh}`] : [])];
+    const load = cbLoad(cur, cbDerive(cur)).state;
+    const warn = [...p.cond.filter(n => ['Poisoned', 'Frightened', 'Blinded', 'Prone', 'Restrained'].includes(n)), ...(p.exh ? [`Exhaustion ${p.exh}`] : []),
+        ...(load === 'heavy' ? ['Heavily encumbered'] : load === 'over' ? ['Over carrying capacity'] : [])];
     let last = '<small>Click a skill, save, or attack to roll it.</small>';
     if (lastRoll) {
         const r = lastRoll.r;
@@ -113,7 +118,7 @@ function renderRollbar() {
     }
     el.innerHTML = `<div class="cs-modes" role="group" aria-label="Roll d20s with">${[['normal', 'Normal'], ['adv', 'Advantage'], ['dis', 'Disadvantage']].map(([v, t]) => `<button type="button" class="cs-btn cs-mini" data-act="mode" data-v="${v}" aria-pressed="${mode === v}">${t}</button>`).join('')}</div>
         <div class="cs-last" aria-live="polite">${last}</div>
-        ${warn.length ? `<span class="cs-dim">⚠️ ${esc(warn.join(', '))}: see Status</span>` : ''}`;
+        ${warn.length ? `<span class="cs-dim">⚠️ ${esc(warn.join(', '))}: see ${load === 'heavy' || load === 'over' ? 'Status and Inventory' : 'Status'}</span>` : ''}`;
 }
 
 function hpPanel(c, d) {
@@ -277,6 +282,61 @@ function resourcesPanel(c, d) {
     }).join('')}</ul></section>`;
 }
 
+const lbs = n => (Math.round(n * 100) / 100).toLocaleString('en-US');
+
+function inventoryPanel(c, d) {
+    const load = cbLoad(c, d), str = d.s.str, id = encodeURIComponent(c.id), att = cbAttuned(c);
+    const state = load.state === 'over' ? ' cs-over' : load.state ? ' cs-low' : '';
+    const say = {
+        over: `Over your carrying capacity: you can push or drag up to ${lbs(str * 30)} lb., but your speed drops to 5 feet.`,
+        heavy: `Heavily encumbered (over ${lbs(str * 10)} lb.): speed −20 ft., and disadvantage on ability checks, attack rolls, and saving throws that use Strength, Dexterity, or Constitution.`,
+        encumbered: `Encumbered (over ${lbs(str * 5)} lb.): speed −10 ft.`,
+        '': c.play.enc ? `Encumbered past ${lbs(str * 5)} lb., heavily past ${lbs(str * 10)} lb.` : 'Capacity is STR × 15. Coins aren\'t counted.'
+    }[load.state];
+    const rows = c.gear.map((g, i) => {
+        const pack = CB_PACKS[g.name], mi = g.mi && typeof MAGIC_ITEM_TEXT !== 'undefined' ? MAGIC_ITEM_TEXT[g.name] : null;
+        const notes = [];
+        if (pack) notes.push(esc(pack[1]));
+        if (mi) notes.push(`${esc(mi[0])} · <a href="dnd-character-cards?char=${id}&amp;items=${magicItemSlug(g.name)}">🎴 card</a>`);
+        const acts = [];
+        if (g.a) acts.push(`<button type="button" class="cs-btn cs-mini" data-act="wear" data-i="${i}" aria-pressed="${c.wear.armor === g.a}">${c.wear.armor === g.a ? '🛡️ Worn' : 'Wear'}</button>`);
+        if (g.name === 'Shield') acts.push(`<button type="button" class="cs-btn cs-mini" data-act="shield" data-i="${i}" aria-pressed="${c.wear.shield}">${c.wear.shield ? '🛡️ Held' : 'Hold'}</button>`);
+        if (cbNeedsAttune(g)) acts.push(`<button type="button" class="cs-btn cs-mini" data-act="attune" data-i="${i}" aria-pressed="${!!g.att}"${!g.att && att >= CB_ATTUNE_MAX ? ' disabled' : ''}>${g.att ? '✨ Attuned' : 'Attune'}</button>`);
+        if (pack) acts.push(`<button type="button" class="cs-btn cs-mini" data-act="unpack" data-i="${i}">📦 Unpack</button>`);
+        acts.push(`<button type="button" class="cs-btn cs-mini cs-red" data-act="drop" data-i="${i}" aria-label="Remove ${esc(g.name)}">✕</button>`);
+        return `<tr><td>${esc(g.name)}${notes.length ? `<small>${notes.join(' · ')}</small>` : ''}</td>
+            <td><span class="cs-step"><button type="button" class="cs-btn" data-act="qty" data-i="${i}" data-n="-1" aria-label="One fewer ${esc(g.name)}"${g.qty > 1 ? '' : ' disabled'}>−</button><span>${g.qty}</span><button type="button" class="cs-btn" data-act="qty" data-i="${i}" data-n="1" aria-label="One more ${esc(g.name)}"${g.qty < 9999 ? '' : ' disabled'}>＋</button></span></td>
+            <td><input type="number" class="cs-lb" min="0" max="9999" step="0.25" data-gear-lb="${i}" value="${cbItemWeight(g)}" aria-label="Weight of one ${esc(g.name)} in pounds"></td>
+            <td class="cs-acts">${acts.join(' ')}</td></tr>`;
+    });
+    const coins = Object.keys(COIN_CP);
+    return `<section class="cs-panel" aria-labelledby="cs-in-h"><h2 id="cs-in-h">🎒 Inventory</h2>
+        <div class="cs-inv"><div>
+        <h3>Coin purse</h3>
+        <p class="cs-coins"><b>${esc(formatCoins(c.coins, true))}</b></p>
+        <div class="cs-add"><input type="number" id="cs-coin-n" min="0" max="1000000" inputmode="numeric" placeholder="0" aria-label="How many coins" value="${esc(addForm.n)}">
+          <select id="cs-coin-kind" aria-label="Which coin">${coins.map(k => `<option${k === addForm.coin ? ' selected' : ''}>${k}</option>`).join('')}</select>
+          <button type="button" class="cs-btn cs-green" data-act="coin" data-v="add">＋ Add</button>
+          <button type="button" class="cs-btn cs-red" data-act="coin" data-v="spend">− Spend</button></div>
+        <h3>Carrying</h3>
+        <p><b>${lbs(load.lb)}</b> of ${lbs(load.cap)} lb.</p>
+        <div class="cs-meter${state}"><i style="width:${Math.min(100, Math.round(100 * load.lb / Math.max(1, load.cap)))}%"></i></div>
+        <p class="cs-dim">${load.state ? '⚠️ ' : ''}${esc(say)}</p>
+        <div class="cs-btnrow"><button type="button" class="cs-btn cs-mini" data-act="enc" aria-pressed="${c.play.enc}">Variant: encumbrance ${c.play.enc ? 'on' : 'off'}</button>
+          <span class="cs-dim">Attunement: <b>${att} of ${CB_ATTUNE_MAX}</b></span></div>
+        </div><div>
+        <h3>Gear</h3>
+        <div class="cs-scroll"><table class="cs-table cs-gear"><thead><tr><th>Item</th><th>Qty</th><th>lb each</th><th></th></tr></thead><tbody>${rows.length ? rows.join('') : '<tr><td colspan="4" class="cs-dim">Nothing yet.</td></tr>'}</tbody></table></div>
+        <div class="cs-add" style="margin-top:12px"><label class="cs-field">Add gear<input type="text" id="cs-add-name" list="cs-gear-list" maxlength="80" autocomplete="off" placeholder="Torch, rope, a lucky coin…" value="${esc(addForm.name)}"></label>
+          <label class="cs-field cs-narrow">How many<input type="number" id="cs-add-qty" min="1" max="9999" inputmode="numeric" value="${esc(addForm.qty)}"></label>
+          <label class="cs-field cs-narrow">lb each<input type="number" id="cs-add-lb" min="0" max="9999" step="0.25" placeholder="usual" value="${esc(addForm.lb)}"></label>
+          <button type="button" class="cs-btn" data-act="add">➕ Add</button></div>
+        <div class="cs-add"><label class="cs-field">Add an SRD magic item<input type="text" id="cs-add-mi" list="cs-mi-list" maxlength="80" autocomplete="off" placeholder="Bag of Holding, Cloak of Protection…" value="${esc(addForm.mi)}"></label>
+          <button type="button" class="cs-btn" data-act="add-mi">✨ Add</button></div>
+        </div></div>
+    </section>`;
+}
+
 function renderLog() {
     const el = document.getElementById('cs-log');
     if (!el) return;
@@ -308,7 +368,8 @@ function render() {
         <div class="cs-rollbar" id="cs-rollbar"></div>
         <div class="cs-grid"><div class="cs-col">${hpPanel(c, d)}${statusPanel(c, d)}${resourcesPanel(c, d)}</div>
         <div class="cs-col">${rollsPanel(c, d)}${attacksPanel(c, d)}${spellsPanel(c, d)}
-          <section class="cs-panel" aria-labelledby="cs-lg-h"><h2 id="cs-lg-h">📜 Recent Rolls</h2><ul class="cs-log" id="cs-log"></ul></section></div></div>`;
+          <section class="cs-panel" aria-labelledby="cs-lg-h"><h2 id="cs-lg-h">📜 Recent Rolls</h2><ul class="cs-log" id="cs-log"></ul></section></div></div>
+        <div class="cs-wide">${inventoryPanel(c, d)}</div>`;
     renderRollbar();
     renderLog();
     if (focus) { const el = sheet.querySelector(focus); if (el) el.focus(); }
@@ -328,8 +389,9 @@ function renderBar() {
         : '<option value="">No characters yet</option>';
     pick.disabled = !chars.length;
     const id = cur ? encodeURIComponent(cur.id) : '';
+    const items = cur ? [...new Set(cur.gear.filter(g => g.mi).map(g => magicItemSlug(g.name)))].join(',') : '';
     document.getElementById('cs-links').innerHTML = cur ? `<a class="cs-btn" href="character-builder?char=${id}">✏️ Edit in Builder</a>
-        <a class="cs-btn" href="dnd-character-cards?char=${id}">🎴 Cards</a>
+        <a class="cs-btn" href="dnd-character-cards?char=${id}${items ? '&amp;items=' + items : ''}">🎴 Cards</a>
         <a class="cs-btn" href="dnd-player-journal?char=${id}">📓 Journal</a>` : '';
 }
 
@@ -464,6 +526,58 @@ function onClick(e) {
         return;
     }
 
+    // Inventory and coins (F60)
+    const g = cur.gear[i];
+    if (act === 'qty' && g) { change(() => { g.qty = Math.max(1, Math.min(9999, g.qty + Number(b.dataset.n))); }); return; }
+    if (act === 'drop' && g) { change(() => cbDropGear(cur, i)); flash(`✕ ${g.name} removed.`); return; }
+    if (act === 'unpack' && g) {
+        let ok;
+        change(() => { ok = cbUnpack(cur, i); });
+        flash(ok ? `📦 Unpacked the ${g.name.toLowerCase()}.` : 'Too many items to unpack: remove a few first.', !ok);
+        return;
+    }
+    if (act === 'wear' && g) { change(() => { cur.wear.armor = cur.wear.armor === g.a ? '' : g.a; }); return; }
+    if (act === 'shield') { change(() => { cur.wear.shield = !cur.wear.shield; }); return; }
+    if (act === 'attune' && g) {
+        if (!g.att && cbAttuned(cur) >= CB_ATTUNE_MAX) { flash(`You can attune to ${CB_ATTUNE_MAX} items at once: end one first.`, true); return; }
+        change(() => { if (g.att) delete g.att; else g.att = true; });
+        return;
+    }
+    if (act === 'add' || act === 'add-mi') {
+        if (cur.gear.length >= CB_MAX_GEAR) { flash(`That's ${CB_MAX_GEAR} kinds of thing already: remove a few first.`, true); return; }
+        const lb = addForm.lb === '' ? NaN : Number(addForm.lb);
+        let item;
+        if (act === 'add-mi') {
+            const name = cbMagicName(addForm.mi);
+            if (!name) { flash('Pick an SRD magic item from the list.', true); document.getElementById('cs-add-mi').focus(); return; }
+            item = { name, qty: 1, mi: true };
+            addForm.mi = '';
+        } else {
+            item = cbGearItem(addForm.name, Math.max(1, Math.min(9999, Math.round(Number(addForm.qty)) || 1)));
+            if (!item) { flash('Type what to add first.', true); document.getElementById('cs-add-name').focus(); return; }
+            addForm.name = '';
+            addForm.qty = '1';
+        }
+        if (Number.isFinite(lb) && lb >= 0) item.lb = Math.min(9999, Math.round(lb * 100) / 100);
+        addForm.lb = '';
+        change(() => { cbAddGear(cur.gear, item); });
+        flash(`➕ ${item.qty > 1 ? item.qty + ' × ' : ''}${item.name} added.`);
+        return;
+    }
+    if (act === 'coin') {
+        const n = Math.round(Number(addForm.n));
+        if (!(n > 0)) { flash('Type how many coins first.', true); document.getElementById('cs-coin-n').focus(); return; }
+        const spend = v === 'spend';
+        let ok;
+        change(() => { ok = cbPurse(cur, n, addForm.coin, spend); });
+        if (!ok) { flash(`Not enough coin: that's ${formatCoins(n * COIN_CP[addForm.coin] / 100)}, and the purse holds ${formatCoins(cur.coins, true)}.`, true); return; }
+        addForm.n = '';
+        render();
+        flash(`${spend ? '− Spent' : '＋ Added'} ${n.toLocaleString('en-US')} ${addForm.coin}. Purse: ${formatCoins(cur.coins, true)}.`);
+        return;
+    }
+    if (act === 'enc') { change(p => { p.enc = !p.enc; }); return; }
+
     if (act === 'insp') { change(p => { p.insp = !p.insp; }); return; }
     if (act === 'exh') { change(p => { p.exh = Math.max(0, Math.min(6, p.exh + Number(b.dataset.n))); }); return; }
     if (act === 'cond') { change(p => { setCond(v, !p.cond.includes(v)); }); return; }
@@ -500,11 +614,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const sheet = document.getElementById('cs-sheet');
     sheet.addEventListener('click', onClick);
-    sheet.addEventListener('input', e => { if (e.target.id === 'cs-amt') amount = e.target.value.slice(0, 4); });
-    sheet.addEventListener('keydown', e => { if (e.target.id === 'cs-amt' && e.key === 'Enter') e.preventDefault(); });
+    const boxes = { 'cs-add-name': 'name', 'cs-add-qty': 'qty', 'cs-add-lb': 'lb', 'cs-add-mi': 'mi', 'cs-coin-n': 'n', 'cs-coin-kind': 'coin' };
+    sheet.addEventListener('input', e => {
+        if (e.target.id === 'cs-amt') amount = e.target.value.slice(0, 4);
+        if (boxes[e.target.id]) addForm[boxes[e.target.id]] = e.target.value.slice(0, 80);
+    });
+    sheet.addEventListener('keydown', e => {
+        if (e.key !== 'Enter' || !(e.target.id === 'cs-amt' || boxes[e.target.id])) return;
+        e.preventDefault();
+        const act = e.target.id === 'cs-add-mi' ? 'add-mi' : /^cs-add-/.test(e.target.id) ? 'add' : '';
+        if (act) sheet.querySelector(`[data-act="${act}"]`).click();
+    });
     sheet.addEventListener('change', e => {
         if (e.target.dataset.f === 'conc') change(p => { p.conc = e.target.value; });
+        if (e.target.id === 'cs-coin-kind') addForm.coin = COIN_CP[e.target.value] ? e.target.value : 'gp';
+        if (e.target.dataset.gearLb !== undefined) {
+            const g = cur && cur.gear[Number(e.target.dataset.gearLb)], lb = Number(e.target.value);
+            if (g && e.target.value !== '' && Number.isFinite(lb)) change(() => { g.lb = Math.min(9999, Math.max(0, Math.round(lb * 100) / 100)); });
+            else render();
+        }
     });
+    // Suggestions for the Inventory's add boxes.
+    document.body.insertAdjacentHTML('beforeend', `<datalist id="cs-gear-list">${cbGearNames().map(n => `<option value="${esc(n)}">`).join('')}</datalist>
+        <datalist id="cs-mi-list">${Object.keys(MAGIC_ITEM_TEXT).sort((a, b) => a.localeCompare(b)).map(n => `<option value="${esc(n)}">`).join('')}</datalist>`);
     document.getElementById('cs-pick').addEventListener('change', e => {
         const c = chars.find(x => x.id === e.target.value);
         if (c) openChar(c);
