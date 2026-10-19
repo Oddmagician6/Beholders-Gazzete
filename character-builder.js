@@ -475,6 +475,7 @@ function renderSheet() {
         <p>Level ${c.level} ${esc(raceLabel(c))} ${k ? esc(k.name) + ' (' + esc(k.sub.name) + ')' : ''}${bgName ? ' · ' + esc(bgName) : ''}${c.alignment ? ' · ' + esc(c.alignment) : ''}${c.player ? ' · played by ' + esc(c.player) : ''}</p></div></div>
         <div class="cb-sheet-btns">
           <button type="button" class="cb-btn cb-gold" data-act="levelup"${c.level >= 20 || !k ? ' disabled' : ''}>⬆️ Level Up to ${Math.min(20, c.level + 1)}</button>
+          ${k ? `<a class="cb-btn cb-gold" href="dnd-character-sheet?char=${encodeURIComponent(c.id)}">▶️ Play</a>` : ''}
           <button type="button" class="cb-btn" data-act="print">🖨️ Print</button>
           ${k ? `<a class="cb-btn" href="dnd-character-cards?char=${encodeURIComponent(c.id)}">🎴 Cards</a>` : ''}
           ${k ? `<a class="cb-btn" href="dnd-attack-calculator?char=${encodeURIComponent(c.id)}">🎯 Attack Math</a>` : ''}

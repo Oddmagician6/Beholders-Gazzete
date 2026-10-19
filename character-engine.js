@@ -37,8 +37,15 @@ function cbBlank() {
         equipMode: 'class', equip: { choice: [], picks: {} }, gear: [], coins: 0, gearSet: false,
         wear: { armor: '', shield: false },
         spells: { cantrips: [], list: [], prepared: [], arcanum: {}, fav: [] },
+        play: cbPlayBlank(),
         updated: Date.now()
     };
+}
+
+// Session state for the Play Sheet (F59; rules in character-play.js). hp null = at full.
+// ds: [successes, failures]; hd and slots/pact/res count what's been used.
+function cbPlayBlank() {
+    return { hp: null, temp: 0, ds: [0, 0], hd: 0, slots: [0, 0, 0, 0, 0, 0, 0, 0, 0], pact: 0, res: {}, cond: [], exh: 0, insp: false, conc: '' };
 }
 
 // ── Cleaning (load, import, backup) ──────────────────────
@@ -113,8 +120,28 @@ function cbClean(raw) {
     const sp = raw.spells || {};
     c.spells = { cantrips: cbIds(sp.cantrips, cbSpellOk, 12), list: cbIds(sp.list, cbSpellOk, 80), prepared: cbIds(sp.prepared, cbSpellOk, 40), arcanum: {}, fav: cbIds(sp.fav, cbSpellOk, 80) };
     [6, 7, 8, 9].forEach(lv => { const n = sp.arcanum && sp.arcanum[lv]; if (cbSpellOk(n)) c.spells.arcanum[lv] = n; });
+    c.play = cbPlayClean(raw.play);
     c.updated = Number(raw.updated) || Date.now();
     return c;
+}
+
+// The shape only; cbPlayFit (character-play.js) trims it to what the level allows.
+function cbPlayClean(raw) {
+    const p = cbPlayBlank();
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return p;
+    const int = (v, max) => { const n = Math.round(Number(v)); return Number.isFinite(n) ? Math.min(max, Math.max(0, n)) : 0; };
+    p.hp = raw.hp === null || raw.hp === undefined ? null : int(raw.hp, 9999);
+    p.temp = int(raw.temp, 9999);
+    if (Array.isArray(raw.ds)) p.ds = [int(raw.ds[0], 3), int(raw.ds[1], 3)];
+    p.hd = int(raw.hd, 20);
+    if (Array.isArray(raw.slots)) p.slots = p.slots.map((_, i) => int(raw.slots[i], 4));
+    p.pact = int(raw.pact, 4);
+    if (raw.res && typeof raw.res === 'object') Object.keys(raw.res).slice(0, 40).forEach(k => { if (/^[a-z0-9-]{1,24}$/.test(k)) p.res[k] = int(raw.res[k], 999); });
+    p.cond = cbIds(raw.cond, n => typeof SRD_CONDITION_TEXT === 'undefined' ? /^[A-Z][a-z]{2,15}$/.test(n) : !!SRD_CONDITION_TEXT[n] && n !== 'Exhaustion', 15);
+    p.exh = int(raw.exh, 6);
+    p.insp = !!raw.insp;
+    p.conc = cbSpellOk(raw.conc) ? raw.conc : '';
+    return p;
 }
 
 // ── Storage ──────────────────────────────────────────────
