@@ -477,6 +477,7 @@ function renderSheet() {
           <button type="button" class="cb-btn cb-gold" data-act="levelup"${c.level >= 20 || !k ? ' disabled' : ''}>⬆️ Level Up to ${Math.min(20, c.level + 1)}</button>
           <button type="button" class="cb-btn" data-act="print">🖨️ Print</button>
           ${k ? `<a class="cb-btn" href="dnd-character-cards?char=${encodeURIComponent(c.id)}">🎴 Cards</a>` : ''}
+          ${k ? `<a class="cb-btn" href="dnd-attack-calculator?char=${encodeURIComponent(c.id)}">🎯 Attack Math</a>` : ''}
           <button type="button" class="cb-btn" data-act="party"${!k ? ' disabled' : ''}>👥 Add to Party</button>
           <button type="button" class="cb-btn" data-act="copy">📋 Copy Summary</button>
         </div>
