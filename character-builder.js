@@ -478,6 +478,7 @@ function renderSheet() {
           <button type="button" class="cb-btn" data-act="print">🖨️ Print</button>
           ${k ? `<a class="cb-btn" href="dnd-character-cards?char=${encodeURIComponent(c.id)}">🎴 Cards</a>` : ''}
           ${k ? `<a class="cb-btn" href="dnd-attack-calculator?char=${encodeURIComponent(c.id)}">🎯 Attack Math</a>` : ''}
+          <a class="cb-btn" href="dnd-player-journal?char=${encodeURIComponent(c.id)}">📓 Journal</a>
           <button type="button" class="cb-btn" data-act="party"${!k ? ' disabled' : ''}>👥 Add to Party</button>
           <button type="button" class="cb-btn" data-act="copy">📋 Copy Summary</button>
         </div>

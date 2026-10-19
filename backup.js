@@ -99,6 +99,13 @@ const BACKUP_KEYS = [
         count: v => bkN(v.length, 'character')
     },
     {
+        key: 'gazette-journals', tool: '📓 Player Journal', href: 'dnd-player-journal', what: 'Journals',
+        // Typed text, escaped by the page; jnClean() (player-journal.js) trims each journal to its shape on load.
+        clean: v => bkItems(v, j => bkObj(j) && typeof j.id === 'string' && Array.isArray(j.entries) && j.entries.length <= 400
+            && j.entries.every(bkObj) && (j.name === undefined || typeof j.name === 'string'), 30, false),
+        count: v => `${bkN(v.length, 'journal')}, ${bkN(v.reduce((n, j) => n + j.entries.length, 0), 'entry', 'entries')}`
+    },
+    {
         key: 'gazette-bestiary-picks', tool: '🐉 Bestiary', href: 'bestiary', what: 'Encounter list',
         clean: v => bkItems(v, p => bkObj(p) && typeof p.id === 'string' && /^[a-z0-9-]{1,60}$/.test(p.id), 60),
         count: v => bkN(v.reduce((n, p) => n + Math.max(1, Math.round(Number(p.count)) || 1), 0), 'monster')
