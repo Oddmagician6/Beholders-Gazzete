@@ -161,7 +161,8 @@ function handoutSource(src) {
         if (src.from === 'npc') {
             const fields = {
                 race: hoPick(p.get('race'), NPC_RACES), profession: hoPick(p.get('profession'), Object.keys(npcData.professions)),
-                age: hoPick(p.get('age'), NPC_AGE_BUCKETS), gender: hoPick(p.get('gender'), NPC_GENDERS)
+                age: hoPick(p.get('age'), NPC_AGE_BUCKETS), gender: hoPick(p.get('gender'), NPC_GENDERS),
+                name: p.get('name'), role: p.get('role')
             };
             const pinned = Object.fromEntries(p.getAll('lock').map(t => parseNpcLock(t)).filter(Boolean));
             const npc = rollNpcPinned(fields, src.seed, pinned);

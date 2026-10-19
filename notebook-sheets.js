@@ -203,7 +203,8 @@ const NB_SHEETS = {
         const pick = (v, list) => (list.includes(v) ? v : 'random');
         const fields = {
             race: pick(p.get('race'), NPC_RACES), profession: pick(p.get('profession'), Object.keys(npcData.professions)),
-            age: pick(p.get('age'), NPC_AGE_BUCKETS), gender: pick(p.get('gender'), NPC_GENDERS)
+            age: pick(p.get('age'), NPC_AGE_BUCKETS), gender: pick(p.get('gender'), NPC_GENDERS),
+            name: p.get('name'), role: p.get('role')
         };
         const pinned = Object.fromEntries(p.getAll('lock').map(t => parseNpcLock(t)).filter(Boolean));
         const n = rollNpcPinned(fields, seed, pinned);

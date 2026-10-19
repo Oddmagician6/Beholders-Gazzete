@@ -212,6 +212,37 @@
     .article-tools[hidden] { display: none; }
     .article-tools .btn { font-size: 0.7rem; padding: 8px 14px; }
 
+    /* ── Use This in My Campaign (F69): campaignHtml() below and export-articles.ps1 ── */
+    .campaign-box {
+      margin: 28px 0 8px; padding: 26px 28px;
+      background: linear-gradient(145deg, var(--bg-raised), var(--bg-dark));
+      border: var(--border-gold); border-radius: var(--radius-md); box-shadow: var(--shadow-card);
+    }
+    .campaign-box h2 { color: var(--gold-bright); font-size: 1.25rem; margin: 0 0 6px; text-align: center; }
+    .campaign-intro { text-align: center; color: var(--text-dim); font-family: var(--font-ui); font-size: 0.86rem; margin: 0 0 18px; }
+    .campaign-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+    .campaign-card {
+      background: var(--bg-card); border: 1px solid var(--gold-dim); border-radius: var(--radius-sm);
+      padding: 14px 16px; font-family: var(--font-body); font-size: 0.98rem; line-height: 1.55; color: var(--text-mid);
+      display: flex; flex-direction: column; gap: 8px; min-width: 0;
+    }
+    .campaign-card h3 {
+      font-family: var(--font-head); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text-dim); margin: 0;
+    }
+    .campaign-card p { margin: 0; }
+    .campaign-name { color: var(--gold-bright); font-family: var(--font-head); font-size: 1rem; }
+    .campaign-name em { color: var(--text-mid); font-family: var(--font-body); }
+    .campaign-rumor { font-style: italic; }
+    .campaign-secret summary { cursor: pointer; color: var(--text-dim); font-family: var(--font-ui); font-size: 0.85rem; }
+    .campaign-secret p { margin-top: 6px; }
+    .campaign-card .btn { align-self: flex-start; margin-top: auto; font-size: 0.66rem; padding: 7px 12px; }
+    .campaign-actions { display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; margin-top: 18px; }
+    .campaign-actions[hidden] { display: none; }
+    .campaign-actions .btn { font-size: 0.72rem; padding: 8px 16px; }
+    .campaign-status { color: var(--text-dim); font-family: var(--font-ui); font-size: 0.85rem; }
+    .campaign-status a { color: var(--gold-bright); }
+
     /* ── Handout (F27): an in-world newspaper clipping for players. Built by buildHandout();
        ?handout shows it on screen, and printing the page always prints it (no site chrome). ── */
     .handout { display: none; }
@@ -304,6 +335,7 @@
       .article-content { padding: 24px; font-size: 1rem; }
       .article-body { padding: 36px 16px; }
       .article-hero-meta { flex-direction: column; gap: 10px; }
+      .campaign-box { padding: 20px 16px; }
     }
   </style>
 </head>
@@ -432,6 +464,8 @@
       <a class="btn" id="handout-preview" href="?handout">📜 Preview Handout</a>
       <a class="btn" id="edition-link" href="edition" hidden>📰 This Day's Edition</a>
     </div>
+
+    <div id="campaign"></div>
 
     <p class="article-satire" id="article-satire">&#x1F300; Real news, not satire. <a href="multiverse">Across the Multiverse</a> covers the tabletop hobby straight, under real names.</p>
 
@@ -588,6 +622,7 @@
 
         document.getElementById('article-content').innerHTML = article.content || '<p>No content available.</p>';
         buildHandout(article, data.articles.indexOf(article) + 1);
+        showCampaign(article);
         loadRelated(data.articles, article);
 
       } catch (e) {
@@ -702,6 +737,96 @@
       }
     }
 
+    // ── Use This in My Campaign (F69) ──
+    // An article's optional campaign block, written by its desk: { hook: { title, text }, npc: { name, role,
+    // want, secret, race, gender, kind }, location: { name, text, tavern }, rumor }. The a/ pages have it
+    // pre-rendered (export-articles.ps1, same markup); this draws it for the ?id= view and wires the save.
+    const CAMPAIGN_NPC = {
+      race: ['human', 'elf', 'dwarf', 'halfling', 'gnome', 'orc', 'tiefling', 'dragonborn'],
+      gender: ['male', 'female', 'nonbinary'],
+      kind: ['commoner', 'merchant', 'guard', 'magic', 'criminal', 'noble', 'religious', 'adventurer']
+    };
+    const campText = v => (typeof v === 'string' ? v.trim() : '');
+
+    // FNV-1a of the article id and a label, in base 36 (Campaign-Seed in export-articles.ps1)
+    function campaignSeed(s) {
+      let h = 0x811c9dc5;
+      for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 0x01000193) >>> 0;
+      return h.toString(36);
+    }
+    function campaignQuery(pairs) {
+      return pairs.filter(([, v]) => v).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join('&');
+    }
+
+    function campaignHtml(a) {
+      const c = a.campaign;
+      if (a.real || !c || typeof c !== 'object') return '';
+      const cards = [];
+      const hook = c.hook || {}, npc = c.npc || {}, loc = c.location || {};
+      if (campText(hook.text)) {
+        cards.push(`<div class="campaign-card"><h3>❗ Adventure Hook</h3>${campText(hook.title) ? `<p class="campaign-name">${esc(campText(hook.title))}</p>` : ''}<p>${esc(campText(hook.text))}</p></div>`);
+      }
+      if (campText(npc.name)) {
+        const role = campText(npc.role), want = campText(npc.want), secret = campText(npc.secret);
+        const ok = k => (CAMPAIGN_NPC[k].includes(campText(npc[k])) ? campText(npc[k]) : '');
+        const link = campaignQuery([['seed', campaignSeed(a.id + '/npc')], ['race', ok('race')], ['gender', ok('gender')],
+          ['profession', ok('kind')], ['name', campText(npc.name)], ['role', role]]);
+        cards.push(`<div class="campaign-card"><h3>🎭 NPC</h3><p class="campaign-name">${esc(campText(npc.name))}${role ? `, <em>${esc(role)}</em>` : ''}</p>`
+          + (want ? `<p><b>Wants:</b> ${esc(want)}</p>` : '')
+          + (secret ? `<details class="campaign-secret"><summary>🤫 Secret (for the DM)</summary><p>${esc(secret)}</p></details>` : '')
+          + `<a class="btn" href="npc-generator?${esc(link)}">🎭 Roll Their Stats</a></div>`);
+      }
+      if (campText(loc.name)) {
+        const tav = loc.tavern === true
+          ? `<a class="btn" href="toolbox?${esc(campaignQuery([['tab', 'tavern'], ['seed', campaignSeed(a.id + '/tavern')], ['name', campText(loc.name)]]))}">🍺 Open in the Tavern Tool</a>` : '';
+        cards.push(`<div class="campaign-card"><h3>📍 Location</h3><p class="campaign-name">${esc(campText(loc.name))}</p>${campText(loc.text) ? `<p>${esc(campText(loc.text))}</p>` : ''}${tav}</div>`);
+      }
+      if (campText(c.rumor)) cards.push(`<div class="campaign-card"><h3>👂 Rumor</h3><p class="campaign-rumor">“${esc(campText(c.rumor))}”</p></div>`);
+      if (!cards.length) return '';
+      return `<section class="campaign-box" aria-labelledby="campaign-head">
+        <h2 id="campaign-head">⚔️ Use This in My Campaign</h2>
+        <p class="campaign-intro">This story, ready for your table: a hook, someone to meet, somewhere to go, and something to overhear.</p>
+        <div class="campaign-grid">${cards.join('')}</div>
+        <div class="campaign-actions" hidden><button type="button" class="btn btn-gold" id="campaign-save">📓 Save to Notebook</button><span class="campaign-status" id="campaign-status" role="status"></span></div>
+      </section>`;
+    }
+
+    function showCampaign(article) {
+      const el = document.getElementById('campaign');
+      if (!el.children.length) el.innerHTML = campaignHtml(article);
+      const btn = document.getElementById('campaign-save');
+      if (!btn || typeof nbAdd !== 'function') return;
+      btn.parentNode.hidden = false;
+      btn.addEventListener('click', () => saveCampaign(article));
+    }
+
+    // Saved as a quest (the notebook's quest tracker) that links back to this article. The hook, NPC,
+    // place, and rumor go in its notes; the NPC's secret goes in its DM-only notes.
+    function saveCampaign(article) {
+      const c = article.campaign, status = document.getElementById('campaign-status');
+      const hook = c.hook || {}, npc = c.npc || {}, loc = c.location || {};
+      const name = campText(npc.name), role = campText(npc.role);
+      const notes = [
+        campText(hook.text),
+        name ? `NPC: ${name}${role ? `, ${role}` : ''}.${campText(npc.want) ? ` Wants: ${campText(npc.want)}` : ''}` : '',
+        campText(loc.name) ? `Location: ${campText(loc.name)}.${campText(loc.text) ? ` ${campText(loc.text)}` : ''}` : '',
+        campText(c.rumor) ? `Rumor: "${campText(c.rumor)}"` : '',
+        `From the Gazette: ${article.title}`
+      ].filter(Boolean).join('\n\n');
+      const r = nbAdd({
+        kind: 'quest',
+        title: campText(hook.title) || article.title,
+        sub: campText(hook.text),
+        href: 'a/' + article.id,
+        status: 'open',
+        giver: name ? name + (role ? `, ${role}` : '') : '',
+        notes,
+        dm: campText(npc.secret) ? `${name}'s secret: ${campText(npc.secret)}` : ''
+      });
+      status.innerHTML = !r ? '⚠️ This browser won\'t store it.' : r.full ? '⚠️ The notebook is full.'
+        : `${r.existed ? '📓 Already in' : '✅ Saved to'} your <a href="dnd-campaign-notebook">Campaign Notebook</a> as a quest.`;
+    }
+
     function printHandout() {
       (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => window.print());
     }
@@ -785,6 +910,7 @@
 
     document.addEventListener('DOMContentLoaded', loadArticle);
   </script>
+  <script src="notebook.js"></script>
   <script src="nav.js"></script>
 </body>
 </html>

@@ -26,13 +26,19 @@ function pinOf(npc, part) {
 
 // seed: replay a roll. push: true = new history entry, false = replace, null = leave the URL alone.
 // pinned: { part: { seed, extra } } to keep; defaults to the locked parts of the current NPC.
-function generateNPC(seed = newSeed(), push = true, pinned = null) {
+// given: a name and role from a link ({ name, role }, F69). Without one, a reroll keeps the given
+// name while the identity is locked, and the given role while the job is.
+function generateNPC(seed = newSeed(), push = true, pinned = null, given = null) {
     if (!pinned) {
         pinned = {};
         if (currentNPC && currentNPC.seeds) locks.forEach(part => { pinned[part] = pinOf(currentNPC, part); });
     }
+    if (!given) {
+        const was = (currentNPC && currentNPC.given) || {};
+        given = { name: pinned.identity ? was.name : '', role: pinned.job ? was.role : '' };
+    }
     const opts = Object.fromEntries(Object.entries(NPC_FIELDS).map(([k, id]) => [k, document.getElementById(id).value]));
-    const npc = { ...rollNpcPinned(opts, seed, pinned), rolledWith: opts };
+    const npc = { ...rollNpcPinned({ ...opts, ...given }, seed, pinned), rolledWith: opts };
     const seeds = npc.seeds;
     // The stat block follows the stats seed, so the stats lock keeps it; a kept block
     // also keeps its class and level.
@@ -222,7 +228,7 @@ function regenerateNPC() {
 
 // ==================== SHAREABLE LINK ====================
 
-// ?seed=…&race=elf&lock=trait.<seed>&lock=identity.<seed>.elf.female
+// ?seed=…&race=elf&lock=trait.<seed>&lock=identity.<seed>.elf.female (&name=…&role=… for a given name and role)
 // A part whose seed isn't the one the base seed gives (it was kept through a reroll)
 // rides along as a lock= token.
 function npcParams() {
@@ -233,6 +239,7 @@ function npcParams() {
     });
     p.lock = NPC_PARTS.filter(part => currentNPC.seeds[part] !== deriveSeed(currentNPC.seed, part))
         .map(part => { const pin = pinOf(currentNPC, part); return [part, pin.seed, ...pin.extra].join('.'); });
+    if (currentNPC.given) Object.assign(p, currentNPC.given);
     return p;
 }
 
@@ -254,7 +261,7 @@ function applyUrl(push) {
     const pinned = Object.fromEntries(p.getAll('lock').map(parseLock).filter(Boolean));
     locks.clear();
     Object.keys(pinned).forEach(part => locks.add(part));
-    generateNPC(seed, push, pinned);
+    generateNPC(seed, push, pinned, { name: p.get('name'), role: p.get('role') });
     return true;
 }
 

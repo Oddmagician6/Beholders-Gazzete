@@ -31,6 +31,8 @@
    famClean, which every page that loads this file loads too). A rolled family keeps its roll's link
    as well, so the Families tab finds it again; a family started by hand has no link. Its people may
    point at NPC entries (`to`), kept to entries that exist like pins.
+   An article's "Use This in My Campaign" box (F69) saves a quest whose link is the article (a/<id>),
+   with the hook, NPC, place, and rumor in its notes and the NPC's secret in its DM notes.
    The page side lives in world-notebook.js. Needs rng.js (paramsQuery) on the page.
    ============================================ */
 
@@ -58,8 +60,9 @@ const NB_QUEST_STATUS = {
     done: { icon: '✅', label: 'Done' },
     failed: { icon: '❌', label: 'Failed' }
 };
-// Saved links may only point at these pages, with a plain query string (older saves end in .html).
-const NB_HREF = /^(worldbuilder|npc-generator|toolbox)(?:\.html)?(\?[A-Za-z0-9_.~%+=&*-]*)?$/;
+// Saved links may only point at these pages, with a plain query string (older saves end in .html),
+// or at an article (F69).
+const NB_HREF = /^(?:(worldbuilder|npc-generator|toolbox)(?:\.html)?(\?[A-Za-z0-9_.~%+=&*-]*)?|a\/[a-z0-9][a-z0-9-]{0,99})$/;
 const NB_LIMITS = { entries: 500, title: 120, sub: 400, notes: 4000, name: 80, href: 2000, links: 60, flips: 400, flip: 300, edits: 200, edit: 2000, file: 2000000 };
 // The options that make two rolls with one seed different, per kind (its own URL keys).
 const NB_SIG_KEYS = {
@@ -310,7 +313,7 @@ function nbFindRoll(nb, kind, seed, get) {
     return nb.entries.find(e => e.kind === kind && e.href && nbEntrySig(e) === sig) || null;
 }
 
-// Save a roll: { kind, title, sub, href, ...that kind's fields }. Returns { entry, existed, linked }
+// Save a roll: { kind, title, sub, href, notes, dm, ...that kind's fields }. Returns { entry, existed, linked }
 // or null when the browser won't store it. The same link twice keeps the first entry; a
 // hand-written entry (no link) is always new.
 function nbAdd(item) {
@@ -326,10 +329,11 @@ function nbAdd(item) {
         title: nbText(item.title, NB_LIMITS.title) || NB_KINDS[item.kind].label,
         sub: nbText(item.sub, NB_LIMITS.sub),
         href,
-        notes: '',
+        notes: nbText(item.notes, NB_LIMITS.notes),
         links: [],
         added: new Date().toISOString(),
-        ...nbFields(item.kind, item)
+        ...nbFields(item.kind, item),
+        ...nbSecretFields({ dm: item.dm })
     };
     nb.entries.push(entry);
     const sig = nbEntrySig(entry), uses = nbEntryUses(entry);

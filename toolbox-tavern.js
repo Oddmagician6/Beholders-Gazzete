@@ -4,7 +4,8 @@
    the shared rumor deck (rumor-deck.js, the same 'all' deck as the Tavern page).
    The URL holds the seed and the rumor's index in rumors.json, so a link shows the
    same tavern and the same rumor without dealing from anyone's deck.
-   URL: ?tab=tavern&seed=&q=<quality>&rumor=<index>
+   A link may also give the tavern its name (&name=, an article's tavern, F69); a new roll drops it.
+   URL: ?tab=tavern&seed=&q=<quality>&rumor=<index>&name=
    ============================================ */
 
 const TAVERN_RUMOR_CATS = {
@@ -12,10 +13,16 @@ const TAVERN_RUMOR_CATS = {
     adventures: '⚔️ Adventures', monsters: '🐉 Monsters', magic: '✨ Magic & Weird'
 };
 
-let tavern = { seed: null, data: null, rumorIdx: null };
+let tavern = { seed: null, data: null, rumorIdx: null, name: '' };
 let tavernRumors = [];
 
 const capWord = s => s.charAt(0).toUpperCase() + s.slice(1);
+
+// The tavern for this seed and quality, under its given name if it has one.
+function tavernRoll(seed, quality) {
+    const tv = rollTavern(seed, { quality });
+    return tavern.name ? { ...tv, name: tavern.name } : tv;
+}
 
 function tavernQuality() {
     return document.getElementById('tv-quality').value;
@@ -37,14 +44,16 @@ function tavParams() {
     return urlFor('tavern', {
         q: fieldValue(q) === defaultValue(q) ? null : q.value,
         seed: tavern.seed,
-        rumor: tavern.rumorIdx !== null ? String(tavern.rumorIdx) : null
+        rumor: tavern.rumorIdx !== null ? String(tavern.rumorIdx) : null,
+        name: tavern.name || null
     });
 }
 
 // push: true = new history entry, false = replace, null = leave the URL alone.
 function rollTavernFor(seed = newSeed(), push = true) {
     tavern.seed = seed;
-    tavern.data = rollTavern(seed, { quality: tavernQuality() });
+    tavern.name = '';
+    tavern.data = tavernRoll(seed, tavernQuality());
     dealTavernRumor();
     renderTavern();
     if (push !== null) setUrlParams(tavParams(), push);
@@ -56,7 +65,8 @@ function applyTavUrl(p) {
     const seed = parseSeed(p.get('seed'));
     if (!seed) return false;
     tavern.seed = seed;
-    tavern.data = rollTavern(seed, { quality: q.value });
+    tavern.name = npcGiven(p.get('name'));
+    tavern.data = tavernRoll(seed, q.value);
     const idx = /^\d+$/.test(p.get('rumor') || '') ? Number(p.get('rumor')) : null;
     tavern.rumorIdx = idx;
     // A link with no rumor (or one rumors.json no longer has) gets a fresh deal.
@@ -179,7 +189,7 @@ function setupTavern() {
     sel.addEventListener('change', () => {
         // Same tavern and rumor, new quality: only the menu and rooms change.
         if (!tavern.seed) return;
-        tavern.data = rollTavern(tavern.seed, { quality: sel.value });
+        tavern.data = tavernRoll(tavern.seed, sel.value);
         renderTavern();
         setUrlParams(tavParams(), false);
     });

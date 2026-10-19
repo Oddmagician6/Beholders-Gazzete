@@ -999,7 +999,13 @@ function parseNpcLock(token, statsOk = ([c, l]) => /^[A-Za-z]{1,20}$/.test(c) &&
     return valid() ? [part, { seed, extra }] : null;
 }
 
-// fields: the pickers { race, profession, age, gender } (a value or 'random').
+// A name or role given in a link (?name=, ?role=: an article's NPC, F69), cleaned: plain words, or ''.
+function npcGiven(v, max = 60) {
+    return typeof v === 'string' && /^[\p{L}\p{M}][\p{L}\p{M} '.,-]*$/u.test(v.trim()) ? v.trim().replace(/\s+/g, ' ').slice(0, max) : '';
+}
+
+// fields: the pickers { race, profession, age, gender } (a value or 'random'), and maybe a given
+// name and role ({ name, role }, cleaned by npcGiven) that replace the rolled ones.
 // pinned: { part: { seed, extra } } for kept parts; the rest roll from the base seed.
 // Returns the NPC (no stat block) with its seed and part seeds.
 function rollNpcPinned(fields, seed, pinned = {}) {
@@ -1009,5 +1015,9 @@ function rollNpcPinned(fields, seed, pinned = {}) {
     if (pinned.job) [rollOpts.professionType] = pinned.job.extra;
     rollOpts.partCategory = Object.fromEntries(NPC_JOB_PARTS.filter(p => pinned[p] && pinned[p].extra.length).map(p => [p, pinned[p].extra[0]]));
     const seeds = Object.fromEntries(NPC_PARTS.map(part => [part, pinned[part] ? pinned[part].seed : deriveSeed(seed, part)]));
-    return { ...rollNPC(rollOpts, seeds), seed, seeds };
+    const npc = { ...rollNPC(rollOpts, seeds), seed, seeds };
+    const name = npcGiven(fields.name), role = npcGiven(fields.role, 80);
+    if (name) Object.assign(npc, { name, firstName: name.split(' ')[0], surname: '', nickname: '', given: { ...npc.given, name } });
+    if (role) Object.assign(npc, { profession: role, given: { ...npc.given, role } });
+    return npc;
 }
