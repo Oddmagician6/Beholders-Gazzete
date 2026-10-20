@@ -69,7 +69,7 @@
     .cs-portrait { width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--gold-mid); object-fit: cover; flex: none; background: var(--bg-deep); }
     .cs-title { flex: 1 1 240px; min-width: 0; }
     .cs-title h2 { margin: 0; font-size: 1.5rem; overflow-wrap: anywhere; }
-    .cs-title p { margin: 2px 0 0; font-family: var(--font-ui); font-size: 0.85rem; color: var(--text-dim); }
+    .cs-title p { margin: 2px 0 0; font-family: var(--font-ui); font-size: 0.85rem; color: var(--text-dim); overflow-wrap: anywhere; }
 
     /* Roll bar: mode and the last result */
     .cs-rollbar { position: sticky; top: var(--cs-nav, 0px); z-index: 20; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; padding: 10px 14px; margin: 0 0 14px; background: rgba(13,10,6,0.96); border: 1px solid var(--gold-dim); border-radius: var(--radius-sm); }
@@ -161,7 +161,7 @@
     .cs-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
     .cs-table th { font-family: var(--font-ui); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--gold-mid); text-align: left; padding: 5px 6px; border-bottom: 1px solid var(--gold-dim); }
     .cs-table td { padding: 6px; color: var(--text-mid); border-bottom: 1px dashed rgba(201,160,64,0.15); vertical-align: middle; }
-    .cs-table td:first-child { color: var(--text-bright); }
+    .cs-table td:first-child { color: var(--text-bright); overflow-wrap: anywhere; }
     .cs-table small { display: block; font-family: var(--font-ui); font-size: 0.66rem; color: var(--text-dim); }
     .cs-table .cs-acts { white-space: nowrap; text-align: right; }
     .cs-scroll { overflow-x: auto; }
@@ -210,6 +210,23 @@
       .cs-rollbar { padding: 8px 10px; }
       .cs-table .cs-acts { white-space: normal; }
       .cs-table .cs-acts .cs-btn { margin: 2px 0; }
+    }
+    /* Paper: the sheet as it stands now, in black on white, without the page around it or the buttons that change it. */
+    @media print {
+      @page { margin: 10mm; }
+      body { background: #fff !important; }
+      body > :not(main), .cs-bar, .cs-status, .tool-note, .tool-guide, .cs-rollbar, .cs-banner, .cs-rest, .cs-add,
+      .cs-btn:not([data-act="insp"]):not([data-act="atk"]):not([data-act="dmg"]):not([data-act="spellatk"]), .cs-chip[aria-pressed="false"], .cs-panel:has(#cs-log), .cs-amount { display: none !important; }
+      #cs-sheet input, #cs-sheet select { appearance: none; border: none !important; padding-left: 0; }
+      .cs-main { padding: 0; max-width: none; }
+      #cs-sheet * { color: #000 !important; background: none !important; box-shadow: none !important; text-shadow: none !important; }
+      #cs-sheet button { border-color: #888 !important; }
+      .cs-panel { border: 1px solid #000; border-radius: 0; padding: 6pt 8pt; margin-bottom: 6pt; break-inside: avoid; }
+      .cs-panel h2 { font-size: 11pt; margin-bottom: 4pt; border-color: #000; }
+      #cs-sheet .cs-pip { border-color: #000 !important; }
+      #cs-sheet .cs-pip.cs-used { background: #bbb !important; }
+      .cs-scroll { overflow: visible; }
+      a { text-decoration: none; }
     }
   </style>
 </head>

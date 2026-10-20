@@ -912,6 +912,8 @@ footer::before {
 .dice-fab:hover, .dice-fab:focus-visible, .dice-fab.open { transform: rotate(-12deg) scale(1.06); border-color: var(--gold-bright); }
 .dice-pop { position: fixed; right: 18px; bottom: 84px; z-index: 300; width: 300px; max-width: calc(100vw - 32px); max-height: calc(100vh - 110px); overflow-y: auto; box-sizing: border-box; background: linear-gradient(145deg, var(--bg-card), var(--bg-dark)); border: var(--border-gold2); border-radius: var(--radius-md); box-shadow: var(--shadow-card); padding: 14px; font-family: var(--font-ui); color: var(--text-mid); }
 .dice-pop[hidden] { display: none; }
+/* The open phone menu runs down to the corner: keep the button off its links. */
+body:has(.nav-open) .dice-fab, body:has(.nav-open) .dice-pop { display: none; }
 .dice-pop-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
 .dice-pop-head strong { font-family: var(--font-head); color: var(--gold-bright); font-size: 0.95rem; letter-spacing: 0.04em; }
 .dice-pop-x { background: none; border: none; color: var(--text-dim); font-size: 1rem; cursor: pointer; padding: 2px 6px; }

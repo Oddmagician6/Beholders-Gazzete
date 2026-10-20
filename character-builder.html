@@ -164,8 +164,8 @@
     /* The sheet */
     .cb-sheet-head { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-bottom: 12px; }
     .cb-portrait { width: 76px; height: 76px; border-radius: 50%; border: 2px solid var(--gold-mid); object-fit: cover; flex: none; background: var(--bg-deep); }
-    .cb-sheet-title { flex: 1 1 260px; min-width: 0; }
-    .cb-sheet-title h2 { margin: 0; font-size: 1.6rem; overflow-wrap: anywhere; }
+    .cb-sheet-title { flex: 1 1 260px; min-width: 0; overflow-wrap: anywhere; }
+    .cb-sheet-title h2 { margin: 0; font-size: 1.6rem; }
     .cb-sheet-title p { margin: 2px 0 0; font-family: var(--font-ui); font-size: 0.85rem; color: var(--text-dim); }
     .cb-sheet-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
     .cb-vitals { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 8px; margin: 12px 0 4px; }
@@ -173,7 +173,7 @@
     .cb-vital b { display: block; font-family: var(--font-head); font-size: 1.45rem; color: var(--text-bright); line-height: 1.15; }
     .cb-vital span { font-family: var(--font-ui); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold-mid); }
     .cb-vital small { display: block; font-family: var(--font-ui); font-size: 0.66rem; color: var(--text-dim); }
-    .cb-cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 26px; }
+    .cb-cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 26px; overflow-wrap: anywhere; }
     @media (min-width: 860px) { .cb-cols { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); } }
     .cb-skill-list { list-style: none; padding: 0; margin: 0; columns: 2; column-gap: 18px; }
     .cb-skill-list li { font-size: 0.88rem; color: var(--text-dim); padding: 2px 0; break-inside: avoid; display: flex; gap: 6px; }
