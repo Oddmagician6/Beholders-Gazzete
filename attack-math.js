@@ -12,7 +12,7 @@
 
 const AM_MAX_ROWS = 8;
 const AM_DEFAULTS = { ac: 15, cover: 0, mode: '', crit: 20, bless: false, lucky: false, xcrit: 0, once: '', pen: 5, bon: 10 };
-const amDefaultRow = () => ({ name: 'Longsword', n: 1, hit: 5, dmg: '1d8 + 3', gwf: false, trade: false });
+const amDefaultRow = () => ({ name: 'Longsword', n: 1, hit: 5, dmg: '1d8 + 3', gwf: false, trade: false, ranged: false });
 const AM_MODES = { '': 'Normal', adv: 'Advantage', dis: 'Disadvantage' };
 
 const am = { ...AM_DEFAULTS, rows: [amDefaultRow()] };
@@ -61,7 +61,7 @@ function amParse(text) {
 const amDieAvg = (z, gwf) => (z < 2 || !gwf ? (z + 1) / 2 : (z * (z + 1) / 2 - 3 + (z + 1)) / z);
 
 // Average damage on a hit and on a crit: a crit doubles the dice (not the flat bonus)
-// and adds xcrit more of the first weapon die (Brutal Critical, Savage Attacks).
+// and adds xcrit more of the first weapon die (Brutal Critical, Savage Attacks; melee rows only).
 function amAverages(roll, gwf, extraFlat, xcrit) {
     let dice = 0;
     roll.dice.forEach(([c, z]) => { dice += c * amDieAvg(z, gwf && c > 0); });
@@ -111,7 +111,7 @@ function amRound(o, ac, tradeOn) {
         const trade = tradeOn && r.trade;
         const bonus = r.hit - (trade ? o.pen : 0);
         const odds = amOdds(bonus, ac, o);
-        const avg = roll ? amAverages(roll, r.gwf, trade ? o.bon : 0, o.xcrit) : { hit: 0, crit: 0 };
+        const avg = roll ? amAverages(roll, r.gwf, trade ? o.bon : 0, r.ranged ? 0 : o.xcrit) : { hit: 0, crit: 0 };
         const each = (odds.hit - odds.crit) * avg.hit + odds.crit * avg.crit;
         const n = roll ? r.n : 0;
         for (let i = 0; i < n; i++) {
@@ -165,7 +165,7 @@ function amParams() {
     if (am.once.trim()) p.once = am.once.trim();
     if (am.pen !== AM_DEFAULTS.pen) p.pen = am.pen;
     if (am.bon !== AM_DEFAULTS.bon) p.bon = am.bon;
-    const rows = am.rows.map(r => [r.hit, r.dmg.replace(/\|/g, '').trim(), r.n, (r.gwf ? 'g' : '') + (r.trade ? 't' : ''), r.name].join('|'));
+    const rows = am.rows.map(r => [r.hit, r.dmg.replace(/\|/g, '').trim(), r.n, (r.gwf ? 'g' : '') + (r.trade ? 't' : '') + (r.ranged ? 'r' : ''), r.name].join('|'));
     const def = amDefaultRow();
     if (rows.length !== 1 || rows[0] !== [def.hit, def.dmg, def.n, '', def.name].join('|')) p.a = rows;
     return p;
@@ -187,7 +187,7 @@ function amFromUrl() {
         const [hit, dmg, n, flags, ...name] = v.split('|');
         return {
             name: amName(name.join(' ')), hit: amClamp(hit, -10, 30, 0), dmg: String(dmg || '').trim().slice(0, 40),
-            n: amClamp(n, 0, 10, 1), gwf: /g/.test(flags || ''), trade: /t/.test(flags || '')
+            n: amClamp(n, 0, 10, 1), gwf: /g/.test(flags || ''), trade: /t/.test(flags || ''), ranged: /r/.test(flags || '')
         };
     });
     am.rows = rows.length ? rows : [amDefaultRow()];
@@ -208,7 +208,7 @@ function amFromCharacter(c) {
         return {
             name: amName(a.name), n: i ? 0 : extra, hit: a.hit,
             dmg: a.dmg + (smite && melee ? ' + 1d8' : ''),
-            gwf: gwf && melee && /two-handed/.test(a.props), trade: false
+            gwf: gwf && melee && /two-handed/.test(a.props), trade: false, ranged: !!w && !melee
         };
     });
     if (extra > 1) said.push(`Extra Attack (${extra} on the first row)`);
@@ -260,6 +260,7 @@ function renderRows() {
         <div class="am-row-end">
           <label class="am-check" title="Reroll a 1 or 2 on the weapon's damage dice"><input type="checkbox" data-i="${i}" data-k="gwf"${r.gwf ? ' checked' : ''}> Great Weapon Fighting</label>
           <label class="am-check" title="Take the penalty to hit for the extra damage"><input type="checkbox" data-i="${i}" data-k="trade"${r.trade ? ' checked' : ''}> ${trade}</label>
+          <label class="am-check" title="Brutal Critical and Savage Attacks add no dice to a ranged attack"><input type="checkbox" data-i="${i}" data-k="ranged"${r.ranged ? ' checked' : ''}> Ranged</label>
           <button type="button" class="am-btn am-small" data-del="${i}" aria-label="Remove ${esc(r.name || 'this attack')}"${am.rows.length < 2 ? ' disabled' : ''}>✕</button>
         </div>
     </div>`).join('');
