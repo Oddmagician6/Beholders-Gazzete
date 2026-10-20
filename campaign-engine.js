@@ -45,36 +45,44 @@ const CP_PATRON_WEIGHT = { order: 4, temple: 4, house: 3, guild: 2, company: 2, 
 const CP_SCHEMES = {
     cult: [
         ["means to wake {god} with {relic}, and the waking needs a great many frightened people", "{god} wakes, and {realm} learns what its prayers were for"],
+        ["is teaching {realm}'s children a new prayer, and {relic} is what the prayer is for", "a whole generation of {realm} kneels to {god} on the same night"],
         ["is opening a door under {realm} that its founders sealed, and {relic} is the key", "the door opens, and what comes through answers only to {villain}"],
         ["wants to trade {realm}'s dead for a god's favor, and has found a way to make more dead", "the bargain is struck, and the graveyards of {realm} empty in a single night"]
     ],
     thieves: [
         ["is buying, bribing, and blackmailing the council of {realm} one seat at a time, and {relic} will buy the last", "{faction} {faction:owns|own} {realm} outright, and every new law is written in {vtheir} hand"],
-        ["plans the theft of the century: {relic}, out of the deepest vault in {realm}", "{relic} is gone, and with it the one thing holding {realm} together"]
+        ["plans the theft of the century: {relic}, out of the deepest vault in {realm}", "{relic} is gone, and with it the one thing holding {realm} together"],
+        ["has forged {realm}'s coin so well that nobody can tell the true from the false, and {relic} will make the forgery law", "{realm}'s treasury is worthless overnight, and only {faction}'s coin still buys bread"]
     ],
     house: [
         ["means to take the throne of {realm}, and {relic} proves the claim", "{villain} is crowned, and the first decree names the party traitors"],
-        ["is starving the other great houses of {realm} into ruin, and {relic} is the seal that makes it lawful", "the old houses fall one by one, and {villain} buys their lands for copper"]
+        ["is starving the other great houses of {realm} into ruin, and {relic} is the seal that makes it lawful", "the old houses fall one by one, and {villain} buys their lands for copper"],
+        ["means to marry into the royal line of {realm} and outlive everyone ahead in it, and {relic} seals the match", "the last heir dies of a fever nobody can name, and {villain} is next in line"]
     ],
     guild: [
         ["is cornering every trade in {realm} by making the roads too deadly for anyone else, and {relic} guarantees the monopoly", "nothing moves in {realm} without {faction}'s seal, and the price of bread triples by winter"],
-        ["has sold {realm}'s mines to a foreign power in secret, and {relic} is the deed", "the foreign buyers arrive to collect, with an army as their bailiff"]
+        ["has sold {realm}'s mines to a foreign power in secret, and {relic} is the deed", "the foreign buyers arrive to collect, with an army as their bailiff"],
+        ["holds the debts of half the lords in {realm}, and {relic} is the surety for the other half", "{faction} {faction:calls|call} in every debt at once, and {realm}'s lords sell their people to pay"]
     ],
     company: [
         ["has taken a foreign crown's gold to break {realm} from the inside, and {relic} is the payment", "the company opens the border forts, and a foreign army marches through"],
-        ["means to make {faction} the only army {realm} has left, then name the price", "{realm} pays {villain} whatever {vthey} asks, forever"]
+        ["means to make {faction} the only army {realm} has left, then name the price", "{realm} pays {villain} whatever {vthey} asks, forever"],
+        ["is starting a war between {realm} and its neighbor so both will hire {faction}, and {relic} is the insult that starts it", "the war comes, and {faction} {faction:fights|fight} for whichever side pays more that week"]
     ],
     order: [
         ["leads a fallen order that has decided {realm} must be purged, and {relic} will show them who is guilty", "the purge begins, and {relic} finds nearly everyone guilty"],
-        ["believes {realm} is already lost, and means to rule it under martial law with {relic} as the warrant", "the order seizes every town in {realm}, and calls it protection"]
+        ["believes {realm} is already lost, and means to rule it under martial law with {relic} as the warrant", "the order seizes every town in {realm}, and calls it protection"],
+        ["has sworn an oath to a dead king of {realm}, and means to bring the king back with {relic}", "the dead king returns to the throne of {realm}, and remembers every traitor by name"]
     ],
     temple: [
         ["runs a temple that has quietly stopped believing, and plans to sell {relic} and the flock along with it", "{relic} goes to the highest bidder, and the bidder is worse than {villain}"],
-        ["believes the end of days is coming and means to hurry it, with {relic} as the signal", "{relic} sounds, and half of {realm} believes {villain}"]
+        ["believes the end of days is coming and means to hurry it, with {relic} as the signal", "{relic} sounds, and half of {realm} believes {villain}"],
+        ["has been selling miracles to the faithful of {realm}, and needs {relic} to keep the miracles coming", "the miracles stop, the faithful riot, and {villain} blames the party"]
     ],
     circle: [
         ["means to give {realm} back to the wild, cities first, and {relic} wakes the old forest", "the forest rises, and {realm}'s roads vanish under it in a single season"],
-        ["is binding the storms over {realm} to {relic}, to rule the weather and everyone who needs rain", "the rains stop everywhere {villain} doesn't like, and the famine begins"]
+        ["is binding the storms over {realm} to {relic}, to rule the weather and everyone who needs rain", "the rains stop everywhere {villain} doesn't like, and the famine begins"],
+        ["is calling the beasts of {realm} down from the hills to drive the farmers off the old sacred ground, and {relic} is the call", "the beasts come down from every hill at once, and the farms of {realm} burn"]
     ]
 };
 
@@ -89,7 +97,21 @@ const CP_RELICS = [
     ['the Sealbreaker of {root}', 'Sealbreaker', 'A key no lock in the realm can refuse, down to the oldest vault.'],
     ['the star map of {root}', 'Star Map', "Shows every vault the realm's builders dug, and what they buried there."],
     ['the Weeping Chalice of {root}', 'Weeping Chalice', 'It fills by itself on holy days. Nobody has dared ask with what.'],
-    ['the mask of the last queen of {root}', "Queen's Mask", 'Whoever wears it is obeyed as she was.']
+    ['the mask of the last queen of {root}', "Queen's Mask", 'Whoever wears it is obeyed as she was.'],
+    ['the Silver Throne of {root}', 'Silver Throne', 'Only a true ruler can sit on it without bleeding.'],
+    ['the drowned charter of {root}', 'Drowned Charter', 'The founding law of the realm, lost in a flood and never written down again.'],
+    ["the Hound's Collar of {root}", "Hound's Collar", 'Whoever holds the leash commands the beasts of the realm.'],
+    ['the Ninth Seal of {root}', 'Ninth Seal', 'Eight seals keep something shut beneath the realm. This is the one that opens them.'],
+    ['the Ember Crown of {root}', 'Ember Crown', 'It has burned without fuel for three hundred years, and will go out when the realm dies.'],
+    ['the Book of Names of {root}', 'Book of Names', 'Every family of the realm is written in it at birth. Strike a name out, and that family is forgotten.'],
+    ['the Moon Mirror of {root}', 'Moon Mirror', 'It shows whoever looks into it what they fear most, and the fear comes true.'],
+    ['the war horn of {root}', 'War Horn', 'Blown once, it calls every oath-sworn soldier of the realm to whoever blew it.'],
+    ['the Salt Ring of {root}', 'Salt Ring', 'It wards off every spirit, curse, and plague, as long as nobody takes it off.'],
+    ['the stone heart of {root}', 'Stone Heart', "Buried under the realm's first city. As long as it's whole, so are the walls."],
+    ["the Weaver's Spindle of {root}", 'Spindle', 'Whatever it spins becomes true, a little, for as long as the thread holds.'],
+    ['the bone flute of {root}', 'Bone Flute', 'Carved from a dragon that died for the realm. Its tune wakes things that should stay asleep.'],
+    ['the Gilded Ledger of {root}', 'Gilded Ledger', 'Every debt ever owed to the crown. Whoever holds it is owed the realm.'],
+    ['the star-iron blade of {root}', 'Star-Iron Blade', 'Forged from a fallen star. It cut the realm free once, and could cut it apart.']
 ];
 
 // The front: one segment ticks after each chapter. Early, middle, and late portents.
@@ -101,7 +123,12 @@ const CP_PORTENTS = {
         "A shrine-keeper wakes to find {realm}'s oldest ward-stone cracked through.",
         "Someone from {wild} is seen leaving {villain}'s door after midnight.",
         'Prices rise at every market. {PatronFaction} {patronFaction:blames|blame} {faction}, and nobody listens.',
-        'A dying stranger stumbles into town with one name on their lips: "{alias}."'
+        'A dying stranger stumbles into town with one name on their lips: "{alias}."',
+        "Three villages in {realm} report the same dream on the same night, and the priests won't say what it means.",
+        "A body pulled from the river wears {faction}'s colors, and nobody claims it.",
+        '{PatronFaction} {patronFaction:sends|send} a rider to the capital with a warning, and the rider never arrives.',
+        'A street preacher in the capital starts calling {villain} the hope of {realm}.',
+        'Someone is buying up old maps of {realm} at any price, and paying in fresh-minted coin.'
     ],
     mid: [
         '{PatronFaction} {patronFaction:loses|lose} a safe house to fire, and two of {patronFaction:its|their} people with it.',
@@ -110,25 +137,42 @@ const CP_PORTENTS = {
         'The roads of {realm} are no longer safe after dark, anywhere.',
         '{Wild} openly {wild:takes|take} the side of {faction}, and {wild:its|their} coin goes with it.',
         'A broadsheet names the party as the cause of all the trouble.',
-        "A town the party passed through closes its gates and won't say who it's afraid of."
+        "A town the party passed through closes its gates and won't say who it's afraid of.",
+        '{Faction} {faction:buys|buy} up the debts of a whole town in {realm}, and calls them all in on the same day.',
+        'Bounty posters with the party\'s faces go up on every road, signed "{alias}."',
+        'The temples of {realm} quarrel in public about {villain}, and the faithful take sides.',
+        "A fire guts {realm}'s great archive, and every record of {relic} burns with it.",
+        'The crops fail in one valley of {realm}, and {faction} {faction:is|are} the only ones selling grain.'
     ],
     late: [
         '{Villain} moves {relic} to the place it was always meant to be used.',
         "{PatronFaction}'s leader is arrested on the word of {faction}.",
         'Half the towns of {realm} pay {faction} for protection now.',
         "{Villain}'s people walk openly in the capital, wearing {faction}'s colors.",
-        "The last of {villain}'s rivals is found dead, and the party gets the blame."
+        "The last of {villain}'s rivals is found dead, and the party gets the blame.",
+        "The ruler of {realm} names {villain} to the high council.",
+        "{Wild} {wild:stops|stop} pretending, and {wild:marches|march} under {faction}'s banner.",
+        "The capital's gates are shut, and only {faction}'s people hold the keys.",
+        'Every bell in {realm} rings at midnight, and nobody is pulling the ropes.',
+        "{PatronFaction}'s last safe house is the one the party is sleeping in."
     ]
 };
 
 // Who the chapter's boss really works for, by the boss's mind. {boss}, {Boss}, {faction}, {town}.
 const CP_SERVES = {
     folk: ["{Boss} takes {faction}'s coin and asks no questions.", '{Boss} owes {faction} a debt, and this job pays it.',
-        '{Boss} thinks they work for themselves. {Faction} {faction:lets|let} them think so.'],
+        '{Boss} thinks they work for themselves. {Faction} {faction:lets|let} them think so.',
+        "{Boss} was one of {patronFaction}'s own, until {faction} made a better offer.",
+        '{Boss} is kin to someone high in {faction}, and was given this job to stay out of trouble.',
+        '{Faction} {faction:keeps|keep} something {boss} loves locked away, and {faction:gives|give} a little of it back after every job.'],
     beast: ['{Faction} drove {boss} toward {town} on purpose, to keep eyes away from something else.',
-        "{Faction} {faction:has|have} been feeding {boss}, and pointing it where {faction:it needs|they need} people scared."],
+        "{Faction} {faction:has|have} been feeding {boss}, and pointing it where {faction:it needs|they need} people scared.",
+        "{Boss} was bred in {faction}'s pens and turned loose here on purpose.",
+        "{Faction} {faction:pays|pay} a hunter to keep {boss} alive: a monster on the road keeps the road empty."],
     mindless: ['{Faction} broke the old seals that held {boss}, for what lay beneath it.',
-        "{Boss} guards a door that {faction} {faction:needs|need} kept shut until {faction:it's|they're} ready."]
+        "{Boss} guards a door that {faction} {faction:needs|need} kept shut until {faction:it's|they're} ready.",
+        "{Faction}'s priests raised {boss} here, and the ritual is written on the walls for anyone who can read it.",
+        "{Faction} set {boss} here to destroy anything that came looking for {relic}."]
 };
 
 // How each chapter points to the next. {boss}, {Boss}, {nextSite}, {nextTown}, {faction}, {Patron}.
@@ -139,16 +183,43 @@ const CP_LEADS = [
     'The hoard holds a ledger, and one name in it keeps getting paid in {nextTown}.',
     'A coded note (DC 13 Intelligence (Investigation) to read it) names {nextSite} and a day.',
     "{Patron} sends word: {faction}'s people have been seen near {nextTown}.",
-    'A survivor swears the rest went to {nextSite}, and took the cart with them.'
+    'A survivor swears the rest went to {nextSite}, and took the cart with them.',
+    "{Boss}'s orders, half burned in a brazier, name {nextTown} and a buyer there.",
+    'A manifest in the hoard lists crates bound for {nextSite}, marked as grain. They are not grain.',
+    'A wounded messenger, caught on the way out, was carrying word to {nextTown}.',
+    '{Patron} recognizes a seal in the last room: it belongs to someone in {nextTown}.',
+    'Every coin in the hoard is newly struck, from the mint at {nextTown}.',
+    'A map scratched on the wall of the last room shows the way to {nextSite}, and a warning.',
+    "The last room's prisoner bargains for freedom with one thing: where {faction} meets next, at {nextSite}.",
+    "{Boss}'s diary ends mid-sentence: \"Tomorrow, {nextTown}, and then it can't be stopped.\"",
+    'A chandler in {nextTown} has been selling the same black candles the party found here.',
+    'Tracks from a back way out lead toward {nextSite}, and they are only a day old.',
+    "{Faction}'s courier is caught on the road with a letter for {nextTown}, and talks for a pardon."
 ];
 
 // What the villain's own people call them before the party learns the name.
 const CP_ALIASES = ['the Lantern', 'the Grey Hand', 'the Quiet One', 'the Patron', 'the Black Candle', 'the Hollow Crown',
-    'the Ferryman', 'the Gardener', 'the Bookkeeper', 'the Pale Hand'];
+    'the Ferryman', 'the Gardener', 'the Bookkeeper', 'the Pale Hand', 'the Shepherd', 'the Widow', 'the Locksmith', 'the Choirmaster',
+    'the Red Key', 'the Weaver', 'the Old Friend', 'the Ash King', 'the Mourner', 'the Physician', 'the Second Son', 'the Cartographer',
+    'the Silent Bell', 'the Glass Saint'];
 
 // Titles. {Short} (the relic), {Root} (the realm), {Who} (the villain's first name), {Fac}, {Noun} (the tone's).
 const CP_TITLES = ['The {Short} of {Root}', 'Shadow over {Root}', "{Who}'s Rise", 'The {Root} Conspiracy', 'Against {Fac}',
-    'The Fall of {Root}', 'The Long {Noun}', 'Heirs of {Root}'];
+    'The Fall of {Root}', 'The Long {Noun}', 'Heirs of {Root}', 'The Hunt for the {Short}', 'The Last Days of {Root}',
+    'The {Short} War', 'The {Root} Reckoning', "{Who}'s War", 'The Ashes of {Root}', 'Whoever Holds the {Short}',
+    'Blood on the {Short}', 'The Price of {Root}', 'Beneath {Root}'];
+
+// How each chapter's pitch opens, by where it sits in the arc (the one-shot's pitch follows it).
+const CP_CHAPTER_OPENS = {
+    first: ['It starts small.', 'It begins with one job.', 'Nobody knows yet what this is part of.', 'A simple job, or it looks like one.'],
+    early: ['The trail goes on.', 'Another piece of the pattern.', 'The next thread pulls tight.', 'Someone wants this kept quiet.',
+        'The same mark turns up again.', "It's bigger than it looked."],
+    reveal: ['The mask slips.', 'Here the party learns the name.', 'Everything changes here.'],
+    late: ["Now it's open war.", "The villain knows the party's names now.", 'No more hiding.', 'The front is moving faster.',
+        'Every ally counts now.', 'The other side strikes first.'],
+    near: ['The last door before the end.', 'One step from the villain.', 'The way to the end runs through here.'],
+    last: ['The end of it.', 'The final chapter.', 'Where it all ends.', 'Everything comes due.']
+};
 
 // The people a faction sends to hold its sites (encounter-engine ENC_BANDS), tried first.
 const CP_BANDS = {
@@ -279,7 +350,12 @@ function rollCampaign(seed, opts = {}, set = {}) {
             used.add(t);
             front.push(t);
         }
-        const leads = Array.from({ length: n - 1 }, () => osPick(CP_LEADS));
+        // No lead twice while the list lasts (one draw each, as before).
+        const leads = [];
+        for (let k = 0; k < n - 1; k++) {
+            const pool = CP_LEADS.filter(t => !leads.includes(t));
+            leads.push(osPick(pool.length ? pool : CP_LEADS));
+        }
         const evil = W.pantheon.gods.filter(g => panEvil(g.alignment));
         const fallbackGod = evil.length ? osPick(evil) : null;
         const rootDraw = hisRoot(new Set());
@@ -320,6 +396,7 @@ function rollCampaign(seed, opts = {}, set = {}) {
     const reveal = Math.max(0, Math.floor((n - 1) / 2));
 
     // ── The chapters ──
+    const slotKey = deriveSeed(seeds.arc, 'slots');
     const chapters = [];
     let prevKind = null;
     for (let i = 0; i < n; i++) {
@@ -331,7 +408,7 @@ function rollCampaign(seed, opts = {}, set = {}) {
         prevKind = kind;
         const lt = !last && ltAt[i] !== undefined ? lts[ltAt[i]] : null;
         const contact = last ? contacts[contacts.length - 1] : contacts[i % contacts.length];
-        const given = { npc: contact };
+        const given = { npc: contact, slot: { key: slotKey, i, n } };
         const bands = CP_BANDS[vf.type];
         if (last) Object.assign(given, { villain: { name: villain.name, tries: 8, bands, forms: Object.keys(CP_FORMS), stand: CP_STAND[vf.type] }, item: [relicText, arc.relic[1]], goal: villain.scheme });
         else if (lt) given.villain = { name: lt.name, tries: 4, bands };
@@ -366,6 +443,10 @@ function rollCampaign(seed, opts = {}, set = {}) {
         ch.serves = serves;
         ch.lead = next ? cpFill(arc.leads[i], { ...cc, nextSite: next.o.site.name, nextTown: next.o.town }) : '';
         ch.stage = i < n - 1 ? fill(arc.front[i]) : '';
+        // The pitch opens with where the chapter sits in the arc, in place of the one-shot's tone line.
+        const at = ch.last ? 'last' : i === 0 ? 'first' : i === reveal ? 'reveal' : i < reveal ? 'early' : i === n - 2 ? 'near' : 'late';
+        const opens = withSeed(deriveSeed(seeds['ch' + i], 'open'), () => osSlotPick(CP_CHAPTER_OPENS[at], 'open.' + at, { key: slotKey, i, n }));
+        o.pitch = `${opens} ${o.pitchBody}`;
         ch.reveal = i === reveal && !ch.last
             ? `The party learns who is behind it all: ${villain.name}, ${villain.title.toLowerCase()} of ${c.faction}, the one ${cpPoss(c.faction)} people call ${arc.alias}.` : '';
     });
