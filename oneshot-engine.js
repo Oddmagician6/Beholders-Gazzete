@@ -13,7 +13,15 @@
            kind (SITE_KINDS key or 'random'), given (an article's campaign block, see below) }
    given: { title, hook, npc: { name, role, want, secret, gender }, place, placeText, tavern, rumor }: the
    article's names stand in for rolled ones (the patron, the town or tavern, the job's opening); the rest rolls.
-   The campaign generator (F74) calls this once per chapter.
+   The campaign generator (F74, campaign-engine.js) calls this once per chapter, and adds two of its own:
+     villain: { name, tries, bands, forms, stand } names the boss, when the boss is a person from a band
+       with a people of its own (bandits, a cult, nobles: osNameable). The site tries `bands` first
+       (siteChooseBand), and rerolls up to `tries` times to find one. Failing that, `forms` (monster
+       types) lets a thinking boss of one of those types take the name (the result's `form`: the villain
+       was a fiend all along), and `stand` (monster ids, best first) puts the strongest one that fits the
+       level into the last fight as the named villain, beside the boss (`guard`: what the boss was).
+     item: [text, short] is the thing everyone wants, in place of a rolled one.
+     goal: what the villain is really doing (after their name), in place of a rolled goal.
    Needs rng.js, coins.js, npc-data.js, names-data.js, monsters-data.js, encounter-engine.js,
    history-engine.js, faction-engine.js, travel-engine.js, tavern-engine.js, quest-engine.js,
    town-engine.js, site-engine.js, loot-data.js, and loot-engine.js.
@@ -261,6 +269,11 @@ function osInt(lo, hi) {
     return lo + Math.floor(rand() * (hi - lo + 1));
 }
 
+// "A heroic", "An intrigue".
+function osA(word) {
+    return (/^[aeiou]/i.test(word) ? 'An ' : 'A ') + word;
+}
+
 function osClamp(v, lo, hi, d) {
     const n = Math.floor(Number(v));
     return Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : d;
@@ -301,6 +314,12 @@ function osPronouns(gender) {
     return gender === 'male' ? { they: 'he', their: 'his' } : gender === 'female' ? { they: 'she', their: 'her' } : { they: 'they', their: 'their' };
 }
 
+// Whether a site's boss is a person a campaign can name: a band of people (with races to name them by).
+function osNameable(site) {
+    const L = site.boss && site.boss.leader, b = site.band && ENC_BAND_BY_KEY[site.band];
+    return !!(L && L.person && b && b.races);
+}
+
 // ── The roll ─────────────────────────────────────────────
 function rollOneShot(seed, opts = {}, set = {}) {
     const ps = id => (set && set[id]) || deriveSeed(seed, id);
@@ -319,8 +338,33 @@ function rollOneShot(seed, opts = {}, set = {}) {
     const kind = SITE_KINDS[opts.kind] ? opts.kind : drawnKind;
 
     // ── The site, and its boss as the villain ──
-    const site = rollSite(seeds.site, { kind, size: Lg.size, level, party });
+    const gv = given && given.villain && given.villain.name ? given.villain : null;
+    const siteOpts = { kind, size: Lg.size, level, party, bands: gv ? gv.bands : null };
+    let site = rollSite(seeds.site, siteOpts);
+    for (let t = 1; gv && !osNameable(site) && t < (gv.tries || 1); t++) {
+        const again = rollSite(deriveSeed(seeds.site, 'again.' + t), siteOpts);
+        if (osNameable(again)) site = again;
+    }
+    let named = !!(gv && osNameable(site)), form = '', guard = '', stood = null;
+    if (named) site.boss.leader.name = gv.name;
+    const L0 = site.boss && site.boss.leader, v0 = osVillain(site), m0 = v0.monster && MONSTER_BY_ID[v0.monster];
+    if (gv && !named && gv.forms && L0 && m0 && v0.mind === 'folk' && gv.forms.includes(m0.type)) {
+        L0.name = gv.name;
+        named = true;
+        form = m0.type;
+    }
+    const lastFight = site.rooms[site.rooms.length - 1].fight;
+    if (gv && !named && gv.stand && lastFight) {
+        stood = gv.stand.map(id => MONSTER_BY_ID[id]).filter(m => m && crValue(m.cr) <= level).sort((a, b) => b.xp - a.xp)[0] || null;
+        if (stood) {
+            guard = v0.name;
+            lastFight.list.push({ id: stood.id, count: 1 });
+            site.boss.leader = { ...(L0 || {}), name: gv.name, role: stood.name, person: true, mark: L0 && L0.person ? L0.mark : 'came to see the end of it in person' };
+            named = true;
+        }
+    }
     const villain = osVillain(site);
+    if (stood) Object.assign(villain, { mind: 'folk', monster: stood.id, role: stood.name, first: gv.name.split(' ')[0] });
 
     // ── Act 1: the town, the tavern, the patron ──
     const hook = withSeed(seeds.hook, () => {
@@ -348,7 +392,8 @@ function rollOneShot(seed, opts = {}, set = {}) {
 
     // ── The plot: goal, the thing, twist, clock, ending ──
     const plot = withSeed(seeds.plot, () => {
-        const [item, short] = osPick(QUEST_ITEMS);
+        const drawn = osPick(QUEST_ITEMS);
+        const [item, short] = given && given.item ? given.item : drawn;
         const goal = osPick(OS_GOALS[villain.mind]);
         const twistAll = osPick(OS_TWISTS[tone]);
         const twistAny = osPick(OS_TWISTS[tone].filter(t => !t[1]));
@@ -370,7 +415,8 @@ function rollOneShot(seed, opts = {}, set = {}) {
         .replace('{Short}', plot.short).replace('{Who}', villain.first || hook.town).replace('{Town}', hook.town));
     const deadline = fill(plot.clock[0].replace('{n}', plot.days));
     const late = fill(plot.clock[1]);
-    const goal = fill(plot.goal);
+    const goalRaw = given && given.goal ? given.goal : plot.goal;
+    const goal = fill(goalRaw);
     const twist = fill(plot.twist);
     const reward = questRound(QUEST_PAY[level] * party * Lg.pay * (0.75 + hook.pay * 0.5));
     const job = given && given.hook ? `${given.hook} ${fill('Every lead points to {site}, and to {villain}.')}`
@@ -420,10 +466,10 @@ function rollOneShot(seed, opts = {}, set = {}) {
         + site.rooms.reduce((t, r) => t + (r.fight ? encounterXp(siteFightList(r.fight)) : 0), 0);
     const bossRead = villain.mind === 'beast' ? OS_BOSS_READ_BEAST : OS_BOSS_READ[tone];
     return {
-        seed, seeds, level, party, length, tone, kind, given: !!given, budget,
-        title, pitch: fill(`A ${T.adj} one-shot. {Patron}, ${patron.role}, needs {villain} stopped at {site} ${deadline}.`),
+        seed, seeds, level, party, length, tone, kind, given: !!given, named, form, guard, budget,
+        title, pitch: fill(`${osA(T.adj)} one-shot. {Patron}, ${patron.role}, needs {villain} stopped at {site} ${deadline}.`),
         villain: { ...villain, goal },
-        truth: fill(`{Villain} ${plot.goal}. ${osCap(late)} if nobody stops {vthem} in time.`),
+        truth: fill(`{Villain} ${goalRaw}. ${osCap(late)} if nobody stops {vthem} in time.`),
         item: plot.item, itemShort: plot.short, twist, deadline, late,
         town: hook.town, terrain: hook.terrain, tavern, patron, why: fill(hook.why), job, reward,
         placeText: given && given.placeText ? given.placeText : '',

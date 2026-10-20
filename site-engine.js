@@ -490,8 +490,13 @@ function siteTrap(K, tier) {
 // Who holds the place at this level: a group of the kind's that can field a High fight
 // for the boss (tried in a random order), else a group from the site's habitat that can,
 // else whichever came closest. Null = no group (a mix of the habitat's monsters).
-function siteChooseBand(K, budget) {
+// prefer: groups to try before the kind's own (the campaign generator's villains), any kind.
+function siteChooseBand(K, budget, prefer) {
     const xpOf = opts => encounterXp(rollThemedEncounter(budget, 'high', opts).list);
+    if (prefer && prefer.length) {
+        const own = siteShuffle(prefer.filter(k => ENC_BAND_BY_KEY[k])).find(k => xpOf({ band: k }) > budget.moderate);
+        if (own) return own;
+    }
     const tries = siteShuffle(K.bands).map(k => [k, xpOf({ band: k })]);
     const good = tries.find(([, xp]) => xp > budget.moderate);
     if (good) return good[0];
@@ -525,7 +530,7 @@ function siteFightList(f) {
 }
 
 // ── The roll ──────────────────────────────────────────────
-// opts: { kind, size: 'random'|small|medium|large, level 1-20, party 1-8 }
+// opts: { kind, size: 'random'|small|medium|large, level 1-20, party 1-8, bands? (groups to try first) }
 // A site's name, from its seed and kind (the Continent tab names its places with this).
 function siteNameFor(seed, kind) {
     const K = SITE_KINDS[kind];
@@ -564,7 +569,7 @@ function rollSite(seed, opts = {}) {
     });
 
     // Who holds it (a group that fits the level), and what wanders in.
-    const band = part(`band.${kind}.${level}.${party}`, () => siteChooseBand(K, budget));
+    const band = part(`band.${kind}.${level}.${party}`, () => siteChooseBand(K, budget, opts.bands));
 
     const rooms = [];
     for (let i = 0; i < count; i++) {
