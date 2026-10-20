@@ -3,6 +3,8 @@
    Enter the player characters once: name, player, class, level, AC, max HP, passive
    Perception, and initiative bonus. party.js keeps them (localStorage gazette-party) and
    the other tabs start from them. Typing saves as you go, without redrawing the cards.
+   A character added from the Character Builder shows its Play Sheet's hit points,
+   conditions, and concentration as they change in another tab (F68: party.js live).
    Loads after toolbox.js, toolbox-table.js, and toolbox-encounter.js
    (uses esc(), flash(), copyText(), armedClick(), addPartyToFight(), encUseParty()).
    ============================================ */
@@ -33,7 +35,14 @@ function partyCardHtml(c, i) {
             ${num('pp', 'Passive Perception', '—')}
             ${num('init', 'Init bonus', '0')}
         </div>
+        <div class="pt-live-box">${partyLiveHtml(c)}</div>
     </li>`;
+}
+
+function partyLiveHtml(c) {
+    if (!c.live) return '';
+    const down = !c.live.hp, low = c.live.hp <= c.live.max / 2;
+    return `<p class="pt-live${down ? ' pt-down' : low ? ' pt-low' : ''}">▶️ <a href="dnd-character-sheet?char=${encodeURIComponent(c.id)}" title="Open this character's Play Sheet">Play Sheet</a>: ${esc(partyLiveText(c.live))}</p>`;
 }
 
 function renderPartyTab() {
@@ -156,7 +165,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('storage', e => {
         if (e.key !== PARTY_KEY && e.key !== null) return;
         party = loadParty();
-        if (!list.contains(document.activeElement)) renderPartyTab();
-        else renderPartySum();
+        if (!list.contains(document.activeElement)) { renderPartyTab(); return; }
+        renderPartySum();
+        // Typing in a card: only the Play Sheet lines change.
+        list.querySelectorAll('.pt-char').forEach(li => { const c = party[Number(li.dataset.i)]; li.querySelector('.pt-live-box').innerHTML = c ? partyLiveHtml(c) : ''; });
     });
 });

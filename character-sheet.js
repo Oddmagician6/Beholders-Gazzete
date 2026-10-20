@@ -8,6 +8,9 @@
    character's c.play, saved through cbSave (CB_KEY) on every change.
    Rolls go through rollAndRecord (dice-engine.js), so they land in the shared
    roll history with the 🎲 button and the Dice Roller.
+   F68: every save also pushes the session state to the DM's tools (party.js partyPushLive)
+   when the character is in the party, so the Toolbox's Party tab and Initiative tracker
+   follow the sheet on this browser.
    ============================================ */
 
 let chars = [];
@@ -61,6 +64,21 @@ function save() {
     const list = cbSave(cur);
     if (!list) { flash('Could not save: this browser\'s storage is full or blocked.', true); return; }
     chars = list;
+    partyPushLive(cur.id, cbPartyLive(cur));
+}
+
+// Adds the character to the party (or updates its row), like the Builder's 👥 Add to Party.
+function addToParty() {
+    const row = cleanPartyMember({ ...cbPartyRow(cur), live: cbPartyLive(cur) });
+    const party = loadParty();
+    const at = party.findIndex(p => p.id === row.id);
+    if (at >= 0) party[at] = row;
+    else if (party.length >= PARTY_MAX) { flash(`The party already has ${PARTY_MAX} characters. Remove one on the Toolbox's Party tab.`, true); return; }
+    else party.push(row);
+    saveParty(party);
+    partyPushLive(cur.id, cbPartyLive(cur));
+    renderBar();
+    flash("👥 In the party. The Toolbox's Party tab and Initiative tracker follow this sheet in this browser.");
 }
 
 // Change the open character's play state, save, and redraw.
@@ -392,7 +410,10 @@ function renderBar() {
     const items = cur ? [...new Set(cur.gear.filter(g => g.mi).map(g => magicItemSlug(g.name)))].join(',') : '';
     document.getElementById('cs-links').innerHTML = cur ? `<a class="cs-btn" href="character-builder?char=${id}">✏️ Edit in Builder</a>
         <a class="cs-btn" href="dnd-character-cards?char=${id}${items ? '&amp;items=' + items : ''}">🎴 Cards</a>
-        <a class="cs-btn" href="dnd-player-journal?char=${id}">📓 Journal</a>` : '';
+        <a class="cs-btn" href="dnd-player-journal?char=${id}">📓 Journal</a>
+        ${!cbClass(cur.cls) ? '' : loadParty().some(m => m.id === cur.id)
+            ? `<span class="cs-linked" title="Hit points, conditions, exhaustion, concentration, and death saves show on the Toolbox's Party tab and in the Initiative tracker when they're open in this browser">👥 In the party: the DM's tools follow this sheet</span>`
+            : `<button type="button" class="cs-btn" data-act="party" title="Put this character on the Toolbox's Party tab, where the DM's tools follow this sheet">👥 Add to Party</button>`}` : '';
 }
 
 // Open a character and fit its play state to its level (saving only if that changed anything).
@@ -405,6 +426,7 @@ function openChar(c) {
         const before = JSON.stringify(cur.play);
         cbPlayFit(cur);
         if (JSON.stringify(cur.play) !== before) save();
+        else partyPushLive(cur.id, cbPartyLive(cur));
         try { history.replaceState(null, '', location.pathname + '?char=' + encodeURIComponent(cur.id)); } catch (e) {}
     }
     render();
@@ -614,6 +636,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const sheet = document.getElementById('cs-sheet');
     sheet.addEventListener('click', onClick);
+    document.getElementById('cs-links').addEventListener('click', e => { if (cur && e.target.closest('[data-act="party"]')) addToParty(); });
     const boxes = { 'cs-add-name': 'name', 'cs-add-qty': 'qty', 'cs-add-lb': 'lb', 'cs-add-mi': 'mi', 'cs-coin-n': 'n', 'cs-coin-kind': 'coin' };
     sheet.addEventListener('input', e => {
         if (e.target.id === 'cs-amt') amount = e.target.value.slice(0, 4);
@@ -654,6 +677,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('gazette-dice', renderLog);
     window.addEventListener('storage', e => {
         if (e.key === DICE_HISTORY_KEY) { renderLog(); return; }
+        if (e.key === PARTY_KEY) { renderBar(); return; }
         if (e.key !== CB_KEY && e.key !== null) return;
         chars = cbLoadAll();
         const same = cur && chars.find(x => x.id === cur.id);

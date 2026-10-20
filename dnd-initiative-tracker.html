@@ -186,6 +186,7 @@
     .init-hp { display: flex; align-items: center; gap: 6px; font-family: var(--font-ui); font-size: 0.85rem; color: var(--text-mid); }
     .init-hp .hp-now { font-family: var(--font-head); font-size: 1.15rem; color: var(--text-bright); }
     .init-hp .hp-low { color: #e57368; }
+    .init-hp .hp-temp { font-family: var(--font-ui); font-size: 0.78rem; color: #8fc0e0; }
     .init-hp input { width: 58px; margin: 0; padding: 6px; font-size: 0.85rem; text-align: center; }
     .init-hp button, .init-x { background: var(--bg-deep); border: 1px solid var(--gold-dim); color: var(--text-mid); border-radius: var(--radius-sm); cursor: pointer; font-size: 0.95rem; width: 30px; height: 30px; padding: 0; }
     .init-hp button:hover { color: var(--gold-bright); border-color: var(--gold-mid); }
@@ -426,6 +427,10 @@
     .pt-row label { font-family: var(--font-ui); font-size: 0.75rem; color: var(--text-dim); min-width: 0; }
     .pt-row input, .pt-row select { display: block; width: 100%; box-sizing: border-box; margin-top: 4px; padding: 8px 9px; font-size: 0.92rem; }
     .pt-row input[data-k="name"] { font-family: 'IM Fell English', serif; font-size: 1.05rem; color: var(--text-bright); }
+    .pt-live { margin: 10px 0 0; font-family: var(--font-ui); font-size: 0.82rem; color: var(--text); }
+    .pt-live a { color: var(--gold-bright); }
+    .pt-live.pt-low { color: #e0b26a; }
+    .pt-live.pt-down { color: #e57368; }
     .pt-line { font-family: var(--font-ui); font-size: 0.85rem; color: var(--text-mid); margin: 6px 0 0; }
     .pt-line b { color: var(--gold-bright); }
     .init-pc .init-who { color: #9fc79f; }
@@ -1067,7 +1072,7 @@ Or with die ranges:
     </section>
     <section class="tool-guide" data-tab="init" aria-labelledby="guide-h">
       <h2 id="guide-h">How the Initiative Tracker works</h2>
-      <p>Add each creature with a name, initiative bonus, HP, and AC, or type the initiative a player rolled. Add five goblins at once with How many. The order runs highest first, with ties going to the higher bonus, and Next Turn ▶ counts the rounds. Type a number in a creature's HP box and press − to damage or + to heal. Conditions are the SRD 5.1 list, with a summary when you hover one. Monsters added by name open their full stat block. The fight is saved in this browser as you go, so a refresh or a closed tab won't lose it.</p>
+      <p>Add each creature with a name, initiative bonus, HP, and AC, or type the initiative a player rolled. Add five goblins at once with How many. The order runs highest first, with ties going to the higher bonus, and Next Turn ▶ counts the rounds. Type a number in a creature's HP box and press − to damage or + to heal. Conditions are the SRD 5.1 list, with a summary when you hover one. Monsters added by name open their full stat block. A character added from the Party tab that has a <a href="dnd-character-sheet">Play Sheet</a> (🔗 sheet) follows it: its HP, temporary HP, conditions, concentration, and death saves change here when the player changes them in the same browser. The fight is saved in this browser as you go, so a refresh or a closed tab won't lose it.</p>
       <h3>At the table</h3>
       <ul>
         <li>Combat starts. ⚔️ Add to Initiative on the Party tab rolls for the whole party; add the monsters and press Next Turn.</li>

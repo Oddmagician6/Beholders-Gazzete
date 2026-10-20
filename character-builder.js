@@ -862,7 +862,8 @@ function addToParty() {
     const row = cleanPartyMember(cbPartyRow(cur));
     const party = loadParty();
     const at = party.findIndex(p => p.id === row.id);
-    if (at >= 0) party[at] = row;
+    // The Play Sheet's live state (F68) stays until the sheet pushes again.
+    if (at >= 0) party[at] = { ...row, live: party[at].live };
     else if (party.length >= PARTY_MAX) { flash(`The party already has ${PARTY_MAX} characters. Remove one on the Toolbox's Party tab.`, true); return; }
     else party.push(row);
     saveParty(party);

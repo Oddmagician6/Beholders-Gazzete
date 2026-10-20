@@ -50,7 +50,8 @@
     .cs-bar { display: flex; flex-wrap: wrap; gap: 10px 12px; align-items: flex-end; padding: 14px 16px; background: var(--bg-card); border: var(--border-gold); border-radius: var(--radius-md); margin-bottom: 12px; }
     .cs-bar > label { display: flex; flex-direction: column; font-family: var(--font-ui); font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; flex: 1 1 240px; max-width: 380px; }
     .cs-bar select { margin-top: 4px; }
-    .cs-links { display: flex; flex-wrap: wrap; gap: 8px; }
+    .cs-links { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .cs-linked { font-family: var(--font-ui); font-size: 0.78rem; color: var(--text-dim); }
     .cs-status { font-family: var(--font-ui); font-size: 0.8rem; color: var(--gold-bright); min-height: 1.4em; margin: 0 0 10px; }
     .cs-status.cs-bad { color: #e57368; }
 
@@ -288,7 +289,7 @@
     <p class="cs-status" id="cs-status" role="status" aria-live="polite"></p>
     <div id="cs-sheet"></div>
 
-    <p class="tool-note">The play sheet uses the characters saved by the <a href="character-builder">Character Builder</a> in this browser; hit points, slots, and the rest are saved with the character as you go, so they're still there after a reload, in an export, and in the <a href="privacy#backup">Privacy page</a> backup. Rolls go into the same history as the 🎲 dice button and the <a href="dnd-dice-roller">Dice Roller</a>. Nothing is sent anywhere.</p>
+    <p class="tool-note">The play sheet uses the characters saved by the <a href="character-builder">Character Builder</a> in this browser; hit points, slots, and the rest are saved with the character as you go, so they're still there after a reload, in an export, and in the <a href="privacy#backup">Privacy page</a> backup. Rolls go into the same history as the 🎲 dice button and the <a href="dnd-dice-roller">Dice Roller</a>. A character in the party (👥 Add to Party) also shows its hit points, conditions, and concentration on the DM Toolbox's <a href="dnd-party-tracker">Party tab</a> and in the <a href="dnd-initiative-tracker">Initiative tracker</a>, live, when they're open in this same browser. Nothing is sent anywhere.</p>
 
     <section class="tool-guide" aria-labelledby="guide-h">
       <h2 id="guide-h">How to use a digital D&amp;D character sheet at the table</h2>
@@ -354,6 +355,7 @@
   <script src="magic-items-data.js"></script>
   <script src="character-data.js"></script>
   <script src="character-engine.js"></script>
+  <script src="party.js"></script>
   <script src="character-play.js"></script>
   <script src="character-sheet.js"></script>
   <script src="dice-fab.js"></script>

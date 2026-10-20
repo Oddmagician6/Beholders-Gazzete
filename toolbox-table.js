@@ -8,6 +8,11 @@
    ?tab=init&add=<monster id>.<count> (the Bestiary's links) adds monsters to the saved fight once.
    ➕ Add the Party (party.js) adds the Party tab's characters as player characters (pc: true):
    their passive Perception shows, and at 0 HP they stay in the fight for their death saves.
+   F68: one that came from a Play Sheet character keeps its party id (party), and the Play Sheet
+   writes its HP, temporary HP (temp, which damage here takes first), conditions, exhaustion (exh),
+   concentration (conc), and death saves (ds) straight into the saved fight (party.js
+   partyPushLive); the 'storage' listener below redraws it. Damage or conditions set here hold
+   until the player's sheet next changes.
    📺 Player View (F47) opens player-view.html: init-view.js turns the fight into what the players
    may see, and saveFight() posts it on INIT_VIEW_CHANNEL. Other creatures' names stay hidden
    there until the DM reveals them (shown: true; 🙈/👁️ on each row).
@@ -158,7 +163,11 @@ function loadFight() {
                 hp: num(c.hp), max: num(c.max), ac: num(c.ac),
                 monster: typeof c.monster === 'string' && Object.hasOwn(MONSTER_BY_ID, c.monster) ? c.monster : null,
                 pc: c.pc === true, pp: num(c.pp), shown: c.shown === true,
-                conds: Array.isArray(c.conds) ? c.conds.filter(x => SRD_CONDITIONS.includes(x)) : []
+                conds: Array.isArray(c.conds) ? c.conds.filter(x => SRD_CONDITIONS.includes(x)) : [],
+                party: typeof c.party === 'string' && /^[a-z0-9]{1,16}$/.test(c.party) ? c.party : null,
+                temp: Math.max(0, num(c.temp) ?? 0), exh: Math.min(6, Math.max(0, num(c.exh) ?? 0)),
+                conc: typeof c.conc === 'string' ? c.conc.slice(0, 40) : '',
+                ds: Array.isArray(c.ds) ? [0, 1].map(i => Math.min(3, Math.max(0, num(c.ds[i]) ?? 0))) : [0, 0]
             }));
             fight = {
                 round: Math.max(1, num(saved.round) || 1),
@@ -206,7 +215,8 @@ function addToFight({ name, mod = 0, fixed = null, hp = null, ac = null, count =
         const c = {
             id: fight.nextId++, name: count > 1 || taken.length ? `${base} ${++n}` : name,
             init: fixed !== null && count === 1 ? fixed : rollInit(mod), mod,
-            hp: hp !== null ? Math.max(0, hp) : null, max: hp !== null ? Math.max(0, hp) : null, ac, monster, pc, pp, shown: false, conds: []
+            hp: hp !== null ? Math.max(0, hp) : null, max: hp !== null ? Math.max(0, hp) : null, ac, monster, pc, pp, shown: false, conds: [],
+            party: null, temp: 0, exh: 0, conc: '', ds: [0, 0]
         };
         fight.list.push(c);
         added.push(c);
@@ -309,10 +319,14 @@ function changeHp(id, sign) {
     if (!c) return;
     if (c.hp === null) { flash('init-status', `${c.name} has no HP tracked. Add them again with HP to track it.`); return; }
     if (!amt) { flash('init-status', 'Type an amount in the HP box first.'); if (box) box.focus(); return; }
-    c.hp = sign < 0 ? Math.max(0, c.hp - amt) : Math.min(c.max ?? Infinity, c.hp + amt);
+    // Temporary hit points take damage first.
+    const soak = sign < 0 ? Math.min(c.temp, amt) : 0;
+    c.temp -= soak;
+    c.hp = sign < 0 ? Math.max(0, c.hp - (amt - soak)) : Math.min(c.max ?? Infinity, c.hp + amt);
     saveFight();
     renderFight();
-    flash('init-status', sign < 0 ? `🩸 ${c.name} takes ${amt}${c.hp === 0 ? ' and falls' : ''}.` : `💚 ${c.name} heals ${amt}.`);
+    flash('init-status', (sign < 0 ? `🩸 ${c.name} takes ${amt}${soak ? ` (${soak} off temporary HP)` : ''}${c.hp === 0 ? ' and falls' : ''}.` : `💚 ${c.name} heals ${amt}.`)
+        + (c.party ? ' Their Play Sheet decides from its next change.' : ''));
     const again = document.querySelector(`.hp-amt[data-id="${id}"]`);
     if (again) again.focus();
 }
@@ -334,6 +348,13 @@ function toggleCond(id, cond) {
     renderFight();
 }
 
+// A player character at 0 HP: its death saves, from its Play Sheet when it has one.
+function deathSaveText(c) {
+    if (c.ds[1] >= 3) return '💀 dead';
+    if (c.ds[0] >= 3) return '🩹 stable';
+    return c.party ? `🩸 death saves ${c.ds[0]}✓ ${c.ds[1]}✗` : '🩸 death saves';
+}
+
 function renderFight(scroll = false) {
     const list = document.getElementById('init-list');
     document.getElementById('init-empty').hidden = fight.list.length > 0;
@@ -351,7 +372,7 @@ function renderFight(scroll = false) {
                     ${c.monster ? `<button type="button" class="sb-toggle" data-act="sb" data-id="${c.id}" aria-expanded="${openBlocks.has(c.id)}" title="Show or hide the stat block"><span class="init-who sb-name">${esc(c.name)}</span> <span class="sb-hint" aria-hidden="true">📜</span></button>`
                         : `<span class="init-who">${esc(c.name)}</span>`}
                     ${c.pc ? '' : `<button type="button" class="init-reveal${c.shown ? ' on' : ''}" data-act="reveal" data-id="${c.id}" aria-pressed="${c.shown}" title="${c.shown ? 'The player view shows this name. Click to hide it again.' : 'The player view calls this one an unknown creature. Click to show its name.'}">${c.shown ? '👁️ Name shown' : '🙈 Name hidden'}</button>`}
-                    <span class="init-meta">${c.pc ? '👤 PC · ' : ''}${c.ac !== null ? `🛡️ AC ${c.ac} · ` : ''}bonus ${c.mod >= 0 ? '+' + c.mod : '−' + -c.mod}${c.pp !== null ? ` · 👁️ passive ${c.pp}` : ''}${down ? (c.pc ? ' · 🩸 death saves' : ' · 💀 down') : ''}</span>
+                    <span class="init-meta">${c.pc ? '👤 PC · ' : ''}${c.party ? '<span title="Follows this character&#39;s Play Sheet in this browser">🔗 sheet</span> · ' : ''}${c.ac !== null ? `🛡️ AC ${c.ac} · ` : ''}bonus ${c.mod >= 0 ? '+' + c.mod : '−' + -c.mod}${c.pp !== null ? ` · 👁️ passive ${c.pp}` : ''}${c.exh ? ` · 😩 exhaustion ${c.exh}` : ''}${c.conc ? ` · 🧠 ${esc(c.conc)}` : ''}${down ? (c.pc ? ` · ${deathSaveText(c)}` : ' · 💀 down') : ''}</span>
                 </div>
                 <div class="init-conds">
                     ${c.conds.map(k => `<button type="button" class="init-cond" data-id="${c.id}" data-cond="${k}" title="Remove ${k}">${k} ✕</button>`).join('')}
@@ -363,7 +384,7 @@ function renderFight(scroll = false) {
             </div>
             <div class="init-hp">
                 ${c.hp === null ? '<span title="No HP tracked">HP —</span>' : `
-                <span><span class="hp-now${low || down ? ' hp-low' : ''}">${c.hp}</span> / ${c.max}</span>
+                <span><span class="hp-now${low || down ? ' hp-low' : ''}">${c.hp}</span> / ${c.max}${c.temp ? ` <span class="hp-temp" title="Temporary hit points">+${c.temp}</span>` : ''}</span>
                 <input type="number" class="hp-amt" data-id="${c.id}" min="0" max="9999" placeholder="amt" aria-label="Damage or healing for ${esc(c.name)}">
                 <button type="button" data-act="dmg" data-id="${c.id}" title="Damage" aria-label="Damage ${esc(c.name)}">−</button>
                 <button type="button" data-act="heal" data-id="${c.id}" title="Heal" aria-label="Heal ${esc(c.name)}">+</button>`}
@@ -483,7 +504,12 @@ function addPartyToFight(list = loadParty()) {
     const todo = list.map((m, i) => ({ m, name: partyMemberName(m, i).slice(0, 36) })).filter(x => !here.has(x.name.toLowerCase()));
     const skipped = list.length - todo.length;
     if (!todo.length) { flash('init-status', '👥 The whole party is already in the fight.'); return; }
-    const added = todo.flatMap(x => addToFight({ name: x.name, mod: x.m.init, hp: x.m.hp, ac: x.m.ac, pc: true, pp: x.m.pp }));
+    const added = todo.flatMap(x => addToFight({ name: x.name, mod: x.m.init, hp: x.m.hp, ac: x.m.ac, pc: true, pp: x.m.pp }).map(c => {
+        // A character from the Play Sheet comes in as the sheet stands (F68).
+        // (One typed in on the Party tab has no sheet; its row is the name match partyPushLive falls back on.)
+        if (x.m.live) { c.party = x.m.id; partyLiveToCombatant(c, x.m.live); }
+        return c;
+    }));
     if (!added.length) { flash('init-status', `⚠️ The tracker holds ${INIT_MAX} combatants. Clear some first.`); return; }
     sortFight();
     saveFight();

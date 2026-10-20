@@ -186,6 +186,7 @@
     .init-hp { display: flex; align-items: center; gap: 6px; font-family: var(--font-ui); font-size: 0.85rem; color: var(--text-mid); }
     .init-hp .hp-now { font-family: var(--font-head); font-size: 1.15rem; color: var(--text-bright); }
     .init-hp .hp-low { color: #e57368; }
+    .init-hp .hp-temp { font-family: var(--font-ui); font-size: 0.78rem; color: #8fc0e0; }
     .init-hp input { width: 58px; margin: 0; padding: 6px; font-size: 0.85rem; text-align: center; }
     .init-hp button, .init-x { background: var(--bg-deep); border: 1px solid var(--gold-dim); color: var(--text-mid); border-radius: var(--radius-sm); cursor: pointer; font-size: 0.95rem; width: 30px; height: 30px; padding: 0; }
     .init-hp button:hover { color: var(--gold-bright); border-color: var(--gold-mid); }
@@ -426,6 +427,10 @@
     .pt-row label { font-family: var(--font-ui); font-size: 0.75rem; color: var(--text-dim); min-width: 0; }
     .pt-row input, .pt-row select { display: block; width: 100%; box-sizing: border-box; margin-top: 4px; padding: 8px 9px; font-size: 0.92rem; }
     .pt-row input[data-k="name"] { font-family: 'IM Fell English', serif; font-size: 1.05rem; color: var(--text-bright); }
+    .pt-live { margin: 10px 0 0; font-family: var(--font-ui); font-size: 0.82rem; color: var(--text); }
+    .pt-live a { color: var(--gold-bright); }
+    .pt-live.pt-low { color: #e0b26a; }
+    .pt-live.pt-down { color: #e57368; }
     .pt-line { font-family: var(--font-ui); font-size: 0.85rem; color: var(--text-mid); margin: 6px 0 0; }
     .pt-line b { color: var(--gold-bright); }
     .init-pc .init-who { color: #9fc79f; }
@@ -1067,7 +1072,7 @@ Or with die ranges:
     </section>
     <section class="tool-guide" data-tab="party" aria-labelledby="guide-h">
       <h2 id="guide-h">How the Party Tracker works</h2>
-      <p>Add a line for each character with their name, the player's name, class, level, Armor Class, maximum hit points, passive Perception, and initiative bonus. Changes save as you type and stay in this browser. The Encounter, Initiative, Quest, Split, and Downtime tabs and the Worldbuilder's dungeons start from this party, and 👥 Use the Party copies it into any of them later. Tools that take one level use the party's average, rounded. A link someone shares with you keeps the party it was made for.</p>
+      <p>Add a line for each character with their name, the player's name, class, level, Armor Class, maximum hit points, passive Perception, and initiative bonus. Changes save as you type and stay in this browser. The Encounter, Initiative, Quest, Split, and Downtime tabs and the Worldbuilder's dungeons start from this party, and 👥 Use the Party copies it into any of them later. Tools that take one level use the party's average, rounded. A link someone shares with you keeps the party it was made for. A character added from the <a href="character-builder">Character Builder</a> also shows its <a href="dnd-character-sheet">Play Sheet</a>'s current hit points, conditions, and concentration here as the player changes them, when both are open in the same browser.</p>
       <h3>At the table</h3>
       <ul>
         <li>Session zero: type in the party once and stop asking for everyone's AC.</li>

@@ -6,11 +6,17 @@
    "Add the Party") and keep their own fields as a manual override.
    A party chip (partyChip) shows "Party: 4 × level 5" beside a tool's own party fields,
    with a button that copies the party into them.
+   Live from the Play Sheet (F68): a character added from the Character Builder keeps the
+   character's id, and the Play Sheet pushes its hit points, temporary HP, conditions,
+   exhaustion, concentration, and death saves onto it (live) and onto the Initiative
+   combatant that came from it (party: id). The other tabs hear it through the 'storage'
+   event, so it works on one browser only; a player's phone to the DM's laptop waits for L2.
    Needs no other script; the chip escapes its own text.
    ============================================ */
 
 const PARTY_KEY = 'gazette-party';
 const PARTY_MAX = 8;
+const PARTY_FIGHT_KEY = 'gazette-initiative';   // the Initiative tab's fight (toolbox-table.js INIT_KEY)
 const PARTY_CLASSES = ['Barbarian', 'Bard', 'Cleric', 'Druid', 'Fighter', 'Monk', 'Paladin', 'Ranger', 'Rogue', 'Sorcerer', 'Warlock', 'Wizard'];
 
 function partyInt(v, lo, hi, def) {
@@ -35,7 +41,22 @@ function cleanPartyMember(c) {
         ac: partyInt(c.ac, 0, 40, null),
         hp: partyInt(c.hp, 1, 999, null),
         pp: partyInt(c.pp, 1, 40, null),
-        init: partyInt(c.init, -10, 20, 0)
+        init: partyInt(c.init, -10, 20, 0),
+        live: cleanPartyLive(c.live)
+    };
+}
+
+// The Play Sheet's state on a party member; null when it has none. at: when it was pushed.
+function cleanPartyLive(v) {
+    if (!v || typeof v !== 'object' || Array.isArray(v)) return null;
+    const max = partyInt(v.max, 1, 9999, null);
+    if (max === null) return null;
+    const ds = Array.isArray(v.ds) ? v.ds : [];
+    return {
+        hp: partyInt(v.hp, 0, max, max), max, temp: partyInt(v.temp, 0, 9999, 0),
+        conds: Array.isArray(v.conds) ? [...new Set(v.conds.filter(x => typeof x === 'string' && /^[A-Z][a-z]{2,15}$/.test(x)))].sort().slice(0, 15) : [],
+        exh: partyInt(v.exh, 0, 6, 0), conc: partyText(v.conc), ds: [partyInt(ds[0], 0, 3, 0), partyInt(ds[1], 0, 3, 0)],
+        at: partyInt(v.at, 0, 8.64e15, 0)
     };
 }
 
@@ -59,6 +80,58 @@ function saveParty(list) {
 
 function partyMemberName(c, i) {
     return c.name || c.player || `Character ${i + 1}`;
+}
+
+// ── Live from the Play Sheet (F68) ─────────────────────────
+// Copies a member's live state onto an Initiative combatant. Exhaustion joins the conditions
+// (its level rides along as exh); the tracker's own conditions are replaced, since the sheet decides.
+function partyLiveToCombatant(c, live) {
+    c.hp = live.hp;
+    c.max = live.max;
+    c.temp = live.temp;
+    c.conds = [...live.conds, ...(live.exh ? ['Exhaustion'] : [])].sort();
+    c.exh = live.exh;
+    c.conc = live.conc;
+    c.ds = live.ds.slice();
+}
+
+// "23 / 31 HP, +5 temp · Poisoned · exhaustion 2 · concentrating on Bless"
+function partyLiveText(live) {
+    const bits = [`${live.hp} / ${live.max} HP${live.temp ? `, +${live.temp} temp` : ''}`];
+    if (!live.hp) bits.push(live.ds[1] >= 3 ? 'dead' : live.ds[0] >= 3 ? 'stable' : `death saves ${live.ds[0]}✓ ${live.ds[1]}✗`);
+    bits.push(...live.conds);
+    if (live.exh) bits.push(`exhaustion ${live.exh}`);
+    if (live.conc) bits.push(`concentrating on ${live.conc}`);
+    return bits.join(' · ');
+}
+
+// The Play Sheet calls this on every change. Writes only what changed, so the other tabs
+// redraw only when there is news. Returns true when the character is in the party.
+function partyPushLive(id, raw) {
+    const live = cleanPartyLive(raw);
+    const list = loadParty();
+    const at = list.findIndex(m => m.id === id);
+    if (!live || at < 0) return false;
+    const m = list[at];
+    const same = (a, b) => !!a && !!b && JSON.stringify({ ...a, at: 0 }) === JSON.stringify({ ...b, at: 0 });
+    if (!same(m.live, live)) { m.live = live; saveParty(list); }
+    try {
+        const fight = JSON.parse(localStorage.getItem(PARTY_FIGHT_KEY));
+        if (!fight || !Array.isArray(fight.list)) return true;
+        // A combatant added before F68 has no party id: a player character with the member's name is it.
+        const name = partyMemberName(m, at).slice(0, 36).toLowerCase();
+        let changed = false;
+        fight.list.forEach(c => {
+            if (!c || typeof c !== 'object') return;
+            if (c.party !== id && !(c.pc === true && !c.party && typeof c.name === 'string' && c.name.toLowerCase() === name)) return;
+            const before = JSON.stringify(c);
+            c.party = id;
+            partyLiveToCombatant(c, live);
+            if (JSON.stringify(c) !== before) changed = true;
+        });
+        if (changed) localStorage.setItem(PARTY_FIGHT_KEY, JSON.stringify(fight));
+    } catch (e) {}
+    return true;
 }
 
 // [{ count, level }], highest level first: the Encounter tab's party groups.

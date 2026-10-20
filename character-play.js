@@ -65,6 +65,12 @@ function cbPlayHp(c, d) {
     return c.play.hp === null ? max : Math.min(max, c.play.hp);
 }
 
+// What the Play Sheet pushes to the DM's tools (F68: party.js partyPushLive).
+function cbPartyLive(c, d = cbDerive(c)) {
+    const p = c.play;
+    return { hp: cbPlayHp(c, d), max: cbPlayMax(c, d), temp: p.temp, conds: p.cond, exh: p.exh, conc: p.conc, ds: p.ds, at: Date.now() };
+}
+
 // Speed after what's carried, exhaustion, and conditions that stop movement.
 function cbPlaySpeed(c, d) {
     const p = c.play;

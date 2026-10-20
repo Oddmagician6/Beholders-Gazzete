@@ -181,7 +181,7 @@ function initBody(ctx) {
     if (!f.list.length) return `<p class="ds-faint">No fight yet. Add combatants on the Toolbox's Initiative tab, and they show up here.</p>${blank}${links}`;
     const turn = f.list.some(c => c.id === f.turn) ? f.turn : null;
     const rows = f.list.filter(c => c && typeof c.name === 'string').slice(0, 40).map(c => {
-        const hp = typeof c.hp === 'number' ? `${c.hp}${typeof c.max === 'number' ? `/${c.max}` : ''}` : '';
+        const hp = typeof c.hp === 'number' ? `${c.hp}${typeof c.max === 'number' ? `/${c.max}` : ''}${c.temp > 0 ? ` +${Math.round(c.temp)}` : ''}` : '';
         const health = initHealth(c);
         const conds = Array.isArray(c.conds) ? c.conds.filter(x => typeof x === 'string').slice(0, 15) : [];
         return `<tr class="${c.id === turn ? 'ds-now' : ''}${health === 'down' ? ' ds-down' : ''}">
@@ -196,13 +196,20 @@ function initBody(ctx) {
         <table class="ds-table"><thead><tr><th>Init</th><th>Name</th><th>HP</th><th>AC</th></tr></thead><tbody>${rows}</tbody></table>${links}`;
 }
 
+// Max HP, or the Play Sheet's current HP when it pushes one (F68), with its conditions.
+function partyHpCell(p) {
+    if (!p.live) return p.hp === null ? '' : p.hp;
+    const l = p.live, conds = [...l.conds, ...(l.exh ? [`Exhaustion ${l.exh}`] : []), ...(l.conc ? [`🧠 ${l.conc}`] : [])];
+    return `<span title="From the Play Sheet">${l.hp}/${l.max}${l.temp ? ` +${l.temp}` : ''}</span>${conds.length ? `<span class="ds-conds">${conds.map(x => `<span>${dsEsc(x)}</span>`).join('')}</span>` : ''}`;
+}
+
 function partyBody(ctx) {
     const party = ctx.party();
     if (!party.length) return '<p class="ds-faint">No party yet. Enter the characters once on the <a href="toolbox?tab=party">Toolbox\'s Party tab</a>.</p>';
     const n = v => (v === null ? '' : v);
     return `<table class="ds-table"><thead><tr><th>Character</th><th>Class</th><th>AC</th><th>HP</th><th title="Passive Perception">PP</th></tr></thead><tbody>
         ${party.map((p, i) => `<tr><td>${dsEsc(partyMemberName(p, i))}${p.player && p.name ? `<span class="ds-steps">${dsEsc(p.player)}</span>` : ''}</td>
-            <td>${dsEsc(p.cls)} ${p.level}</td><td>${n(p.ac)}</td><td>${n(p.hp)}</td><td>${n(p.pp)}</td></tr>`).join('')}
+            <td>${dsEsc(p.cls)} ${p.level}</td><td>${n(p.ac)}</td><td>${partyHpCell(p)}</td><td>${n(p.pp)}</td></tr>`).join('')}
         </tbody></table>
         <p class="ds-links"><a href="toolbox?tab=party">👥 Edit the party</a></p>`;
 }
