@@ -18,7 +18,7 @@ let cur = null;
 let mode = 'normal';         // advantage / disadvantage for d20 rolls; stays until switched back
 let amount = '';             // the damage/heal box, kept across redraws
 let lastRoll = null;         // { label, r } shown in the roll bar
-let notice = null;           // { text, ok, conc: DC, endurance } after damage or a death save
+let notice = null;           // { text, ok, conc: DC, endurance, kept: { spell, dc } } after damage or a death save
 let restOpen = false;
 let longArmed = 0;
 let addForm = { name: '', qty: '1', lb: '', mi: '', n: '', coin: 'gp' };   // the Inventory boxes, kept across redraws
@@ -96,10 +96,13 @@ function change(fn) {
     render();
 }
 
+// Incapacitated, or a condition that includes it, ends concentration (SRD 5.1).
+const CS_INCAP = ['Incapacitated', 'Paralyzed', 'Petrified', 'Stunned', 'Unconscious'];
 function setCond(name, on) {
     const list = cur.play.cond.filter(n => n !== name);
     if (on) list.push(name);
     cur.play.cond = list;
+    if (on && CS_INCAP.includes(name)) cur.play.conc = '';
 }
 
 // ── Rolling ──────────────────────────────────────────────
@@ -487,15 +490,23 @@ function onClick(e) {
             notice = null;
             if (r.dead) notice = { text: r.failed ?'💀 A third death save failure: dead.' : '💀 Massive damage: what was left over is at least your hit point maximum, so that\'s instant death.' };
             else if (r.down) {
+                const spell = p.conc, endurance = !!res && !p.res[res.id];
                 setCond('Unconscious', true);
-                notice = { text: '🩸 Down to 0 hit points: unconscious and dying.', endurance: res && !p.res[res.id] };
+                notice = { text: `🩸 Down to 0 hit points: unconscious and dying.${spell ? ` Concentration on ${spell} ends.` : ''}`, endurance };
+                // Relentless Endurance means never going down, so the spell comes back (with its save).
+                if (endurance && spell) notice.kept = { spell, dc: r.conc };
             } else if (r.failed) notice = { text: '🩸 Damage at 0 hit points: one death save failure (two for a critical hit; tap another failure).' };
             if (r.conc && p.conc) notice = Object.assign(notice || { text: `Took ${n} damage.` }, { conc: r.conc });
         });
         return;
     }
     if (act === 'endurance') {
-        change(p => { p.hp = 1; p.res['relentless-endurance'] = 1; p.ds = [0, 0]; setCond('Unconscious', false); notice = null; });
+        const kept = notice && notice.kept;
+        change(p => {
+            p.hp = 1; p.res['relentless-endurance'] = 1; p.ds = [0, 0]; setCond('Unconscious', false);
+            if (kept) p.conc = kept.spell;
+            notice = kept ? { text: '💪 Still up.', conc: kept.dc } : null;
+        });
         flash('💪 Relentless Endurance: you stay up at 1 hit point.');
         return;
     }

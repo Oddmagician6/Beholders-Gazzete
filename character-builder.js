@@ -990,7 +990,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key !== CB_KEY && e.key !== null) return;
         chars = cbLoadAll();
         const same = cur && chars.find(x => x.id === cur.id);
-        const typing = document.activeElement && document.activeElement.matches('#cb-panel input[type="text"], #cb-panel textarea');
-        if (same && !typing) { cur = same; render(); } else if (!same) openChar(chars[0] || null); else renderBar();
+        const el = document.activeElement;
+        const typing = el && el.matches('#cb-panel input[type="text"], #cb-panel textarea');
+        if (same && !typing) { cur = same; render(); } else if (!same) openChar(chars[0] || null);
+        else {
+            // Don't redraw under the cursor, but take the other tab's changes (HP from the Play Sheet, say),
+            // keeping only the box being typed in, so the next keystroke doesn't save the old character back.
+            const f = el.dataset.f;
+            if (f) setPath(same, f, el.value);
+            cur = same;
+            renderBar();
+        }
     });
 });

@@ -33,7 +33,8 @@ const MC_PROFS = {
 const MC_ARMOR_NAMES = { light: 'light armor', medium: 'medium armor', heavy: 'heavy armor', shield: 'shields' };
 const MC_LEVEL_NAMES = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th'];
 
-const mc = { rows: [{ cls: '', lv: 1 }], s: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 } };
+// tough: extra HP per level from the race (a hill dwarf's Dwarven Toughness), set by loading a character.
+const mc = { rows: [{ cls: '', lv: 1 }], s: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 }, tough: 0 };
 
 function esc(s) {
     return String(s === undefined || s === null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -128,7 +129,7 @@ function mcHitPoints() {
         for (let lv = 1; lv <= r.lv; lv++) hp += Math.max(1, (i === 0 && lv === 1 ? k.hd : k.hd / 2 + 1) + con);
         if (r.cls === 'sorcerer') hp += r.lv;   // Draconic Resilience
     });
-    return hp;
+    return hp + mc.tough * mcTotal();
 }
 
 function mcHitDice() {
@@ -172,6 +173,7 @@ function mcParams() {
     const rows = mcPicked();
     if (rows.length) p.c = rows.map(r => `${r.cls}.${r.lv}`).join(',');
     if (CB_ABILITIES.some(a => mc.s[a] !== 10)) p.s = CB_ABILITIES.map(a => mc.s[a]).join('.');
+    if (mc.tough) p.t = 1;
     return p;
 }
 
@@ -191,6 +193,7 @@ function mcFromUrl() {
     mc.rows = rows.length ? rows : [{ cls: '', lv: 1 }];
     const s = (q.get('s') || '').split('.').map(Number);
     CB_ABILITIES.forEach((a, i) => { mc.s[a] = s.length === 6 && Number.isInteger(s[i]) ? Math.min(30, Math.max(1, s[i])) : 10; });
+    mc.tough = q.get('t') === '1' ? 1 : 0;
 }
 
 function mcChanged() {
@@ -238,7 +241,7 @@ function renderSummary() {
         ['Character level', L],
         ['Proficiency bonus', cbSign(cbProf(L))],
         ['Hit dice', mcHitDice()],
-        ['Hit points', `${mcHitPoints()} <span class="mc-dim">(average)</span>`],
+        ['Hit points', `${mcHitPoints()} <span class="mc-dim">(average${mc.tough ? ', with Dwarven Toughness' : ''})</span>`],
         ['Ability Score Improvements', `${nAsi}${nAsi ? ` <span class="mc-dim">(${asi.map(x => `${esc(cbClass(x.r.cls).name)} ${x.lv.join(', ')}`).join('; ')})</span>` : ''}`]
     ];
     el.innerHTML = `<div class="mc-stats">${stats.map(([k, v]) => `<div class="mc-stat"><span>${k}</span><b>${v}</b></div>`).join('')}</div>`
@@ -441,6 +444,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!c) return;
         const s = cbScores(c);
         CB_ABILITIES.forEach(a => { mc.s[a] = s[a]; });
+        const sub = cbSubrace(c);
+        mc.tough = sub && sub.hpPerLevel ? 1 : 0;
         mc.rows = [{ cls: c.cls, lv: c.level }];
         mcChanged();
         flash(`🧝 Loaded ${c.name || 'the character'}'s scores and class. Add a class to see where it could go.`);
@@ -448,6 +453,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('mc-reset').addEventListener('click', () => {
         mc.rows = [{ cls: '', lv: 1 }];
         CB_ABILITIES.forEach(a => { mc.s[a] = 10; });
+        mc.tough = 0;
         mcChanged();
         flash('↺ Cleared.');
     });

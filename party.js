@@ -122,11 +122,17 @@ function partyPushLive(id, raw) {
         const fight = JSON.parse(localStorage.getItem(PARTY_FIGHT_KEY));
         if (!fight || !Array.isArray(fight.list)) return true;
         // A combatant added before F68 has no party id: a player character with the member's name is it.
+        // Only when it can't be anyone else: no row follows this character yet, one row has the name,
+        // and no other member without a row of their own shares it (two Bobs stay apart).
         const name = partyMemberName(m, at).slice(0, 36).toLowerCase();
+        const rows = fight.list.filter(c => c && typeof c === 'object');
+        const linked = new Set(rows.map(c => c.party).filter(Boolean));
+        const byName = rows.filter(c => c.pc === true && !c.party && typeof c.name === 'string' && c.name.toLowerCase() === name);
+        const twin = list.some((o, i) => i !== at && !linked.has(o.id) && partyMemberName(o, i).slice(0, 36).toLowerCase() === name);
+        const guess = !linked.has(id) && byName.length === 1 && !twin ? byName[0] : null;
         let changed = false;
-        fight.list.forEach(c => {
-            if (!c || typeof c !== 'object') return;
-            if (c.party !== id && !(c.pc === true && !c.party && typeof c.name === 'string' && c.name.toLowerCase() === name)) return;
+        rows.forEach(c => {
+            if (c.party !== id && c !== guess) return;
             const before = JSON.stringify(c);
             c.party = id;
             partyLiveToCombatant(c, live);
