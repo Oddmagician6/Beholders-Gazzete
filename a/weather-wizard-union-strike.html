@@ -237,6 +237,8 @@
     .campaign-secret summary { cursor: pointer; color: var(--text-dim); font-family: var(--font-ui); font-size: 0.85rem; }
     .campaign-secret p { margin-top: 6px; }
     .campaign-card .btn { align-self: flex-start; margin-top: auto; font-size: 0.66rem; padding: 7px 12px; }
+    .campaign-oneshot { text-align: center; margin: 18px 0 0; }
+    .campaign-oneshot .btn { font-size: 0.72rem; padding: 8px 16px; }
     .campaign-actions { display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; margin-top: 18px; }
     .campaign-actions[hidden] { display: none; }
     .campaign-actions .btn { font-size: 0.72rem; padding: 8px 16px; }
@@ -403,6 +405,7 @@
           <li><a href="rules">📋 Rules</a></li>
           <li><a href="handouts">📜 Handouts</a></li>
           <li><a href="session-kit">🎲 Session Kit</a></li>
+          <li><a href="dnd-one-shot-generator">⚔️ One-Shot</a></li>
           <li><a href="dm-screen">🛡️ DM Screen</a></li>
           <li><a href="toolbox">🧰 Toolbox</a></li>
           <li><a href="worldbuilder">🗺️ Worldbuilder</a></li>
@@ -761,6 +764,7 @@
         <h2 id="campaign-head">⚔️ Use This in My Campaign</h2>
         <p class="campaign-intro">This story, ready for your table: a hook, someone to meet, somewhere to go, and something to overhear.</p>
         <div class="campaign-grid">${cards.join('')}</div>
+        <p class="campaign-oneshot"><a class="btn btn-gold" href="dnd-one-shot-generator?art=${esc(encodeURIComponent(a.id))}">⚔️ Run This as a One-Shot</a></p>
         <div class="campaign-actions" hidden><button type="button" class="btn btn-gold" id="campaign-save">📓 Save to Notebook</button><span class="campaign-status" id="campaign-status" role="status"></span></div>
       </section>`;
     }

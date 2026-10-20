@@ -62,7 +62,7 @@ const NB_QUEST_STATUS = {
 };
 // Saved links may only point at these pages, with a plain query string (older saves end in .html),
 // or at an article (F69).
-const NB_HREF = /^(?:(worldbuilder|npc-generator|toolbox)(?:\.html)?(\?[A-Za-z0-9_.~%+=&*-]*)?|a\/[a-z0-9][a-z0-9-]{0,99})$/;
+const NB_HREF = /^(?:(worldbuilder|npc-generator|toolbox|dnd-one-shot-generator)(?:\.html)?(\?[A-Za-z0-9_.~%+=&*-]*)?|a\/[a-z0-9][a-z0-9-]{0,99})$/;
 const NB_LIMITS = { entries: 500, title: 120, sub: 400, notes: 4000, name: 80, href: 2000, links: 60, flips: 400, flip: 300, edits: 200, edit: 2000, file: 2000000 };
 // The options that make two rolls with one seed different, per kind (its own URL keys).
 const NB_SIG_KEYS = {
