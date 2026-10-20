@@ -211,14 +211,16 @@ function rollInit(mod) {
 function addToFight({ name, mod = 0, fixed = null, hp = null, ac = null, count = 1, monster = null, pc = false, pp = null }) {
     count = Math.min(count, INIT_MAX - fight.list.length);
     if (count < 1) return [];
-    // Numbering carries on from any "Goblin 2" already in the fight.
-    const base = name.replace(/\s+\d+$/, '');
-    const taken = fight.list.map(c => c.name.match(new RegExp('^' + base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ' (\\d+)$', 'i'))).filter(Boolean).map(m => Number(m[1]));
+    // Numbering carries on from any "Goblin 2" already in the fight; a plain "Goblin" there counts as 1.
+    // The base is cut to 36 so the number survives loadFight's 40 (homebrew names run to 60).
+    const base = name.replace(/\s+\d+$/, '').slice(0, 36).trim();
+    const taken = fight.list.map(c => c.name.toLowerCase() === base.toLowerCase() ? [, 1]
+        : c.name.match(new RegExp('^' + base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ' (\\d+)$', 'i'))).filter(Boolean).map(m => Number(m[1]));
     let n = taken.length ? Math.max(...taken) : 0;
     const added = [];
     for (let i = 0; i < count; i++) {
         const c = {
-            id: fight.nextId++, name: count > 1 || taken.length ? `${base} ${++n}` : name,
+            id: fight.nextId++, name: count > 1 || taken.length ? `${base} ${++n}` : name.length > 36 ? base : name,
             init: fixed !== null && count === 1 ? fixed : rollInit(mod), mod,
             hp: hp !== null ? Math.max(0, hp) : null, max: hp !== null ? Math.max(0, hp) : null, ac, monster, pc, pp, shown: false, conds: [],
             party: null, temp: 0, exh: 0, conc: '', ds: [0, 0]
@@ -542,7 +544,12 @@ function applyInitAdds() {
         want += count;
         return addToFight({ name: m.name, mod: m.dex, hp: m.hp, ac: m.ac, count, monster: m.id });
     });
-    if (!want) return;
+    if (!want) {
+        flash('init-status', adds.some(s => s.startsWith(HB_PREFIX))
+            ? "⚠️ That homebrew monster isn't in this browser's notebook, so nothing was added. Save it in the Monster Maker here first."
+            : "⚠️ That link names no monster the tracker knows, so nothing was added.");
+        return;
+    }
     if (!added.length) { flash('init-status', `⚠️ The tracker holds ${INIT_MAX} combatants. Clear some first.`); return; }
     sortFight();
     saveFight();
