@@ -72,10 +72,12 @@ function loadParty() {
     return [];
 }
 
-// Saves and tells the open page (other tabs hear the storage event).
+// Saves and tells the open page (other tabs hear the storage event). Returns false when
+// the browser refused (storage full or blocked).
 function saveParty(list) {
-    try { localStorage.setItem(PARTY_KEY, JSON.stringify(list.slice(0, PARTY_MAX))); } catch (e) {}
+    try { localStorage.setItem(PARTY_KEY, JSON.stringify(list.slice(0, PARTY_MAX))); } catch (e) { return false; }
     window.dispatchEvent(new Event('gazette-party'));
+    return true;
 }
 
 function partyMemberName(c, i) {
@@ -106,7 +108,8 @@ function partyLiveText(live) {
 }
 
 // The Play Sheet calls this on every change. Writes only what changed, so the other tabs
-// redraw only when there is news. Returns true when the character is in the party.
+// redraw only when there is news. Returns true when the character is in the party, and
+// null when it is but the browser wouldn't store the news (storage full or blocked).
 function partyPushLive(id, raw) {
     const live = cleanPartyLive(raw);
     const list = loadParty();
@@ -114,7 +117,7 @@ function partyPushLive(id, raw) {
     if (!live || at < 0) return false;
     const m = list[at];
     const same = (a, b) => !!a && !!b && JSON.stringify({ ...a, at: 0 }) === JSON.stringify({ ...b, at: 0 });
-    if (!same(m.live, live)) { m.live = live; saveParty(list); }
+    if (!same(m.live, live)) { m.live = live; if (!saveParty(list)) return null; }
     try {
         const fight = JSON.parse(localStorage.getItem(PARTY_FIGHT_KEY));
         if (!fight || !Array.isArray(fight.list)) return true;
@@ -130,7 +133,9 @@ function partyPushLive(id, raw) {
             if (JSON.stringify(c) !== before) changed = true;
         });
         if (changed) localStorage.setItem(PARTY_FIGHT_KEY, JSON.stringify(fight));
-    } catch (e) {}
+    } catch (e) {
+        if (e && e.name === 'QuotaExceededError') return null;
+    }
     return true;
 }
 

@@ -283,7 +283,7 @@ function nbSaveEdit(id, key, value) {
     if (Object.keys(edits).length) e.edits = edits;
     else delete e.edits;
     nbView.editing = null;
-    if (!nbStore(nb, true)) { flash('nb-pl-status', "⚠️ This browser won't keep a notebook (storage is off)."); return; }
+    if (!nbStore(nb, true)) { flash('nb-pl-status', "⚠️ This browser won't keep a notebook (storage is full or off)."); return; }
     flash('nb-pl-status', Object.hasOwn(edits, key) ? '✏️ Reworded. Only the notebook\'s copy changed.' : '↩️ Back to the rolled wording.');
     renderPlayers(nb, `.nb-pl-edit[data-id="${CSS.escape(id)}"][data-key="${CSS.escape(key)}"]`);
 }
@@ -406,7 +406,7 @@ function nbFlipLine(id, key) {
     if (next.length > NB_LIMITS.flips) { flash('nb-pl-status', '⚠️ That entry has too many switched lines.'); return; }
     if (next.length) e.flip = next;
     else delete e.flip;
-    if (!nbStore(nb, true)) { flash('nb-pl-status', "⚠️ This browser won't keep a notebook (storage is off)."); return; }
+    if (!nbStore(nb, true)) { flash('nb-pl-status', "⚠️ This browser won't keep a notebook (storage is full or off)."); return; }
     renderPlayers(nb, `.nb-pl-line[data-id="${CSS.escape(id)}"][data-key="${CSS.escape(key)}"]`);
 }
 
@@ -506,7 +506,7 @@ function renderNotebook(nb = nbLoad()) {
 function nbEdit(fn) {
     const nb = nbLoad();
     fn(nb);
-    if (!nbStore(nb)) flash('nb-status', "⚠️ This browser won't keep a notebook (storage is off).");
+    if (!nbStore(nb)) flash('nb-status', "⚠️ This browser won't keep a notebook (storage is full or off).");
 }
 
 // Show every entry again (the filters could hide the one we're going to).
@@ -533,7 +533,7 @@ function nbJump(id) {
 // A new hand-written entry: open it and put the cursor in the field to fill first.
 function nbAddByHand(item, focus, said) {
     const r = nbAdd(item);
-    if (!r) { flash('nb-status', "⚠️ This browser won't keep a notebook (storage is off)."); return; }
+    if (!r) { flash('nb-status', "⚠️ This browser won't keep a notebook (storage is full or off)."); return; }
     if (r.full) { flash('nb-status', '⚠️ The notebook is full. Remove an entry first.'); return; }
     nbView.open.add(r.entry.id);
     nbShowAll();
@@ -565,7 +565,7 @@ function nbSaveField(box) {
     if (f === 'title') e.title = nbText(box.value, NB_LIMITS.title) || (e.kind === 'session' && e.num ? `Session ${e.num}` : NB_KINDS[e.kind].label);
     else if (f === 'sub') e.sub = nbText(box.value, NB_LIMITS.sub);
     else nbSetField(e, f, box.value);
-    if (!nbStore(nb, true)) { flash('nb-status', "⚠️ This browser won't keep a notebook (storage is off)."); return; }
+    if (!nbStore(nb, true)) { flash('nb-status', "⚠️ This browser won't keep a notebook (storage is full or off)."); return; }
     const card = document.getElementById('nb-e-' + e.id);
     if (!card) return;
     card.querySelector('.nb-top').outerHTML = nbTopHTML(nb, e);
@@ -654,7 +654,7 @@ function nbImport(file) {
         const { nb: incoming, dropped } = nbParseFile(text);
         const nb = nbLoad();
         const r = nbMerge(nb, incoming);
-        if (!nbStore(nb)) throw new Error("This browser won't keep a notebook (storage is off).");
+        if (!nbStore(nb)) throw new Error("This browser won't keep a notebook (storage is full or off).");
         const bits = [`📂 Imported ${r.added} ${r.added === 1 ? 'entry' : 'entries'}`];
         if (r.merged) bits.push(`${r.merged} already here`);
         if (dropped) bits.push(`${dropped} skipped as unreadable`);
@@ -676,7 +676,7 @@ function setupNotebook() {
     name.addEventListener('input', () => {
         const nb = nbLoad();
         nb.name = nbText(name.value, NB_LIMITS.name);
-        nbStore(nb, true);
+        if (!nbStore(nb, true)) flash('nb-status', "⚠️ This browser won't keep a notebook (storage is full or off).");
         if (nbView.last) renderLast(nb);
     });
 
@@ -750,7 +750,7 @@ function setupNotebook() {
             const v = nbText(box.value, NB_LIMITS.notes);
             if (k === 'dm' && !v) delete entry.dm;
             else entry[k] = v;
-            if (!nbStore(nb, true)) flash('nb-status', "⚠️ This browser won't keep a notebook (storage is off).");
+            if (!nbStore(nb, true)) flash('nb-status', "⚠️ This browser won't keep a notebook (storage is full or off).");
             else if (k === 'notes' && nbView.players) renderPlayers(nb);
         }, 400);
     });

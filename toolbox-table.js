@@ -181,7 +181,12 @@ function loadFight() {
 }
 
 function saveFight() {
-    try { localStorage.setItem(INIT_KEY, JSON.stringify(fight)); } catch (e) {}
+    try {
+        localStorage.setItem(INIT_KEY, JSON.stringify(fight));
+    } catch (e) {
+        // After the caller's own message ("rolls in", "takes 5"), so this one stays on screen.
+        queueMicrotask(() => flash('init-status', "⚠️ This browser wouldn't save the fight (storage full or blocked). A refresh will lose this change."));
+    }
     postPlayerView();
 }
 

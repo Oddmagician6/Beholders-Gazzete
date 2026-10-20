@@ -187,7 +187,10 @@ function loadPicks() {
 }
 
 function savePicks() {
-    try { localStorage.setItem(PICKS_KEY, JSON.stringify(picks)); } catch (e) {}
+    try { localStorage.setItem(PICKS_KEY, JSON.stringify(picks)); } catch (e) {
+        // After the caller's own message ("➕ Orc ×1"), so this one stays on screen.
+        queueMicrotask(() => bstFlash("⚠️ This browser wouldn't save the encounter list (storage full or blocked)."));
+    }
 }
 
 function addPick(id) {

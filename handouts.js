@@ -27,7 +27,10 @@ function hoLoad() {
 }
 
 function hoSave() {
-    try { localStorage.setItem(HO_KEY, JSON.stringify(ho)); } catch (e) { /* storage off: the page still works */ }
+    try { localStorage.setItem(HO_KEY, JSON.stringify(ho)); } catch (e) {
+        // The page still works; say the typing won't survive a refresh (after any message of the caller's).
+        queueMicrotask(() => hoFlash("⚠️ This browser wouldn't save your handouts (storage full or blocked)."));
+    }
 }
 
 const hoForm = () => ho.forms[ho.t];

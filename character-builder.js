@@ -866,7 +866,7 @@ function addToParty() {
     if (at >= 0) party[at] = { ...row, live: party[at].live };
     else if (party.length >= PARTY_MAX) { flash(`The party already has ${PARTY_MAX} characters. Remove one on the Toolbox's Party tab.`, true); return; }
     else party.push(row);
-    saveParty(party);
+    if (!saveParty(party)) { flash("Could not add to the party: this browser's storage is full or blocked.", true); return; }
     flash(at >= 0 ? '👥 Updated this character in the party.' : '👥 Added to the party (Toolbox → Party).');
 }
 

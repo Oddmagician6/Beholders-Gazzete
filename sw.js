@@ -8,7 +8,7 @@
 // Cache keys drop the query string (?seed=, ?t=, ?id= ...): pages rebuild their state from the URL.
 // Links use clean addresses (about, a/<id>); keyFor maps each one to its file's key (about.html).
 
-const VERSION = '76eb29f126fd';
+const VERSION = '233a4cfb261c';
 const STATIC = 'gazette-static-' + VERSION;
 const PAGES = 'gazette-pages';
 const FONTS = 'gazette-fonts';
@@ -33,11 +33,18 @@ const PRECACHE = [
 // Written by export-tools.ps1.
 const TAB_HUBS = {"tavern-name-generator.html":"toolbox.html","dnd-tavern-generator.html":"toolbox.html","dnd-side-quest-generator.html":"toolbox.html","dnd-travel-weather-generator.html":"toolbox.html","dnd-dice-roller.html":"toolbox.html","random-table-roller.html":"toolbox.html","dnd-party-tracker.html":"toolbox.html","dnd-encounter-builder.html":"toolbox.html","dnd-initiative-tracker.html":"toolbox.html","progress-clocks.html":"toolbox.html","dnd-loot-splitter.html":"toolbox.html","dnd-downtime-tracker.html":"toolbox.html","fantasy-calendar-generator.html":"worldbuilder.html","dnd-pantheon-generator.html":"worldbuilder.html","dnd-faction-generator.html":"worldbuilder.html","fantasy-history-generator.html":"worldbuilder.html","dnd-town-generator.html":"worldbuilder.html","fantasy-family-tree-generator.html":"worldbuilder.html","dnd-dungeon-generator.html":"worldbuilder.html","fantasy-map-generator.html":"worldbuilder.html","dnd-campaign-map.html":"worldbuilder.html","dnd-campaign-notebook.html":"worldbuilder.html","npc-relationship-web.html":"worldbuilder.html"};
 
+// The Worldbuilder's map art (illustrated maps and coats of arms, img/map): too big to precache for
+// every visitor, so a Worldbuilder page asks for it ('cache-map-art') and it's saved in the background
+// into ART. After that its maps draw offline too. Written by export-pages.ps1.
+const MAP_ART = ['img/map/door/iron-door.webp', 'img/map/door/portcullis.webp', 'img/map/door/spiral-stairs.webp', 'img/map/door/stairs.webp', 'img/map/door/trapdoor.webp', 'img/map/door/wooden-door.webp', 'img/map/floor/bone.webp', 'img/map/floor/cave.webp', 'img/map/floor/dirt.webp', 'img/map/floor/flagstones.webp', 'img/map/floor/marble.webp', 'img/map/floor/mossy-cave.webp', 'img/map/floor/planks.webp', 'img/map/floor/temple-tiles.webp', 'img/map/floor/water.webp', 'img/map/heraldry/bear.webp', 'img/map/heraldry/bell.webp', 'img/map/heraldry/crescent-moon.webp', 'img/map/heraldry/crowned-lion.webp', 'img/map/heraldry/eagle.webp', 'img/map/heraldry/gauntlet.webp', 'img/map/heraldry/hammer.webp', 'img/map/heraldry/horse.webp', 'img/map/heraldry/key.webp', 'img/map/heraldry/lantern.webp', 'img/map/heraldry/oak.webp', 'img/map/heraldry/rose.webp', 'img/map/heraldry/serpent.webp', 'img/map/heraldry/ship.webp', 'img/map/heraldry/stag.webp', 'img/map/heraldry/sun.webp', 'img/map/heraldry/sword.webp', 'img/map/heraldry/three-stars.webp', 'img/map/heraldry/tower.webp', 'img/map/heraldry/wolf-head.webp', 'img/map/ornament/banner.webp', 'img/map/ornament/border-corner.webp', 'img/map/ornament/border-edge.webp', 'img/map/ornament/compass.webp', 'img/map/ornament/galley.webp', 'img/map/ornament/kraken.webp', 'img/map/ornament/sea-serpent.webp', 'img/map/ornament/ship.webp', 'img/map/ornament/whale.webp', 'img/map/ornament/wind-face.webp', 'img/map/parchment.webp', 'img/map/place/bandit-fort.webp', 'img/map/place/barrow.webp', 'img/map/place/capital-clans.webp', 'img/map/place/capital-empire.webp', 'img/map/place/capital-kingdom.webp', 'img/map/place/capital-league.webp', 'img/map/place/capital-magocracy.webp', 'img/map/place/capital-republic.webp', 'img/map/place/capital-theocracy.webp', 'img/map/place/city.webp', 'img/map/place/cursed-wood.webp', 'img/map/place/dragon-lair.webp', 'img/map/place/hamlet.webp', 'img/map/place/lost-mine.webp', 'img/map/place/metropolis.webp', 'img/map/place/port-city.webp', 'img/map/place/port-town.webp', 'img/map/place/ruined-keep.webp', 'img/map/place/sunken-temple.webp', 'img/map/place/town.webp', 'img/map/place/village.webp', 'img/map/place/wizard-tower.webp', 'img/map/prop/altar.webp', 'img/map/prop/barrels.webp', 'img/map/prop/bed.webp', 'img/map/prop/bedrolls.webp', 'img/map/prop/bone-pile.webp', 'img/map/prop/bookshelf.webp', 'img/map/prop/brazier.webp', 'img/map/prop/cage.webp', 'img/map/prop/campfire.webp', 'img/map/prop/cauldron.webp', 'img/map/prop/chest.webp', 'img/map/prop/coffin.webp', 'img/map/prop/crates.webp', 'img/map/prop/desk.webp', 'img/map/prop/fountain.webp', 'img/map/prop/magic-circle.webp', 'img/map/prop/mine-cart.webp', 'img/map/prop/pillar.webp', 'img/map/prop/rubble.webp', 'img/map/prop/rug.webp', 'img/map/prop/sarcophagus.webp', 'img/map/prop/spider-web.webp', 'img/map/prop/stalagmites.webp', 'img/map/prop/statue.webp', 'img/map/prop/table.webp', 'img/map/prop/throne.webp', 'img/map/prop/treasure-hoard.webp', 'img/map/prop/weapon-rack.webp', 'img/map/prop/well.webp', 'img/map/sea.webp', 'img/map/shallows.webp', 'img/map/terrain/dunes-1.webp', 'img/map/terrain/dunes-2.webp', 'img/map/terrain/dunes-3.webp', 'img/map/terrain/dunes-4.webp', 'img/map/terrain/dunes-5.webp', 'img/map/terrain/dunes-6.webp', 'img/map/terrain/dunes-7.webp', 'img/map/terrain/dunes-8.webp', 'img/map/terrain/dunes-9.webp', 'img/map/terrain/grass-1.webp', 'img/map/terrain/grass-2.webp', 'img/map/terrain/grass-3.webp', 'img/map/terrain/grass-4.webp', 'img/map/terrain/grass-5.webp', 'img/map/terrain/grass-6.webp', 'img/map/terrain/grass-7.webp', 'img/map/terrain/grass-8.webp', 'img/map/terrain/grass-9.webp', 'img/map/terrain/hills-1.webp', 'img/map/terrain/hills-2.webp', 'img/map/terrain/hills-3.webp', 'img/map/terrain/hills-4.webp', 'img/map/terrain/hills-5.webp', 'img/map/terrain/hills-6.webp', 'img/map/terrain/hills-7.webp', 'img/map/terrain/hills-8.webp', 'img/map/terrain/hills-9.webp', 'img/map/terrain/jungle-1.webp', 'img/map/terrain/jungle-2.webp', 'img/map/terrain/jungle-3.webp', 'img/map/terrain/jungle-4.webp', 'img/map/terrain/jungle-5.webp', 'img/map/terrain/jungle-6.webp', 'img/map/terrain/jungle-7.webp', 'img/map/terrain/jungle-8.webp', 'img/map/terrain/jungle-9.webp', 'img/map/terrain/marsh-1.webp', 'img/map/terrain/marsh-2.webp', 'img/map/terrain/marsh-3.webp', 'img/map/terrain/marsh-4.webp', 'img/map/terrain/marsh-5.webp', 'img/map/terrain/marsh-6.webp', 'img/map/terrain/marsh-7.webp', 'img/map/terrain/marsh-8.webp', 'img/map/terrain/marsh-9.webp', 'img/map/terrain/mesas-1.webp', 'img/map/terrain/mesas-2.webp', 'img/map/terrain/mesas-3.webp', 'img/map/terrain/mesas-4.webp', 'img/map/terrain/mesas-5.webp', 'img/map/terrain/mesas-6.webp', 'img/map/terrain/mesas-7.webp', 'img/map/terrain/mesas-8.webp', 'img/map/terrain/mesas-9.webp', 'img/map/terrain/moor-1.webp', 'img/map/terrain/moor-2.webp', 'img/map/terrain/moor-3.webp', 'img/map/terrain/moor-4.webp', 'img/map/terrain/moor-5.webp', 'img/map/terrain/moor-6.webp', 'img/map/terrain/moor-7.webp', 'img/map/terrain/moor-8.webp', 'img/map/terrain/moor-9.webp', 'img/map/terrain/mountains-1.webp', 'img/map/terrain/mountains-2.webp', 'img/map/terrain/mountains-3.webp', 'img/map/terrain/mountains-4.webp', 'img/map/terrain/mountains-5.webp', 'img/map/terrain/mountains-6.webp', 'img/map/terrain/mountains-7.webp', 'img/map/terrain/mountains-8.webp', 'img/map/terrain/mountains-9.webp', 'img/map/terrain/oases-1.webp', 'img/map/terrain/oases-2.webp', 'img/map/terrain/oases-3.webp', 'img/map/terrain/oases-4.webp', 'img/map/terrain/oases-5.webp', 'img/map/terrain/oases-6.webp', 'img/map/terrain/pines-1.webp', 'img/map/terrain/pines-2.webp', 'img/map/terrain/pines-3.webp', 'img/map/terrain/pines-4.webp', 'img/map/terrain/pines-5.webp', 'img/map/terrain/pines-6.webp', 'img/map/terrain/pines-7.webp', 'img/map/terrain/pines-8.webp', 'img/map/terrain/pines-9.webp', 'img/map/terrain/snowy-mountains-1.webp', 'img/map/terrain/snowy-mountains-2.webp', 'img/map/terrain/snowy-mountains-3.webp', 'img/map/terrain/snowy-mountains-4.webp', 'img/map/terrain/snowy-mountains-5.webp', 'img/map/terrain/snowy-mountains-6.webp', 'img/map/terrain/snowy-mountains-7.webp', 'img/map/terrain/snowy-mountains-8.webp', 'img/map/terrain/snowy-mountains-9.webp', 'img/map/terrain/snowy-pines-1.webp', 'img/map/terrain/snowy-pines-2.webp', 'img/map/terrain/snowy-pines-3.webp', 'img/map/terrain/snowy-pines-4.webp', 'img/map/terrain/snowy-pines-5.webp', 'img/map/terrain/snowy-pines-6.webp', 'img/map/terrain/snowy-pines-7.webp', 'img/map/terrain/snowy-pines-8.webp', 'img/map/terrain/snowy-pines-9.webp', 'img/map/terrain/trees-1.webp', 'img/map/terrain/trees-2.webp', 'img/map/terrain/trees-3.webp', 'img/map/terrain/trees-4.webp', 'img/map/terrain/trees-5.webp', 'img/map/terrain/trees-6.webp', 'img/map/terrain/trees-7.webp', 'img/map/terrain/trees-8.webp', 'img/map/terrain/trees-9.webp', 'img/map/terrain/tundra-1.webp', 'img/map/terrain/tundra-2.webp', 'img/map/terrain/tundra-3.webp', 'img/map/terrain/tundra-4.webp', 'img/map/terrain/tundra-5.webp', 'img/map/terrain/tundra-6.webp', 'img/map/terrain/tundra-7.webp', 'img/map/terrain/tundra-8.webp', 'img/map/terrain/tundra-9.webp', 'img/map/terrain/volcanoes-1.webp', 'img/map/terrain/volcanoes-2.webp', 'img/map/terrain/volcanoes-3.webp', 'img/map/terrain/volcanoes-4.webp', 'img/map/terrain/volcanoes-5.webp', 'img/map/terrain/volcanoes-6.webp'];
+const ART = 'gazette-map-art';
+
 // Network-first, but seeded on install so the homepage and Town Crier work on a first offline visit
 const SEED = ['index.html', 'articles.json', 'glossary.json'];
 
 const BASE = new URL('./', self.location).href;
 const STATIC_URLS = new Set(PRECACHE.map(p => BASE + p));
+const ART_URLS = new Set(MAP_ART.map(p => BASE + p));
 
 function keyFor(url) {
   const u = new URL(url);
@@ -63,7 +70,7 @@ self.addEventListener('install', event => {
 
 self.addEventListener('activate', event => {
   event.waitUntil((async () => {
-    const keep = [STATIC, PAGES, FONTS];
+    const keep = [STATIC, PAGES, FONTS, ART];
     for (const name of await caches.keys()) {
       if (name.startsWith('gazette-') && !keep.includes(name)) await caches.delete(name);
     }
@@ -98,7 +105,8 @@ async function cacheFirst(req, key) {
 async function networkFirst(req, key) {
   try {
     const res = await fetchWithTimeout(req, 6000);
-    if (res.ok) (await caches.open(PAGES)).put(key, res.clone());
+    // Map art the Worldbuilder saved stays in ART, so that copy is the one kept fresh.
+    if (res.ok) (await caches.open(ART_URLS.has(key) ? ART : PAGES)).put(key, res.clone());
     return res;
   } catch (err) {
     const hit = await caches.match(key);
@@ -130,6 +138,30 @@ async function staleWhileRevalidate(req, cacheName) {
     return res;
   }).catch(() => hit);
   return hit || net;
+}
+
+// A Worldbuilder page asked for the map art: fetch what ART doesn't have yet, and drop what the
+// site no longer has. Stops quietly when the connection does.
+self.addEventListener('message', event => {
+  if (event.data === 'cache-map-art') event.waitUntil(cacheMapArt());
+});
+
+async function cacheMapArt() {
+  const cache = await caches.open(ART);
+  const have = new Set();
+  for (const req of await cache.keys()) {
+    if (ART_URLS.has(req.url)) have.add(req.url);
+    else await cache.delete(req);
+  }
+  for (const url of ART_URLS) {
+    if (have.has(url)) continue;
+    try {
+      const res = await fetch(url);
+      if (res.ok) await cache.put(url, res);
+    } catch (e) {
+      return;
+    }
+  }
 }
 
 function offlinePage() {

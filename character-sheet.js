@@ -64,7 +64,12 @@ function save() {
     const list = cbSave(cur);
     if (!list) { flash('Could not save: this browser\'s storage is full or blocked.', true); return; }
     chars = list;
-    partyPushLive(cur.id, cbPartyLive(cur));
+    pushLive();
+}
+
+// Sends the sheet's state to the DM's tools, and says so when the browser won't store it.
+function pushLive() {
+    if (partyPushLive(cur.id, cbPartyLive(cur)) === null) flash("The DM's tools couldn't be updated: this browser's storage is full.", true);
 }
 
 // Adds the character to the party (or updates its row), like the Builder's 👥 Add to Party.
@@ -75,8 +80,8 @@ function addToParty() {
     if (at >= 0) party[at] = row;
     else if (party.length >= PARTY_MAX) { flash(`The party already has ${PARTY_MAX} characters. Remove one on the Toolbox's Party tab.`, true); return; }
     else party.push(row);
-    saveParty(party);
-    partyPushLive(cur.id, cbPartyLive(cur));
+    if (!saveParty(party)) { flash("Could not add to the party: this browser's storage is full or blocked.", true); return; }
+    pushLive();
     renderBar();
     flash("👥 In the party. The Toolbox's Party tab and Initiative tracker follow this sheet in this browser.");
 }
@@ -426,7 +431,7 @@ function openChar(c) {
         const before = JSON.stringify(cur.play);
         cbPlayFit(cur);
         if (JSON.stringify(cur.play) !== before) save();
-        else partyPushLive(cur.id, cbPartyLive(cur));
+        else pushLive();
         try { history.replaceState(null, '', location.pathname + '?char=' + encodeURIComponent(cur.id)); } catch (e) {}
     }
     render();

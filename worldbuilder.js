@@ -143,7 +143,7 @@ function saveWorldTab(tab, statusId) {
     if (!t.rolled()) return;
     if (t.save) { t.save(statusId); return; }
     const r = nbAdd({ kind: tab, ...t.entry(), href: 'worldbuilder?' + paramsQuery(t.params()) });
-    if (!r) flash(statusId, "⚠️ This browser won't keep a notebook (storage is off).");
+    if (!r) flash(statusId, "⚠️ This browser won't keep a notebook (storage is full or off).");
     else if (r.full) flash(statusId, '⚠️ The notebook is full. Remove an entry first.');
     else if (r.existed) flash(statusId, '📓 This one is already in the notebook.');
     else flash(statusId, `📓 Saved to the notebook${r.linked ? `, linked to ${r.linked} saved ${r.linked === 1 ? 'entry' : 'entries'}` : ''}.`);
@@ -168,4 +168,10 @@ document.addEventListener('DOMContentLoaded', () => {
     applyWorldUrl();
     // Back/Forward step through earlier rolls.
     window.addEventListener('popstate', applyWorldUrl);
+});
+
+// Offline maps: once the page has loaded, the service worker (sw.js) saves the map art in the background.
+window.addEventListener('load', () => {
+    if (!('serviceWorker' in navigator) || !navigator.onLine) return;
+    navigator.serviceWorker.ready.then(reg => { if (reg.active) reg.active.postMessage('cache-map-art'); }).catch(() => {});
 });

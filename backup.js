@@ -107,8 +107,13 @@ const BACKUP_KEYS = [
     },
     {
         key: 'gazette-bestiary-picks', tool: '🐉 Bestiary', href: 'bestiary', what: 'Encounter list',
-        clean: v => bkItems(v, p => bkObj(p) && typeof p.id === 'string' && /^[a-z0-9-]{1,60}$/.test(p.id), 60),
-        count: v => bkN(v.reduce((n, p) => n + Math.max(1, Math.round(Number(p.count)) || 1), 0), 'monster')
+        // Counts as bestiary.js keeps them: 12 kinds (PICKS_MAX), 1 to 40 of each (PICK_MAX_COUNT).
+        clean: v => {
+            const r = bkItems(v, p => bkObj(p) && typeof p.id === 'string' && /^[a-z0-9-]{1,60}$/.test(p.id), 12);
+            r.value = r.value.map(p => ({ ...p, count: Math.min(40, Math.max(1, Math.round(Number(p.count)) || 1)) }));
+            return r;
+        },
+        count: v => bkN(v.reduce((n, p) => n + p.count, 0), 'monster')
     },
     {
         key: 'gazette-initiative', tool: '🧰 DM Toolbox', href: 'toolbox?tab=init', what: 'Initiative tracker',

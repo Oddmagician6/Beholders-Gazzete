@@ -226,7 +226,7 @@ function contEditPins(fn, quiet = false) {
     if (!e) {
         const r = nbAdd({ kind: 'continent', ...WORLD_TABS.continent.entry(), href: 'worldbuilder?' + paramsQuery(contParams()) });
         if (!r || r.full) {
-            flash('cont-status', r ? '⚠️ The notebook is full, and pins are kept there. Remove an entry first.' : "⚠️ This browser won't keep a notebook (storage is off), so it can't keep pins.");
+            flash('cont-status', r ? '⚠️ The notebook is full, and pins are kept there. Remove an entry first.' : "⚠️ This browser won't keep a notebook (storage is full or off), so it can't keep pins.");
             return false;
         }
         nb = nbLoad();
@@ -237,7 +237,7 @@ function contEditPins(fn, quiet = false) {
     const pins = (e.pins || []).map(p => ({ ...p }));
     if (fn(pins) === false) return false;
     nbSetPins(e, pins, new Set(nb.entries.map(x => x.id)));
-    if (!nbStore(nb, quiet)) { flash('cont-status', "⚠️ This browser won't keep a notebook (storage is off), so it can't keep pins."); return false; }
+    if (!nbStore(nb, quiet)) { flash('cont-status', "⚠️ This browser won't keep a notebook (storage is full or off), so it can't keep pins."); return false; }
     if (filed) flash('cont-status', '📓 This map is in the notebook now, so its pins come back whenever you open it.');
     return true;
 }

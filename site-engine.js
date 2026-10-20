@@ -970,7 +970,7 @@ function siteMapSvg(s, title, opts = {}) {
         if (art) {
             const d = Math.min(c.w, c.h);
             const drawn = shape === 'circle' ? { ...c, w: d, h: d } : c;
-            props += siteArtProps(s, i, drawn, p, shape !== 'rect').map(q => siteArtImg(`prop/${q.file}`, q.x, q.y, q.w, q.h)).join('');
+            props += siteArtProps(s, i, drawn, p, shape !== 'rect').map(q => siteArtImg(q.file === 'trapdoor' ? 'door/trapdoor' : `prop/${q.file}`, q.x, q.y, q.w, q.h)).join('');
         }
         if (!nums) return;
         const r = s.rooms[i];

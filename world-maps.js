@@ -169,6 +169,13 @@ function renderMaps(nb = nbLoad()) {
             <div class="um-print" aria-hidden="true"></div>
             <div class="wb-pins"></div>
         </section>`;
+    // A stored picture the browser can't draw (a damaged store): say so instead of showing an empty frame.
+    card.querySelector('.um-img').addEventListener('error', () => {
+        const note = document.createElement('div');
+        note.className = 'um-empty';
+        note.innerHTML = '<p>🖼️ This map\'s picture can\'t be opened in this browser.</p><p class="wb-small">Press 🔁 Replace Picture to upload it again. Its pins stay where they are.</p>';
+        card.querySelector('.um-wrap').before(note);
+    }, { once: true });
     mapsState.view.vw = 0;
     mapsSize();
     mapsBoard.render(nb);
@@ -416,7 +423,7 @@ function mapsEditPins(fn, quiet = false) {
     const pins = (e.pins || []).map(p => ({ ...p }));
     if (fn(pins) === false) return false;
     nbSetPins(e, pins, new Set(nb.entries.map(x => x.id)));
-    if (!nbStore(nb, quiet)) { flash('maps-status', "⚠️ This browser won't keep a notebook (storage is off), so it can't keep pins."); return false; }
+    if (!nbStore(nb, quiet)) { flash('maps-status', "⚠️ This browser won't keep a notebook (storage is full or off), so it can't keep pins."); return false; }
     return true;
 }
 
@@ -482,7 +489,7 @@ async function mapsUpload(file, replace = false) {
     if (!id || !nbStore(now)) {
         mapsState.recs.delete(rec.id);
         mapDelete(rec.id).catch(() => {});
-        flash('maps-status', id ? "⚠️ This browser won't keep a notebook (storage is off)." : '⚠️ The notebook is full. Remove an entry first.');
+        flash('maps-status', id ? "⚠️ This browser won't keep a notebook (storage is full or off)." : '⚠️ The notebook is full. Remove an entry first.');
         return;
     }
     mapsShow(id, true);
@@ -508,7 +515,7 @@ function mapsDeleteMap() {
     nbRemove(nb, e.id);
     // Out of the list first, so the redraw doesn't show it as a picture without a map.
     mapsState.recs.delete(e.id);
-    if (!nbStore(nb)) { flash('maps-status', "⚠️ This browser won't keep a notebook (storage is off)."); mapsReload(); return; }
+    if (!nbStore(nb)) { flash('maps-status', "⚠️ This browser won't keep a notebook (storage is full or off)."); mapsReload(); return; }
     mapDelete(e.id).catch(() => {});
     mapsShow('', false);
     flash('maps-status', `🗑️ ${e.title} is deleted: its picture, pins, and notes.`);
@@ -524,7 +531,7 @@ function mapsOrphansBack() {
         if (got !== r.id) mapPut({ ...r, id: got }).then(() => mapDelete(r.id)).catch(() => {});
         id = id || got;
     }
-    if (!nbStore(nb)) { flash('maps-status', "⚠️ This browser won't keep a notebook (storage is off)."); return; }
+    if (!nbStore(nb)) { flash('maps-status', "⚠️ This browser won't keep a notebook (storage is full or off)."); return; }
     mapsReload().then(() => { if (id) mapsShow(id, true); });
     flash('maps-status', id ? '📓 Back in the notebook.' : '⚠️ The notebook is full. Remove an entry first.');
 }
@@ -629,7 +636,7 @@ function setupMaps() {
             const nb = nbLoad(), e = mapsEntry(nb);
             if (!e) return;
             e.title = nbText(name.value, NB_LIMITS.title) || 'My map';
-            if (!nbStore(nb, true)) { flash('maps-status', "⚠️ This browser won't keep a notebook (storage is off)."); return; }
+            if (!nbStore(nb, true)) { flash('maps-status', "⚠️ This browser won't keep a notebook (storage is full or off)."); return; }
             const opt = document.querySelector(`#maps-pick option[value="${e.id}"]`);
             if (opt) opt.textContent = e.title + (mapsState.recs.has(e.id) ? '' : ' (no picture here)');
             const h = card.querySelector('.wb-name');

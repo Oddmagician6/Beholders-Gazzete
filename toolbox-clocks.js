@@ -38,7 +38,9 @@ function loadClocks() {
 }
 
 function saveClocks() {
-    try { localStorage.setItem(CLOCKS_KEY, JSON.stringify(clocks)); } catch (e) {}
+    try { localStorage.setItem(CLOCKS_KEY, JSON.stringify(clocks)); } catch (e) {
+        flash('clocks-status', "⚠️ This browser wouldn't save the clocks (storage full or blocked).");
+    }
 }
 
 // ── Drawing ───────────────────────────────────────────────

@@ -135,7 +135,7 @@ function saveQuestToNotebook() {
         giver: [g.name, g.profession].filter(Boolean).join(', '),
         reward: `${formatCoins(q.reward.gp)} for the party. ${questRewardText(q.reward)}`
     });
-    if (!r) flash('quest-status', "⚠️ This browser won't keep a notebook (storage is off).");
+    if (!r) flash('quest-status', "⚠️ This browser won't keep a notebook (storage is full or off).");
     else if (r.full) flash('quest-status', '⚠️ The notebook is full. Remove an entry first.');
     else if (r.existed) flash('quest-status', '📓 This quest is already in the notebook.');
     else flash('quest-status', '📓 Saved to the notebook as an open quest. Track it on the Worldbuilder\'s Notebook tab.');

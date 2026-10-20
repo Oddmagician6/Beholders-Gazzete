@@ -125,7 +125,7 @@ function famEdit(fn, quiet = false) {
         const r = nbAdd({ kind: 'family', title: famState.roll.fam.name, sub: famSummary(famState.roll.fam), href: famHref(), fam: famState.roll.fam });
         famState.filing = false;
         if (!r || r.full) {
-            flash('fam-status', r ? '⚠️ The notebook is full, and your changes are kept there. Remove an entry first.' : "⚠️ This browser won't keep a notebook (storage is off), so it can't keep your changes.");
+            flash('fam-status', r ? '⚠️ The notebook is full, and your changes are kept there. Remove an entry first.' : "⚠️ This browser won't keep a notebook (storage is full or off), so it can't keep your changes.");
             return false;
         }
         nb = nbLoad();
@@ -144,7 +144,7 @@ function famEdit(fn, quiet = false) {
     if (e.title === e.fam.name && clean.name !== e.fam.name) e.title = nbText(clean.name, NB_LIMITS.title) || e.title;
     e.fam = clean;
     e.sub = nbText(famSummary(clean), NB_LIMITS.sub);
-    if (!nbStore(nb, quiet)) { flash('fam-status', "⚠️ This browser won't keep a notebook (storage is off), so it can't keep your changes."); return false; }
+    if (!nbStore(nb, quiet)) { flash('fam-status', "⚠️ This browser won't keep a notebook (storage is full or off), so it can't keep your changes."); return false; }
     if (filed) flash('fam-status', '📓 This family is in your notebook now. Open this link again and your changes come back.');
     return true;
 }
@@ -391,7 +391,7 @@ function famSaveNpc() {
     const p = fam && famPerson(fam, famState.sel);
     if (!p || !p.npc) return;
     const r = nbAdd({ kind: 'npc', title: p.name, sub: `${famCapital(p.race)}${p.title ? ', ' + p.title : ''}, of ${fam.name}`, href: 'npc-generator?' + p.npc });
-    if (!r || r.full) { flash('fam-status', r ? '⚠️ The notebook is full. Remove an entry first.' : "⚠️ This browser won't keep a notebook (storage is off)."); return; }
+    if (!r || r.full) { flash('fam-status', r ? '⚠️ The notebook is full. Remove an entry first.' : "⚠️ This browser won't keep a notebook (storage is full or off)."); return; }
     if (famEdit(f => { const q = famPerson(f, p.id); if (!q) return false; q.to = r.entry.id; }))
         flash('fam-status', `📓 ${p.name} is ${r.existed ? 'already' : 'now'} in the notebook, linked to this family.`);
 }
@@ -415,7 +415,7 @@ function famBack() {
 function famStartBlank() {
     const fam = famBlank(document.getElementById('fam-race').value);
     const r = nbAdd({ kind: 'family', title: fam.name, sub: famSummary(fam), href: '', fam });
-    if (!r || r.full) { flash('fam-status', r ? '⚠️ The notebook is full. Remove an entry first.' : "⚠️ This browser won't keep a notebook (storage is off), and a family made by hand lives there."); return; }
+    if (!r || r.full) { flash('fam-status', r ? '⚠️ The notebook is full. Remove an entry first.' : "⚠️ This browser won't keep a notebook (storage is full or off), and a family made by hand lives there."); return; }
     famState = { ...famState, entry: r.entry.id, seed: null, roll: null, root: null, from: {}, sel: fam.top, removing: '', backing: false };
     renderFamily();
     setUrlParams(famParams(), true);
@@ -428,7 +428,7 @@ function famSave(statusId) {
     if (!famState.roll) return;
     const fam = famState.roll.fam;
     const r = nbAdd({ kind: 'family', title: fam.name, sub: famSummary(fam), href: famHref(), fam });
-    if (!r) flash(statusId, "⚠️ This browser won't keep a notebook (storage is off).");
+    if (!r) flash(statusId, "⚠️ This browser won't keep a notebook (storage is full or off).");
     else if (r.full) flash(statusId, '⚠️ The notebook is full. Remove an entry first.');
     else flash(statusId, `📓 Saved to the notebook${r.linked ? `, linked to ${r.linked} saved ${r.linked === 1 ? 'entry' : 'entries'}` : ''}.`);
 }

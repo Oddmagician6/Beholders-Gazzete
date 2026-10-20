@@ -68,7 +68,7 @@ function renderPartySum() {
 }
 
 function partySave() {
-    saveParty(party);
+    if (!saveParty(party)) flash('party-status', "⚠️ This browser wouldn't save the party (storage full or blocked).");
 }
 
 function partyIndex(el) {

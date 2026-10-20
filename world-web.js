@@ -352,7 +352,7 @@ function webMoveNode(id, x, y) {
 function webKeepPlaced(id) {
     webState.fixed.add(id);
     webState.nodeEls.get(id).classList.add('wg-fixed');
-    if (!webSaveStore(webState.pos, webState.fixed, new Set(webState.entries.keys()), webState.loose)) flash('web-status', "⚠️ This browser won't keep the layout (storage is off).");
+    if (!webSaveStore(webState.pos, webState.fixed, new Set(webState.entries.keys()), webState.loose)) flash('web-status', "⚠️ This browser won't keep the layout (storage is full or off).");
 }
 
 function setupWebView(view) {
