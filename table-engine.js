@@ -190,6 +190,8 @@ async function tablesFromShareCode(code) {
         .map(r => (Array.isArray(r) ? tableClean({ name: r[0], src: r[1], die: r[2] }) : null))
         .filter(Boolean);
     list.forEach(t => { if (!t.name) t.name = 'Shared table'; });
-    if (!list.length) throw broken;
-    return list;
+    // One table to a name, as tablesWithRefs makes them ([[Name]] rolls the first anyway).
+    const named = list.filter((t, i) => list.findIndex(o => tableKey(o.name) === tableKey(t.name)) === i);
+    if (!named.length) throw broken;
+    return named;
 }

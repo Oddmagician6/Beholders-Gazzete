@@ -504,7 +504,7 @@ const npcData = {
         "Is a priest who lost their faith years ago", "Has a second family in the next town", "Is apprenticed to a hag",
         "Accidentally let something loose at {place}", "Murdered their business partner and took the shop", "Started the fire everyone blamed on lightning",
         "Sells news of the town to a dragon", "Knows who poisoned the town well", "Isn't the race they claim to be; it's an illusion",
-        "Is wanted for treason in their homeland", "Still collects a pension for a {kin} who died years ago", "Hid a body under {place}",
+        "Is wanted for treason in their homeland", "Still collects a pension for their {kin}, who died years ago", "Hid a body under {place}",
         "Was a famous hero's sidekick and got written out of the songs", "Has won the harvest contest six years running by cheating", "Has the real {thing} and sold everyone forgeries",
         "Gambled away their {kin}'s inheritance", "Serves a vampire by night and remembers nothing by day", "Works as a fence for the thieves' guild",
         "Is the missing heir to a cult's leadership", "Is cursed to tell only the truth under a full moon", "Talks to the dead, who talk back",
@@ -520,7 +520,7 @@ const npcData = {
     // QUEST HOOKS
     questHooks: [
         "Needs escort to the next town (dangerous road)", "Lost a family heirloom in a dungeon", "Being followed by mysterious figures",
-        "Received a threatening letter", "A {kin} has gone missing", "Business being sabotaged", "Cursed and needs it lifted",
+        "Received a threatening letter", "Their {kin} has gone missing", "Business being sabotaged", "Cursed and needs it lifted",
         "Witnessed something they shouldn't have", "Needs protection for an important delivery", "Someone is impersonating them",
         "Has information that could start a war", "Owes a debt to a crime lord", "Found a map but can't read it",
         "Dreams are coming true (literally)", "Item they sold is now needed back", "Someone knows their secret",

@@ -378,7 +378,13 @@ const NAME_TABLES = {
             return `The ${noun} ${prep} ${setting}`;
         } },
         { weight: 3, make: (t) => counted(t) },
-        { weight: 2, make: (t) => `${randomArray(NAME_TABLES.pairs)} ${randomArray(t.places)}` },
+        { weight: 2, make: (t) => {
+            const pair = randomArray(NAME_TABLES.pairs);
+            let place = randomArray(t.places);
+            // Never a word twice in a row (High & Dry Dry Dock).
+            for (let k = 0; k < 5 && place.split(' ')[0] === pair.split(' ').pop(); k++) place = randomArray(t.places);
+            return `${pair} ${place}`;
+        } },
         { weight: 1, make: (t) => `Ye Olde ${randomArray(t.nouns)} ${randomArray(t.places)}` },
         { weight: 5, pun: true, make: (t) => randomArray(t.puns) }
     ]

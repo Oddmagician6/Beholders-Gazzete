@@ -28,7 +28,7 @@
    Your own maps (F54) are kind 'map': uploaded on the Maps tab, so no link; the picture lives in
    IndexedDB under the entry's id (map-store.js), and the entry keeps the name, notes, and pins.
    Family trees (F55) are kind 'family', with the whole family in `fam` (family-tree.js, cleaned by
-   famClean, which every page that loads this file loads too). A rolled family keeps its roll's link
+   famClean; a page without it, like an article or the DM Screen, passes `fam` through untouched). A rolled family keeps its roll's link
    as well, so the Families tab finds it again; a family started by hand has no link. Its people may
    point at NPC entries (`to`), kept to entries that exist like pins.
    An article's "Use This in My Campaign" box (F69) saves a quest whose link is the article (a/<id>),

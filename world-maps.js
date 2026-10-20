@@ -13,6 +13,8 @@
    ============================================ */
 
 const MAPS_PIN_R = 10;   // a pin head's radius on screen, in pixels
+// Room kept around the picture in the view, so a pin on its edge shows its whole head (pinSvg draws it 3.3 r above the point).
+const MAPS_INSET = { t: Math.ceil(MAPS_PIN_R * 3.3) + 2, x: MAPS_PIN_R + 2, b: 2 };
 
 const mapsState = {
     db: null,          // true once IndexedDB answered, false when it won't
@@ -200,7 +202,8 @@ function mapsEls() {
 
 function mapsFitK() {
     const rec = mapsRec(), v = mapsState.view;
-    return rec && v.vw && v.vh ? Math.min(v.vw / rec.w, v.vh / rec.h) : 1;
+    const I = MAPS_INSET;
+    return rec && v.vw && v.vh ? Math.max(1e-3, Math.min((v.vw - 2 * I.x) / rec.w, (v.vh - I.t - I.b) / rec.h)) : 1;
 }
 
 function mapsLimits() {
@@ -208,14 +211,16 @@ function mapsLimits() {
     return { min: fit, max: Math.max(fit * 8, 2) };
 }
 
-// Keep the picture on screen: centered on an axis where it's smaller than the view, edge to edge where it's bigger.
+// Keep the picture on screen: centered on an axis where it's smaller than the view, edge to edge
+// (less the room for pin heads, MAPS_INSET) where it's bigger.
 function mapsClamp() {
-    const rec = mapsRec(), v = mapsState.view;
+    const rec = mapsRec(), v = mapsState.view, I = MAPS_INSET;
     const lim = mapsLimits();
     v.k = Math.min(lim.max, Math.max(lim.min, v.k));
     const sw = rec.w * v.k, sh = rec.h * v.k;
-    v.x = sw <= v.vw ? (v.vw - sw) / 2 : Math.min(0, Math.max(v.vw - sw, v.x));
-    v.y = sh <= v.vh ? (v.vh - sh) / 2 : Math.min(0, Math.max(v.vh - sh, v.y));
+    const aw = v.vw - 2 * I.x, ah = v.vh - I.t - I.b;
+    v.x = sw <= aw ? I.x + (aw - sw) / 2 : Math.min(I.x, Math.max(v.vw - I.x - sw, v.x));
+    v.y = sh <= ah ? I.t + (ah - sh) / 2 : Math.min(I.t, Math.max(v.vh - I.b - sh, v.y));
 }
 
 function mapsApply() {

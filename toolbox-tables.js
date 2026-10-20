@@ -54,8 +54,11 @@ const TABLE_EXAMPLES = [
 ];
 
 // ── Data ──────────────────────────────────────────────────
+// Several tables can be added in the same millisecond (the examples, a shared link's set), so an id is checked against the list.
 function newTableId() {
-    return Date.now().toString(36) + Math.floor(Math.random() * 1296).toString(36);
+    let id;
+    do id = Date.now().toString(36) + Math.floor(Math.random() * 1296).toString(36); while (tables.some(t => t.id === id));
+    return id;
 }
 
 function cleanStoredTable(t) {

@@ -60,7 +60,7 @@ const QUEST_PLACES = [
     ["a giant's abandoned kitchen", "Kitchen", ["giant", "beast", "swarm"]],
     ["the riverboat moored at the dead dock", "Riverboat", ["humanoid", "undead", "beast"]],
     ["the old prison on the island", "Prison", ["humanoid", "undead", "construct"]],
-    ["a volcanic vent the locals pray to", "Vent", ["elemental", "dragon", "monstrosity"]],
+    ["a volcanic vent the locals worship", "Vent", ["elemental", "dragon", "monstrosity"]],
     ["gallows hill at the crossroads", "Gallows", ["undead", "fiend", "humanoid"]],
     ["a halfling burrow-village gone suspiciously quiet", "Burrows", ["monstrosity", "beast", "fey"]],
     ["the royal menagerie after closing", "Menagerie", ["beast", "monstrosity"]],

@@ -37,6 +37,39 @@ function mapMb(bytes) {
     return `${mb < 10 ? mb.toFixed(1) : Math.round(mb)} MB`;
 }
 
+// The width and height a picture's header gives (PNG IHDR, a JPEG frame, WebP's VP8X/VP8/VP8L), or null.
+// Checked before decoding, so a picture too big to decode is called too big, not damaged.
+function mapHeaderSize(b, type) {
+    const u16 = i => (b[i] << 8) | b[i + 1], u32 = i => ((b[i] << 24) >>> 0) + (b[i + 1] << 16) + (b[i + 2] << 8) + b[i + 3];
+    const le24 = i => b[i] | (b[i + 1] << 8) | (b[i + 2] << 16);
+    if (type === 'image/png') return b.length >= 24 ? { w: u32(16), h: u32(20) } : null;
+    if (type === 'image/webp') {
+        const kind = String.fromCharCode(...b.slice(12, 16));
+        if (kind === 'VP8X' && b.length >= 30) return { w: le24(24) + 1, h: le24(27) + 1 };
+        if (kind === 'VP8 ' && b.length >= 30) return { w: (b[26] | (b[27] << 8)) & 0x3fff, h: (b[28] | (b[29] << 8)) & 0x3fff };
+        if (kind === 'VP8L' && b.length >= 25) return { w: 1 + (b[21] | ((b[22] & 0x3f) << 8)), h: 1 + ((b[22] >> 6) | (b[23] << 2) | ((b[24] & 0x0f) << 10)) };
+        return null;
+    }
+    // JPEG: walk the markers to the first start-of-frame (C0–CF, but not C4, C8, or CC).
+    for (let i = 2; i + 9 < b.length;) {
+        if (b[i] !== 0xFF) return null;
+        const m = b[i + 1];
+        if (m === 0xFF) { i++; continue; }
+        if (m >= 0xC0 && m <= 0xCF && m !== 0xC4 && m !== 0xC8 && m !== 0xCC) return { w: u16(i + 7), h: u16(i + 5) };
+        if (m === 0xD8 || (m >= 0xD0 && m <= 0xD7) || m === 0x01) { i += 2; continue; }
+        i += 2 + u16(i + 2);
+    }
+    return null;
+}
+
+function mapTooBig(size) {
+    return size.w > MAP_LIMITS.side || size.h > MAP_LIMITS.side || size.w * size.h > MAP_LIMITS.pixels;
+}
+
+function mapTooBigError(size) {
+    return new Error(`That picture is ${size.w.toLocaleString('en-US')} × ${size.h.toLocaleString('en-US')} pixels, too big to pan and zoom smoothly. Export it at up to ${MAP_LIMITS.side.toLocaleString('en-US')} pixels a side and 100 million pixels in all.`);
+}
+
 // The picture's width and height, or null when the browser can't draw it.
 async function mapDecodeSize(blob) {
     if (typeof createImageBitmap === 'function') {
@@ -64,14 +97,15 @@ async function mapDecodeSize(blob) {
 async function mapCheck(blob) {
     if (!(blob instanceof Blob) || !blob.size) throw new Error("That file is empty.");
     if (blob.size > MAP_LIMITS.bytes) throw new Error(`That picture is ${mapMb(blob.size)}. A map can be ${mapMb(MAP_LIMITS.bytes)} at most: export it smaller, or as a JPEG or WebP.`);
-    const type = mapSniff(new Uint8Array(await blob.slice(0, 16).arrayBuffer()));
+    const head = new Uint8Array(await blob.slice(0, 65536).arrayBuffer());
+    const type = mapSniff(head);
     if (!type) throw new Error("That isn't a PNG, JPEG, or WebP picture, so it can't be a map here.");
+    const said = mapHeaderSize(head, type);
+    if (said && mapTooBig(said)) throw mapTooBigError(said);
     const clean = new Blob([blob], { type });
     const size = await mapDecodeSize(clean);
     if (!size || !size.w || !size.h) throw new Error("This browser couldn't open that picture. It may be damaged.");
-    if (size.w > MAP_LIMITS.side || size.h > MAP_LIMITS.side || size.w * size.h > MAP_LIMITS.pixels) {
-        throw new Error(`That picture is ${size.w.toLocaleString('en-US')} × ${size.h.toLocaleString('en-US')} pixels, too big to pan and zoom smoothly. Export it at up to ${MAP_LIMITS.side.toLocaleString('en-US')} pixels a side and 100 million pixels in all.`);
-    }
+    if (mapTooBig(size)) throw mapTooBigError(size);
     return { blob: clean, type, w: size.w, h: size.h, size: clean.size };
 }
 

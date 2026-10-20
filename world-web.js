@@ -16,7 +16,7 @@
 
 const webState = {
     drawn: false, graph: null, entries: new Map(), pos: {}, fixed: new Set(), loose: [], adj: new Map(),
-    hidden: new Set(), lines: { link: true, pin: true, family: true }, loose: true, q: '',
+    hidden: new Set(), lines: { link: true, pin: true, family: true }, showLoose: true, q: '',
     sel: null, hover: null, restarting: false,
     nodeEls: new Map(), edgeEls: new Map(), on: [], bounds: null,
     view: { x: 0, y: 0, k: 1, vw: 0, vh: 0, fit: true }
@@ -80,7 +80,7 @@ function webVisible() {
     let nodes = g.nodes.filter(nd => !webState.hidden.has(nd.kind));
     const on = new Set(nodes.map(nd => nd.id));
     const edges = g.edges.filter(ed => on.has(ed.a) && on.has(ed.b) && webEdgeType(ed, webState.lines));
-    if (!webState.loose) {
+    if (!webState.showLoose) {
         const tied = new Set(edges.flatMap(ed => [ed.a, ed.b]));
         nodes = nodes.filter(nd => tied.has(nd.id));
     }
@@ -529,12 +529,15 @@ function setupWeb() {
         webState.view.fit = true;
         renderWeb();
     });
+    // Start from the boxes as they are (a reload can bring back an unticked one).
+    Object.keys(WEB_EDGE_TYPES).forEach(t => { webState.lines[t] = document.getElementById('web-l-' + t).checked; });
+    webState.showLoose = document.getElementById('web-loose').checked;
     Object.keys(WEB_EDGE_TYPES).forEach(t => document.getElementById('web-l-' + t).addEventListener('change', ev => {
         webState.lines[t] = ev.target.checked;
         renderWeb();
     }));
     document.getElementById('web-loose').addEventListener('change', ev => {
-        webState.loose = ev.target.checked;
+        webState.showLoose = ev.target.checked;
         webState.view.fit = true;
         renderWeb();
     });

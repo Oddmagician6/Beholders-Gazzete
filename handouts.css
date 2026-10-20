@@ -65,7 +65,7 @@
 .ho-letter p { margin: 0 0 0.8em; }
 .ho-letter-to { font-style: italic; }
 .ho-letter-re { font-family: var(--font-head); font-size: 0.8rem; letter-spacing: 0.06em; border-bottom: 1px solid var(--ho-line); padding-bottom: 6px; }
-.ho-letter-sign { margin: 1.4em 0 0 auto; width: max-content; max-width: 70%; text-align: left; }
+.ho-letter-sign { margin: 1.4em 0 0 auto; width: fit-content; max-width: 70%; text-align: left; }
 .ho-letter-sign p { margin: 0; }
 .ho-letter-close { font-style: italic; }
 .ho-letter-from { font-family: var(--font-display); font-size: 1.35rem; margin-top: 4px !important; color: var(--ho-dark); }

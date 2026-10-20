@@ -178,9 +178,10 @@ function initBody(ctx) {
     const f = ctx.fight();
     const links = '<p class="ds-links"><a href="toolbox?tab=init">⚔️ Open the tracker</a> <a href="player-view" target="gazette-player-view">📺 Players\' initiative</a></p>';
     const blank = `<table class="ds-print-only ds-grid-table"><thead><tr><th>Init</th><th>Name</th><th>HP</th><th>Conditions</th></tr></thead><tbody>${'<tr><td></td><td></td><td></td><td></td></tr>'.repeat(10)}</tbody></table>`;
-    if (!f.list.length) return `<p class="ds-faint">No fight yet. Add combatants on the Toolbox's Initiative tab, and they show up here.</p>${blank}${links}`;
-    const turn = f.list.some(c => c.id === f.turn) ? f.turn : null;
-    const rows = f.list.filter(c => c && typeof c.name === 'string').slice(0, 40).map(c => {
+    const list = f.list.filter(c => c && typeof c.name === 'string').slice(0, 40);
+    if (!list.length) return `<p class="ds-faint">No fight yet. Add combatants on the Toolbox's Initiative tab, and they show up here.</p>${blank}${links}`;
+    const turn = list.some(c => c.id === f.turn) ? f.turn : null;
+    const rows = list.map(c => {
         const hp = typeof c.hp === 'number' ? `${c.hp}${typeof c.max === 'number' ? `/${c.max}` : ''}${c.temp > 0 ? ` +${Math.round(c.temp)}` : ''}` : '';
         const health = initHealth(c);
         const conds = Array.isArray(c.conds) ? c.conds.filter(x => typeof x === 'string').slice(0, 15) : [];
@@ -341,6 +342,26 @@ function renderTypes(...types) {
         if (el && el.contains(document.activeElement) && document.activeElement.matches('input, textarea, select')) return;
         renderCard(c.id);
     });
+}
+
+// Redraw the whole board, putting the box being typed in back as it was (its text, cursor, and scroll).
+function renderBoardKeepingFocus() {
+    const el = document.activeElement;
+    const cardEl = el && el.closest('.ds-card');
+    const sel = cardEl && el.matches('input, textarea') && (el.dataset.field ? `[data-field="${el.dataset.field}"]` : el.name ? `[name="${el.name}"]` : '');
+    if (!sel) { renderBoard(); return; }
+    const keep = { value: el.value, start: el.selectionStart, end: el.selectionEnd, scroll: el.scrollTop };
+    renderBoard();
+    const again = document.querySelector(`.ds-card[data-card="${cardEl.dataset.card}"] ${sel}`);
+    if (!again) return;
+    again.focus({ preventScroll: true });
+    // The other tab saved before this one's last keystroke: keep the keystroke.
+    if (again.value !== keep.value) {
+        again.value = keep.value;
+        again.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+    try { again.setSelectionRange(keep.start, keep.end); } catch (e) {}
+    again.scrollTop = keep.scroll;
 }
 
 // Stat blocks and spell text load the first time a stat block card is on the board.
@@ -733,9 +754,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Another tab changed a tool these cards read (or this screen itself).
     window.addEventListener('storage', e => {
         if (e.key === DS_KEY || e.key === null) {
-            const typing = document.activeElement && document.activeElement.matches('.ds-card input, .ds-card textarea');
             ds = dsLoad();
-            if (!typing) renderBoard(); else renderBar();
+            renderBoardKeepingFocus();
             return;
         }
         if (e.key === CLOCKS_KEY) renderTypes('clock');
