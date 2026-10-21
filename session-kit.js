@@ -91,7 +91,7 @@ function rollKitLoot(seed = newSeed()) {
 
 function rollKitShop(seed = newSeed()) {
     kit.seeds.shop = seed;
-    kit.shop = withSeed(seed, () => rollShop({ type: opt('shop-type'), wealth: opt('shop-wealth') }));
+    kit.shop = withSeed(seed, () => rollShop({ type: opt('shop-type'), wealth: opt('shop-wealth'), seed }));
 }
 
 const ROLLERS = { crier: rollCrier, rumor: rollRumor, npc: rollKitNPC, loot: rollKitLoot, shop: rollKitShop };
@@ -380,6 +380,7 @@ function copyKit() {
 // ── Init ──────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('year').textContent = new Date().getFullYear();
+    fillShopTypePicker(document.getElementById('shop-type'));
     loadKit();
     setupParty();
 

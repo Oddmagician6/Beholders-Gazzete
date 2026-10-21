@@ -456,9 +456,10 @@ function twoDifferent(list) {
 // A name reads wrong when a word repeats ("The Anvil Anvil", "Golden Gold Crown", "Bookworm Books").
 function repeatsWord(name) {
     const words = name.toLowerCase().replace(/[^a-z' -]/g, '').split(/[\s-]+/)
-        .filter(w => w.length > 3 && !['the', 'and'].includes(w))
-        .map(w => w.replace(/'s$/, '').replace(/(ies|es|s)$/, ''));
-    return words.some((w, i) => words.some((v, j) => i !== j && v.length >= 4 && w.startsWith(v)));
+        .filter(w => w.length > 2 && !['the', 'and'].includes(w))
+        .map(w => w.length > 3 ? w.replace(/'s$/, '').replace(/(ies|es|s)$/, '') : w);
+    // A shared stem of 4+ letters, or the same short word twice ("The Ink Ink").
+    return words.some((w, i) => words.some((v, j) => i !== j && (v.length >= 4 ? w.startsWith(v) : w === v)));
 }
 
 // A shop name for a type ('blacksmith', 'alchemist', …). owner is optional (first name).

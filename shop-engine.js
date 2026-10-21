@@ -160,8 +160,171 @@ const SHOP_TYPES = {
         exclude: [],
         count: [8, 13],
         greetings: ["Sailing or sinking? I stock for both.", "Rope's by the fathom. Advice is free and usually wrong.", "The tide waits for no one. Neither do I. Make it quick.", "If it floats, I sell it. If it doesn't, I sell it cheaper."]
+    },
+    // The newer types (E8). A random roll lands on one of them through shopMoreType, under its own seed.
+    // art: a stand-in picture under img/ until the type has its own img/shop/<type>.webp.
+    tavern: {
+        label: 'Taproom & Cellar', icon: '🍺', art: 'tavern/tavern-inn',
+        keepers: ['Innkeeper', 'Tapster', 'Cellarman', 'Barkeep'],
+        categories: [],
+        ids: ['ale-gallon', 'wine-bottle', 'wine-fine-bottle', 'flask-or-tankard', 'jug-or-pitcher', 'bread-loaf', 'cheese-wedge', 'meat-chunk', 'rations-1-day',
+              'candle', 'blanket', 'bedroll', 'dice-set', 'playing-card-set', 'barrel', 'waterskin', 'stabling-per-day', 'feed-per-day'],
+        exclude: [],
+        count: [7, 11],
+        greetings: ["Drinking or sleeping? Both is fine. Both at once is extra.", "Barrels by the gallon, bottles by the bottle, regrets by the morning.", "We sell it to take away. Bring the jug back or I charge for the jug.", "The cellar's cool, the ale's cooler, and the cellarman is the coolest of all. He's a ghost.", "Room's upstairs. Lock's on the inside. Mostly.", "If it's wet and it's not water, I have it."]
+    },
+    bakery: {
+        label: 'Bakery', icon: '🥖', art: 'shop/provisioner',
+        keepers: ['Baker', 'Pastry Cook', "Baker's Widow", 'Miller'],
+        categories: [],
+        ids: ['bread-loaf', 'flour-pound', 'sugar-pound', 'salt-pound', 'spices-pound', 'cheese-wedge', 'rations-1-day', 'basket', 'sack',
+              'cook-s-utensils', 'mess-kit', 'pot-iron', 'jug-or-pitcher', 'wood-cord'],
+        exclude: [],
+        count: [6, 10],
+        greetings: ["Mind the oven door. It bites harder than I do.", "Yesterday's loaves at half price. Last week's are for throwing at goblins.", "Up before the sun every day of my life. Don't ask me anything complicated.", "Flour on your boots means you've been somewhere good.", "Pies are fresh. The pie with the cross on it is for the baron. Don't touch the baron's pie.", "Waybread? No. Way-better-bread, yes."]
+    },
+    butcher: {
+        label: 'Butcher & Smokehouse', icon: '🥩', art: 'shop/provisioner',
+        keepers: ['Butcher', 'Smokehouse Keeper', 'Slaughterman', 'Sausage Maker'],
+        categories: [],
+        ids: ['meat-chunk', 'chicken', 'fish-fresh', 'salt-pound', 'spices-pound', 'rations-1-day', 'fur-pelt', 'leather-square-yard', 'hunting-trap',
+              'sack', 'barrel', 'dagger', 'handaxe', 'cook-s-utensils', 'pot-iron', 'soap', 'candle'],
+        exclude: [],
+        count: [7, 11],
+        greetings: ["Everything's fresh except the jokes.", "Don't mind the cleaver. It's for the meat. Usually.", "Smoked, salted, or still kicking. Your choice.", "I'll take any beast you bring me, as long as it stays dead.", "Every sausage has a secret. Mine's mostly pig.", "Wipe your hands before you shake mine. Actually, don't shake mine."]
+    },
+    brewery: {
+        label: 'Brewer & Vintner', icon: '🍷', art: 'tavern/brewhouse',
+        keepers: ['Brewer', 'Vintner', 'Distiller', 'Meadmaker'],
+        categories: [],
+        ids: ['ale-gallon', 'wine-bottle', 'wine-fine-bottle', 'brewer-s-supplies', 'barrel', 'bottle-glass', 'jug-or-pitcher', 'flask-or-tankard',
+              'grain-bushel', 'sugar-pound', 'spices-pound', 'vial', 'waterskin', 'glassblower-s-tools'],
+        exclude: [],
+        count: [6, 10],
+        greetings: ["Tasting's free. Standing up afterward is your problem.", "This one's a good year. That one was a bad year, but it's a great wine.", "The vats are bubbling. That's normal. The singing isn't.", "We age it in oak. The oak was not consulted.", "Buy a barrel and I'll throw in the hangover.", "Keep it out of the sun and away from dwarves."]
+    },
+    carpenter: {
+        label: 'Carpenter & Cooper', icon: '🪚', art: 'shop/tinker',
+        keepers: ['Carpenter', 'Cooper', 'Joiner', 'Cartwright'],
+        categories: [],
+        ids: ['carpenter-s-tools', 'woodcarver-s-tools', 'wood-cord', 'barrel', 'chest', 'ladder-10-foot', 'pole-10-foot', 'bucket', 'quarterstaff',
+              'club', 'greatclub', 'shield', 'cart', 'sled', 'land-vehicle', 'ram-portable', 'hammer', 'basket'],
+        exclude: [],
+        count: [7, 11],
+        greetings: ["Measure twice, cut once, charge three times.", "Mind the sawdust. It gets everywhere. I've found it in my soup.", "Every barrel's watertight. I sat in one in the river to prove it.", "Oak for strength, pine for price, ash for the fellow who can't decide.", "That's not a coffin. That's a long chest. Don't ask who ordered it.", "Splinters are free with every purchase."]
+    },
+    mason: {
+        label: 'Stonemason & Builder', icon: '🧱', art: 'shop/blacksmith',
+        keepers: ['Stonemason', 'Master Builder', 'Quarryman', 'Bricklayer'],
+        categories: [],
+        ids: ['mason-s-tools', 'potter-s-tools', 'hammer', 'hammer-sledge', 'pick-miner-s', 'chalk-1-piece', 'shovel', 'block-and-tackle', 'crowbar',
+              'ladder-10-foot', 'bucket', 'spikes-iron-10', 'rope-hempen-50-feet', 'piton', 'iron-pound'],
+        exclude: [],
+        count: [6, 10],
+        greetings: ["Stone lasts forever. My invoices too.", "That wall's been standing three hundred years. I built the bit that's leaning.", "Mind the gargoyle. It's a commission, and it's being difficult.", "If you want it done fast, hire a carpenter.", "Dwarves say my work is acceptable. That's the highest praise there is.", "Every tower starts with one stone. Most of them end with a lawsuit."]
+    },
+    cartographer: {
+        label: 'Cartographer & Guide', icon: '🗺️', art: 'shop/scribe',
+        keepers: ['Cartographer', 'Mapmaker', 'Guide', 'Surveyor'],
+        categories: [],
+        ids: ['cartographer-s-tools', 'navigation-tools', 'case-map-or-scroll', 'paper-sheet', 'parchment-sheet', 'ink-1-ounce-bottle', 'ink-pen', 'spyglass',
+              'hourglass', 'magnifying-glass', 'signal-whistle', 'tent-two-person', 'bedroll', 'climber-s-kit', 'rations-1-day', 'waterskin', 'lantern-hooded', 'book'],
+        exclude: [],
+        count: [7, 11],
+        greetings: ["Where are you going? No, really, where? Most people point vaguely.", "Every map is right. The land just keeps changing.", "The blank bits are the interesting bits. They cost extra.", "Here be dragons. I checked. Personally.", "North is up. That's the only promise I make.", "That road's on the map, but I'd go around it."]
+    },
+    moneychanger: {
+        label: 'Moneylender & Bank', icon: '🏦', art: 'shop/jeweler',
+        keepers: ['Moneychanger', 'Moneylender', 'Banker', 'Clerk of the Counting House'],
+        categories: [],
+        ids: ['gold-pound', 'silver-pound', 'platinum-pound', 'copper-pound', 'gemstones-100gp', 'gemstones-500gp', 'gemstones-1000gp', 'scale-merchant-s',
+              'abacus', 'chest', 'lock', 'signet-ring', 'pouch', 'sealing-wax', 'art-object-25gp', 'art-object-250gp'],
+        exclude: [],
+        count: [5, 9],
+        greetings: ["Every coin is weighed, bitten, and remembered.", "Borrowing? Splendid. Paying back? We'll see.", "Interest is a tenth a month. Disinterest is free.", "Your money is safe here. Safer than you, frankly.", "We change any coin of the realm, and a few from realms that no longer exist.", "Sign here, here, and in blood here. Just a joke. Ink will do."]
+    },
+    herbalist: {
+        label: 'Herbalist & Healer', icon: '🌿', art: 'shop/alchemist',
+        keepers: ['Herbalist', 'Hedge Healer', 'Wise Woman', 'Root Doctor'],
+        categories: [],
+        ids: ['herbalism-kit', 'healer-s-kit', 'medicine-kit', 'antitoxin-vial', 'antidote', 'potion-of-healing', 'potion-of-animal-friendship',
+              'restorative-ointment', 'spices-pound', 'soap', 'vial', 'basket', 'perfume-vial', 'candle', 'blanket'],
+        exclude: [],
+        count: [6, 10],
+        greetings: ["Sit. Stick out your tongue. Hm. I've seen worse. Not often.", "Willow bark for the head, mint for the stomach, nothing for bad decisions.", "Everything here grows wild. Some of it grows wilder than it should.", "Don't eat the purple ones raw. Don't eat the purple ones cooked either.", "I don't do curses. I do the rash a curse leaves behind.", "Drink it all, and don't make that face."]
+    },
+    barber: {
+        label: 'Barber-Surgeon & Bathhouse', icon: '💈', art: 'tavern/temple-hostel',
+        keepers: ['Barber', 'Barber-Surgeon', 'Bathhouse Keeper', 'Tooth-Puller'],
+        categories: [],
+        ids: ['healer-s-kit', 'medicine-kit', 'soap', 'perfume-vial', 'mirror-steel', 'potion-of-healing', 'antitoxin-vial', 'whetstone', 'blanket',
+              'robes', 'bucket', 'vial', 'dagger'],
+        exclude: [],
+        count: [5, 9],
+        greetings: ["Shave, haircut, or a leg off? The chair's the same for all three.", "Hold still. The razor's sharp and so am I.", "The bath's hot, the towels are clean, and the leeches are hungry.", "Every tooth I pull, I keep. Don't ask to see the jar.", "You've got a twig in your beard and a story in your eyes. Sit down.", "I used to cut for an army. Customers here complain less."]
+    },
+    gambling: {
+        label: 'Gambling Den', icon: '🎲', art: 'tavern/gambling-hall',
+        keepers: ['Dealer', 'House Boss', 'Croupier', 'Bookmaker'],
+        categories: [],
+        ids: ['dice-set', 'playing-card-set', 'ale-gallon', 'wine-bottle', 'wine-fine-bottle', 'flask-or-tankard', 'signet-ring', 'disguise-kit',
+              'art-object-25gp', 'gemstones-100gp', 'stone-of-good-luck', 'clothes-fine', 'perfume-vial', 'candle'],
+        exclude: [],
+        count: [5, 9],
+        greetings: ["The house always wins. The house is very proud of that.", "Cards or dice? Dice are honest. The cards are honest-ish.", "First drink's free. The second costs you the first.", "No spells at the tables. The last wizard who tried is still a frog.", "Feeling lucky? Good. We sell luck too, in a pouch, no refunds.", "Leave your weapons at the door. Leave your sense at the door as well."]
+    },
+    theater: {
+        label: 'Playhouse & Theater', icon: '🎭', art: 'tavern/festhall',
+        keepers: ['Impresario', 'Stage Manager', 'Playwright', 'Costumer'],
+        categories: [],
+        ids: ['clothes-costume', 'clothes-fine', 'disguise-kit', 'painter-s-supplies', 'perfume-vial', 'mirror-steel', 'candle', 'lamp', 'book',
+              'paper-sheet', 'ink-1-ounce-bottle', 'ink-pen', 'bell', 'hat-of-disguise', 'wine-bottle'],
+        exclude: [],
+        count: [5, 9],
+        greetings: ["Tickets? Costumes? Autographs? The lead is in, but she's in a mood.", "Tonight's play is a tragedy. So are our finances.", "Everything you see here has been worn by a king. Several kings, in several plays.", "Don't say the name of the play in the green room. You know which one.", "Every seat has a view. Some of them have a view of a pillar.", "The ghost in the rafters is part of the show. We think."]
+    },
+    tattoo: {
+        label: 'Tattooist & Inkwright', icon: '🖋️', art: 'tavern/cellar-bar',
+        keepers: ['Tattooist', 'Inkwright', 'Needle Artist', 'Rune Carver'],
+        categories: [],
+        ids: ['ink-1-ounce-bottle', 'ink-pen', 'painter-s-supplies', 'calligrapher-s-supplies', 'healer-s-kit', 'soap', 'mirror-steel', 'candle',
+              'vial', 'whetstone', 'perfume-vial', 'paper-sheet'],
+        exclude: [],
+        count: [5, 8],
+        greetings: ["Pick a picture off the wall, or tell me your sins and I'll draw one.", "It only hurts while I'm working. And after. And when it rains.", "Spell your mother's name for me. Twice. Slowly.", "I don't do faces. I did one face once. Never again.", "Ink's from a giant squid. It won't fade, and neither will the smell.", "Every mark means something. That one means you lost a bet."]
+    },
+    guild: {
+        label: 'Guildhall & Mercenaries', icon: '🛡️', art: 'tavern/dwarven-alehall',
+        keepers: ['Guildmaster', 'Quartermaster', 'Mercenary Captain', 'Guild Clerk'],
+        categories: [],
+        ids: ['rations-1-day', 'bedroll', 'tent-two-person', 'backpack', 'rope-hempen-50-feet', 'torch', 'healer-s-kit', 'shield', 'spear', 'crossbow-light',
+              'crossbow-bolts-20', 'chain-shirt', 'manacles', 'signal-whistle', 'climber-s-kit', 'caltrops', 'potion-of-healing', 'whetstone'],
+        exclude: [],
+        count: [7, 11],
+        greetings: ["Hiring or for hire? Sign the book either way.", "Every blade here has a contract. Read yours before it reads you.", "The board's full of jobs. The ones with blood on the corner pay best.", "Members get a discount. Nonmembers get a lecture.", "We don't ask who you're fighting. We ask how many.", "Dues are due. Dues are always due."]
+    },
+    monster: {
+        label: 'Monster Parts Dealer', icon: '🦴', art: 'shop/curio',
+        keepers: ['Monster Parts Dealer', 'Trophy Hunter', 'Taxidermist', 'Beast Butcher'],
+        categories: [],
+        ids: ['dragon-scale', 'phoenix-feather', 'unicorn-horn', 'fur-pelt', 'leather-square-yard', 'poison-basic-vial', 'antitoxin-vial', 'acid-flask',
+              'hunting-trap', 'net', 'manacles', 'chain-10-feet', 'vial', 'bottle-glass', 'potion-of-climbing', 'potion-of-animal-friendship', 'alchemist-s-supplies'],
+        exclude: [],
+        count: [6, 10],
+        greetings: ["Fresh off the beast, or as fresh as I could carry it.", "That jar is watching you. It does that. It's only an eye now.", "Owlbear feathers, troll teeth, mimic tongue. The tongue still twitches. Bonus.", "Everything's dead. I check twice. Trolls get checked three times.", "Bring me a head and I'll pay you. Bring me a whole one and I'll pay you more.", "Don't touch the stinger. That's not a warning, that's a price list."]
     }
 };
+
+// The types a random roll drew from before E8; shopMoreType may then swap in a newer one.
+const SHOP_TYPE_FIRST = ['general', 'blacksmith', 'bowyer', 'alchemist', 'arcane', 'stable', 'provisioner', 'tinker', 'curio', 'tailor', 'leatherworker', 'jeweler', 'scribe', 'temple', 'docks'];
+const SHOP_TYPE_MORE = Object.keys(SHOP_TYPES).filter(k => !SHOP_TYPE_FIRST.includes(k));
+
+// A random type: drawn from SHOP_TYPE_FIRST the way it always was, then, under its own seed (so the
+// keeper and stock draws don't move), it may give way to a newer type, each type as likely as any other.
+function shopMoreType(seed, drawn) {
+    const pick = () => rand() < SHOP_TYPE_MORE.length / (SHOP_TYPE_FIRST.length + SHOP_TYPE_MORE.length) ? randomArray(SHOP_TYPE_MORE) : drawn;
+    return seed ? withSeed(deriveSeed(seed, 'type.more'), pick) : pick();
+}
 
 // Wealth: how much stock, how pricey it may be (by base price), and the markup on market price.
 const SHOP_WEALTH = {
@@ -203,6 +366,18 @@ const SHOP_QUIRKS = [
     'The shopkeeper names every item they sell and says a quiet goodbye at the counter.'
 ];
 
+// The shop-type <select> on the shop page and the Session Kit, grouped the way the Names tab groups them.
+function fillShopTypePicker(sel) {
+    NAME_TABLES.groups.forEach(group => {
+        const og = document.createElement('optgroup');
+        og.label = group;
+        Object.entries(NAME_TABLES.types).forEach(([k, n]) => {
+            if (n.group === group && SHOP_TYPES[k]) og.appendChild(new Option(`${SHOP_TYPES[k].icon} ${SHOP_TYPES[k].label}`, k));
+        });
+        if (og.children.length) sel.appendChild(og);
+    });
+}
+
 // Quantity on hand: cheap things come in piles, expensive things one at a time.
 function shopQty(item) {
     if (item.category === 'magic-items' || item.category === 'mounts' || item.basePrice >= 200) return 1;
@@ -221,9 +396,9 @@ function shuffled(list) {
     return a;
 }
 
-// opts: { type, wealth }, each a key or 'random'
+// opts: { type, wealth }, each a key or 'random'; seed: the seed this roll runs under (for shopMoreType)
 function rollShop(opts = {}) {
-    const type = !opts.type || opts.type === 'random' ? randomArray(Object.keys(SHOP_TYPES)) : opts.type;
+    const type = !opts.type || opts.type === 'random' ? shopMoreType(opts.seed, randomArray(SHOP_TYPE_FIRST)) : opts.type;
     const wealth = !opts.wealth || opts.wealth === 'random' ? randomArray(Object.keys(SHOP_WEALTH)) : opts.wealth;
     const def = SHOP_TYPES[type], w = SHOP_WEALTH[wealth];
 
@@ -438,6 +613,96 @@ const SHOP_DETAILS = {
         services: [['Patch a sail', 1], ['Book passage on the next ship', 0.1, 'mile'], ['Hire a rowboat', 0.5, 'day'], ['Read the tide tables for you', 0.05]],
         buying: [['fresh fish', 0.05, 'fish', 50], ['ambergris', 50, 'lump', 2], ['sea serpent scales', 20, 'scale', 5]],
         jobs: ['A ship called the {name}\'s Luck came into port with no crew.', 'Something under the pier keeps cutting the mooring lines.', 'The keeper needs a crate smuggled past the harbormaster.']
+    },
+    tavern: {
+        inside: ['Barrels stand in a row behind the counter, each chalked with a name and a price.', 'Stairs lead down to a cellar that breathes cold air into the room.', 'A long bench by the fire holds three regulars who have not moved in hours.', 'Tankards hang from hooks over the bar, each with an owner\'s mark.'],
+        services: [['A bed for the night', 0.5, 'night'], ['A hot meal', 0.3], ['A hot bath', 0.1], ['Stabling and feed', 0.5, 'night'], ['Fill a waterskin with something better', 0.2]],
+        buying: [['honey for the mead', 0.5, 'jar', 6], ['good hops', 0.2, 'sack', 10], ['a barrel of dwarven stout', 25, 'barrel', 1]],
+        jobs: ['Something in the cellar drinks a barrel a night and leaves the tap running.', 'A regular called {name} ran up a tab of 40 gp and left town. The keeper wants it collected.', 'The brewer who supplies the house has started watering the ale, and the keeper wants to know why.', 'A guest checked in a week ago, never came down, and still answers through the door.']
+    },
+    bakery: {
+        inside: ['The ovens at the back glow red, and the whole shop smells of hot bread.', 'Loaves cool on racks that reach the ceiling.', 'A dusting of flour lies over everything, the keeper included.', 'A tray of honey cakes sits under a net to keep the flies and the children off.'],
+        services: [['Bake your own dough in the oven', 0.01, 'loaf'], ['Bake a celebration cake', 2], ['Pack trail bread for a journey', 0.1, 'day of food'], ['Bake a pie with something hidden inside', 1]],
+        buying: [['wheat flour', 0.01, 'lb', 100], ['eggs', 0.01, 'egg', 60], ['wild berries', 0.1, 'basket', 8], ['honey', 0.5, 'jar', 6]],
+        jobs: ['The mill upstream has stopped turning, and the flour has stopped coming.', 'Someone left a baby griffon on the doorstep, and it eats a sack of bread a day.', 'The keeper\'s secret recipe was stolen, and a rival is already selling the loaf.', 'Rats have moved into the flour store, and they are very large rats.']
+    },
+    butcher: {
+        inside: ['Sides of meat hang from hooks in the cold back room.', 'Smoke from the smokehouse drifts in through a hatch in the wall.', 'A chopping block in the middle of the shop is worn into a deep hollow.', 'Strings of sausages swing over the counter like bunting.'],
+        services: [['Butcher a carcass you bring in', 0.5], ['Smoke and salt your catch for the road', 0.5, 'animal'], ['Skin and dress a hide', 1], ['Deliver an order across town', 0.05]],
+        buying: [['fresh game', 0.5, 'animal', 6], ['wild boar', 3, 'boar', 2], ['giant crab', 5, 'crab', 2], ['owlbear meat', 10, 'owlbear', 1]],
+        jobs: ['Wolves have been taking the keeper\'s cattle from the pasture outside town.', 'A customer swears the last sausage tasted like a person, and the watch has questions.', 'The keeper wants a hunting party to bring back a giant boar for a lord\'s feast.', 'The smokehouse fire went out on its own three nights running, and the dog will not go near it.']
+    },
+    brewery: {
+        inside: ['Copper vats steam at the back, and the air is thick with the smell of mash.', 'Casks are racked three high, each chalked with a date.', 'A tasting table holds a row of little cups, all of them empty.', 'A cellar door stands open, and someone down there is singing.'],
+        services: [['A tasting flight', 0.1], ['Brew a batch to order', 5, 'barrel'], ['Store your barrels in the cellar', 0.1, 'barrel a week'], ['Bottle a special vintage with your name on it', 2]],
+        buying: [['barley', 0.5, 'bushel', 20], ['grapes', 0.1, 'basket', 20], ['wild honey', 0.5, 'jar', 10], ['fire beetle glands for the still', 2, 'gland', 6]],
+        jobs: ['The best barrel in the cellar has been tapped and refilled with water, twice.', 'A pixie has moved into the vineyard and is drinking the grapes before they are picked.', 'A noble ordered a hundred bottles for a wedding and wants them delivered past bandit country.', 'Something in the old cellar has started brewing on its own.']
+    },
+    carpenter: {
+        inside: ['Sawdust drifts in the sunlight, and the floor is soft with shavings.', 'Half-built barrels stand in a row, hoops waiting beside them.', 'A cart with three wheels waits by the door for its fourth.', 'Planks of oak and pine lean against every wall, sorted by some system only the keeper knows.'],
+        services: [['Mend a cart wheel', 1], ['Build a chest or crate to order', 2], ['Make a coffin', 5], ['Repair a door or shutters', 0.5], ['Fit a hidden compartment', 3]],
+        buying: [['seasoned oak', 1, 'plank', 20], ['old barrels', 0.5, 'barrel', 10], ['treant wood (offered freely)', 50, 'branch', 1]],
+        jobs: ['The timber yard outside town has gone quiet, and the last cart came back empty.', 'A noble ordered a cabinet with a secret drawer, and now the noble is missing.', 'Someone bought six coffins this week and paid in very old coins.', 'The keeper needs wood from a grove the druids say not to cut.']
+    },
+    mason: {
+        inside: ['Blocks of stone stand in the yard, each marked with chalk.', 'Grey dust covers everything, and the air tastes of it.', 'A half-carved gargoyle squats by the door, scowling.', 'Plans for a tower are pinned to the wall, with one floor crossed out in red.'],
+        services: [['Repair a wall or chimney', 2], ['Carve a gravestone', 5], ['Build a cellar or vault', 50, 'plus stone'], ['Set a trapped flagstone (no questions)', 25], ['Inspect a building for cracks', 0.5]],
+        buying: [['good stone', 0.1, 'block', 50], ['marble', 2, 'block', 10], ['earth elemental grit', 25, 'pouch', 2]],
+        jobs: ['The quarry crew struck an old door in the rock and refuses to open it.', 'A wall the keeper built last spring keeps falling down at night, and only at night.', 'The keeper needs someone to guard a stone shipment through goblin country.', 'A statue in the square moved between Monday and Tuesday, and the keeper carved it.']
+    },
+    cartographer: {
+        inside: ['Maps cover every wall, layered over one another like scales.', 'A great globe stands in the corner with a dent where somebody kicked it.', 'Rolled charts fill a rack of pigeonholes to the ceiling.', 'A table holds a half-finished map with one region left blank and a skull drawn in the middle.'],
+        services: [['A map of the local roads', 2], ['Hire a guide', 2, 'day'], ['Copy a map', 1], ['Plan a route and mark the dangers', 5], ['Find your way back to somewhere you lost', 10]],
+        buying: [['maps of far places', 5, 'map', 3], ['ship\'s logs', 2, 'log', 4], ['a map of the Underdark', 100, 'map', 1]],
+        jobs: ['A surveyor sent to chart the hills came back with a map of a valley that is not there.', 'The keeper wants the coast road charted, and nobody who went has come back.', 'A treasure map sold here last month led a party to their deaths, and their kin want answers.', 'Someone breaks in every night and changes one road on the master map.']
+    },
+    moneychanger: {
+        inside: ['Brass scales sit on the counter, with a row of weights beside them.', 'A clerk behind iron bars counts coins without looking at them.', 'Ledgers line a locked shelf, each with a name on the spine.', 'A heavy vault door at the back stands shut, with three different locks.'],
+        services: [['Change coin of the realm', 0, 'a tenth of the sum'], ['Store valuables in the vault', 1, 'month'], ['Write a letter of credit', 1, 'plus a hundredth of the sum'], ['Lend at interest', 0, 'a tenth a month'], ['Weigh and test a coin', 0.01]],
+        buying: [['foreign coins', 0, 'at their weight less a tenth', 0], ['gemstones', 0, 'at half their value', 0], ['ancient coins of a dead empire', 5, 'coin', 20]],
+        jobs: ['A borrower skipped town with 300 gp, and the keeper wants it back, with interest.', 'Someone has been passing coins that weigh true and turn to lead by morning.', 'The keeper needs a strongbox carried to a branch in the next city, quietly.', 'A vault box rented forty years ago has started knocking from the inside.']
+    },
+    herbalist: {
+        inside: ['Bundles of drying herbs hang from every beam.', 'A mortar and pestle sit on the counter, still green from the last batch.', 'Jars of roots and leaves line the shelves, each tagged in a tiny hand.', 'A cot by the stove holds a patient who waves weakly.'],
+        services: [['Treat a wound', 0.5], ['Cure a fever', 1], ['Mix a sleeping draught', 0.5], ['Sit with the sick through the night', 0.5, 'night'], ['Ease a hangover (no promises)', 0.1]],
+        buying: [['healing herbs', 0.2, 'bundle', 10], ['mandrake root', 5, 'root', 3], ['wolfsbane', 1, 'sprig', 6], ['dryad\'s moss', 20, 'pouch', 1]],
+        jobs: ['A sickness is spreading through the lower town, and the cure grows only on a hill full of goblins.', 'Someone has been picking the keeper\'s herb garden bare at night and leaving gold behind.', 'The keeper needs moonflowers picked at midnight from the old graveyard.', 'A patient left a sealed letter and died. The keeper wants it delivered.']
+    },
+    barber: {
+        inside: ['A striped pole turns slowly by the door.', 'Steam rolls out of the bathhouse at the back.', 'A jar of leeches on the counter is labeled "Fresh."', 'A row of chairs faces a long mirror, and every one of them is taken.'],
+        services: [['A shave', 0.02], ['A haircut', 0.05], ['A hot bath', 0.1], ['Pull a tooth', 0.2], ['Set a broken bone', 1], ['Bleed a fever with leeches', 0.5]],
+        buying: [['clean linen', 1, 'yard', 10], ['leeches', 0.01, 'leech', 50], ['good soap', 0.1, 'cake', 20]],
+        jobs: ['A customer came in for a shave and left without a reflection.', 'Someone keeps stealing the pulled teeth from the jar, and only the teeth.', 'The bathhouse water has started coming up warm on its own and smells of sulfur.', 'The keeper patched up a wounded stranger last night who paid with a stolen signet ring.']
+    },
+    gambling: {
+        inside: ['Smoke hangs over the tables, and every lamp is turned low.', 'A wheel of fortune stands by the far wall, its pointer chained in place.', 'A bouncer the size of a door watches every hand.', 'Dice rattle at a dozen tables, and somebody is always cheering.'],
+        services: [['A seat at the high table', 5], ['A seat at the low table', 0.1], ['A private room for your own game', 2, 'night'], ['A loan at the table', 0, 'a fifth on top, by morning'], ['Check a set of dice for weights', 0.5]],
+        buying: [['lucky charms', 1, 'charm', 10], ['IOUs from other dens', 0, 'at a third of their worth', 0], ['a marked deck that works', 20, 'deck', 1]],
+        jobs: ['A player has won every night for a week, and the house wants to know how.', 'Someone lost a deed to a manor at the table, and the manor turns out to be haunted.', 'The house needs a big winner walked safely home through a bad part of town.', 'A rival den is stealing customers with a game nobody can lose. Somebody always does.']
+    },
+    theater: {
+        inside: ['Painted scenery leans against the walls: a castle, a forest, a dragon\'s head.', 'Racks of costumes fill the back room in a riot of color.', 'Somebody on the stage is rehearsing the same line over and over.', 'A box office window has a sign that reads "Sold Out" no matter the night.'],
+        services: [['A ticket in the pit', 0.05], ['A ticket in a box', 1], ['Hire a troupe for a private show', 25], ['A song written about your deeds', 5], ['Lessons in stage fighting', 0.5, 'lesson']],
+        buying: [['fine old clothes', 1, 'outfit', 6], ['new plays', 10, 'play', 2], ['true tales of daring', 2, 'tale', 3]],
+        jobs: ['The leading actor has been threatened by a letter written in a dead playwright\'s hand.', 'Someone keeps changing the ending of tonight\'s play, and the audience loves it.', 'A prop sword from the costume racks turned out to be a real magic blade, and its owner wants it back.', 'The troupe needs guards for a tour through three towns that hate theater.']
+    },
+    tattoo: {
+        inside: ['Drawings of dragons, roses, and anchors paper every wall.', 'A single chair under a bright lamp waits at the back.', 'Needles soak in a jar of something that smells like strong spirits.', 'A book of designs lies open on the counter, some pages glued shut.'],
+        services: [['A small tattoo', 1], ['A large tattoo', 5], ['Cover up an old one', 3], ['A mark that glows faintly in the dark', 25], ['Ink a map onto your back', 10]],
+        buying: [['squid ink', 1, 'jar', 6], ['rare pigments', 5, 'pot', 4], ['a design from a far land', 2, 'drawing', 5]],
+        jobs: ['Everyone who got the keeper\'s new wolf design has started howling at the moon.', 'A customer wants the map on a dead pirate\'s back copied before the body is buried.', 'Someone has been tattooing a strange rune on sleeping drunks all over town.', 'The keeper inked a cult\'s mark by mistake, and now the cult wants to recruit the customer.']
+    },
+    guild: {
+        inside: ['A job board by the door is covered in notices, some with bounties pinned in coin.', 'Shields of old members hang along the walls, a few cracked down the middle.', 'A long table holds a ledger where every hire is signed for.', 'Mercenaries play cards in the corner and size up anyone who walks in.'],
+        services: [['Hire a guard', 2, 'day'], ['Hire a sellsword for a job', 5, 'day'], ['Post a job on the board', 1], ['Guild membership', 10, 'year'], ['Train with the guild sergeant', 1, 'day']],
+        buying: [['monster bounties (proof required)', 0, 'by the board\'s posted price', 0], ['captured weapons', 1, 'weapon', 10], ['a bandit chief\'s head', 50, 'head', 1]],
+        jobs: ['A whole company of the guild\'s mercenaries switched sides in the middle of a contract.', 'The guildmaster needs someone to collect dues from a member who has gone bandit.', 'A contract on the board pays well, and nobody who took it has come back.', 'Someone is forging guild seals and hiring out fake mercenaries.']
+    },
+    monster: {
+        inside: ['A stuffed owlbear stands rearing by the door, wearing a hat.', 'Jars of eyes, teeth, and stranger things fill the shelves, all labeled in red.', 'A wyvern\'s tail hangs over the counter with its stinger capped in a cork.', 'The back room smells like a dragon\'s lair, because some of it was one.'],
+        services: [['Identify what a part came from', 1], ['Skin and preserve a trophy', 5], ['Mount a head for your wall', 10], ['Harvest a carcass you bring in', 2, 'plus a cut'], ['Tell you what a beast is weak to', 2]],
+        buying: [['owlbear feathers', 2, 'feather', 10], ['troll teeth', 5, 'tooth', 6], ['basilisk eyes', 50, 'eye', 2], ['a mimic tongue', 25, 'tongue', 1], ['a dragon\'s heart', 500, 'heart', 1]],
+        jobs: ['A buyer wants a live displacer beast kitten and will pay 500 gp.', 'The keeper sold a "dead" troll arm last week, and it has since walked off.', 'Someone is poaching the keeper\'s hunting grounds and selling cheaper.', 'A crate of basilisk eyes went missing, and three customers have since turned to stone.']
     }
 };
 

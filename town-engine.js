@@ -610,12 +610,21 @@ function rollTown(seed, opts = {}) {
         return { seed: sub('tavern.' + k), quality: tier, district: Math.floor(rand() * nd) };
     }));
     t.shops = part(`shops.${size}.${setting}.${wealth}`, () => {
-        const types = Object.keys(SHOP_TYPES).filter(k => k !== 'docks' || ['river', 'coast', 'marsh'].includes(setting));
+        const types = SHOP_TYPE_FIRST.filter(k => k !== 'docks' || ['river', 'coast', 'marsh'].includes(setting));
         const n = townRange(z.shops);
         // The setting's favorites first, then a shuffled deck of the rest; a hamlet has only a general store.
         const order = size === 'hamlet' ? ['general'] : townShuffle(s.shops.filter(k => types.includes(k))).slice(0, 2)
             .concat(townShuffle(types.filter(k => !s.shops.includes(k))));
         return order.slice(0, n).map((type, k) => ({ seed: sub('shop.' + k), type, wealth: townWeighted(wl.shop), district: Math.floor(rand() * nd) }));
+    });
+    // The newer shop types (E8; not the taproom, a town has its taverns): past the setting's favorites,
+    // each shop may give way to one, by share, under its own seed.
+    if (size !== 'hamlet') part('shops.more', () => {
+        const more = SHOP_TYPE_MORE.filter(k => k !== 'tavern'), share = more.length / (SHOP_TYPE_FIRST.length + more.length);
+        t.shops.forEach(sh => {
+            const swap = rand() < share, pick = townShuffle(more.filter(m => !t.shops.some(o => o.type === m)))[0];
+            if (swap && pick && !s.shops.includes(sh.type)) sh.type = pick;
+        });
     });
 
     // Never fewer buildings than the ones described.

@@ -178,7 +178,7 @@ function handoutSource(src) {
         }
         if (src.from === 'shop') {
             const opts = { type: hoPick(p.get('type'), Object.keys(SHOP_TYPES)), wealth: hoPick(p.get('wealth'), Object.keys(SHOP_WEALTH)) };
-            const shop = { ...withSeed(src.seed, () => rollShop(opts)), seed: src.seed };
+            const shop = { ...withSeed(src.seed, () => rollShop({ ...opts, seed: src.seed })), seed: src.seed };
             return { ...src, shop, title: shop.name };
         }
     } catch (e) {

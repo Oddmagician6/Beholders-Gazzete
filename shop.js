@@ -111,7 +111,7 @@ function render() {
             <td class="num chg">${changeHTML(p.change)}</td>
         </tr>`).join('');
     const mins = Math.max(1, Math.round(msToNextPriceBell() / 60000));
-    const art = `img/shop/${shop.type}`;
+    const art = `img/${def.art || 'shop/' + shop.type}`;
     card.innerHTML = `<div class="shop-art" aria-hidden="true"><img src="${art}.webp" srcset="${art}-sm.webp 480w, ${art}.webp 960w" sizes="(max-width: 1000px) 100vw, 960px" alt="" width="960" height="640" decoding="async"></div>
         <header class="shop-sign">
             <div class="shop-sign-icon" aria-hidden="true">${def.icon}</div>
@@ -175,7 +175,7 @@ function applyUrl() {
     const sign = shopSign(p.get('name'));
     // Same shop as the saved one? Keep it, haggle and all.
     if (!(shop && shop.seed === seed && shop.rolledWith && shop.rolledWith.type === opts.type && shop.rolledWith.wealth === opts.wealth && (shop.sign || null) === sign)) {
-        shop = { ...withSeed(seed, () => rollShop(opts)), seed, rolledWith: opts };
+        shop = { ...withSeed(seed, () => rollShop({ ...opts, seed })), seed, rolledWith: opts };
         if (sign) { shop.name = sign; shop.sign = sign; }
     }
     return true;
@@ -191,7 +191,7 @@ function copyLink() {
 function roll(push = true) {
     const opts = { type: document.getElementById('shop-type').value, wealth: document.getElementById('shop-wealth').value };
     const seed = newSeed();
-    shop = { ...withSeed(seed, () => rollShop(opts)), seed, rolledWith: opts };
+    shop = { ...withSeed(seed, () => rollShop({ ...opts, seed })), seed, rolledWith: opts };
     render();
     saveShop();
     setUrlParams(shopParams(), push);
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('year').textContent = new Date().getFullYear();
 
     const typeSel = document.getElementById('shop-type');
-    Object.entries(SHOP_TYPES).forEach(([k, t]) => typeSel.add(new Option(`${t.icon} ${t.label}`, k)));
+    fillShopTypePicker(typeSel);
     const wealthSel = document.getElementById('shop-wealth');
     Object.entries(SHOP_WEALTH).forEach(([k, w]) => wealthSel.add(new Option(w.label, k)));
 
