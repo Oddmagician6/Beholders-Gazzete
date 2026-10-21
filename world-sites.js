@@ -3,7 +3,8 @@
    A keyed adventure site from site-engine.js (rollSite): its story, a map (SVG), and a
    key to every room (feature, foes, trap, exits), with the hoard in the last room. Each
    fight opens in the Toolbox's Encounter tab, and the hoard in the Loot generator.
-   The map downloads as a PNG battle map on a 5-foot grid (map-export.js).
+   The map downloads as a PNG battle map on a 5-foot grid (map-export.js), or opens in the
+   Battlemap Builder to finish by hand (battlemap-engine.js, loaded on the click).
    "Use the History tab's history" dates the site to one of its ages (the History tab's
    own "Explore a ruin from this age" picks the age). Nothing is stored: the URL holds it.
    Two map styles: 🎨 Illustrated (floors, furniture, and doors from img/map) and ✒️ Classic.
@@ -273,6 +274,26 @@ async function siteDownloadMap() {
         : '⚠️ This browser could not draw a map that big. Try fewer pixels per square.');
 }
 
+// ✏️ Edit in the Battlemap Builder: the map square by square (battlemap-engine.js bmFromSite),
+// sent as the builder's own share code, so it opens there as a new saved map.
+async function siteEditMap() {
+    const s = siteState.data;
+    const btn = document.getElementById('site-edit');
+    if (!s || btn.disabled) return;
+    btn.disabled = true;
+    try {
+        await worldScript('battlemap-engine.js');
+        const p = bmPack(bmFromSite(s, siteStyle()));
+        delete p.id;
+        delete p.t;
+        location.href = 'dnd-battlemap-builder?m=' + await packShareCode(p);
+    } catch (err) {
+        console.error(err);
+        btn.disabled = false;
+        siteStatus("⚠️ The Battlemap Builder didn't load. Check your connection and try again.");
+    }
+}
+
 function siteGoRoom(n) {
     const el = document.getElementById('site-r' + n);
     if (!el) return;
@@ -324,6 +345,9 @@ function setupSites() {
     });
     window.addEventListener('afterprint', () => document.body.classList.remove('print-site'));
     document.getElementById('site-png').addEventListener('click', siteDownloadMap);
+    document.getElementById('site-edit').addEventListener('click', siteEditMap);
+    // Back from the builder, the page may come out of the browser's cache with the button still off.
+    window.addEventListener('pageshow', () => { document.getElementById('site-edit').disabled = false; });
     document.getElementById('site-link').addEventListener('click', () =>
         copyPageLink(ok => flash('site-status', ok ? '🔗 Link copied. It opens this same site.' : '⚠️ Copy blocked by the browser.')));
 }

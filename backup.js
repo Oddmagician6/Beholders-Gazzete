@@ -181,6 +181,13 @@ const BACKUP_KEYS = [
         count: v => `${bkN(v.layouts.length, 'layout')}, ${bkN(v.layouts.reduce((n, l) => n + l.cards.length, 0), 'card')}`
     },
     {
+        key: 'gazette-battlemaps', tool: '🧱 Battlemap Builder', href: 'dnd-battlemap-builder', what: 'Battlemaps',
+        // Typed names and labels, escaped by the page; bmClean (battlemap-engine.js) trims each map on load.
+        clean: v => bkWhole(v, s => bkObj(s) && Array.isArray(s.maps) && s.maps.length <= 30
+            && s.maps.every(m => bkObj(m) && Number.isInteger(m.w) && Number.isInteger(m.h) && typeof m.f === 'string'), false),
+        count: v => bkN(v.maps.length, 'map')
+    },
+    {
         key: 'gazette-monster-draft', tool: '🐲 Monster Maker', href: 'monster-maker', what: 'The monster being worked on',
         // Typed text, escaped by the page; hbClean (homebrew.js) trims it to a monster's shape.
         clean: v => bkWhole(v, d => bkObj(d) && !!hbClean(d.mon) && (d.prev === undefined || d.prev === null || (bkObj(d.prev) && !!hbClean(d.prev.mon))), false),
