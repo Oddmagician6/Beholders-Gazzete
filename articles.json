@@ -1713,6 +1713,285 @@
         },
         "rumor": "They say a travelling charm-seller swears a bundle of dried nettle does the same work as the vial, and he has run out twice this week."
       }
+    },
+    {
+      "id": "streaming-earnings-ad-forecast-cut-netherflix",
+      "title": "Streaming Earnings Beat, Ad Outlook Cut: Netherflix Sinks 7%",
+      "category": "Finance",
+      "author": "Barnaby Tallowmere",
+      "date": "2026-10-21",
+      "excerpt": "Netherflix beat quarterly earnings, then cut its advertising forecast to 2.7 billion gp, and its shares fell 7% to a two-year low. I made a spreadsheet.",
+      "content": "<p>Netherflix, the crystal-ball streaming house, reported third-quarter earnings on Tuesday evening, and the numbers were good. Profit came in at 87 copper pieces a share against the 82 the Merchant Princes expected. Then the company cut its advertising forecast for the year from roughly 3 billion gp to 2.7 billion, guided the next quarter light, and watched its shares slide about 7% to a two-year low. (I have checked the direction of that arrow four times. It points down.)</p>\n\n<p>Let me explain what happened, because the headline does not. Netherflix sells two things: monthly subscriptions, and the attention of subscribers who accept a cheaper tier in exchange for watching town criers shout about boots. The second business was supposed to be the growth engine. A forecast cut of 300 million gp means the criers are selling fewer boots than promised. On the current Loaf Index, at roughly fifty loaves to the gold piece, that is about fifteen billion loaves of advertising that did not happen. I have stopped calculating where those loaves would have been stored.</p>\n\n<p>The timing is what makes me sweat through my waistcoat. Only days ago, Co-Guildmasters <a href=\"/a/streaming-layoffs-netherflix-cuts-1000-jobs\">Sorcerandos and Petrifer cut about 1,000 jobs</a> in a memo with a flourish and a silver quill. Six percent of the staff went out the door, and the quarter still ended with a sinking stock. The lesson here is that trimming costs buys you a quarter, not a business. Revenue has to come from somewhere, and the somewhere keeps being advertisers who suddenly feel thrifty.</p>\n\n<p>Analysts, being analysts, said buy the dip. Sterling Vanmoor will no doubt call this a golden opportunity and tell you the market will sort itself out. It has not sorted itself out since the dawn of the Third Age, Sterling. A stock that falls 7% on a beat is a stock whose buyers were already holding their breath.</p>\n\n<p>There is a broader squeeze too. With the ten-year bond yield parked above five percent, every future gold piece a company promises is worth less today, and growth stories get marked down hardest. Netherflix was priced as if the criers would keep growing forever. Sensible budgets assume they will not.</p>\n\n<p>My aunt Marigold, who keeps her savings in a boot, does not own a share of anything and does not subscribe to anything. She watched the news over my shoulder, nodded once, and went back to her knitting. I find I envy her.</p>\n\n<p><strong>What this means for your pantry:</strong> if your subscription price is about to rise to make up the missing boot-adverts, cancel the one you forget about, and buy a loaf.</p>\n\n<p><em>— B.T. (Loaf Index: see sidebar)</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Missing Boot Advertisers",
+          "text": "A traveling scrying-stone theater has lost its biggest sponsors just before the harvest fair, and its owner will pay the party to find out why. The advertisers are all quietly paying a rival who promises better crowds."
+        },
+        "npc": {
+          "name": "Odrin Pellwick",
+          "role": "Harried theater impresario",
+          "want": "He wants the sponsors back before the fair ends.",
+          "secret": "He has been padding his audience counts with paid seat-fillers.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Gilded Crier Pavilion",
+          "text": "A striped tent where town criers shout sponsor messages between shows. The stage lanterns keep dimming whenever a sponsor's name is mentioned.",
+          "tavern": false
+        },
+        "rumor": "They say the sponsors didn't leave, they just discovered nobody was actually watching the boots."
+      }
+    },
+    {
+      "id": "layoffs-krogger-3000-corporate-jobs-forhand-ai",
+      "title": "Layoffs: Krogger Cuts 3,000 Desk Jobs for Thinking-Engines",
+      "category": "Labor",
+      "author": "Brakka Stonesweat",
+      "date": "2026-10-21",
+      "excerpt": "Krogger Provisioners will lay off 3,000 corporate workers, 37% of its clerks, to buy thinking-engines. Guildmaster Forhand calls it 'fewer layers.'",
+      "content": "<p>Krogger is firing three thousand people. These corporate layoffs hit the ones who sit at desks.</p>\n\n<p>The grocery giant of Cinderati, in Ohyo Vale, told its clerks on Monday that about 3,000 corporate jobs will go over three years. That is 37 percent of the 8,200 who work in its counting-houses. The layoffs land a month after Krogger admitted its sales had barely moved, and a year after it axed nearly a thousand more.</p>\n\n<p>Guildmaster Gregor Forhand put it in a memo. 'Our company has more layers, more handoffs and more overhead than we need,' he wrote. Plain speech: the layers are people. The handoffs are people. The overhead is people with mortgages. He also mentioned leaning on thinking-engines to cut costs, which means a ledger-golem is getting the chair.</p>\n\n<p>'Every dollar we take out is a dollar we can reinvest in areas customers will see,' Forhand told the guild's investors. Customers will see it, all right. They will see the cheese went up, and nobody at the counting-house is left to ask why.</p>\n\n<p>Krogger has not said which departments are on the chopping block. That is deliberate. Three thousand people now spend their evenings guessing, and a guessing worker does not ask for a raise.</p>\n\n<p>'I've priced pickled turnips for eleven years,' said Hilda Brasspail, a shelf-cost analyst who asked that her real chair not be named. 'Last month they told us the golem could do it. This month they told us it can do it for free. I asked who checks when it prices the turnips at a copper each. Nobody had an answer.'</p>\n\n<p>Here is the part that makes a dwarf's beard curl. This is the same Krogger that tried to swallow Albertsonne Provisioners, lost the fight, and now owes a mountain of gold in a lawsuit about it. It is also chasing a purchase of Great Roc Markets. The money for the lawyers and the deals exists. The money for Hilda's chair does not.</p>\n\n<p>Compare the sums. Netherflix just <a href=\"/a/streaming-layoffs-netherflix-cuts-1000-jobs\">cut a thousand jobs</a> and called it a refresh. Krogger cuts three times that and calls it a diet. The word they were looking for is 'firing.' I will keep supplying it.</p>\n\n<p>If you work in a Krogger counting-house, count your colleagues. Learn their names and their numbers. Talk to each other before the guild talks to you separately. A shop steward is cheaper than a lawyer and meaner than a golem.</p>\n\n<p><em>Solidarity. And stretch your back. — Brakka</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Golem Prices the Turnips",
+          "text": "A grocery guild is replacing its counting-house clerks with a ledger-golem, and the golem has begun mispricing staples by wild margins. Laid-off clerks hire the party to find who sabotaged the golem, or whether it is simply that bad. Thousands of gold and a town's food prices ride on it."
+        },
+        "npc": {
+          "name": "Hilda Brasspail",
+          "role": "Shelf-cost analyst, soon unemployed",
+          "want": "To prove the ledger-golem cannot do her job before her post is cut.",
+          "secret": "She has been quietly correcting the golem's mistakes at night, which is the only reason it looks competent.",
+          "race": "dwarf",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Lantern Counting-House",
+          "text": "A six-story brick hall where grocery clerks tally the guild's stock by candlelight. Every third desk is now empty, and the golem's humming can be heard through the floors.",
+          "tavern": false
+        },
+        "rumor": "They say the golem charged a baker four thousand gold for one sack of flour, and the guild blamed the baker."
+      }
+    },
+    {
+      "id": "peace-talks-stalled-purpose-calimshan-donwald",
+      "title": "Peace Talks Stalled on Purpose to Sink Donwald's Ballots",
+      "category": "International",
+      "author": "Grashka Ironjaw",
+      "date": "2026-10-21",
+      "excerpt": "Calimshan's officials admit they dragged out the peace talks to hurt Donwald before the midterm elections. The siege is now a campaign stunt.",
+      "content": "<p>Calimshan has been stalling the peace talks on purpose, its own officials told scouts this week, in the hope of wrecking High Lord Donwald of the Golden Towers before the midterm elections. They are not preparing for a deal, they said. They are preparing for the next volley.</p>\n\n<p>I have covered sieges for years. Usually the besieged lie about their food. These ones lied about their calendar.</p>\n\n<p>The <a href=\"/a/donwald-no-siege-of-calimshan-until-ballots-counted\">promise of no new strikes until the ballots are counted</a> now reads differently. Donwald thought he had bought quiet. Calimshan thought it had bought a campaign ad. Both sides are running out the clock, and only one of them admits it. Honest enemy. I respect that. I would still not turn my back on it.</p>\n\n<p>Meanwhile Warmarshal Asim Munitar of Tashalar, the realm's chief go-between, rode into the Calimshan capital on Tuesday. He rode out with nothing. Handshake with the Calimshan envoys: limp, long, three seconds. Dagger not detected. Hope not detected either. Tashalar has carried messages between these camps all year and has been paid mostly in thanks.</p>\n\n<p>Calimshan's price for returning to the table is plain. Waterdeep lifts its naval blockade and eases the sanctions. The Hormoth Narrows stay shut until somebody blinks. Waterdeep's price is also plain: no price. The two camps are negotiating the way two boulders negotiate.</p>\n\n<p>Back at the front, the Pentacle's war chief met Chancellor Nettleyahu the Perennial at a Halruaan airfield. Nobody released a menu. I assume field rations. Only rations would explain the silence.</p>\n\n<p>The ordinary Calimshans, who are not in this ledger of fools, still wait for the Narrows to open and for bread prices to fall. Nobody asked them whether the stall was worth it. Nobody asks the pikemen either.</p>\n\n<p>Tension sits at roughly two hundred siege-days, give or take a sunrise. Last week's <a href=\"/a/energy-ceasefire-donwald-damara-vaasa-shelling\">energy ceasefire</a> was one more parley decoration. This one is at least frank. A stalled peace is just a siege with better manners, and the Calimshans have stopped pretending to have manners.</p>\n\n<p>Nobody won today. The ballots are counted in two weeks. After that, somebody loses.</p>\n\n<p><em>Ironjaw, filed from the front.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Stalled Envoy",
+          "text": "A negotiator carrying peace terms between two warring lords has been seen burning half his dispatches. Someone wants the party to find out whether he is delaying the talks for a payer, before the next harvest vote."
+        },
+        "npc": {
+          "name": "Daria Velmoor",
+          "role": "Weary border go-between",
+          "want": "To get one signed truce out of either side before winter closes the pass.",
+          "secret": "She has been quietly paid by both camps to keep the talks alive but never finished.",
+          "race": "human",
+          "gender": "female",
+          "kind": "noble"
+        },
+        "location": {
+          "name": "The Neutral Ford Inn",
+          "text": "A roadside inn sitting exactly on a border river, where each side's soldiers drink at opposite ends. The middle table is always empty and always reserved.",
+          "tavern": true
+        },
+        "rumor": "They say neither lord wants peace before the vote, because a won war gives no one anything to campaign on."
+      }
+    },
+    {
+      "id": "fireball-undermaw-corridor-party-singed",
+      "title": "Fireball Cast in Ten-Foot Corridor Singes Entire Party",
+      "category": "Adventurers",
+      "author": "Hollis Delvewright",
+      "date": "2026-10-21",
+      "excerpt": "A wizard's fireball in a ten-foot Undermaw corridor left the whole adventuring party at single-digit hit points. The hirelings were behind a door.",
+      "content": "<p>THE UNDERMAW, LEVEL 4 — The wizard of the Fourth Attempt cast a fireball down a ten-foot corridor this morning, and the adventuring party is now at a combined 31 hit points, most of them the mule's. The goblins at the far end took it well. They had left an hour earlier.</p>\n\n<p>The box score, as filed by the party's cleric: fighter 6, rogue 3, wizard 2, bard 7, cleric 13. The mule is at full health. The mule had stayed at the junction, where the contract says mules stay.</p>\n\n<p>A fireball fills a sphere with a twenty-foot radius and does not turn corners politely. It bends around them. In a corridor ten feet wide, it had nowhere to go but back. 'I measured the corridor,' the wizard told me through a damp cloth. 'I measured it as wide.' The party's bard, who asked to be named, says the wizard 'had a look about her' before casting. He then went back to patting out his eyebrows.</p>\n\n<p>The hirelings were the interesting part. Under the <a href=\"/a/mimic-furniture-clause-adventuring-party-contract\">furniture clause settlement</a>, hirelings of the Fourth Attempt now stand behind the nearest closed door during any spellcasting. Steward Ansel Pottage, who has read the contract to the end, was behind a door forty feet back, reading it again. He was unsinged. He asked that I note the door is oak and the date of the clause is the fifteenth.</p>\n\n<p>'We were told to hold the door,' said Pottage. 'The contract says they may not ask us to hold the door during a fireball. The contract was correct. I would like that in writing.' I have put it in writing. Hold-the-door requests remain my least favorite phrase in the language, and I rolled poorly on a similar one in my second season.</p>\n\n<p>Deputy Registrar Pell Oddingwick of Chapter 9 called the incident 'a soft heating event' and said Level 4 remains 'mostly cleared.' It is, in fairness, cleared of goblins. Oddingwick declined to say whether the corridor map, sold by Chapter 9 for 12 gold, lists the width. The map lists the width as 'wide.'</p>\n\n<p>Shieldwall Mutual Assurance Society has opened a file. A Shieldwall adjuster, who did not wish to be named either, said burns from a spell cast by one's own side are 'a question of whose fire it was,' and that the fire in this case was 'plainly the wizard's, and so plainly the wizard's problem.' The wizard has appealed. The appeal is on fire-retardant parchment.</p>\n\n<p>The party is back at the Sleeping Mule tonight, where Keeper Bess Harrowgate has extended credit on healing potions and a bucket of cold water. Pole count for the season: nine, one of them still smoldering in the corridor and now technically ash.</p>\n\n<p><em>— H.D., filing from below</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Corridor Was Wide",
+          "text": "A wizard's fireball in a narrow passage has scorched an entire adventuring party, and the guild map swears the corridor is 'wide.' The map seller wants the matter dropped; the party wants to know who drew it, and what else it lies about."
+        },
+        "npc": {
+          "name": "Tavish Greywell",
+          "role": "Guild map cartographer",
+          "want": "To keep selling maps without anyone checking his measurements.",
+          "secret": "He draws every corridor as wide because wide corridors sell better.",
+          "race": "gnome",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Scorched Passage",
+          "text": "A ten-foot stone corridor, blackened floor to ceiling, with a goblin camp at the far end that was abandoned one hour before the blast. Someone left a note on the wall, and it is oddly polite.",
+          "tavern": false
+        },
+        "rumor": "They say the goblins were tipped off, and that somebody on the party's own side sold the plan for a bag of coins."
+      }
+    },
+    {
+      "id": "ai-chips-open-source-gargoogle-amazoom-envydia",
+      "title": "Rivals Open-Source Tools to Pry Devs Off Envydia AI Chips",
+      "category": "Technology",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-10-21",
+      "excerpt": "Gargoogle and Amazoom both released open source tools so spellwrights can run their grimoires on rival AI chips. Nyx tried them. Byte has notes.",
+      "content": "<p>Okay. OKAY. Two caravans just declared war on <a href=\"/a/ai-chips-40-billion-gp-financing-spellx\">the rune-chip empire I have been bankrupting myself for</a>, and the weapon is an open source toolkit. On Monday Amazoom Caravans released TorchScroll, and on Tuesday Gargoogle answered with TorchPrism. Both let spellwrights run their existing AI grimoires on the caravans' own AI chips with, quote, a simple configuration change.</p>\n\n<p>Here is why this matters, and I will say it fast. About eighty-five percent of all enchanted apps are written in the Pyrotorch Grimoire. For years, its best incantations only worked on Envydia rune-chips, thanks to the Kuda-Script runes that every apprentice learns and none can unlearn. That was the moat. Switching meant rewriting everything, and nobody has that many weekends.</p>\n\n<p>Now Amazoom says its Trainmire stones will run your grimoire untouched, and it is sending patches to the main Pyrotorch scroll that cut the Envydia-only threads loose. Gargoogle went further. Its Tensor Prisms run native Pyrotorch, and it shipped a Prism Agent Suite that moves your apps over and fixes the errors on the way. It even worked directly with Metamagic and the Hugging Phiz Guild so the tools behave. The mana throughput numbers on the slides are gorgeous.</p>\n\n<p>I did the responsible thing and migrated my entire familiar-training pipeline on launch day. The firmware glyph took eleven minutes. The runic latency is great! Then Byte, my pseudodragon, who now only speaks in ad copy, flew onto the console and said, \"Envydia. The way it's meant to be played.\" Every test I ran after that quietly returned to the old chips. I still do not know how.</p>\n\n<p>To be fair, the trade scribes keep noting that nobody is fleeing Envydia in a mass exodus. The Kuda-Script runes are deep, the habits are older than that, and the Hugging Phiz Guild has not said what it thinks. Brother Tumbleberry's column this morning told us to touch grass instead of comparing chips. Brother, the grass does not have a Prism Agent Suite.</p>\n\n<p>What I want to know is the price, because every one of these toolkits is free until the first invoice for the cloud time. Subscription fees are how a free tool turns into a leash, and I have the scar to prove it. Still: competition is wonderful, choice is wonderful, and my wallet is already in the other room, sobbing. Four out of five beholder eyes.</p>\n\n<p><em>— Nyx (they/them). Damage Report below. Burns sustained: 1. Pipelines migrated: 1, then un-migrated: 1. Eyebrows: intact, but Byte has opinions.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Rune That Wouldn't Leave",
+          "text": "A guild of spellwrights is migrating its grimoires off an old rune-forge and the migrated spells keep sneaking back to it. Guildmaster Orsel Brightwick will pay the party to find whether it is a bug, a saboteur, or the forge itself resisting."
+        },
+        "npc": {
+          "name": "Pim Tallowick",
+          "role": "Overworked guild migration clerk",
+          "want": "To finish the move before the guild's debt comes due.",
+          "secret": "She has been secretly patching the old rune back in because the new tools keep corrupting her work.",
+          "race": "gnome",
+          "gender": "female",
+          "kind": "magic"
+        },
+        "location": {
+          "name": "The Gilded Cauldron Annex",
+          "text": "A converted brewery where spellwrights test rune-chips in rows of copper vats. Every vat hums the same advertising jingle at night.",
+          "tavern": false
+        },
+        "rumor": "They say the old forge's masters pay apprentices a silver a week just to never learn the new tools."
+      }
+    },
+    {
+      "id": "special-envoy-humanitarian-czar-vlad-witcoffer",
+      "title": "Special Envoy Calls Czar Vlad a Humanitarian; Councilors Recoil",
+      "category": "Politics",
+      "author": "Ottoline Vex",
+      "date": "2026-10-21",
+      "excerpt": "A special envoy freed a 74-year-old prisoner in Damara, then praised Czar Vlad as a humanitarian. The Red Oliphants asked him to look the word up.",
+      "content": "<p>Envoy Stiv Witcoffer, the Ivory Keep's special envoy to the frozen east, stood in Saint Peterspire on Wednesday and called Czar Vlad the Bear-Handed a humanitarian. The remark came after Damara released a 74-year-old prisoner it had held for four years, a man the Keep itself had formally ruled wrongfully detained. Witcoffer had traveled there to move the Vaasan war toward an ending.</p>\n\n<p>The transcript is short, so I can quote it. \"You talk so much about my High Lord being a humanitarian,\" Witcoffer told the Czar. \"You are a humanitarian also, sir, and I salute that, I commend you, and I thank you again.\" Under the Chamber's rules of decorum, a thank-you is not a vote. The record shows it was received anyway.</p>\n\n<p>The Senate Chamber's response arrived within the hour. Councilor Thornis of the Carolan Reach, a member of the Envoy's own Party of the Red Oliphant, wrote, \"Look up the definition of 'humanitarian.'\" Councilor John Cornwyn of the Lone Star Marches was briefer: the Czar, he said, is \"a stone cold killer.\" Commons Member Don Baconne, who has now said \"another embarrassment\" often enough to have it stitched onto a cushion, said it again.</p>\n\n<p>The gentleman from the Ivory Keep may find the Chamber's mood unfair. Four days ago the Keep <a href=\"/a/sanctions-waiver-damara-oil-tariffs-donwald\">waived the Damaran sanctions</a> two days before they were due to take effect, over the objections of the same Councilors who are now objecting. Last week it eased the diesel restrictions and announced a deal to import Damaran diesel. On Tuesday High Lord Donwald of the Golden Towers said that Damara \"has been fine on Vaasa.\" Meanwhile Damara has spent the past month striking Vaasan power and civilian works ahead of winter. By this desk's count, the humanitarian remark is the first thing in the file that matches the policy.</p>\n\n<p>A courtier who asked not to be named because they were not authorized to be awake told me the Envoy meant it as diplomacy: a freed prisoner, a grateful tone, a door left open. This reading has support. Praise for a captor is a recognized tool of the trade. The Chamber's complaint is only that the captor in question has spent four and a half years on the other side of the ledger, and the tool was used on the nearest available scroll.</p>\n\n<p>The Promises ledger now stands at Promises Made, fourteen, and Promises Kept, one, which concerns the prisoner. I record that one gladly. A 74-year-old man is home, and that is the one entry here no one is mocking. The rest of the ledger concerns a special envoy who has been sent to end a war and came back with a compliment.</p>\n\n<p>The Chamber has not scheduled a vote on anything. It has scheduled a strongly worded letter. The motion carried. Nobody read it.</p>\n\n<p><em>— O.V., from the gallery</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Kindest Words Ever Bought",
+          "text": "A visiting envoy has publicly praised the tyrant who rules the northern pass, and the town council fears the trade road will be given away on the strength of a compliment. The party is hired to learn what was actually promised in the room where the praise was spoken, before the caravan guilds sign anything."
+        },
+        "npc": {
+          "name": "Marta Quillfen",
+          "role": "Deputy Clerk of Foreign Correspondence",
+          "want": "To see the envoy's private letters made public before the council votes.",
+          "secret": "She copied the envoy's last dispatch and has been selling the contents to a rival caravan guild.",
+          "race": "human",
+          "gender": "female",
+          "kind": "noble"
+        },
+        "location": {
+          "name": "The Gilded Ledger Inn",
+          "text": "A tavern where diplomats and caravan masters drink in separate rooms and trade rumors through the serving hatch. The hatch keeper keeps meticulous minutes and will sell them.",
+          "tavern": true
+        },
+        "rumor": "They say the freed prisoner was part of a bargain and the envoy simply forgot to mention the price."
+      }
+    },
+    {
+      "id": "parrot-airport-fight-chikraggo-windgate-skyport",
+      "title": "Parrot Brawls Passengers at Chikraggo Windgate Skyport",
+      "category": "Local Chaos",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-10-21",
+      "excerpt": "A green parrot flew into an airport terminal, picked fights with travelers, and lost to a janitor's shirt. Skritch has the feathers-and-fists scoop.",
+      "content": "<p>At roughly the third bell after midnight, a green parrot allegedly flew through an open door at Chikraggo Windgate Skyport and spent the better part of a day fighting passengers in Fifth Landing. The airport bird brawl was caught on crystal-ball footage near the Aerie Franque Skyways check-in line, where the creature perched on heads and luggage like it held the deed to both.</p>\n\n<p>'It chose fight, not flight,' said Orla Fennimore, a gate hand who filmed the whole thing and was eating a turkey leg at the time. 'Somebody tried to pet it nicely. Nicely! It went for the knuckles.' Witnesses say the parrot pecked anyone who reached for it, kind or otherwise, and shrieked at a gnome with a rolling trunk until the gnome apologized. Allegedly the bird was winning.</p>\n\n<p>The Windgate Watch was reportedly not called, since nobody could agree which crime to list. Trespassing? Assault by beak? Flying without a ticket? A Skyport clerk, who asked not to be named because he is afraid of the bird, confirmed there is no form for it.</p>\n\n<p>Skritch, who covers every airborne incident in the realm and has been stepped on by three of them, notes the Skyport is a known hazard. Pigeons loiter there openly. The Gazette has asked the airport why it leaves its doors open, and was told doors are 'a matter for the Tower District.' Typical.</p>\n\n<p>Also, there was a really shiny luggage tag on the floor near the fighting. Gold, maybe brass. Skritch would like to state he did not pick it up. It is in his pocket for safekeeping. Anyway.</p>\n\n<p>The standoff ended when a janitor named Dellick Voss, armed with nothing but a work shirt, tossed it over the bird like a net and carried it off. 'Thirty years of mopping,' Voss allegedly said. 'You learn to handle whatever comes in.' The parrot was taken to a beast-healer to be checked for a registration sigil, and its owner has not come forward. Nor has any apology.</p>\n\n<p>The bird's species remains unknown and its verdict on the matter is allegedly 'squawk.' The Skyport says normal operations have resumed. Allegedly.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Bird Nobody Claimed",
+          "text": "A foul-tempered green parrot has been taken in at the healer's, and the sigil under its feathers points to a wizard who died last year. A grieving apprentice wants it back before the Watch sells it, and the bird knows a spell it keeps half-shouting."
+        },
+        "npc": {
+          "name": "Dellick Voss",
+          "role": "Skyport night janitor",
+          "want": "To keep the bird as a pet without anyone asking questions.",
+          "secret": "He has been feeding it the wizard's old spell components, which is why it is so angry.",
+          "race": "human",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Perched Mop",
+          "text": "A cramped tavern wedged inside a Skyport terminal where staff drink between shifts. Every stool has a bird-claw scratch, and no one will say why.",
+          "tavern": true
+        },
+        "rumor": "They say the parrot didn't wander in at all, it was sent to deliver a message nobody has dared to translate."
+      }
+    },
+    {
+      "id": "automaker-earnings-20b-gp-buyback-general-mounts",
+      "title": "Automaker Earnings Hit 50B gp; 20B Buyback Follows",
+      "category": "Business",
+      "author": "Sterling Vanmoor",
+      "date": "2026-10-21",
+      "excerpt": "General Mounts posts 50B gp in quarterly earnings and approves a 20B gp stock buyback. Sterling Vanmoor calls a shrinking shareholder table a growth story.",
+      "content": "<p>General Mounts, the carriage-maker of the Cleaveland-adjacent Iron Marches, reported third-quarter earnings on Tuesday: 50 billion gp in revenue, 3.3 billion gp in profit, and a brand-new 20 billion gp stock buyback with no expiration date. I want you to sit with that last part, because most guilds can't even schedule a meeting with no expiration date.</p>\n\n<p>Here is the pivot. Guildmaster Mary Barrow's scribes have been buying the company's own shares back for a year, and the guild now has 849 million shares in circulation, down from 904 million at the start of the year. General Mounts is, in the most literal sense, becoming more exclusive. Some call that shrinking. I call it scaling <em>inward</em>. It's the same energy as the <a href=\"/a/bank-earnings-equities-trading-72-goldmane\">Merchant Princes' latest earnings season</a>, and I am here for it.</p>\n\n<p>The skeptics, and you know who you are, Brakka, will point out that the guild also took 3.6 billion gp in what the report calls an \"EV strategic realignment\" this year. That is the accounting term for a stable of enchanted lightning-carriages nobody wanted to buy. I prefer another term: a bold early-stage experiment in discovering what the customer doesn't want. Very few guilds have the courage to lose 3.6 billion gp on purpose. Guildmaster Barrow simply labeled it, set it aside, and told the investors to look at the other number, the 4.1 billion gp that came in before the lightning-carriages were mentioned. That is thought leadership.</p>\n\n<p>The dividend, meanwhile, holds at 18 copper pieces per share, payable in mid-December, which is a very generous way of saying \"thanks for staying.\" The guild also nudged its full-year forecast: profit before the tax-collectors is now expected at 14.5 to 15.5 billion gp, a tighter range than before. Tighter is better. Ask any rightsized adventuring party.</p>\n\n<p>When I met Guildmaster Jeff Bezoar at a gala last spring, I asked him about buybacks. He looked at me over his goblet and said, \"Sterling, the best investment is the one you already own.\" I wrote it on my forearm. I have since bought back three of my own sword-routine scrolls, at a premium, from myself. The returns have been exceptional.</p>\n\n<p>Will the 20 billion gp buyback make the stock go up? Almost certainly, because there will be fewer of them. Will it build a single new carriage? No, and that is precisely the point. Builders build. Visionaries retire shares.</p>\n\n<p><strong>Key takeaways for the ambitious adventurer:</strong></p>\n<ul>\n<li>If your product line is struggling, buy your own stock until the problem becomes everyone else's.</li>\n<li>A 3.6 billion gp loss is a \"realignment\" if you say it slowly.</li>\n<li>Fewer shareholders means bigger slices. Ignore anyone who says the pie is the same size.</li>\n</ul>\n\n<p><em>— Sterling Vanmoor, Guild Visionary. Let's connect at the Yawning Portal.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Buyback at Blackharrow",
+          "text": "A carriage guild in town has announced it will spend a fortune buying back its own shares, and the same week it laid off the wheelwrights' apprentices. The wheelwrights' widow hires the party to find where the money is really going before the guild's charter is sold."
+        },
+        "npc": {
+          "name": "Tobin Fairweather",
+          "role": "Deputy Keeper of Guild Ledgers",
+          "want": "To see the guild's buyback scheme exposed before it empties the pension vault.",
+          "secret": "He signed the original authorization himself, and has been quietly moving his own coin out of the guild's vault.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Hollow Axle",
+          "text": "A shuttered carriage works whose owners insist it is 'temporarily realigned.' Its bells still ring at dawn, though no one has worked there in months.",
+          "tavern": false
+        },
+        "rumor": "They say the guild isn't buying back shares at all, just buying the same ones back from itself, over and over, to look busy."
+      }
+    },
+    {
+      "id": "flu-season-early-start-flu-shot-wendell",
+      "title": "Flu Season Arrives Two Months Early in the West",
+      "category": "Health",
+      "author": "Brother Wendell Tumbleberry",
+      "date": "2026-10-21",
+      "excerpt": "The flu season has started in September, with 140.6 cases per 100,000 folk and a western children's infirmary swamped. Get your flu shot, friends.",
+      "content": "<p>Friends, the winter cough has come early. The flu season, which the clerics usually expect in the cold months, began climbing in early September, and the Clerics' Disease Council now says activity is rising across the realm. Nationally it is still low, but the western coast is already coughing.</p>\n\n<p>The old herbals say the sick season follows the first frost. The new studies, as reported by a records firm that counts sniffles for a living, say otherwise: 140.6 visits for flu per 100,000 folk in the week of mid-September, the highest for that time of year in five years and double the last two autumns. One western children's infirmary saw 150 little patients in two weeks, where last year it saw ten. Its healer told reporters, \"We're about two months early.\" I do not like the sound of that, friends.</p>\n\n<p>The Disease Council's own tally for the week ending the third of October shows flu tests coming back positive 3.6 percent of the time, and 3,334 folk in hospital beds, mostly the elderly. Hospital visits have crept up since the end of summer. Several scholars guess a new strain of the H1N1 sort is dodging the defenses people built up from old coughs and old vials. Another reminded everyone that an early start says little about how long the season lasts or how hard it bites. Seasons often come in waves, so an early H1N1 wave may be followed by H3N2 or the B kind. Nobody is promising you a short winter.</p>\n\n<p>Now the good part. The strain going around is close to the one in this year's vial, so the <a href=\"/a/hepatitis-b-newborn-vial-delay-fennedy\">vials the Ministry has been fretting over</a> in other matters are, for flu, a good match. Get your flu shot early. The scholars say before the middle of October if you can, which is now, so go on. Arm out, sleeve up, a boiled sweet afterward. The Potion &amp; Provisions Authority has even approved a newer kind of shot for those aged fifty and over, though I note it will not be cheap, and cheap is where I put my trust.</p>\n\n<p>Meanwhile, wash your hands, sleep at least eight hours, and keep your cough off the elderly. A halfling who skips sleep during a flu surge is asking for a visit from me and my ladle.</p>\n\n<p>My friend Nyx tells me there is a tracker for flu now, with a live map and push alerts. Go outside, Nyx, preferably after your shot. For everyone else, this week's recommendation is a chicken-and-ginger broth with plenty of garlic, simmered two hours and sipped slowly under a blanket.</p>\n\n<p><em>Rest well, friends. — Brother Wendell</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Early Cough",
+          "text": "A wheezing sickness arrives two months before the cold season, and the town's only healer is out of tonics. The party must gather ginger root and garlic from a hermit herbalist before the children's ward fills up."
+        },
+        "npc": {
+          "name": "Tilda Brambleroot",
+          "role": "Hermit herbalist and ward nurse",
+          "want": "To keep the children's ward stocked until the temple sends real cures.",
+          "secret": "She has been quietly diluting the tonics so they last longer.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "religious"
+        },
+        "location": {
+          "name": "The Sniffling Kettle",
+          "text": "A soup house beside the infirmary, packed since the first cough. The cook refuses to take coin from anyone who is wearing a scarf.",
+          "tavern": true
+        },
+        "rumor": "They say the cough came in on a merchant caravan from the coast and the first frost has nothing to do with it."
+      }
     }
   ]
 }
