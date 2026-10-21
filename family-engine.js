@@ -46,7 +46,22 @@ const FAM_CAUSES = {
         'of poison, some say', 'fighting a monster in the hills', 'in a fire', 'on the road', 'in childbed', 'in a tavern brawl']
 };
 
+// Newer causes (E7), swapped in by their share from a later draw. None names poison, old age, sleep, or peace,
+// so the poison scandal picks from the same dead as before.
+const FAM_CAUSES_MORE = {
+    old: ['of a stroke at the dinner table', 'of the shaking sickness', 'after a hard winter', 'of gout and stubbornness', 'with the whole family at the bedside',
+        'of a chill caught at a funeral', 'of a weak heart', 'after a long decline', 'after a fall in the garden', 'of the wasting sickness'],
+    young: ['of the spotted fever', 'of a snakebite', 'of the summer flux', 'in a fall through the ice', 'of a dog bite gone bad', 'of the coughing sickness',
+        'in a cart accident', 'of a chill after a soaking'],
+    adult: ['in a siege', 'in a shipwreck', 'at the hands of bandits', 'of a wound that festered', 'in a rockfall', 'of a wyvern sting', 'in the flood year',
+        'on campaign in the north', 'in a magical accident', 'of an owlbear mauling', 'defending the gate', 'of a curse nobody could lift',
+        'in a trial by combat', 'of a fever caught abroad', 'in a riding accident at the tourney']
+};
+
 const FAM_HIDDEN = ['a farmhouse outside town', 'a temple orphanage', 'the house of an old nurse', 'a fishing village down the coast', 'a convent school', "a blacksmith's family who ask no questions"];
+const FAM_HIDDEN_MORE = ["a shepherd's hut in the hills", 'a dwarven hold that owed the family a favor', 'a traveling circus', 'a monastery in the mountains',
+    "a ferryman's cottage on the river", 'the crew of a merchant ship that rarely comes to port', "a wizard's tower, as a servant",
+    'an inn on the far side of the kingdom', 'a forester\'s lodge deep in the woods'];
 
 // ── The NPC page's rolls ──────────────────────────────────
 // An NPC from one seed, the NPC page's way (facNpc, with a race when one is set).
@@ -121,8 +136,17 @@ function famFate(w, R) {
         kind = age < R.young[0] ? 'young' : 'adult';
     }
     const list = FAM_CAUSES[kind];
-    return { dead: true, age, ago: w - age, cause: list[Math.floor(r[3] * list.length)] };
+    return { dead: true, age, ago: w - age, cause: list[Math.floor(r[3] * list.length)], kind };
 }
+
+// One of the newer lines in place of cur, by its share of the whole list (always two draws).
+function famSwap(cur, old, more) {
+    const newer = facPick(more);
+    return rand() < more.length / (old.length + more.length) ? newer : cur;
+}
+
+// Causes the poison scandal never picks (and that never swap, so it picks from the same dead).
+const FAM_NOT_POISON = /poison|old age|sleep|peacefully/;
 
 function famGenderPick(partner) {
     if (partner === 'male') return facWeighted([['female', 85], ['male', 10], ['nonbinary', 5]]);
@@ -163,14 +187,15 @@ const FAM_SCANDALS = [
             const age = 1 + Math.floor(rand() * Math.max(1, Math.min(15 * space, p.age - c.R.young[0])));
             const k = c.add({ race: p.race, gender: famGenderPick(), w: age, surname: null, cat: 'commoner', alive: true }, { a: p.id, b: '', kind: 'secret' });
             if (!k) return null;
-            return { text: `{0} has a child nobody in the family knows about: {1}, raised in ${facPick(FAM_HIDDEN)} and told nothing.`, who: [p.id, k.id] };
+            const place = facPick(FAM_HIDDEN);
+            return { text: `{0} has a child nobody in the family knows about: {1}, raised in ${place} and told nothing.`, who: [p.id, k.id], place };
         }
     },
     {
         key: 'poison',
         pick(c) {
             const space = Math.max(1, Math.round(c.R.adult[0] / 26));
-            const dead = c.fam.people.filter(p => p.dead && p.cause && !/poison|old age|sleep|peacefully/.test(p.cause) && p.ago >= 1 && p.ago <= 40 * space);
+            const dead = c.fam.people.filter(p => p.dead && p.cause && !FAM_NOT_POISON.test(p.cause) && p.ago >= 1 && p.ago <= 40 * space);
             if (!dead.length) return null;
             const d = facPick(dead);
             const who = c.living(c.fam.people).filter(p => p.id !== d.id && p.age >= d.ago + c.R.young[0]);
@@ -250,6 +275,143 @@ const FAM_SCANDALS = [
     }
 ];
 
+// Other ways to tell the scandals whose text is fixed (E7), swapped in by their share.
+const FAM_SCANDAL_ALTS = {
+    disinherited: ['{0} was disowned for marrying {1}, and has spent every year since working to buy back the family\'s favor.',
+        '{0} lost their inheritance for marrying {1}. Neither of them has forgiven the family, and both are very polite about it.'],
+    debts: ['{0} has been selling the family silver piece by piece and replacing it with tin. The next feast will give it away.',
+        '{0} signed a contract with a moneylender who wants the family seat as payment, and the day is close.'],
+    will: ["{0} and {1} are suing each other over their parent's will, and only the lawyers are getting rich.",
+        "{0} hid their parent's last will before it could be read, and {1} has hired someone to find it."],
+    affair: ['{0} has a lover in the next town over, and {1} has started to wonder about all the trips.',
+        'Half the town knows {0} is unfaithful. {1} has just found out, and is planning something.'],
+    heir: ["{0} has been slipping something into {1}'s wine, a little at a time.",
+        '{0} is paying a hedge wizard to curse {1}, so far without much luck.'],
+    cult: ['{0} has joined a cult that meets in the woods at the new moon, and has started bringing strangers home.',
+        '{0} keeps a shrine to a forbidden god behind a loose panel in their room.']
+};
+
+// Newer scandals (E7). A rolled family draws its scandals from FAM_SCANDALS first, then a later draw may
+// swap one for a newer kind. None of these adds anyone to the family or changes a title.
+const famHouseLike = c => /^(House|Clan|The House of) /.test(c.fam.name);
+const famAdults = c => c.living(c.blood()).filter(p => p.age >= c.R.adult[0]);
+const famSingle = (c, p) => !famUnionsOf(c.fam, p.id).length && !famMarriedInto(c.fam, p.id);
+const FAM_SCANDALS_MORE = [
+    {
+        key: 'heirloom',
+        pick(c) {
+            const list = famAdults(c);
+            if (!list.length) return null;
+            return { text: "{0} pawned the family's ancestral sword and had a copy made. The copy hangs over the hearth.", who: [facPick(list).id] };
+        }
+    },
+    {
+        key: 'spy',
+        pick(c) {
+            const list = c.fam.unions.filter(u => u.kind === 'wed' && u.b && !famPerson(c.fam, u.b).dead && famPerson(c.fam, u.b).age >= c.R.adult[0]);
+            if (!list.length) return null;
+            return { text: `{0} married into the family to spy on it for a rival ${famHouseLike(c) ? 'house' : 'family'}, and has been sending reports for years.`, who: [facPick(list).b] };
+        }
+    },
+    {
+        key: 'elope',
+        pick(c) {
+            const list = c.living(c.blood()).filter(p => p.age >= c.R.young[0] && p.age <= c.R.adult[1] && p !== c.head && famSingle(c, p));
+            if (!list.length) return null;
+            return { text: '{0} plans to run off with a stablehand on the next moonless night, and has already packed.', who: [facPick(list).id] };
+        }
+    },
+    {
+        key: 'ghost',
+        pick(c) {
+            const space = Math.max(1, Math.round(c.R.adult[0] / 26));
+            const dead = c.blood().filter(p => p.dead && p.ago <= 30 * space);
+            const alive = c.living(c.fam.people).filter(p => p.age >= c.R.young[0]);
+            if (!dead.length || !alive.length) return null;
+            return { text: '{0} still walks the halls at night. {1} has seen them twice and told no one.', who: [facPick(dead).id, facPick(alive).id] };
+        }
+    },
+    {
+        key: 'hag',
+        pick(c) {
+            if (c.head.dead) return null;
+            return { text: "{0} made a bargain with a hag for the family's good fortune, and the hag is coming to collect.", who: [c.head.id] };
+        }
+    },
+    {
+        key: 'wolf',
+        pick(c) {
+            const list = famAdults(c);
+            if (!list.length) return null;
+            return { text: '{0} was bitten by a wolf on a hunt last autumn and has not been the same at the full moon.', who: [facPick(list).id] };
+        }
+    },
+    {
+        key: 'charter',
+        pick(c) {
+            if (c.head.dead) return null;
+            const who = famAdults(c).concat(c.living(c.fam.people).filter(p => !famIsBlood(c.fam, p) && p.age >= c.R.adult[0])).filter(p => p !== c.head);
+            if (!who.length) return null;
+            return {
+                text: famHouseLike(c) ? "The charter that gives {0}'s house its lands is a forgery. {1} knows, and is waiting for the right moment."
+                    : "The money that set {0}'s family up came from a robbery nobody was ever hanged for. {1} has found out, and is waiting for the right moment.",
+                who: [c.head.id, facPick(who).id]
+            };
+        }
+    },
+    {
+        key: 'deserter',
+        pick(c) {
+            const list = famAdults(c).filter(p => p.age >= c.R.adult[0] + 5 * Math.max(1, Math.round(c.R.adult[0] / 26)));
+            if (!list.length) return null;
+            return { text: "{0} ran from the battle that made the family's name. Almost everyone who saw it is dead now.", who: [facPick(list).id] };
+        }
+    },
+    {
+        key: 'wed',
+        pick(c) {
+            const list = famAdults(c).filter(p => p !== c.head && famSingle(c, p));
+            if (!list.length) return null;
+            return { text: '{0} is secretly married to someone the family would never accept, and wears the ring on a cord under their shirt.', who: [facPick(list).id] };
+        }
+    },
+    {
+        key: 'duel',
+        pick(c) {
+            const list = famAdults(c);
+            if (list.length < 2) return null;
+            const a = facPick(list), b = facPick(list.filter(p => p !== a));
+            return { text: '{0} killed a rival in a duel that was not quite fair, and {1} helped hide the body.', who: [a.id, b.id] };
+        }
+    },
+    {
+        key: 'blackmail',
+        pick(c) {
+            const list = c.living(c.fam.people).filter(p => p.age >= c.R.adult[0]);
+            if (list.length < 2) return null;
+            const a = facPick(list), b = facPick(list.filter(p => p !== a));
+            return { text: '{0} has been blackmailing {1} for years over a letter that should have been burned.', who: [a.id, b.id] };
+        }
+    },
+    {
+        key: 'smuggling',
+        pick(c) {
+            if (c.head.dead) return null;
+            return { text: "{0} has been letting smugglers use the family's cellars, and the Watch is getting curious.", who: [c.head.id] };
+        }
+    }
+];
+
+// A scandal's newer wording or hiding place, by share: two draws each, always.
+function famScandalMore(s, key) {
+    const alts = FAM_SCANDAL_ALTS[key];
+    if (alts) s.text = famSwap(s.text, [s.text], alts);
+    else rand(), rand();
+    if (s.place) s.text = s.text.replace(s.place, famSwap(s.place, FAM_HIDDEN, FAM_HIDDEN_MORE));
+    else rand(), rand();
+    return s;
+}
+
 // ── The roll ─────────────────────────────────────────────
 // opts: { gens: 'random'|3|4|5, size: 'random'|small|big, race: 'random'|race,
 //         root: { seed, cat, age, title, house } (an NPC rolled elsewhere) or null }
@@ -289,6 +451,7 @@ function rollFamily(seed, opts = {}) {
             fate.ago = part(label + '.late', () => Math.floor(rand() * (o.maxAgo + 1)));
             fate.age = o.w - fate.ago;
         }
+        if (fate.dead && !FAM_NOT_POISON.test(fate.cause)) fate.cause = part(label + '.fate.more', () => famSwap(fate.cause, FAM_CAUSES[fate.kind], FAM_CAUSES_MORE[fate.kind]));
         // o.npc: someone rolled already (the head), who keeps their own name and link.
         const id = o.npc ? { n: { first: o.npc.firstName, name: o.npc.name } } : famFindName(deriveSeed(seed, label + '.id'), o.race, o.gender, o.surname, used, o.surname === null ? surname : null);
         used.add(id.n.first);
@@ -464,8 +627,26 @@ function rollFamily(seed, opts = {}) {
         for (const sc of facShuffle(FAM_SCANDALS)) {
             if (fam.scandals.length >= want) break;
             const s = sc.pick(c);
-            if (s) fam.scandals.push(s);
+            if (s) fam.scandals.push({ ...s, key: sc.key });
         }
+    });
+    // A later draw (E7): a newer kind in place of one by its share (not one that added a child or a title),
+    // and newer wording for the rest.
+    part('scandals.more', () => {
+        const share = FAM_SCANDALS_MORE.length / (FAM_SCANDALS.length + FAM_SCANDALS_MORE.length);
+        const order = facShuffle(FAM_SCANDALS_MORE);
+        const used = new Set();
+        fam.scandals = fam.scandals.map(s => {
+            const swap = rand() < share;
+            if (swap && s.key !== 'hidden' && s.key !== 'disinherited') {
+                for (const sc of order) {
+                    if (used.has(sc.key)) continue;
+                    const n = sc.pick(c);
+                    if (n) { used.add(sc.key); return n; }
+                }
+            }
+            return famScandalMore(s, s.key);
+        });
     });
 
     return { fam: famClean(fam), gens, size, race, noble };
@@ -551,10 +732,15 @@ function famRollScandal(fam) {
         fam.people.push(k);
         return k;
     });
-    for (const sc of facShuffle(FAM_SCANDALS)) {
+    for (const sc of facShuffle(FAM_SCANDALS.concat(FAM_SCANDALS_MORE))) {
         const keep = JSON.stringify(fam);
-        const s = sc.pick(c);
-        if (s && !have.has(famScandalText(fam, s))) return s;
+        const got = sc.pick(c);
+        // Not one the family has already, in any of its wordings.
+        const said = got && [got.text, ...(FAM_SCANDAL_ALTS[sc.key] || [])].some(text => have.has(famScandalText(fam, { text, who: got.who })));
+        if (got && !said) {
+            const s = famScandalMore(got, sc.key);
+            return { text: s.text, who: s.who };
+        }
         // A pick that added someone but isn't used takes them back out.
         if (JSON.stringify(fam) !== keep) Object.assign(fam, JSON.parse(keep));
     }

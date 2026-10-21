@@ -278,6 +278,87 @@ const HANDOUT_SHOP_FOOT = [
     'Payment in coin only. Teeth, scales, and promises are not coin.'
 ];
 
+// ── Newer lines (E7) ──────────────────────────────────────
+// A filled handout rolls its words from the tables above first; a later draw (deriveSeed(seed, 'handout-<t>.more'))
+// then swaps in one of these by its share of the whole list, so an old link keeps the rest of its handout.
+const HANDOUT_CRIMES_MORE = [
+    ['Selling the same horse to four different buyers', 1], ['Walking off with the church roof, one lead sheet at a time', 2],
+    ['Leading travelers into the marsh and selling their boots back to them', 2], ['Turning the mayor\'s nephew into a newt (he got better)', 1],
+    ['Robbing the royal mail coach', 3], ['Faking a death to escape a debt, and then attending the funeral', 1],
+    ['Setting fire to a rival\'s ship in harbor', 3], ['Cattle rustling on the high pastures', 2], ['Breaking into the dwarven vault', 3],
+    ['Selling holy water drawn from the horse trough', 1], ['Opening a door in the old ruins that should have stayed shut', 3],
+    ['Stealing the crown jewels for one evening, as a wager', 3], ['Swindling widows with a false shipping company', 2],
+    ['Tampering with the town\'s weights and measures', 1], ['Trading arms to the goblins in the hills', 3],
+    ['Escaping with a prisoner bound for the gallows', 2], ['Charming the guards, literally, with a spell', 2],
+    ['Stealing an entire wedding cake, and the bride\'s ring inside it', 1], ['Hunting griffons out of season', 2],
+    ['Robbing a tomb in the royal crypt', 3]
+];
+const HANDOUT_ISSUERS_MORE = [
+    'By order of the Lord Mayor', 'Posted by the Thieves\' Guild, who want their cut back', 'By order of the Castellan',
+    'By writ of the High Court, sealed in red', 'Posted by the Adventurers\' Guild, members first', 'By order of the Warden of the Marches',
+    'Posted by the family of the victim', 'By order of the Customs House', 'By decree of the Duchess, read aloud at the gate',
+    'Posted by the Mages\' College, who want their property back'
+];
+const HANDOUT_PAID_MORE = [
+    'Paid in silver at the Watch House door.', 'Reward doubled if the stolen goods come back too.', 'Paid by the week to anyone with useful word.',
+    'Bring a witness. The last three claimants lied.', 'Paid in full. Bounty hunters from out of town take a tithe off the top.',
+    'Paid only if taken inside the town walls.', 'Half now, half when the rope is tied.', 'The Guild pays. Do not ask the Guild why.'
+];
+
+const HANDOUT_LETTER_TO_MORE = [
+    'To the strangers who arrived on the evening coach', 'To the heroes of the hour (I hope)', 'To the one with the honest face',
+    'To the travelers at the sign of the Boar', 'To the company of adventurers, care of the innkeeper', 'To the people who handled the trouble at the mill',
+    'To the wizard, or whoever reads the wizard\'s mail', 'To the bold, in confidence'
+];
+const HANDOUT_LETTER_OPEN_MORE = [
+    'I have watched you for two days, and I think you are what I need.', 'My hands shake as I write this, so forgive the blots.',
+    'You do not know me, but I owe a debt to someone who knows you.', 'I have tried every other door. Yours is the last.',
+    'I would sign my real name, but it would only put you in danger.', 'Do not show this letter to the innkeeper.',
+    'By the time you read this I will have left town, but I will come back for your answer.', 'I am told you ask few questions. Good.',
+    'The bearer of this letter is paid to forget your face. Please let them.'
+];
+const HANDOUT_LETTER_ASK_MORE = [
+    'Something has gone wrong, and the people meant to fix it are the ones who caused it.', 'I need someone who can fight, and keep quiet about it after.',
+    'I will make it worth your while. More than worth it.', 'My family is in danger, and I do not know who else to trust.',
+    'There is a job no sensible person would take. That is why I am asking you.', 'I have a name, a place, and a deadline. I lack the courage.',
+    'What I ask is not quite legal. It is entirely right.', 'Help me, and I will owe you a favor I can actually pay.',
+    'Every day that passes makes this harder to put right.', 'I can pay half now, and the rest when it is done.'
+];
+const HANDOUT_LETTER_END_MORE = [
+    'Meet me at the old well at midnight. Bring a lantern, but keep it shuttered.', 'If anyone asks, you never received this.',
+    'Wear something blue so I know you.', 'Keep this letter. You may need it to prove who sent you.', 'I am counting on you. More people are than you know.',
+    'Do not trust the man with the silver ring.', 'Leave your answer under the third stone of the bridge.', 'Come before the next full moon, or do not come at all.',
+    'Destroy this letter, and the envelope, and the string.', 'Answer by the same messenger. They cannot read.'
+];
+const HANDOUT_LETTER_CLOSE_MORE = ['Gratefully,', 'In your debt,', 'Faithfully,', 'With trust,', 'Respectfully,', 'Hopefully yours,', 'In desperation,', 'Your friend, I hope,'];
+
+const HANDOUT_FILLER_NOTICES_MORE = [
+    { head: 'Lost: Wedding Ring', text: 'Gold band, inscribed inside. Possibly swallowed by a goat. The goat is also missing.', reward: 10, contact: 'Ask at the chapel' },
+    { head: 'Rat Catchers Wanted', text: 'The granary needs clearing. The rats are large. Bring your own dog, and a bigger dog.', reward: 3, contact: 'The miller, mornings' },
+    { head: 'Harvest Hands', text: 'Strong backs wanted for the barley. Meals, a bed of straw, and all the ale you can earn.', reward: 0, contact: 'Ostler farm, past the bridge' },
+    { head: 'Do Not Buy', text: 'The tonic sold by the man in the purple coat. It is mostly vinegar. The rest is worse.', reward: 0, contact: 'An unhappy customer' },
+    { head: 'Found: Small Dragon', text: 'Probably a lizard. Breathes smoke when frightened. Has eaten two candles. Owner, please.', reward: 0, contact: 'The chandler\'s shop' },
+    { head: 'Duel at Dawn', text: 'Sir Corwin will meet any man who insulted his mustache, at the green, tomorrow at dawn. Spectators welcome.', reward: 0, contact: 'Sir Corwin\'s squire' },
+    { head: 'Market Day Moved', text: 'Because of the flooding, market day moves to the hill until further notice. Bring boots.', reward: 0, contact: 'The Reeve' },
+    { head: 'Fortunes Told', text: 'Your future read in tea leaves, bones, or cards. Bad news at half price.', reward: 0, contact: 'Old Nana Thrush, wagon by the gate' },
+    { head: 'Wanted: Brave Taster', text: 'The baker\'s new pie needs a second opinion. The first opinion is resting.', reward: 1, contact: 'The bakery' },
+    { head: 'Ferry Closed', text: 'The ferry will not run until the thing in the river has been dealt with. Ask about the thing.', reward: 0, contact: 'The ferryman' }
+];
+const HANDOUT_BOARD_TITLES_MORE = ['Wanted & Wanting', 'The Notice Post', 'Work Going Begging', 'Coin for Courage', 'Town Business', 'Read Me',
+    'Jobs, Lost & Found', 'Notices of the Week'];
+const HANDOUT_SHOP_FOOT_MORE = [
+    'Shoplifters will be turned into frogs. We have done it before.', 'Ask about our discounts for repeat customers who survived.',
+    'All sales final. All sales very final.', 'Returns accepted within a day, if unopened and not on fire.',
+    'Prices higher for anyone who mentions dragons.', 'We buy too. Fair prices for honest goods. Lower prices for the other kind.',
+    'Closed on holy days and when the owner is fishing.', 'If it is not on this list, we can probably get it. Probably.'
+];
+
+// One of the newer lines in place of cur, by its share of the whole list (always two draws).
+function hoSwap(cur, old, more) {
+    const newer = more[Math.floor(rand() * more.length)];
+    return rand() < more.length / (old.length + more.length) ? newer : cur;
+}
+
 // ── From a roll ───────────────────────────────────────────
 function hoNpcLook(n) {
     const sentence = t => { t = hoCap(String(t || '').trim()); return t && !/[.!?]$/.test(t) ? t + '.' : t; };
@@ -298,7 +379,8 @@ function hoQuestNotice(q) {
 // The handout of type t that a source fills, or null when it can't fill that type.
 function handoutFromSource(t, src) {
     if (!src || !HANDOUT_SOURCES[src.from].fills.includes(t)) return null;
-    return withSeed(deriveSeed(src.seed, 'handout-' + t), () => {
+    let body = null, small = null, jobs = null;
+    const h = withSeed(deriveSeed(src.seed, 'handout-' + t), () => {
         let h = null;
         if (src.npc && t === 'wanted') {
             const n = src.npc;
@@ -312,7 +394,7 @@ function handoutFromSource(t, src) {
             const n = src.npc;
             h = {
                 style: rand() < 0.5 ? 'letter' : 'note', to: randomArray(HANDOUT_LETTER_TO), re: hoCap(n.questHook),
-                body: [randomArray(HANDOUT_LETTER_OPEN), randomArray(HANDOUT_LETTER_ASK), randomArray(HANDOUT_LETTER_END)].join('\n\n'),
+                body: body = [randomArray(HANDOUT_LETTER_OPEN), randomArray(HANDOUT_LETTER_ASK), randomArray(HANDOUT_LETTER_END)],
                 close: randomArray(HANDOUT_LETTER_CLOSE), from: n.name, title: n.profession, seal: randomArray(Object.keys(HANDOUT_SEALS))
             };
         } else if (src.quest && t === 'letter') {
@@ -320,17 +402,17 @@ function handoutFromSource(t, src) {
             const pay = `I will pay ${formatCoins(q.reward.gp)} for the job. ${questRewardText(q.reward)}`;
             h = {
                 style: 'letter', to: randomArray(HANDOUT_LETTER_TO), re: q.title,
-                body: [randomArray(HANDOUT_LETTER_OPEN), q.task, `When: ${q.deadline}.`, pay, randomArray(HANDOUT_LETTER_END)].join('\n\n'),
+                body: body = [randomArray(HANDOUT_LETTER_OPEN), q.task, `When: ${q.deadline}.`, pay, randomArray(HANDOUT_LETTER_END)],
                 close: randomArray(HANDOUT_LETTER_CLOSE), from: g.name, title: g.profession, seal: randomArray(Object.keys(HANDOUT_SEALS))
             };
         } else if (src.quest && t === 'board') {
             // The quest itself, then 2–4 more public jobs from the same seed, then 1–2 small notices.
             const q = src.quest;
             const more = randomInt(2, 4), fill = randomInt(1, 2);
-            const jobs = Array.from({ length: more }, (_, i) =>
+            jobs = Array.from({ length: more }, (_, i) =>
                 hoQuestNotice(rollQuest(deriveSeed(src.seed, 'board' + i), { level: q.level, size: q.size, job: randomArray(HANDOUT_PUBLIC_JOBS) })));
             const pool = [...HANDOUT_FILLER_NOTICES];
-            const small = Array.from({ length: fill }, () => ({ ...pool.splice(Math.floor(rand() * pool.length), 1)[0] }));
+            small = Array.from({ length: fill }, () => ({ ...pool.splice(Math.floor(rand() * pool.length), 1)[0] }));
             const notices = [hoQuestNotice(q), ...jobs, ...small].slice(0, HANDOUT_LISTS.board.max);
             h = { title: randomArray(HANDOUT_BOARD_TITLES), notices };
         } else if (src.shop && t === 'prices') {
@@ -340,8 +422,50 @@ function handoutFromSource(t, src) {
                 items: shopPrices(s).slice(0, HANDOUT_LISTS.prices.max).map(p => ({ name: p.name, price: p.price, note: p.sale ? 'Today only' : '' }))
             };
         }
-        return h && handoutClean(t, { ...h, src: src.query });
+        return h;
     });
+    if (!h) return null;
+    // The later draw (E7): newer lines in place of some of the old ones.
+    withSeed(deriveSeed(src.seed, 'handout-' + t + '.more'), () => {
+        if (t === 'wanted') {
+            const all = HANDOUT_CRIMES.concat(HANDOUT_CRIMES_MORE);
+            const crime = hoSwap(h.crime, HANDOUT_CRIMES, HANDOUT_CRIMES_MORE.map(c => c[0]));
+            const tier = all.find(c => c[0] === crime)[1], was = all.find(c => c[0] === h.crime)[1];
+            const reward = randomArray(HANDOUT_REWARDS[tier]);
+            if (tier !== was) h.reward = reward;
+            h.crime = crime;
+            h.paid = hoSwap(h.paid, HANDOUT_PAID, HANDOUT_PAID_MORE);
+            h.issuer = hoSwap(h.issuer, HANDOUT_ISSUERS, HANDOUT_ISSUERS_MORE);
+        } else if (t === 'letter') {
+            const last = body.length - 1;
+            h.to = hoSwap(h.to, HANDOUT_LETTER_TO, HANDOUT_LETTER_TO_MORE);
+            body[0] = hoSwap(body[0], HANDOUT_LETTER_OPEN, HANDOUT_LETTER_OPEN_MORE);
+            if (src.npc) body[1] = hoSwap(body[1], HANDOUT_LETTER_ASK, HANDOUT_LETTER_ASK_MORE);
+            body[last] = hoSwap(body[last], HANDOUT_LETTER_END, HANDOUT_LETTER_END_MORE);
+            h.close = hoSwap(h.close, HANDOUT_LETTER_CLOSE, HANDOUT_LETTER_CLOSE_MORE);
+        } else if (t === 'board') {
+            h.title = hoSwap(h.title, HANDOUT_BOARD_TITLES, HANDOUT_BOARD_TITLES_MORE);
+            // No two jobs on one board with the same title: a repeat is rolled again under its own seed.
+            const heads = new Set([h.notices[0].head]);
+            jobs.forEach((n, i) => {
+                for (let k = 0; heads.has(n.head) && k < 20; k++) {
+                    const q = src.quest;
+                    Object.assign(n, hoQuestNotice(rollQuest(deriveSeed(src.seed, `board${i}.more${k}`), { level: q.level, size: q.size, job: randomArray(HANDOUT_PUBLIC_JOBS) })));
+                }
+                heads.add(n.head);
+            });
+            // The small notices, never one twice.
+            const pool = HANDOUT_FILLER_NOTICES_MORE.slice();
+            small.forEach(n => {
+                const i = Math.floor(rand() * pool.length);
+                if (rand() < pool.length / (HANDOUT_FILLER_NOTICES.length + pool.length)) Object.assign(n, pool.splice(i, 1)[0]);
+            });
+        } else if (t === 'prices') {
+            h.foot = hoSwap(h.foot, HANDOUT_SHOP_FOOT, HANDOUT_SHOP_FOOT_MORE);
+        }
+    });
+    if (body) h.body = body.join('\n\n');
+    return handoutClean(t, { ...h, src: src.query });
 }
 
 // ── Drawing ───────────────────────────────────────────────
