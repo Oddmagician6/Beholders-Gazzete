@@ -51,7 +51,8 @@ const OS_TONE_KEYS = Object.keys(OS_TONES);
 const OS_TERRAIN = {
     crypt: ['road', 'forest', 'moor'], mine: ['hills', 'mountains'], tower: ['forest', 'moor', 'hills'],
     temple: ['swamp', 'jungle', 'coast'], fort: ['hills', 'forest', 'road'], lair: ['hills', 'mountains', 'forest', 'swamp'],
-    keep: ['moor', 'hills', 'plains']
+    keep: ['moor', 'hills', 'plains'], sewer: ['road', 'plains'], seacave: ['coast'], shipwreck: ['coast'], lighthouse: ['coast'],
+    manor: ['forest', 'moor', 'plains', 'hills'], barrow: ['moor', 'hills', 'plains']
 };
 const OS_TOWN_SETTING = {
     road: 'crossroads', plains: 'farmland', forest: 'forest', hills: 'hills', moor: 'hills', coast: 'coast',
@@ -329,7 +330,25 @@ const OS_ARRIVE = {
         "A warm wind breathes out of the cave mouth, then in, then out, slow and steady. It smells of old meat and something sharper."],
     keep: ["The keep's outer wall has fallen, but the tower still stands. Crows sit along the broken battlements, and not one of them makes a sound.",
         "The keep sits on a rise above a dead village, its drawbridge down and its gate wide open, as if it's expecting someone.",
-        "Moss climbs the keep's walls as high as the arrow slits. Above them the stone is clean, as if something keeps it scrubbed."]
+        "Moss climbs the keep's walls as high as the arrow slits. Above them the stone is clean, as if something keeps it scrubbed."],
+    sewer: ["The grate lifts out more easily than it should, as if someone oils it. The smell that comes up out of the dark makes everyone take a step back.",
+        "Under the bridge, the river runs past a brick tunnel mouth. Its bars have been cut through and bent neatly back, and a lantern hangs just inside.",
+        "Behind the tannery, a cellar wall has been knocked through into the old drains. Someone has chalked an arrow on the bricks, pointing down."],
+    seacave: ["At low tide the cave mouth shows in the cliff, black and dripping. A boat is drawn up on the shingle inside, and its oars are still wet.",
+        "Steps cut into the cliff lead down from a ruined chapel, half hidden by brambles. The sea booms somewhere below, inside the rock.",
+        "Gulls wheel over the cliff, but none of them land near the cave. Barrel staves and rope ends wash about in the surf by its mouth."],
+    shipwreck: ["The wreck lies on its side on the rocks, masts trailing in the surf. Green weed hangs from every rail, and the hatch to below stands open.",
+        "At low tide you can walk out to the wreck across the wet sand. Its figurehead, a woman with her hands over her eyes, watches you come.",
+        "The ship sits upright in the bay, run aground long ago and never floated off. A thin trail of smoke rises from its stern cabin."],
+    lighthouse: ["The causeway to the lighthouse is only just above the water, and the tide is turning. The great lamp at the top is dark.",
+        "The lighthouse stands on its rock against a grey sky, its keeper's cottage huddled at its foot. Every window is shuttered but one.",
+        "A boat that isn't the keeper's is tied up at the lighthouse jetty. Up at the top, the lamp is lit, though it is broad day."],
+    manor: ["The drive is lined with dead elms, and the house at the end of it has every curtain drawn. The front door stands open, just a little.",
+        "The manor's gardens have run wild, but someone has cut a path through the weeds to the front step. A light moves behind an upstairs window.",
+        "Ivy has swallowed the east wing of the house. The rest is untouched, as if the family stepped out this morning. A clock inside is striking."],
+    barrow: ["The mound rises out of the heather, bigger than a barn and green on top. Standing stones flank a dark passage into its side.",
+        "Someone has dug a hole in the top of the barrow, and turf lies in heaps around it. The rope they left is still tied to a stake.",
+        "Crows sit on the standing stones around the barrow, and not one of them takes off as you come near. The stone door is rolled aside."]
 };
 // For a site kind with no lines of its own.
 const OS_ARRIVE_ANY = ["The way in is just where the stories said it would be, and it looks as if nobody has used it in years. Nobody but someone, very recently."];
@@ -629,7 +648,7 @@ function rollOneShot(seed, opts = {}, set = {}) {
     const seeds = Object.fromEntries(OS_PARTS.map(id => [id, ps(id)]));
     // A random kind belongs to the site and a random tone to the plot, so a kept part keeps them.
     // Always drawn, so picking one doesn't shift anything else.
-    const drawnKind = withSeed(deriveSeed(seeds.site, 'kind'), () => osPick(SITE_KIND_KEYS));
+    const drawnKind = siteMoreKind(seeds.site, withSeed(deriveSeed(seeds.site, 'kind'), () => osPick(SITE_KIND_FIRST)));
     const drawnTone = withSeed(deriveSeed(seeds.plot, 'tone'), () => osPick(OS_TONE_KEYS));
     const tone = OS_TONES[opts.tone] ? opts.tone : drawnTone;
     const kind = SITE_KINDS[opts.kind] ? opts.kind : drawnKind;

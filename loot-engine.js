@@ -522,7 +522,9 @@ function composeArt(value) {
     .replace('{subject}', () => lootPick(ART_SUBJECTS))
     .replace('{gems}', () => artGem(band, true))
     .replace('{gem}', () => artGem(band, false));
-  return `${lootPick(ART_MATERIALS[band])} ${lootPick(objects)} ${decor}`;
+  const material = lootPick(ART_MATERIALS[band]), object = lootPick(objects);
+  // Not "chess set set with a topaz".
+  return `${material} ${object} ${/ set$/.test(object) ? decor.replace(/^set with/, 'inlaid with') : decor}`;
 }
 
 // Looks for a magic item: potions and scrolls always, most other items, never artifacts.

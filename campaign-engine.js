@@ -244,8 +244,9 @@ const CP_STAND = {
     temple: ['priest', 'cult-fanatic', 'acolyte'], circle: ['druid', 'scout']
 };
 
-// The last chapter happens somewhere a villain lives.
+// The last chapter happens somewhere a villain lives. MORE: added later (siteMoreKind).
 const CP_FINAL_KINDS = ['keep', 'fort', 'tower', 'temple'];
+const CP_FINAL_MORE = ['manor', 'lighthouse'];
 
 // ── Helpers ──────────────────────────────────────────────
 function cpWeighted(pairs) {
@@ -403,8 +404,9 @@ function rollCampaign(seed, opts = {}, set = {}) {
         const cs = seeds['ch' + i];
         const last = i === n - 1;
         const level = cpLevel(i, n, start, end);
-        const kinds = last ? CP_FINAL_KINDS : SITE_KIND_KEYS;
-        const kind = withSeed(deriveSeed(cs, 'kind'), () => osPick(kinds.filter(k => k !== prevKind)));
+        const first = (last ? CP_FINAL_KINDS : SITE_KIND_FIRST).filter(k => k !== prevKind);
+        const more = (last ? CP_FINAL_MORE : SITE_KIND_KEYS.filter(k => !SITE_KIND_FIRST.includes(k))).filter(k => k !== prevKind);
+        const kind = siteMoreKind(cs, withSeed(deriveSeed(cs, 'kind'), () => osPick(first)), first, more);
         prevKind = kind;
         const lt = !last && ltAt[i] !== undefined ? lts[ltAt[i]] : null;
         const contact = last ? contacts[contacts.length - 1] : contacts[i % contacts.length];

@@ -1,10 +1,12 @@
 /* ============================================
    SITE ENGINE (F39): a keyed adventure site
    rollSite(seed, { kind, size, level, party }) → a crypt, lost mine, wizard's tower,
-   sunken temple, bandit fort, monster lair, or ruined keep: 5-12 rooms on a grid
-   (siteLayout, drawn as SVG by siteMapSvg), a feature in every room, fights from the
-   encounter engine (one group of foes holds the place; something else wanders), traps,
-   a hoard in the last room (opened in the Loot generator), and the site's story.
+   sunken temple, bandit fort, monster lair, ruined keep, sewer, smugglers' cave, shipwreck,
+   lighthouse, haunted manor, or barrow mound: 5-12 rooms on a grid (siteLayout, drawn as
+   SVG by siteMapSvg), a feature in every room, fights from the encounter engine (one group
+   of foes holds the place; something else wanders), traps, someone else in a room or two
+   (a prisoner, a rival party, ...), a hoard in the last room (opened in the Loot
+   generator) on the kind's own ground, and the site's story.
    Every part draws from its own child seed (deriveSeed), so:
      - a new level or party size keeps the map, the rooms, and which rooms hold a fight
        or a trap, and changes only the monsters, the DCs, and the damage;
@@ -64,10 +66,13 @@ const SITE_KINDS = {
         ],
         features: ['A sarcophagus whose lid is carved with a warning in an old script.', 'Candle stubs still warm to the touch.', 'A mural of the dead walking in procession; one figure is new.', 'An iron grate over a shaft that breathes cold air.', 'Bones arranged on the floor in a spiral.', 'A bell rope that disappears into the ceiling.', 'Burial shrouds hung up to dry on a line.', 'A brass plaque listing names, the last one blank.', 'Grave dirt scattered across the floor in footprints that lead in and not out.', 'A carved stone hand rising from the floor, palm up, with coins in it.'],
         senses: ['Cold air seeps from somewhere below.', 'Dust sifts from the ceiling at every footstep.', 'It smells of old incense and older rot.', 'Something drips, slow and steady, in the dark.', 'A faint scraping sound, like a lid being moved, stops when you listen for it.', 'The torchlight seems weaker here.'],
-        builders: ['the priests of a death god whose name no one prays to anymore', 'a family of minor nobles, now extinct', 'a town council during a plague year', 'an order of knights for its fallen', 'the old kings of this land', 'a necromancer who planned ahead'],
-        purposes: ['as a resting place for its honored dead', 'to bury the dead of a great plague far from the living', 'as a family tomb, extended every generation', 'to hold a relic that kept the dead from rising', 'as a monastery for the priests who tended the graves'],
-        fates: ['the last priest died and nobody came to replace them', 'grave robbers broke the seals, and what they woke drove them out', 'the town above burned, and the crypt was forgotten under the ashes', 'a flood filled the lower vaults and the doors were bricked up', 'the relic that kept the dead quiet was stolen'],
-        containers: ['inside the great sarcophagus, under the body', 'in iron-banded grave chests at the foot of the dais', 'heaped around the bier as offerings', 'in a hidden compartment under the altar']
+        builders: ['the priests of a death god whose name no one prays to anymore', 'a family of minor nobles, now extinct', 'a town council during a plague year', 'an order of knights for its fallen', 'the old kings of this land', 'a necromancer who planned ahead', 'a guild of embalmers who buried their own here', 'a mourning queen, for one husband and then the next three', 'a monastery that sold burial plots to the rich'],
+        purposes: ['as a resting place for its honored dead', 'to bury the dead of a great plague far from the living', 'as a family tomb, extended every generation', 'to hold a relic that kept the dead from rising', 'as a monastery for the priests who tended the graves', 'to bury the losers of a war where the winners could not see them', 'as a place to hide the bodies of heretics, unblessed', 'to keep a saint\'s bones where pilgrims could pay to see them'],
+        fates: ['the last priest died and nobody came to replace them', 'grave robbers broke the seals, and what they woke drove them out', 'the town above burned, and the crypt was forgotten under the ashes', 'a flood filled the lower vaults and the doors were bricked up', 'the relic that kept the dead quiet was stolen', 'the family that paid for it ran out of money, and then out of heirs', 'a new faith came, and the old dead were left to the old gods', 'the dead began to be found in the wrong coffins, and the priests stopped coming down'],
+        containers: ['inside the great sarcophagus, under the body', 'in iron-banded grave chests at the foot of the dais', 'heaped around the bier as offerings', 'in a hidden compartment under the altar', 'in a row of funeral urns, ashes on top and coin underneath', 'sewn into the burial shrouds of the oldest dead', 'in a reliquary chest whose lock is shaped like a skull'],
+        doing: { folk: [['unaware', 'prying the lid off a sarcophagus, one of them holding the lantern'], ['unaware', 'praying in front of the hooded statue, in a language nobody should still speak'], ['ambush', 'lying in the open coffins, as still as the dead']], beast: [['unaware', 'nosing through a broken coffin'], ['ambush', 'waiting in the burial niches, too high to see into']] },
+        ground: ['Stone coffins in rows give half cover to anyone crouched behind one.', 'The floor is uneven with grave slabs; a few have sunk, and count as difficult terrain.', 'A raised dais at the far end puts anyone on it 5 feet above the rest of the room.', 'Burial niches in the walls are big enough for a Small creature to climb into and fight from (three-quarters cover).', 'Pillars carved like mourners hold up the roof; each one blocks line of sight.', 'Candle stands are everywhere; knocking one over leaves a 5-foot patch of burning wax.'],
+        hazards: ['The floor of the far half is thin over a lower vault. The first time a Large creature or three Medium ones stand on it, it gives way: DC {dc} Dexterity saving throw or fall 10 feet and take {dmg} bludgeoning damage.', 'Grave gas pools in the low corners. Anyone who starts a turn in one makes a DC {dc} Constitution saving throw or is poisoned until the end of their next turn.']
     },
     mine: {
         label: 'Lost mine', icon: '⛏️', entry: 'top', cols: 5, rows: 4, shape: 'cave', door: 'a timber door', habitat: 'underdark', hoard: 'den',
@@ -105,10 +110,13 @@ const SITE_KINDS = {
         ],
         features: ['A rusted minecart that rolls if anyone leans on it.', 'Old warning chalk marks on the wall: "BAD AIR".', 'A lantern hung on a hook, still lit.', 'Pick marks that change from human-sized to something much larger.', 'Timbers holding the ceiling, one of them cracked through.', 'A vein of quartz that glows faintly in the dark.', 'A tally of days scratched on the wall by someone trapped here.', 'A rope bridge over a narrow crevice.', 'A pile of ore sorted carefully into "good" and "cursed".', 'A dead canary in a cage.'],
         senses: ['The tunnels groan as the rock settles.', 'The air is thick, hot, and tastes of metal.', 'Water drips everywhere; the floor is slick.', 'A tapping sound comes from deeper in, like a pick, and stops when you stop.', 'Bats rustle on the ceiling.', 'A cold draft from somewhere below.'],
-        builders: ['a dwarf clan that came for the silver', 'a human prospecting company with a royal charter', 'a gnome guild of engineers', 'a mad baron who swore there was gold under his land', 'slaves of a forgotten empire'],
-        purposes: ['to dig out a silver seam', 'to mine iron for a war', 'to chase a vein of gems', 'to quarry a rare stone for a temple', 'to find the source of a strange crystal'],
-        fates: ['the miners dug too deep and broke into something\'s home', 'a cave-in sealed the lower levels with the miners inside', 'the seam ran out and the company left overnight, owing everyone', 'the water came in and the pumps failed', 'the miners vanished one shift and the rest refused to go down'],
-        containers: ['in the old company strongbox', 'in ore carts piled with more than ore', 'scattered through a nest of stolen things', 'in a sealed dwarven chest at the end of the seam']
+        builders: ['a dwarf clan that came for the silver', 'a human prospecting company with a royal charter', 'a gnome guild of engineers', 'a mad baron who swore there was gold under his land', 'slaves of a forgotten empire', 'two brothers with one pick, and later two hundred men', 'a temple that needed stone, and convicts to cut it', 'a halfling family who found gold under their turnips'],
+        purposes: ['to dig out a silver seam', 'to mine iron for a war', 'to chase a vein of gems', 'to quarry a rare stone for a temple', 'to find the source of a strange crystal', 'to mine salt for half the kingdom', 'to dig coal for a city that burned through it faster every winter', 'to follow a map that promised a dwarven city below'],
+        fates: ['the miners dug too deep and broke into something\'s home', 'a cave-in sealed the lower levels with the miners inside', 'the seam ran out and the company left overnight, owing everyone', 'the water came in and the pumps failed', 'the miners vanished one shift and the rest refused to go down', 'the miners struck, the owners hired thugs, and nobody won', 'the crystal they dug up made the miners sick, then strange', 'a fire in the lower galleries burned for a year, and nobody went back'],
+        containers: ['in the old company strongbox', 'in ore carts piled with more than ore', 'scattered through a nest of stolen things', 'in a sealed dwarven chest at the end of the seam', 'in the pay chest, never handed out on the last day', 'in leather sacks hidden under the floor of the foreman\'s cave', 'in a lead-lined box of uncut stones'],
+        doing: { folk: [['unaware', 'loading a cart with ore, and arguing about whose turn it is to push'], ['unaware', 'picking at the seam by lamplight, backs to the door'], ['ready', 'standing round a lit fuse, and one of them is about to throw it']], beast: [['unaware', 'chewing on a leather boot with a foot still in it'], ['ambush', 'clinging to the timbers overhead']] },
+        ground: ['Mine rails run across the room; a cart on them can be shoved 20 feet as an action, and hits like a battering ram.', 'Timber props hold up the ceiling. Knocking one out (AC 15, 20 hit points) brings down rubble on a 10-foot square.', 'Spoil heaps 5 feet high give half cover, and are difficult terrain to climb.', 'A shaft in the floor, 5 feet across, drops 30 feet to the level below.', 'Puddles of water and loose gravel make the low end of the room difficult terrain.', 'Lamps hang on hooks along the walls; knock them down and the room goes dark.'],
+        hazards: ['Blasting powder is stacked by the wall. Fire or lightning that touches it sets it off: everyone within 10 feet makes a DC {dc} Dexterity saving throw or takes {dmg} fire damage; half damage on a success.', 'The roof is bad. The first time something thunderous happens here, rubble falls: everyone in a random 10-foot square makes a DC {dc} Dexterity saving throw or takes {dmg} bludgeoning damage.']
     },
     tower: {
         label: "Wizard's tower", icon: '🗼', entry: 'bottom', cols: 2, rows: 7, shape: 'circle', stairs: true, door: 'an oak door', habitat: 'dungeon', hoard: 'wizard',
@@ -146,10 +154,13 @@ const SITE_KINDS = {
         ],
         features: ['A floating staircase that moves when no one is on it.', 'A talking portrait that gives bad advice.', 'Books that rearrange themselves on the shelves.', 'A window that shows a different season.', 'Chalk equations on the wall, ending mid-line.', 'A broom that keeps sweeping on its own.', 'An hourglass running upward.', 'A stuffed owl that blinks.', 'A cauldron, simmering, with no fire under it.', 'A rug that tries to trip strangers.'],
         senses: ['The tower sways a little in the wind.', 'Everything smells of ozone and old paper.', 'A clock ticks somewhere, though there are no clocks.', 'Whispers come from the walls, in a language you almost know.', 'Static makes your hair stand on end.', 'A faint music box tune plays, then stops.'],
-        builders: ['an archmage who wanted to be left alone', 'a guild of wizards as a training school', 'a court mage who fell out of favor', 'a sorcerer who lifted every stone with a spell', 'two rival wizards who built it together and fought for the rest of their lives'],
-        purposes: ['to study the stars', 'to keep a dangerous book safe', 'to train apprentices', 'to work on a spell that would change the world', 'to imprison something in the cellar'],
-        fates: ['the wizard vanished in the middle of an experiment', 'the apprentices turned on their master', 'a spell went wrong and the top floors still hum with it', 'the wizard died, and the tower did not notice', 'the thing in the cellar got out'],
-        containers: ['in a chest that opens only to a polite request', "on the wizard's workbench, among the notes", 'in a cabinet of drawers, each one locked', 'in a vault behind a bookcase']
+        builders: ['an archmage who wanted to be left alone', 'a guild of wizards as a training school', 'a court mage who fell out of favor', 'a sorcerer who lifted every stone with a spell', 'two rival wizards who built it together and fought for the rest of their lives', 'a king, for a wizard he wanted close and watched', 'an alchemist who paid the masons in gold that turned to lead the next week', 'a wizard who grew it from a single enchanted stone'],
+        purposes: ['to study the stars', 'to keep a dangerous book safe', 'to train apprentices', 'to work on a spell that would change the world', 'to imprison something in the cellar', 'to watch the border for a king who paid in favors', 'to brew a cure for a plague, which it did, too late', 'to talk with something on another plane'],
+        fates: ['the wizard vanished in the middle of an experiment', 'the apprentices turned on their master', 'a spell went wrong and the top floors still hum with it', 'the wizard died, and the tower did not notice', 'the thing in the cellar got out', 'the wizard\'s guild declared it forbidden, and nobody dared buy it', 'lightning struck it on the night of the great experiment, and the wizard went with the flash', 'the wizard sold their tower to pay a debt, and the buyer never moved in'],
+        containers: ['in a chest that opens only to a polite request', "on the wizard's workbench, among the notes", 'in a cabinet of drawers, each one locked', 'in a vault behind a bookcase', 'inside a stuffed crocodile hanging from the ceiling', 'in a box of jars, each one labeled wrongly on purpose', 'in a trunk that is bigger inside than out'],
+        doing: { folk: [['unaware', 'reading the wizard\'s notes aloud, and getting the words wrong'], ['ready', 'mid-spell over a glowing circle, and they look up as the door opens'], ['unaware', 'trying on the wizard\'s robes and hats']], beast: [['unaware', 'knocking glassware off the shelves one piece at a time'], ['ambush', 'hiding among the stuffed and mounted creatures on the walls']] },
+        ground: ['Bookshelves and tables give half cover; a shelf can be pushed over (DC 13 Strength) to make a 10-foot line of difficult terrain.', 'A spiral stair climbs the wall to a gallery 10 feet up.', 'Glassware covers every table; a creature knocked into one takes 1d4 slashing damage.', 'The floor is painted with a magic circle. Anyone standing in it has advantage on saving throws against spells.', 'A tall window looks out on a drop of 60 feet or more.', 'A great pendulum swings slowly through the middle of the room; it blocks line of sight every other round.'],
+        hazards: ['A shelf of unstable potions. Any area spell here smashes them: everyone within 10 feet makes a DC {dc} Constitution saving throw or takes {dmg} acid damage; half damage on a success.', 'Wild magic hangs in the air. Whenever a spell of 1st level or higher is cast here, roll a d6: on a 1, the caster takes {dmg} force damage (DC {dc} Constitution saving throw for half).']
     },
     temple: {
         label: 'Sunken temple', icon: '🛕', entry: 'top', cols: 4, rows: 4, shape: 'mixed', door: 'a bronze door', habitat: 'dungeon', hoard: 'temple',
@@ -187,10 +198,13 @@ const SITE_KINDS = {
         ],
         features: ['An idol with gems for eyes; one eye is missing.', 'Fresh offerings on a long-dead altar.', 'Water dripping through the ceiling onto a single spot, wearing a hole.', 'Roots breaking through the walls, thick as a man.', 'A prayer wheel that still turns.', 'Frescoes of a god with too many arms.', 'A font of holy water that has turned black.', 'Vines that close over the door behind the party.', 'Stone serpents coiled around every pillar.', 'A collection box, nailed down and full.'],
         senses: ['The air is humid and green-smelling.', 'Somewhere, water is moving where it should not.', 'A chant drifts up from far below, then stops.', 'Frogs and insects fall silent as the party passes.', 'The walls sweat.', 'Incense, faint but fresh.'],
-        builders: ['the faithful of a god of the waters', 'a sun cult that ruled the land in its day', 'a monastic order of healers', 'a king who wanted to be remembered as a god', 'snake-worshippers from the south'],
-        purposes: ['to honor a god nobody remembers now', 'as a place of pilgrimage for the sick', 'to keep an oracle', 'to bind a demon under its altar', 'as a fortress-monastery against the dark'],
-        fates: ['the earth swallowed it in a single night, as punishment the priests said', 'the river changed course and the swamp took it', 'the faithful turned to a darker god and the land rejected them', 'a war burned the town around it, and the swamp crept in', 'the high priest made a bargain with something under the altar'],
-        containers: ['in the lap of the idol', 'in the alms chests of a thousand years of pilgrims', 'in a sunken coffer under the altar water', 'in the treasury vault behind the god\'s mouth']
+        builders: ['the faithful of a god of the waters', 'a sun cult that ruled the land in its day', 'a monastic order of healers', 'a king who wanted to be remembered as a god', 'snake-worshippers from the south', 'a frog-folk people who were here before anyone', 'a merchant prince who wanted to buy his way into heaven', 'a prophet who said the ground was holy and was believed'],
+        purposes: ['to honor a god nobody remembers now', 'as a place of pilgrimage for the sick', 'to keep an oracle', 'to bind a demon under its altar', 'as a fortress-monastery against the dark', 'to keep a sacred spring flowing', 'to crown the kings of a land that is now swamp', 'to hold the bones of a god, or something that claimed to be one'],
+        fates: ['the earth swallowed it in a single night, as punishment the priests said', 'the river changed course and the swamp took it', 'the faithful turned to a darker god and the land rejected them', 'a war burned the town around it, and the swamp crept in', 'the high priest made a bargain with something under the altar', 'the oracle foretold its fall, and everyone left early, which caused it', 'a plague killed the monks, and the frogs moved in', 'its god stopped answering, and its priests went looking for one who would'],
+        containers: ['in the lap of the idol', 'in the alms chests of a thousand years of pilgrims', 'in a sunken coffer under the altar water', 'in the treasury vault behind the god\'s mouth', 'inside the idol, through a door in its back', 'in offering bowls at the bottom of the sacred pool', 'in the high priest\'s coffin, which holds no high priest'],
+        doing: { folk: [['unaware', 'chanting on their knees in the silt, facing the altar'], ['unaware', 'hauling an idol out of the water on ropes'], ['ready', 'in a ring with linked arms, singing louder as the party comes in']], beast: [['unaware', 'basking on the warm stones of the altar'], ['ambush', 'lying just under the water, eyes and nostrils showing']] },
+        ground: ['Knee-deep water covers half the room: difficult terrain, and anything prone in it is underwater.', 'Fallen columns lie across the floor; each gives half cover and is difficult terrain to cross.', 'Broad steps rise to the altar, 10 feet above the floor.', 'Roots as thick as a man break through the walls and floor. Climbing them needs no check.', 'Silt has buried the benches to the seat; the room is difficult terrain except down the aisle.', 'A sacred pool in the middle is 15 feet deep, and the water is perfectly clear.'],
+        hazards: ['The roof is held up by roots and habit. Anything that deals thunder damage here brings part of it down: everyone in a 10-foot square makes a DC {dc} Dexterity saving throw or takes {dmg} bludgeoning damage.', 'Leeches the size of a hand live in the water. Anyone who ends a turn in it makes a DC {dc} Constitution saving throw or takes {dmg} piercing damage as they latch on; half damage on a success.']
     },
     fort: {
         label: 'Bandit fort', icon: '🏰', entry: 'bottom', cols: 5, rows: 3, shape: 'rect', door: 'a plank door', habitat: 'hills', hoard: 'bandits', portcullis: true,
@@ -228,10 +242,13 @@ const SITE_KINDS = {
         ],
         features: ['A wanted poster for the leader, used as a dartboard.', 'A cage hung from a beam with someone in it.', 'Stolen church bells used as a dinner gong.', 'Barrels of lamp oil stacked against a wall.', 'A tame bear chained to a post.', 'A pile of stolen mail, some of it opened.', 'A pot of stew bubbling unattended.', 'Loot sorted into piles: sell, keep, burn.', 'A rope ladder to the walkway above.', 'A chalkboard with the watch rota, and a gap tonight.'],
         senses: ['Smoke from the cookfires hangs low.', 'Someone is singing badly.', 'Dogs bark somewhere in the fort.', 'It smells of horses, ale, and pine pitch.', 'The palisade creaks in the wind.', 'Distant laughter, and a slap of cards.'],
-        builders: ['the old lord\'s soldiers, as a border post', 'loggers who needed a safe camp', 'a mercenary company between wars', 'the bandits themselves, from stolen timber', 'a frontier town that never grew'],
-        purposes: ['to guard the road against raiders', 'as a toll post on the river crossing', 'to hold the border', 'as a hunting lodge for a lord', 'as a stockade during an old war'],
-        fates: ['the garrison was recalled and nobody came to replace them', 'it was overrun in a raid and left to rot', 'the lord who paid for it went bankrupt', 'the road moved, and the fort was forgotten', 'its own soldiers turned bandit and kept it'],
-        containers: ['in iron-bound chests under the boss\'s bed', 'in a cellar under a trapdoor', 'in sacks hanging from the rafters', "in a stolen strongbox, still with the merchant's seal"]
+        builders: ['the old lord\'s soldiers, as a border post', 'loggers who needed a safe camp', 'a mercenary company between wars', 'the bandits themselves, from stolen timber', 'a frontier town that never grew', 'a trading company that wanted its own private army', 'settlers who were promised the land was empty', 'a prince in exile, waiting for the call that never came'],
+        purposes: ['to guard the road against raiders', 'as a toll post on the river crossing', 'to hold the border', 'as a hunting lodge for a lord', 'as a stockade during an old war', 'as a fur-trading post', 'to keep a prisoner nobody was supposed to know about', 'as a waystation for the king\'s messengers'],
+        fates: ['the garrison was recalled and nobody came to replace them', 'it was overrun in a raid and left to rot', 'the lord who paid for it went bankrupt', 'the road moved, and the fort was forgotten', 'its own soldiers turned bandit and kept it', 'the war it was built for ended, and nobody told the fort for a year', 'a fever went through the garrison one winter, and the survivors walked home', 'the captain sold it to the bandits for a barrel of brandy and a horse'],
+        containers: ['in iron-bound chests under the boss\'s bed', 'in a cellar under a trapdoor', 'in sacks hanging from the rafters', "in a stolen strongbox, still with the merchant's seal", 'in barrels marked SALT FISH that hold no fish', 'buried under the floor of the boss\'s hall, marked with a horseshoe', 'in a coach taken whole off the road, with the coat of arms scraped off'],
+        doing: { folk: [['unaware', 'dividing the week\'s take into piles, with a lot of shouting'], ['unaware', 'practicing knife throws at a wanted poster'], ['ready', 'saddling horses for a raid, and the party is in the way']], beast: [['unaware', 'gnawing on scraps thrown down from the mess hall'], ['ready', 'straining at their chains, barking']] },
+        ground: ['A walkway runs along the palisade 10 feet up, reached by a ladder at each end.', 'Barrels and crates are stacked everywhere: half cover, and each can be shoved over as an action.', 'Mud from the yard makes half the floor difficult terrain.', 'A cookfire burns in the middle; anyone shoved into it takes 1d6 fire damage.', 'Horses tied at a rail panic once the fighting starts and kick anyone who walks behind them (+5 to hit, 1d8 bludgeoning).', 'A table long enough to stand on runs down the middle of the room.'],
+        hazards: ['Lamp oil soaks the straw on the floor. If fire touches it, the room burns: anyone who starts a turn here makes a DC {dc} Dexterity saving throw or takes {dmg} fire damage.', 'The boss keeps a rack of loaded crossbows by the chair. Anyone can fire one as an action (+4 to hit, 1d10 piercing), until they run out.']
     },
     lair: {
         label: 'Monster lair', icon: '🐉', entry: 'top', cols: 5, rows: 4, shape: 'cave', door: 'a slab of rock', habitat: 'hills', hoard: 'den',
@@ -269,10 +286,13 @@ const SITE_KINDS = {
         ],
         features: ['Huge tracks in the mud, fresh.', 'Shed scales or fur in heaps.', 'A half-eaten cow.', "A dead adventurer's journal, the last page torn.", 'A crude warning sign in Common: GO BAK.', 'Smoke stains on the ceiling in a long streak.', 'A nest of eggs, some cracked.', 'Gold coins trodden into the floor.', 'Old spears snapped and thrown in a pile.', 'Claw marks around a crack too narrow for the beast, as if it tried very hard.'],
         senses: ['It reeks of musk and rotting meat.', 'Deep breathing echoes from further in.', 'The floor is warm.', 'Bones crunch under every step.', 'Water trickles down the walls.', 'A low rumble, like snoring, shakes dust from the ceiling.'],
-        builders: ['nature, over ten thousand years', 'a river that dried up long ago', 'dwarves, who dug it as a mine and fled', 'giants who carved it as a home', 'the beast itself, digging for years'],
-        purposes: ['as a home for whatever lives in it', 'as a shelter for the hill tribes in winter', 'as a smugglers\' cave', 'as a hermit\'s retreat', 'as a shrine to the spirits of the hill'],
-        fates: ['the beast moved in and the others moved out or got eaten', 'it was abandoned when the beast first came', 'the last hero to go in never came out', 'the beast was driven off once, and came back', 'nothing happened to it; it has always been a lair'],
-        containers: ['heaped under the beast where it sleeps', 'scattered among the bones', 'buried under the floor in a crude cache', "in a dead adventurer's pack, along with their stuff"]
+        builders: ['nature, over ten thousand years', 'a river that dried up long ago', 'dwarves, who dug it as a mine and fled', 'giants who carved it as a home', 'the beast itself, digging for years', 'a lava flow, cooling into tubes a long time ago', 'an earthquake that split the hill open', 'hermits, one cell at a time, until the hill was hollow'],
+        purposes: ['as a home for whatever lives in it', 'as a shelter for the hill tribes in winter', 'as a smugglers\' cave', 'as a hermit\'s retreat', 'as a shrine to the spirits of the hill', 'as a place to keep cheese cold for a village that is gone now', 'as a hiding place in a war that everyone has forgotten', 'as the den of an older beast, which this one ate'],
+        fates: ['the beast moved in and the others moved out or got eaten', 'it was abandoned when the beast first came', 'the last hero to go in never came out', 'the beast was driven off once, and came back', 'nothing happened to it; it has always been a lair', 'the village that used it paid the beast in sheep until they ran out of sheep', 'a lord sealed the entrance with the beast inside, and his heirs unsealed it to see what was left', 'its young grew up, and the den grew with them'],
+        containers: ['heaped under the beast where it sleeps', 'scattered among the bones', 'buried under the floor in a crude cache', "in a dead adventurer's pack, along with their stuff", 'in a nest of shiny things the beast could not stop collecting', 'in the stomach of something it ate, now just bones around a purse', 'wedged into cracks in the wall, as if hidden by a clever claw'],
+        doing: { folk: [['unaware', 'feeding the beast through bars, and very careful about it'], ['ready', 'painting their faces with ash before they go out to hunt']], beast: [['unaware', 'licking their wounds from a fight with something bigger'], ['unaware', 'teaching the young to hunt with a live goat'], ['ambush', 'waiting in the dark of a side cave, only their eyes showing']] },
+        ground: ['Stalagmites stand in clusters; each gives half cover.', 'A ledge 15 feet up runs round the cave. Climbing to it takes a DC 12 Strength (Athletics) check.', 'Bones a foot deep cover the floor: difficult terrain, and loud to move through.', 'A crack in the floor, 10 feet wide, splits the cave in two.', 'The roof opens to the sky in one place, and a shaft of light falls through it.', 'A stream runs through the cave, 3 feet deep and fast.'],
+        hazards: ['Loose stalactites hang overhead. A loud noise or a thrown boulder brings one down on a random creature: DC {dc} Dexterity saving throw or take {dmg} piercing damage.', 'The cave floor slopes to a sinkhole at its low end. A creature knocked prone near it slides in unless it succeeds on a DC {dc} Strength saving throw, falling 20 feet and taking {dmg} bludgeoning damage.']
     },
     keep: {
         label: 'Ruined keep', icon: '🏚️', entry: 'bottom', cols: 4, rows: 4, shape: 'rect', door: 'an iron-bound door', habitat: 'dungeon', hoard: 'manor', portcullis: true,
@@ -310,25 +330,296 @@ const SITE_KINDS = {
         ],
         features: ['A suit of armor that turns its head.', 'A coat of arms smashed off the wall.', 'A table still set for a feast.', 'Ivy growing through the windows in great green ropes.', 'A spiral stair with missing steps.', 'A family tree painted on the wall, with one branch burned off.', 'A fireplace big enough to stand in, with a passage behind it.', 'A tapestry of a battle, moth-eaten into a different battle.', 'A tower clock stopped at the same hour as every other clock here.', 'Crows nesting in the rafters.'],
         senses: ['The wind moans through broken windows.', 'Floorboards creak as if someone else is walking.', 'It smells of damp stone and mildew.', 'A door slams somewhere in the keep.', 'Distant music, like a feast, from an empty room.', 'Rain drips through the broken roof.'],
-        builders: ['a baron who held the valley for the crown', 'a knightly order on the frontier', 'a robber-lord who made himself respectable', 'an old royal house in its glory days', 'a warlord who took the land by force'],
-        purposes: ['to hold the pass', 'as the seat of a noble house', 'to guard the river crossing', 'as a royal hunting lodge', 'as a prison for the realm\'s worst enemies'],
-        fates: ['it fell in a siege and was never rebuilt', 'the family died out, one strange death at a time', 'a curse fell on the lord and spread to the house', 'the heir gambled it away, and the new owners never came', 'it burned on the night of a great feast'],
-        containers: ['in the strongroom chests', 'in a hidden compartment behind a portrait', 'in an iron chest under the throne', 'in the family tombs, with the family']
+        builders: ['a baron who held the valley for the crown', 'a knightly order on the frontier', 'a robber-lord who made himself respectable', 'an old royal house in its glory days', 'a warlord who took the land by force', 'a dwarf mason who built it for a lord and then sued him for it', 'twin sisters who ruled it together and never once agreed', 'a crusading order on its way home from a war it lost'],
+        purposes: ['to hold the pass', 'as the seat of a noble house', 'to guard the river crossing', 'as a royal hunting lodge', 'as a prison for the realm\'s worst enemies', 'to keep a dangerous heir far from the capital', 'as the stronghold of a border lord who answered to nobody', 'to watch over a mine, a ford, and a grudge'],
+        fates: ['it fell in a siege and was never rebuilt', 'the family died out, one strange death at a time', 'a curse fell on the lord and spread to the house', 'the heir gambled it away, and the new owners never came', 'it burned on the night of a great feast', 'the crown seized it for treason, then forgot to give it to anyone', 'the lord went to war, the lady went mad, and the servants went home', 'the well went bad, and then the people who drank from it'],
+        containers: ['in the strongroom chests', 'in a hidden compartment behind a portrait', 'in an iron chest under the throne', 'in the family tombs, with the family', 'in the lord\'s war chest, packed for a flight that never came', 'up the chimney, on a ledge only a child could reach', 'in a suit of armor stuffed with coin instead of a knight'],
+        doing: { folk: [['unaware', 'holding court on the broken dais, with one of them as the lord'], ['unaware', 'pulling the lead off the roof and arguing about the price'], ['ready', 'on the walls, and one of them points straight at the party']], beast: [['unaware', 'nesting in the rotten tapestries'], ['ambush', 'perched in the rafters among the crows']] },
+        ground: ['A long table runs down the room; standing on it puts you 3 feet up and in everyone\'s view.', 'A gallery runs round the room 15 feet up, reached by a stair in one corner.', 'Half the roof has fallen; rubble makes a third of the room difficult terrain.', 'A fireplace big enough to stand in is lit; anyone shoved into it takes 2d6 fire damage.', 'Suits of armor line the walls, and give half cover to anyone behind one.', 'Tall windows open on a long fall to the moat.'],
+        hazards: ['A great iron chandelier hangs by a frayed rope. Cutting it (AC 11, 5 hit points) drops it on a 10-foot square: DC {dc} Dexterity saving throw or take {dmg} bludgeoning damage.', 'The floor is rotten over the cellar. The first creature to stand in the middle makes a DC {dc} Dexterity saving throw or falls through, taking {dmg} bludgeoning damage.']
+    },
+    sewer: {
+        label: 'Sewers', icon: '🕳️', entry: 'top', cols: 5, rows: 3, shape: 'rect', door: 'a rusted grate', habitat: 'town', hoard: 'guild',
+        bands: ['wererats', 'vermin', 'lurkers', 'cult', 'shadows', 'lies', 'grimlocks', 'aberrant', 'undead'],
+        names: ['The {Root} Drains', 'The Undercity of {Root}', 'The {Adj} Sluices', 'The Old {Root} Cisterns', 'The {Epithet} Tunnels', 'The {Adj} Outfall'],
+        epithets: ['Rat King\'s', 'Drowned Man\'s', 'Lamplighter\'s', 'Seven Gates', 'Night-Soil', 'Smugglers\''],
+        adjs: ['Old', 'Flooded', 'Forgotten', 'Lower', 'Stinking', 'Sunken', 'Dripping'],
+        entrances: [
+            { name: 'The manhole', text: 'A grate in a back alley lifts out with a crowbar. Iron rungs lead down into the smell.' },
+            { name: 'The outfall', text: 'A brick tunnel mouth spills into the river. The bars across it have been cut and bent back.' },
+            { name: 'The cellar breach', text: 'A tavern cellar wall has been knocked through into the sewer behind it. The tavern keeper would like that bricked up again.' },
+            { name: 'The flushing chamber', text: 'A round chamber where the main drains meet. Ladders lead up to four different streets.' }
+        ],
+        rooms: [
+            { name: 'The main channel', text: 'A wide tunnel with a walkway on each side and a slow brown river between them.' },
+            { name: 'The old cistern', text: 'A vaulted cistern, half full of still water, its roof held up by rows of brick pillars.' },
+            { name: 'The sluice room', text: 'Rusted wheels and chains work the gates that send the water one way or the other. One wheel still turns.' },
+            { name: 'The rat warren', text: 'A side tunnel packed with nests of rags and straw. Thousands of small eyes in the lantern light.' },
+            { name: 'The smugglers\' landing', text: 'A dry ledge where a boat can tie up, with crates stacked under tarpaulins and a ledger hidden badly.' },
+            { name: 'The collapsed vault', text: 'A cellar of some long-gone house that fell into the sewer. Its wine racks are still standing in the muck.' },
+            { name: 'The lamplighters\' store', text: 'Lanterns, oil, long poles, and a duty roster that ends a year ago.' },
+            { name: 'The shrine of lost things', text: 'Things that fell down the drains, arranged on a brick shelf like offerings: rings, coins, a doll, a false eye.' },
+            { name: 'The old street', text: 'A whole street of the old city, buried when the new one was built on top. Shop signs still hang over empty doors.' },
+            { name: 'The fungus grotto', text: 'Pale mushrooms carpet a damp chamber. They glow green, and some of them are bigger than a dog.' },
+            { name: 'The overflow', text: 'A steep brick slope where floodwater pours down into the dark when it rains up above.' },
+            { name: 'The thieves\' hideout', text: 'A dry chamber with bunks, a card table, and a map of the city with certain houses circled.' },
+            { name: 'The bone pipes', text: 'A tangle of old pipes where something has packed the bones of whatever it caught.' },
+            { name: 'The dead-end tunnel', text: 'A short tunnel bricked up at the end, recently. The mortar is still soft.' }
+        ],
+        ends: [
+            { name: 'The great cistern', text: 'A cathedral of brick under the city, its roof lost in darkness. An island of rubble stands in the black water.' },
+            { name: 'The rat king\'s court', text: 'A chamber heaped with stolen goods around a throne built from a barrel, a cartwheel, and a mayor\'s chair.' },
+            { name: 'The forgotten temple', text: 'A small temple from before the city was built over it, still dry, still lit.' },
+            { name: 'The treasure drain', text: 'Where every drain in the rich quarter ends. Generations of dropped coins and rings glitter in the silt.' }
+        ],
+        features: ['A grate overhead lets in daylight and the sound of a market.', 'Chalk marks at each junction: a code, and someone has changed the last one.', 'A dead body caught on a grate, wearing good boots.', 'A rowing boat tied to a ring in the wall.', 'Pipes overhead drip something warm.', 'A stuck sluice gate holding back a lot of water.', 'A lantern on a hook, recently lit.', 'Bricks carved with the names of the workers who laid them.', 'A rope bridge across a fast channel.', 'Thousands of rats, all running the same way.'],
+        senses: ['The smell is like a wall.', 'Water rushes somewhere close, then stops.', 'Footsteps on the street above, muffled.', 'Every sound echoes three times.', 'Something splashes in the dark, then nothing.', 'The air is warm and wet and tastes of copper.'],
+        builders: ['the city fathers, when the old river stank too much', 'dwarven engineers paid by the yard', 'prisoners working off their sentences', 'a guild of masons who built it far bigger than anyone asked', 'the old city, before the new one was built on top'],
+        purposes: ['to carry the city\'s filth to the river', 'to drain the marsh the city was built on', 'to store water for a siege', 'as a way for the old kings to move unseen', 'to hide a smuggling trade under the customs house', 'to keep the plague away, which it did not', 'to bury the old city out of sight'],
+        fates: ['the city grew, and nobody remembered where the old tunnels went', 'a flood filled the lower tunnels, and the city stopped sending workers down', 'the thieves\' guild took it over, and the watch learned not to follow', 'the cistern cracked and the tunnels around it were sealed', 'the workers kept finding things down there that they would not talk about', 'the council stopped paying the lamplighters'],
+        containers: ['in a smugglers\' chest on a dry ledge', 'in the silt, where the rich quarter\'s drains end', 'in a sack hanging from a hook over the water', 'in a strongbox stolen from the customs house', 'inside a drainpipe, packed with rags to keep it dry', 'on the throne of the master of the place, as a cushion'],
+        doing: { folk: [['unaware', 'unloading a boat of crates onto a ledge'], ['ambush', 'waist-deep in the channel, blades under the water'], ['unaware', 'counting stolen purses on a dry step']], beast: [['unaware', 'swarming over a dead dog in the water'], ['ambush', 'under the surface of the channel']] },
+        ground: ['A narrow walkway runs along each side of a channel of filthy water 4 feet deep.', 'Brick pillars hold up the roof; each blocks line of sight.', 'An iron grate across the channel can be lowered from a wheel on the wall (an action).', 'The floor is slick: anyone who Dashes makes a DC 10 Dexterity saving throw or falls prone.', 'A pipe 3 feet wide leads off the room; Small creatures can crawl through it.', 'A ladder leads up to a street grate, 20 feet above.'],
+        hazards: ['The sluice upstream can be opened from the room. A wall of water sweeps down the channel: everyone in or beside it makes a DC {dc} Strength saving throw or takes {dmg} bludgeoning damage and is carried 20 feet downstream.', 'The water is foul. Anyone who goes under, or ends a turn in it with an open wound, makes a DC {dc} Constitution saving throw or catches sewer plague.']
+    },
+    seacave: {
+        label: 'Smugglers\' cave', icon: '🌊', entry: 'bottom', cols: 5, rows: 3, shape: 'cave', door: 'a driftwood door', habitat: 'coast', hoard: 'smugglers',
+        bands: ['pirates', 'bandits', 'sahuagin', 'deep', 'hags', 'lizardfolk', 'aberrant', 'undead', 'shadows'],
+        names: ['{Root}\'s Cove', 'The {Adj} Grotto', 'The Caves of {Root}', 'The {Epithet} Hole', 'The {Adj} Caverns', 'The Sea Caves under {Root}'],
+        epithets: ['Wrecker\'s', 'Mermaid\'s', 'Drowned Bell', 'Gull', 'Black Sail', 'Kraken\'s', 'Lantern'],
+        adjs: ['Echoing', 'Booming', 'Tidal', 'Salt', 'Green', 'Hidden', 'Weeping'],
+        entrances: [
+            { name: 'The sea mouth', text: 'A cave mouth in the cliff that only shows at low tide. A rowing boat is pulled up on the shingle inside.' },
+            { name: 'The cliff stair', text: 'Steps cut into the cliff lead down from a clifftop chapel, hidden behind a bramble bush.' },
+            { name: 'The blowhole', text: 'A hole in the clifftop that roars when the waves come in. A rope ladder hangs down it, between roars.' },
+            { name: 'The fisherman\'s hut', text: 'A tumbledown hut on the beach. Under its floor, a trapdoor and a ladder into the rock.' }
+        ],
+        rooms: [
+            { name: 'The landing', text: 'A beach of black shingle inside the cliff, where boats unload. Lanterns on poles mark the safe way in.' },
+            { name: 'The tide pool cave', text: 'Pools of seawater full of crabs and anemones. One pool is much deeper than the others.' },
+            { name: 'The storeroom', text: 'Crates, barrels, and bales stacked on a dry shelf of rock, every one marked with a different merchant\'s stamp.' },
+            { name: 'The drowned passage', text: 'A tunnel that floods at high tide. A rope runs along the wall for those who have to swim it.' },
+            { name: 'The lookout', text: 'A crack in the cliff gives a view of the whole bay. A spyglass sits on a ledge.' },
+            { name: 'The crew cave', text: 'Hammocks strung between stalactites, a cold stove, and a game of cards left face up.' },
+            { name: 'The wreck cave', text: 'The bow of a ship is wedged into the cave, driven in by a storm long ago. Its figurehead stares at the door.' },
+            { name: 'The singing cave', text: 'Wind through the rock makes a long, low note that never quite stops.' },
+            { name: 'The barnacle hall', text: 'A cave the sea fills twice a day. Every surface is crusted with barnacles sharp enough to cut.' },
+            { name: 'The rum cellar', text: 'Kegs of rum stacked to the ceiling, and a tap in one of them that has been used a lot.' },
+            { name: 'The prison cave', text: 'A cave closed off with a grate, where the tide comes up to the knees of whoever is inside.' },
+            { name: 'The shell shrine', text: 'A shrine to a sea god built from shells and driftwood. Someone leaves fish here every day.' },
+            { name: 'The kelp cave', text: 'Kelp hangs from the roof like curtains, and the floor is slick with it.' },
+            { name: 'The signal room', text: 'A lantern with colored glass shutters, pointing out to sea through a hole in the rock.' }
+        ],
+        ends: [
+            { name: 'The captain\'s grotto', text: 'A dry cave furnished with things taken from fine ships: a carpet, a desk, a bed with curtains, and a chair with a view.' },
+            { name: 'The sea altar', text: 'A cave open to the sea at one end, where an altar of coral stands at the waterline.' },
+            { name: 'The hoard pool', text: 'A pool of still seawater at the heart of the cliff, its bottom paved with coins.' },
+            { name: 'The ship\'s graveyard', text: 'A huge cave where the bones of three ships lie heaped together, and something lives in them.' }
+        ],
+        features: ['A message in a bottle, unopened.', 'Tide marks on the wall, well above head height.', 'A wrecker\'s lantern with a red glass.', 'A crab the size of a shield, dead and hollow.', 'A chart of the coast with the reefs marked in blood.', 'Barrels with false bottoms, one of them open.', 'A ship\'s bell hung from the roof.', 'A pile of nets with something tangled in them.', 'Footprints in the sand, all going in.', 'A carving of a mermaid with a key in her hand.'],
+        senses: ['The boom of the waves shakes the rock.', 'Salt spray on every surface.', 'The tide is coming in: you can hear it.', 'It smells of seaweed, tar, and rum.', 'Gulls cry somewhere overhead.', 'Water drips from the roof, salty on the tongue.'],
+        builders: ['the sea, over a thousand years', 'smugglers, who widened it a little more every year', 'a coastal tribe who buried their chiefs here', 'wreckers who lured ships onto the rocks', 'a hermit who found it and never told anyone'],
+        purposes: ['as a hiding place for smuggled goods', 'as a refuge from the press gangs', 'as a shrine to the sea', 'as a pirate captain\'s secret harbor', 'to hide a ship\'s cargo that was never supposed to be found', 'as a lookout for raiders from the sea', 'as a place to wait out the storms'],
+        fates: ['the revenue men found it, and nobody came back for the goods', 'a storm brought down the roof on the old landing', 'the smugglers fell out over shares, and the sea took the losers', 'something came up out of the deep water and claimed it', 'the captain who knew the way in was hanged, and took the secret with them', 'the village above turned honest, mostly'],
+        containers: ['in a sea chest chained to the rock', 'in barrels marked SALT that are not salt', 'at the bottom of the hoard pool', 'in the captain\'s cabin of a wrecked ship', 'in oilskin bundles wedged into a crack above the tide line', 'inside the figurehead of a wreck, through a hidden panel'],
+        doing: { folk: [['unaware', 'rolling barrels up the beach and singing to keep time'], ['ready', 'with lanterns out over the water, signaling a ship that is not coming'], ['unaware', 'mending nets and talking about the last wreck']], beast: [['unaware', 'feeding in the tide pools'], ['ambush', 'under the water at the edge of the landing']] },
+        ground: ['Wet rock everywhere: anyone who Dashes makes a DC 10 Dexterity saving throw or falls prone.', 'Seawater 5 feet deep fills half the cave.', 'Barnacles crust the walls; anyone shoved into them takes 1d4 slashing damage.', 'A rowing boat on the shingle can be pushed off into the water as an action.', 'A ledge 10 feet up runs along one side, reached by a rope.', 'Crates and barrels give half cover.'],
+        hazards: ['The tide is coming in. Each round, roll a d6: on a 1, a wave surges through, and everyone near the water makes a DC {dc} Strength saving throw or takes {dmg} bludgeoning damage and is pulled 10 feet toward the sea.', 'Kegs of rum stand by the wall. Fire that touches them sets them off: everyone within 10 feet makes a DC {dc} Dexterity saving throw or takes {dmg} fire damage; half damage on a success.']
+    },
+    shipwreck: {
+        label: 'Shipwreck', icon: '⚓', entry: 'top', cols: 4, rows: 3, shape: 'rect', stairs: true, door: 'a plank door', habitat: 'coast', hoard: 'smugglers',
+        bands: ['pirates', 'sahuagin', 'deep', 'undead', 'haunt', 'lizardfolk', 'aberrant', 'hags', 'bandits'],
+        names: ['The Wreck of the {Epithet}', 'The {Adj} Hulk', 'The {Root} Wreck', 'The Hull of the {Epithet}', 'The Wreck at {Root}', 'The Last Voyage of the {Epithet}'],
+        epithets: ['Merry Widow', 'Golden Gull', 'Saint Agnes', 'Sea Wolf', 'Lucky Star', 'Crown of the South', 'Never Again'],
+        adjs: ['Broken', 'Drowned', 'Stranded', 'Black', 'Barnacled', 'Burned', 'Listing'],
+        entrances: [
+            { name: 'The main deck', text: 'The deck lies tilted at a steep angle, slick with weed. The hatch to below hangs open.' },
+            { name: 'The hole in the hull', text: 'The rocks tore a hole in the side big enough to walk through at low tide.' },
+            { name: 'The broken stern', text: 'The stern snapped off in the wreck. You can climb straight into the decks through the break.' },
+            { name: 'The rigging', text: 'The masts lean against the cliff. Climbing down them lands you on the forecastle.' }
+        ],
+        rooms: [
+            { name: 'The gun deck', text: 'A long low deck with cannons that broke loose and slid to one side. Daylight shows through the gunports.' },
+            { name: 'The galley', text: 'A cramped kitchen with a stove, pots on hooks, and a barrel of salt pork still sealed.' },
+            { name: 'The crew\'s quarters', text: 'Hammocks hang in rows, swaying though there is no wind. Sea chests sit under each.' },
+            { name: 'The cargo hold', text: 'Crates and barrels shifted when the ship struck, and lie in a heap against the low side.' },
+            { name: 'The flooded hold', text: 'The lowest deck is full of seawater to the knees. Things float in it.' },
+            { name: 'The surgeon\'s cabin', text: 'A table with straps, saws on a rack, and jars of things best not looked at.' },
+            { name: 'The officers\' mess', text: 'A table bolted to the floor, set for dinner, with the plates slid to one end.' },
+            { name: 'The sail locker', text: 'Folded sails, coils of rope, and a nest made out of both.' },
+            { name: 'The brig', text: 'Two cells with iron bars. One is open. One is not, and has a skeleton in it.' },
+            { name: 'The powder room', text: 'A lead-lined room of powder kegs, mostly soaked. Some of them are dry.' },
+            { name: 'The carpenter\'s store', text: 'Tools, nails, and planks for patching the hull, never used in time.' },
+            { name: 'The chapel cabin', text: 'A tiny cabin with an altar to a sea god and a hundred knotted prayer cords.' },
+            { name: 'The bilge', text: 'The bottom of the ship, a black slot of stinking water and old rats.' },
+            { name: 'The navigator\'s cabin', text: 'Charts pinned to every wall, and a compass that still points somewhere, but not north.' }
+        ],
+        ends: [
+            { name: 'The captain\'s cabin', text: 'A fine cabin at the stern, with tall windows, a desk, and a log book open to its last page.' },
+            { name: 'The strongroom', text: 'An iron-lined room under the captain\'s cabin, where the ship carried its pay and its secrets.' },
+            { name: 'The forbidden hold', text: 'A hold at the bow sealed with chains and warnings in three languages. The chains are broken.' },
+            { name: 'The figurehead\'s chamber', text: 'A cabin inside the bow, behind the figurehead. Someone has been living in it.' }
+        ],
+        features: ['A ship\'s cat\'s skeleton curled in a hammock.', 'A logbook page stuck to the wall with tar.', 'A cannon ball wedged in a beam.', 'Seaweed hanging from the ceiling like a curtain.', 'A sea chest with its owner\'s name carved on it.', 'Crabs everywhere, scuttling away from the light.', 'A ship in a bottle, perfect, of this ship.', 'A barrel that knocks back when you knock on it.', 'Words scratched into a beam: WE SHOULD NOT HAVE TAKEN IT.', 'A porthole full of green light.'],
+        senses: ['The hull groans with every wave.', 'The whole wreck tilts underfoot.', 'Water sloshes somewhere below.', 'It smells of rot, tar, and salt.', 'A bell rings somewhere on the ship, once.', 'Something scrapes along the outside of the hull.'],
+        builders: ['a shipyard famous for its warships', 'a merchant house that wanted the fastest ship on the sea', 'a navy that sold it on when the war ended', 'pirates who stole it and built it up', 'a shipwright who carved a face like his wife\'s on the bow'],
+        purposes: ['to carry gold for a king', 'to carry pilgrims to a holy island', 'to hunt pirates', 'to carry something the crew were told never to look at', 'to trade spices from the far south', 'to carry a royal bride to her wedding', 'to chart a coast that nobody had charted'],
+        fates: ['a storm drove it onto the rocks', 'wreckers lured it in with false lights', 'the crew mutinied, and nobody could sail it after', 'something came up out of the sea and held it fast', 'it caught fire with all hands asleep', 'the captain ran it aground on purpose, for reasons in the log'],
+        containers: ['in the captain\'s sea chest, under the bunk', 'in the strongroom, in iron-banded boxes', 'in a barrel in the hold marked DRINKING WATER', 'in a waterproof box in the bilge', 'in a hidden compartment behind the captain\'s portrait', 'scattered across the flooded hold floor'],
+        doing: { folk: [['unaware', 'prying open crates in the hold with crowbars'], ['ready', 'bailing water and jumping up at the first footstep'], ['unaware', 'reading the captain\'s log out loud, and laughing']], beast: [['unaware', 'nesting in the coiled ropes'], ['ambush', 'clinging to the underside of the deck above']] },
+        ground: ['The deck is tilted steeply: anyone moving uphill treats it as difficult terrain.', 'A hatch in the floor drops to the deck below.', 'Loose cannons sit on rails; shoving one (DC 13 Strength) sends it rolling 20 feet downhill, and it hits for 2d10 bludgeoning.', 'Ropes and nets hang everywhere; anyone can climb them without a check.', 'The far end is flooded to the waist.', 'Barrels and crates give half cover, and roll if pushed.'],
+        hazards: ['Powder kegs, some still dry. Fire or lightning sets them off: everyone within 15 feet makes a DC {dc} Dexterity saving throw or takes {dmg} fire damage; half damage on a success.', 'The wreck shifts. On a round of your choosing, the whole deck lurches: everyone makes a DC {dc} Dexterity saving throw or slides 10 feet downhill and falls prone, taking {dmg} bludgeoning damage if they hit the wall.']
+    },
+    lighthouse: {
+        label: 'Lighthouse', icon: '🕯️', entry: 'bottom', cols: 2, rows: 6, shape: 'circle', stairs: true, door: 'a salt-stiff door', habitat: 'coast', hoard: 'smugglers',
+        bands: ['pirates', 'cult', 'haunt', 'sahuagin', 'bandits', 'aberrant', 'hags', 'shadows', 'elementals'],
+        names: ['The {Root} Light', 'The Lighthouse at {Root}', 'The {Adj} Tower', 'The {Epithet} Light', 'The {Adj} Beacon', '{Root} Point'],
+        epithets: ['Keeper\'s', 'Widow\'s', 'False', 'Last', 'Drowned Man\'s', 'Seven Wrecks', 'Gull Rock'],
+        adjs: ['Dark', 'Lonely', 'Salt', 'Crooked', 'Storm', 'Grey', 'Silent'],
+        entrances: [
+            { name: 'The causeway door', text: 'A stone causeway leads out to the rock, under water at high tide. The door at the end is bolted from inside.' },
+            { name: 'The keeper\'s cottage', text: 'A cottage at the foot of the tower, joined to it by a covered walk. The kettle is on the stove, cold.' },
+            { name: 'The boat dock', text: 'A jetty at the foot of the rock, with a boat tied up that is not the keeper\'s.' },
+            { name: 'The storm door', text: 'A low iron door on the sea side of the tower, for bringing up supplies by rope from boats.' }
+        ],
+        rooms: [
+            { name: 'The oil store', text: 'Barrels of lamp oil stacked round the wall, and a pump to carry it up the tower.' },
+            { name: 'The keeper\'s room', text: 'A bed, a table, a stove, and a log of every ship that passed. The last entries are in another hand.' },
+            { name: 'The watch room', text: 'A room with windows on every side and a chair facing the sea. A telescope lies on the floor.' },
+            { name: 'The stair landing', text: 'The stair spirals round the wall with nothing in the middle but a long drop.' },
+            { name: 'The supply room', text: 'Salt fish, ship\'s biscuit, rope, and wicks enough for a year.' },
+            { name: 'The clockwork room', text: 'Brass gears that turn the great lamp, ticking slowly, though the light is out.' },
+            { name: 'The storeroom', text: 'Crates stacked to the ceiling, stamped with the marks of ships that never reached port.' },
+            { name: 'The library', text: 'A shelf of books on the sea, the stars, and the weather, and a diary that is not the keeper\'s.' },
+            { name: 'The wreck room', text: 'Things saved from wrecks: a figurehead, a ship\'s wheel, a chest of tangled jewelry.' },
+            { name: 'The water cistern', text: 'A round cistern catching rainwater from the roof. The water is very still.' },
+            { name: 'The signal room', text: 'Flags, horns, and a big brass bell for when the fog is too thick for the light.' },
+            { name: 'The gallery', text: 'A balcony ringing the tower outside, high over the rocks, with an iron rail half rusted away.' },
+            { name: 'The cellar', text: 'Cut into the rock under the tower. The sea can be heard on the other side of the wall.' },
+            { name: 'The guest room', text: 'A room for shipwrecked sailors. The bed has been slept in, recently.' }
+        ],
+        ends: [
+            { name: 'The lantern room', text: 'The top of the tower: the great lamp and its lens, glass on every side, and the sea far below.' },
+            { name: 'The false light', text: 'The top of the tower, where the lens has been turned to point ships onto the rocks.' },
+            { name: 'The storm room', text: 'A room at the top where the wind never stops, and something calls the storms.' },
+            { name: 'The keeper\'s hoard', text: 'The room under the lamp, piled with everything the wrecks gave up.' }
+        ],
+        features: ['A log book with the same ship listed every night for a month.', 'Oil lamps on every wall, all lit.', 'Gull feathers everywhere.', 'A window cracked in a star, from the outside.', 'A coat on a peg, still wet.', 'A portrait of a keeper long dead, looking out to sea.', 'Salt crusted on the walls in strange patterns.', 'A rope tied to the rail and running down out of a window.', 'Bird bones under a gap in the roof.', 'A brass horn with something stuffed down it.'],
+        senses: ['The wind howls round the tower.', 'The tower sways a little in the gusts.', 'Waves crash on the rocks below.', 'It smells of whale oil and salt.', 'Gulls scream, then suddenly stop.', 'The great lamp\'s clockwork ticks above you.'],
+        builders: ['the harbor guild, after a bad winter of wrecks', 'a queen whose son drowned on this rock', 'dwarves, who built it to last forever', 'a lord who charged every ship a toll for the light', 'the navy, to watch for raiders'],
+        purposes: ['to warn ships off the rocks', 'to watch for raiders from the sea', 'to guide ships into a harbor that is gone now', 'to signal to a smuggling fleet', 'as a prison for a keeper nobody wanted on land', 'to hold a light that never goes out', 'to mark a holy island for pilgrim ships'],
+        fates: ['the last keeper went mad, and the light went out', 'wreckers took it and turned the light to lure ships in', 'a storm swept the keeper off the gallery', 'the harbor silted up and nobody paid for the oil', 'something came up the rocks one night and took the keeper\'s family', 'the keeper kept lighting it, long after dying'],
+        containers: ['in sea chests salvaged from wrecks', 'in the oil barrels, sealed in wax', 'under the floor of the lantern room', 'in the keeper\'s strongbox, under the bed', 'in a crate stamped with a royal seal', 'in a ship\'s figurehead, hollowed out'],
+        doing: { folk: [['unaware', 'turning the great lens to face the rocks'], ['ready', 'watching the stair from above, crossbows ready'], ['unaware', 'going through a wrecked ship\'s mail']], beast: [['unaware', 'nesting in the eaves among the gulls'], ['ambush', 'clinging to the wall above the stair']] },
+        ground: ['A spiral stair runs round the wall; anyone pushed off it falls to the floor below.', 'The great lens fills the middle of the room. It blocks line of sight, and dazzles anyone who looks into it.', 'Windows on every side, and a drop of 60 feet or more to the rocks.', 'Oil barrels give half cover.', 'A trapdoor in the floor drops to the room below.', 'The wind through the broken windows imposes disadvantage on ranged attacks.'],
+        hazards: ['The great lamp is lit. Turning the lens (an action) focuses the light on a 5-foot square: anyone there makes a DC {dc} Constitution saving throw or is blinded until the end of their next turn.', 'Oil is spilled across the floor. Fire sets it alight: everyone in the room makes a DC {dc} Dexterity saving throw or takes {dmg} fire damage; half damage on a success.']
+    },
+    manor: {
+        label: 'Haunted manor', icon: '🕰️', entry: 'bottom', cols: 4, rows: 4, shape: 'rect', door: 'a panelled door', habitat: 'dungeon', hoard: 'manor',
+        bands: ['haunt', 'vampire', 'undead', 'lies', 'cult', 'necromancer', 'devils', 'shadows', 'wererats'],
+        names: ['{Root} Hall', '{Root} Manor', 'The {Adj} House', 'The House of the {Epithet}', '{Root} Grange', 'The {Adj} Manse'],
+        epithets: ['Weeping Bride', 'Seven Clocks', 'Last Guest', 'Mad Uncle', 'Twin Sisters', 'Locked Room', 'Hollow Heir'],
+        adjs: ['Shuttered', 'Silent', 'Crooked', 'Empty', 'Grey', 'Rotting', 'Whispering'],
+        entrances: [
+            { name: 'The front door', text: 'A grand door under a portico. It opens before anyone knocks.' },
+            { name: 'The kitchen door', text: 'The servants\' way in, round the back, past a kitchen garden gone to thistles.' },
+            { name: 'The conservatory', text: 'A glass room full of dead plants. One pane is broken out, just big enough to climb through.' },
+            { name: 'The cellar hatch', text: 'A slanting wooden hatch beside the house, chained shut. The chain has been cut.' }
+        ],
+        rooms: [
+            { name: 'The entrance hall', text: 'A grand staircase, a chandelier under a dust sheet, and a grandfather clock that has stopped.' },
+            { name: 'The ballroom', text: 'A long room with a sprung floor and mirrors on every wall. The mirrors show dancers.' },
+            { name: 'The dining room', text: 'A table laid for twelve, with name cards. One card has the name of someone in the party.' },
+            { name: 'The library', text: 'Two floors of books, a rolling ladder, and a reading chair still dented from its last reader.' },
+            { name: 'The nursery', text: 'A rocking horse, a doll\'s house of this very house, and a cot that rocks by itself.' },
+            { name: 'The music room', text: 'A harpsichord with its lid open. Someone has been practicing the same three notes.' },
+            { name: 'The servants\' hall', text: 'A long table for the staff, and a board of bells, one for each room. A bell rings.' },
+            { name: 'The kitchen', text: 'A huge range, copper pans, and a pie on the table that is still warm.' },
+            { name: 'The master bedroom', text: 'A four-poster bed hung with black curtains, and a dressing table covered in letters.' },
+            { name: 'The portrait gallery', text: 'Generations of the family, each portrait with the eyes cut out.' },
+            { name: 'The conservatory', text: 'Glass on every side, and plants grown over everything. Some of the plants have grown over people.' },
+            { name: 'The study', text: 'A desk with a half-written letter, and a safe in the wall behind a painting.' },
+            { name: 'The wine cellar', text: 'Racks of dusty bottles, and a wall that sounds hollow when knocked.' },
+            { name: 'The attic', text: 'Trunks, broken furniture, dress dummies, and a little window that looks out on the wrong season.' }
+        ],
+        ends: [
+            { name: 'The locked room', text: 'A bedroom nobody has opened in forty years, kept exactly as it was the night it happened.' },
+            { name: 'The family chapel', text: 'A small chapel at the back of the house, with the family vault beneath it, and the vault door open.' },
+            { name: 'The secret study', text: 'A hidden room behind the library, full of the master of the house\'s real work.' },
+            { name: 'The ballroom\'s heart', text: 'A second ballroom, behind the first, where the last party never ended.' }
+        ],
+        features: ['A grandfather clock that strikes thirteen.', 'Dust sheets over every piece of furniture, and one of them moves.', 'Wet footprints that cross the room and stop at a wall.', 'A painting whose subject is not where it was.', 'A music box that starts playing as the party enters.', 'Letters on a desk, all addressed to someone in the party.', 'A doll sitting in a chair, facing the door.', 'Candles in every window, unlit, but warm.', 'A bell pull that rings in a room nobody is in.', 'A child\'s height marks on a doorframe, stopping suddenly.'],
+        senses: ['Floorboards creak somewhere above.', 'The house smells of lilies and damp.', 'A door closes softly somewhere in the house.', 'It\'s colder inside than out.', 'Faint music, and laughter, from far away.', 'A clock ticks, though none here are wound.'],
+        builders: ['a merchant family who made their money in something they never talked about', 'a lord who built it for a bride who never came', 'a retired general who never stopped fighting', 'a famous actress at the height of her fame', 'a family of witches, posing as gentry'],
+        purposes: ['as a country seat for a rich family', 'as a summer house, far from the city\'s fevers', 'to hide a mad relative from the world', 'as a place for parties the whole county talked about', 'to keep a family secret safe', 'as a gift to a bride', 'as a hospital for soldiers back from a war'],
+        fates: ['the family died one by one, in the same room', 'the last party ended in a murder that was never solved', 'the heir vanished, and the will was never read', 'the servants left in a single night, and would never say why', 'a fire gutted the east wing, and the family moved out of the rest', 'the master of the house made a bargain, and the bill came due'],
+        containers: ['in the wall safe behind the painting', 'under the floorboards of the locked room', 'in the family vault under the chapel', 'in a trunk in the attic, under the wedding dress', 'in the dining table\'s hidden drawer', 'in the grandfather clock\'s case'],
+        doing: { folk: [['unaware', 'setting the dining table for guests who are never coming'], ['ready', 'standing on the stair, as if they were expecting the party for dinner'], ['unaware', 'searching the walls for a hidden door, knocking on every panel']], beast: [['unaware', 'nesting in the rotten furniture'], ['ambush', 'under the dust sheets, perfectly still']] },
+        ground: ['A grand stair climbs to a gallery 15 feet up.', 'Dust sheets hide the furniture; anything could be under any of them.', 'A chandelier hangs over the middle of the room.', 'Tall mirrors on every wall: invisible things show in them.', 'The floor is polished smooth: anyone who Dashes makes a DC 10 Dexterity saving throw or falls prone.', 'Heavy curtains can be pulled to let in daylight or shut it out (an action).'],
+        hazards: ['The house fights back. Once a round, a piece of furniture flies at a random creature: +5 to hit, {dmg} bludgeoning damage.', 'The mirrors shatter when anything breaks one: everyone within 10 feet of the walls makes a DC {dc} Dexterity saving throw or takes {dmg} slashing damage.']
+    },
+    barrow: {
+        label: 'Barrow mound', icon: '⛰️', entry: 'top', cols: 4, rows: 3, shape: 'mixed', door: 'a stone slab', habitat: 'hills', hoard: 'tomb',
+        bands: ['undead', 'haunt', 'tomb', 'clans', 'weres', 'wolves', 'hags', 'burrowers', 'spiders', 'necromancer'],
+        names: ['{Root}\'s Howe', 'The Barrow of the {Epithet}', 'The {Adj} Mound', '{Root} Barrow', 'The Howe of the {Epithet}', 'The {Adj} Barrows'],
+        epithets: ['Ring-Giver', 'Wolf King', 'Sleeping Chief', 'Nine Shields', 'Ship-Burned', 'Oath-Breaker', 'Grey Spear'],
+        adjs: ['Grass', 'Long', 'Green', 'Grey', 'Wind', 'Old', 'Hollow'],
+        entrances: [
+            { name: 'The forecourt', text: 'Standing stones flank a passage into the side of the mound. The capstone over the door is carved with a warning in old runes.' },
+            { name: 'The robbers\' hole', text: 'Someone dug down through the top of the mound. The hole goes straight into a chamber, and someone has tied a rope there.' },
+            { name: 'The sunken door', text: 'A slab of stone at the end of a sunken path, rolled aside. Turf has been carefully laid back over the path.' },
+            { name: 'The blocked passage', text: 'The passage in was blocked with stones, long ago. Something has pulled the stones out, from inside.' }
+        ],
+        rooms: [
+            { name: 'The long passage', text: 'A low passage lined with standing slabs, carved with spirals and long-legged beasts.' },
+            { name: 'The side chamber', text: 'A small round chamber with three stone ledges, each holding a body in a cloak of furs.' },
+            { name: 'The horse burial', text: 'The bones of horses, still in their harness, laid out as if they were pulling something.' },
+            { name: 'The warriors\' chamber', text: 'Warriors buried sitting up, with spears across their knees. Some are sitting up a little too straight.' },
+            { name: 'The grave goods', text: 'Pots, beads, combs, and a little wooden boat, left for the dead to take with them.' },
+            { name: 'The root cave', text: 'The roots of an old tree break through the roof, wrapping round the bones below.' },
+            { name: 'The fire pit', text: 'A ring of blackened stones where the funeral feast was cooked, and the bones of the feast.' },
+            { name: 'The ship burial', text: 'The ribs of a buried ship, its planks long rotted, with the shape of a body at the stern.' },
+            { name: 'The dog graves', text: 'Small barrows within the barrow, for the chief\'s hounds. One of them is empty.' },
+            { name: 'The carved chamber', text: 'Every stone is carved with the story of the chief\'s life, and the last stone with how it ended.' },
+            { name: 'The collapsed chamber', text: 'Half of this chamber has fallen in. Under the rubble, a gauntleted hand.' },
+            { name: 'The well of bones', text: 'A shaft in the floor, packed with the bones of animals sacrificed at the funeral.' },
+            { name: 'The guardian\'s niche', text: 'A deep niche facing the passage, where a single warrior was buried standing up, to watch.' },
+            { name: 'The earth chamber', text: 'A chamber dug from the earth itself, with no stones at all. It is warm, and smells of turned soil.' }
+        ],
+        ends: [
+            { name: 'The chief\'s chamber', text: 'A great round chamber where the chief lies on a stone bed under a heap of furs, crowned and armed.' },
+            { name: 'The ring hall', text: 'A round hall where the chief sits on a stone chair, ringed by the dead of the chief\'s household.' },
+            { name: 'The ship of the dead', text: 'A ship buried whole under the mound, its deck heaped with grave goods, its captain at the helm.' },
+            { name: 'The oath stone', text: 'A chamber around a standing stone, where the chief\'s warriors swore to guard the barrow forever, and meant it.' }
+        ],
+        features: ['A carved stone of a wolf eating the sun.', 'Grave goods knocked over, as if by someone in a hurry.', 'Fresh flowers on a stone shelf.', 'Old turf stacked against a wall, as if someone is rebuilding.', 'A rusted sword driven into the floor.', 'Animal skulls set in a row along a ledge.', 'A circle of white pebbles on the floor.', 'Roots that twitch when touched.', 'An ancient comb carved with a woman\'s face.', 'A horn hung on a hook, as if for calling someone back.'],
+        senses: ['It smells of earth and old smoke.', 'The air is very still.', 'Somewhere, soil trickles down from the roof.', 'A low hum, like many voices far away.', 'Your breath fogs, though it is summer outside.', 'The wind moans over the mound above.'],
+        builders: ['the people of the hills, for their greatest chief', 'a clan that came by sea and stayed', 'a warband, for the leader they swore to follow into death', 'the first farmers of these lands', 'a queen, for the husband she buried alive'],
+        purposes: ['to bury a chief with their warriors and their wealth', 'to hold the dead of a great battle', 'as a gate between the living and the dead', 'to mark the land as theirs forever', 'to keep a dead king from walking', 'as a place to ask the ancestors for advice', 'to bury a hero with the weapon that slew a dragon'],
+        fates: ['the clan that tended it died out, and the grass grew over it', 'robbers dug in and woke the dead', 'the farmers ploughed round it for a thousand years, and then someone ploughed into it', 'the dead chief\'s oath outlived the living', 'a hill giant used it as a pillow', 'the barrow was sealed, and then something dug its way in'],
+        containers: ['on the chief\'s stone bed, around the body', 'heaped in the ship of the dead', 'in clay pots buried in the floor', 'in a chest of rotted oak bound with bronze', 'on the bodies of the household dead', 'under the oath stone'],
+        doing: { folk: [['unaware', 'digging into a side chamber with shovels'], ['ready', 'standing guard in a ring around the chief\'s bed'], ['unaware', 'burning offerings and chanting old words']], beast: [['unaware', 'sleeping in a heap of furs and bones'], ['ambush', 'buried in the loose earth at the edges of the chamber']] },
+        ground: ['The ceiling is low: Large creatures squeeze, and have disadvantage on attack rolls.', 'Stone shelves along the walls hold bodies, and give half cover to anyone who climbs onto one.', 'A ring of standing stones fills the middle of the chamber; each blocks line of sight.', 'Earth falls from the roof in places, making difficult terrain.', 'The floor is heaped with grave goods: difficult terrain, and loud to move through.', 'A stone bed stands in the middle, 3 feet high.'],
+        hazards: ['The roof is old turf on rotten timbers. Anything that deals thunder damage here brings part of it down: everyone in a 10-foot square makes a DC {dc} Dexterity saving throw or takes {dmg} bludgeoning damage.', 'The dead\'s oath fills the air. Anyone who takes something from the barrow makes a DC {dc} Wisdom saving throw or takes {dmg} necrotic damage; half damage on a success.']
     }
 };
+// The kinds a random roll picks from first: the seven there were before the rest were
+// added (2026-10-20), so a link that rolled a random kind still rolls the same one most of
+// the time. siteMoreKind may then swap it for one of the newer kinds, under its own seed.
+const SITE_KIND_FIRST = ['crypt', 'mine', 'tower', 'temple', 'fort', 'lair', 'keep'];
 const SITE_KIND_KEYS = Object.keys(SITE_KINDS);
 
 // One feature every room can have, besides its own kind's.
-const SITE_FEATURES = ['A table covered in old maps, all of the same place.', 'A chest that is empty except for a note: "Too late."', 'A well-made trap, already sprung, with nothing in it.', 'Old graffiti: a crude map, a joke, and a warning.', 'A skeleton sitting against the wall, holding a lantern.', 'A pile of rubble hiding a crawlspace.', 'A cracked mirror that shows the room as it was long ago.', 'A fresh bootprint in the dust, too small for a human.', 'A rope hanging from a hole in the ceiling.', "A circle of salt on the floor, broken in one place.", 'A rack of torches, two of them lit.', 'A message in chalk: "Second door. Not the first."', 'A dead adventurer with an empty pack and a full waterskin.', 'A statue whose pointing hand has been moved.', 'A heap of old campaign gear: a bedroll, a dented pot, a lute with two strings.', 'A stone with a hollow under it, as if for hiding things.'];
-const SITE_SENSES = ['Utter silence, as if the room is holding its breath.', 'A cold spot in the middle of the room.', 'A faint smell of smoke, from somewhere.', 'Your footsteps echo too long.', 'Something small scurries away out of the light.'];
+const SITE_FEATURES = ['A table covered in old maps, all of the same place.', 'A chest that is empty except for a note: "Too late."', 'A well-made trap, already sprung, with nothing in it.', 'Old graffiti: a crude map, a joke, and a warning.', 'A skeleton sitting against the wall, holding a lantern.', 'A pile of rubble hiding a crawlspace.', 'A cracked mirror that shows the room as it was long ago.', 'A fresh bootprint in the dust, too small for a human.', 'A rope hanging from a hole in the ceiling.', "A circle of salt on the floor, broken in one place.", 'A rack of torches, two of them lit.', 'A message in chalk: "Second door. Not the first."', 'A dead adventurer with an empty pack and a full waterskin.', 'A statue whose pointing hand has been moved.', 'A heap of old campaign gear: a bedroll, a dented pot, a lute with two strings.', 'A stone with a hollow under it, as if for hiding things.', 'A wanted poster for someone in the party, nailed up recently.', 'A child\'s drawing of this very room, with a monster in it.', 'Three coins balanced on top of each other on the floor.', 'A scorch mark on the wall in the shape of a person.', 'A bucket of clean water, still cold.', 'A rusted helmet with a bird\'s nest in it.', 'Torn pages from a prayer book scattered across the floor.', 'A tripwire, cut, with the bell still attached.', 'A crude arrow scratched on the floor, pointing back the way you came.', 'A pair of boots by the wall, neatly placed, with nobody in them.'];
+const SITE_SENSES = ['Utter silence, as if the room is holding its breath.', 'A cold spot in the middle of the room.', 'A faint smell of smoke, from somewhere.', 'Your footsteps echo too long.', 'Something small scurries away out of the light.', 'A draft carries a smell of cooking from somewhere further in.', 'Your torch flame leans toward one wall.', 'A distant knocking, three times, then nothing.', 'The dust here has been disturbed, recently.', 'Faint voices, too far off to make out the words.', 'The air tastes stale, as if nobody has breathed it in years.', 'A slow drip, and an echo that does not match it.'];
 
 // What the foes in a room are doing when the party arrives. by: who acts like this
 // (folk: those who think and talk; beast: animals and monsters; mindless: undead,
 // constructs, oozes, elementals). seen: who notices whom (SITE_AWARE).
 const SITE_DOING = {
-    folk: [['ready', 'waiting for the party: they heard them coming'], ['unaware', 'eating, and arguing over who gets the last of it'], ['unaware', 'asleep, apart from one on watch who is nodding off'], ['ambush', 'hiding behind the door, weapons ready'], ['unaware', 'counting loot and accusing each other of cheating'], ['unaware', 'patching up their wounds from some earlier fight'], ['ready', 'building a barricade across the far door'], ['unaware', 'gambling with knucklebones'], ['ready', 'on patrol, and walking straight into the party'], ['unaware', 'interrogating a prisoner'], ['ambush', 'perched up high, waiting to drop on whoever comes in']],
-    beast: [['unaware', 'feeding on a kill'], ['unaware', 'asleep in a heap'], ['ambush', 'hiding in the shadows near the ceiling'], ['ready', 'pacing, hungry, and already sniffing the air'], ['unaware', 'guarding a nest'], ['ambush', 'lying perfectly still, half buried in the debris'], ['ready', 'circling, ears up: they heard the party']],
-    mindless: [['ready', 'standing in rows, waiting for an order that never came'], ['ambush', 'lying still among the debris until someone comes close'], ['ready', 'shuffling in circles, and they turn as one when the party enters'], ['unaware', 'going through the motions of a task they were made for'], ['ambush', 'hidden in alcoves along the walls']]
+    folk: [['ready', 'waiting for the party: they heard them coming'], ['unaware', 'eating, and arguing over who gets the last of it'], ['unaware', 'asleep, apart from one on watch who is nodding off'], ['ambush', 'hiding behind the door, weapons ready'], ['unaware', 'counting loot and accusing each other of cheating'], ['unaware', 'patching up their wounds from some earlier fight'], ['ready', 'building a barricade across the far door'], ['unaware', 'gambling with knucklebones'], ['ready', 'on patrol, and walking straight into the party'], ['unaware', 'interrogating a prisoner'], ['ambush', 'perched up high, waiting to drop on whoever comes in'], ['unaware', 'sharpening blades and complaining about the pay'], ['ready', 'shouting at each other about a noise they heard, weapons already out'], ['unaware', 'dragging a heavy chest across the floor, and making a lot of noise about it'], ['unaware', 'holding a mock trial for one of their own, who is losing'], ['ambush', 'pressed flat against the walls on either side of the door'], ['unaware', 'drunk, and singing a song about their leader that their leader would not like'], ['unaware', 'cooking something that smells far better than it should'], ['ambush', 'pretending to be prisoners, chained loosely to the wall'], ['unaware', 'trying on a dead adventurer\'s clothes'], ['ready', 'drawing lots for who goes to see what the noise was, when the noise walks in']],
+    beast: [['unaware', 'feeding on a kill'], ['unaware', 'asleep in a heap'], ['ambush', 'hiding in the shadows near the ceiling'], ['ready', 'pacing, hungry, and already sniffing the air'], ['unaware', 'guarding a nest'], ['ambush', 'lying perfectly still, half buried in the debris'], ['ready', 'circling, ears up: they heard the party'], ['unaware', 'grooming one another'], ['ambush', 'clinging to the walls high above the door'], ['ready', 'fighting each other over a bone, until they smell the party'], ['unaware', 'dozing in a patch of warmth'], ['unaware', 'dragging something heavy toward the back of the room'], ['ambush', 'waiting just around the corner, crouched low'], ['ready', 'standing over a fresh kill, hackles up']],
+    mindless: [['ready', 'standing in rows, waiting for an order that never came'], ['ambush', 'lying still among the debris until someone comes close'], ['ready', 'shuffling in circles, and they turn as one when the party enters'], ['unaware', 'going through the motions of a task they were made for'], ['ambush', 'hidden in alcoves along the walls'], ['unaware', 'scraping at a wall as if trying to get through it'], ['ready', 'facing the door, perfectly still, as if they knew'], ['unaware', 'carrying stones from one side of the room to the other, and back'], ['ambush', 'slumped in the darkest corner, not moving until something warm comes close'], ['unaware', 'standing round a cold table or altar, heads bowed']]
 };
 const SITE_MINDS = { humanoid: 'folk', giant: 'folk', fiend: 'folk', dragon: 'folk', fey: 'folk', celestial: 'folk', undead: 'mindless', construct: 'mindless', ooze: 'mindless', elemental: 'mindless' };
 const SITE_AWARE = {
@@ -348,15 +639,29 @@ const SITE_TRAPS = [
     { name: 'Spear floor', trigger: 'A loose flagstone drops an inch, and spears jab up through holes in the floor.', disarm: "DC {dc} Dexterity check with thieves' tools to jam the mechanism", effect: 'DC {dc} Dexterity saving throw or take {dmg} piercing damage; half damage on a success.' },
     { name: 'Falling net', trigger: 'A tripwire drops a weighted net from the ceiling.', disarm: "DC {dc} Dexterity check with thieves' tools to cut the wire", effect: 'Everyone in a 10-foot square makes a DC {dc} Dexterity saving throw or is restrained. A DC 10 Strength check (or cutting the net: AC 10, 20 hit points) frees a creature. Anything in the room hears it fall.' },
     { name: 'Alarm', trigger: 'A thin wire across the floor rings a bell somewhere deeper in.', disarm: "DC {dc} Dexterity check with thieves' tools, or step over it once it's found", effect: 'Every fight in the next two rooms is ready and waiting: no one there is surprised.' },
-    { name: 'Rolling stone', trigger: 'A pressure plate releases a stone ball down a sloping passage into the room.', kinds: ['crypt', 'temple', 'mine', 'lair', 'keep'], disarm: 'wedge an iron spike under the plate (DC {dc} Dexterity check with thieves\' tools)', effect: 'Everyone in its path makes a DC {dc} Dexterity saving throw or takes {dmg} bludgeoning damage and is knocked prone.' },
-    { name: 'Fire glyph', trigger: 'A glyph carved on the threshold bursts into flame when crossed.', kinds: ['crypt', 'tower', 'temple', 'keep'], disarm: 'DC {dc} Intelligence (Arcana) check to smudge it out safely, or dispel magic', effect: 'Everyone within 10 feet makes a DC {dc} Dexterity saving throw or takes {dmg} fire damage; half damage on a success.' },
-    { name: 'Lightning rune', trigger: 'A rune on the door handle discharges into whoever grabs it.', kinds: ['tower', 'temple'], disarm: 'DC {dc} Intelligence (Arcana) check, or open it with something that does not conduct', effect: 'DC {dc} Dexterity saving throw or take {dmg} lightning damage; half damage on a success.' },
-    { name: 'Whispering face', trigger: 'A carved face on the wall speaks a word that bites into the mind of whoever looks at it.', kinds: ['crypt', 'tower', 'temple'], disarm: 'cover the face with cloth (no check, once found)', effect: 'DC {dc} Wisdom saving throw or take {dmg} psychic damage and be frightened of the face until the end of the next turn.' },
-    { name: 'Flooding room', trigger: 'The door slams shut behind the party and water pours in from vents.', kinds: ['crypt', 'temple', 'mine'], disarm: "DC {dc} Dexterity check with thieves' tools on the door mechanism", effect: 'The room fills in 4 rounds, and then everyone must hold their breath. Forcing the door takes a DC {dc} Strength (Athletics) check.' },
-    { name: 'Rotten planks', trigger: 'Planks laid over an old shaft give way under the first one across.', kinds: ['mine', 'lair', 'keep', 'fort'], disarm: 'test the floor with a pole (no check, once found)', effect: 'DC {dc} Dexterity saving throw to grab the edge, or fall 30 feet and take {dmg} bludgeoning damage.' },
+    { name: 'Rolling stone', trigger: 'A pressure plate releases a stone ball down a sloping passage into the room.', kinds: ['crypt', 'temple', 'mine', 'lair', 'keep', 'barrow'], disarm: 'wedge an iron spike under the plate (DC {dc} Dexterity check with thieves\' tools)', effect: 'Everyone in its path makes a DC {dc} Dexterity saving throw or takes {dmg} bludgeoning damage and is knocked prone.' },
+    { name: 'Fire glyph', trigger: 'A glyph carved on the threshold bursts into flame when crossed.', kinds: ['crypt', 'tower', 'temple', 'keep', 'manor', 'barrow'], disarm: 'DC {dc} Intelligence (Arcana) check to smudge it out safely, or dispel magic', effect: 'Everyone within 10 feet makes a DC {dc} Dexterity saving throw or takes {dmg} fire damage; half damage on a success.' },
+    { name: 'Lightning rune', trigger: 'A rune on the door handle discharges into whoever grabs it.', kinds: ['tower', 'temple', 'lighthouse', 'manor'], disarm: 'DC {dc} Intelligence (Arcana) check, or open it with something that does not conduct', effect: 'DC {dc} Dexterity saving throw or take {dmg} lightning damage; half damage on a success.' },
+    { name: 'Whispering face', trigger: 'A carved face on the wall speaks a word that bites into the mind of whoever looks at it.', kinds: ['crypt', 'tower', 'temple', 'manor', 'barrow'], disarm: 'cover the face with cloth (no check, once found)', effect: 'DC {dc} Wisdom saving throw or take {dmg} psychic damage and be frightened of the face until the end of the next turn.' },
+    { name: 'Flooding room', trigger: 'The door slams shut behind the party and water pours in from vents.', kinds: ['crypt', 'temple', 'mine', 'sewer', 'seacave', 'shipwreck'], disarm: "DC {dc} Dexterity check with thieves' tools on the door mechanism", effect: 'The room fills in 4 rounds, and then everyone must hold their breath. Forcing the door takes a DC {dc} Strength (Athletics) check.' },
+    { name: 'Rotten planks', trigger: 'Planks laid over an old shaft give way under the first one across.', kinds: ['mine', 'lair', 'keep', 'fort', 'lighthouse', 'manor'], disarm: 'test the floor with a pole (no check, once found)', effect: 'DC {dc} Dexterity saving throw to grab the edge, or fall 30 feet and take {dmg} bludgeoning damage.' },
     { name: 'Dropping portcullis', trigger: 'A portcullis crashes down behind the first one through, splitting the party.', kinds: ['fort', 'keep'], disarm: "DC {dc} Dexterity check with thieves' tools to jam the winch", effect: 'DC {dc} Dexterity saving throw or take {dmg} piercing damage as it slams down. Lifting it again takes a DC 20 Strength check.' },
-    { name: 'Boiling oil', trigger: 'Murder holes over the doorway pour hot oil on whoever is under them.', kinds: ['fort', 'keep'], disarm: 'stand clear of the doorway (no check, once found)', effect: 'DC {dc} Dexterity saving throw or take {dmg} fire damage; half damage on a success.' },
-    { name: 'Bad air', trigger: 'A pocket of foul air sits low in the room. Lit flames gutter in it.', kinds: ['mine', 'lair'], disarm: 'fan it out, or hold your breath across (no check, once found)', effect: 'Everyone who breathes it makes a DC {dc} Constitution saving throw or gains a level of exhaustion.' }
+    { name: 'Boiling oil', trigger: 'Murder holes over the doorway pour hot oil on whoever is under them.', kinds: ['fort', 'keep', 'lighthouse'], disarm: 'stand clear of the doorway (no check, once found)', effect: 'DC {dc} Dexterity saving throw or take {dmg} fire damage; half damage on a success.' },
+    { name: 'Bad air', trigger: 'A pocket of foul air sits low in the room. Lit flames gutter in it.', kinds: ['mine', 'lair', 'sewer', 'barrow', 'seacave'], disarm: 'fan it out, or hold your breath across (no check, once found)', effect: 'Everyone who breathes it makes a DC {dc} Constitution saving throw or gains a level of exhaustion.' },
+    { name: 'Poison needle', trigger: 'A needle springs out of the lock of a chest or a door handle.', disarm: "DC {dc} Dexterity check with thieves' tools", effect: 'The one who touched it takes 1 piercing damage and {dmg} poison damage, and makes a DC {dc} Constitution saving throw or is poisoned for 1 hour.' },
+    { name: 'Sleep gas', trigger: 'A flagstone sinks when stepped on, and a sweet-smelling mist hisses from the walls.', disarm: 'plug the jets with wax or cloth (no check, once found)', effect: 'Everyone in the room makes a DC {dc} Constitution saving throw or falls unconscious for 10 minutes, waking if they take damage or someone shakes them.' },
+    { name: 'Hidden crossbows', trigger: 'A tripwire fires a row of crossbows hidden behind a hanging or a stack of crates.', kinds: ['fort', 'keep', 'manor', 'seacave', 'sewer', 'lighthouse'], disarm: "DC {dc} Dexterity check with thieves' tools to cut the wire safely", effect: 'Everyone in a 30-foot line makes a DC {dc} Dexterity saving throw or takes {dmg} piercing damage; half damage on a success.' },
+    { name: 'Crushing walls', trigger: 'The doors slam and lock, and the side walls start to grind inward.', kinds: ['crypt', 'temple', 'tower', 'barrow'], disarm: 'DC {dc} Intelligence (Investigation) check to find the lever that stops them', effect: 'The walls meet in 4 rounds. After that, anyone still inside takes {dmg} bludgeoning damage each round. Holding them back takes a DC {dc} Strength (Athletics) check each round.' },
+    { name: 'Pendulum blades', trigger: 'Three great blades swing across the room on a steady beat.', kinds: ['crypt', 'temple', 'keep', 'manor'], disarm: "DC {dc} Dexterity check with thieves' tools on the drum behind the wall, or time the run with a DC {dc} Dexterity (Acrobatics) check", effect: 'Anyone who crosses without timing it makes a DC {dc} Dexterity saving throw or takes {dmg} slashing damage.' },
+    { name: 'Collapsing stair', trigger: 'The steps fold flat into a slope when a hidden catch is stepped on.', kinds: ['tower', 'keep', 'manor', 'lighthouse', 'shipwreck'], disarm: "DC {dc} Dexterity check with thieves' tools to pin the catch", effect: 'Everyone on the stair makes a DC {dc} Dexterity saving throw or slides to the bottom, taking {dmg} bludgeoning damage and landing prone.' },
+    { name: 'Falling chandelier', trigger: 'A tripwire lets a great iron chandelier drop into the middle of the room.', kinds: ['keep', 'manor'], disarm: "DC {dc} Dexterity check with thieves' tools, or tie off the rope (no check, once found)", effect: 'Everyone under it makes a DC {dc} Dexterity saving throw or takes {dmg} bludgeoning damage; half damage on a success.' },
+    { name: 'Mirror of dread', trigger: 'A tall mirror shows each viewer their own death.', kinds: ['manor', 'tower'], disarm: 'cover or turn the mirror (no check, once found)', effect: 'Everyone who looks into it makes a DC {dc} Wisdom saving throw or is frightened for 1 minute, repeating the save at the end of each of their turns.' },
+    { name: 'Grave curse', trigger: 'A curse-stone set into the floor sours the luck of whoever steps on it.', kinds: ['barrow', 'crypt'], disarm: 'DC {dc} Intelligence (Religion) check to quiet it with the right prayers', effect: 'DC {dc} Wisdom saving throw or have disadvantage on attack rolls and saving throws until a long rest, or until remove curse ends it.' },
+    { name: 'Sluice surge', trigger: 'A chain across the floor opens a sluice gate upstream when pulled or tripped over.', kinds: ['sewer'], disarm: 'tie the chain off (no check, once found)', effect: 'A wall of filthy water crashes through: DC {dc} Strength saving throw or take {dmg} bludgeoning damage and be swept 30 feet down the channel, prone.' },
+    { name: 'Sewer gas', trigger: 'Foul gas collects under the roof, waiting for a spark.', kinds: ['sewer', 'seacave', 'mine'], disarm: 'put out every flame before going in (no check, once found)', effect: 'If a flame comes in, everyone in the room makes a DC {dc} Dexterity saving throw or takes {dmg} fire damage; half damage on a success.' },
+    { name: 'Tide grate', trigger: 'A loose grate in the floor lets the sea in, fast, the moment its pin is knocked out.', kinds: ['seacave', 'shipwreck', 'lighthouse'], disarm: 'wedge the pin back in (DC {dc} Strength check)', effect: 'The room fills over 5 rounds. Swimming out against the rush takes a DC {dc} Strength (Athletics) check; anyone who fails is swept back in and starts to drown.' },
+    { name: 'Rotten deck', trigger: 'The boards in the middle of the room are soft as bread.', kinds: ['shipwreck'], disarm: 'walk along the beams at the edge (no check, once found)', effect: 'The first creature over them makes a DC {dc} Dexterity saving throw or falls through to the deck below, taking {dmg} bludgeoning damage.' },
+    { name: 'Burning lens', trigger: 'A lever swings a great lens round to focus the light on the doorway.', kinds: ['lighthouse'], disarm: 'DC {dc} Strength check to jam the lens, or cover it (no check, once found)', effect: 'Everyone in a 5-foot-wide line across the room makes a DC {dc} Dexterity saving throw or takes {dmg} fire damage; half damage on a success.' }
 ];
 const SITE_TRAP_SEVERITY = [['setback', 50, [10, 11]], ['dangerous', 40, [12, 15]], ['deadly', 10, [16, 20]]];
 const SITE_TRAP_DAMAGE = {
@@ -382,6 +687,31 @@ const SITE_HOLDERS = {
     'giants-high': 'giant lords', celestial: "heaven's wardens", dinos: 'beasts from a lost valley'
 };
 const SITE_AGO = [60, 120, 200, 300, 450, 600, 800, 1000, 1400];
+
+// Someone else in a room (siteEvent): a prisoner, a rival party, or one of the others.
+// {name}: a person's name (left out when npc-data.js isn't loaded). {gp}: a ransom or price by tier.
+const SITE_EVENT_KINDS = [['prisoner', 3], ['rivals', 3], ['other', 4]];
+const SITE_EVENT_ROLES = ['a merchant\'s clerk', 'a tax collector', 'a young priest', 'a scout from the nearest town', 'a tinker', 'an herbalist', 'a minor noble\'s youngest', 'a retired soldier', 'a bard who came for a song', 'a mapmaker', 'a farmer\'s eldest', 'a runaway apprentice', 'a pilgrim', 'a watch sergeant'];
+const SITE_PRISON_HELD = ['is chained to the wall by one ankle', 'sits in a cage hung from the ceiling', 'is tied to a chair and gagged', 'is locked in a cupboard, knocking softly', 'lies bound in a corner, pretending to be asleep', 'is shackled to a heavy chest', 'is tied to a post with their hands over their head', 'sits in a pit with a grate over it'];
+const SITE_PRISON_KNOWS = ['Freed, they know a way out that the place\'s masters don\'t watch.', 'They were taken for ransom, and their family will pay {gp} for them alive.', 'They saw what waits in the last room, and won\'t stop talking about it.', 'They are not what they seem: they are one of their captors, left here to tell a good story and lead the party into a trap.', 'Give them a weapon and they\'ll fight beside the party until they can run.', 'They know the name of whoever leads this place, and one thing it fears.', 'They came here on purpose, looking for someone, and they still mean to find them.', 'They\'re too weak to walk, and someone will have to carry them out.', 'They\'d rather stay: they owe money in town, and here at least they\'re fed.', 'They\'ve counted the guards for days and know when the watch changes.', 'They hid something valuable in this room before they were caught, and they\'ll share it.', 'They insist they can\'t leave until something of theirs is found, deeper in.'];
+const SITE_RIVAL_LEAD = ['a loud fighter in polished armor', 'a nervous wizard', 'a cleric of a war god', 'a halfling with far too many knives', 'a ranger who doesn\'t talk', 'a bard who is writing all this down', 'a paladin who is very sure of everything', 'a sorcerer barely out of childhood'];
+const SITE_RIVAL_DOING = ['are resting here, licking their wounds', 'are arguing over a map', 'are trying to open a door that won\'t open', 'are burying one of their own', 'are pinned down here, low on spells and food', 'are going through a dead foe\'s pockets', 'are lost, and too proud to say so', 'are already packing up a share of the loot'];
+const SITE_RIVAL_MOOD = ['They want the hoard and will race the party to it.', 'They\'d split the hoard evenly if the party helps them.', 'They\'ll sell the party their map of the rest of the place for {gp}.', 'They\'ll turn on the party at the worst moment.', 'They\'ve had enough: they\'d hand over everything they\'ve learned for an escort out.', 'They take the party for enemies and attack first, unless someone talks fast (DC 13 Charisma (Persuasion)).', 'They were hired by someone the party knows, and that someone said nothing about the party.', 'They\'ll join the party for the rest of the way, and want a fair share.'];
+const SITE_EVENT_OTHER = [
+    'A badly wounded survivor of an earlier party, {name}, lies here. They have a map of the next two rooms, and an hour to live without healing.',
+    'A hermit, {name}, has made a home here, and knows every room. They will trade what they know for food.',
+    'A deserter from the place\'s masters, {name}, is hiding here, and begs the party not to make a sound. They know where the guards sleep.',
+    'A ghost of one of the builders stands in a corner. It asks the party to take its bones out of this place, and will answer one question in return.',
+    'A mule, still in its harness, is tangled in the wreckage here. It is well fed. Someone has been looking after it.',
+    'A note is pinned to the wall: "To whoever comes next: don\'t trust the one who calls for help." It is signed by {name}.',
+    'A trader, {name}, has set up a stall here, and sells rope, oil, rations, and healing potions at four times the price. Nobody knows how they got in.',
+    'A lost child has wandered in from outside and is hiding behind the door, too scared to come out.',
+    'A dead adventurer, {name}, sits against the wall. Their journal tells how the rest of their party died, one room at a time.',
+    'A talking raven perches here and offers to guide the party, for a shiny thing. It is honest about the way, and lies about everything else.',
+    'A spy, {name}, is copying the place\'s maps, and would pay {gp} for the party to keep quiet.',
+    'A messenger, {name}, is trying to deliver a letter to the place\'s master, and wants an escort the rest of the way.'
+];
+const SITE_EVENT_GP = { '0-4': 50, '5-10': 250, '11-16': 1500, '17+': 7500 };
 
 // ── Helpers ───────────────────────────────────────────────
 function sitePick(list) {
@@ -520,13 +850,46 @@ function siteFight(K, band, budget, diff, seed) {
     if (!r.list.length) return null;
     const lead = r.list.reduce((a, b) => (b.m.xp > a.m.xp ? b : a)).m;
     const mind = SITE_MINDS[lead.type] || 'beast';
-    const [seen, doing] = sitePick(SITE_DOING[mind]);
+    const [seen, doing] = sitePick(SITE_DOING[mind].concat((K.doing && K.doing[mind]) || []));
     return { list: r.list.map(e => ({ id: e.m.id, count: e.count })), band: r.band, diff, doing, seen, seed };
 }
 
 // The fight as the encounter engine's [{ m, count }].
 function siteFightList(f) {
     return f.list.map(e => ({ m: MONSTER_BY_ID[e.id], count: e.count })).filter(e => e.m);
+}
+
+// A random kind. drawn: picked from `first` the way it always was; then, under its own seed
+// (so nothing else moves), it may give way to one of `more`, each kind as likely as any other.
+function siteMoreKind(seed, drawn, first = SITE_KIND_FIRST, more = SITE_KIND_KEYS.filter(k => !SITE_KIND_FIRST.includes(k))) {
+    return withSeed(deriveSeed(seed, 'kind.more'), () => (more.length && rand() < more.length / (first.length + more.length) ? sitePick(more) : drawn));
+}
+
+// A person's name for a room event, or '' when npc-data.js (buildName) isn't loaded.
+function siteName() {
+    if (typeof buildName !== 'function') return '';
+    const race = sitePick(['human', 'human', 'human', 'dwarf', 'elf', 'halfling', 'gnome', 'tiefling']);
+    return buildName(race, rand() < 0.5 ? 'male' : 'female').name;
+}
+
+// Someone else in a room: { kind, text }. A room with a fight only ever holds a prisoner.
+function siteEvent(fight, tier) {
+    const kind = siteWeighted(SITE_EVENT_KINDS.filter(([k]) => !fight || k === 'prisoner'));
+    const gp = `${SITE_EVENT_GP[tier].toLocaleString('en-US')} gp`;
+    let text;
+    if (kind === 'prisoner') {
+        const role = sitePick(SITE_EVENT_ROLES), held = sitePick(SITE_PRISON_HELD), knows = sitePick(SITE_PRISON_KNOWS), name = siteName();
+        text = `${name ? `${name}, ${role},` : siteCap(role)} ${held}. ${knows}`;
+    } else if (kind === 'rivals') {
+        const n = sitePick(['Two', 'Three', 'Three', 'Four', 'Five']), doing = sitePick(SITE_RIVAL_DOING), mood = sitePick(SITE_RIVAL_MOOD);
+        text = `${n} rival adventurers, led by ${sitePick(SITE_RIVAL_LEAD)}, ${doing}. ${mood}`;
+    } else {
+        const line = sitePick(SITE_EVENT_OTHER);
+        const name = line.includes('{name}') ? siteName() : '';
+        // Without a name: "A hermit, {name}, has" → "A hermit has"; "It is signed by {name}." goes.
+        text = name ? line.replace(/\{name\}/g, name) : line.replace(/, \{name\},/g, '').replace(/ [^.]*\{name\}[^.]*\./g, '');
+    }
+    return { kind, text: text.replace(/\{gp\}/g, gp) };
 }
 
 // ── The roll ──────────────────────────────────────────────
@@ -542,8 +905,8 @@ function siteNameFor(seed, kind) {
 
 function rollSite(seed, opts = {}) {
     const part = (label, fn) => withSeed(deriveSeed(seed, label), fn);
-    const drawn = part('options', () => ({ kind: sitePick(SITE_KIND_KEYS), size: siteWeighted([['medium', 5], ['small', 3], ['large', 3]]) }));
-    const kind = SITE_KINDS[opts.kind] ? opts.kind : drawn.kind;
+    const drawn = part('options', () => ({ kind: sitePick(SITE_KIND_FIRST), size: siteWeighted([['medium', 5], ['small', 3], ['large', 3]]) }));
+    const kind = SITE_KINDS[opts.kind] ? opts.kind : siteMoreKind(seed, drawn.kind);
     const size = SITE_SIZES[opts.size] ? opts.size : drawn.size;
     const level = siteClamp(opts.level, 1, 20, 3);
     const party = siteClamp(opts.party, 1, 8, 4);
@@ -571,7 +934,7 @@ function rollSite(seed, opts = {}) {
     // Who holds it (a group that fits the level), and what wanders in.
     const band = part(`band.${kind}.${level}.${party}`, () => siteChooseBand(K, budget, opts.bands));
 
-    const rooms = [];
+    const rooms = [], plans = [];
     for (let i = 0; i < count; i++) {
         const last = i === count - 1;
         const type = i === 0 ? types.entry : last ? types.end : types.middle[(i - 1) % types.middle.length];
@@ -582,6 +945,7 @@ function rollSite(seed, opts = {}) {
             const trap = rand() < (i === 0 ? 0.15 : last ? 0.2 : fight ? 0.15 : 0.35);
             return { fight, diff, trap };
         });
+        plans.push(plan);
         const fightSeed = deriveSeed(seed, `fight.${i}`);
         const fight = plan.fight ? part(`fight.${i}.${kind}.${level}.${party}`, () => siteFight(K, band, budget, plan.diff, fightSeed)) : null;
         const trap = plan.trap ? part(`trap.${i}.${kind}.${level}`, () => siteTrap(kind, tier)) : null;
@@ -617,7 +981,28 @@ function rollSite(seed, opts = {}) {
         ago: sitePick(SITE_AGO) + Math.floor(rand() * 4) * 10, age: rand()
     }));
 
-    return { seed, kind, size, level, party, tier, name, map, rooms, doors, band, hoard, boss, wander, story, budget };
+    // Drawn after everything else, each under its own seed, so they move nothing above.
+    // The boss room's ground: two features of the kind's, and sometimes a hazard (setback or
+    // dangerous; only its damage follows the level).
+    const ground = part('ground.' + kind, () => {
+        const features = siteShuffle(K.ground || []).slice(0, 2);
+        if (!K.hazards || rand() >= 0.5) return { features, hazard: null };
+        const [sev, , dcs] = siteWeighted(SITE_TRAP_SEVERITY.slice(0, 2).map(t => [t, t[1]]));
+        const dc = dcs[0] + Math.floor(rand() * (dcs[1] - dcs[0] + 1));
+        return { features, hazard: sitePick(K.hazards).replace(/\{dc\}/g, dc).replace(/\{dmg\}/g, SITE_TRAP_DAMAGE[tier][sev]) };
+    });
+    // Someone else in a room or two between the way in and the end.
+    const events = part(`events.${kind}.${n}`, () => {
+        const out = {};
+        let left = count >= 9 ? 2 : 1;
+        siteShuffle(rooms.map((_, i) => i).slice(1, -1)).forEach(i => {
+            if (left && rand() < (plans[i].fight ? 0.12 : 0.35)) { out[i] = siteEvent(plans[i].fight, tier); left--; }
+        });
+        return out;
+    });
+    rooms.forEach((r, i) => { r.event = events[i] || null; });
+
+    return { seed, kind, size, level, party, tier, name, map, rooms, doors, band, hoard, boss, wander, story, budget, ground };
 }
 
 // ── Text ──────────────────────────────────────────────────
@@ -709,6 +1094,7 @@ function siteRoomLines(s, i) {
     const r = s.rooms[i];
     const lines = [['Feature', r.feature]];
     if (r.sense) lines.push(['Senses', r.sense]);
+    if (r.event) lines.push(['Also here', r.event.text]);
     if (r.fight) {
         lines.push(['Foes', `${siteMonsterText(r.fight)} (${siteFightRating(s, r.fight)}).`]);
         lines.push(['Doing', `${siteCap(r.fight.doing)}. ${SITE_AWARE[r.fight.seen]}`]);
@@ -719,6 +1105,8 @@ function siteRoomLines(s, i) {
         lines.push(['Tactics', s.boss.tactics]);
         lines.push(['Morale', s.boss.morale]);
         if (s.boss.parley) lines.push(['Parley', s.boss.parley]);
+        if (s.ground && s.ground.features.length) lines.push(['Ground', s.ground.features.join(' ')]);
+        if (s.ground && s.ground.hazard) lines.push(['Hazard', s.ground.hazard]);
     }
     if (r.trap) {
         const t = r.trap;
@@ -817,11 +1205,17 @@ const SITE_ART_KINDS = {
     temple: { floor: 'temple-tiles', door: 'iron-door', props: ['pillar', 'statue', 'rubble', 'brazier', 'altar', 'spider-web'] },
     fort: { floor: 'dirt', door: 'wooden-door', props: ['barrels', 'crates', 'table', 'campfire', 'weapon-rack'] },
     lair: { floor: 'cave', door: null, props: ['bone-pile', 'stalagmites', 'rubble', 'spider-web'] },
-    keep: { floor: 'flagstones', door: 'wooden-door', props: ['rubble', 'table', 'barrels', 'pillar', 'chest', 'weapon-rack', 'brazier'] }
+    keep: { floor: 'flagstones', door: 'wooden-door', props: ['rubble', 'table', 'barrels', 'pillar', 'chest', 'weapon-rack', 'brazier'] },
+    sewer: { floor: 'flagstones', door: 'iron-door', props: ['barrels', 'crates', 'rubble', 'spider-web', 'bone-pile'] },
+    seacave: { floor: 'cave', door: null, props: ['barrels', 'crates', 'rubble', 'stalagmites', 'chest'] },
+    shipwreck: { floor: 'planks', door: 'wooden-door', props: ['barrels', 'crates', 'chest', 'rubble', 'spider-web'] },
+    lighthouse: { floor: 'flagstones', door: 'wooden-door', props: ['barrels', 'crates', 'chest', 'table', 'brazier'] },
+    manor: { floor: 'planks', door: 'wooden-door', props: ['table', 'rug', 'bookshelf', 'chest', 'statue', 'spider-web'] },
+    barrow: { floor: 'dirt', door: null, props: ['bone-pile', 'rubble', 'sarcophagus', 'spider-web', 'brazier'] }
 };
 // A room's own floor, by what its name and description say (first match). room: not in caves.
 const SITE_FLOOR_RULES = [
-    [/flood|water|lake|stream|wallow|baptistry|pool|wades|knee-deep|bog/, 'water'],
+    [/flood|water|lake|stream|wallow|baptistry|pool|wades|knee-deep|bog|channel|cistern|bilge/, 'water'],
     [/ossuar|bone|charnel/, 'bone'],
     [/fungus|mushroom|herb garden|grotto/, 'mossy-cave'],
     [/library|quarters|guest|dining|study|bedchamber|solar|lady|porter|office|barracks|mess|counting|hostel|scriptorium|refectory|cellar|infirmary|watchtower|lookout/, 'planks', 'room'],
@@ -837,7 +1231,7 @@ const SITE_PROP_RULES = [
     [/altar|shrine|sanctum|offering/, 'altar'],
     [/statue|saint|idol|mourners|effig|golem|armor that stands/, 'statue'],
     [/\bbeds?\b|bunks?\b|cots?\b|quarters|four-poster|canopy/, 'bed'],
-    [/bedroll|camp\b|old camp/, 'bedrolls'],
+    [/bedroll|camp\b|old camp|hammocks?\b/, 'bedrolls'],
     [/books?\b|library|shelves|scriptorium/, 'bookshelf'],
     [/desk|office|study|ledger|counting|diary|notes/, 'desk'],
     [/table|dining|mess hall|refectory|map room|war room|guardroom|dice/, 'table'],
@@ -848,7 +1242,7 @@ const SITE_PROP_RULES = [
     [/forge|smelter|smithy|furnace|hearth|candles|brazier|lamp/, 'brazier'],
     [/cookfire|cold fire|campfire/, 'campfire'],
     [/circle of silver|summoning|scrying/, 'magic-circle'],
-    [/\bcarts?\b|rails|ore\b/, 'mine-cart'],
+    [/\bcarts?\b|rails|\bore\b/, 'mine-cart'],
     [/pillar|column|portico|nave|hammerbeam|stalactite hall/, 'pillar'],
     [/rubble|collaps|cave-in|landslide|fallen roof|half fallen|cracked open/, 'rubble'],
     [/solar|lady's|lord's|guest room|apartment|rug/, 'rug'],
