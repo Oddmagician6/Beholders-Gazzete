@@ -174,7 +174,8 @@ function renderContinent() {
         </section>
         <h4 class="site-key-h">👑 The nations</h4>
         ${c.nations.map(nat => contNationHTML(c, nat)).join('')}
-        <p class="wb-small cont-wilds">🌲 The wilds: about ${Math.round(wild / Math.max(1, c.map.landIdx.length) * 100)}% of the land belongs to no one.${c.seas.length ? ` The seas: ${esc(c.seas.map(s => s.name).join(' and '))}.` : ''}</p>
+        <p class="wb-small cont-wilds">🌲 The wilds: about ${Math.round(wild / Math.max(1, c.map.landIdx.length) * 100)}% of the land belongs to no one.</p>
+        ${c.seas.length ? `<section class="wb-block wb-wide"><h4>🌊 The seas</h4><ul class="wb-list">${contSeaLines(c).map(l => `<li>${esc(l)}</li>`).join('')}</ul></section>` : ''}
         <section class="wb-block wb-wide">
             <h4>🏚️ Places worth the trip</h4>
             <ul class="wb-list cont-pois">${c.pois.map((p, n) => contPoiHTML(c, p, n)).join('')}</ul>

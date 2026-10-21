@@ -105,6 +105,123 @@ const CONT_FEUDS = [
     'an ambassador from {other} who insulted the ruler\'s mother', 'fishing waters, and the sinking of three boats'
 ];
 
+// ── Second pass (E5). Each nation's newer parts roll from nation.<k>.more, after the
+// old ones, so an old link keeps its tempers, feuds, and exports unless a swap draw says so.
+const CONT_TEMPERS_MORE = [
+    'Gloomy, dry-witted, and convinced the weather is personal.', 'Gamblers to a soul; even the courts settle ties with dice.',
+    'Gentle and slow to anger, and terrible once they get there.', 'Gossips: news crosses the realm faster than the post riders.',
+    'Hard-working and humorless; idleness is a fineable offense.', 'Horse-mad. A family\'s worth is counted in mounts.',
+    'Suspicious of magic, and of anyone who reads too much.', 'Sentimental about their dead; every house keeps a shrine to its grandparents.',
+    'Proud of their cooking, and offended by anyone else\'s.', 'Litigious: they sue their neighbors, their lords, and now and then the weather.',
+    'Seafarers at heart, even the ones who live a hundred miles inland.', 'Haunted by an old defeat, and building statues to the generals who lost it.',
+    'Thrifty to a fault; they mend a boot four times before they buy one.', 'Fond of duels, and of the laws that pretend to forbid them.',
+    'Welcoming to strangers, and very curious about their purses.', 'Song-proud: every village keeps a choir, and the choirs keep feuds.'
+];
+
+// Customs: one shared, or (now and then) one that fits the rule.
+const CONT_CUSTOMS = [
+    'Every guest is given salt and bread at the door, and refusing them is an insult.', 'Debts are forgiven at midwinter, which makes autumn a busy season for lenders.',
+    'The dead are buried with a coin for the ferryman and a second one, in case he raises his prices.', 'Nobody whistles after dark; it calls the wrong kind of listener.',
+    'A promise made over a shared cup of ale is binding in law.', 'Every child plants a tree on their naming day, and the trees are counted in the census.',
+    'A stranger who arrives during a storm must be sheltered, whoever they are.', 'Weddings last three days, and the third is spent apologizing.',
+    'Swords are peace-bound with red cord inside town walls; cutting the cord is a crime.', 'Bells ring once for every death in the realm, so the big cities ring all day.',
+    'Spring begins when the oldest woman in each village says it does.', 'A fallen enemy\'s boots are returned to their family. Everything else is fair plunder.',
+    'Every road shrine must be kept with fresh flowers; travelers who pass one bare stop to fill it.', 'The first fish of the season is thrown back, with an apology.',
+    'Lying on a feast day is bad luck, so feast days are very quiet.', 'Names are not spoken over a new grave for a year and a day.',
+    'Any quarrel can be settled by a race, if both sides agree to the course.', 'Mirrors are covered at night, and nobody will say why anymore.',
+    'Bread is never cut with a knife, only torn.', 'Heralds may cross any border unharmed, so a great many spies carry herald\'s staves.',
+    'A dragon\'s name is never spoken aloud, even in jest.', 'The harvest festival crowns a fool king who rules, in law, for a day.',
+    'Every town keeps a copy of the realm\'s founding charter, and reads it aloud each spring, typos included.', 'A traveler who shares a road meal is safe from the host for a night and a day.'
+];
+const CONT_CUSTOMS_GOV = {
+    kingdom: ['Commoners bow to the royal portrait in every inn, and the inns charge extra for the privilege.', 'Every noble house keeps one empty chair at table for the monarch, who has never once come.', 'Royal birthdays are holidays, so the crown has a great many birthdays.'],
+    empire: ['Every province sends a hostage child to the capital, to be raised at court and remember who is in charge.', 'Imperial milestones mark every road, counting the miles to the capital.', 'Conquered peoples keep their gods, as long as they add the emperor to the list.'],
+    theocracy: ['No work is done on holy days, and the calendar has a great many holy days.', 'Every child spends a year serving in the temple before they choose a trade.', 'Oaths are sworn on relics, and lying on one is said to rot the tongue.'],
+    republic: ['Every citizen may speak once a year in the assembly, and some save it up for decades.', 'Officials wear plain grey so nobody can say they dress above the people.', 'Votes are cast with black and white beans, and bean merchants grow rich in election years.'],
+    league: ['Contracts are signed in public in the market square, before witnesses who are paid by the word.', 'Guild seals count as law: a broken seal is a crime, whatever was inside.', 'Even weddings come with a written contract and a dowry ledger.'],
+    magocracy: ['Common folk need a license to cast any spell, even a cantrip to light a pipe.', 'Every child is tested for the gift at seven, and the gifted are taken to the towers.', 'Wizards are greeted with a bow; anyone else wearing a pointed hat is fined.'],
+    clans: ['Every clan keeps a tally-stick of debts owed by the others, and the sticks are very long.', 'Disputes are settled at the great moot, by argument first and by wrestling after.', 'A child is fostered for seven years with another clan, to keep the peace.']
+};
+
+// What keeps the ruler up at night. {other}: a rival realm's root; {capital}.
+const CONT_WORRIES = [
+    'An heir who would rather write poetry than rule.', 'A cousin with a better claim to the throne and a growing following.',
+    'A treasury emptier than anyone has been told.', 'A plague in the river towns that the healers cannot name.',
+    'Spies from {other}, and a growing suspicion that one sits on the council.', 'A prophecy about the end of the dynasty, now quoted in every tavern.',
+    'A general more popular than the ruler.', 'Three bad harvests in a row, and bread riots in {capital}.',
+    'A secret marriage that would ruin an alliance if it came out.', 'An assassin who has failed twice, and keeps trying.',
+    'The temples, which own a third of the land and would like the rest.', 'An old treaty with {other} that runs out at the end of the year.',
+    'A dragon that wants tribute doubled.', 'The ruler\'s own failing health, hidden behind a curtain and a body double.',
+    'Bandits on the trade roads, and merchants threatening to take their goods elsewhere.', 'A missing royal seal, and forged decrees turning up in the provinces.',
+    'A guild strike that has shut the docks and the mines.', 'Ghosts in the palace, which the court wizard insists are drafts.',
+    'Refugees from {other}, crossing the border by the thousand.', 'A rebel lord in the hills who is winning the songs, if not the battles.'
+];
+
+const CONT_FEUDS_MORE = [
+    'a princess who eloped across the border, and the dowry that went with her', 'a mountain pass both say their ancestors carved',
+    'the drowning of a trade fleet, blamed on {other}\'s pilots', 'a holy site on the border that both faiths claim',
+    'a wizard who fled with the other side\'s secrets', 'a famine year when {other} sold grain at triple price',
+    'a coronation insult no one will repeat in polite company', 'the river {other} dammed for its mills',
+    'a border town that switches sides whenever the taxes change', 'a hero each side claims as their own',
+    'a treaty signed in two languages that don\'t say the same thing', 'a murdered heir, and a confession nobody believes',
+    'smugglers that {other} pretends not to see', 'a forest both sides log and neither will replant',
+    'a map, drawn a century ago, that put the border in the wrong valley', 'a war of tariffs that has outlasted the people who started it'
+];
+// How a feud stands now (said once per pair).
+const CONT_FEUD_NOW = [
+    'For now, an uneasy truce.', 'Skirmishes along the border every summer.', 'Both sides are hiring mercenaries.',
+    'Talks are under way, and going badly.', 'Cold: no trade, no envoys, no letters.', 'Open war is a matter of when, not if.',
+    'A marriage is being arranged to end it, and neither bride nor groom has been asked.', 'The common folk trade across the border anyway.',
+    'Each side holds hostages of the other.', 'A neutral power has offered to judge it, for a fee.', 'Quiet, since the last war, but nobody has forgotten.',
+    'Raids and counter-raids, and a list of grievances that grows every season.'
+];
+
+// More goods per terrain: a nation's export may swap to one of these.
+const CONT_EXPORTS_MORE = {
+    plains: ['linen', 'oats', 'leather', 'mead'], forest: ['resin', 'mushrooms', 'carved wood', 'venison'],
+    jungle: ['parrots', 'rubber', 'tea', 'snake venom for alchemists'], hills: ['lead', 'whetstones', 'cider', 'goat cheese'],
+    mountains: ['crystal', 'mountain goats', 'granite', 'healing springs water'], moor: ['woolen cloth', 'grouse', 'standing stones, in pieces'],
+    desert: ['camels', 'carpets', 'silver jewelry', 'saltpeter'], badlands: ['giant bones', 'iron', 'jasper', 'saltpeter'],
+    swamp: ['rice', 'frog leather', 'poisons, quietly', 'cranberries'], tundra: ['reindeer', 'walrus ivory', 'smoked fish', 'snow-fox pelts'],
+    coast: ['sailcloth', 'dried kelp', 'shellfish', 'rope']
+};
+
+// Trade with a neighbor that isn't its feud: {good} {them} {road}.
+const CONT_TRADE = [
+    'Sells {good} to {them}, {road}.', 'Sends {good} to {them}, {road}, and buys their {back} in return.',
+    'Has a standing contract to supply {them} with {good}, {road}.', 'Its traders carry {good} to {them}, {road}, and bring back {back}.',
+    'Trades {good} for {them}\'s {back}, {road}, and both sides think they got the better deal.', 'Gets a high price for {good} in {them}, {road}.'
+];
+// What a border is made of, and how it is kept.
+const CONT_BORDER = {
+    mountains: ['passes watched by forts', 'one pass, snowed shut half the year', 'old watchtowers on every peak'],
+    river: ['two bridges, both taxed', 'ferries on both banks and toll collectors on each', 'a river nobody can agree the middle of'],
+    forest: ['a forest neither side patrols', 'woodland where the border stones have walked', 'a forest road with a toll house at either end'],
+    open: ['a line of boundary stones, moved now and then', 'open fields and a busy customs house', 'a dyke and ditch from an older war']
+};
+const CONT_BORDER_WHAT = { mountains: 'the mountains', river: 'a river', forest: 'deep forest', open: 'open country' };
+
+// Capitals: what each is known for.
+const CONT_CAPITAL_FAME = [
+    'a bridge lined with a hundred shops', 'a cathedral that has been under construction for two centuries', 'the best library in the land',
+    'walls that have never been breached', 'a great market that never closes', 'a palace built over an older palace, built over an older one',
+    'a lighthouse older than the kingdom', 'the arena, where the realm settles its duels in public', 'gardens that bloom in winter',
+    'a clock tower whose clock runs one hour fast, on purpose', 'its catacombs, which are larger than the city above', 'a statue of the founder, with a nose that was replaced three times',
+    'a tavern that claims to have served every ruler since the founding', 'its mint, guarded by golems', 'a bell that rings by itself before disasters',
+    'the riots, which happen on schedule every spring', 'a university that awards degrees in fencing', 'its smell, mostly from the tanneries'
+];
+
+// Sea lore, for the named seas.
+const CONT_SEA_LORE = [
+    'sailors say a drowned city rings its bells below on calm nights', 'a kraken sleeps in its deepest trench, and is not to be woken',
+    'the fog comes in fast and leaves ships far from where they were', 'its islands move, a little, from one chart to the next',
+    'pirates keep a free port on an island no navy has found', 'whales gather there each autumn, and so do the whalers',
+    'the water glows green at night, and the fish taste of copper', 'a ghost ship sails it, always heading for home',
+    'merfolk trade pearls for iron knives at the reef markets', 'its storms come only from the west, and only on the new moon',
+    'a sea serpent is sighted every few years, a little bigger each time', 'a sunken treasure fleet lies somewhere under it, and every captain has a map',
+    'its tides run higher than they should, and the old charts blame the moon\'s mood', 'a lighthouse stands alone in the middle of it, still lit, with no keeper'
+];
+
 const CONT_TINCTURES = ['gold', 'silver', 'red', 'blue', 'green', 'black', 'purple'];
 const CONT_CHARGES = ['a stag', 'a tower', 'a crowned lion', 'three stars', 'a ship', 'a wolf\'s head', 'an oak', 'a key', 'a sun', 'a crescent moon',
     'a hammer', 'a rose', 'a serpent', 'an eagle', 'a bell', 'a sword', 'a bear', 'a lantern', 'a horse', 'a gauntlet'];
@@ -119,57 +236,99 @@ const CONT_SEAS = ['the Sea of {r}', 'the {Adj} Sea', 'the {Adj} Deep', 'the {r}
 
 // Points of interest. site: the SITE_KINDS key it opens. biomes: where it likes to be.
 // names: its own map name (else the site's name). Hooks: {site} {near} {nation}.
+// more: hooks from the second pass (E5), swapped in by a later draw.
 const CONT_POIS = {
     ruin: { label: 'Ruined keep', site: 'keep', biomes: { plains: 3, hills: 3, moor: 3, forest: 1, badlands: 2 }, hooks: [
         'Lights burn in {site} again, and {near} wants to know who lit them.',
         'The last lord of {site} buried the family silver before the end. The oldest drunk in {near} claims to know where.',
         '{nation} wants the old keep garrisoned before its rivals take it. Nobody has told the current tenants.',
         'A survey party from {near} went up to {site} a month ago. One came back, and won\'t talk.',
-        'Every child in {near} dares the others to touch the gate of {site}. This year one did, and is still missing.'] },
-    barrow: { label: 'Old barrow', site: 'crypt', biomes: { moor: 4, plains: 2, hills: 3, tundra: 2 }, hooks: [
+        'Every child in {near} dares the others to touch the gate of {site}. This year one did, and is still missing.'],
+        more: [
+        'A banner nobody recognizes flies over {site}. {near} sent two riders to ask whose it is; neither came back.',
+        'The heir to {site} has turned up in {near} with a deed, a sword, and no money, and wants an escort home.',
+        'Masons from {near} have taken stone from {site} for years. This spring the walls started taking masons.'] },
+    barrow: { label: 'Old barrow', site: 'barrow', biomes: { moor: 4, plains: 2, hills: 3, tundra: 2 }, hooks: [
         'The barrow-mound outside {near} split open in the spring rains. Something walked out of {site} before anyone walked in.',
         'A grave-robber from {near} sold a crown at market last week. The crown came from {site}, and the robber hasn\'t been seen since.',
         'Shepherds won\'t graze near {site}: the sheep go in and don\'t come out.',
         'The priests of {nation} want {site} sealed for good. A scholar in {near} will pay double to see it first.',
-        'On the longest night, the dead of {site} are said to answer one question each.'] },
+        'On the longest night, the dead of {site} are said to answer one question each.'],
+        more: [
+        'A farmer outside {near} ploughed up a gold torc by {site}. Since then, the mound has been humming.',
+        '{nation} wants the old chief in {site} named as its founder, and needs proof. The proof is still in the grave.',
+        'Mist rolls out of {site} every dawn and stops at the edge of {near}. Each day, a little closer.'] },
     dragon: { label: 'Dragon\'s lair', site: 'lair', biomes: { mountains: 6, hills: 1 },
         names: ['Mount {r}', 'the {Adj} Peak', '{r}\'s Teeth', 'the Smoking Crag', 'the Burnt Horn', 'the {Adj} Spire'], adj: ['Black', 'Red', 'Ashen', 'Broken', 'Howling', 'Cinder'], hooks: [
         'Herds vanish from the valleys below {place}, and {near} pays tribute it can\'t afford. The herders say dragon. The cave is {site}.',
         'Smoke rises from {place} for the first time in a lifetime. {nation} has offered a knighthood to whoever finds out why, inside {site}.',
         'A dragon\'s hoard is said to lie in {site}, under {place}. Every fool in {near} has a map to it. One of the maps might be real.',
-        'Something huge flies over {near} at dusk, always back toward {place}. The lair, {site}, has not been seen by anyone who came home.'] },
+        'Something huge flies over {near} at dusk, always back toward {place}. The lair, {site}, has not been seen by anyone who came home.'],
+        more: [
+        'A young dragon has claimed {place} and sent {near} a list of demands in very good handwriting. The lair is {site}.',
+        'Scales the size of shields wash down the river from {place}. Something up in {site} is molting, or dying.',
+        '{nation} signed a treaty with the dragon of {site} a century ago. The dragon has come down to {near} to renew it, on new terms.'] },
     wood: { label: 'Cursed wood', site: 'lair', biomes: { forest: 5, jungle: 4, swamp: 2 },
         names: ['the {Adj} Wood', '{r} Forest', 'the Weeping Wood', 'the {Adj} Thicket', 'the Hollow Trees', 'the {Adj} Wilds'], adj: ['Whispering', 'Thorn', 'Gloaming', 'Witch', 'Hungry', 'Silent'], hooks: [
         'The woodcutters of {near} won\'t go into {place} anymore. The trees there have started following them home. Something lairs at its heart: {site}.',
         'Paths in {place} lead back to where they started. A girl from {near} walked in and came out forty years older. She says the answer is {site}.',
         '{nation} lost a whole patrol in {place}. Their horses came back, saddled and calm. The tracks end at {site}.',
-        'Strange fruit grows in {place}, and the alchemists of {near} pay a fortune for it, if anyone comes back from {site} with some.'] },
+        'Strange fruit grows in {place}, and the alchemists of {near} pay a fortune for it, if anyone comes back from {site} with some.'],
+        more: [
+        'Every seven years {place} lets one traveler through to {site}. This is the seventh year, and {near} is drawing lots.',
+        'A druid came out of {place} to warn {near} that something is waking at {site}, and fell asleep mid-sentence. She hasn\'t woken.',
+        'The foresters of {nation} marked {place} for felling. The marks have moved to their own front doors, and the trail leads to {site}.'] },
     tower: { label: 'Wizard\'s tower', site: 'tower', biomes: { hills: 2, moor: 3, plains: 1, forest: 2, tundra: 2, badlands: 2, desert: 1 }, hooks: [
         'The wizard of {site} hasn\'t been seen in years, but the lights still change color every night, and {near} is tired of it.',
         '{site} appeared overnight on a hill outside {near}. Nobody built it. The door is open.',
         'The apprentices of {site} came down to {near} for supplies and paid in coins from a kingdom that fell centuries ago.',
         '{nation} wants the wizard of {site} to answer for a plague of frogs. Someone has to deliver the summons.',
-        'A storm sits over {site} and hasn\'t moved in a month. The farmers of {near} would like their sun back.'] },
+        'A storm sits over {site} and hasn\'t moved in a month. The farmers of {near} would like their sun back.'],
+        more: [
+        'A letter from {site} invites the bravest soul in {near} to tea. The last three who accepted are still there.',
+        '{site} has started to lean toward {near}, a little more each week.',
+        'The wizard of {site} has died, and the will leaves everything to whoever reaches the top floor first. Half of {near} is packing.'] },
     mine: { label: 'Lost mine', site: 'mine', biomes: { hills: 5, mountains: 3, badlands: 2 }, hooks: [
         'The miners dug too deep in {site} and fled. {near} still has the deed, and a reward for whoever clears it.',
         'Ore carts roll out of {site} by themselves at night, full, and nobody in {near} is loading them.',
         'A dwarf in {near} has the only map of {site}, and wants a bodyguard, a share, and a promise not to ask about her brother.',
         '{nation} needs the silver in {site} to pay its army, and the army is getting restless.',
-        'The canaries come back from {site} singing a song nobody taught them.'] },
+        'The canaries come back from {site} singing a song nobody taught them.'],
+        more: [
+        'Miners from {near} broke into a vault under {site} full of someone else\'s tools, far older than theirs.',
+        'Fresh gold from {site} is turning up in {near}, though the mine has been sealed for twenty years.',
+        '{nation} sent convicts to work {site}. The convicts sent back a letter declaring themselves a kingdom.'] },
     temple: { label: 'Sunken temple', site: 'temple', biomes: { swamp: 6, jungle: 3, coast: 3 }, hooks: [
         'The waters around {site} dropped in the drought, and the temple roof is showing. Half of {near} wants to loot it; the other half wants it drowned again.',
         'Fishermen out of {near} pull up idols from the shallows by {site}. Everyone who keeps one dreams of the same door.',
         'A bell rings under the water at {site} when a storm is coming. Lately it rings every night.',
         'The priests of {nation} say {site} holds a relic stolen centuries ago, and want it back before anyone else does.',
-        'Pilgrims still come to {site} by boat, and fewer of them leave than arrive.'] },
+        'Pilgrims still come to {site} by boat, and fewer of them leave than arrive.'],
+        more: [
+        'The god of {site} is forgotten everywhere but {near}, where folk still leave offerings. Lately the offerings are taken.',
+        'A diver from {near} came up from {site} with a golden mask, and now speaks only in a tongue nobody knows.',
+        '{nation} is draining the marsh around {site} for farmland. The water keeps coming back, and so do the priests.'] },
     fort: { label: 'Bandit fort', site: 'fort', biomes: { forest: 3, hills: 3, badlands: 3, plains: 1, moor: 1 }, hooks: [
         'Raiders from {site} took the tax wagon bound for {near}, and {nation} wants the tax back more than the raiders dead.',
         'The bandits of {site} are holding a merchant\'s heir for ransom. The merchant in {near} would rather pay you than them.',
         'Nobody pays the toll at the bridge near {near} anymore; they pay the folk at {site} instead.',
         '{site} was a border fort of {nation}. The soldiers never left when the pay stopped; they just changed jobs.',
-        'Somebody in {near} is selling the caravan schedules to {site}. Find them, or end the fort.'] }
+        'Somebody in {near} is selling the caravan schedules to {site}. Find them, or end the fort.'],
+        more: [
+        'The bandit chief of {site} has written to {near} proposing marriage to the mayor. The mayor is considering it.',
+        '{site} has fallen to something worse than bandits, and the bandits came to {near} begging for help.',
+        'Soldiers of {nation} besieged {site} all summer and gave up. They left a siege engine behind, and someone has been using it.'] }
 };
 const CONT_POI_KEYS = Object.keys(CONT_POIS);
+// A hook put together for any place: {who} in {near} {wants} {site}. {twist}
+const CONT_POI_WHO = ['A widow', 'The town priest', 'A retired adventurer', 'A merchant\'s clerk', 'A young noble', 'The local healer',
+    'A traveling scholar', 'A fisherman', 'The captain of the watch', 'A pair of orphans', 'A bard', 'A fence'];
+const CONT_POI_WANTS = ['will pay well for anything brought out of', 'wants a body brought home from', 'needs a map of', 'wants a lost ring found in',
+    'swears a missing sister is held in', 'will pay to have a sealed letter left in', 'wants proof that nothing lives in', 'needs a stone from the oldest wall of'];
+const CONT_POI_TWISTS = ['They are lying about why.', 'Someone else has been hired for the same job.', 'Whatever is in there knows they are coming.',
+    'The reward is real; the employer may not be.', 'They went themselves, once, and won\'t say what happened.', 'The job is a test for something bigger.',
+    '{nation} has forbidden anyone to go.', 'They will be dead before the party returns, unless someone keeps watch over them.',
+    'Half of {near} thinks it\'s a terrible idea, loudly.', 'It has to be done before the next full moon.'];
 
 // ── The illustrated style (pictures in img/map, made by map-art.py) ──
 // How many symbols each terrain sheet holds (img/map/terrain/<sheet>-<n>.webp). A terrain
@@ -665,6 +824,21 @@ function rollContinent(seed, opts = {}) {
         nat.index = k;
         nat.cap = cap;
         nat.color = CONT_COLORS[k % CONT_COLORS.length];
+        // E5: a fixed number of draws, so nothing here shifts with the rule or the map.
+        withSeed(sub('more'), () => {
+            const temper = contPick(CONT_TEMPERS_MORE), tSwap = rand() < CONT_TEMPERS_MORE.length / (CONT_TEMPERS.length + CONT_TEMPERS_MORE.length);
+            if (tSwap) nat.temper = temper;
+            const feud = contPick(CONT_FEUDS_MORE), fSwap = rand() < CONT_FEUDS_MORE.length / (CONT_FEUDS.length + CONT_FEUDS_MORE.length);
+            if (fSwap) nat.feudWhy = feud;
+            nat.feudNow = contPick(CONT_FEUD_NOW);
+            const own = CONT_CUSTOMS_GOV[nat.gov], custom = contPick(CONT_CUSTOMS), r = rand(), use = rand() < 0.35;
+            nat.custom = use ? own[Math.floor(r * own.length)] : custom;
+            nat.worry = contPick(CONT_WORRIES);
+            nat.fame = contPick(CONT_CAPITAL_FAME);
+            nat.exportMore = [[rand(), rand()], [rand(), rand()]];
+            nat.tradePick = [rand(), rand(), rand()];
+            nat.borderPick = rand();
+        });
         return nat;
     });
 
@@ -683,9 +857,15 @@ function rollContinent(seed, opts = {}) {
         nat.coastal = !!tally.coast;
         const goods = ranked.slice(0, 3);
         const first = goods[0], second = goods.find(t => t !== first && CONT_EXPORTS[t]);
-        nat.exports = [CONT_EXPORTS[first][Math.floor(nat.exportPick[0] * CONT_EXPORTS[first].length)]];
+        // Each good may swap to one of the newer ones for its terrain (E5).
+        const good = (t, n) => {
+            const old = CONT_EXPORTS[t], more = CONT_EXPORTS_MORE[t] || [];
+            const [u, r] = nat.exportMore[n];
+            return u < more.length / (old.length + more.length) ? more[Math.floor(r * more.length)] : old[Math.floor(nat.exportPick[n] * old.length)];
+        };
+        nat.exports = [good(first, 0)];
         if (second) {
-            const g2 = CONT_EXPORTS[second][Math.floor(nat.exportPick[1] * CONT_EXPORTS[second].length)];
+            const g2 = good(second, 1);
             if (g2 !== nat.exports[0]) nat.exports.push(g2);
         }
         nat.climate = +Object.entries(clim).sort((a, b) => b[1] - a[1])[0][0];
@@ -706,9 +886,30 @@ function rollContinent(seed, opts = {}) {
             .sort((a, b) => contCellDist(m, nat.cap, c.nations[a].cap) - contCellDist(m, nat.cap, c.nations[b].cap)).slice(0, 2);
         if (!pool.length) return;
         const j = pool[Math.floor(nat.feudPick * pool.length)];
-        nat.feud = { with: j, why: nat.feudWhy, sea: !nat.neighbors.includes(j) };
+        nat.feud = { with: j, why: nat.feudWhy, now: nat.feudNow, sea: !nat.neighbors.includes(j) };
         const o = c.nations[j];
-        if (!o.feud) o.feud = { with: k, why: nat.feudWhy, sea: nat.feud.sea };
+        if (!o.feud) o.feud = { with: k, why: nat.feudWhy, now: nat.feudNow, sea: nat.feud.sea };
+    });
+
+    // Borders (E5): what each shared border is mostly made of, from the cells along it.
+    const borderKinds = c.nations.map(() => c.nations.map(() => ({ mountains: 0, river: 0, forest: 0, open: 0 })));
+    m.landIdx.forEach(i => contEach4(m, i, nb => {
+        const a = m.owner[i], b = m.owner[nb];
+        if (a < 0 || b < 0 || a === b) return;
+        const bi = m.biome[i], bn = m.biome[nb];
+        const kind = bi === 'mountains' || bn === 'mountains' ? 'mountains' : m.river[i] || m.river[nb] ? 'river'
+            : ['forest', 'jungle'].includes(bi) || ['forest', 'jungle'].includes(bn) ? 'forest' : 'open';
+        borderKinds[a][b][kind]++;
+    }));
+    c.nations.forEach((nat, k) => {
+        nat.borders = nat.neighbors.slice().sort((a, b) => shared[k][b] - shared[k][a]).slice(0, 3).map(j => {
+            const t = borderKinds[k][j], tot = t.mountains + t.river + t.forest + t.open;
+            // A river or mountains count as the border when they run along a good stretch of it.
+            const kind = t.mountains >= tot * 0.3 ? 'mountains' : t.river >= tot * 0.25 ? 'river' : t.forest >= tot * 0.5 ? 'forest' : 'open';
+            const lo = c.nations[Math.min(k, j)];
+            const list = CONT_BORDER[kind];
+            return { with: j, kind, how: list[Math.floor(((lo.borderPick + Math.max(k, j) * 0.37) % 1) * list.length)] };
+        });
     });
 
     // Towns: the capital first, then good spots spread through the nation.
@@ -780,6 +981,20 @@ function rollContinent(seed, opts = {}) {
     }));
     c.roadCells = roads;
 
+    // Trade (E5): each nation sells to one realm it isn't feuding with, by the road between
+    // them, or by sea when both have a coast and no border.
+    c.nations.forEach((nat, k) => {
+        const foe = nat.feud ? nat.feud.with : -1;
+        let pool = nat.neighbors.filter(j => j !== foe);
+        if (!pool.length && nat.coastal) pool = c.nations.filter(o => o.index !== k && o.index !== foe && o.coastal).map(o => o.index);
+        if (!pool.length) return;
+        const j = pool[Math.floor(nat.tradePick[0] * pool.length)];
+        const road = c.roads.find(r => [c.towns[r.a].nation, c.towns[r.b].nation].sort().join() === [k, j].sort().join());
+        const from = road && (c.towns[road.a].nation === k ? road.a : road.b), to = road && (from === road.a ? road.b : road.a);
+        nat.trade = { with: j, good: nat.exports[Math.floor(nat.tradePick[1] * nat.exports.length)], line: nat.tradePick[2],
+            road: road ? `${road.kept ? 'by the road' : 'along an unkept track'} from ${c.towns[from].name} to ${c.towns[to].name}` : 'by sea' };
+    });
+
     // Points of interest: wild country first, away from towns and each other.
     const poiKinds = part('pois', () => {
         const count = Z.pois, out = [], tally = {};
@@ -815,6 +1030,13 @@ function rollContinent(seed, opts = {}) {
             place: P.names ? contPick(P.names).replace('{r}', hisRoot(used)).replace('{Adj}', contPick(P.adj)) : null,
             hook: contPick(P.hooks)
         }));
+        // E5: a newer hook for the kind, or one put together, may take over (a fixed number of draws).
+        withSeed(deriveSeed(pseed, 'more2'), () => {
+            const newer = contPick(P.more), swap = rand() < P.more.length / (P.hooks.length + P.more.length);
+            const made = `${contPick(CONT_POI_WHO)} in {near} ${contPick(CONT_POI_WANTS)} {site}. ${contPick(CONT_POI_TWISTS)}`, build = rand() < 0.25;
+            if (build) more.hook = made;
+            else if (swap) more.hook = newer;
+        });
         c.pois.push({ id: c.pois.length, kind, cell, seed: pseed, site, place: more.place, name: more.place || site, hook: more.hook,
             near: near.id, owner: m.owner[cell], miles: Math.round(contCellDist(m, near.cell, cell) * Z.miles / 5) * 5 || 5, dir: contDir(m, near.cell, cell) });
     });
@@ -835,6 +1057,10 @@ function rollContinent(seed, opts = {}) {
             out.push({ cell: best, name: contPick(CONT_SEAS).replace('{r}', hisRoot(used)).replace('{Adj}', contPick(CONT_SEA_ADJ)) });
         }
         return out;
+    });
+    part('seas.lore', () => {
+        const lore = contShuffle(CONT_SEA_LORE);
+        c.seas.forEach((s, i) => { s.lore = lore[i]; });
     });
     return c;
 }
@@ -903,7 +1129,32 @@ function contFeudText(c, nat) {
     if (!nat.feud) return 'None worth a war, yet.';
     const o = c.nations[nat.feud.with];
     const why = nat.feud.why.replace('{other}', o.root);
-    return `With ${o.name}${nat.feud.sea ? ', across the water,' : ''} over ${why}.`;
+    return `With ${o.name}${nat.feud.sea ? ', across the water,' : ''} over ${why}.${nat.feud.now ? ' ' + nat.feud.now : ''}`;
+}
+
+function contTradeText(c, nat) {
+    if (!nat.trade) return 'Little beyond its own borders.';
+    const o = c.nations[nat.trade.with];
+    const back = o.exports.find(g => g !== nat.trade.good);
+    const lines = back ? CONT_TRADE : CONT_TRADE.filter(t => !t.includes('{back}'));
+    const t = lines[Math.floor(nat.trade.line * lines.length)];
+    return facCap(t.replace('{good}', nat.trade.good).replace(/\{them\}/g, o.name).replace('{road}', nat.trade.road).replace('{back}', back || ''));
+}
+
+function contBorderText(c, nat) {
+    if (!nat.borders || !nat.borders.length) return 'The sea and the wilds; no neighbors to quarrel with.';
+    return nat.borders.map((b, i) => `${i ? CONT_BORDER_WHAT[b.kind] : facCap(CONT_BORDER_WHAT[b.kind])} with ${c.nations[b.with].name} (${b.how})`).join('; ') + '.';
+}
+
+function contWorryText(c, nat) {
+    const others = c.nations.filter(o => o !== nat);
+    const other = nat.feud ? c.nations[nat.feud.with] : others[0];
+    return nat.worry.replace('{other}', other ? other.name : 'the wilds').replace('{capital}', c.towns[nat.capital].name);
+}
+
+// The named seas with their lore: "The Grey Deep: sailors say …."
+function contSeaLines(c) {
+    return c.seas.map(s => `${facCap(s.name)}${s.lore ? `: ${s.lore}` : ''}.`);
 }
 
 function contTownLabel(t) {
@@ -918,12 +1169,16 @@ function contNationLines(c, k) {
     return [
         ['Rule', `${G.label}. ${G.how.replace('{capital}', cap.name)}`],
         ['Ruler', `${nat.ruler.title} ${facPersonLine(nat.ruler)}.`],
-        ['Capital', `${cap.name}, ${TOWN_SIZES[cap.size].a}.`],
+        ['The ruler\'s worry', contWorryText(c, nat)],
+        ['Capital', `${cap.name}, ${TOWN_SIZES[cap.size].a}, known for ${nat.fame}.`],
         ['Towns', towns.length ? towns.map(contTownLabel).join(', ') + '.' : 'None besides the capital.'],
         ['The land', `${contTerrainText(nat)} ${CONT_CLIMATES[nat.climate].label} climate.`],
         ['Folk', nat.temper],
+        ['Custom', nat.custom],
         ['Times', CONT_PROSPERITY_TEXT[nat.wealth]],
         ['Exports', facCap(nat.exports.join(' and ')) + '.'],
+        ['Trade', contTradeText(c, nat)],
+        ['Borders', contBorderText(c, nat)],
         ['Feud', contFeudText(c, nat)],
         ['Banner', facCap(nat.banner) + '.']
     ];
@@ -967,7 +1222,7 @@ function contMid(name) {
 function contPoiHook(c, p) {
     const near = c.towns[p.near];
     return p.hook.replace(/\{site\}/g, contMid(p.site)).replace(/\{place\}/g, contMid(p.place || p.site)).replace(/\{near\}/g, near.name)
-        .replace(/\{nation\}/g, p.owner >= 0 ? facCap(c.nations[p.owner].name) : facCap(c.nations[c.towns[p.near].nation].name))
+        .replace(/\{nation\}/g, c.nations[p.owner >= 0 ? p.owner : c.towns[p.near].nation].name)
         .replace(/(^|\. )([a-z])/g, (x, a, b) => a + b.toUpperCase());
 }
 
@@ -989,7 +1244,7 @@ function contText(c) {
     c.pois.forEach((p, i) => out.push(`  ${i + 1}. ${facCap(p.name)} (${CONT_POIS[p.kind].label.toLowerCase()}). ${contPoiWhere(c, p)} ${contPoiHook(c, p)}`));
     out.push('', 'Roads:');
     c.roads.forEach(r => out.push('  ' + contRoadLine(c, r)));
-    if (c.seas.length) out.push('', 'Seas: ' + facCap(c.seas.map(s => s.name).join(', ')) + '.');
+    if (c.seas.length) out.push('', 'Seas:', ...contSeaLines(c).map(l => '  ' + l));
     return out.join('\n');
 }
 

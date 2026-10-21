@@ -187,7 +187,7 @@ const NB_SHEETS = {
         const c = contCached(seed, nbUrlOpts(p, CONT_FIELDS));
         const nations = c.nations.map((nat, k) => {
             const head = facCap(nat.name);
-            return { head, lines: nbLinesOf(head, contNationLines(c, k)) };
+            return { head, lines: nbLinesOf(head, contNationLines(c, k), ['The ruler\'s worry']) };
         });
         const places = [];
         c.pois.forEach(poi => {
@@ -196,7 +196,7 @@ const NB_SHEETS = {
             places.push(nbLine('Places worth the trip', `${name}: the tale`, contPoiHook(c, poi), true));
         });
         const top = [nbLine('', 'The land', contSummary(c))];
-        if (c.seas.length) top.push(nbLine('', 'Seas', facCap(c.seas.map(s => s.name).join(', ')) + '.'));
+        if (c.seas.length) top.push(nbLine('', 'Seas', contSeaLines(c).join(' ')));
         return [{ head: '', lines: top }, ...nations, { head: 'Places worth the trip', lines: places },
             { head: 'Roads', lines: nbLinesOf('Roads', c.roads.map((r, i) => [`Road ${i + 1}`, contRoadLine(c, r)])) }];
     },
