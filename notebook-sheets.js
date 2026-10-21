@@ -150,7 +150,8 @@ const NB_SHEETS = {
         }
         const t = rollTown(seed, { ...nbUrlOpts(p, TOWN_FIELDS), govs: realm ? realm.t.govs : null });
         const ctx = { factions: townFactions(t), pantheon, realm };
-        const top = nbSplitLine(nbLinesOf('', [['What it is', townSummary(t)], ...townLines(t, ctx), ['Trouble', townTroubleText(t, ctx)]], ['Trouble']),
+        const top = nbSplitLine(nbLinesOf('', [['What it is', townSummary(t)], ...townLines(t, ctx), ['Trouble', townTroubleText(t, ctx)],
+            ['Behind it', townBehindText(t, ctx)]], ['Trouble', 'Behind it']),
             'Rule', ' The real power: ', 'The real power');
         let people = nbLinesOf('Notable people', townPeopleLines(t, ctx));
         people.filter(l => l.text.includes(' Secretly works for ')).forEach(l => { people = nbSplitLine(people, l.label, ' Secretly works for ', `${l.label}: secretly works for`); });
@@ -159,6 +160,7 @@ const NB_SHEETS = {
             { head: 'Districts', lines: nbLinesOf('Districts', [...townDistrictLines(t), ['Buildings', townBuildingsText(t)]]) },
             { head: 'Notable people', lines: people },
             { head: 'Laws and customs', lines: nbLinesOf('Laws and customs', [...townLawLines(t).map((l, i) => [`Law ${i + 1}`, l]), ...t.customs.map((c, i) => [`Custom ${i + 1}`, c])]) },
+            { head: 'Market, sights, and legend', lines: nbLinesOf('Market, sights, and legend', townMoreLines(t, ctx), ['The truth']) },
             { head: 'Taverns and shops', lines: nbLinesOf('Taverns and shops', [
                 ...t.taverns.map((tv, i) => [`Tavern ${i + 1}`, townTavernLine(t, tv, townTavern(tv))]),
                 ...t.shops.map((sh, i) => [`Shop ${i + 1}`, townShopLine(t, sh, townShop(sh))])

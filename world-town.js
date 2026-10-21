@@ -3,7 +3,8 @@
    A settlement from town-engine.js (rollTown): the place at a glance, its districts and
    buildings, notable people (each opens on the NPC page), the factions in town (they
    open on the Factions tab), its taverns (Toolbox Tavern) and shops (Shop page), laws
-   and customs, trouble, rumors, and a quest hook (Toolbox Quest). "Use the Pantheon
+   and customs, trouble (and who is behind it), rumors, market day, sights, a local
+   legend, and a quest hook (Toolbox Quest). "Use the Pantheon
    tab's gods" links a pantheon, and then the temple and the factions follow its gods.
    A town opened from a Continent tab marker stands in that realm (cont=…&ctown=): its
    rule follows the realm's kinds of government, and it knows its climate and exports.
@@ -256,10 +257,24 @@ function renderTown() {
             <section class="wb-block">
                 <h4>⚠️ Trouble</h4>
                 <p>${esc(townTroubleText(t, ctx))}</p>
+                <p class="wb-small"><b>Behind it (for the DM):</b> ${esc(townBehindText(t, ctx))}</p>
                 <h4 class="town-h-gap">👂 Rumors</h4>
                 ${rumorIdx.length
                     ? `<ul class="wb-list">${rumorIdx.map(i => `<li>"${esc(townRumorList[i].text)}"</li>`).join('')}</ul>`
                     : '<p class="wb-small">The gossip is still on its way.</p>'}
+            </section>
+        </div>
+        <div class="wb-grid">
+            <section class="wb-block">
+                <h4>🧺 Market day</h4>
+                <p>${esc(townMarketText(t, ctx))}</p>
+                <h4 class="town-h-gap">👁️ Worth seeing</h4>
+                <ul class="wb-list">${t.sights.map(x => `<li>${esc(facCap(x))}.</li>`).join('')}</ul>
+            </section>
+            <section class="wb-block">
+                <h4>📖 Local legend</h4>
+                <p>They say ${esc(t.legend.tale)}.</p>
+                <p class="wb-small"><b>The truth (for the DM):</b> ${esc(t.legend.truth)}</p>
             </section>
         </div>
         <section class="wb-block wb-wide">
