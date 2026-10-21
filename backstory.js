@@ -8,12 +8,23 @@
    Needs rng.js, npc-data.js, character-data.js, and character-engine.js.
    ============================================ */
 
+// Each line has its own seed (by id), so the order here is only the order shown.
 const BS_LINES = [
     ['name', 'Name'], ['trait', 'Personality'], ['ideal', 'Ideal'], ['bond', 'Bond'], ['flaw', 'Flaw'],
-    ['upbringing', 'Grew up'], ['family', 'Family'], ['reason', 'Why I adventure'], ['secret', 'Secret'], ['hook', 'Hook for the DM']
+    ['upbringing', 'Grew up'], ['family', 'Family'], ['mentor', 'Mentor'], ['rival', 'Rival'], ['events', 'Turning points'],
+    ['reason', 'Why I adventure'], ['secret', 'Secret'], ['hook', 'Hook for the DM'], ['useit', 'For the DM']
 ];
 const BS_IDS = BS_LINES.map(l => l[0]);
 const BS_GENDERS = [['', 'Any names'], ['male', 'Masculine names'], ['female', 'Feminine names'], ['nonbinary', 'Neutral names']];
+// Walks of life, not the builder's backgrounds: each one only flavors the lines.
+const BS_BACKGROUNDS = [
+    ['', 'Any background'], ['acolyte', '🙏 Acolyte'], ['artisan', '🔨 Artisan'], ['criminal', '🗝️ Criminal'],
+    ['entertainer', '🎭 Entertainer'], ['farmer', '🌾 Farmhand'], ['hermit', '🕯️ Hermit'], ['noble', '👑 Noble'],
+    ['outlander', '🏹 Outlander'], ['sage', '📚 Sage'], ['sailor', '⚓ Sailor'], ['soldier', '⚔️ Soldier'],
+    ['swindler', '🃏 Swindler'], ['urchin', '🐀 Urchin']
+];
+// The age each builder race comes of age (SRD 5.1 race notes), for Turning points.
+const BS_ADULT = { dwarf: 50, elf: 100, halfling: 20, human: 18, dragonborn: 15, gnome: 40, 'half-elf': 20, 'half-orc': 14, tiefling: 18 };
 
 // The NPC name tables a builder race borrows; a half-elf or half-orc picks one of two.
 const BS_NAME_RACES = {
@@ -82,7 +93,7 @@ const BS_FAMILY = [
     "No family to speak of; my friends from the street are my family",
     "My {kin} is the town's black sheep, and I'm the next in line",
     "My parents are dull, kind people, and I miss them more than I'll admit",
-    "I have a child back home, safe with my {kin}",
+    "I have a child back home, safe with my {elder}",
     "My family thinks I'm a clerk in the city"
 ];
 
@@ -181,6 +192,357 @@ const BS_HOOK = [
     "A monster from {place} has learned their name"
 ];
 
+// ── Second pass (E4): newer lines join the old tables through bsMore, drawn after
+// the old line is done, so a link from before keeps its line unless that draw swaps it.
+const BS_UPBRINGING_MORE = [
+    "In a lumber camp where the trees were older than the town",
+    "In a canal city, where I could row before I could walk",
+    "In a toll house on a bridge, collecting coppers from strangers",
+    "In a vineyard village where every quarrel waited until after the harvest",
+    "In a prison town, as the warden's child",
+    "In a salt-marsh hamlet built on stilts",
+    "In a desert oasis town that lived on passing caravans",
+    "In a hunting lodge that a lord used twice a year and my family kept the rest of the time",
+    "In a quarry town, where the dust got into everything, songs included",
+    "Among traveling players, sleeping in the props wagon",
+    "In a lakeside village that swears something lives under the water",
+    "In a walled city's poorest ward, downwind of the tanneries",
+    "In a castle kitchen, stealing honey cakes from the cook",
+    "In a plague town that shut its gates for three years",
+    "On an island where the ferry came once a month",
+    "In a hospice run by healers, where I learned early how people die",
+    "In a mill town that kept time by the turning of the wheel",
+    "In a snowbound village that spends half the year indoors",
+    "Under a famous bridge, with a crowd of other children nobody counted",
+    "In a wizard's tower, as the cook's child, which is not the same as an apprentice"
+];
+const BS_UPBRINGING_RACE_MORE = {
+    dwarf: ["In a trading post at the mouth of the mines, between the surface folk and my own", "In a brewing family whose ale is known three holds over"],
+    elf: ["In a treetop village where the young were taught to wait", "With a wandering elven company that sings the old roads back into memory"],
+    halfling: ["Above a halfling bakery, where the ovens woke before the roosters", "On a riverboat crewed by three generations of my family"],
+    human: ["In a port city where every ship brought a new rumor", "In a pilgrim town that lives off a saint nobody can quite prove was real"],
+    dragonborn: ["As a ward in a human lord's court, kept there to honor an old treaty", "Among dragonborn sellswords who raised their children together"],
+    gnome: ["In an illusionists' quarter where nothing was quite where it looked", "In a gnome hamlet dug into the roots of one enormous oak"],
+    'half-elf': ["In a port town where nobody asked about anyone's parents", "Passed between both families every other summer"],
+    'half-orc': ["With an orc grandmother who taught me to hunt and a human grandfather who taught me to read", "On a frontier farm where my strength was the only thing that mattered"],
+    tiefling: ["With a troupe of performers who said my horns were good for business", "In a temple orphanage where the priests prayed over me twice as long"]
+};
+
+const BS_FAMILY_MORE = [
+    "My {elder} raised me alone and worked three jobs to do it",
+    "My parents run an inn, and every guest was family for a night",
+    "I'm the eldest, and I left the younger ones to fend for themselves",
+    "My {elder} is the town's healer and still expects me home to take over",
+    "My family are all soldiers; I was meant to be one too",
+    "My {elder} remarried, and the new family never quite made room for me",
+    "My {kin} went to prison for something I did",
+    "My grandparents raised me while my parents chased a fortune overseas",
+    "My family has a feud with the family next door that's older than anyone alive",
+    "My {elder} is a wizard who barely noticed I existed",
+    "Four older siblings, each better than me at something",
+    "My parents live apart, and each one asks me about the other",
+    "My {kin} died last winter, and I haven't cried yet",
+    "My family keeps bees, goats, and grudges",
+    "I was taken in by {townsfolk}, and I still send them half of what I earn",
+    "My {kin} is missing, and the family has stopped looking",
+    "My family are traveling merchants; I have cousins in every port",
+    "My {kin} is ill, and the cure costs more than the farm is worth",
+    "My family name means something in the old country, and nothing here",
+    "My {kin} and I write to each other in a code we made up as children"
+];
+
+const BS_REASON_MORE = [
+    "I found a map in my {elder}'s things, and I want to know where it goes",
+    "The village chose me to go, and I couldn't say no to all of them",
+    "I want to find out if the stories my {elder} told were true",
+    "I want enough gold to never be hungry again",
+    "Someone paid for my training, and I mean to earn it",
+    "I heard the ruins up north are full of answers",
+    "The temple took everything my family had; I mean to take some of it back",
+    "I'm learning to be brave, one bad idea at a time",
+    "I want to be the person {townsfolk} always said I could be",
+    "I saw a dragon once, flying over the hills, and I've wanted more ever since",
+    "Staying home meant marrying someone I'd never met",
+    "My name was drawn to pay the village's debt, and I'm paying it my own way",
+    "I was cursed, and the cure is somewhere out there",
+    "A stranger saved my life and asked me to pass it on",
+    "I'm collecting stories to bring home to my {kin}",
+    "I'm searching for the {thing} that was stolen from my family"
+];
+const BS_REASON_CLASS_MORE = {
+    barbarian: ["I was exiled for a death that wasn't my fault", "My people say a warrior must see the sea before they die, and I haven't"],
+    bard: ["I heard a song in a tavern that nobody alive could have written, and I'm finding its author", "Applause is wonderful, and danger draws a crowd"],
+    cleric: ["My god has gone quiet, and I want to know why", "I tend the dying, and there are more of them out here"],
+    druid: ["A spirit of the wild asked me for help, and spirits rarely ask", "The old standing stones are waking, and my circle sent me to listen"],
+    fighter: ["I lost a duel I should have won, and I need to know why", "My company was disbanded, and I don't know how to be anything else"],
+    monk: ["My order teaches that the body learns what the mind forgets", "I broke a vow of silence to save a life, and I wander until I'm forgiven"],
+    paladin: ["My oath demands that I right a wrong I haven't found yet", "A holy relic chose me, and I don't know why"],
+    ranger: ["I'm the last of the wardens who watched the old border", "Beasts are fleeing the forest, and something is driving them"],
+    rogue: ["I'm stealing back what a guildmaster stole from me", "I like locks, and the locks out here are more interesting"],
+    sorcerer: ["My power woke during a storm, and storms seem to follow me", "A dragon in my bloodline is still alive, and I want to meet it"],
+    warlock: ["My patron went silent, and the power didn't", "I'm searching for the last person who served my patron, to learn how they died"],
+    wizard: ["I want to see the spells my books only describe", "My familiar keeps leading me somewhere, and I'm letting it"]
+};
+
+const BS_SECRET_MORE = [
+    "I was the one who told the guards where my friends were hiding",
+    "I can't swim, and I've lied about it on every boat",
+    "I once let an innocent person hang for my crime",
+    "My real name is on a list in a temple's archive, marked 'do not admit'",
+    "I've already died once; something sent me back",
+    "I'm married, and my spouse thinks I'm dead",
+    "I sold my {elder}'s {thing} to pay a gambling debt",
+    "I sleepwalk, and some mornings I wake up with mud on my boots",
+    "I'm terrified of magic, even the healing kind",
+    "I was paid to lose a fight once, and I did",
+    "I have a sibling nobody knows about, raised by the other side",
+    "I've been forging letters of introduction since I was twelve",
+    "I'm the only survivor of a party that didn't come back, and I won't say what happened",
+    "The scar I say came from a monster came from my own family",
+    "I hid a chest of coins at {place}, and someone moved it",
+    "I can understand a language I never learned",
+    "My old teacher isn't dead; I only told everyone that",
+    "I read a letter that wasn't meant for me, and I can't unread it",
+    "I've never been in a real fight, whatever my stories say",
+    "I keep a list of everyone who has wronged me, and I'm not done with it"
+];
+const BS_SECRET_CLASS = {
+    barbarian: ["My rage once hurt someone I love, and I don't remember doing it", "I can read perfectly well, and I pretend I can't"],
+    bard: ["My most famous song was stolen from a dying friend", "I'm a spy for a noble house, and my songs carry its messages"],
+    cleric: ["My god spoke to me once, and what it said frightened me", "I healed someone who didn't deserve it, and they've done worse since"],
+    druid: ["The fire that burned my grove was one I started", "I once wore a beast's shape so long I nearly forgot how to come back"],
+    fighter: ["The medal I wear belongs to someone else", "I deserted my last army, and they still post my description"],
+    monk: ["I left my monastery the night it burned, and I saw who set the fire", "I was never a real student; I learned by watching through a window"],
+    paladin: ["I broke my oath once, and nobody knows", "My order's founder was a monster, and I've read the proof"],
+    ranger: ["The beast I'm hunting was my pet once", "I led a group into the wilds and came back alone"],
+    rogue: ["I still work for the guild; they let me think I left", "I robbed one of the people in this party before we met"],
+    sorcerer: ["My power came from a deal my {elder} made", "When I lose control, I hear a second voice laughing"],
+    warlock: ["My patron is someone the party would hunt if they knew", "I don't know who my patron really is"],
+    wizard: ["My spellbook was taken from my dead master's hands", "I copied a spell I was forbidden to learn"]
+};
+
+const BS_HOOK_MORE = [
+    "A letter arrives from {place} in this character's own handwriting, dated next year",
+    "Their {kin} turns up at the party's camp, in trouble and not saying why",
+    "A temple offers a reward for this character, alive, no questions asked",
+    "An heirloom they sold years ago turns up on the villain's belt",
+    "Someone from home has written a book about them, and it's selling well",
+    "A child arrives claiming to be theirs",
+    "The guild they once crossed opens a hall in the party's favorite town",
+    "Their old home is up for auction, and someone is bidding against them",
+    "A familiar face appears among the villain's guards",
+    "A fortune teller refuses to read for them, and leaves town that night",
+    "Their name is on a list of the dead, posted at a temple door",
+    "A stranger pays the party's tab and leaves a note: for old times' sake",
+    "An old promise comes due on the day of the party's biggest job",
+    "The {thing} they lost years ago is found in a dungeon, with a fresh note tied to it",
+    "A herald arrives with a summons from a court they've never heard of",
+    "Someone they wronged long ago turns up and has forgiven them, which is worse",
+    "A beast from their childhood stories is sighted near {place}",
+    "Their {kin} has joined the side the party is fighting",
+    "An inheritance waits for them, if they can reach it before their cousins do",
+    "The thing they swore never to do again is the only way out of the next fix"
+];
+
+// Per background: where they grew up, why they left, and what they hide.
+const BS_BG = {
+    acolyte: {
+        up: ["In a temple dormitory, waking to the dawn bell", "As a foundling left on the temple steps"],
+        reason: ["My temple sent me to carry its faith where it's needed", "I'm searching for a lost shrine named in the oldest prayers"],
+        secret: ["I've been stealing from the offering box for years", "I saw the high priest do something unforgivable"],
+        mentor: ["the temple's oldest priest", "a pilgrim who never stayed anywhere long"]
+    },
+    artisan: {
+        up: ["In a workshop, sweeping up shavings before I could hold a chisel", "In a guild town where your trade was your name"],
+        reason: ["I need a rare material for the masterwork I've planned for years", "The guild threw me out, and I mean to come back too good to refuse"],
+        secret: ["My best piece was made by my master, and I signed it", "I sold forgeries to a noble who still doesn't know"],
+        mentor: ["my guild master", "a tinker who could fix anything but people"]
+    },
+    criminal: {
+        up: ["In a smugglers' den, keeping watch for the customs men", "Running messages for a gang before I knew what they were"],
+        reason: ["My old crew wants me dead, and the road is far from them", "I'm planning one last job, and I need a crew who can fight"],
+        secret: ["I informed on my crew to save my own neck", "There's a price on my head, and it keeps going up"],
+        mentor: ["a fence with a very tidy shop", "the gang's best lockpick"]
+    },
+    entertainer: {
+        up: ["On a stage, with a different name in every town", "In a circus, raised by acrobats and a very patient bear"],
+        reason: ["I'm out of new stories, and adventurers make the best ones", "My act needs a real monster, and I mean to find one"],
+        secret: ["I faked my most famous trick, and someone has worked it out", "The patron who made me famous wants me back on a leash"],
+        mentor: ["a fading star of the stage", "a juggler with a mean streak"]
+    },
+    farmer: {
+        up: ["On a farm where every harvest decided whether we'd eat that winter", "In a farming hamlet where the lord's taxes took more than the frost"],
+        reason: ["The farm can't feed all of us, so I left to send coin home", "Something killed our herd, and I mean to find out what"],
+        secret: ["I sold the farm's deed to pay a debt, and my family doesn't know", "I buried something in the north field and told no one"],
+        mentor: ["the old shepherd up the hill", "the miller's widow"]
+    },
+    hermit: {
+        up: ["In a cave above the treeline, with a hermit who taught me silence", "Alone, mostly, after I walked out of the village at twelve"],
+        reason: ["In my solitude I learned something the world needs to hear", "The quiet stopped working, and I wanted to know why"],
+        secret: ["I went into exile to hide from what I'd done", "The truth I found alone would ruin a great house if spoken"],
+        mentor: ["a hermit who talked to crows", "a silent monk on the mountain"]
+    },
+    noble: {
+        up: ["In a cold manor full of portraits that frowned", "At court, where every smile was a move in a game"],
+        reason: ["My family needs a hero in its name, and I'm the spare", "I want to earn something my title didn't buy me"],
+        secret: ["My family's title was bought with a forged charter", "I'm not my parents' child, and the true heir is out there"],
+        mentor: ["my family's master-at-arms", "a tutor who drank"]
+    },
+    outlander: {
+        up: ["Following the herds across the plains with my clan", "In the wild hills, where the nearest town was a rumor"],
+        reason: ["My people's lands are shrinking, and I want to know who's taking them", "The wilds are changing, and I'm the one who noticed"],
+        secret: ["I left my clan without leave, and leaving is a crime there", "I've seen a city in the wilds that isn't on any map"],
+        mentor: ["my clan's eldest tracker", "a trapper who wintered alone"]
+    },
+    sage: {
+        up: ["In a library, cataloguing books I wasn't old enough to read", "As the child of two scholars who argued about everything"],
+        reason: ["I'm one fact away from finishing my life's work", "A footnote in an old book points somewhere no scholar has gone"],
+        secret: ["My famous thesis is wrong, and I know it", "I've read a book that's banned everywhere, and I remember every word"],
+        mentor: ["a librarian who had read everything", "an astronomer who never slept"]
+    },
+    sailor: {
+        up: ["On a fishing boat, gutting the catch before dawn", "In a harbor town where everyone waited on the tide"],
+        reason: ["My ship went down, and I'm the only one who knows why", "I want a ship of my own, and that takes gold"],
+        secret: ["I was part of a mutiny, and the captain lived", "I sailed with pirates for two seasons, and I liked it"],
+        mentor: ["a bosun with a voice like thunder", "an old navigator"]
+    },
+    soldier: {
+        up: ["In a garrison town, with drums for a lullaby", "In a war camp, as one of the children who followed the army"],
+        reason: ["My unit was wiped out, and I want to know who sold us", "I'm good at fighting, and I'm tired of fighting for lords"],
+        secret: ["I followed an order I knew was wrong", "My old commander thinks I'm dead, and I'd like to keep it that way"],
+        mentor: ["my first sergeant", "a one-armed veteran"]
+    },
+    swindler: {
+        up: ["Following a con artist from town to town, learning every trick", "In a gambling house, where I learned to count cards before coins"],
+        reason: ["I've conned half the kingdom, and I'd like to see the other half", "The last mark was dangerous, and I need to vanish for a while"],
+        secret: ["Half of what I've told this party is a lie, and I've lost track of which half", "I sold a fake relic to a temple, and they built a shrine around it"],
+        mentor: ["a card sharp with a dozen names", "a fortune teller who made it all up"]
+    },
+    urchin: {
+        up: ["On the rooftops of a city that never noticed me", "In the sewers, with a gang of other children nobody wanted"],
+        reason: ["I promised the other street children I'd come back rich", "I want a door with a lock that's mine"],
+        secret: ["I still steal, a little, just to know I can", "I know where the city's rich families hide their money"],
+        mentor: ["a beggar who called himself a king", "a pickpocket twice my age"]
+    }
+};
+
+// Mentor: "{name}, {role}, who taught me {lesson}. {now}"
+const BS_MENTOR_ROLES = [
+    "an old sellsword", "a hedge witch", "a retired thief", "the village priest", "a traveling scholar",
+    "my {elder}'s best friend", "a one-eyed sailor", "a disgraced knight", "a gruff blacksmith", "a wandering monk",
+    "a court musician", "a hunter in the hills", "a fortune teller", "a former adventurer", "a healer at the temple",
+    "the magistrate's clerk", "a gambler with fast hands", "a sea captain", "a ranger of the borderlands", "an old librarian"
+];
+const BS_MENTOR_LESSONS = [
+    "to read", "how to hold a blade", "never to trust a smiling noble", "how to lie with a straight face",
+    "the names of the stars", "to keep my temper, mostly", "how to cook over a campfire", "every tavern song worth knowing",
+    "how to tell when someone is lying", "to walk without a sound", "how to win at cards", "that kindness is a kind of strength",
+    "how to read a map", "to pick a lock", "to keep my promises", "to look for the way out first"
+];
+const BS_MENTOR_LESSONS_CLASS = {
+    barbarian: "to let the anger out, and then let it go", bard: "to play for a crowd that wants to leave",
+    cleric: "the prayers for the dying", druid: "to listen to the trees", fighter: "to fight dirty when it counts",
+    monk: "to breathe through pain", paladin: "what an oath is worth", ranger: "to read tracks in the dark",
+    rogue: "to be gone before anyone looks", sorcerer: "to hold the magic in", warlock: "that every bargain has a hidden clause",
+    wizard: "my first cantrip"
+};
+const BS_MENTOR_NOW = [
+    "We haven't spoken in years.", "They died, and I carry their {thing}.", "They still write, and still correct my spelling.",
+    "They're missing, and nobody else seems worried.", "They turned to crime, and I'm not sure they were wrong.",
+    "I let them down, and they know it.", "They think I'm wasting what they taught me.",
+    "They're old now, and asking for one last favor.", "They're in prison, and they won't tell me why.",
+    "They vanished the same night as {townsfolk}.", "They took on a new student after me, and that student is trouble.",
+    "They're the reason I'm still alive.", "They owe money to the wrong people.", "They sent me away for my own good, they said.",
+    "I've never told them I became an adventurer.", "They're adventuring again, at their age."
+];
+
+// Rival: "{name}, {who}. {why}. {now}"
+const BS_RIVAL_WHO = [
+    "a childhood friend", "my oldest enemy", "a cousin who's better at everything", "a fellow apprentice",
+    "the bully from my street", "a former partner", "the child of {townsfolk}", "an adventurer from a rival party",
+    "my {elder}'s favorite", "a noble's heir I grew up beside", "a soldier from my old company", "a priest who calls me a disgrace",
+    "a thief who stole my first score", "someone I loved once", "my mentor's other student", "a merchant who ruined my family"
+];
+const BS_RIVAL_WHY = [
+    "We wanted the same apprenticeship, and they cheated to win it", "I broke their nose at a harvest fair, and they've never let it go",
+    "They took the credit for my bravest moment", "We both loved the same person", "I won a duel I should have lost",
+    "They think I left them to die", "Our families have hated each other for three generations", "They were always one step ahead of me",
+    "I told a secret they trusted me with", "They stole the {thing} I was meant to inherit", "We split a treasure, and they say I cheated",
+    "They became everything I was supposed to be", "I testified against them", "They burned down {place}, and I'm the only one who knows",
+    "We made a bet years ago, and it's still not settled", "They laughed when I failed, and everyone heard",
+    "I beat them at the one thing they were proud of", "They joined the people I ran from", "We were partners until a job went wrong",
+    "They blame me for their {kin}'s death"
+];
+const BS_RIVAL_NOW = [
+    "They're doing well, which makes it worse.", "They've sworn to beat me to the same prize.", "Last I heard, they were looking for me.",
+    "They're adventuring too, and getting famous.", "They've joined a cult, or a guild; I can't tell which.",
+    "We'd probably be friends, if either of us gave in.", "They've married into money.", "They're captain of the watch now.",
+    "They're working for someone dangerous.", "They want to settle it with one more contest.", "They saved my life once, and I hate it.",
+    "They don't know I'm still alive.", "They're in debt, and I could help, and I won't.", "They write me letters I never answer."
+];
+
+// Turning points: three ages, scaled to when the race comes of age.
+const BS_EVENTS_CHILD = [
+    "I got lost in the woods for three days and came back changed", "I saw my first monster, from under a cart",
+    "I won a footrace against the whole village", "I broke something precious and blamed my {kin}",
+    "I learned to read from a book of old ballads", "I fell through the ice, and someone pulled me out",
+    "I made a friend nobody else could see", "I stole a pie and got caught by {townsfolk}",
+    "I watched a great funeral pass through town", "I found a coin with a face I didn't recognize",
+    "I nearly drowned and had a dream I still remember", "a traveling fortune teller wouldn't read my palm",
+    "I hid in a cellar while raiders burned the barn", "I took in a stray dog that followed me everywhere",
+    "I climbed the tallest tree in the valley and saw another town", "I was blamed for a fire I didn't start",
+    "I sat with a dying soldier who told me a secret", "my {elder} took me to a city for the first time"
+];
+const BS_EVENTS_YOUTH = [
+    "I had my heart broken at the spring dance", "I left home for the first time", "I got into my first real fight, and lost",
+    "I was apprenticed, and hated it", "I pulled a child out from under a runaway cart", "I was caught somewhere I shouldn't have been",
+    "I lost my best friend to a fever", "I ran away and came back a week later", "I joined the local militia",
+    "I was arrested for the first time", "I fell in love with someone far above my station", "I found a hidden room in {place}",
+    "I spent a winter snowed in with a stranger", "I won a prize I didn't deserve", "I learned a family secret by accident",
+    "I talked my way out of a hanging", "I helped bury {townsfolk}", "I made an enemy for life"
+];
+const BS_EVENTS_RECENT = [
+    "I left for good", "I signed on with a caravan headed somewhere I'd never been", "I spent my last coin on the gear I'm wearing",
+    "I met the people I'd adventure with", "I walked away from a life that was finally comfortable", "I made the promise I'm still keeping",
+    "I heard my name in a prophecy", "I survived something that killed better people", "I took my first paid job with a weapon",
+    "I buried someone and took up their cause", "I lost everything in one night", "I answered a notice on a tavern board",
+    "I burned a letter without reading it", "I said goodbye to my {elder} without saying why", "I woke up in a ditch with a map in my pocket",
+    "I turned down an offer I may regret", "I was told never to come back", "I stopped waiting for my life to start"
+];
+
+// For the DM: ways to bring the mentor and rival (by name) into play.
+const BS_USEIT = [
+    "Bring {rival} in as the leader of a rival party, chasing the same prize",
+    "Let {mentor} send for help, with a job that leads straight into the secret",
+    "Make {mentor} the one person who knows the secret, and tired of keeping it",
+    "Have {rival} offer a truce, on the condition that the party does one job for them",
+    "Put {rival} in the cell next to the prisoner the party came to free",
+    "Let {mentor}'s old enemies mistake this character for {mentor}'s heir",
+    "Have {rival} learn the secret and send a single line: we should talk",
+    "Reveal that {mentor} and {rival} know each other, and not as strangers",
+    "Give a villain {mentor}'s old {thing}, and let the character recognize it",
+    "Have {rival} save the party at the worst possible moment, and expect to be thanked",
+    "Land the hook in a town where everyone knows {rival}, and likes them better",
+    "Have {mentor} die offstage, leaving the character a will with conditions",
+    "Ask the player what {mentor} would think of the party, then have {mentor} visit",
+    "Let {rival} hire the party under a false name",
+    "Bring {mentor} back as a rumor first: someone saw them, alive, in the wrong company",
+    "Make the first big reward something {rival} wants too"
+];
+
+// Fillers the NPC tables lack: older relatives, for lines where a child or spouse won't fit.
+const BS_FILL = { elder: ["mother", "father", "parent", "grandmother", "grandfather", "aunt", "uncle"] };
+
+// A named person from the character's past. Rolls from the line's own seed, so the
+// For the DM line names the same mentor and rival the other lines show.
+function bsWho(id, g) {
+    return withSeed(deriveSeed(bsLineSeed(id), 'who'), () => {
+        const own = BS_NAME_RACES[g.race], r = rand(), near = rand() < 0.7, any = randomArray(NPC_RACES);
+        const race = own && near ? own[Math.floor(r * own.length)] : any;
+        return buildName(race, randomArray(NPC_GENDERS)).name;
+    });
+}
+
 const BS_ROLL = {
     name: g => {
         const pool = BS_NAME_RACES[g.race] || NPC_RACES;
@@ -195,13 +557,42 @@ const BS_ROLL = {
         return `${a}. ${b}.`;
     },
     ideal: () => randomArray(npcData.ideals),
-    bond: () => fillTemplate(randomArray(npcData.bonds)),
+    // Bonds are first person, and some open on a {place}.
+    bond: () => bsFill(randomArray(npcData.bonds), true).replace(/^[a-z]/, c => c.toUpperCase()),
     flaw: () => randomArray(npcData.flaws),
-    upbringing: g => bsMix(BS_UPBRINGING, BS_UPBRINGING_RACE[g.race], 0.4),
-    family: () => fillTemplate(randomArray(BS_FAMILY)),
-    reason: g => fillTemplate(bsMix(BS_REASON, BS_REASON_CLASS[g.cls], 0.5)),
-    secret: () => fillTemplate(randomArray(BS_SECRET)),
-    hook: () => fillTemplate(randomArray(BS_HOOK))
+    upbringing: g => {
+        const t = bsMore(bsMix(BS_UPBRINGING, BS_UPBRINGING_RACE[g.race], 0.4),
+            () => bsMix(BS_UPBRINGING_MORE, BS_UPBRINGING_RACE_MORE[g.race], 0.4), 20 / 44);
+        return bsOwn(t, bsBg(g, 'up'), 0.35);
+    },
+    family: () => bsMore(bsFill(randomArray(BS_FAMILY), true), () => bsFill(randomArray(BS_FAMILY_MORE), true), 20 / 44),
+    reason: g => {
+        const t = bsMore(bsFill(bsMix(BS_REASON, BS_REASON_CLASS[g.cls], 0.5), true),
+            () => bsFill(bsMix(BS_REASON_MORE, BS_REASON_CLASS_MORE[g.cls], 0.5), true), 16 / 36);
+        return bsFill(bsOwn(t, bsBg(g, 'reason'), 0.35), true);
+    },
+    secret: g => {
+        let t = bsMore(bsFill(randomArray(BS_SECRET), true), () => bsFill(randomArray(BS_SECRET_MORE), true), 20 / 48);
+        t = bsOwn(t, BS_SECRET_CLASS[g.cls], 0.25);
+        return bsFill(bsOwn(t, bsBg(g, 'secret'), 0.25), true);
+    },
+    hook: () => bsMore(bsFill(randomArray(BS_HOOK)), () => bsFill(randomArray(BS_HOOK_MORE)), 20 / 44),
+    // The lines below came with E4, so they roll freely.
+    mentor: g => {
+        const role = bsOwn(randomArray(BS_MENTOR_ROLES), bsBg(g, 'mentor'), 0.35);
+        const lesson = bsOwn(randomArray(BS_MENTOR_LESSONS), BS_MENTOR_LESSONS_CLASS[g.cls] && [BS_MENTOR_LESSONS_CLASS[g.cls]], 0.3);
+        return bsFill(`${bsWho('mentor', g)}, ${role}, who taught me ${lesson}. ${randomArray(BS_MENTOR_NOW)}`, true);
+    },
+    rival: g => bsFill(`${bsWho('rival', g)}, ${randomArray(BS_RIVAL_WHO)}. ${randomArray(BS_RIVAL_WHY)}. ${randomArray(BS_RIVAL_NOW)}`, true),
+    events: g => {
+        const adult = BS_ADULT[g.race] || 18;
+        const child = Math.max(5, Math.round(adult * (0.3 + rand() * 0.3)));
+        const youth = Math.max(child + 2, Math.round(adult * (0.7 + rand() * 0.2)));
+        const recent = Math.max(youth + 2, adult + Math.floor(rand() * Math.ceil(adult * 0.4)));
+        const beat = (age, list) => `At ${age}, ${randomArray(list)}.`;
+        return bsFill(`${beat(child, BS_EVENTS_CHILD)} ${beat(youth, BS_EVENTS_YOUTH)} ${beat(recent, BS_EVENTS_RECENT)}`, true);
+    },
+    useit: g => bsFill(randomArray(BS_USEIT).replace(/\{mentor\}/g, bsWho('mentor', g)).replace(/\{rival\}/g, bsWho('rival', g))) + '.'
 };
 
 // A race or class list replaces the shared one when there is one and the draw says so.
@@ -211,7 +602,31 @@ function bsMix(shared, own, chance) {
     return own && use ? own[Math.floor(r * own.length)] : s;
 }
 
-const bs = { seed: '', race: '', cls: '', gender: '', set: {}, lock: [] };
+// The same, over a line already rolled: a background (or class) list may take over.
+function bsOwn(text, own, chance) {
+    const r = rand(), use = rand() < chance;
+    return own && use ? own[Math.floor(r * own.length)] : text;
+}
+
+// Swaps in a newer line (more()) for share of the draws; the rest keep the old one.
+function bsMore(text, more, share) {
+    return rand() < share ? more() : text;
+}
+
+const bsBg = (g, part) => BS_BG[g.bg] && BS_BG[g.bg][part];
+
+// fillTemplate, with older relatives, and "their" made "my" in first-person lines.
+// Draws exactly what fillTemplate does, so old lines keep their picks.
+function bsFill(text, mine = false) {
+    return text.replace(/\{(\w+)\}/g, (m, key) => {
+        const list = BS_FILL[key] || npcData.fill[key];
+        if (!list) return m;
+        const v = randomArray(list);
+        return mine ? v.replace(/^their /, 'my ') : v;
+    });
+}
+
+const bs = { seed: '', race: '', cls: '', bg: '', gender: '', set: {}, lock: [] };
 
 function esc(s) {
     return String(s === undefined || s === null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -235,6 +650,7 @@ function bsParams() {
     const p = { seed: bs.seed };
     if (bs.race) p.race = bs.race;
     if (bs.cls) p.cls = bs.cls;
+    if (bs.bg) p.bg = bs.bg;
     if (bs.gender) p.g = bs.gender;
     const set = BS_IDS.filter(id => bs.set[id]).map(id => `${id}.${bs.set[id]}`);
     if (set.length) p.set = set.join(',');
@@ -247,6 +663,7 @@ function bsFromUrl() {
     bs.seed = parseSeed(q.get('seed')) || newSeed();
     bs.race = cbRace(q.get('race')) ? q.get('race') : '';
     bs.cls = cbClass(q.get('cls')) ? q.get('cls') : '';
+    bs.bg = BS_BG[q.get('bg')] ? q.get('bg') : '';
     bs.gender = BS_GENDERS.some(g => g[0] && g[0] === q.get('g')) ? q.get('g') : '';
     bs.set = {};
     (q.get('set') || '').split(',').forEach(t => {
@@ -265,6 +682,7 @@ function bsChanged() {
 function render() {
     document.getElementById('bs-race').value = bs.race;
     document.getElementById('bs-class').value = bs.cls;
+    document.getElementById('bs-bg').value = bs.bg;
     document.getElementById('bs-gender').value = bs.gender;
     const lines = bsAll();
     document.getElementById('bs-lines').innerHTML = BS_LINES.map(([id, label]) => {
@@ -295,7 +713,10 @@ function renderChars() {
 // ── Actions ──────────────────────────────────────────────
 function bsText(withName = true) {
     const lines = bsAll();
-    return BS_LINES.filter(([id]) => withName || id !== 'name').map(([id, label]) => `${label}: ${lines[id]}`).join('\n');
+    const bg = BS_BACKGROUNDS.find(b => b[0] && b[0] === bs.bg);
+    const out = BS_LINES.filter(([id]) => withName || id !== 'name').map(([id, label]) => `${label}: ${lines[id]}`);
+    if (bg) out.splice(withName ? 1 : 0, 0, `Background: ${bg[1].replace(/^\S+ /, '')}`);
+    return out.join('\n');
 }
 
 let spellsLoading = null;
@@ -355,6 +776,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('year').textContent = new Date().getFullYear();
     document.getElementById('bs-race').innerHTML = '<option value="">Any race</option>' + CB_RACES.map(r => `<option value="${r.id}">${r.icon} ${esc(r.name)}</option>`).join('');
     document.getElementById('bs-class').innerHTML = '<option value="">Any class</option>' + CB_CLASSES.map(k => `<option value="${k.id}">${k.icon} ${esc(k.name)}</option>`).join('');
+    document.getElementById('bs-bg').innerHTML = BS_BACKGROUNDS.map(([v, t]) => `<option value="${v}">${esc(t)}</option>`).join('');
     document.getElementById('bs-gender').innerHTML = BS_GENDERS.map(([v, t]) => `<option value="${v}">${t}</option>`).join('');
 
     bsFromUrl();
@@ -377,9 +799,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (again) again.focus();
     });
     document.getElementById('bs-roll').addEventListener('click', rollNew);
-    // Name and grew-up follow the race, and why-I-adventure the class; a kept line keeps
-    // its seed, so it can still change with them.
-    ['race', 'class', 'gender'].forEach(f => document.getElementById('bs-' + f).addEventListener('change', e => {
+    // Name, the mentor and rival, grew-up, and turning points follow the race; why-I-adventure,
+    // the secret, and the mentor's lesson the class; grew-up, why, the secret, and the mentor
+    // the background. A kept line keeps its seed, so it can still change with them.
+    ['race', 'class', 'bg', 'gender'].forEach(f => document.getElementById('bs-' + f).addEventListener('change', e => {
         bs[f === 'class' ? 'cls' : f] = e.target.value;
         bsChanged();
     }));
