@@ -743,6 +743,79 @@ const FAC_ALLY_WHY = [
     'A member of {a} saved the life of {b}\'s leader.'
 ];
 
+// ── Second pass (E6). Later draws (faction.<i>.<type>.more, ties.more) swap these in,
+// so an old link keeps its factions and only some of their lines change.
+const FAC_LEADER_STYLES_MORE = [
+    'Rules by committee and takes the credit for every vote.',
+    'Keeps everyone guessing by changing the orders every week.',
+    'A brilliant fighter and a terrible bookkeeper.',
+    'Rules from a sickbed, and is sharper than ever.',
+    'Was elected, and never lets anyone forget it.',
+    'Inherited the post and is still not sure they want it.',
+    'Rules through a favorite, who decides who gets to see them.',
+    'Laughs at everything, which is somehow worse than shouting.',
+    'Spends the group\'s money like water, and brings home more.',
+    'Trusts nobody, and keeps a food taster, a double, and a spare double.',
+    'Settles every quarrel in person, at length, over dinner.',
+    'Consults the omens before every decision, and the omens are suspiciously convenient.'
+];
+const FAC_MOTIVES_MORE = [
+    'Keeps a second set of books, and a bag packed by the door.',
+    'Was promised {leader}\'s job years ago and has not forgotten.',
+    'Has been meeting {rival} in secret to talk peace, without asking anyone.',
+    'Is the last of the founders and thinks everyone else is a newcomer.',
+    'Covers for a friend in the ranks who is stealing.',
+    'Lost a sibling to {rival} and wants blood, not business.',
+    'Is trying to marry into {leader}\'s family.',
+    'Is dying, quietly, and wants to leave something behind.',
+    'Would follow {leader} into fire, and has.',
+    'Is ambitious, capable, and smiles at everyone.',
+    'Was once one of {rival} and still has friends there.',
+    'Gambles heavily, and lately has been winning, which is worse.',
+    'Has a child who wants to join, and is doing everything to stop it.',
+    'Knows a secret about {leader} that could end the group.',
+    'Thinks {leader} is a fraud and is gathering proof.',
+    'Joined for the money and stayed for the people, which surprised everyone.'
+];
+const FAC_RIVAL_WHY_MORE = [
+    '{b} poached the best of {a}\'s people, one by one, over a single winter.',
+    '{a} {a:was|were} blamed for a crime {b} committed, and {a:has|have} the scars to prove it.',
+    'A shipment meant for {a} ended up in {b}\'s warehouse, and the paperwork vanished.',
+    '{b} {b:knows|know} a secret about {a}\'s leader and {b:has|have} been dropping hints.',
+    'A child of {a}\'s leader ran off to join {b}.',
+    '{a} reported {b} to the authorities once, and it cost {b} a year and a fortune.',
+    'Each says the other started the riot in the market square last spring.',
+    '{b} {b:holds|hold} the council seat {a} {a:has|have} wanted for twenty years.',
+    'They want opposite things for {place}, and only one of those futures can happen.',
+    '{a} sold {b} a fake relic, and {b} found out in front of witnesses.',
+    'A wedding between them was called off at the altar, and the gifts were never returned.',
+    '{b} {b:has|have} been buying up the debts of {a}\'s members.'
+];
+const FAC_RIVAL_HEAT_MORE = [
+    'Both sides have hired adventurers this month, though neither will admit it.',
+    'It is fought by proxy: hired thugs, bribed clerks, and unsigned pamphlets.',
+    'The watch has stopped taking sides and started taking bribes from both.',
+    'Their members cross the street to avoid each other, and sometimes cross back with a knife.',
+    'A marriage was supposed to end it, and made it worse.',
+    'It flares up every festival, when the drink flows and the old songs come out.',
+    'Each side keeps a ledger of wrongs, and both ledgers are getting long.',
+    'It has gone quiet, which worries everyone more than the fighting did.',
+    'One more death and it\'s open war, and both leaders know it.',
+    'It is fought over contracts and customers, and the losers go hungry.'
+];
+const FAC_ALLY_WHY_MORE = [
+    '{a} and {b} use the same fence for stolen goods, and protect that fence jealously.',
+    '{a} {a:keeps|keep} {b}\'s books, and {a:knows|know} where every coin went.',
+    'Their leaders grew up on the same street and still drink together.',
+    '{b} {b:needs|need} {a}\'s good name; {a} {a:needs|need} {b}\'s muscle.',
+    'They signed a written pact, witnessed by a priest and a lawyer, and both kept copies.',
+    '{a} {a:sends|send} {b} the recruits too rough for {a:its|their} own ranks.',
+    'Each holds a hostage from the other, treated as an honored guest.',
+    'They are planning something together, and neither will say what.',
+    '{b} {b:pays|pay} {a} to look the other way, and {a} {a:does|do}.',
+    'One patron funds them both and expects them to get along.'
+];
+
 // ── Helpers ──────────────────────────────────────────────
 function facPick(list) {
     return list[Math.floor(rand() * list.length)];
@@ -915,7 +988,47 @@ function rollFactions(seed, opts = {}) {
     });
     const w = { seed, count, focus: focus || 'random', scale, factions };
     Object.assign(w, part(`ties.${n}.` + order.slice(0, n).join('.'), () => facTies(factions)));
+    facSecondPass(w, part, `ties.more.${n}.` + order.slice(0, n).join('.'));
     return w;
+}
+
+// One of the newer lines in place of cur, by its share of the whole list (always two draws).
+function facSwap(cur, old, more) {
+    const newer = facPick(more);
+    return rand() < more.length / (old.length + more.length) ? newer : cur;
+}
+
+// The second pass (E6): swap draws after everything else, so old links keep their factions.
+function facSecondPass(w, part, tiesLabel) {
+    w.factions.forEach(f => part(`faction.${f.i}.${f.type}.more`, () => {
+        f.leader.style = facSwap(f.leader.style, FAC_LEADER_STYLES, FAC_LEADER_STYLES_MORE);
+        // No two lieutenants of one faction share a motive.
+        const seen = new Set();
+        f.lieutenants.forEach(l => {
+            l.motive = facUnused(facSwap(l.motive, FAC_MOTIVES, FAC_MOTIVES_MORE), FAC_MOTIVES.concat(FAC_MOTIVES_MORE), seen);
+        });
+    }));
+    // No two ties share a reason, and no two rivalries the same heat.
+    part(tiesLabel, () => {
+        const seen = new Set(), heats = new Set();
+        w.rivals.forEach(r => {
+            r.why = facUnused(facSwap(r.why, FAC_RIVAL_WHY, FAC_RIVAL_WHY_MORE), FAC_RIVAL_WHY.concat(FAC_RIVAL_WHY_MORE), seen);
+            r.heat = facUnused(facSwap(r.heat, FAC_RIVAL_HEAT, FAC_RIVAL_HEAT_MORE), FAC_RIVAL_HEAT.concat(FAC_RIVAL_HEAT_MORE), heats);
+        });
+        w.allies.forEach(t => {
+            t.why = facUnused(facSwap(t.why, FAC_ALLY_WHY, FAC_ALLY_WHY_MORE), FAC_ALLY_WHY.concat(FAC_ALLY_WHY_MORE), seen);
+        });
+    });
+}
+
+// line, or (if seen already has it) a fresh one from all; either way it joins seen.
+function facUnused(line, all, seen) {
+    if (seen.has(line)) {
+        const free = all.filter(l => !seen.has(l));
+        if (free.length) line = facPick(free);
+    }
+    seen.add(line);
+    return line;
 }
 
 // ── Gods ─────────────────────────────────────────────────
@@ -965,6 +1078,11 @@ function facIsPlural(name) {
     return /([^s]s|men|^Children|Kin|Faithful)$/.test(head);
 }
 
+// "the Grey Moths'" but "the Order of the Dawn's" and "House Moss's".
+function facPoss(name) {
+    return facIsPlural(name) && /s$/.test(name) ? name + '\'' : name + '\'s';
+}
+
 // Pick {key:singular|plural} by the name standing in for {key}.
 function facAgree(text, key, name) {
     const plural = facIsPlural(name);
@@ -982,6 +1100,7 @@ function facFill(text, w, i, ctx) {
         .replace(/\{thing\}/g, f.craft ? f.craft[1] : 'their trade')
         .replace(/\{god\}/g, god ? god.name : 'their god')
         .replace(/\{God\}/g, god && !god.outer ? god.name : 'the Nameless')
+        .replace(/\{rival\}'s/g, facPoss(rival))
         .replace(/\{rival\}/g, rival)
         .replace(/\{leader\}/g, f.leader.npc.firstName)
         .replace(/\{Leader\}/g, f.leader.title);
@@ -1046,7 +1165,7 @@ function facLieutenantLines(w, i, ctx) {
 
 function facTieText(w, t, ctx, kind) {
     const a = facName(w, t.a, ctx), b = facName(w, t.b, ctx);
-    const why = facAgree(facAgree(t.why, 'a', a), 'b', b).replace(/\{a\}/g, a).replace(/\{b\}/g, b).replace(/\{place\}/g, FAC_SCALES[w.scale].place);
+    const why = facAgree(facAgree(t.why, 'a', a), 'b', b).replace(/\{a\}'s/g, facPoss(a)).replace(/\{b\}'s/g, facPoss(b)).replace(/\{a\}/g, a).replace(/\{b\}/g, b).replace(/\{place\}/g, FAC_SCALES[w.scale].place);
     return kind === 'rival' ? `${facCap(why)} ${t.heat}` : facCap(why);
 }
 

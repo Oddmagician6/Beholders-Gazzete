@@ -389,7 +389,45 @@ const HIS_BEGAN = {
     treaty:    'It began when the treaty was signed and everyone went home.'
 };
 
-const HIS_START_KIND = { gods: 'making', empire: 'empire', dark: 'dark', migration: 'migration' };
+// Second pass (E6): later draws (age.<i>.<start>.more) swap these in, so an old link keeps its ages.
+const HIS_BEGAN_MORE = {
+    start:     ['It began so long ago that the oldest songs only hum it.', 'It began before anyone thought to count the years.'],
+    making:    ['It began when the world was finished, or the gods stopped working on it.', 'It began on the first morning the sun rose without a god pushing it.'],
+    migration: ['It began once the wandering was over and the arguing about borders started.', 'It began when the last of the newcomers stopped calling the old country home.'],
+    founding:  ['It began when the founders were dead and their heirs wanted more.', 'It began once the new realm had walls, laws, and enemies.'],
+    empire:    ['It began with the empire at its proudest, which is never a good sign.', 'It began when the empire ran out of neighbors to conquer.'],
+    golden:    ['It began when the good years ended, as good years do.', 'It began with the last of the great feasts, though the guests didn\'t know it.'],
+    war:       ['It began with the soldiers coming home, the ones who could.', 'It began when the last banner was taken down from the field.'],
+    plague:    ['It began when the sickness passed and the survivors counted the empty houses.', 'It began with the last plague pit filled in.'],
+    cataclysm: ['It began when the dust settled and the survivors climbed out.', 'It began in a changed world, with new coasts and old maps that no longer worked.'],
+    fall:      ['It began after the fall, when nobody was in charge of anything.', 'It began with the old crown lost and the old roads going to weed.'],
+    dark:      ['It began when the first lamps were lit again.', 'It began as people came out of hiding and found the world still there.'],
+    invasion:  ['It began when the invaders had gone, or settled in and stopped being called invaders.', 'It began as the refugees came home to whatever was left.'],
+    dragon:    ['It began with the dragon dead and its hoard up for grabs.', 'It began when the sky was empty of wings for the first time in living memory.'],
+    rebellion: ['It began when the rebels had to start governing.', 'It began on the day the old rulers were marched out of the gates.'],
+    schism:    ['It began when the faith had split for good, and both halves claimed to be whole.', 'It began after the burnings stopped.'],
+    treaty:    ['It began with the ink still wet on the treaty.', 'It began when the peace was signed, and the hard part started.']
+};
+// More roles for an age's figure (used when the story doesn't name them).
+const HIS_ROLES_MORE = {
+    making:    ['the first smith', 'the one who named the animals', 'the first to die'],
+    migration: ['the navigator', 'the one who stayed behind', 'the keeper of the old songs'],
+    founding:  ['the kingmaker', 'the first judge', 'the rival claimant'],
+    empire:    ['the imperial treasurer', 'the governor of the far provinces', 'the court poet'],
+    golden:    ['the master architect', 'the great physician', 'the merchant prince'],
+    war:       ['the spymaster', 'the deserter who became a legend', 'the quartermaster who kept the army fed'],
+    plague:    ['the gravedigger', 'the quarantine warden', 'the priest who stayed'],
+    cataclysm: ['the one who led the survivors out', 'the scholar who wrote it all down', 'the mapmaker of the new coasts'],
+    fall:      ['the regent who failed', 'the looter', 'the keeper of the last library'],
+    dark:      ['the lamplighter', 'the warlord of the ruins', 'the wandering teacher'],
+    invasion:  ['the collaborator', 'the resistance leader', 'the child who carried the messages'],
+    dragon:    ['the dragon\'s keeper', 'the smith who forged the spear', 'the one who bargained with it'],
+    rebellion: ['the pamphleteer', 'the general who switched sides', 'the old ruler\'s heir'],
+    schism:    ['the reformer', 'the high priest who refused to choose', 'the scribe who forged the scripture'],
+    treaty:    ['the translator', 'the witness who signed for the absent', 'the spy at the table']
+};
+
+const HIS_START_KIND ={ gods: 'making', empire: 'empire', dark: 'dark', migration: 'migration' };
 
 // ── Helpers ──────────────────────────────────────────────
 function hisPick(list) {
@@ -467,6 +505,16 @@ function rollHistory(seed, opts = {}) {
         x.endAgo = ago;
     });
     list[list.length - 1].ongoing = true;
+    // The second pass (E6): newer openings and roles swap in by their share, after everything else.
+    list.forEach((x, i) => part(`age.${i}.${start}.more`, () => {
+        const prev = i === 0 ? 'start' : list[i - 1].kind;
+        const began = HIS_BEGAN_MORE[prev] || HIS_BEGAN_MORE.start;
+        const newer = hisPick(began);
+        if (rand() < began.length / (began.length + 1)) x.began = newer;
+        const K = HIS_KINDS[x.kind], roles = HIS_ROLES_MORE[x.kind] || [];
+        const role = roles.length ? hisPick(roles) : null;
+        if (rand() < roles.length / (K.roles.length + roles.length) && !x.figure.fixed) x.figure.role = role;
+    }));
     return { seed, ages, span, start, total, list, realm: st.realm, old: st.old };
 }
 
@@ -548,7 +596,7 @@ function hisRollAge(i, forced, st, used) {
         i, kind, name, weight,
         began: HIS_BEGAN[prev] || HIS_BEGAN.start,
         text: fill(text),
-        figure: { name: figure.name, race: figure.race, role },
+        figure: { name: figure.name, race: figure.race, role, fixed: /\{figure\}/.test(text) },
         faith: fill(faith),
         legacies: legacies.map(([lk, t, hook]) => ({ kind: lk, text: fill(t), hook: fill(hook) })),
         godDraws,

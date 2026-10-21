@@ -537,6 +537,84 @@ const PAN_BOND_EFFECTS = [
     'Their holy days fall close together, and the town celebrates for a week.'
 ];
 
+// ── Second pass (E6). Later draws (god.<i>.more, bonds.more, world.more) swap these in,
+// so an old link keeps its gods and only some of their lines change.
+const PAN_WALKS_MORE = [
+    'The gods come down only to settle bets with each other, and mortals are usually the bet.',
+    'Each god keeps one mortal body in the world, asleep somewhere, and wakes it when needed.',
+    'The gods walk among the faithful on their holy days, so the priests set an extra place at the table.',
+    'They used to walk the world, until something happened at a crossroads that nobody will talk about.',
+    'The gods send dreams instead; a temple\'s whole job is working out what the dreams meant.',
+    'Only children and the very old can see the gods when they pass, and most of them don\'t mention it.',
+    'A god who walks the world forgets they are a god until they leave it, which explains a great deal.',
+    'An old pact forbids the gods to come down, and they keep finding loopholes.',
+    'The gods ride the weather: a sudden wind indoors means one of them is passing through.',
+    'They answer only those who ask in person at the top of the right mountain, which keeps its inns very busy.'
+];
+const PAN_BOND_WHY_MORE = [
+    '{a} hid {b} from the other gods during the war in heaven, and neither will say where.',
+    '{a} and {b} made the first mortals together, and argue fondly about who did the hard part.',
+    '{b} keeps {a}\'s true name, and {a} keeps {b}\'s.',
+    '{a} taught {b} to laugh, which nobody else had managed.',
+    '{a} and {b} share a single star in the night sky, and take turns lighting it.',
+    '{b} nursed {a} back from a wound that nearly ended them at the beginning of the world.'
+];
+const PAN_BOND_EFFECTS_MORE = [
+    'Their faithful trade festival days, so each god gets two parties a year.',
+    'A cleric of one may bless in the other\'s name, and often does when the other\'s priests are drunk.',
+    'Their shrines stand side by side at every crossroads.',
+    'An oath sworn to both at once is the hardest in the land to break.',
+    'Their temples raise orphans together, and the orphans grow up thinking both gods are their parents.',
+    'Their priests swap pulpits once a year, and the sermons get very strange.',
+    'Offend one and the other\'s faithful won\'t serve you either.',
+    'Their holy symbols are often worn as a pair, on one chain.',
+    'When one of their temples burns, the other rebuilds it and sends the bill later.',
+    'Their statues hold hands in the old temples, and someone keeps polishing the hands.'
+];
+// More offerings, vestments, and names for the priests, by domain.
+const PAN_DOMAIN_MORE = {
+    knowledge: {
+        offering: ['a riddle nobody has answered', 'ink ground by hand', 'a pair of spectacles', 'a lesson taught to a stranger'],
+        vestments: ['black robes with pages of old books stitched inside', 'plain smocks and a pen behind each ear', 'blue caps with a tassel for every book read'],
+        priests: ['Scribes of the Lamp', 'the Learned']
+    },
+    life: {
+        offering: ['clean linen', 'a basket of eggs', 'a day\'s work for a sick neighbor', 'herbs from the kitchen garden'],
+        vestments: ['grey aprons with deep pockets full of bandages', 'green robes embroidered with a sheaf of wheat', 'white linen washed every single day'],
+        priests: ['Hands of Mercy', 'Healers']
+    },
+    light: {
+        offering: ['a lamp left burning all night', 'a sunflower', 'oil for the temple lamps', 'a window washed clean'],
+        vestments: ['white cloaks lined with gold thread', 'sun-yellow tabards over mail', 'pale robes with a small mirror on the breast'],
+        priests: ['Sunspeakers', 'the Bright Order']
+    },
+    nature: {
+        offering: ['a seedling planted where nothing grows', 'a stag\'s shed antler', 'a basket of acorns', 'a fish let go back into the river'],
+        vestments: ['patched cloaks the color of autumn leaves', 'bare feet and robes of undyed hemp', 'hooded mantles stitched with feathers'],
+        priests: ['Thornwardens', 'the Wild Kin']
+    },
+    tempest: {
+        offering: ['a broken oar', 'a bell rung in the wind', 'a bucket of seawater carried uphill', 'a rope from a wrecked ship'],
+        vestments: ['tarred coats and a whistle on a chain', 'storm-grey cloaks that snap in no wind', 'robes stitched with shells and fishhooks'],
+        priests: ['Tidecallers', 'the Weathered']
+    },
+    trickery: {
+        offering: ['a lie told well', 'a card from a marked deck', 'a key to someone else\'s door', 'a mask worn once'],
+        vestments: ['patchwork coats with a dozen hidden pockets', 'borrowed finery that never fits', 'grey cloaks that are easy to forget'],
+        priests: ['Knaves', 'the Smiling Ones']
+    },
+    war: {
+        offering: ['a whetstone worn thin', 'a soldier\'s last letter', 'a broken shield', 'a shoe from a warhorse'],
+        vestments: ['battered helms worn even at prayer', 'iron-grey surcoats and a sword at every hip', 'blood-red sashes over plain wool'],
+        priests: ['Shieldbearers', 'the Iron Choir']
+    },
+    death: {
+        offering: ['a lock of a dead friend\'s hair', 'a cup of wine poured on the ground', 'a candle lit for a stranger', 'the name of someone forgotten, spoken aloud'],
+        vestments: ['grey robes sewn with the names of the dead', 'black gloves they never take off', 'plain shrouds and ash-smudged bare feet'],
+        priests: ['Lanterns of the Last Road', 'Bonewardens']
+    }
+};
+
 // ── Helpers ──────────────────────────────────────────────
 function panPick(list) {
     return list[Math.floor(rand() * list.length)];
@@ -849,7 +927,41 @@ function rollPantheon(seed, opts = {}) {
     });
     // In many peoples' gods there is no shared heaven.
     if (shape === 'many') p.home = 'each god\'s own country: a mountain, a river, a hall under a hill, wherever their people first prayed';
+    panSecondPass(p, part);
     return p;
+}
+
+// One of the newer lines in place of cur, by its share of the whole list (always two draws).
+function panSwap(cur, old, more) {
+    const newer = panPick(more);
+    return rand() < more.length / (old.length + more.length) ? newer : cur;
+}
+
+// The second pass (E6): swap draws after everything else, so old links keep their gods.
+function panSecondPass(p, part) {
+    const n = p.gods.length;
+    p.gods.forEach(g => part(`god.${g.i}.more`, () => {
+        const d = PAN_DOMAINS[g.domain], m = PAN_DOMAIN_MORE[g.domain];
+        g.offering = panSwap(g.offering, d.offering, m.offering);
+        g.vestments = panSwap(g.vestments, d.vestments, m.vestments);
+        g.priests = panSwap(g.priests, d.priests, m.priests);
+    }));
+    part(`bonds.more.${p.shape}.${n}`, () => {
+        const used = new Set();
+        p.bonds.forEach(b => {
+            const a = p.gods[b.a].name, c = p.gods[b.b].name;
+            const why = panPick(PAN_BOND_WHY_MORE), effect = panPick(PAN_BOND_EFFECTS_MORE);
+            if (rand() < PAN_BOND_WHY_MORE.length / (PAN_BOND_WHY.length + PAN_BOND_WHY_MORE.length) && !used.has(why)) {
+                used.add(why);
+                b.why = panCap(panFill(why, a, c));
+            }
+            if (rand() < PAN_BOND_EFFECTS_MORE.length / (PAN_BOND_EFFECTS.length + PAN_BOND_EFFECTS_MORE.length) && !used.has(effect)) {
+                used.add(effect);
+                b.effect = panCap(panFill(effect, a, c));
+            }
+        });
+    });
+    part('world.more', () => { p.walks = panSwap(p.walks, PAN_WALKS, PAN_WALKS_MORE); });
 }
 
 // ── Holy days on a calendar ──────────────────────────────

@@ -236,6 +236,45 @@ const CAL_MOON_FULL = [
     'Children born under it are said to have the sight.',
     'Duels and challenges are fought by its light, by tradition.'
 ];
+// Second pass (E6): later draws (moon.<i>.more, era.more) swap these in.
+const CAL_MOON_LORE_MORE = [
+    'Debts fall due when it\'s full, and the moneylenders call it the Collector.',
+    'Bakers say bread rises higher under it, and charge accordingly.',
+    'Elves name their children for whatever it was doing on the night they were born.',
+    'When it rises red, the old folk stay indoors and the young folk find out why.',
+    'It is said to be the eye of a sleeping giant, and its waning is the giant blinking.',
+    'Pilgrims walk to the coast to watch it rise out of the sea.',
+    'Ships\' captains keep tables of it, and guard them like treasure.',
+    'A cult in the hills believes it is coming closer, and has the measurements to prove it.',
+    'Midwives swear more babies come when it\'s full; the midwives are tired.',
+    'Wolves stop howling when it\'s new, and the silence keeps whole villages awake.',
+    'Scribes date their letters by it rather than by the months, which confuses everyone else.',
+    'Gravediggers won\'t dig when it\'s new; the ground is said to be listening.'
+];
+const CAL_MOON_FULL_MORE = [
+    'The taverns stay open all night, by an old law nobody has bothered to repeal.',
+    'Wizards renew their wards, and the whole town smells of burnt sage.',
+    'Couples who marry by its light are said never to quarrel, which their neighbors dispute.',
+    'Ghost stories are told on the green, and a child always claims to have seen one.',
+    'Night markets spring up in the square, selling things nobody would buy by daylight.',
+    'Shepherds pen their flocks early; something comes down from the hills.',
+    'Prisoners are let out into the yard so they can see it.',
+    'Lovers carve their names in the old oak, which is running out of room.',
+    'The temple bells ring once at moonrise, and every dog in town answers.',
+    'Nobody cuts their hair or nails, for fear of what might grow back.'
+];
+const CAL_ERA_NOTES_MORE = [
+    'A few old families still count from an older event, and sign their letters that way to show it.',
+    'A sect insists the count is off by exactly one year, and keeps New Year a day early.',
+    'Some counted the first year as year one and others as year nought, and the lawyers love it.',
+    'Coins are stamped with the year, so a forger\'s first mistake is usually the date.',
+    'The court historian is paid to keep it accurate, and is three years behind.',
+    'Some villages never took it up and still count by their lord\'s age.',
+    'The event is played out every year at the fair, and the play gets the story wrong in a new way each time.',
+    'Prophets announce the end of the count every few decades; the count keeps going.',
+    'The gnomes keep it to the minute and are scandalized that nobody else does.',
+    'Its name is cut on every gravestone, so even the dead keep the count.'
+];
 
 // ── Festivals ────────────────────────────────────────────
 // s: seasons it fits. climates: only these climates (else any). Each party activity has a check
@@ -600,6 +639,12 @@ function calCap(s) {
     return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
 }
 
+// One of the newer lines in place of cur, by its share of the whole list (always two draws).
+function calSwap(cur, old, more) {
+    const newer = calPick(more);
+    return rand() < more.length / (old.length + more.length) ? newer : cur;
+}
+
 function calFill(text, cal) {
     const moon = cal.moons[0] ? cal.moons[0].name : 'the moon';
     return text.replace(/\{moon\}/g, moon);
@@ -903,6 +948,16 @@ function rollCalendar(seed, opts = {}) {
         const taken = cal.moons.flatMap(m => [m.name, m.epithet]);
         cal.moons.push(part('moon.' + i, () => calMoon(i, taken)));
     }
+    // The second pass (E6): newer lines swap in by their share, and no two moons share one.
+    cal.moons.forEach((mo, i) => part(`moon.${i}.more`, () => {
+        const prev = cal.moons.slice(0, i);
+        [['lore', CAL_MOON_LORE, CAL_MOON_LORE_MORE], ['full', CAL_MOON_FULL, CAL_MOON_FULL_MORE]].forEach(([k, old, more]) => {
+            mo[k] = calSwap(mo[k], old, more);
+            const free = old.concat(more).filter(l => !prev.some(p => p[k] === l));
+            if (prev.some(p => p[k] === mo[k])) mo[k] = calPick(free);
+        });
+    }));
+    part('era.more', () => { cal.era.note = calSwap(cal.era.note, CAL_ERA_NOTES, CAL_ERA_NOTES_MORE); });
     part('year', () => {
         cal.year = 300 + Math.floor(rand() * 2100);
         cal.yearName = `the Year of the ${calPick(CAL_YEAR_ADJ)} ${calPick(CAL_YEAR_NOUN)}`;
