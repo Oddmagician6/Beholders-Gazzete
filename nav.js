@@ -32,7 +32,17 @@
     group.addEventListener('focusout', function(e) {
       if (!group.contains(e.relatedTarget)) setGroup(group, false);
     });
+    // Desktop dropdown: fit it into the space below the nav (it scrolls past that)
+    group.addEventListener('mouseenter', fitSub);
+    toggle.addEventListener('click', fitSub);
   });
+
+  function fitSub() {
+    const room = window.innerHeight - nav.getBoundingClientRect().bottom - 12;
+    nav.style.setProperty('--nav-sub-max', Math.max(room, 200) + 'px');
+  }
+  window.addEventListener('resize', fitSub);
+  window.addEventListener('scroll', fitSub, { passive: true });
 
   // Fit the open mobile menu into the space below the nav so it scrolls
   // instead of running off the bottom of the screen

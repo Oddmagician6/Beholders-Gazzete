@@ -197,8 +197,20 @@ p:last-child { margin-bottom: 0; }
   z-index: 210;
 }
 .nav-group.open > .nav-sub { display: block; }
+/* Desktop: two columns, and scroll inside the menu if the window is still
+   too short (the nav is sticky, so the page can't scroll to reach it).
+   nav.js sets --nav-sub-max to the space left below the nav. */
+@media (min-width: 769px) {
+  .nav-sub {
+    grid-template-columns: repeat(2, minmax(200px, 1fr));
+    max-height: var(--nav-sub-max, calc(100vh - 80px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .nav-group.open > .nav-sub { display: grid; }
+}
 @media (hover: hover) and (min-width: 769px) {
-  .nav-group:hover > .nav-sub { display: block; }
+  .nav-group:hover > .nav-sub { display: grid; }
   .nav-group:hover .nav-caret { transform: translateY(3px) rotate(-135deg); }
 }
 .main-nav .nav-sub a {
