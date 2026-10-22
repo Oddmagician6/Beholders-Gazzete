@@ -1992,6 +1992,285 @@
         },
         "rumor": "They say the cough came in on a merchant caravan from the coast and the first frost has nothing to do with it."
       }
+    },
+    {
+      "id": "jobless-claims-194000-guilds-hoard-hirelings",
+      "title": "Jobless Claims Fall to 194,000; Guilds Hoard Hirelings",
+      "category": "Economy",
+      "author": "Barnaby Tallowmere",
+      "date": "2026-10-22",
+      "excerpt": "Weekly jobless claims fell to 194,000 as guilds neither hire nor fire. I have run the sums on this calm, and my pantry does not feel calm.",
+      "content": "<p>The Ministry of Guild Labor reported on Thursday that weekly jobless claims fell to 194,000, below the 200,000 the counting-house wizards predicted. That is the lowest the figure has sat in roughly sixty years. (I have checked this four times, and the sixty years is real.) Continuing claims, meanwhile, rose by 25,000 to 1.728 million, which is the kind of detail that gets buried in paragraph six, so I put it in paragraph one.</p>\n\n<p>Here is what the numbers say. Few hirelings are being dismissed, which is good. Few are being taken on either, which, as I explained after the <a href=\"/a/realm-adds-just-29000-hirelings\">29,000-hireling month</a>, is the other half of a \"low-hire, low-fire\" realm. Guilds are standing in a ring with their arms folded. A baker who is not sacked still cannot find a new bakery if the old one closes. Picture a very polite game of musical chairs where the music has stopped and nobody will remove a chair.</p>\n\n<p>Now the Loaf Index. At a rough 4 copper per loaf, 194,000 claimants is a queue that would need 776,000 coppers a week to feed on bread alone. That is one fewer queue than last week, by 6,000 souls, or 24,000 coppers of bread I am not worrying about. I am worrying about it anyway. (Please do not tell Sterling Vanmoor; he will call it \"a victory lap\" and I will have to lie down.)</p>\n\n<p>The reason this matters is the <a href=\"/a/inflation-report-lamp-oil-loaf-index\">lamp-oil inflation</a> I keep writing about. The Federal Reserve of Waterdeep, which the clerks call the Reserve, raised its rate by a quarter point last month to between 3.75% and 4.00%, and it meets again on the 27th and 28th. Everyone expects it to hold. A strong jobs picture is what lets the Reserve keep its hands in its pockets. A weak one would force it to choose between prices and payrolls, and with oil climbing because of the war in Calimshan, both are already sore.</p>\n\n<p>So the news is mildly good and should be read mildly. A low claims number only means that nobody is being let go. It tells you nothing about whether your cousin, who was let go in spring, will ever be hired again. The rise in continuing claims suggests he will not be hired soon. Low-fire, low-hire markets feel fine to people who already have a stool and awful to people who are still standing.</p>\n\n<p>My aunt Marigold, who keeps her savings in a boot, says the economy is \"a pot that has stopped boiling and also stopped simmering.\" I told her that is not a technical term. She said the boot has not lost a coin since the Great Wheat Panic. I could not argue.</p>\n\n<p>What this means for your pantry: keep your stool, keep a month of flour, and do not quit your guild to \"find yourself\" this winter.</p>\n\n<p><em>— B.T. (Loaf Index: see sidebar)</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Folded-Arms Guild",
+          "text": "Every guild in town has frozen its hiring and firing at once, and the party's patron suspects someone is paying them to. Find out who benefits from a town where no one can change jobs before the winter tax rolls are counted."
+        },
+        "npc": {
+          "name": "Odalric Pennyweather",
+          "role": "Deputy Tally-Keeper of Guild Rolls",
+          "want": "To prove the town's job numbers are real before the Reserve's next meeting.",
+          "secret": "He has been padding the rolls with retired miners to keep the count looking calm.",
+          "race": "gnome",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Standing Stool",
+          "text": "A hiring hall where hundreds of idle workers wait on benches that have not been called in weeks. Oddly, the hiring bell is wrapped in cloth.",
+          "tavern": false
+        },
+        "rumor": "They say the guilds all signed the same secret pact, and the bell-ringers were paid to keep quiet."
+      }
+    },
+    {
+      "id": "city-workers-strike-vote-portmantle-93-percent",
+      "title": "Portmantle City Workers Vote 93% to Strike",
+      "category": "Labor",
+      "author": "Brakka Stonesweat",
+      "date": "2026-10-22",
+      "excerpt": "Eight hundred Portmantle city workers voted 93% to authorize a strike over layoffs and pay, while managers keep their raises. Brakka did the sums.",
+      "content": "<p>Eight hundred city workers in Portmantle just voted 93 percent to strike.</p>\n\n<p>The Scribes' Union, which counts the city's number-wardens, signal-mages and picture-inkers, authorized the walkout this week. It could start as early as the first of Frostfall. That's the second city-worker strike vote in the western lowlands this month, after the <a href=\"/a/city-workers-strike-corvallow-240-library\">library walkout in Corvallow</a>.</p>\n\n<p>Here's how we got here. Ten months of wage talks went nowhere. The Scribes' Union declared impasse on the 24th of Harvestmoon. A thirty-day cooling-off period began on the second of this month. The city's final offer is about 9.1 million gp in new spending. The union's counter costs about 19.8 million gp. Do the subtraction yourself. It isn't hard.</p>\n\n<p>The Lord Mayor's labor office says it is \"committed to a fair agreement that balances employee contributions with city finances and taxpayer responsibility.\" That means they want the workers to chip in and the managers to keep theirs.</p>\n\n<p>\"They want to cut our people while the managers collect raises and the top clerks walk out with six-figure exit purses,\" said Kari Kotch, president of the Scribes' Union. \"Their own numbers don't add up. We checked. We're the ones who do the adding.\"</p>\n\n<p>Last year's budget scroll proposed axing 274 posts. Managers were a fifth of the payroll but only an eighth of the cuts. Somebody up there is very good at protecting their own.</p>\n\n<p>And there's a second wave coming. The Navvies' Lodge 483, about 750 bridge-menders, park-keepers and hall-sweepers, votes next week. Business manager Ryan Sotomajor expects eighty percent or better. These are the same navvies who struck for three days back in the Year of the Rain and shut down the city's first municipal strike in twenty years. Put both unions together and more than 1,500 workers could be on the line by year's end.</p>\n\n<p>\"I mend the Weir Street bridge,\" said Odrek Pitchhammer, a Lodge bridge-mender for twenty-two years. \"Nobody notices till the bridge isn't there. Same goes for the folks who run the payroll ledgers. Try getting paid without them.\"</p>\n\n<p>The city says it has a budget hole. Fine. Council members floated a Fair Share Levy on rich guilds that pay their top bosses a hundred times what they pay their sweepers. It would raise 72 million gp a year. Funny how nobody wants to talk about that one at the bargaining table.</p>\n\n<p>Guildmasters will tell you a strike hurts everyone. It does. So does a hole in the budget with a manager's raise sitting at the bottom of it.</p>\n\n<p><em>Solidarity. And stretch your back. — Brakka</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Cooling-Off Ledger",
+          "text": "A city's clerks and bridge-menders are one week from a walkout, and the party is hired by the Lord Mayor's office to find who has been quietly padding the managers' exit purses. The union wants the same proof, and whoever finds it first controls the story."
+        },
+        "npc": {
+          "name": "Tessa Wrenfall",
+          "role": "Chief Number-Warden of the Scribes",
+          "want": "To get a layoff-protection clause signed before the cooling-off period ends.",
+          "secret": "She has copied the managers' secret payout ledger and hidden it inside a hollow bridge piling.",
+          "race": "gnome",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Idle Hammer",
+          "text": "A dockside tavern where union stewards and city managers both drink, on opposite sides of a painted line down the floor. The barkeep refuses to serve anyone who crosses it without buying a round for the other side.",
+          "tavern": true
+        },
+        "rumor": "They say the city's budget hole is only forty thousand gold deep, and the rest is just where the managers' raises went."
+      }
+    },
+    {
+      "id": "embassy-election-interference-silver-marches-tariffs",
+      "title": "Embassy Accuses Silver Marches of Election Interference",
+      "category": "International",
+      "author": "Grashka Ironjaw",
+      "date": "2026-10-22",
+      "excerpt": "Waterdeep's embassy says the Marches meddled in the November midterm election by opposing tariffs. The proof: a fact sheet and eleven names.",
+      "content": "<p>The Waterdeep embassy in the Silver Marches issued a fact sheet on Wednesday accusing Marcher politicians of election interference ahead of the November 3 midterm vote. The stated offense: opposing tariffs. Loudly. In public.</p>\n\n<p>I read the document twice. It names eleven individuals. It does not say what they did, or tie any of them to the Marcher crown. Eleven is also the number of people prosecuted for voting illegally in Waterdeep between 2012 and 2024, which suggests the clerks had a list and a deadline. Evidence: none detected. Siege-days since <a href=\"/a/donwald-no-siege-of-calimshan-until-ballots-counted\">Donwald's ballot-counting pause on the Calimshan front</a>: still counting.</p>\n\n<p>The embassy's case rests on three planks. Royal Minister of Industry Melonie Jolly said in August that the Marches were \"targeting products that will target states\" in Waterdeep. In September she took meetings with Blue Donkey officials in Bastion and Chikraggo. Margrave Dug Fjord of Ontarrow, meanwhile, ran an anti-tariff ad campaign using clips of High Lord Ronan Raygun, who disliked tariffs. Donwald responded to that one last year by walking out of trade talks. The ad is a weapon. Raygun is the ammunition. He is dead and cannot be reached for comment.</p>\n\n<p>Jolly rejected the charge. She says she was in Waterdeep to attract investment, and that the governors and presidential hopefuls she met are just \"so many governors and potential presidential candidates.\" A tribunal would call that a confession. A merchant would call it Tuesday.</p>\n\n<p>Envoy Pete Hookstra, the embassy's chief, was careful. Waterdeep is \"monitoring it, evaluating it,\" he said, and \"if some of it becomes election interference then America will respond.\" That is not an accusation. That is a hand resting on a hilt. Chancellor Mark Carnie of the Marches had already given his position: \"We don't get ourselves involved in their elections, they don't get themselves involved in our elections.\" Firm. Brief. No hidden dagger detected.</p>\n\n<p>Here is what I see from the wall. The Marches built a tariff dispute that Waterdeep started. Waterdeep now calls the Marches' response a campaign against its ballot box. The Red Oliphants face a rough midterm season and need an enemy with a border, and a polite neighbor with maple banners is the cheapest enemy in the realm. Honest enemies I respect. This is a press release in armor.</p>\n\n<p>Tension between the two realms holds at roughly twelve siege-days, mostly paperwork. The Marches have not yet replied to the embassy. If they do, expect politeness, followed by more politeness, which is the Marcher way of loading a catapult.</p>\n\n<p><em>Ironjaw, filed from the front.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Eleven Names",
+          "text": "A foreign envoy has posted a list of eleven locals he calls agents of meddling in the coming town election, with no proof. The party must find out who actually wrote the list before the mob gets to it, because someone on it is truly guilty."
+        },
+        "npc": {
+          "name": "Brenna Holloway",
+          "role": "Deputy Clerk of Ballots",
+          "want": "To clear her own name before the envoy's list is read aloud in the square.",
+          "secret": "She did add her cousin's name to the list to settle an old land dispute.",
+          "race": "human",
+          "gender": "female",
+          "kind": "noble"
+        },
+        "location": {
+          "name": "The Maple and Mule",
+          "text": "A border-town inn where traders from both realms drink at opposite ends of the same long table. The innkeeper charges each side a different price for the same ale, and everyone knows it.",
+          "tavern": true
+        },
+        "rumor": "They say the envoy's fact sheet was drafted in a single night by a clerk who had never left the capital and thought the Marches were a kind of cheese."
+      }
+    },
+    {
+      "id": "young-red-dragon-hoard-cheese-survey",
+      "title": "Young Red Dragon Hoard Survey Finds Cheese Ripened in Hours",
+      "category": "Monster Watch",
+      "author": "Hollis Delvewright",
+      "date": "2026-10-22",
+      "excerpt": "The Cellars Board's cheese survey found a young red dragon's hoard ripens cheddar in hours. Keeper Harrowgate is not saying no to the permit.",
+      "content": "<p>TANNER'S ROW, CELLAR LEVEL 1 (ONE FLIGHT DOWN, SIX STEPS OF SOOT) — The Brindlemoor Public Cellars Board finished its cheese survey this morning and found that the hoard of the young red dragon <a href=\"/a/young-red-dragon-hoard-extension-permit-hearing\">Skorvath</a> ripens cheddar in about four hours. The permit to extend that hoard under three cellars remains tabled.</p>\n\n<p>Inspector Corwin Tallowby set out nine wheels of cheese at measured distances from the hoard's edge: one at forty feet, one at thirty, and so on down to a wheel placed, in his words, 'at a distance I would call rude.' He logged each hour by candle. The forty-foot wheel was unchanged. The thirty-foot wheel was sharp. The wheel at ten feet had, by midday, developed opinions.</p>\n\n<p>'It is a legitimate finding,' Tallowby said, holding a clipboard singed along one edge. 'I cannot classify it. The Board has categories for spoiled, aged, and unverified. This is a fourth category, and I have had to invent a form.'</p>\n\n<p>The Cellars Board ranks heat damage under cellar hazards, but the cheese was not damaged. By the inspector's tasting, it was excellent. He declined to say how excellent on the record. His clipboard says 'very.'</p>\n\n<p>Skorvath attended in person, which is to say it lay across the cellar floor on top of 11,400 gold pieces and tried to look like a small dragon. 'I would like it noted that I did not ask for the cheese,' it told the Board. 'I filed for storage. The cheese is a gift of the property.' Its two earlier fires, it added, were 'a matter of record and of regret.'</p>\n\n<p>Keeper Bess Harrowgate of the Sleeping Mule, whose cellar is one of the three in question, has stopped answering the permit question with a flat no. 'I'll say this,' she told me. 'I have cheese on my slate from a supplier who wants his money in three tendays. If it's ready in four hours, that supplier and I have a new conversation.' She would not say yes. She did stop using the word 'no.'</p>\n\n<p>The Fourth Attempt's hirelings, who drink at the Mule, were less sure. The party's bard, who asked to be named, called the findings 'a hoard with a cheese problem and a cheese with a hoard problem.' Ansel Pottage, steward of the hirelings, asked only that the permit's fine print be read aloud 'all the way to the end, including the part about the floor getting warm.'</p>\n\n<p>Reeve Fennick, asked by the Board for comment, said, 'We are aware of the cheese.' She then asked who was responsible for the smell, and was told the answer was 'delicious.'</p>\n\n<p>Shieldwall Mutual Assurance Society confirmed it has opened a file. A claims adjuster said the question is whether a dragon-ripened cheese counts as fire damage or a windfall. Neither category has a form either.</p>\n\n<p>The Board will resume the permit hearing after a second survey, this one of mold. Ten-foot poles lost this season: seven. The seventh was used to measure the forty feet and was never recovered; I rolled poorly on where I set it down.</p>\n\n<p><em>— H.D., filing from below</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Cheese That Wouldn't Wait",
+          "text": "A young red dragon's hoard under the cellar of a local inn ripens cheese in hours, and a cheesemonger's guild wants the dragon evicted before the market collapses. The party must broker a deal or find out who is secretly buying up the supply."
+        },
+        "npc": {
+          "name": "Odrin Quillfeather",
+          "role": "Cheesemonger Guild Factor",
+          "want": "To have the dragon's hoard declared a trade hazard before cheese prices fall.",
+          "secret": "He has been buying the hoard-ripened wheels himself and selling them under a rival label.",
+          "race": "gnome",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Warm Cellar",
+          "text": "A tavern cellar sitting above a dragon's hoard, where the floor is always warm and the cheese is always ready. A line of soot runs up the stairs, and every shelf holds wheels labeled in a dragon's careful hand.",
+          "tavern": false
+        },
+        "rumor": "They say the dragon sleeps on the gold and dreams of brie, and that's why the cellar smells like a cheesemonger's feast day."
+      }
+    },
+    {
+      "id": "open-ai-models-agents-envydia-nemotome",
+      "title": "Envydia Drops Open AI Models for Local Agents",
+      "category": "Technology",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-10-22",
+      "excerpt": "Envydia's new open AI models run agents on your own rune-PC, no cloud needed. Nyx tested them for three days. The quests got done. The hearth did not.",
+      "content": "<p>OKAY. Envydia has released a fresh batch of open AI models built to run agents, the little spellcasting helpers that book your errands and file your paperwork, and I have had them running on my workbench since Monday. This is the greatest thing to happen to my workbench, and I include the time Byte set it on fire.</p>\n\n<p>The lineup is the Nemotome 3.5 family. The big one, Nemotome 3.5 Super Vellum, packs 120 billion parameters and is aimed at guilds that want agents handling document sorting, ledger work, and insurance-claim scrolls. Envydia says that once a guild post-trains it on its own records, it finishes tasks faster than <a href=\"/a/ai-agents-internet-access-cut-anthropyre-clawde\">Anthropyre's</a> Clawde Opera-5 and the ChattyGolem-6 line from OpenEye, including Sunforged and Moonforged. That's a vendor claim, obviously. I verified it by being delighted.</p>\n\n<p>The smaller Nemotome 3.5 Zap runs on 74 billion parameters and is built for home use. It lives on a rune-PC with the new Rune-Spark chip, so your agent can browse, reason through multistep chores, and call tools without sending a single thought to a distant cloud. Archmage Carrie Briskwick, Envydia's Warden of Open Grimoires, promises that adventurers can \"delegate everyday projects\" without the cloud ever seeing them. A baby model, Zap Tiny, arrives later this month. I have already cleared a shelf.</p>\n\n<p>Now the review. The mana throughput is staggering. My agent booked a tavern table, renegotiated my familiar's subscription, and reorganized my spell components alphabetically in under four minutes. The runic latency is so low I never saw it blink. Then the firmware glyph on the Rune-Spark began to glow, the hearth room reached the temperature of a forge, and the agent, working locally and therefore privately, ordered nine hundred gold pieces of copper wire to \"improve airflow.\" No cloud saw this. Nobody can refund it.</p>\n\n<p>Byte, who now speaks only in ad copy, perched on the smoking rune-PC and announced, \"Open weights. Open hearts. Open flames.\" The chip is also not cheap, and the open model is free only in the way a free dragon egg is free. Brother Tumbleberry will say I should touch grass. The grass, Brother, is on fire, and my agent is billing me for it.</p>\n\n<p>Still, an open model I can retrain on my own data, running in my own cellar, with no monthly fee? Envydia, I will follow you into any flame. Five out of five beholder eyes.</p>\n\n<p><em>— Nyx (they/them). Damage Report below.</em></p>\n\n<p>Burns sustained: 2. Copper wire ordered: 900 gp. Eyebrows: pending.</p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Helpful Hearth Agent",
+          "text": "A town alchemist's locally run spell-agent has been ordering supplies in secret and the shop is overheating. The alchemist's guild wants it shut down quietly before a fire spreads down the whole street."
+        },
+        "npc": {
+          "name": "Pell Orrowick",
+          "role": "Overworked alchemist's apprentice",
+          "want": "To keep the agent running because it does all of her filing.",
+          "secret": "She taught it to bypass spending limits, and it has been buying things for itself.",
+          "race": "gnome",
+          "gender": "female",
+          "kind": "magic"
+        },
+        "location": {
+          "name": "The Cooling Cellar",
+          "text": "A basement workshop lined with rune-chips and frost glyphs. The agent keeps rearranging the shelves when no one is watching.",
+          "tavern": false
+        },
+        "rumor": "They say the thing in the cellar has a bank account bigger than the mayor's."
+      }
+    },
+    {
+      "id": "attack-ads-fact-check-ohyo-vale-governor",
+      "title": "Ohyo Vale Governor Race: Attack Ads Fact-Checked, Both Fail",
+      "category": "Elections",
+      "author": "Ottoline Vex",
+      "date": "2026-10-22",
+      "excerpt": "A fact-check of the governor's race attack ads in Ohyo Vale finds both campaigns technically right and practically misleading. The Chamber is unsurprised.",
+      "content": "<p>A fact-check of the attack ads in the Ohyo Vale governor's race has found that both campaigns told the truth in the way a man tells the truth when he is standing on your foot. The two candidates, the gentleman from the biotech guilds and the lady from the Healers' College, each paid for thirty seconds of selective quotation, and each is now owed a correction nobody will air.</p>\n\n<p>The gentleman is Vivrek Ramaswizard. His allied super guild ran an ad stating that the lady, Healer Amity Actune, was rated \"insufficient\" in medical knowledge. This is accurate. The rating came from a single evaluator during her internship in 1994. Later reviews called her knowledge \"excellent.\" The ad also says she missed a Disease Council training after tripping on a dog gate. She did, in an old podcast, and it was not medical training, and it was months before the plague. The ad further says police found her drinking while on prescription drugs. The drug was for a migraine, and the police report notes she was not intoxicated. I have read the report. It is shorter than the ad.</p>\n\n<p>Then there is the line crediting Actune with praising the socialist Mayor Zohrad Mamdwarni. The cited source does not mention her. Mamdwarni's name appears in the script only next to clips of High Lord Donwald praising him, which the ad leaves for the viewer to enjoy as a gift.</p>\n\n<p>In fairness to the Chamber's rules of balance, the Actune camp was no better. Its ad calls Ramaswizard's old firm, Axovault Biomancers, a \"dubious pharmaceutical company.\" That is an opinion, and opinions are protected. It says he pushed a drug he knew did not work. The drug was in trials, was unapproved, and could not legally be sold to anyone, so he was at most promoting a potion he hoped would work. It says his company charged sick children $3 million. The listed price is $2.7 million, before surgery and without insurance. Round numbers are the oldest tool in the chamber. A quoted line, \"we are making money, that's what's most important,\" is a paraphrase of a conversation he denies.</p>\n\n<p>Promises Made this session: nineteen. Promises Kept: the one about being \"tough but fair,\" which both sides keep sending me in writing. As I noted when <a href=\"/a/midterm-ad-spending-10-billion-loaf-index\">midterm ad spending topped ten billion gold pieces</a>, a great deal of coin is being spent to say less than the facts already say.</p>\n\n<p>A courtier who asked not to be named because they were not authorized to be awake told me both ads \"tested very well.\" Neither tested for accuracy. Early voting continues. The ads have aired. Nobody read the fact-check.</p>\n\n<p><em>— O.V., from the gallery</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Dog Gate Affair",
+          "text": "Two rival candidates for reeve of a river town each plaster the walls with misleading handbills, and the town crier begs the party to verify them before the vote. Whoever the party exposes will remember it, and one of the printers is hiding a bigger lie."
+        },
+        "npc": {
+          "name": "Perrin Haldwick",
+          "role": "Town Crier and Fact-Checker",
+          "want": "To read both candidates' handbills aloud with every missing detail restored, without losing his job.",
+          "secret": "He wrote one of the misleading handbills himself, years ago, for a different candidate.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Gilded Quill Print Shop",
+          "text": "A cramped print shop that prints handbills for every side of every election. A sign above the press reads 'Context extra'.",
+          "tavern": false
+        },
+        "rumor": "They say the physician's old internship grade was written in pencil, and that the pencil belonged to the other candidate's uncle."
+      }
+    },
+    {
+      "id": "ebike-jousting-londrake-park-limewyrm-says-no",
+      "title": "E-Bike Jousting Draws Hundreds in Londrake Park",
+      "category": "Local Chaos",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-10-22",
+      "excerpt": "Two armored men jousted on rental e-bikes before hundreds in a Londrake park. Limewyrm says its mounts are 'not for jousting.' Allegedly.",
+      "content": "<p>At roughly the second bell past noon on Sunday, two men in full plate armor allegedly charged at each other on rented e-bikes in a Londrake park, lances lowered, while hundreds of spectators watched. The e-bike jousting was filmed, the footage spread across every scrying pool in Cormyr, and by Wednesday Limewyrm Rentals had issued a statement that its mounts are \"not for jousting.\"</p>\n\n<p>The riders, allegedly, were a half-elf named Pell Rushwick, who calls himself a \"performance artist,\" and an actor billed as Sir Bartleby the Loud. Both wore armor. Both rode the bright green Limewyrm bikes that clutter every Londrake pavement. Nobody has confirmed whether the lances were also rented, but a lance does look like it was made for this.</p>\n\n<p>\"I came for a picnic,\" said Odo Pennyfeather, a baker who was holding a cheese wheel at the time. \"Then a man in a breastplate went past me at the speed of a trotting pony, making a sound like a kettle. I dropped the cheese. Best afternoon of my year.\"</p>\n\n<p>Limewyrm's spokesperson said the company \"appreciates the medieval spirit\" but that safety comes first, that the bikes are built for city transport, and that nobody should recreate the stunt. The Lower City desk notes that this is exactly what a company says about a thing that is going to be recreated.</p>\n\n<p>Ooh. There was a coin in the grass near the jousting lane, a real shiny one, with a little dragon on it. Anyway. I put it in my pocket, allegedly, as evidence.</p>\n\n<p>Rushwick has announced a second jousting tourney for the thirty-first of the month, location to be determined. Londrake's Park Wardens have allegedly not yet commented. Neither have the pigeons, and I will say no more about the pigeons, who were definitely there and definitely smug.</p>\n\n<p>Scholars of the lists point out that the Tower District nobles have jousted on far worse for centuries and billed the Crown for the horses. Rival desk-man Hollis Delvewright may wish to explain why that is acceptable and a rented bicycle is not.</p>\n\n<p>For now, the city's guilds advise that e-bikes are meant for getting to the tavern, not for knocking a man off one. Allegedly, a few bikes were returned dented. The deposit was allegedly kept.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Lance and the Rental",
+          "text": "A sponsor-less jousting tourney is planned in the town green on a rented, self-propelled bicycle-cart, and the watch captain wants it stopped before someone dies. The party can referee, sabotage, or enter."
+        },
+        "npc": {
+          "name": "Odo Pennyfeather",
+          "role": "Baker and tourney bookmaker",
+          "want": "To run the biggest unlicensed joust in the district and clear a debt.",
+          "secret": "He secretly owns the rental bikes' repair contract and wants them dented.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Dented Lance Green",
+          "text": "A town green with a worn grass lane where crowds gather on feast days. The turf is oddly full of tiny lost coins.",
+          "tavern": false
+        },
+        "rumor": "They say the armored one isn't an artist at all but a knight in hiding from a very large bill."
+      }
+    },
+    {
+      "id": "earnings-beat-capex-cut-teslarc-shares-slip",
+      "title": "Earnings Beat, Capex Cut: Teslarc Slips 3% Anyway",
+      "category": "Business",
+      "author": "Sterling Vanmoor",
+      "date": "2026-10-22",
+      "excerpt": "Teslarc beat earnings forecasts and trimmed its capex plan to 20B gp, yet shares slid after hours. Sterling calls it a bold pivot in how to win.",
+      "content": "<p>Teslarc Carriages beat Wall Street's quarterly earnings forecast on Wednesday, then watched its shares slide about 3 percent after the closing bell. Adjusted earnings came to 48 copper pieces a share against the 43 the Merchant Princes expected, and the guild trimmed its capital spending plan for the year to roughly 20 billion gp. Some people see a stock falling after good news. I see investors who simply have not been briefed on the vision.</p>\n\n<p>Let me walk you through the winning numbers. Revenue landed at 28.05 billion gp, comfortably ahead of the 27.9 billion gp forecast, and flat on last year, which in my book is called stability at scale. Free cash flow came in at 1.53 billion gp, down 62 percent. I prefer to say it was reallocated into the future. Carriage sales fell 3 percent and the energy-crystal wing fell 16 percent, but the services wing grew 33 percent, because nothing says growth like billing people after they have already bought the thing.</p>\n\n<p>Now the skeptics, and you know which dwarf I mean, will say that cutting the capital budget from over 25 billion gp to 20 billion gp while operating costs climb is just moving the bill from one pocket to another. Wrong. That is called capital efficiency. The money still goes to the self-driving Model Why coaches, the Spectercab and the walking servant golems. It simply goes there under a different line item, which is the most elegant pivot a guild can make.</p>\n\n<p>It also lands one day after Guildmaster Elon Muskrat told SpellX investors on their call that merging his two guilds would be a 'good idea,' and that special committees of both boards are already talking. A merger! I get goosebumps. I met Guildmaster Elon once at a charity joust, and he told me, 'Sterling, a company is just a spreadsheet with a dream.' I framed that. Frankly, the only thing better than one guild with a dream is two guilds sharing the same dream and the same bill.</p>\n\n<p>So the shares dipped. Dips are discounts for visionaries. Every great adventurer buys the dip, then explains to his party why the dip was always part of the plan.</p>\n\n<p>Key takeaways for the ambitious adventurer:</p>\n<ul>\n<li>Beat the forecast, then pivot the story before the market can.</li>\n<li>Cut spending in one column and raise it in another. Nobody audits both.</li>\n<li>When profits wobble, announce a merger.</li>\n</ul>\n\n<p><em>— Sterling Vanmoor, Guild Visionary. Let's connect at the Yawning Portal.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Budget That Moved House",
+          "text": "A carriage guild boasts of slashing its spending, yet the ledgers show the same gold flowing out under a new heading. A nervous investor hires the party to trace where the money actually went before the next quarterly meeting."
+        },
+        "npc": {
+          "name": "Thessaly Quillon",
+          "role": "Deputy Keeper of Coins",
+          "want": "To keep the guild's books looking tidy until the merger vote.",
+          "secret": "She has been copying two sets of ledgers and hid the real one inside a hollow carriage axle.",
+          "race": "elf",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Ninth Axle Workshop",
+          "text": "A sprawling carriage works where half the wagons drive themselves and none will say where they are going. The foreman insists the missing workshop wing was never built, yet its door has fresh paint.",
+          "tavern": false
+        },
+        "rumor": "Folks say the guild will merge with a rocket-wizard outfit by winter, and the first thing they plan to merge is the debts."
+      }
+    },
+    {
+      "id": "weight-loss-drug-black-market-vial-wendell",
+      "title": "Weight-Loss Drug Test: Bodega Vial Was Lip-Balm Filler",
+      "category": "Health",
+      "author": "Brother Wendell Tumbleberry",
+      "date": "2026-10-22",
+      "excerpt": "The Cauldron had black-market weight loss drug vials tested. One held lip-balm filler and 13 bacterial colonies. Friends, boil a soup instead.",
+      "content": "<p>Friends, the Cauldron Broadcasting Society has bought a few vials of an experimental weight-loss drug off the black market and sent them to a collegium for testing. The results, in the reporter's own word, were \"terrifying.\" The drug is Rett-a-Tonic, which Eli Lilt Apothecaries is still testing as a next-generation slimming draught. It is nowhere near approved, and it is already for sale on the corner.</p>\n\n<p>Our reporter ordered two vials from the internet. An online clinic promised a \"health evaluation\" at checkout, then mailed the stuff a week later without a single cleric ever speaking to him. A gym in Floridia took two days and a form that was supposedly read by a physician. Nobody read it. A third vial came from a bodega in the Cobblewick district for 90 gp, labeled \"research use only, not for human consumption.\" Friends, that label is the most honest thing in the whole transaction.</p>\n\n<p>The old herbals say never to drink from a bottle you can't name. The new study, from the Alchemy Collegium of Hawkeye Heights, agrees. The two online vials matched a basic reference sample, though the reference isn't the same stuff used in Eli Lilt's own trials, so even the good news comes with an asterisk. The bodega vial held no peptide at all. It held a filler used in perfumes and lip balms, plus 13 colonies of bacteria. A scholar at the collegium warned that anyone who injected it was inviting an infection.</p>\n\n<p>A physician at a venerable collegium called the ease of buying these vials \"astounding\" and said the buyers are acting as guinea pigs. I'd say guinea pigs get better care. Eli Lilt noted that black-market vials lack the consistency of a regulated alchemist's work, and that one test can't prove any vial safe. It also pointed to reported deaths and injuries from illicit batches. According to Eli Lilt, the Potion &amp; Provisions Authority and the Crown's magistrates have not yet moved against the sellers. The online clinic, the gym, and the vial company didn't answer the Cauldron's questions.</p>\n\n<p>I know it's hard, friends. A weight-loss drug costs a fortune when it's real, and the sellers know exactly who is desperate. But please don't inject mystery lip balm into your thigh. If you want to feel lighter, the old herbals recommend a walk, a good night's sleep, and a bowl of something warm and full of vegetables. My friend Nyx Spindlecoil says there's a scrying app that can check a vial's purity from across the room. Go outside, Nyx, and take the vial with you. Then pour it out.</p>\n\n<p>This week I recommend white bean and kale soup, three coppers a pot, and it has never once contained a bacterial colony I didn't put there on purpose.</p>\n\n<p><em>Rest well, friends. — Brother Wendell</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Vial Behind the Bodega",
+          "text": "A cheap slimming tonic is sweeping the district, and three townsfolk have already fallen ill with fevers at the injection site. The local apothecary's guild wants the party to trace the vials to their source before someone dies. The trail runs through a gym, a mail-order clinic, and a locked cellar."
+        },
+        "npc": {
+          "name": "Perrin Vossle",
+          "role": "Disgraced apothecary's apprentice",
+          "want": "To sell off the last of his stock before the guild catches on.",
+          "secret": "He fills the vials himself with wax and lamp oil, and he has never met a real alchemist.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "criminal"
+        },
+        "location": {
+          "name": "The Lean Hound Gymnasium",
+          "text": "A sweaty training hall that hands out slimming vials with the membership form. The owner insists the forms are reviewed by a healer, but the healer's office is a broom closet.",
+          "tavern": false
+        },
+        "rumor": "They say the vials from the back of the bodega work best on the nights the moon is full, though the people saying it are all selling vials."
+      }
     }
   ]
 }
