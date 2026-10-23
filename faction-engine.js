@@ -816,6 +816,76 @@ const FAC_ALLY_WHY_MORE = [
     'One patron funds them both and expects them to get along.'
 ];
 
+// ── Third pass (R7). More mottos, symbols, and perks per type, and more rival heat and
+// ally reasons. Later draws (faction.<i>.<type>.r7, ties.r7) swap them in by their share
+// of all the lists, so an old link keeps its factions.
+const FAC_R7 = {
+    guild: {
+        mottos: ['Every Seal Means Something.', 'Apprentice, Journeyman, Master.', 'Built to Last.', 'Quality Is Remembered.', 'One Hall, Many Hands.', 'The Ledger Never Lies.'],
+        symbols: ['a plumb line over an anvil', 'a pair of compasses round a star', 'a spindle wound with thread', 'two hands clasped over a ledger', 'a bell over a market cross', 'a wheel with a hammer through it'],
+        perks: ['first pick of the next caravan\'s goods', 'a guild seal that halves the tolls at every gate', 'free repairs to the party\'s gear for a year', 'an introduction to the richest merchant in {place}']
+    },
+    cult: {
+        mottos: ['The Stars Are Right.', 'All Shall Be Answered.', 'We Were Here Before.', 'Hush.', 'What Is Given Returns.', 'The Dark Remembers.'],
+        symbols: ['a hand with six fingers', 'a ring of teeth', 'a sun with a hole in its middle', 'a hooded figure with no face', 'a twisted horn', 'a bell with no clapper'],
+        perks: ['a charm that keeps one terrible thing from noticing the party', 'a true answer to one question, from something below', 'the way into a ruin nobody has looted', 'protection from the cult\'s own people, for now']
+    },
+    house: {
+        mottos: ['Blood Remembers.', 'We Were Kings Once.', 'Patience and Iron.', 'Never Twice.', 'By Oath and Arm.', 'Our Word Holds.'],
+        symbols: ['a golden key', 'a bear in chains', 'a falcon over three waves', 'a spreading oak', 'a crowned lion', 'a crowned heron'],
+        perks: ['a seat at the house\'s table at the next feast', 'the family\'s old sword, on loan', 'a pardon for one small crime, signed by the head of the house', 'hunting rights in the house\'s forest']
+    },
+    thieves: {
+        mottos: ['Quiet Feet, Full Pockets.', 'No Names.', 'What Falls Is Ours.', 'The Shadows Keep Their Own.', 'Pay Your Dues.', 'Always Two Exits.'],
+        symbols: ['a mask with no mouth', 'a spider on a coin', 'a black cat', 'a knife through a purse', 'a fox with a bell', 'a candle snuffer'],
+        perks: ['a safe house in every quarter of {place}', 'the guards on one gate looking away, once', 'a set of lockpicks that once belonged to a legend', 'the name of whoever really runs the watch']
+    },
+    order: {
+        mottos: ['Duty Is Enough.', 'Shield the Gate.', 'We Remember the Fallen.', 'Faith and Steel.', 'Stand Where Others Run.', 'The Oath Outlives Us.'],
+        symbols: ['a sword set in an anvil', 'a lion holding a lantern', 'a cracked shield, still standing', 'a silver bell on a chain', 'a winged helm', 'two keys over a gate'],
+        perks: ['training with the order\'s masters at arms', 'a blessed blade, lent for the season', 'the order\'s word, spoken for the party in any court', 'a squire to carry the party\'s gear']
+    },
+    temple: {
+        mottos: ['Mercy First.', '{God} Sees.', 'Give, and It Is Given.', 'The Door Is Open.', 'Peace in the Hearth.', 'All Paths Lead Home.'],
+        symbols: [],
+        perks: ['one spell of healing, cast for free when it matters most', 'a priest of {god} to travel with the party for a week', 'burial rites for a fallen friend, with every honor', 'sanctuary: no one may lay hands on the party inside the temple']
+    },
+    circle: {
+        mottos: ['Seek the Hidden Door.', 'Power Through Patience.', 'The Ink Remembers.', 'Measure the Stars.', 'Silence Is a Spell.', 'All Knowledge Is Borrowed.'],
+        symbols: ['a quill crossed with a wand', 'a moth with eyes on its wings', 'a ring of runes round a flame', 'a hand holding a sphere', 'a keyhole full of stars', 'an inkwell struck by lightning'],
+        perks: ['a potion of the circle\'s own brewing', 'one magic item identified, with its whole history', 'a spell copied into a spellbook, free', 'a familiar\'s egg, of uncertain species']
+    },
+    company: {
+        mottos: ['We Finish the Job.', 'Steel for Silver.', 'Mud, Blood, Gold.', 'Always Paid, Never Bought.', 'Shoulder to Shoulder.', 'The Contract Is Sacred.'],
+        symbols: ['a boar\'s tusk', 'a broken chain', 'two crossed axes', 'a raven on a spear', 'a snarling bear', 'a burning tower'],
+        perks: ['a veteran sergeant to train the party for a month', 'first word of every war worth fighting', 'the company\'s healer, on call for a week', 'a share in the next big contract']
+    }
+};
+const FAC_RIVAL_HEAT_R7 = [
+    'It began as a joke between friends and stopped being funny years ago.',
+    'Both sides have paid the same assassin, who has not yet decided whom to kill.',
+    'The young members want a war; the old ones are barely holding them back.',
+    'It is fought at the council table, one bitter vote at a time.',
+    'Both sides are losing money on it, and neither will be the first to stop.',
+    'There have been three fires this year, and nobody has proved who set them.',
+    'A line runs through the market, and crossing it costs a fight.',
+    'It only stays quiet because a third power is watching them both.',
+    'Nobody remembers how it started, and nobody will be the first to forget it.',
+    'Children on both sides grow up on stories of the other\'s treachery.'
+];
+const FAC_ALLY_WHY_R7 = [
+    '{a} {a:trains|train} {b}\'s recruits for a share of the take.',
+    'A forged document would ruin them both, so each keeps the other honest.',
+    '{b} {b:hides|hide} {a}\'s people when the watch comes looking.',
+    'Their leaders swore an oath at a dying friend\'s bedside.',
+    '{a} {a:carries|carry} {b}\'s letters, and never reads them.',
+    'They split {place} between them years ago, and the line has held.',
+    '{b} {b:is|are} the only ones {a} {a:trusts|trust} to guard {a:its|their} treasury.',
+    'A plague year forced them together, and they never quite came apart.',
+    'They both want a third group gone, and quietly share what they learn about it.',
+    '{a} {a:buys|buy} everything {b} {b:sells|sell}, at a fair price and with no questions.'
+];
+
 // ── Helpers ──────────────────────────────────────────────
 function facPick(list) {
     return list[Math.floor(rand() * list.length)];
@@ -989,6 +1059,7 @@ function rollFactions(seed, opts = {}) {
     const w = { seed, count, focus: focus || 'random', scale, factions };
     Object.assign(w, part(`ties.${n}.` + order.slice(0, n).join('.'), () => facTies(factions)));
     facSecondPass(w, part, `ties.more.${n}.` + order.slice(0, n).join('.'));
+    facThirdPass(w, part, `ties.r7.${n}.` + order.slice(0, n).join('.'));
     return w;
 }
 
@@ -1017,6 +1088,36 @@ function facSecondPass(w, part, tiesLabel) {
         });
         w.allies.forEach(t => {
             t.why = facUnused(facSwap(t.why, FAC_ALLY_WHY, FAC_ALLY_WHY_MORE), FAC_ALLY_WHY.concat(FAC_ALLY_WHY_MORE), seen);
+        });
+    });
+}
+
+// One of the newest lines in place of cur, by their share of all three lists (always two draws).
+function facSwap3(cur, old, more, newest) {
+    const newer = facPick(newest);
+    return rand() < newest.length / (old.length + more.length + newest.length) ? newer : cur;
+}
+
+// The third pass (R7), drawn after the second.
+function facThirdPass(w, part, tiesLabel) {
+    w.factions.forEach(f => part(`faction.${f.i}.${f.type}.r7`, () => {
+        const t = FAC_TYPES[f.type], m = FAC_R7[f.type];
+        f.motto = facSwap(f.motto, t.mottos, m.mottos);
+        f.perk = facSwap(f.perk, t.perks, m.perks);
+        // A temple has no symbol of its own (it shows its god's): the draws are made all the same.
+        const symbol = facSwap(f.symbol, t.symbols || [], m.symbols);
+        if (f.symbol) f.symbol = symbol;
+    }));
+    // Still no two rivalries the same heat, and no two alliances the same reason.
+    part(tiesLabel, () => {
+        const heats = new Set(), seen = new Set();
+        const allHeats = FAC_RIVAL_HEAT.concat(FAC_RIVAL_HEAT_MORE, FAC_RIVAL_HEAT_R7);
+        const allWhy = FAC_ALLY_WHY.concat(FAC_ALLY_WHY_MORE, FAC_ALLY_WHY_R7);
+        w.rivals.forEach(r => {
+            r.heat = facUnused(facSwap3(r.heat, FAC_RIVAL_HEAT, FAC_RIVAL_HEAT_MORE, FAC_RIVAL_HEAT_R7), allHeats, heats);
+        });
+        w.allies.forEach(t => {
+            t.why = facUnused(facSwap3(t.why, FAC_ALLY_WHY, FAC_ALLY_WHY_MORE, FAC_ALLY_WHY_R7), allWhy, seen);
         });
     });
 }
