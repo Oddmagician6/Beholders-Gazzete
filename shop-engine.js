@@ -727,6 +727,50 @@ const SHOP_SALE_WHY = ['overstocked', 'the last of an old batch', 'the keeper is
 const SHOP_SOLDOUT_WHY = ['an adventuring party bought every last one this morning', 'the shipment is late', 'the keeper refuses to stock it after "the incident"', 'the rats got to it', 'a noble bought the lot for a party', 'it is on order, back next week, probably'];
 const SHOP_SALE_OFF = 0.2;
 
+// ── Second pass (R4). Drawn after everything else in dressShop (shopSecondPass), by each
+// list's share of the whole, so an older link keeps its keeper, stock, and extras but these.
+const SHOP_BUILDINGS_MORE = {
+    poor: ['a converted stable that still smells of horse', 'a shack on stilts above the mud', 'the back of a tannery, upwind on good days',
+        'a tent pitched inside a burned-out house', 'a stump of an old tower with a door cut into it'],
+    modest: ['a half-timbered shop with bull\'s-eye windows', 'a shop built into the old city gate', 'a brick shop with a bow window',
+        'a former chapel with the pews sold off', 'a shop on the bridge itself, over the river'],
+    wealthy: ['a domed arcade with a fountain inside', 'a townhouse with its ground floor turned into a showroom', 'a shop around a garden courtyard full of caged songbirds',
+        'a hall of polished oak and brass rails', 'a shopfront whose stained-glass windows show the keeper\'s own face']
+};
+const SHOP_SECURITY_MORE = {
+    poor: ['a goose that hates strangers', 'the keeper, who sleeps on the counter', 'a rusty bear trap by the back door', 'a sign reading "Nothing worth stealing"'],
+    modest: ['a parrot that shouts "Thief!" at everyone', 'a cellar door that bolts from the inside', 'a cousin in the watch', 'bars on every window', 'a mastiff named Biscuit'],
+    wealthy: ['an arcane lock on the strongroom', 'a guard who used to fight in the arena', 'a mirror by the door that shows anyone invisible',
+        'an understanding with the thieves\' guild', 'a stone guardian by the door that the keeper calls "just a statue"']
+};
+const SHOP_HELPERS_MORE = ['foundling', 'cousin from the country', 'reformed thief', 'eldest child', 'lodger who pays in work', 'bookkeeper'];
+const SHOP_HELPER_NOTES_MORE = ['keeps a second set of books', 'talks to the stock', 'sells the good stuff out the back door', 'remembers every customer\'s name and every debt',
+    'is saving up to buy the shop', 'breaks something every day', 'is far too honest for this trade', 'is spying for a rival shop'];
+const SHOP_SALE_WHY_MORE = ['the keeper bought too many at auction', 'it is the wrong color, apparently', 'a rival opened across the street',
+    'the keeper owes money by the new moon', 'it was in a flood, but it dried out fine', 'the end of the season', 'the keeper lost a bet', 'it fell off a wagon, officially'];
+const SHOP_SOLDOUT_WHY_MORE = ['the supplier was eaten by something on the road', 'the guild has banned it until further notice', 'the last one is holding up a table leg',
+    'a wizard bought them all and won\'t say why', 'the keeper is keeping the last one for luck', 'the caravan was robbed, and the bandits are selling it cheaper',
+    'the price is climbing so fast the keeper is waiting to see how high it goes', 'the cat sleeps on the last one and won\'t move'];
+
+// One of the newer lines in place of cur, by its share of the whole list (always two draws).
+function shopSwap(cur, old, more) {
+    const newer = randomArray(more);
+    return rand() < more.length / (old.length + more.length) ? newer : cur;
+}
+
+function shopSecondPass(shop) {
+    const w = shop.wealth;
+    shop.building = shopSwap(shop.building, SHOP_BUILDINGS[w], SHOP_BUILDINGS_MORE[w]);
+    shop.security = shopSwap(shop.security, SHOP_SECURITY[w], SHOP_SECURITY_MORE[w]);
+    const role = shopSwap(shop.helper && shop.helper.role, SHOP_HELPERS, SHOP_HELPERS_MORE);
+    const note = shopSwap(shop.helper && shop.helper.note, SHOP_HELPER_NOTES, SHOP_HELPER_NOTES_MORE);
+    if (shop.helper) Object.assign(shop.helper, { role, note });
+    const sale = shopSwap(shop.sale && shop.sale.why, SHOP_SALE_WHY, SHOP_SALE_WHY_MORE);
+    if (shop.sale) shop.sale.why = sale;
+    const soldOut = shopSwap(shop.soldOut && shop.soldOut.why, SHOP_SOLDOUT_WHY, SHOP_SOLDOUT_WHY_MORE);
+    if (shop.soldOut) shop.soldOut.why = soldOut;
+}
+
 // Adds the place, people, services, buying, job, sale, and sold-out item to a rolled shop.
 function dressShop(shop, pool, byId) {
     const d = SHOP_DETAILS[shop.type], w = shop.wealth;
@@ -746,6 +790,7 @@ function dressShop(shop, pool, byId) {
     shop.sale = onSale.length && rand() < 0.6 ? { id: randomArray(onSale).id, why: randomArray(SHOP_SALE_WHY) } : null;
     const missing = pool.filter(id => !shop.stock.some(s => s.id === id));
     shop.soldOut = missing.length && rand() < 0.5 ? { id: randomArray(missing), why: randomArray(SHOP_SOLDOUT_WHY) } : null;
+    shopSecondPass(shop);
     return shop;
 }
 
