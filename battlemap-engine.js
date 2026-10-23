@@ -24,10 +24,13 @@ const BM_KEY = 'gazette-battlemaps';
 const BM_LIMITS = { side: 60, maps: 30, objs: 800, labels: 300, name: 60, label: 24, code: 200000, bytes: 2000000 };
 const BM_STYLES = { art: '🎨 Illustrated', classic: '✒️ Classic ink' };
 // Floor numbers in fl are these plus one (img/map/floor).
-const BM_FLOORS = ['flagstones', 'planks', 'dirt', 'cave', 'mossy-cave', 'marble', 'temple-tiles', 'bone', 'water'];
+// New floors go on the end: saved maps keep their numbers.
+const BM_FLOORS = ['flagstones', 'planks', 'dirt', 'cave', 'mossy-cave', 'marble', 'temple-tiles', 'bone', 'water',
+    'carpet', 'grass', 'sand', 'ice', 'lava'];
 const BM_FLOOR_NAMES = {
     flagstones: 'Flagstones', planks: 'Planks', dirt: 'Dirt', cave: 'Cave rock', 'mossy-cave': 'Mossy cave',
-    marble: 'Marble', 'temple-tiles': 'Temple tiles', bone: 'Bones', water: 'Water'
+    marble: 'Marble', 'temple-tiles': 'Temple tiles', bone: 'Bones', water: 'Water',
+    carpet: 'Carpet', grass: 'Overgrown', sand: 'Sand', ice: 'Ice', lava: 'Lava'
 };
 // Everything that stands on the map. Doors and stairs (img/map/door): edge doors sit on a grid
 // line between two squares, and their pictures run past the square (pw, ph) as the Sites
@@ -35,6 +38,8 @@ const BM_FLOOR_NAMES = {
 const BM_ITEMS = {
     wood: { label: 'Wooden door', file: 'door/wooden-door', door: true, edge: true, pw: 1.2, ph: 1.2 },
     iron: { label: 'Iron door (locked)', file: 'door/iron-door', door: true, edge: true, pw: 1.2, ph: 1.2 },
+    barred: { label: 'Barred door', file: 'door/barred-door', door: true, edge: true, pw: 1.2, ph: 1.2 },
+    seal: { label: 'Magic seal', file: 'door/magic-seal', door: true, edge: true, pw: 1.2, ph: 1.2 },
     portcullis: { label: 'Portcullis', file: 'door/portcullis', door: true, edge: true, pw: 1.4, ph: 1 },
     secret: { label: 'Secret door', file: null, door: true, edge: true },
     stairs: { label: 'Stairs', file: 'door/stairs', door: true },
@@ -42,13 +47,16 @@ const BM_ITEMS = {
     trapdoor: { label: 'Trapdoor', file: 'door/trapdoor', door: true }
 };
 [
-    ['altar', 'Altar', 2, 1], ['barrels', 'Barrels'], ['bed', 'Bed', 1, 2], ['bedrolls', 'Bedrolls'], ['bone-pile', 'Bone pile'],
-    ['bookshelf', 'Bookshelf', 2, 1], ['brazier', 'Brazier'], ['cage', 'Cage'], ['campfire', 'Campfire'], ['cauldron', 'Cauldron'],
-    ['chest', 'Chest'], ['coffin', 'Coffin', 1, 2], ['crates', 'Crates'], ['desk', 'Desk', 2, 1], ['fountain', 'Fountain', 2, 2],
-    ['magic-circle', 'Magic circle', 3, 3], ['mine-cart', 'Mine cart', 1, 2], ['pillar', 'Pillar'], ['rubble', 'Rubble'],
-    ['rug', 'Rug', 2, 3], ['sarcophagus', 'Sarcophagus', 1, 2], ['spider-web', 'Spider web'], ['stalagmites', 'Stalagmites'],
-    ['statue', 'Statue'], ['table', 'Table', 2, 1], ['throne', 'Throne'], ['treasure-hoard', 'Treasure hoard'],
-    ['weapon-rack', 'Weapon rack', 2, 1], ['well', 'Well']
+    ['alchemy-table', 'Alchemy table', 2, 1], ['altar', 'Altar', 2, 1], ['anvil', 'Anvil'], ['barrels', 'Barrels'], ['bed', 'Bed', 1, 2],
+    ['bedrolls', 'Bedrolls'], ['bone-pile', 'Bone pile'], ['bookshelf', 'Bookshelf', 2, 1], ['brazier', 'Brazier'], ['cage', 'Cage'],
+    ['campfire', 'Campfire'], ['cauldron', 'Cauldron'], ['chest', 'Chest'], ['coffin', 'Coffin', 1, 2], ['crates', 'Crates'],
+    ['crystal', 'Crystals'], ['desk', 'Desk', 2, 1], ['egg-nest', 'Egg nest', 2, 2], ['forge', 'Forge', 2, 2], ['fountain', 'Fountain', 2, 2],
+    ['gallows', 'Gallows', 2, 2], ['hay', 'Hay'], ['idol', 'Idol'], ['lever', 'Lever'], ['magic-circle', 'Magic circle', 3, 3],
+    ['mine-cart', 'Mine cart', 1, 2], ['mirror', 'Mirror'], ['pillar', 'Pillar'], ['pit-trap', 'Pit trap'], ['prison-cell', 'Prison cell', 2, 2],
+    ['rubble', 'Rubble'], ['rug', 'Rug', 2, 3], ['sacks', 'Sacks'], ['sarcophagus', 'Sarcophagus', 1, 2], ['ship-wheel', "Ship's wheel"],
+    ['spider-web', 'Spider web'], ['spike-trap', 'Spike trap'], ['stalagmites', 'Stalagmites'], ['statue', 'Statue'], ['stocks', 'Stocks'],
+    ['table', 'Table', 2, 1], ['tapestry', 'Tapestry', 2, 1], ['throne', 'Throne'], ['torture-rack', 'Torture rack', 1, 2],
+    ['treasure-hoard', 'Treasure hoard'], ['weapon-rack', 'Weapon rack', 2, 1], ['well', 'Well']
 ].forEach(([k, label, w = 1, h = 1]) => { BM_ITEMS[k] = { label, file: 'prop/' + k, w, h }; });
 
 function bmId() {
@@ -310,9 +318,10 @@ function bmObjSvg(o, art, secret = true) {
     let body;
     if (art || !it.door) {
         body = siteArtImg(it.file, 0, 0, w * (it.pw || 1), h * (it.ph || 1));
-    } else if (o.k === 'wood' || o.k === 'iron') {
+    } else if (['wood', 'iron', 'barred', 'seal'].includes(o.k)) {
         body = `<rect class="bm-door" x="${bmF1(-w * 0.6)}" y="${bmF1(-h * 0.3)}" width="${bmF1(w * 1.2)}" height="${bmF1(h * 0.6)}"/>`
-            + (o.k === 'iron' ? `<circle class="bm-lock" cx="0" cy="0" r="${bmF1(Math.min(w, h) * 0.18)}"/>` : '');
+            + (o.k === 'iron' || o.k === 'seal' ? `<circle class="bm-lock" cx="0" cy="0" r="${bmF1(Math.min(w, h) * 0.18)}"/>` : '')
+            + (o.k === 'barred' ? `<rect class="bm-lock" x="${bmF1(-w * 0.55)}" y="${bmF1(-h * 0.07)}" width="${bmF1(w * 1.1)}" height="${bmF1(h * 0.14)}"/>` : '');
     } else if (o.k === 'portcullis') {
         body = `<line class="bm-port" x1="${bmF1(-w * 0.7)}" y1="0" x2="${bmF1(w * 0.7)}" y2="0"/>`;
     } else if (o.k === 'stairs') {
@@ -412,7 +421,8 @@ function bmFromSite(s, style = 'art') {
         const gap = (dx ? Math.abs(pb.x - pa.x) : Math.abs(pb.y - pa.y)) - ra - rb;
         const x = (pa.x + dx * (ra + gap / 2)) / S, y = (pa.y + dy * (ra + gap / 2)) / S;
         const kind = s.doors[k];
-        const k2 = kind === 'locked' ? 'iron' : kind === 'portcullis' ? 'portcullis' : kind === 'secret' ? 'secret'
+        const locked = KA.locked === 'barred-door' ? 'barred' : KA.locked === 'magic-seal' ? 'seal' : 'iron';
+        const k2 = kind === 'locked' ? locked : kind === 'portcullis' ? 'portcullis' : kind === 'secret' ? 'secret'
             : kind === 'stairs' ? 'spiral' : (kind === 'door' || kind === 'stuck') ? (KA.door === 'iron-door' ? 'iron' : 'wood') : null;
         if (!k2) return;
         if (k2 === 'spiral') ob.push({ k: k2, x: Math.floor(x) + 0.5, y: Math.floor(y) + 0.5, w: 1, h: 1, r: 0 });
