@@ -277,6 +277,45 @@ const CAL_ERA_NOTES_MORE = [
 ];
 
 // ── Festivals ────────────────────────────────────────────
+// Third pass (R9): later draws (era.r9, gap.more.*, fest.more.*) swap these in by their share.
+const CAL_ERA_EVENTS_MORE = [
+    { e: 'the Great Thaw', a: 'GT' }, { e: 'the Opening of the Gate', a: 'OG' }, { e: 'the Coming of the Ships', a: 'CS' },
+    { e: 'the Binding of the Demon', a: 'BD' }, { e: 'the Red Comet', a: 'RC' }, { e: 'the First Harvest', a: 'FH' },
+    { e: 'the Raising of the Walls', a: 'RW' }, { e: 'the Exile', a: 'AE' }, { e: 'the Godswar', a: 'GW' },
+    { e: 'the Hallowing', a: 'AH' }, { e: 'the Year Without Summer', a: 'YS' }, { e: 'the Great Census', a: 'GC' }
+];
+const CAL_GAP_CUSTOMS_MORE = [
+    'Anyone may sleep in any house, and turning a stranger away brings a year of bad luck.',
+    'Every quarrel must be settled before sunset, or the law says it carries into the new year.',
+    'People wear their clothes inside out, so whatever walks on these days won\'t know them.',
+    'Children run the town council for the day, and some of their laws are still on the books.',
+    'Every bell is silenced, and whichever rings first afterward is said to choose the year\'s luck.',
+    'Nobody may buy or sell; whatever is needed must be given or lent.',
+    'The dead are said to visit, and every table sets a place for them.',
+    'A wedding made on it lasts forever, which is why so few dare.'
+];
+const CAL_FEST_NAMES_MORE = {
+    harvest: ['The Feast of the Last Load', 'Sheaf Night', 'The Gleaning', 'Barn Dance Night'],
+    fire: ['The Night of Sparks', 'The Great Blaze', 'Torch Night', 'The Feast of Flames'],
+    dead: ['The Feast of Names', 'Ghost Supper', 'The Night the Dead Walk Home', 'The Quiet Feast'],
+    sowing: ['The Blessing of the Seed', 'Furrow Day', 'The Plowmen\'s Feast', 'Mudfoot Day'],
+    blossom: ['The Petal Fair', 'Blossom Night', 'The Ribbon Dance', 'Greenmantle Day'],
+    midsummer: ['Sunstanding', 'The Golden Eve', 'The Shortest Night', 'The Feast of the Sun'],
+    water: ['Riverfeast', 'The Casting of Garlands', 'Fountain Day', 'The Drowning of the Straw Man'],
+    misrule: ['The Upside-Down Feast', 'The Beggar King\'s Day', 'Mummers\' Night', 'The Pig King\'s Feast'],
+    fair: ['The Wool Fair', 'The Spice Fair', 'The Pie Fair', 'The Cattle Fair'],
+    games: ['The Iron Games', 'The Bridge Race', 'The Feast of Champions', 'Stone-Throw Day'],
+    vigil: ['The Night Without Fire', 'The Silent Watch', 'The Fast of Bread and Water', 'Ash Night'],
+    masque: ['The Night of Feathers', 'Mummery', 'The Feast of Masks', 'The Strangers\' Ball'],
+    founding: ['The Walls Feast', 'Gate Day', 'The Founding Feast', 'Banner Day'],
+    moon: ['The Silver Feast', 'Moonrise Night', 'The Night of Long Shadows', 'The Lantern Moon'],
+    hunt: ['The Wild Hunt Feast', 'Antler Day', 'The Hounds\' Feast', 'The Last Chase'],
+    gifts: ['The Night of Small Gifts', 'The Yule Table', 'Winternight', 'The Feast of Kindness'],
+    beasts: ['The Pig Parade', 'The Duck Race', 'Shearing Day', 'The Feast of Good Dogs'],
+    ice: ['Frostfair Night', 'The Snow Feast', 'The Night of Ice Lanterns'],
+    rain: ['The Thunder Dance', 'The Feast of the Cloud Mother', 'Wet Earth Day']
+};
+
 // s: seasons it fits. climates: only these climates (else any). Each party activity has a check
 // and an optional prize (gp, shown through formatCoins()).
 const CAL_FESTIVALS = {
@@ -977,6 +1016,25 @@ function rollCalendar(seed, opts = {}) {
         mo.cycle = 29.5;
         mo.offset = (MOON_MONTH_LUNAR - (calAbsDay(cal, cal.year, 0, 1) % 29.5)) % 29.5;
     }
+    // The third pass (R9): a newer era event, gap custom, and festival names, each under its own seed.
+    part('era.r9', () => {
+        const ev = calPick(CAL_ERA_EVENTS_MORE);
+        if (rand() < CAL_ERA_EVENTS_MORE.length / (CAL_ERA_EVENTS.length + CAL_ERA_EVENTS_MORE.length)) {
+            cal.era.name = cal.era.name.replace(cal.era.event, ev.e);
+            cal.era.event = ev.e;
+            cal.era.abbr = ev.a;
+        }
+    });
+    if (cal.gap) part(`gap.more.${monthCount}.${start}`, () => { cal.gap.custom = calSwap(cal.gap.custom, CAL_GAP_CUSTOMS, CAL_GAP_CUSTOMS_MORE); });
+    part(`fest.more.${monthCount}.${start}.${climate}`, () => {
+        // No two festivals in a year share a name.
+        const names = new Set(cal.months.map(m => m.festival.name));
+        cal.months.forEach(m => {
+            const f = m.festival;
+            const name = calSwap(f.name, CAL_FESTIVALS[f.kind].names, CAL_FEST_NAMES_MORE[f.kind] || []);
+            if (name !== f.name && !names.has(name)) { names.delete(f.name); names.add(name); f.name = name; }
+        });
+    });
     calAlignMoonFestivals(cal);
     return cal;
 }

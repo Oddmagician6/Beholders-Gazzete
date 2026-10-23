@@ -199,6 +199,13 @@ const CONT_BORDER = {
     forest: ['a forest neither side patrols', 'woodland where the border stones have walked', 'a forest road with a toll house at either end'],
     open: ['a line of boundary stones, moved now and then', 'open fields and a busy customs house', 'a dyke and ditch from an older war']
 };
+// Third pass (R9): swapped in by their share (part 'borders.more'), the same on both sides.
+const CONT_BORDER_MORE = {
+    mountains: ['a pass held by a monastery that answers to neither side', 'goat tracks only the smugglers know', 'a tunnel the dwarves charge both sides to use'],
+    river: ['fords marked with painted posts that move after every flood', 'a river island both sides keep a garrison on', 'a chain across the water at the old crossing'],
+    forest: ['blazes on the trees, renewed each spring by both sides', 'a wood where the rangers of both sides drink together', 'a forest the druids say belongs to neither'],
+    open: ['a road lined with gibbets, as a warning', 'a strip of land nobody dares to farm', 'watchtowers a mile apart, each in sight of the other']
+};
 const CONT_BORDER_WHAT = { mountains: 'the mountains', river: 'a river', forest: 'deep forest', open: 'open country' };
 
 // Capitals: what each is known for.
@@ -220,6 +227,16 @@ const CONT_SEA_LORE = [
     'merfolk trade pearls for iron knives at the reef markets', 'its storms come only from the west, and only on the new moon',
     'a sea serpent is sighted every few years, a little bigger each time', 'a sunken treasure fleet lies somewhere under it, and every captain has a map',
     'its tides run higher than they should, and the old charts blame the moon\'s mood', 'a lighthouse stands alone in the middle of it, still lit, with no keeper'
+];
+
+// Third pass (R9): swapped in by their share (part 'seas.lore.more').
+const CONT_SEA_LORE_MORE = [
+    'the drowned dead walk out of it on one night a year, and go home', 'a sea witch sells fair winds there, for a price paid later',
+    'its waters turn red each spring, and nobody fishes then', 'an island in it shows only at low tide, with a temple on it',
+    'giant turtles cross it every summer, and a few carry villages on their backs', 'a whirlpool opens in its middle once in a generation',
+    'sailors throw a coin overboard at its midpoint, and those who forget don\'t come back', 'its fishermen speak a trade tongue nobody else understands',
+    'a bell rings out in it where no buoy was ever set', 'a great chain lies across its narrows, laid by a forgotten empire',
+    'the gulls there talk, a little, and mostly complain', 'its pirates fly a flag of truce on holy days, and keep to it'
 ];
 
 const CONT_TINCTURES = ['gold', 'silver', 'red', 'blue', 'green', 'black', 'purple'];
@@ -1061,6 +1078,22 @@ function rollContinent(seed, opts = {}) {
     part('seas.lore', () => {
         const lore = contShuffle(CONT_SEA_LORE);
         c.seas.forEach((s, i) => { s.lore = lore[i]; });
+    });
+    // The third pass (R9): newer sea lore and border lines, by their share, after everything else.
+    part('seas.lore.more', () => {
+        const more = contShuffle(CONT_SEA_LORE_MORE);
+        c.seas.forEach((s, i) => { if (rand() < more.length / (CONT_SEA_LORE.length + more.length) && more[i]) s.lore = more[i]; });
+    });
+    part('borders.more', () => {
+        const done = new Map();
+        c.nations.forEach((nat, k) => nat.borders.forEach(b => {
+            const key = `${Math.min(k, b.with)}-${Math.max(k, b.with)}-${b.kind}`;
+            if (!done.has(key)) {
+                const more = CONT_BORDER_MORE[b.kind], newer = contPick(more);
+                done.set(key, rand() < more.length / (CONT_BORDER[b.kind].length + more.length) ? newer : b.how);
+            }
+            b.how = done.get(key);
+        }));
     });
     return c;
 }

@@ -427,6 +427,32 @@ const HIS_ROLES_MORE = {
     treaty:    ['the translator', 'the witness who signed for the absent', 'the spy at the table']
 };
 
+// Third pass (R9): more roles, and more names for each form of realm.
+const HIS_ROLES_R9 = {
+    making:    ['the first singer', 'the one who stole fire', 'the first to break an oath'],
+    migration: ['the scout who found the pass', 'the herd-mother', 'the one who turned back'],
+    founding:  ['the first queen', 'the builder of the walls', 'the founder\'s faithless friend'],
+    empire:    ['the road-builder', 'the emperor\'s shadow', 'the rebel prince'],
+    golden:    ['the poet laureate', 'the inventor', 'the peacekeeper'],
+    war:       ['the boy general', 'the healer of the battlefield', 'the enemy\'s greatest captain'],
+    plague:    ['the rat-catcher', 'the alchemist who sold false cures', 'the last of the old family'],
+    cataclysm: ['the one who saw it coming', 'the wizard who tried to stop it', 'the rebuilder'],
+    fall:      ['the last loyal general', 'the usurper', 'the chronicler of the end'],
+    dark:      ['the hedge knight', 'the witch of the crossroads', 'the keeper of the flame'],
+    invasion:  ['the invaders\' queen', 'the hostage', 'the guerrilla captain'],
+    dragon:    ['the dragon\'s chosen', 'the shepherd who fed it', 'the hoard-thief\'s apprentice'],
+    rebellion: ['the firebrand', 'the reluctant king', 'the informer'],
+    schism:    ['the doubting bishop', 'the martyr', 'the hermit who refused both sides'],
+    treaty:    ['the envoy', 'the one who broke it first', 'the queen who married for peace']
+};
+const HIS_FORMS_MORE = {
+    kingdom:  ['the Lands of {r}', 'the High Kingdom of {r}', 'the Dominion of {r}'],
+    empire:   ['the Imperium of {r}', 'the Imperial Throne of {r}', 'the Great Realm of {r}'],
+    republic: ['the Commonwealth of {r}', 'the Free Towns of {r}', 'the Concord of {r}'],
+    holy:     ['the Theocracy of {r}', 'the Blessed Crown of {r}', 'the Faithful Realm of {r}'],
+    clans:    ['the Kindreds of {r}', 'the Hold of {r}', 'the Free Folk of {r}']
+};
+
 const HIS_START_KIND ={ gods: 'making', empire: 'empire', dark: 'dark', migration: 'migration' };
 
 // ── Helpers ──────────────────────────────────────────────
@@ -484,9 +510,11 @@ function rollHistory(seed, opts = {}) {
     const n = part('n.' + ages, () => a.min + Math.floor(rand() * (a.max - a.min + 1)));
 
     const used = new Set();
-    const st = { realm: null, old: null, prevKind: 'start', usedNames: new Set() };
+    // made: every realm in the order it rose (for the third pass's names).
+    const st = { realm: null, old: null, prevKind: 'start', usedNames: new Set(), made: [] };
     // An old empire is already standing when history starts.
     if (start === 'empire') part('first-realm', () => { st.realm = hisRealm('empire', hisRoot(used)); });
+    if (st.realm) st.made.push(st.realm);
     const list = [];
     for (let i = 0; i < n; i++) {
         list.push(part(`age.${i}.${start}`, () => hisRollAge(i, i === 0 ? HIS_START_KIND[start] : null, st, used)));
@@ -515,7 +543,42 @@ function rollHistory(seed, opts = {}) {
         const role = roles.length ? hisPick(roles) : null;
         if (rand() < roles.length / (K.roles.length + roles.length) && !x.figure.fixed) x.figure.role = role;
     }));
+    hisThirdPass(list, st, part, start);
     return { seed, ages, span, start, total, list, realm: st.realm, old: st.old };
+}
+
+// The third pass (R9), after everything else: newer figure roles, and newer names for the realms.
+// A realm's new name replaces its old one everywhere it was written, in every age.
+function hisThirdPass(list, st, part, start) {
+    list.forEach((x, i) => part(`age.${i}.${start}.r9`, () => {
+        const old = HIS_KINDS[x.kind].roles, more = HIS_ROLES_MORE[x.kind] || [], newest = HIS_ROLES_R9[x.kind] || [];
+        const role = hisPick(newest);
+        if (rand() < newest.length / (old.length + more.length + newest.length) && !x.figure.fixed && role) x.figure.role = role;
+    }));
+    const names = part(`realms.r9.${start}`, () => {
+        const out = new Map();
+        st.made.forEach(r => {
+            const more = HIS_FORMS_MORE[r.form] || [];
+            const newer = more.length ? hisPick(more).replace('{r}', r.root) : r.name;
+            const swap = rand() < more.length / (HIS_FORMS[r.form].length + more.length);
+            if (!out.has(r.name)) out.set(r.name, swap ? newer : r.name);
+        });
+        return out;
+    });
+    const renames = [...names].filter(([a, b]) => a !== b);
+    if (!renames.length) return;
+    // "the Kingdom of Vel" never matches inside "the Kingdom of Velan"; a capital The keeps its capital.
+    const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const swaps = renames.map(([a, b]) => [new RegExp("(?<![\\w'])([Tt])" + esc(a.slice(1)) + '(?![\\w])', 'g'), b.slice(1)]);
+    const fix = s => swaps.reduce((t, [re, rest]) => t.replace(re, (m, t0) => t0 + rest), s);
+    const walk = o => {
+        Object.keys(o).forEach(k => {
+            if (typeof o[k] === 'string') o[k] = fix(o[k]);
+            else if (o[k] && typeof o[k] === 'object') walk(o[k]);
+        });
+    };
+    list.forEach(walk);
+    st.made.forEach(r => { r.name = names.get(r.name) || r.name; });
 }
 
 function hisRollAge(i, forced, st, used) {
@@ -582,6 +645,7 @@ function hisRollAge(i, forced, st, used) {
     } else if (kind === 'schism' && st.realm && rand() < 0.3) {
         st.realm = hisRealm('holy', st.realm.root);
     }
+    if (st.realm && !st.made.includes(st.realm)) st.made.push(st.realm);
     vars.new = st.realm ? st.realm.name : vars.realm;
     vars.after = st.realm ? st.realm.name : null;
     vars.newRoot = st.realm ? st.realm.root : vars.realmRoot;
