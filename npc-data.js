@@ -797,6 +797,120 @@ function rollNames(count = 10, opts = {}) {
     return out;
 }
 
+// ── Second pass (R3): more lines to say and clothes to wear. swapNpcMore() swaps them in
+// from a stream of its own, so the caller's draws (and everything else an old link rolled) stay put.
+const NPC_DIALOGUE_MORE = {
+    greetings: [
+        "Strangers! Lovely. The last ones left in a hurry.",
+        "You made it through the pass. Most people bring back fewer arrows in them.",
+        "Welcome. Boots off if you're staying, swords off if you're not.",
+        "You're the ones from the notice board? You look smaller in person.",
+        "Hello there. Don't step on the chalk circle, I'm not finished.",
+        "You've got that look. The 'where's the nearest dungeon' look.",
+        "Oh good, you're not the tax collector. Come in.",
+        "Fresh faces! Quick, tell me something nobody here knows.",
+        "Evening. If you're here about the noise, it wasn't me.",
+        "Welcome to town. Population: fewer than last week.",
+        "Hail and well met. Mostly well met. We'll see.",
+        "Careful, the dog bites. The cat's worse."
+    ],
+    farewells: [
+        "Go on, then. Leave a legend, or at least a forwarding address.",
+        "If you find treasure, remember who pointed the way.",
+        "Mind the crows on the north road. They remember faces.",
+        "Don't trust any bridge that charges its toll in riddles.",
+        "I'd wave, but I'm holding something important.",
+        "Be back by spring. The festival needs heroes, or at least volunteers.",
+        "Keep your torches lit and your boots dry.",
+        "Farewell. Write, if you learn how.",
+        "May the road be short and the inns be cheap.",
+        "Don't come back cursed. The last lot did, and we're still cleaning up.",
+        "Go with the gods. Or ahead of them, if you're quick.",
+        "Take an umbrella. And a sword. Mostly the umbrella."
+    ],
+    gossip: [
+        "The blacksmith's apprentice sleeps in the forge. With the forge lit.",
+        "Old Widow Marsh has buried three husbands, and none of the graves are deep.",
+        "The magistrate's new hat came off a dead man. Everyone knows whose.",
+        "Somebody keeps leaving fresh flowers on the hanged man's grave.",
+        "The ferryman charges double after dark, and nobody knows where the money goes.",
+        "The bell-ringer swears the bell rang by itself last week.",
+        "The baron's twins are not twins. Count the teeth.",
+        "There's a door in the old wall that wasn't there last year.",
+        "The healer's cures work too well. Ask the goats.",
+        "Every cat in town left on the same night and came back with mud on their paws.",
+        "The innkeeper's 'cousin' has a sword and no last name.",
+        "The fishing boats keep catching the same fish. It has a scar."
+    ],
+    quest: [
+        "My shop was robbed and the watch shrugged. Do you shrug?",
+        "Something keeps knocking from inside the old well. Polite knocking.",
+        "I need a letter delivered. The recipient is in a tower. The tower is on fire.",
+        "My grandfather buried something in the hills. He drew a map. He couldn't draw.",
+        "Bandits took the tithe cart. The priests want it back before anyone notices.",
+        "There's a cellar under my cellar. I'd like to stop hearing it.",
+        "The lord pays well for wolf pelts. These wolves are very large.",
+        "A gold piece a head for whatever is eating my chickens. Its head.",
+        "The caravan's three days late. One driver is my husband. The other owes me money.",
+        "Escort job. Easy money. The cargo bites, but only sometimes.",
+        "There's a ghost in my mill, grinding all night. I want my sleep back.",
+        "Find out who's poisoning the river and I'll owe you."
+    ],
+    combat: [
+        "Last warning. The one before that was also the last.",
+        "I've been practicing. On scarecrows, mostly, but still.",
+        "You fight like my grandmother. She was terrifying.",
+        "If I win, you're buying. If you win, you're still buying.",
+        "Hold my drink. No, really hold it, it's expensive.",
+        "I'm not angry. I'm just very, very armed.",
+        "Let's keep this off the furniture.",
+        "Run now and I'll tell everyone you were brave.",
+        "I don't want to hurt you. I'm going to, but I don't want to.",
+        "My mother warned me about people like you. I didn't listen to her either.",
+        "Somebody fetch a healer. For them, not me.",
+        "Right. Sleeves up."
+    ]
+};
+const NPC_JOB_DIALOGUE_MORE = {
+    commoner: ["The lord's taxes took the pig. Now they want the pig's taxes.", "We had a hero through here once. He ate everything.", "Mud season, they call it. Every season is mud season.", "Can't stop to chat, the cow's loose again."],
+    merchant: ["Buy two and I'll pretend to be sad about the price.", "Quality goods! Some of them are even mine.", "I do a discount for heroes. Heroes pay up front.", "That's not a scratch, that's character."],
+    guard: ["I've been on shift since yesterday. Don't give me a reason.", "Weapons stay peace-bonded inside the walls. Yes, the dagger too.", "Lost? Good. Stay lost somewhere legal.", "The sergeant says I'm to be polite. So: please move."],
+    magic: ["The last apprentice asked that question. He's a newt now. A happy newt.", "Don't read anything aloud in here.", "I'm not mad, I'm differently enlightened.", "That spell? Easy. Ninety years of practice, then easy."],
+    criminal: ["Nice purse. Shame if someone admired it.", "I've got a cousin who knows a man. The man is very discreet.", "Rule one: no names. Rule two: see rule one.", "The watch and I are on very friendly terms. Bribes help."],
+    noble: ["My steward handles the peasants. You appear to be peasants.", "Is it raining? Someone should do something about that.", "Do bow. It's tradition, and I enjoy it.", "I once spoke to a commoner, you know. It was fine."],
+    religious: ["The temple roof leaks on the sinners first. Interesting, isn't it?", "Faith is free. Candles are a copper.", "I'll pray for you, and I'll keep it short.", "The gods forgive. The temple keeps records."],
+    adventurer: ["That scar? Gelatinous cube. Don't ask what it ate.", "Rule of thumb: if the treasure's in plain sight, it's bait.", "There were six of us once. Now it's me and a mule.", "Pay the healer first. Always pay the healer first."]
+};
+const NPC_ATTIRE_MORE = {
+    conditions: {
+        poor: ["Moth-eaten", "Sun-bleached", "Re-dyed", "Darned", "Much-mended", "Shabby", "Salt-stained", "Ill-fitting"],
+        mid: ["Freshly washed", "Smart", "Tidy", "Starched", "Good-quality", "Well-loved", "Plain but sturdy", "Freshly brushed"],
+        rich: ["Pearl-studded", "Satin", "Lace-edged", "Perfumed", "Tailored", "Damask", "Ermine-edged", "Silver-buttoned"]
+    },
+    garments: {
+        commoner: ["knitted jumper and canvas trousers", "shepherd's cloak", "kirtle and shawl", "fisher's oilskins"],
+        merchant: ["brocade waistcoat over a linen shirt", "fur-collared cloak", "merchant's robe with a purse at each hip", "tailored riding coat"],
+        guard: ["studded leather and a watchman's hood", "scale vest under a surcoat", "ranger's cloak and bracers", "sergeant's coat with tarnished braid"],
+        magic: ["robe stitched with silver runes", "patched academy gown", "smock full of burn holes", "high-collared mage's coat"],
+        criminal: ["dark hood and rag-wrapped boots", "stolen livery", "smuggler's oilcloak", "borrowed priest's robe"],
+        noble: ["slashed velvet doublet", "flowing gown with a train", "fencing jacket", "mantle with the family crest"],
+        religious: ["sackcloth robe", "white surplice", "travel-stained cassock", "robe with a stole of office"],
+        adventurer: ["leather armor patched with drake hide", "mismatched mail and plate", "weathered cloak over a brigandine", "monk's wrapped traveling clothes"]
+    }
+};
+
+// One of the newer lines in place of cur, by its share of the whole list (always two draws).
+function npcSwap(cur, old, more) {
+    const newer = randomArray(more);
+    return rand() < more.length / (old.length + more.length) ? newer : cur;
+}
+
+// The second pass, on a stream of its own: the part's seed when the NPC has one (so a
+// kept part keeps it), else one made from the NPC, so the caller's stream doesn't move.
+function npcMoreSeed(seeds, part, key) {
+    return seeds && seeds[part] ? deriveSeed(seeds[part], 'more') : deriveSeed(hashString(key).toString(36), part + '.more');
+}
+
 // The parts of an NPC that can be locked and rerolled on their own (F14).
 // identity = name, race, gender (and so speed and portrait); job = profession;
 // stats = abilities plus HP/AC (which follow the job and age).
@@ -908,14 +1022,24 @@ function rollNPC(opts = {}, seeds = null) {
     const feature = part('feature', () => raceOr(npcData.raceFeatures, npcData.features, 0.35));
     const clothing = part('clothing', () => {
         const a = npcData.attire;
-        const cat = partCategories.clothing;
-        return `${randomArray(a.conditions[a.tier[cat] || 'mid'])} ${randomArray(a.colors)} ${randomArray(a.garments[cat])}, ${randomArray(a.details)}`;
+        const cat = partCategories.clothing, band = a.tier[cat] || 'mid';
+        const look = { condition: randomArray(a.conditions[band]), color: randomArray(a.colors), garment: randomArray(a.garments[cat]), detail: randomArray(a.details) };
+        const said = `${look.condition} ${look.color} ${look.garment}, ${look.detail}`;
+        withSeed(npcMoreSeed(seeds, 'clothing', name + '|' + said), () => {
+            look.condition = npcSwap(look.condition, a.conditions[band], NPC_ATTIRE_MORE.conditions[band]);
+            look.garment = npcSwap(look.garment, a.garments[cat], NPC_ATTIRE_MORE.garments[cat]);
+        });
+        return `${look.condition} ${look.color} ${look.garment}, ${look.detail}`;
     });
 
     const dialogue = part('dialogue', () => {
-        const general = randomArray(npcData.dialogue[randomArray(['greetings', 'farewells', 'gossip', 'quest', 'combat'])]);
+        const kind = randomArray(['greetings', 'farewells', 'gossip', 'quest', 'combat']);
+        const general = randomArray(npcData.dialogue[kind]);
         const job = randomArray(npcData.jobDialogue[partCategories.dialogue]);
-        return rand() < 0.4 ? job : general;
+        const useJob = rand() < 0.4, line = useJob ? job : general;
+        return withSeed(npcMoreSeed(seeds, 'dialogue', name + '|' + line), () => useJob
+            ? npcSwap(line, npcData.jobDialogue[partCategories.dialogue], NPC_JOB_DIALOGUE_MORE[partCategories.dialogue])
+            : npcSwap(line, npcData.dialogue[kind], NPC_DIALOGUE_MORE[kind]));
     });
     const voice = part('voice', () => randomArray(npcData.voices));
     const doing = part('doing', () => {
