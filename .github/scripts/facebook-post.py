@@ -133,7 +133,7 @@ def main():
         print("No new articles to post.")
         return
 
-    page, token = os.environ.get("FB_PAGE_ID"), os.environ.get("FB_PAGE_TOKEN")
+    page, token = (os.environ.get(k, "").strip() for k in ("FB_PAGE_ID", "FB_PAGE_TOKEN"))
     if not args.dry_run and not (page and token):
         raise SystemExit("FB_PAGE_ID and FB_PAGE_TOKEN must be set.")
 
