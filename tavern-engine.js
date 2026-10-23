@@ -431,6 +431,113 @@ const TAVERN_SPECIAL_ROOMS = [
     { name: 'The room with the painted ceiling (try not to look too long)', mult: 1.2 }
 ];
 
+// ── Second pass (R2). A later draw (more) swaps these in by their share of the whole
+// list, so an old link keeps its owner, staff, regulars, and prices.
+const TAVERN_DISHES_MORE = {
+    squalid: ['Fried bread and lard', 'Gristle pie', 'Soup of the week, by the week', 'Turnip tops in hot water',
+        'Sheep\'s-head broth, head included', 'Cold porridge, cut in slices'],
+    poor: ['Barley bannocks and buttermilk', 'Beans and bacon rind', 'Faggots in onion gravy', 'Jellied eels',
+        'Kale and oat broth', 'Mashed neeps with a sausage'],
+    modest: ['Chicken and leek pie', 'Smoked haddock with a poached egg', 'Beef stew with dumplings', 'Ploughman\'s board with three cheeses',
+        'Mutton chops and minted peas', 'Giant-crab cakes (one crab, many cakes)'],
+    comfortable: ['Roast pork with crackling', 'Salmon baked in a salt crust', 'Venison sausages on barley mash', 'Steak and kidney pudding',
+        'Partridge with bread sauce', 'Baked pears with honey and walnuts'],
+    wealthy: ['Turbot in saffron cream', 'Spiced crab served in its shell', 'Wild duck with blackcurrants', 'Rack of lamb in a herb crust',
+        'Chilled melon in elven wine', 'Hippogriff-egg soufflé'],
+    aristocratic: ['A whole roast boar with a gilded apple', 'Sea serpent steaks seared at the table', 'Oyster stew with the pearls left in',
+        'Unicorn-shaped jelly (no unicorns harmed)', 'Twelve-bird roast, carved by the chef', 'Frost giant cheese, aged a century']
+};
+const TAVERN_DRINKS_MORE = {
+    squalid: ['Wet Sock Stout', 'Last week\'s mead', 'Boot-strained beer', 'Cellar-damp cider', 'Rusty Nail (it has one in it)', 'Grain spirit of no fixed grain'],
+    poor: ['Barley water with a splash', 'Crabapple cider', 'Gorse wine', 'Spruce beer', 'Thin mead', 'Farm-still rye'],
+    modest: ['Oatmeal stout', 'Brown ale with honey', 'Pear cider', 'Gnomish ginger ale', 'Hot buttered ale', 'Rhubarb wine'],
+    comfortable: ['Apple brandy', 'Rosehip mead', 'Smoked cherry porter', 'Honey whiskey', 'Mulled red with orange peel', 'Elven pale ale'],
+    wealthy: ['Aged dwarven rye', 'Sparkling wine with blackcurrant cordial', 'Twenty-year tawny port', 'Elven moonpetal wine',
+        'Glacier-cold rye spirit', 'Spiced coffee with cream and rum'],
+    aristocratic: ['Wine pressed by dryads', 'Cloudberry brandy from the giant-lands', 'Sunfire whiskey (it glows faintly)',
+        'Mead from the bees of a celestial garden', 'Ambrosia (one sip per guest)', 'Pearl wine from the merfolk courts']
+};
+// More of what each kind of place is known for (only kinds that already have one).
+const TAVERN_KIND_MORE = {
+    'roadside inn': { dish: ['Road stew (the pot is never empty, or washed)', 'Hard-boiled eggs for the road'], drink: ['Dust-cutter cider', 'Crossroads gin'] },
+    'coaching inn': { dish: ['Drover\'s hotpot', 'Pork pie in a paper wrap'], drink: ['The coachman\'s hot toddy', 'Post-horse porter'] },
+    'dockside tavern': { dish: ['Smoked eel and black bread', 'Crab boiled in seawater'], drink: ['Grog, three parts water', 'Harbor-master\'s rum'] },
+    'flophouse': { dish: ['Bread and dripping from yesterday\'s pan', 'Broth of the day (any day)'] },
+    'brewhouse': { drink: ['The brewer\'s seasonal (ask what it is this week)', 'Unfiltered wheat beer, cloudy as fog'] },
+    'mountain lodge': { dish: ['Melted mountain cheese with bread', 'Barley soup with smoked mutton'], drink: ['Pine-needle schnapps', 'Hot butter mead'] },
+    'gambling hall': { drink: ['The house edge (a sweet punch)', 'Double-or-nothing whiskey'] },
+    'festhall': { dish: ['Little cakes iced with the guests\' faces', 'Towers of candied fruit'] },
+    'temple hostel': { drink: ['Pilgrim\'s barley water, blessed', 'Abbey mead'] },
+    'riverboat inn': { dish: ['Pike fried in butter', 'Crayfish by the bucket'], drink: ['Bargee\'s bitter', 'Lock-keeper\'s plum brandy'] },
+    'dwarven alehall': { dish: ['Cave-mushroom pie', 'Smoked goat and black bread'], drink: ['Deepdelver dark ale', 'Firebeard whiskey'] },
+    'halfling burrow-inn': { dish: ['Elevenses platter (all day)', 'Mushroom and bacon pasties'], drink: ['Pipeweed-smoked porter', 'Blackberry cordial, Gran\'s recipe'] },
+    'woodland lodge': { dish: ['Rabbit roasted on the hearth', 'Nettle soup with forest bread'], drink: ['Birch-sap wine', 'Wild-bee mead'] },
+    'cellar bar': { drink: ['The bootlegger\'s rye', 'Bitters as green as the bottle'] }
+};
+const TAVERN_CROWD_MORE = ['Full of farmers in for the market tonight', 'Mostly off-duty soldiers tonight', 'Half empty, and the half that is here is loud',
+    'Standing room only near the fire', 'A few travelers and one very old regular', 'Full of sailors on shore leave tonight',
+    'Quiet enough to hear the cat purr', 'Crowded with a wedding party and all its cousins'];
+const TAVERN_TONIGHT_MORE = [
+    'A troupe of acrobats is practicing in the rafters, mostly successfully.',
+    'A traveling tinker is mending pots and handing out gossip for free.',
+    'A lord\'s hunting party has come in muddy and loud, with a dead boar on a pole.',
+    'A gnome is showing off a tap that pours by itself. It is pouring, and it won\'t stop.',
+    'The regulars are holding a mock trial of the cat, for the theft of a sausage.',
+    'An old soldier is teaching anyone who will listen how to hold a pike, using a broom.',
+    'Twins are taking turns at the bar, and the barkeep thinks one man has had eleven drinks.',
+    'A dance night. The fiddler is very fast and the floor is very small.',
+    'Pilgrims are singing hymns in one corner and sailors are singing something else in the other.',
+    'A dwarven caravan is celebrating a good deal and paying for everything in raw silver.',
+    'Story night: the best ghost story wins a free room, and one teller swears theirs is true.',
+    'An elf is waiting for a friend who said "meet me here" a hundred years ago.',
+    'A painter is sketching the regulars for a mural and charging extra to make them handsome.',
+    'The first barrel of the new brew is being tapped, and the whole street has turned up.'
+];
+const TAVERN_RULES_MORE = ['No spells above a whisper.', 'The cat outranks you.', 'No arm-wrestling on the good table.',
+    'Dwarves pay for the stools they break. So does everyone else.', 'Pay in coin, not in "exciting opportunities."', 'No selling maps at the bar.',
+    'Gnomish inventions stay outside.', 'Trophies stay outside, especially the heads.', 'If the barkeep says you\'ve had enough, you have.',
+    'No invisible patrons. Everyone gets counted.', 'Leave the fire alone. It has been lit for forty years.', 'Wager disputes go to the cook, whose ruling is final.',
+    'Talk business in the back room, not at the bar.', 'No drinking from your own flask.', 'Mounts stay in the stable, however small.',
+    'Lie to the barkeep and you drink elsewhere.'];
+const TAVERN_GAMES_MORE = [
+    { name: 'Shove-copper', how: 'Slide a copper down the bar toward the edge. Dexterity checks: the highest total wins, but a 20 or more sails off the end and loses.' },
+    { name: 'Toad racing', how: 'Pick a toad (there are five) and roll a d4 for it each round. The first to ten hops wins. One toad always just sits there.' },
+    { name: 'Candle and coin', how: 'Snuff a candle across the table by flicking a coin at it. Dexterity, DC 15. The house relights it for a copper.' },
+    { name: 'Tankard tower', how: 'Stack empty tankards in turns. Dexterity (Sleight of Hand), DC 8 plus the number already stacked. Whoever topples it buys the round.' },
+    { name: 'Slaps', how: 'Hands stacked on the table. Opposed Dexterity checks; the winner slaps, and the loser pays a copper a slap. Three slaps ends it.' },
+    { name: 'The dragon\'s hoard', how: 'Everyone puts a coin in and draws a token from a bag; whoever draws the dragon takes the hoard. A DC 16 Sleight of Hand check palms a second token.' },
+    { name: 'Tall tales', how: 'Each player tells a story of their own deeds and the table votes. Charisma (Performance) checks; a DC 13 Wisdom (Insight) catches an outright lie, which forfeits.' },
+    { name: 'Axe throwing', how: 'Three throws at a log in the yard: attack rolls against AC 12, 14, and 16. Hit all three to take the pot; miss all three and pay for the log.' },
+    { name: 'Stones and pits', how: 'A board of pits and pebbles. Opposed Intelligence checks, best of three; a natural 20 clears the board.' },
+    { name: 'Last one standing', how: 'Everyone rolls a d12; the lowest drops out each round until one is left. Pay double the stake once to reroll.' }
+];
+const TAVERN_TROUBLE_MORE = [
+    'A noble\'s runaway child is hiding upstairs, and the noble\'s men are asking questions downstairs.',
+    'The new barmaid is a doppelganger, and the real one is tied up in the pantry. DC 15 Wisdom (Insight) to notice she doesn\'t know the regulars.',
+    'A smuggler has stashed a crate under the party\'s table and is coming back for it, with friends.',
+    'A wizard\'s familiar has got loose and is stealing shiny things from the guests.',
+    'Someone has been adding drinks to the party\'s tab all night. A DC 13 Intelligence (Investigation) check on the slate shows the handwriting changes.',
+    'A gang is collecting protection money tonight, and the owner can\'t pay.',
+    'Two guests were sold the same room, and both of them have swords.',
+    'The common-room floor is sagging over the cellar. A DC 12 Wisdom (Perception) check hears it crack.',
+    'A drunk has stolen a horse from the stable and is riding it round and round the yard.',
+    'A rival tavern has paid someone to start a brawl tonight. A DC 14 Wisdom (Insight) check spots the plant.',
+    'A guest\'s pet snake has got into the walls, and the guest won\'t say how big it is.',
+    'The new strongbox behind the bar is a mimic, and the barkeep is about to open it.',
+    'An old enemy of the owner has taken a room under a false name, and has brought a crossbow.',
+    'A traveler upstairs is coughing badly, and the guests in the next rooms have started coughing too.'
+];
+const TAVERN_SPECIAL_ROOMS_MORE = [
+    { name: 'The room with the round bed (a gnome designed it)', mult: 1.3 },
+    { name: 'The attic with a view of the stars (and the drafts)', mult: 0.7 },
+    { name: 'The room the last adventurers never came back for (their gear is still in it)', mult: 0.8 },
+    { name: 'The room with a balcony over the square', mult: 1.5 },
+    { name: 'The cellar room (cool, quiet, close to the barrels)', mult: 0.6 },
+    { name: 'The room with the portrait whose eyes follow you', mult: 0.9 },
+    { name: 'The room with its own copper bath', mult: 2 },
+    { name: 'The room that stays cold even in summer', mult: 0.6 }
+];
+
 const TAVERN_OWNER_ROLES = ['Owner and barkeep', 'Innkeeper', 'Proprietor', 'Owner and cook', 'Landlord', 'Owner (inherited it, regrets it)',
     'Owner (won it in a card game)', 'Retired adventurer and owner', 'Co-owner (the other one is never in)', 'Owner and brewer',
     'Manager (the real owner is a dragon, they say)', 'Owner (bought it with a reward and a dream)', 'Host and owner', 'Widowed owner, keeping it going',
@@ -439,6 +546,49 @@ const TAVERN_OWNER_ROLES = ['Owner and barkeep', 'Innkeeper', 'Proprietor', 'Own
 // {owner}, {other}, {regular}, plus npc-data's {kin} etc.
 function tavernFill(text, ctx) {
     return fillTemplate(text.replace(/\{(owner|other|regular)\}/g, (m, k) => ctx[k] || 'the owner'));
+}
+
+// One of the newer lines in place of cur, by its share of the whole list (always two draws).
+function tavernSwap(cur, old, more) {
+    const newer = randomArray(more);
+    return rand() < more.length / (old.length + more.length) ? newer : cur;
+}
+
+// The second pass (R2): drawn after everything else, so old links keep their tavern.
+function tavernSecondPass(tv) {
+    const { menu, kind } = tv, tier = tv.tier;
+    const taken = new Set([...menu.food, ...menu.drink].map(i => i.name));
+    const swapItem = (i, old, more) => {
+        const next = tavernSwap(i.name, old, more);
+        if (next !== i.name && !taken.has(next)) { taken.add(next); i.name = next; }
+    };
+    menu.food.forEach(i => { if (i.src === 'house' && !i.known) swapItem(i, TAVERN_DISHES[tier], TAVERN_DISHES_MORE[tier]); });
+    // Not the owner's own brew.
+    menu.drink.forEach(i => { if (TAVERN_DRINKS[tier].includes(i.name)) swapItem(i, TAVERN_DRINKS[tier], TAVERN_DRINKS_MORE[tier]); });
+    const km = TAVERN_KIND_MORE[kind.label] || {};
+    if (kind.dish && km.dish) {
+        const known = menu.food.find(i => i.known);
+        swapItem(known, [kind.dish], km.dish);
+        kind.dish = known.name;
+    }
+    if (kind.drink && km.drink) {
+        const known = menu.drink.find(i => i.known);
+        swapItem(known, [kind.drink], km.drink);
+        kind.drink = known.name;
+    }
+    const special = tv.rooms.list.find(r => TAVERN_SPECIAL_ROOMS.some(x => x.name === r.name));
+    const room = randomArray(TAVERN_SPECIAL_ROOMS_MORE), price = tavernPrice(TAVERN_TIERS[tier].stay * room.mult);
+    if (special && rand() < TAVERN_SPECIAL_ROOMS_MORE.length / (TAVERN_SPECIAL_ROOMS.length + TAVERN_SPECIAL_ROOMS_MORE.length)) {
+        special.name = room.name;
+        special.gp = price;
+    }
+    tv.scene.crowd = tavernSwap(tv.scene.crowd, TAVERN_SCENES.crowd, TAVERN_CROWD_MORE);
+    tv.rule = tavernSwap(tv.rule, TAVERN_RULES, TAVERN_RULES_MORE);
+    const g = randomArray(TAVERN_GAMES_MORE);
+    if (rand() < TAVERN_GAMES_MORE.length / (TAVERN_GAMES.length + TAVERN_GAMES_MORE.length)) Object.assign(tv.game, { name: g.name, how: g.how });
+    tv.tonight = tavernSwap(tv.tonight, TAVERN_TONIGHT, TAVERN_TONIGHT_MORE);
+    const trouble = tavernSwap(tv.trouble, TAVERN_TROUBLE, TAVERN_TROUBLE_MORE);
+    if (tv.trouble) tv.trouble = trouble;
 }
 
 // opts: { quality: tier key or 'random' }. Returns the tavern without a rumor.
@@ -556,7 +706,9 @@ function rollTavern(seed, opts = {}) {
     const tonight = part('tonight', () => randomArray(TAVERN_TONIGHT));
     const trouble = part('trouble', () => { const x = randomArray(TAVERN_TROUBLE); return rand() < 0.65 ? x : null; });
 
-    return { seed, name, tier, kind, owner, staff, regulars, menu, rooms, quirk, scene, sign, history, rule, game, tonight, trouble };
+    const tv = { seed, name, tier, kind, owner, staff, regulars, menu, rooms, quirk, scene, sign, history, rule, game, tonight, trouble };
+    part('more', () => tavernSecondPass(tv));
+    return tv;
 }
 
 function tavernNpcLine(n) {
