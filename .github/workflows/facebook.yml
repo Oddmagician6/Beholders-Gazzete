@@ -1,0 +1,44 @@
+# Schedules each new article (not Across the Multiverse) as a Facebook Page post,
+# a few hours apart. Secrets: FB_PAGE_ID, FB_PAGE_TOKEN.
+name: Post to Facebook
+
+on:
+  push:
+    branches: [main]
+    paths: [articles.json]
+  workflow_dispatch:
+    inputs:
+      ids:
+        description: Article ids to post (comma-separated)
+        required: true
+      dry_run:
+        description: Only print the schedule
+        type: boolean
+        default: true
+
+concurrency: facebook
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch the previous commit
+        if: github.event_name == 'push'
+        run: git fetch --depth=1 origin ${{ github.event.before }} || true
+
+      - name: Schedule posts
+        env:
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+          BEFORE: ${{ github.event.before }}
+          IDS: ${{ inputs.ids }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          if [ -n "$IDS" ]; then
+            python3 .github/scripts/facebook-post.py --ids "$IDS" $([ "$DRY_RUN" = true ] && echo --dry-run)
+          else
+            python3 .github/scripts/facebook-post.py --before "$BEFORE"
+          fi
