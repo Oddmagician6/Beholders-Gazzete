@@ -663,6 +663,54 @@ const SITE_TRAPS = [
     { name: 'Rotten deck', trigger: 'The boards in the middle of the room are soft as bread.', kinds: ['shipwreck'], disarm: 'walk along the beams at the edge (no check, once found)', effect: 'The first creature over them makes a DC {dc} Dexterity saving throw or falls through to the deck below, taking {dmg} bludgeoning damage.' },
     { name: 'Burning lens', trigger: 'A lever swings a great lens round to focus the light on the doorway.', kinds: ['lighthouse'], disarm: 'DC {dc} Strength check to jam the lens, or cover it (no check, once found)', effect: 'Everyone in a 5-foot-wide line across the room makes a DC {dc} Dexterity saving throw or takes {dmg} fire damage; half damage on a success.' }
 ];
+// ── Third pass (R6). More traps and boss-room hazards. Each swaps in under a seed of its own
+// (trap.<room>.more, ground.more), by its share of the whole list, so an old link keeps its rooms.
+const SITE_TRAPS_MORE = [
+    { name: 'Acid jar', trigger: 'A jar of acid balanced over the door tips onto whoever opens it.', disarm: "DC {dc} Dexterity check with thieves' tools to lift the jar down, or push the door open with a pole (no check, once found)", effect: 'DC {dc} Dexterity saving throw or take {dmg} acid damage; half damage on a success.' },
+    { name: 'Tilting floor', trigger: 'A slab of floor tips on a pivot when weight reaches its middle, sliding whoever is on it toward a spiked trench.', disarm: 'wedge the pivot with iron spikes (no check, once found)', effect: 'Everyone on the slab makes a DC {dc} Dexterity saving throw or slides into the trench and takes {dmg} piercing damage.' },
+    { name: 'Locking door', trigger: 'The door swings shut and bolts itself once the last creature is through.', disarm: "DC {dc} Dexterity check with thieves' tools to jam the bolt open", effect: "It hurts nobody, but it shuts the party in. Picking the lock takes a DC {dc} Dexterity check with thieves' tools; breaking the door takes a DC {dc} Strength (Athletics) check, and everything nearby hears it." },
+    { name: 'Spiked ceiling', trigger: 'A false ceiling studded with spikes drops 5 feet when a plate in the floor is stepped on.', disarm: "DC {dc} Dexterity check with thieves' tools to jam the plate", effect: 'Everyone in a 10-foot square makes a DC {dc} Dexterity saving throw or takes {dmg} piercing damage; half damage on a success.' },
+    { name: 'Blinding powder', trigger: 'Bellows hidden in the wall blow out a cloud of pepper and chalk when a loose stone is stepped on.', disarm: "DC {dc} Dexterity check with thieves' tools to cut the bellows hose", effect: 'Everyone within 10 feet makes a DC {dc} Constitution saving throw or is blinded for 1 minute, repeating the save at the end of each of their turns.' },
+    { name: 'Snare', trigger: 'A noose hidden in the dust yanks whoever steps in it up toward the ceiling.', disarm: "DC {dc} Dexterity check with thieves' tools, or set it off with a pole (no check, once found)", effect: 'DC {dc} Dexterity saving throw or be hauled up by one ankle and restrained, hanging 10 feet up. A DC {dc} Strength check, or cutting the rope, frees them, and they fall.' },
+    { name: 'Thunder stone', trigger: 'A stone in the floor booms like a great drum when stepped on.', disarm: 'DC {dc} Intelligence (Arcana) check to quiet it, or step round it (no check, once found)', effect: 'Everyone within 10 feet makes a DC {dc} Constitution saving throw or takes {dmg} thunder damage and is deafened for 1 minute; half damage and not deafened on a success. Everything nearby hears it.' },
+    { name: 'Grasping hands', trigger: 'Bony arms burst out of the floor when someone walks the middle of the room.', kinds: ['crypt', 'barrow', 'temple'], disarm: 'DC {dc} Intelligence (Religion) check to speak the rite that keeps them still', effect: 'DC {dc} Strength saving throw or be grappled and restrained until the creature escapes (DC {dc} Strength (Athletics)) or the arms are broken (AC 12, 10 hit points).' },
+    { name: 'Grave dust', trigger: 'Lifting the lid of a sarcophagus breaks a seal, and a cloud of black dust pours out.', kinds: ['crypt', 'barrow', 'temple'], disarm: 'open it from a distance with a rope (no check, once found)', effect: 'Everyone within 10 feet makes a DC {dc} Constitution saving throw or takes {dmg} necrotic damage; half damage on a success.' },
+    { name: 'Cave-in', trigger: 'A rope across the tunnel at ankle height is tied to the one prop holding up the roof.', kinds: ['mine', 'lair', 'barrow'], disarm: "DC {dc} Dexterity check with thieves' tools to untie it without pulling", effect: 'Everyone in a 10-foot square makes a DC {dc} Dexterity saving throw or takes {dmg} bludgeoning damage and is buried (restrained) until dug out; half damage and not buried on a success.' },
+    { name: 'Teleport circle', trigger: 'A faint circle on the floor sends whoever steps into it somewhere else in the place.', kinds: ['tower', 'temple', 'manor'], disarm: 'DC {dc} Intelligence (Arcana) check to break the circle, or dispel magic', effect: "DC {dc} Wisdom saving throw or be teleported, alone, to another room of the DM's choosing." },
+    { name: 'Frost sigil', trigger: 'A rime-white sigil painted on a step freezes the air around whoever treads on it.', kinds: ['tower', 'temple', 'keep'], disarm: 'DC {dc} Intelligence (Arcana) check to scrape it out safely, or dispel magic', effect: 'Everyone within 10 feet makes a DC {dc} Constitution saving throw or takes {dmg} cold damage and has their speed halved until the end of their next turn; half damage and no slowing on a success.' },
+    { name: 'Offering bowl', trigger: "A bronze bowl stands before the altar. Taking anything from the room without leaving a coin in it calls down the god's anger.", kinds: ['temple', 'crypt'], disarm: 'leave a coin in the bowl (no check, once understood)', effect: 'The thief makes a DC {dc} Wisdom saving throw or takes {dmg} radiant damage; half damage on a success.' },
+    { name: 'Caltrop floor', trigger: 'The straw on the floor hides a scatter of caltrops.', kinds: ['fort', 'keep', 'lair'], disarm: 'sweep a path clear (no check, once found)', effect: 'Anyone who moves through at more than half speed makes a DC {dc} Dexterity saving throw or takes {dmg} piercing damage and has their speed reduced by 10 feet until they regain a hit point.' },
+    { name: 'Trapdoor floor', trigger: 'The middle of the passage is one big trapdoor, held by a bolt that gives under the weight of two people.', kinds: ['fort', 'keep', 'manor'], disarm: "DC {dc} Dexterity check with thieves' tools to pin the hinges", effect: 'Everyone on it makes a DC {dc} Dexterity saving throw or falls 20 feet into a locked cell below, taking {dmg} bludgeoning damage.' },
+    { name: 'Bone rattle', trigger: 'Strings of old bones hang across the way and rattle at the lightest touch.', kinds: ['lair', 'barrow', 'seacave'], disarm: 'DC {dc} Dexterity (Stealth) check to hold them still and slip through', effect: 'Whatever lives here knows the party is coming: the fight in the last room is ready and waiting, and no one there is surprised.' },
+    { name: 'Deadfall', trigger: 'A heavy log hangs over the way in, held up by a cord across the floor.', kinds: ['lair', 'mine', 'fort'], disarm: "DC {dc} Dexterity check with thieves' tools to tie off the cord", effect: 'DC {dc} Dexterity saving throw or take {dmg} bludgeoning damage and be knocked prone; half damage and not prone on a success.' },
+    { name: 'Slick ledge', trigger: 'The ledge beside the channel is coated in slime, and narrows at a bend.', kinds: ['sewer', 'seacave'], disarm: 'rope everyone together (no check, once found)', effect: 'Each creature that crosses makes a DC {dc} Dexterity saving throw or slips into the water, takes {dmg} bludgeoning damage on the rocks, and is carried 20 feet along.' },
+    { name: 'Kelp snare', trigger: 'Kelp grows thick in a flooded stretch of floor and wraps the legs of anyone who wades in.', kinds: ['seacave', 'shipwreck'], disarm: 'cut a path through with blades (no check, once found)', effect: 'DC {dc} Strength saving throw or be restrained and pulled under, and start to drown. A DC {dc} Strength (Athletics) check, or cutting the kelp (AC 10, 10 hit points), frees a creature.' },
+    { name: 'Shifting cargo', trigger: 'Crates stacked to the beams are held up by a single rotten strap.', kinds: ['shipwreck', 'seacave', 'fort'], disarm: 'lash the stack with fresh rope (no check, once found)', effect: 'Everyone within 10 feet of the stack makes a DC {dc} Dexterity saving throw or takes {dmg} bludgeoning damage and is pinned (restrained) under the crates; half damage and not pinned on a success.' },
+    { name: 'Gale shutter', trigger: 'Opening the door throws open a shutter on the far wall, and the wind tears through.', kinds: ['lighthouse', 'tower'], disarm: "DC {dc} Dexterity check with thieves' tools to unhook the shutter's cord", effect: 'Everyone in the room makes a DC {dc} Strength saving throw or is pushed 15 feet toward the door and knocked prone. Every flame in the room goes out.' },
+    { name: 'Poisoned wine', trigger: 'A table is laid for a feast, with a decanter of good wine already poured.', kinds: ['manor', 'keep'], disarm: 'leave the wine alone (no check)', effect: 'Anyone who drinks makes a DC {dc} Constitution saving throw or takes {dmg} poison damage and is poisoned for 1 hour; half damage and not poisoned on a success.' },
+    { name: 'Turning bookcase', trigger: 'Pulling the wrong book swings a bookcase round, sweeping whoever is in front of it into a cell behind the wall.', kinds: ['manor', 'tower'], disarm: 'DC {dc} Intelligence (Investigation) check to find the right book, or wedge the bookcase still (no check, once found)', effect: 'DC {dc} Dexterity saving throw or be shut in the cell behind, alone, until someone finds the right book. The air in there lasts an hour.' }
+];
+// Boss-room hazards by kind, besides each kind's own two; and a few that suit any kind.
+const SITE_HAZARDS_MORE = {
+    crypt: ['Coffins lie on rotten shelves along the walls. A heavy blow to a wall brings a shelf down: everyone within 5 feet of it makes a DC {dc} Dexterity saving throw or takes {dmg} bludgeoning damage and is knocked prone.', 'Candles burn in niches all round the room. Whenever a creature drops to 0 hit points here, every one of them gutters out, and anyone in the room makes a DC {dc} Wisdom saving throw or is frightened until the end of their next turn.'],
+    mine: ['An ore cart stands at the top of a rail slope. Kicking out its chock (an action) sends it down a 30-foot line: everyone in it makes a DC {dc} Dexterity saving throw or takes {dmg} bludgeoning damage and is knocked prone.', 'One side of the floor drops into a flooded shaft. Anyone who goes in makes a DC {dc} Constitution saving throw at the start of each of their turns in the black water or takes {dmg} cold damage.'],
+    tower: ['A great brass orrery hangs from the ceiling. Hitting it hard (AC 15) sets its arms spinning for a round: everyone within 10 feet of the middle makes a DC {dc} Dexterity saving throw or takes {dmg} bludgeoning damage.', 'The windows are open to a long drop. A creature shoved within 5 feet of one makes a DC {dc} Dexterity saving throw or goes over the sill, catching the ledge outside, and needs an action to climb back in.'],
+    temple: ['The floor slopes into a pool of black water. Anyone who starts a turn in it makes a DC {dc} Strength saving throw or is dragged under toward a drain grate, taking {dmg} bludgeoning damage.', "The god's eye is set in the ceiling, a lens of colored glass. Anyone who strikes the altar beneath it makes a DC {dc} Constitution saving throw or takes {dmg} radiant damage; half damage on a success."],
+    fort: ['A ladder runs up to a platform with a bell. Anyone who rings it (an action) brings whoever else is in the fort running, in 3 rounds.', 'Firewood is stacked against a timber wall. Fire that touches it lights the wall: from the next round on, anyone who starts a turn within 10 feet of it makes a DC {dc} Constitution saving throw or takes {dmg} fire damage.'],
+    lair: ['Old bones cover the floor and roll underfoot: difficult terrain, and anyone who dashes across makes a DC {dc} Dexterity saving throw or falls prone.', "A stinking pool in one corner is where the beast drops what it doesn't eat. Anyone who falls in makes a DC {dc} Constitution saving throw or takes {dmg} poison damage and is poisoned until the end of their next turn."],
+    keep: ['A wall stands half fallen and leaning. A hit that deals 20 damage or more to it brings it down: everyone in a 10-foot strip beside it makes a DC {dc} Dexterity saving throw or takes {dmg} bludgeoning damage.', 'Ivy and rotten tapestries cover the walls. Fire that touches them runs round the room in a round: everyone within 5 feet of a wall makes a DC {dc} Dexterity saving throw or takes {dmg} fire damage; half damage on a success.'],
+    sewer: ['A grate in the floor opens onto a cistern far below. Prying it loose (DC 15 Strength) drops it: anyone on it makes a DC {dc} Dexterity saving throw or falls 20 feet into the water, taking {dmg} bludgeoning damage.', 'Rats pour out of the walls at the smell of blood. At the start of each round, anyone below half their hit points makes a DC {dc} Dexterity saving throw or takes {dmg} piercing damage.'],
+    seacave: ['Smuggled lamp oil is stacked in barrels by the landing. A barrel that breaks spreads a slick 10 feet across: difficult terrain, and if fire touches it, everyone on it makes a DC {dc} Dexterity saving throw or takes {dmg} fire damage.', 'A blowhole in the floor spouts with the swell. Each round, roll a d6: on a 1, it throws anyone standing over it 15 feet up (DC {dc} Dexterity saving throw or take {dmg} bludgeoning damage on landing).'],
+    shipwreck: ['The broken mast lies across the hold on a heap of loose cargo. Knocking the cargo out from under it (DC 15 Strength) rolls it across the deck: everyone in a 10-foot-wide line makes a DC {dc} Dexterity saving throw or takes {dmg} bludgeoning damage and is knocked prone.', 'Ankle-deep water sloshes through the hold and hides holes in the planking. Anyone who moves more than half their speed makes a DC {dc} Dexterity saving throw or puts a foot through and takes {dmg} piercing damage.'],
+    lighthouse: ['The stair spirals round an open drop in the middle of the tower. A creature knocked prone on it makes a DC {dc} Dexterity saving throw or slides off and falls 20 feet, taking {dmg} bludgeoning damage.', 'A storm howls outside. Each round, roll a d6: on a 1, a gust tears through the gallery door, and everyone near it makes a DC {dc} Strength saving throw or is pushed 10 feet and knocked prone.'],
+    manor: ['A harpsichord in the corner plays by itself. Anyone who starts a turn within 10 feet of it while it plays makes a DC {dc} Wisdom saving throw or takes {dmg} psychic damage; half damage on a success.', 'The portraits watch. Once a round, a painted hand reaches out of a frame at a random creature beside a wall: DC {dc} Dexterity saving throw or take {dmg} necrotic damage.'],
+    barrow: ['A dozen old spears stand point-up in the earth among the grave goods. A creature shoved into them makes a DC {dc} Dexterity saving throw or takes {dmg} piercing damage.', "A cold mist rises from the chief's bed whenever blood is spilled on it. Anyone who starts a turn within 10 feet of the bed while the mist is up makes a DC {dc} Constitution saving throw or takes {dmg} cold damage; half damage on a success."]
+};
+const SITE_HAZARDS_ANY = [
+    'Braziers of hot coals stand at the corners. Knocking one over (an action, or a shove into it) spills them: everyone in a 10-foot square makes a DC {dc} Dexterity saving throw or takes {dmg} fire damage.',
+    'A heavy chain with a hook on its end hangs from the ceiling. Swinging it (an action) sweeps a 10-foot-wide arc: everyone in it makes a DC {dc} Dexterity saving throw or takes {dmg} bludgeoning damage and is knocked prone.',
+    'Smoke from a smoldering fire fills the top half of the room. Anyone flying, climbing, or standing on something high is heavily obscured, and makes a DC {dc} Constitution saving throw at the start of each of their turns there or loses their reaction until their next turn.'
+];
 const SITE_TRAP_SEVERITY = [['setback', 50, [10, 11]], ['dangerous', 40, [12, 15]], ['deadly', 10, [16, 20]]];
 const SITE_TRAP_DAMAGE = {
     '0-4': { setback: '1d10', dangerous: '2d10', deadly: '4d10' },
@@ -817,6 +865,23 @@ function siteTrap(K, tier) {
     return { name: t.name, severity: sev, dc, trigger: t.trigger, disarm: fill(t.disarm), effect: fill(t.effect) };
 }
 
+// The third pass (R6): one of the newer traps in place of trap, by its share of the kind's
+// whole list, at the same severity and DC (always two draws).
+function siteTrapMore(trap, K, tier) {
+    const old = SITE_TRAPS.filter(t => !t.kinds || t.kinds.includes(K));
+    const more = SITE_TRAPS_MORE.filter(t => !t.kinds || t.kinds.includes(K));
+    const t = sitePick(more);
+    if (rand() >= more.length / (old.length + more.length)) return trap;
+    const fill = s => s.replace(/\{dc\}/g, trap.dc).replace(/\{dmg\}/g, SITE_TRAP_DAMAGE[tier][trap.severity]);
+    return { name: t.name, severity: trap.severity, dc: trap.dc, trigger: t.trigger, disarm: fill(t.disarm), effect: fill(t.effect) };
+}
+
+// One of the newer lines in place of cur, by its share of the whole list (always two draws).
+function siteSwap(cur, old, more) {
+    const newer = sitePick(more);
+    return rand() < more.length / (old.length + more.length) ? newer : cur;
+}
+
 // Who holds the place at this level: a group of the kind's that can field a High fight
 // for the boss (tried in a random order), else a group from the site's habitat that can,
 // else whichever came closest. Null = no group (a mix of the habitat's monsters).
@@ -948,7 +1013,9 @@ function rollSite(seed, opts = {}) {
         plans.push(plan);
         const fightSeed = deriveSeed(seed, `fight.${i}`);
         const fight = plan.fight ? part(`fight.${i}.${kind}.${level}.${party}`, () => siteFight(K, band, budget, plan.diff, fightSeed)) : null;
-        const trap = plan.trap ? part(`trap.${i}.${kind}.${level}`, () => siteTrap(kind, tier)) : null;
+        const drawnTrap = plan.trap ? part(`trap.${i}.${kind}.${level}`, () => siteTrap(kind, tier)) : null;
+        // The third pass (R6) may swap the trap for a newer one, under its own seed.
+        const trap = drawnTrap && part(`trap.${i}.more.${kind}`, () => siteTrapMore(drawnTrap, kind, tier));
         rooms.push({ n: i + 1, name: type.name, text: type.text, feature: features[i % features.length], sense: senses[i % senses.length], fight, trap });
     }
 
@@ -984,13 +1051,16 @@ function rollSite(seed, opts = {}) {
     // Drawn after everything else, each under its own seed, so they move nothing above.
     // The boss room's ground: two features of the kind's, and sometimes a hazard (setback or
     // dangerous; only its damage follows the level).
-    const ground = part('ground.' + kind, () => {
+    const drawnGround = part('ground.' + kind, () => {
         const features = siteShuffle(K.ground || []).slice(0, 2);
         if (!K.hazards || rand() >= 0.5) return { features, hazard: null };
         const [sev, , dcs] = siteWeighted(SITE_TRAP_SEVERITY.slice(0, 2).map(t => [t, t[1]]));
         const dc = dcs[0] + Math.floor(rand() * (dcs[1] - dcs[0] + 1));
-        return { features, hazard: sitePick(K.hazards).replace(/\{dc\}/g, dc).replace(/\{dmg\}/g, SITE_TRAP_DAMAGE[tier][sev]) };
+        return { features, hazard: sitePick(K.hazards), dc, dmg: SITE_TRAP_DAMAGE[tier][sev] };
     });
+    // The third pass (R6) may swap the hazard for a newer one, under its own seed.
+    const hazard = drawnGround.hazard && part('ground.more.' + kind, () => siteSwap(drawnGround.hazard, K.hazards, (SITE_HAZARDS_MORE[kind] || []).concat(SITE_HAZARDS_ANY)));
+    const ground = { features: drawnGround.features, hazard: hazard ? hazard.replace(/\{dc\}/g, drawnGround.dc).replace(/\{dmg\}/g, drawnGround.dmg) : null };
     // Someone else in a room or two between the way in and the end.
     const events = part(`events.${kind}.${n}`, () => {
         const out = {};

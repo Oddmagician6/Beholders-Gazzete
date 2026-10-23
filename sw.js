@@ -8,7 +8,7 @@
 // Cache keys drop the query string (?seed=, ?t=, ?id= ...): pages rebuild their state from the URL.
 // Links use clean addresses (about, a/<id>); keyFor maps each one to its file's key (about.html).
 
-const VERSION = 'c151a9b66f59';
+const VERSION = '943ce0665e2b';
 const STATIC = 'gazette-static-' + VERSION;
 const PAGES = 'gazette-pages';
 const FONTS = 'gazette-fonts';

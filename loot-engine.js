@@ -315,6 +315,15 @@ const LOOT_LOCK_KEYS = [
   'The key is lost.', 'The key hangs on a nail nearby, a little too obviously.', 'The key was on whoever owned it.',
   'There is no keyhole; a spoken password opens it.', 'A spare key is hidden under a loose stone nearby.'
 ];
+// Third pass (R6): swapped in by share at the very end of decorateTreasure, so nothing else moves.
+const LOOT_LOCK_KEYS_MORE = [
+  'The key snapped off in the lock, and the stub has to be picked out first.', 'The keyhole is a fake; the real one hides under the lip of the lid.',
+  'Three keys hang on a ring nearby, and only one of them fits.', 'The key is hidden inside a hollow candle nearby.',
+  'The lock is rusted, so picking it makes a lot of noise.', 'The lock is a ring of turning letters that must spell a word.',
+  'The key was swallowed by something that lives nearby.', 'There are two keyholes, and both keys must turn at once.',
+  'The key is tied to the leg of a dead rat in the corner.', 'The lock is new, and much better made than what it is fixed to.',
+  'Fresh scratches round the keyhole show someone tried and gave up.', 'A note nearby says where the key is buried, in a riddle.'
+];
 const TRAP_SEVERITY = [['setback', 50, [10, 11]], ['dangerous', 40, [12, 15]], ['deadly', 10, [16, 20]]];
 const TRAP_DAMAGE = {
   '0-4':   { setback: '1d10', dangerous: '2d10',  deadly: '4d10' },
@@ -624,6 +633,11 @@ function decorateTreasure(t, kind, cr, opts = {}) {
   t.story = hoard ? `${lootFill(lootPick(src.owners))} ${lootFill(lootPick(src.hooks))}` : '';
 
   t.totalValue = totalGP(t.coins, t.gems, t.art, t.magic, t.goods);
+  // The third pass (R6), drawn last (always two draws): a newer line about the key.
+  const newerKey = lootPick(LOOT_LOCK_KEYS_MORE);
+  if (rand() < LOOT_LOCK_KEYS_MORE.length / (LOOT_LOCK_KEYS.length + LOOT_LOCK_KEYS_MORE.length) && t.lock) {
+    t.lock.text = t.lock.text.slice(0, t.lock.text.indexOf('force. ') + 7) + newerKey;
+  }
   return t;
 }
 
