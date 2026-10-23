@@ -620,6 +620,42 @@ const QUEST_GOODS = ["rough gems", "bolts of dyed silk", "casks of good brandy",
     "the deed to a small orchard", "IOUs from respectable people", "old coins from a fallen kingdom", "spices worth their weight in silver",
     "a cart of fine timber", "ivory chess pieces", "two goats and a promise", "jars of honey", "bundles of fur pelts"];
 
+// ── Second pass (R5). A later draw (more) swaps these in by their share of the whole list,
+// so an old link keeps its giver, place, task, reward, and foe.
+const QUEST_OBSTACLES_MORE = [
+    "A bandit roadblock that is very polite and very well organized.",
+    "An old hermit blocks the trail until someone answers a riddle.",
+    "The road is closed for a royal hunt, and poachers hang.",
+    "A wagon wheel breaks, and the nearest wheelwright is a day back.",
+    "A patch of quicksand sits right where the map says the road is.",
+    "A huge beehive has fallen across the path, and the bees are upset.",
+    "A neighboring lord's border patrol wants to see papers nobody has.",
+    "Snow falls out of season and buries the trail.",
+    "A stray giant goat has made its home on the only bridge.",
+    "A sleepwalking ogre is wandering the road in circles.",
+    "A burned-out village, whose survivors beg the party for help.",
+    "A deserter asks for help hiding, and his old sergeant is close behind.",
+    "Someone has turned the signposts around, and the party walks half a day the wrong way.",
+    "A forest fire on the ridge, with the wind turning toward the road.",
+    "Lights in the marsh at night that look exactly like the party's own camp.",
+    "Someone steals the party's rations while they sleep."
+];
+const QUEST_TERMS_MORE = ["On return, paid at the shrine so the gods can witness it", "A third now, a third halfway, a third on return",
+    "On return, in coin still warm from the giver's mattress", "On return, by a note drawn on the counting house",
+    "Half on return, half when the giver's ship comes in", "Paid daily, in arrears, with complaints",
+    "On return, after the giver checks every claim twice", "On return, in the town square, so everyone sees the giver is good for it",
+    "A deposit held by the innkeeper, the rest on return", "On return, if the giver lives that long (they are not well)",
+    "Up front, with a contract signed in three places", "On return, in freshly minted coins nobody has seen before",
+    "On return, after a feast where the giver tells everyone how it went", "On return, minus the cost of anything the party breaks"];
+const QUEST_GOODS_MORE = ["barrels of pickled herring", "casks of dwarven ale", "bolts of fine wool", "silver candlesticks", "crates of good lamp oil",
+    "a share in a tin mine", "bottles of perfume from the south", "a hunting falcon and its gear", "copper pots, a great many of them", "carved jade figurines"];
+
+// One of the newer lines in place of cur, by its share of the whole list (always two draws).
+function questSwap(cur, old, more) {
+    const newer = randomArray(more);
+    return rand() < more.length / (old.length + more.length) ? newer : cur;
+}
+
 // Title patterns: w = weight. Tokens: {Short} place, {Noun}/{Topic} job words, {First}, {Item}, {Adj}.
 const QUEST_TITLES = [
     { t: "The {Short} Job", w: 3 }, { t: "Trouble at the {Short}", w: 2 }, { t: "The {Noun} at the {Short}", w: 2 },
@@ -732,7 +768,16 @@ function rollQuest(seed, opts = {}) {
         return null;
     });
 
-    return { seed, level, size, job, title, giver, place: place.name, task, lead, feature, obstacle, twist, stakes, deadline, reward, foe };
+    // The second pass (R5), drawn last.
+    const more = part("more", () => ({
+        obstacle: questSwap(obstacle, QUEST_OBSTACLES, QUEST_OBSTACLES_MORE),
+        terms: questSwap(reward.terms, QUEST_TERMS, QUEST_TERMS_MORE),
+        inKind: questSwap(reward.inKind, QUEST_GOODS, QUEST_GOODS_MORE)
+    }));
+    reward.terms = more.terms;
+    if (reward.inKind) reward.inKind = more.inKind;
+
+    return { seed, level, size, job, title, giver, place: place.name, task, lead, feature, obstacle: obstacle && more.obstacle, twist, stakes, deadline, reward, foe };
 }
 
 // The reward's fine print in one line: terms, then goods, then the bonus.
