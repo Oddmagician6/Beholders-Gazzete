@@ -853,6 +853,72 @@ const NIGHT_EVENTS = [
     { t: 'A figure stands perfectly still on a distant ridge all night. At dawn it is a dead tree. Probably.' }
 ];
 
+// ── More lines (R8). Swapped in by their share of the whole list through later draws:
+// discovery hooks under their own seed (travelMoreHook), camp notes and night-watch lines
+// at the end of rollCamp, so an old link keeps its days.
+const DISCOVERY_HOOK_MORE = [
+    'A traveling scholar left a note here: "Do not tell the abbot."',
+    'The nearest village pretends it does not exist.',
+    'Someone has left fresh flowers here every day for years.',
+    'It matches a carving over the door of the town hall back the way the party came.',
+    'A thieves\' mark scratched nearby says "safe to sleep, not safe to dig."',
+    'A bounty hunter is watching it, waiting for someone in particular to show up.',
+    'It is older than the road, and the road bends politely around it.',
+    'The local priest says it is cursed; the local innkeeper says it is good for business.',
+    'A rival party passed by yesterday and left their mark on it.',
+    'Children in the next town sing a rhyme that describes it exactly.',
+    'Under it, wrapped in oilcloth, is a letter addressed to one of the party.',
+    'Every full moon, something comes to it out of the dark to grieve.'
+];
+const CAMP_GOOD_MORE = [
+    { t: 'A shepherd\'s dog adopts the camp and keeps watch all night.', terr: ['hills', 'moor', 'plains', 'mountains', 'road'] },
+    { t: 'Flat stones ring the fire and stay warm long after it dies.' },
+    { t: 'A hollow tree keeps the packs dry.', terr: ['forest', 'jungle', 'swamp', 'hills'] },
+    { t: 'Wild herbs grow nearby, and supper tastes like an inn\'s for once.', terr: ['forest', 'hills', 'moor', 'plains', 'road', 'mountains'] },
+    { t: 'Someone left a dry bundle of kindling and a tinderbox under a rock.' },
+    { t: 'A brook loud enough to cover the snoring.', terr: ['forest', 'hills', 'mountains', 'moor', 'plains', 'road'] },
+    { t: 'A rabbit warren close by: a DC 12 Wisdom (Survival) check means stew.', terr: ['plains', 'hills', 'moor', 'forest', 'road'] },
+    { t: 'The wind drops at sunset, and the night is perfectly still.' },
+    { t: 'Rock walls on three sides: only one way in to watch.' },
+    { t: 'A pool of clean, cold water in a cave that never freezes.', terr: ['mountains', 'hills', 'tundra', 'badlands'] },
+    { t: 'A sea breeze keeps the bugs away all night.', terr: ['coast'] },
+    { t: 'A big flat rock holds the day\'s heat well into the night.', terr: ['desert', 'badlands', 'mountains'] }
+];
+const CAMP_BAD_MORE = [
+    { t: 'An old grave lies right where the tent should go, and nobody will sleep beside it.' },
+    { t: 'Something has marked this spot as its territory, and the smell says so.' },
+    { t: 'The rock overhead drips all night, one drop at a time, on the same sleeper.' },
+    { t: 'Frogs. Loud frogs. All night.', terr: ['swamp', 'jungle', 'forest', 'moor'] },
+    { t: 'The only firewood is green and smokes more than it burns.', terr: ['forest', 'jungle', 'swamp', 'hills', 'road', 'plains'] },
+    { t: 'Another group of travelers got here first and took the best spot.', terr: ['road', 'plains', 'coast', 'hills'] },
+    { t: 'Ticks in the long grass. Everyone spends the morning checking.', terr: ['plains', 'moor', 'forest', 'hills', 'road'] },
+    { t: 'The tide comes in at midnight, and the only dry ground is a narrow ledge.', terr: ['coast'] },
+    { t: 'Scorpions under every stone.', terr: ['desert', 'badlands'] },
+    { t: 'Ice in the waterskins by morning, and the first hour on the road is miserable.', w: ['cold', 'snow'] },
+    { t: 'The wind turns at midnight and blows the smoke straight into the tents.' },
+    { t: 'Somebody forgot the salt, and supper is a quiet, sad affair.' },
+    { t: 'Loose rock above the camp: every gust sends pebbles rattling down.', terr: ['mountains', 'badlands', 'hills'] }
+];
+const NIGHT_EVENTS_MORE = [
+    { t: 'A hedgehog wanders into camp and falls asleep in someone\'s boot.', terr: ['forest', 'plains', 'hills', 'road', 'moor'] },
+    { t: 'A pack is found open in the morning with nothing missing. Something has been added: a smooth white pebble.' },
+    { t: 'A bell rings three times somewhere in the dark. There is no village for miles.' },
+    { t: 'The fire burns blue for a few minutes, then goes back to normal.' },
+    { t: 'A moth the size of a hand lands on the watch\'s sleeve and stays until dawn.' },
+    { t: 'Thunder rolls far off for an hour, though the sky stays clear.', w: ['clear'] },
+    { t: 'Riders pass in the dark. They stop, look at the camp, and ride on without a word.', terr: ['road', 'plains', 'hills', 'moor'] },
+    { t: 'Something big sniffs round the edge of the camp. At dawn, a DC 12 Wisdom (Survival) check reads the tracks: a bear, and a curious one.', terr: ['forest', 'hills', 'mountains', 'tundra'] },
+    { t: 'A child laughs, once, somewhere in the trees. Nothing else.', terr: ['forest', 'jungle', 'swamp'] },
+    { t: 'Seals bark on the rocks all night.', terr: ['coast'] },
+    { t: 'The sand hums in the wind, a low note that sets everyone\'s teeth on edge.', terr: ['desert', 'badlands'] },
+    { t: 'The watch dozes off and wakes to find the fire built back up by someone else.' },
+    { t: 'A wounded crow hops up to the fire and lets the watch bind its wing.' },
+    { t: 'Two voices argue in whispers just past the firelight, and fall silent when the watch stands up.' },
+    { t: 'Green and silver lights ripple across the northern sky for an hour.', terr: ['tundra', 'mountains'], w: ['clear', 'cold'] },
+    { t: 'An old wolf, white at the muzzle, lies down just outside the firelight and is gone before dawn.', terr: ['forest', 'hills', 'tundra', 'mountains', 'moor'] },
+    { t: 'Something tugs gently at a bedroll. In the morning, every boot is tied to its neighbor.' }
+];
+
 // ── The sky: the moon and the daylight ───────────────────
 const MOON_PHASES = [
     { icon: '🌑', label: 'New moon' }, { icon: '🌒', label: 'Waxing crescent' },
@@ -1043,6 +1109,19 @@ function composeDiscovery(terrain, used) {
     return ev;
 }
 
+// One of the newer lines in place of cur, by its share of the whole list (always two draws).
+function travelSwap(cur, old, more) {
+    const newer = travelPick(more);
+    return rand() < more.length / (old.length + more.length) ? newer : cur;
+}
+
+// A composed discovery's hook may give way to a newer one (R8), under a seed of its own, so
+// the caller's own stream doesn't move. Fixed events keep their hooks. Returns a copy.
+function travelMoreHook(ev, seed) {
+    const hook = withSeed(seed, () => travelSwap(ev.hook, DISCOVERY_HOOK, DISCOVERY_HOOK_MORE));
+    return ev.hook && DISCOVERY_HOOK.includes(ev.hook) ? { ...ev, hook } : ev;
+}
+
 function rollRoadEvent(terrain, weather, used = []) {
     const r = rand();
     if (r < 0.2) return { k: 'quiet', t: 'A quiet day', d: travelPick(QUIET_DAYS) };
@@ -1081,6 +1160,13 @@ function rollCamp(terrain, weather, quietNight) {
     if (rand() < 0.45 && !quietNight) {
         watch = { when: travelPick(NIGHT_WATCHES), t: travelPick(NIGHT_EVENTS.filter(s => travelFits(s, terrain, weather))).t };
     }
+    // More notes and night-watch lines (R8), drawn last (always four draws).
+    const fits = list => list.filter(s => travelFits(s, terrain, weather)).map(s => s.t);
+    const goodNote = travelSwap(note && note.t, good, fits(CAMP_GOOD_MORE));
+    const badNote = travelSwap(note && note.t, bad, fits(CAMP_BAD_MORE));
+    const night = travelSwap(watch && watch.t, NIGHT_EVENTS.filter(s => travelFits(s, terrain, weather)), fits(NIGHT_EVENTS_MORE));
+    if (note) note.t = note.good ? goodNote : badNote;
+    if (watch) watch.t = night;
     return { site, note, watch };
 }
 
@@ -1164,7 +1250,7 @@ function rollJourney(seed, opts, days) {
     const moonStart = withSeed(deriveSeed(seed, 'moon'), () => rand() * MOON_MONTH);
     for (let k = 1; k <= days; k++) {
         const weather = weatherOn(k);
-        const event = withSeed(deriveSeed(seed, 'e' + k), () => rollRoadEvent(opts.terrain, weather, used));
+        const event = travelMoreHook(withSeed(deriveSeed(seed, 'e' + k), () => rollRoadEvent(opts.terrain, weather, used)), deriveSeed(seed, 'e' + k + '.more'));
         const scene = withSeed(deriveSeed(seed, 'v' + k), () => rollScene(opts.terrain, opts.season));
         const find = withSeed(deriveSeed(seed, 'f' + k), () => rollFind(opts.terrain, weather));
         let dist = travelDistance(opts, weather);

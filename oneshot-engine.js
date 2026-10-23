@@ -756,7 +756,7 @@ function rollOneShot(seed, opts = {}, set = {}) {
         for (let d = 0; d < n; d++) {
             const w = rollWeather('temperate', season, prev);
             prev = w;
-            const ev = rollRoadEvent(hook.terrain, w, usedEv);
+            const ev = travelMoreHook(rollRoadEvent(hook.terrain, w, usedEv), deriveSeed(seeds.road, 'event.more.' + d));
             usedEv.push(ev.t);
             days.push({ weather: weatherHeadline(w), event: ev, scene: rollScene(hook.terrain, season) });
         }
