@@ -615,6 +615,124 @@ const PAN_DOMAIN_MORE = {
     }
 };
 
+// ── Third pass (R1). Later draws (world.r1, god.<i>.r1, bonds.r1) swap these in,
+// so an old link keeps its gods and everything the second pass gave it but these lines.
+const PAN_HOMES_MORE = [
+    'a city built on the back of a sleeping beast that turns over once an age',
+    'a single tower with one floor for each god, and a long quarrel over the top floor',
+    'the inside of a storm that never stops circling the world',
+    'a great tree whose roots are the underworld and whose leaves are the stars',
+    'a ship that sails the sky, which mortals sometimes see crossing the moon',
+    'a palace under the deepest lake, where the water is so still it shows the sky upside down',
+    'a ring of standing stones that is a doorway on one night a year and a sheep field the rest',
+    'a hall at the top of a waterfall that falls upward',
+    'a market town in the clouds, where the gods trade favors like merchants',
+    'a frozen island at the top of the world, lit by curtains of green light',
+    'a burning city inside the sun, with cool cellars for the gods who can\'t stand the heat',
+    'a cave under the oldest mountain, where the first fire still burns'
+];
+const PAN_AFTERLIVES_MORE = [
+    'The dead climb a long stair to the gods, and every cruel thing they did is a step that crumbles under them.',
+    'Souls become stars; the brightest belonged to the bravest, and the astrologers keep the list.',
+    'The dead go into the earth and come back as grain, which is why bread is blessed before it is eaten.',
+    'A great hound meets each soul at the edge of the world and leads it home, unless the soul ever kicked a dog.',
+    'The dead tell their whole life story to a judge who has heard it all before and is not easily impressed.',
+    'Souls sleep in the hall of the gods until the end of the world, when they will be woken for the last battle.',
+    'The dead stay with their families as house spirits for three generations, then go somewhere nobody describes.',
+    'A god reads each soul\'s true name and sorts it; the ones with no name left wander as ghosts.',
+    'The dead row a boat west across a sea with no far shore, and they say the rowing is the point.',
+    'Souls are traded among the gods like coins, and a well-spent life buys a kinder master.',
+    'The faithful dead go to their god\'s country; the faithless have to build one of their own, and some have.',
+    'The dead walk back to the place they were born and wait there to be remembered; the forgotten fade.',
+    'Each soul pays a toll at seven gates, in memories, and the ones who arrive with none left are at peace.',
+    'The dead turn into birds for a year and a day, and then decide for themselves where to go.'
+];
+const PAN_CREATIONS_MORE = {
+    family: [
+        'The eldest mother sang the world into being as a lullaby, and stopped halfway when the first child cried.',
+        'The world is the house the first family built, and the oceans are where the eldest child flooded the cellar.',
+        'Two gods married at the beginning of time and gave each other the world as a wedding gift, which neither has finished paying for.',
+        'The first father carved the world from his own bones so his children would have somewhere to stand.'
+    ],
+    court: [
+        'The gods held a council on whether the world should exist; it passed by one vote, and the god who voted against it still sits in the court.',
+        'The world was the prize at the first tournament of heaven, and the winner was crowned for giving it away.',
+        'A god-king laid out the world like a city plan; the rivers still follow roads that were never built.',
+        'The court ordered the world finished by a certain day, and it was late, which explains the deserts.'
+    ],
+    camps: [
+        'One side made the land and the other made the sea, and the coasts are where they still fight.',
+        'The world is a game board between the two sides, and the mortals are pieces nobody told the rules.',
+        'Each side made half of every living thing, so every creature has a better half and a worse one.',
+        'The world was made as a prison for a third god, and the two sides disagree about who should hold the key.'
+    ],
+    many: [
+        'Every river and hill had its own small god before there were people; the gods worshipped now are the ones who survived.',
+        'Each people says its own god made the world, and the scholars who tried to settle it are buried in separate graveyards.',
+        'The world was dreamed by something older than any god, and the gods are the dreams that woke up.',
+        'The gods were mortals once, the first heroes of each people, and became gods when the stories about them outgrew them.'
+    ]
+};
+const PAN_WALKS_R1 = [
+    'The gods walk the world as animals, so nobody harms a white stag, a three-legged cat, or an unusually polite crow.',
+    'A god comes down when a temple\'s bells ring on their own, and the town tidies up very quickly.',
+    'The gods walk only in reflections; look into still water on a holy day and someone may look back.',
+    'The gods walked the world until mortals started asking them for things; now they send letters.',
+    'Each god borrows a mortal body for one day a year, and the borrowed person remembers nothing but a good meal.',
+    'The gods walk freely but can\'t cross running water, so the river towns are the most pious and the least visited.',
+    'The gods visit in a dream a whole village shares on the same night, and the village argues about it for a year.',
+    'The gods are too big to come down; what walks the world are their saints, who are mostly tired.',
+    'A god who sets foot in the world must grant the first wish they hear, so they mostly arrive in empty fields.',
+    'The gods walk the world at the end of every war, counting the dead.'
+];
+const PAN_BOND_EFFECTS_R1 = [
+    'Their priests marry each other often enough that the two temples keep a shared nursery.',
+    'A prayer that names both of them is answered twice as fast, or so the old folk say.',
+    'Their holy days are kept with one joint feast, and the two temples take turns cooking.',
+    'Their faithful greet each other as cousins, even on the road.',
+    'A pilgrimage to {a}\'s shrine ends at {b}\'s.',
+    'A ring blessed by both is worn by half the married couples in town.',
+    'Their churches share one treasury, and one very nervous treasurer.',
+    'Wherever {a} has a temple, {b} has an altar inside it.',
+    'Their followers lend each other money without interest, which the moneylenders hate.',
+    'Their priests settle each other\'s quarrels, since nobody else is allowed to.'
+];
+// More priest names and holy-day names, by domain (no holy-day name repeats another domain's).
+const PAN_DOMAIN_R1 = {
+    knowledge: {
+        priests: ['Loremasters', 'Seekers', 'the Ink-Stained', 'Wardens of the Stacks'],
+        holyNames: ['the Feast of Ink', 'Scrollmas', 'the Night of Counted Stars', 'the Unsealing', 'the Day of Lessons', 'the Quiet Hour']
+    },
+    life: {
+        priests: ['Caretakers', 'the Gentle', 'Bread-Bearers', 'Bonesetters'],
+        holyNames: ['the Blessing of Cradles', 'the Feast of Plenty', 'Kindday', 'the Washing of Hands', 'the Hearth Feast', 'Seedmas']
+    },
+    light: {
+        priests: ['Sunwardens', 'the Gilded', 'Daybearers', 'Torchbearers'],
+        holyNames: ['the Gilding', 'the Feast of Mirrors', 'Brightmorn', 'the Lighting of the Towers', 'the Vigil of Dawn', 'Candlemoot']
+    },
+    nature: {
+        priests: ['Antlerbearers', 'the Mossborn', 'Rangers of the Faith', 'Briarwardens'],
+        holyNames: ['the Feast of First Fruits', 'the Running of the Stags', 'Rootmas', 'the Night of Owls', 'the Gathering of Seeds', 'Mossday']
+    },
+    tempest: {
+        priests: ['Galewardens', 'the Salted', 'Stormwatchers', 'Keepers of the Bell'],
+        holyNames: ['the Blessing of the Fleet', 'Squallmas', 'the Night of Bells', 'the Raising of the Masts', 'Stormfast', 'the Tide Feast']
+    },
+    trickery: {
+        priests: ['Tricksters', 'the Unseen', 'Coinflippers', 'Brothers and Sisters of the Fox'],
+        holyNames: ['Mischief Night', 'the Feast of Coins', 'All-Liars\' Day', 'the Switching', 'the Night of Locks', 'Foxmas']
+    },
+    war: {
+        priests: ['Warpriests', 'Battlesingers', 'the Unbroken', 'Oathkeepers'],
+        holyNames: ['Oathday', 'the Feast of Iron', 'the Night of Vigils', 'Spearmas', 'the Day of the Fallen Standard', 'the Long March']
+    },
+    death: {
+        priests: ['Shroudweavers', 'the Veiled Choir', 'Ashwalkers', 'Keepers of the Last Door'],
+        holyNames: ['the Night of Candles', 'Bonemas', 'the Day of Graves', 'the Last Feast', 'the Quieting', 'Ashday']
+    }
+};
+
 // ── Helpers ──────────────────────────────────────────────
 function panPick(list) {
     return list[Math.floor(rand() * list.length)];
@@ -928,6 +1046,7 @@ function rollPantheon(seed, opts = {}) {
     // In many peoples' gods there is no shared heaven.
     if (shape === 'many') p.home = 'each god\'s own country: a mountain, a river, a hall under a hill, wherever their people first prayed';
     panSecondPass(p, part);
+    panThirdPass(p, part);
     return p;
 }
 
@@ -962,6 +1081,41 @@ function panSecondPass(p, part) {
         });
     });
     part('world.more', () => { p.walks = panSwap(p.walks, PAN_WALKS, PAN_WALKS_MORE); });
+}
+
+// Like panSwap, for a third list: newest takes its share of all three (always two draws).
+function panSwap3(cur, old, more, newest) {
+    const newer = panPick(newest);
+    return rand() < newest.length / (old.length + more.length + newest.length) ? newer : cur;
+}
+
+// The third pass (R1): more world lines, priests, holy-day names, and bond effects.
+function panThirdPass(p, part) {
+    const n = p.gods.length;
+    p.gods.forEach(g => part(`god.${g.i}.r1`, () => {
+        const d = PAN_DOMAINS[g.domain], m = PAN_DOMAIN_MORE[g.domain], r = PAN_DOMAIN_R1[g.domain];
+        g.priests = panSwap3(g.priests, d.priests, m.priests, r.priests);
+        // A holy-day name can't repeat another god's.
+        const name = panPick(r.holyNames);
+        if (rand() < r.holyNames.length / (d.holyNames.length + r.holyNames.length) && !p.gods.some(o => o.holyName === name)) g.holyName = name;
+    }));
+    part(`bonds.r1.${p.shape}.${n}`, () => {
+        p.bonds.forEach((b, k) => {
+            const fill = e => panCap(panFill(e, p.gods[b.a].name, p.gods[b.b].name));
+            const all = PAN_BOND_EFFECTS.length + PAN_BOND_EFFECTS_MORE.length + PAN_BOND_EFFECTS_R1.length;
+            const filled = fill(panPick(PAN_BOND_EFFECTS_R1));
+            if (rand() < PAN_BOND_EFFECTS_R1.length / all && !p.bonds.some(o => o.effect === filled)) b.effect = filled;
+            // Two bonds never share an effect (older rolls sometimes did).
+            if (p.bonds.slice(0, k).some(o => o.effect === b.effect)) b.effect = fill(panPick(PAN_BOND_EFFECTS_R1.filter(e => !p.bonds.some(o => o.effect === fill(e)))));
+        });
+    });
+    part('world.r1', () => {
+        const home = panSwap(p.home, PAN_HOMES, PAN_HOMES_MORE);
+        if (p.shape !== 'many') p.home = home;
+        p.creation = panSwap(p.creation, PAN_CREATIONS[p.shape], PAN_CREATIONS_MORE[p.shape]);
+        p.afterlife = panSwap(p.afterlife, PAN_AFTERLIVES, PAN_AFTERLIVES_MORE);
+        p.walks = panSwap3(p.walks, PAN_WALKS, PAN_WALKS_MORE, PAN_WALKS_R1);
+    });
 }
 
 // ── Holy days on a calendar ──────────────────────────────
