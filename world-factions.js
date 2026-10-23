@@ -110,11 +110,23 @@ function facDl(lines) {
     return `<dl class="wb-dl">${lines.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>`;
 }
 
+// A faction's colors (FAC_COLORS) as paint, for its emblem.
+const FAC_PAINT = {
+    crimson: '#a3202c', gold: '#d6a62a', black: '#1d1b19', white: '#ece8dc', silver: '#bfc3c7', 'deep blue': '#1f3f8a',
+    'forest green': '#2e6a35', purple: '#6b2f8f', grey: '#7a7a7a', orange: '#d0721f', brown: '#6b4626', 'sky blue': '#5d9fd6',
+    'bone white': '#e4dcc4', copper: '#b06a3a', scarlet: '#cf2b1f', teal: '#1f8a87'
+};
+
+// The emblem of a faction's kind (img/symbol/<type>.webp) in its first color on a disc of its second.
+function facEmblemHTML(f, cls = '') {
+    return `<span class="wb-emblem${cls}" style="--emblem:url('img/symbol/${f.type}.webp');--ink:${FAC_PAINT[f.colors[0]] || '#d6a62a'};--field:${FAC_PAINT[f.colors[1]] || '#1d1b19'}" aria-hidden="true"></span>`;
+}
+
 function facRosterHTML(w, ctx) {
     return `<div class="pan-roster">${w.factions.map((f, i) => {
         const t = FAC_TYPES[f.type];
         return `<button type="button" class="pan-god${i === facState.view ? ' on' : ''}" data-fac="${i}" aria-pressed="${i === facState.view}">
-            <span class="pan-god-icon" aria-hidden="true">${t.icon}</span>
+            ${facEmblemHTML(f, ' pan-god-icon wb-disc')}
             <span class="pan-god-name">${esc(facCap(facName(w, i, ctx)))}</span>
             <span class="pan-god-sub">${esc(t.label)} · ${'●'.repeat(f.influence + 1)}${'○'.repeat(4 - f.influence)}</span>
             <span class="pan-god-role">${esc(f.leader.title)} ${esc(f.leader.npc.firstName)}</span>
@@ -140,7 +152,8 @@ function facPeopleLinks(f) {
 function facOneHTML(w, i, ctx) {
     const f = w.factions[i], t = FAC_TYPES[f.type];
     const god = facDeity(f, ctx.pantheon);
-    return `<div class="wb-month-head">
+    return `<div class="wb-seal">${facEmblemHTML(f, ' wb-disc')}</div>
+        <div class="wb-month-head">
             <button type="button" class="btn wb-arrow" data-step="-1" aria-label="Previous faction">◀</button>
             <h4>${t.icon} ${esc(facCap(facName(w, i, ctx)))}<small>${esc(t.label)} · faction ${i + 1} of ${w.factions.length}</small></h4>
             <button type="button" class="btn wb-arrow" data-step="1" aria-label="Next faction">▶</button>

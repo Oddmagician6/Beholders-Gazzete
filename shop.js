@@ -111,7 +111,7 @@ function render() {
             <td class="num chg">${changeHTML(p.change)}</td>
         </tr>`).join('');
     const mins = Math.max(1, Math.round(msToNextPriceBell() / 60000));
-    const art = `img/${def.art || 'shop/' + shop.type}`;
+    const art = `img/shop/${shop.type}`;
     card.innerHTML = `<div class="shop-art" aria-hidden="true"><img src="${art}.webp" srcset="${art}-sm.webp 480w, ${art}.webp 960w" sizes="(max-width: 1000px) 100vw, 960px" alt="" width="960" height="640" decoding="async"></div>
         <header class="shop-sign">
             <div class="shop-sign-icon" aria-hidden="true">${def.icon}</div>

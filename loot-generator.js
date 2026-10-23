@@ -220,11 +220,13 @@ function displayLoot() {
     document.getElementById('magic-grid').innerHTML = loot.magic.map(item => {
       const rarityClass = item.rarity.replace(' ', '-');
       const info = magicItemInfo(item.name);
+      const kind = item.type === 'wondrous' ? 'wondrous-item' : item.type;
       return `<div class="magic-card">
         <div class="item-header">
           <span class="item-name">${item.name}</span>
           <span class="item-rarity rarity-${rarityClass}">${item.rarity}</span>
         </div>
+        <img class="magic-art" src="img/item/${kind}.webp" alt="" width="72" height="72" loading="lazy" decoding="async">
         <div class="item-meta">
           <span class="item-type">${item.type}</span>
           ${item.attune ? '<span class="attune-badge">⚡ Attunement</span>' : ''}

@@ -677,7 +677,7 @@
       if (!filtered.length) {
         grid.innerHTML = document.getElementById('fav-filter').value === 'yes' && !viewList().spells.length
           ? `<p class="no-results">“${esc(viewList().name)}” has no spells yet. Set Spell List to All Spells, then tap the ☆ on any spell to add it.</p>`
-          : '<p class="no-results">No spells matched your search. The arcane tomes yield nothing…</p>';
+          : '<p class="no-results"><img class="mascot" src="img/mascot/empty.webp" alt="" width="140" height="140" decoding="async">No spells matched your search. The arcane tomes yield nothing…</p>';
         return;
       }
       const inList = new Set(activeList().spells);

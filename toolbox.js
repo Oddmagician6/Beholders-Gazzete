@@ -280,7 +280,7 @@ function renderTravel(opts) {
             <section class="day-block day-weather">
                 <h4>Weather</h4>
                 <div class="wx-head">
-                    <span class="wx-icon" aria-hidden="true">${WEATHER_KINDS[w.kind].icon}</span>
+                    ${weatherArtHtml(w.kind)}
                     <div>
                         <div class="wx-title">${esc(weatherHeadline(w))}</div>
                         <p class="wx-detail">${esc(weatherDetail(w))}</p>
@@ -288,7 +288,7 @@ function renderTravel(opts) {
                 </div>
                 <p class="day-flavor">${esc(w.flavor)}</p>
                 ${w.effects.length ? `<ul class="day-fx">${w.effects.map(f => `<li>${esc(f.text)}<span class="fx-src${f.src === 'SRD' ? ' srd' : ''}">${f.src === 'SRD' ? 'SRD' : 'ruling'}</span></li>`).join('')}</ul>` : ''}
-                <p class="day-sky"><span aria-hidden="true">${moon.icon}</span> ${esc(moon.label)} · about ${d.sky.daylight} hours of daylight</p>
+                <p class="day-sky">${moonArtHtml(d.sky.phase)} ${esc(moon.label)} · about ${d.sky.daylight} hours of daylight</p>
                 ${d.sign ? `<p class="day-sign"><strong>🌅 Signs for tomorrow:</strong> ${esc(d.sign)}</p>` : ''}
             </section>
             <section class="day-block">

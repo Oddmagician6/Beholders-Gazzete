@@ -21,12 +21,11 @@ const HANDOUT_TYPES = {
     prices: { icon: '🏷️', label: 'Price List' }
 };
 
-// Wanted-poster sketches in img/wanted/, one per race and gender (plus a lone half-orc),
-// as [value, label] picker options. A poster filled from an NPC picks theirs.
+// Wanted-poster sketches in img/wanted/, one per race and gender, as [value, label] picker options.
+// A poster filled from an NPC picks theirs.
 const HANDOUT_LIKENESSES = [['', 'None (an empty box)'], ...[
-    ...['human', 'elf', 'dwarf', 'halfling', 'gnome', 'orc', 'tiefling', 'dragonborn', 'aasimar']
-        .flatMap(r => ['male', 'female', 'nonbinary'].map(g => [r, g])),
-    ['half-orc', 'nonbinary']
+    ...['human', 'elf', 'dwarf', 'halfling', 'gnome', 'orc', 'tiefling', 'dragonborn', 'aasimar', 'half-elf', 'half-orc']
+        .flatMap(r => ['male', 'female', 'nonbinary'].map(g => [r, g]))
 ].map(([r, g]) => [`${r}-${g}`, `${r.charAt(0).toUpperCase() + r.slice(1)}, ${g}`])];
 
 const HANDOUT_SEALS = { red: '#8b1d1d', black: '#26211c', green: '#2f5a35', blue: '#24406b', gold: '#a37c1c' };

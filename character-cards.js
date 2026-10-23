@@ -18,7 +18,7 @@ const CC_ITEM_SLUG = {};
 const CC_ITEMS = Object.keys(MAGIC_ITEM_TEXT).sort((a, b) => a.localeCompare(b));
 CC_ITEMS.forEach(n => { CC_ITEM_SLUG[magicItemSlug(n)] = n; });
 
-const cc = { charId: '', c: null, items: [], off: new Set(), paper: 'letter', q: '', rarity: '' };
+const cc = { charId: '', c: null, items: [], off: new Set(), paper: 'letter', backs: false, q: '', rarity: '' };
 const ccCache = new Map(); // card HTML by what it was made from, so measured cards aren't measured again
 
 function esc(s) {
@@ -230,11 +230,16 @@ function ccToggleItem(name) {
     if (btn) btn.focus();
 }
 
-function ccPrint() {
+// The printed back for each set of cards
+const CC_BACKS = { attack: 'attack', class: 'feature', race: 'feature', background: 'feature', items: 'magic-item' };
+
+async function ccPrint() {
     const cards = ccCards();
     if (!cards.length) return;
-    document.getElementById('cc-print').innerHTML = gcPages(cards.map(x => x.html));
+    const backs = cc.backs ? cards.map(x => CC_BACKS[x.set]) : null;
+    document.getElementById('cc-print').innerHTML = gcPages(cards.map(x => x.html), 9, backs);
     document.getElementById('cc-page-css').textContent = gcPageCss(cc.paper);
+    await gcBacksReady(backs);
     window.print();
 }
 
@@ -283,6 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
         render();
     });
     document.getElementById('cc-paper').addEventListener('change', e => { cc.paper = e.target.value === 'a4' ? 'a4' : 'letter'; });
+    document.getElementById('cc-backs').addEventListener('change', e => { cc.backs = e.target.checked; });
     document.getElementById('cc-print-btn').addEventListener('click', ccPrint);
     window.addEventListener('popstate', () => { ccFromUrl(); render(); });
     window.addEventListener('storage', e => {

@@ -170,7 +170,7 @@
             <p class="ar-edition">📰 Click a day's date to read that day as a printed newspaper, or open <a href="edition">the newest print edition</a>.</p>
         </div>
         <p class="ar-count" id="ar-count" role="status"></p>
-        <div id="ar-list"><p class="ar-empty">Dusting off the shelves…</p></div>
+        <div id="ar-list"><p class="ar-empty"><img class="mascot" src="img/mascot/reading.webp" alt="" width="140" height="140" decoding="async">Dusting off the shelves…</p></div>
     </div>
 
     <footer>
@@ -237,7 +237,7 @@
             (filtered ? ` found · <a href="archive" id="ar-reset">show all</a>` : ' in the archives');
 
         if (!rows.length) {
-            list.innerHTML = '<p class="ar-empty">No scroll matches that. The archivist shrugs.</p>';
+            list.innerHTML = '<p class="ar-empty"><img class="mascot" src="img/mascot/empty.webp" alt="" width="140" height="140" decoding="async">No scroll matches that. The archivist shrugs.</p>';
             return;
         }
 
@@ -310,7 +310,7 @@
         if (wanted && desks.some(d => d.id === wanted)) section = wanted;
         renderChips(); render();
     }).catch(() => {
-        document.getElementById('ar-list').innerHTML = '<p class="ar-empty">The archive scroll could not be loaded. The mice may have won.</p>';
+        document.getElementById('ar-list').innerHTML = '<p class="ar-empty"><img class="mascot" src="img/mascot/error.webp" alt="" width="140" height="140" decoding="async">The archive scroll could not be loaded. The mice may have won.</p>';
     });
     </script>
   <script src="nav.js"></script>

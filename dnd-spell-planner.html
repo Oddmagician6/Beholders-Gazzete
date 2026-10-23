@@ -133,7 +133,7 @@
 </head>
 <body>
   <!-- Hero -->
-  <section class="page-hero">
+  <section class="page-hero photo" style="background-image: url('img/hero-dnd-spell-planner.webp'); background-size:cover; background-position:center;">
     <div class="page-hero-overlay"></div>
     <div class="page-hero-content">
       <h1 class="page-hero-logo">🃏 Spell Planner &amp; Cards</h1>
@@ -221,10 +221,11 @@
 
       <section class="sp-panel" id="sp-cards" aria-label="Spell cards">
         <h2 class="sp-h">🃏 Spell cards</h2>
-        <p class="sp-dim sp-small-text sp-note">Poker-size cards (2.5 × 3.5 in, 63 × 88 mm), nine to a page with dashed lines to cut along. Print at 100% scale (not "fit to page"). Attack, feature, and magic item cards are on <a href="dnd-character-cards">🎴 Feature &amp; Item Cards</a>.</p>
+        <p class="sp-dim sp-small-text sp-note">Poker-size cards (2.5 × 3.5 in, 63 × 88 mm), nine to a page with dashed lines to cut along. Print at 100% scale (not "fit to page"). Tick Backs too and print on both sides (flip on the long edge) for a patterned back on every card. Attack, feature, and magic item cards are on <a href="dnd-character-cards">🎴 Feature &amp; Item Cards</a>.</p>
         <div class="sp-card-bar">
           <label class="sp-field">Cards for<select id="sp-cardset"></select></label>
           <label class="sp-field sp-narrow">Paper<select id="sp-paper"><option value="letter">Letter</option><option value="a4">A4</option></select></label>
+          <label class="sp-check" title="A page of card backs after each page of cards: print on both sides, flipping on the long edge"><input type="checkbox" id="sp-backs"> Backs too</label>
           <button type="button" class="sp-btn sp-gold" id="sp-print-btn">🖨️ Print Cards</button>
           <span id="sp-card-count"></span>
         </div>

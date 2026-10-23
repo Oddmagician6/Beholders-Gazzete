@@ -113,7 +113,7 @@
 </head>
 <body>
   <!-- Hero -->
-  <section class="page-hero">
+  <section class="page-hero photo" style="background-image: url('img/hero-dnd-character-cards.webp'); background-size:cover; background-position:center;">
     <div class="page-hero-overlay"></div>
     <div class="page-hero-content">
       <h1 class="page-hero-logo">🎴 Feature &amp; Item Cards</h1>
@@ -212,9 +212,10 @@
 
       <section class="cc-panel" aria-labelledby="cc-cards-h">
         <h2 class="cc-h" id="cc-cards-h">🎴 Cards</h2>
-        <p class="cc-dim cc-note">Poker-size cards (2.5 × 3.5 in, 63 × 88 mm), nine to a page with dashed lines to cut along. Print at 100% scale (not "fit to page"). An item too long for one card carries on to the next.</p>
+        <p class="cc-dim cc-note">Poker-size cards (2.5 × 3.5 in, 63 × 88 mm), nine to a page with dashed lines to cut along. Print at 100% scale (not "fit to page"). Tick Backs too and print on both sides (flip on the long edge) for a patterned back on every card. An item too long for one card carries on to the next.</p>
         <div class="cc-card-bar">
           <label class="cc-field cc-narrow">Paper<select id="cc-paper"><option value="letter">Letter</option><option value="a4">A4</option></select></label>
+          <label class="cc-check" title="A page of card backs after each page of cards: print on both sides, flipping on the long edge"><input type="checkbox" id="cc-backs"> Backs too</label>
           <button type="button" class="cc-btn cc-gold" id="cc-print-btn">🖨️ Print Cards</button>
           <button type="button" class="cc-btn" id="cc-copy">🔗 Copy Link</button>
           <span id="cc-card-count"></span>

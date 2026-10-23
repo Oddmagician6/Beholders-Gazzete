@@ -334,9 +334,121 @@ const CONT_POIS = {
         more: [
         'The bandit chief of {site} has written to {near} proposing marriage to the mayor. The mayor is considering it.',
         '{site} has fallen to something worse than bandits, and the bandits came to {near} begging for help.',
-        'Soldiers of {nation} besieged {site} all summer and gave up. They left a siege engine behind, and someone has been using it.'] }
+        'Soldiers of {nation} besieged {site} all summer and gave up. They left a siege engine behind, and someone has been using it.'] },
+    // The newer kinds (with their own map art): a place's kind may swap to one of them, under its own
+    // seed (CONT_POI_MORE in rollContinent), so the older draw holds.
+    lighthouse: { label: 'Dark lighthouse', site: 'lighthouse', biomes: { coast: 6 }, hooks: [
+        'The lamp of {site} went out a month ago, and two ships have broken on the rocks since. {near} wants to know why the keeper stopped answering.',
+        'Someone relit {site} last night, though the keeper has been dead ten years. The lamp burns green now.',
+        'Smugglers out of {near} pay the keeper of {site} to look the other way. {nation} would pay more to learn which way.',
+        'A ship that sank fifty years ago signaled {site} last night, asking for a berth.',
+        'The keeper of {site} has sent to {near} for help: something keeps climbing the tower from the sea side.'],
+        more: [
+        '{nation} wants {site} rebuilt before the winter storms. The masons from {near} came back from the first survey white-haired.',
+        'The light of {site} has started pointing inland, at {near}, every night at the same hour.',
+        'A child from {near} swears she saw the keeper of {site} walk into the sea and keep walking.'] },
+    monastery: { label: 'Cliffside monastery', site: 'temple', biomes: { mountains: 4, hills: 3, tundra: 1 },
+        names: ['the Monastery of {r}', 'the {Adj} Cloister', 'the House of {r}', '{r} Abbey'], adj: ['Silent', 'High', 'Ashen', 'Weeping', 'Cloud', 'Iron'], hooks: [
+        'The monks of {place} took a vow of silence a century ago. Last week one ran into {near} screaming, and hasn\'t stopped. The trouble is below, in {site}.',
+        'Pilgrims climb the steps to {place} every spring. This year the steps went on further than they used to, down into {site}.',
+        'The abbot of {place} has asked {nation} for soldiers, and won\'t say against what. The monks have bricked up the way to {site}.',
+        'A novice from {near} ran away from {place} with a book the abbot wants back unread.',
+        'The bell of {place} rang thirteen times at midnight. In {near} they say that means {site} is open again.'],
+        more: [
+        'The monks of {place} brew a famous cordial, and the last barrel that came down to {near} had a hand in it.',
+        '{place} has stopped sending for supplies. Smoke still rises, and {near} counts one goat fewer every night.',
+        'An old monk from {place} is dying in {near}, and will only confess to someone who has been inside {site}.'] },
+    stones: { label: 'Standing stones', site: 'barrow', biomes: { moor: 5, plains: 3, hills: 2, tundra: 2 },
+        names: ['the {Adj} Stones', 'the Ring of {r}', '{r}\'s Dance', 'the Nine Maidens', 'the {Adj} Circle'], adj: ['Old', 'Whispering', 'Grey', 'Crooked', 'Singing', 'Hollow'], hooks: [
+        'The stones of {place} have moved again. The farmers of {near} counted, and there is one more than at harvest. The barrow under them, {site}, is open.',
+        'Druids from all over {nation} are gathering at {place} for a rite nobody in {near} has been told about.',
+        'Sleep inside {place} on a clear night and you dream of {site}. Three sleepers from {near} haven\'t woken.',
+        'A surveyor from {nation} marked {place} for a road. His instruments were found on the altar stone, pointing at {site}.',
+        'Every midsummer a door appears in the tallest stone of {place}. This year someone from {near} went through it.'],
+        more: [
+        'Lightning split the altar stone of {place} in two. Inside it: a stair down to {site}.',
+        'The shepherds of {near} pay a coin to {place} every spring. This year they didn\'t, and the flock walked into {site}.',
+        'A scholar in {near} has worked out that {place} is a clock, and that it is about to strike.'] },
+    battlefield: { label: 'Old battlefield', site: 'barrow', biomes: { plains: 5, moor: 3, hills: 2, badlands: 2 },
+        names: ['the Field of {r}', '{r} Field', 'the {Adj} Field', 'the Plain of Swords', 'the {Adj} Rout'], adj: ['Red', 'Broken', 'Last', 'Crow', 'Weeping', 'Lost'], hooks: [
+        'Every year on the day of the battle, the dead of {place} form up again. This year they marched toward {near}. The fallen king lies in {site}.',
+        'Farmers from {near} still plough up swords on {place}. This spring one ploughed up a banner, and it hasn\'t stopped bleeding.',
+        '{nation} lost {place} and never forgave it. The old general\'s tomb, {site}, holds the orders that lost it.',
+        'A scavenger in {near} sells relics from {place}. The latest, a helm, whispers its owner\'s name.',
+        'Crows gather over {place} in their thousands, and the folk of {near} say they are waiting for something to come out of {site}.'],
+        more: [
+        'Two families in {near} still feud over who ran first at {place}. Both want proof from {site}, and neither wants the other to find it.',
+        'A ghostly herald rode out of {place} into {near} with a challenge. Nobody knows who it is for.',
+        'The great grave at {place} has sunk, and where it was, a stair leads down to {site}.'] },
+    portal: { label: 'Stone portal', site: 'tower', biomes: { hills: 3, mountains: 2, moor: 2, desert: 2, plains: 1, tundra: 1 },
+        names: ['the {Adj} Gate', 'the Arch of {r}', '{r}\'s Door', 'the {Adj} Arch'], adj: ['Violet', 'Empty', 'Star', 'Whispering', 'Broken', 'Hollow'], hooks: [
+        'The arch of {place} lit up violet last night, for the first time in living memory. The wizard who watched it from {site} hasn\'t come down since.',
+        'Things come through {place}: last month a goat with too many eyes, last week a letter addressed to {near}.',
+        '{nation} has posted guards at {place}. They are paid in gold they can\'t spend, minted on the other side.',
+        'A merchant in {near} swears he walked through {place} to a city of brass and back in an afternoon, and lost a year.',
+        'The key to {place} is said to lie in {site}. Three crews from {near} have gone after it this season.'],
+        more: [
+        '{place} has started to hum, and every dog in {near} howls along. The old keeper\'s notes are in {site}.',
+        'Someone came through {place} from the other side and asked the way to {near}. Politely. With a sword.',
+        'The arch of {place} has cracked, and the light inside is leaking across the grass toward {site}.'] },
+    bones: { label: 'Giant\'s bones', site: 'lair', biomes: { badlands: 4, desert: 4, tundra: 3, hills: 2, plains: 1 },
+        names: ['the {r} Bones', 'the Ribs of {r}', 'the {Adj} Skull', 'the Giant\'s Rest', '{r}\'s Ribcage'], adj: ['White', 'Sunken', 'Great', 'Grinning', 'Broken', 'Old'], hooks: [
+        'Something has made its lair in the skull at {place}. The herds around {near} are thinning, and the tracks lead into {site}.',
+        'Scholars from {nation} want the bones of {place} measured. Nobody has measured them twice and got the same answer.',
+        'Bone carvers from {near} take what they need from {place}. Lately the bones have been taking it back.',
+        'The giant of {place} died holding something. Its fist is in {site}, and it hasn\'t opened.',
+        'On windy nights {place} howls like a flute, and the children of {near} sleepwalk toward it.'],
+        more: [
+        'A rival town claims {place} as its founder\'s grave, and wants {near}\'s share of the pilgrims.',
+        'A tooth from {place} sold in {near} for a fortune. The buyer has since grown a foot.',
+        'The ground around {place} is rising. The giant, it seems, is sitting up, and something nests in {site}.'] },
+    wreck: { label: 'Shipwreck', site: 'shipwreck', biomes: { coast: 6 }, hooks: [
+        'The tide went out further than anyone has seen and left {site} high on the rocks near {near}, its hold still sealed.',
+        '{site} went down with {nation}\'s pay chest aboard. Divers from {near} are going after it, and so is everyone else.',
+        'Lanterns move inside {site} at low tide, though the crew drowned years ago.',
+        'The only survivor of {site} is in {near}, and will only say that they didn\'t hit a rock. The rock hit them.',
+        'Wreckers lured {site} onto the reef. {near} would like them found before they do it again.'],
+        more: [
+        'The figurehead of {site} washed up in {near}, and keeps turning to face the wreck.',
+        'A map in the captain\'s cabin of {site} is worth more than the ship. Two crews from {near} are racing for it.',
+        'Crabs the size of carts have taken {site} as a shell, and the fishing out of {near} has stopped.'] },
+    oracle: { label: 'Oracle\'s shrine', site: 'temple', biomes: { hills: 3, mountains: 2, forest: 2, plains: 2, desert: 2 },
+        names: ['the Oracle of {r}', 'the {Adj} Shrine', 'the Seat of {r}', 'the {Adj} Brazier'], adj: ['Veiled', 'Smoking', 'Silent', 'Blind', 'Golden', 'Last'], hooks: [
+        'The oracle of {place} answers one question a year. This year she answered before anyone asked, with the name of a family in {near}. The way down to {site} opened that night.',
+        '{nation} won\'t go to war without the oracle\'s blessing, and the oracle of {place} has stopped talking.',
+        'Pilgrims to {place} breathe the smoke and see their own deaths. Someone from {near} saw the party\'s instead.',
+        'The priestesses of {place} are hiring guards. They say they have foreseen why, and won\'t say what.',
+        'The brazier of {place} has gone out. The last time that happened, {near} burned.'],
+        more: [
+        'A false oracle has set up in {near} and is drawing the pilgrims away from {place}. The real one wants it stopped, and knows how.',
+        'The oracle of {place} has foretold her own murder, and asked {near} for guards.',
+        'Everyone who visits {place} this month gets the same answer: go to {site}.'] },
+    witch: { label: 'Witch\'s hut', site: 'lair', biomes: { swamp: 5, forest: 4, jungle: 2, moor: 2 },
+        names: ['{r}\'s Hut', 'the Hut on Hen\'s Legs', 'the {Adj} Cottage', 'Old Mother {r}\'s', 'the {Adj} Hovel'], adj: ['Crooked', 'Walking', 'Smoking', 'Gingerbread', 'Hungry', 'Mossy'], hooks: [
+        'The hut of {place} walked out of the woods and sat down outside {near}. Nobody has knocked yet. Behind it lies the way to {site}.',
+        'The witch of {place} cures any sickness for a price. This year the price is a child from {near}, and the parents are looking for another way.',
+        'A prince of {nation} went to {place} for a love charm and came back a frog. His mother would like that undone.',
+        'The witch of {place} has died, and everything she ever cursed is waking at once, starting with {site}.',
+        'Trade with {place} is brisk: {near} sells her bread, and she sells back weather. This month the weather is wrong.'],
+        more: [
+        'The witch of {place} has sent to {near} for a husband. Volunteers are few, and she has stopped asking nicely.',
+        'Somebody stole the cauldron from {place}, and now the witch can\'t undo what she brewed for {near}.',
+        '{place} has been seen in two places at once, and only one of them is in {nation}.'] },
+    isle: { label: 'Floating isle', site: 'keep', biomes: { mountains: 3, hills: 2, plains: 2, moor: 1, tundra: 1, desert: 1 },
+        names: ['the Isle of {r}', '{r}\'s Rock', 'the {Adj} Isle', 'the Drifting Hold', 'the {Adj} Island'], adj: ['Hanging', 'Drifting', 'Sky', 'Cloud', 'Lost', 'High'], hooks: [
+        '{place} drifts over {near} once a generation. This time it stopped, and a rope ladder came down. At the top: {site}.',
+        'The waterfall off {place} has turned red, and so has the river through {near}.',
+        '{nation} claims {place} whenever it floats over the border. The folk who live on it have opinions.',
+        'A wizard in {near} has worked out how to reach {place} by kite. He needs someone light and brave to test it.',
+        'Stones are falling from {place}, and one took the roof off the temple in {near}. The isle is sinking, and {site} with it.'],
+        more: [
+        'A rope dropped from {place} into the square at {near}, with a note tied to it: "Help. Sinking."',
+        '{place} has drifted into a storm and stuck there. The lightning lights up {site} every night.',
+        'Seeds from the tree on {place} fall on {near} and grow overnight into something that walks.'] }
 };
-const CONT_POI_KEYS = Object.keys(CONT_POIS);
+// The first eight kinds, which every continent draws from; then the newer ones.
+const CONT_POI_KEYS = ['ruin', 'barrow', 'dragon', 'wood', 'tower', 'mine', 'temple', 'fort'];
+const CONT_POI_MORE = Object.keys(CONT_POIS).filter(k => !CONT_POI_KEYS.includes(k));
 // A hook put together for any place: {who} in {near} {wants} {site}. {twist}
 const CONT_POI_WHO = ['A widow', 'The town priest', 'A retired adventurer', 'A merchant\'s clerk', 'A young noble', 'The local healer',
     'A traveling scholar', 'A fisherman', 'The captain of the watch', 'A pair of orphans', 'A bard', 'A fence'];
@@ -363,7 +475,9 @@ const CONT_ART_BIOMES = {
     plains: { sheet: 'grass', size: 11, gap: 2.4, keep: 0.25 }, tundra: { sheet: 'tundra', size: 15, gap: 2, keep: 0.45 }
 };
 const CONT_ART_POIS = { ruin: 'ruined-keep', barrow: 'barrow', dragon: 'dragon-lair', wood: 'cursed-wood', tower: 'wizard-tower',
-    mine: 'lost-mine', temple: 'sunken-temple', fort: 'bandit-fort' };
+    mine: 'lost-mine', temple: 'sunken-temple', fort: 'bandit-fort', lighthouse: 'lighthouse', monastery: 'monastery',
+    stones: 'standing-stones', battlefield: 'battlefield', portal: 'portal', bones: 'giant-bones', wreck: 'shipwreck',
+    oracle: 'oracle', witch: 'witch-hut', isle: 'floating-isle' };
 const CONT_ART_TOWNS = { hamlet: 19, village: 22, town: 25, city: 29, metropolis: 32 };   // icon sizes; a capital is 35
 // Ornaments: [file, width ÷ height].
 const CONT_ART_SEA = [['ship', 1.53], ['kraken', 1.65], ['whale', 1.61], ['sea-serpent', 1.79], ['galley', 1.59]];
@@ -1023,6 +1137,11 @@ function rollContinent(seed, opts = {}) {
         }
         return out;
     });
+    // A newer kind may take each place's turn (two draws each, under their own seed, so the rest holds).
+    withSeed(deriveSeed(seed, 'pois.more'), () => poiKinds.forEach((k, p) => {
+        const newer = contPick(CONT_POI_MORE);
+        if (rand() < 0.45 && !poiKinds.includes(newer)) poiKinds[p] = newer;
+    }));
     c.pois = [];
     poiKinds.forEach((kind, p) => {
         const P = CONT_POIS[kind];

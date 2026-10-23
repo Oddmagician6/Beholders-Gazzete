@@ -7,12 +7,13 @@
    Needs rng.js (withSeed, hashString). Page-free, so F71 and F72 can deal ads too.
    ============================================ */
 
+// art: the kind's woodcut, img/woodcut/<art>.webp
 const CLASSIFIED_KINDS = {
-    hire:    { label: 'For Hire',      icon: '⚔️' },
-    wanted:  { label: 'Wanted',        icon: '📜' },
-    sale:    { label: 'For Sale',      icon: '🪙' },
-    lost:    { label: 'Lost & Found',  icon: '🔍' },
-    display: { label: 'Advertisement', icon: '📯' }
+    hire:    { label: 'For Hire',      icon: '⚔️', art: 'ad-for-hire' },
+    wanted:  { label: 'Wanted',        icon: '📜', art: 'ad-wanted' },
+    sale:    { label: 'For Sale',      icon: '🪙', art: 'ad-for-sale' },
+    lost:    { label: 'Lost & Found',  icon: '🔍', art: 'ad-lost' },
+    display: { label: 'Advertisement', icon: '📯', art: 'ad-display' }
 };
 
 // k: kind · h: headline · t: text · by: the sign-off (small ads)

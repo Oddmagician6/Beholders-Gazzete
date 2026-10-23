@@ -43,11 +43,34 @@ function spellCardHtml(s, tag = '') {
     </div>`;
 }
 
-// Cards (HTML strings) in pages of nine, for printing.
-function gcPages(cards, per = 9) {
+// Cards (HTML strings) in pages of nine, for printing. backs: each card's back, one per card
+// ('spell', 'feature', 'attack', 'magic-item', or 'npc': img/card/<back>.webp). With it, each page of
+// fronts is followed by a page of backs, each row mirrored so a back lands behind its own front when
+// the sheet is printed on both sides and flipped on the long edge.
+function gcPages(cards, per = 9, backs = null) {
     const out = [];
-    for (let i = 0; i < cards.length; i += per) out.push(`<div class="gc-page">${cards.slice(i, i + per).join('')}</div>`);
+    for (let i = 0; i < cards.length; i += per) {
+        const end = Math.min(i + per, cards.length);
+        out.push(`<div class="gc-page">${cards.slice(i, end).join('')}</div>`);
+        if (!backs) continue;
+        const cells = [];
+        for (let r = i; r < end; r += 3) {
+            cells.push(...[r, r + 1, r + 2].map(j => j < end
+                ? `<div class="gc-card gc-back" style="background-image:url('img/card/${backs[j]}.webp')"></div>`
+                : '<div class="gc-gap"></div>').reverse());
+        }
+        out.push(`<div class="gc-page">${cells.join('')}</div>`);
+    }
     return out.join('');
+}
+
+// Resolves once the back pictures have loaded, so they make it onto the printout.
+function gcBacksReady(backs) {
+    return Promise.all([...new Set(backs || [])].map(b => {
+        const im = new Image();
+        im.src = `img/card/${b}.webp`;
+        return im.decode().catch(() => {});
+    }));
 }
 
 // The @page rule for a paper size ('letter' or 'a4').

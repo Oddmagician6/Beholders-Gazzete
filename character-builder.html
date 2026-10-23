@@ -95,6 +95,8 @@
     .cb-card:hover, .cb-card:focus-visible { border-color: var(--gold-mid); }
     .cb-card[aria-pressed="true"] { border-color: var(--gold-bright); background: rgba(212,168,67,0.12); box-shadow: 0 0 0 1px var(--gold-mid); }
     .cb-card[aria-pressed="true"] b { color: var(--gold-bright); }
+    .cb-class-card { padding-top: 0; overflow: hidden; }
+    .cb-class-art { display: block; width: calc(100% + 24px); max-width: none; height: auto; aspect-ratio: 4 / 3; margin: 0 -12px 8px; object-fit: cover; object-position: center 20%; }
 
     /* Chips (multi-pick) */
     .cb-chips { display: flex; flex-wrap: wrap; gap: 5px; margin: 0 0 6px; }
@@ -234,7 +236,7 @@
 </head>
 <body>
   <!-- Hero -->
-  <section class="page-hero">
+  <section class="page-hero photo" style="background-image: url('img/hero-character-builder.webp'); background-size:cover; background-position:center;">
     <div class="page-hero-overlay"></div>
     <div class="page-hero-content">
       <h1 class="page-hero-logo">🧝 Character Builder</h1>

@@ -18,7 +18,7 @@ const SP_SLUG = {};
 SPELLS_DATA.forEach(s => { SP_SLUG[spellSlug(s.name)] = s; });
 
 // edit: '' | 'prep' | 'known' | 'cantrips'; before: the spells when editing began (for Cancel and the swap note).
-const sp = { charId: '', c: null, edit: '', before: null, filter: '', favOnly: false, cards: 'today', paper: 'letter' };
+const sp = { charId: '', c: null, edit: '', before: null, filter: '', favOnly: false, cards: 'today', paper: 'letter', backs: false };
 
 function esc(s) {
     return String(s === undefined || s === null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -407,12 +407,14 @@ function spPick(name, on) {
     if (box) box.focus();
 }
 
-function spPrint() {
+async function spPrint() {
     const set = spCardSet(sp.cards);
     if (!set.length) return;
     const k = spClass();
-    document.getElementById('sp-print').innerHTML = gcPages(set.map(({ s, tag }) => spellCardHtml(s, `${k.name} · ${tag}`)));
+    const backs = sp.backs ? set.map(() => 'spell') : null;
+    document.getElementById('sp-print').innerHTML = gcPages(set.map(({ s, tag }) => spellCardHtml(s, `${k.name} · ${tag}`)), 9, backs);
     document.getElementById('sp-page-css').textContent = gcPageCss(sp.paper);
+    await gcBacksReady(backs);
     window.print();
 }
 
@@ -514,6 +516,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('sp-cardset').addEventListener('change', e => { sp.cards = e.target.value; renderCards(); });
     document.getElementById('sp-paper').addEventListener('change', e => { sp.paper = e.target.value === 'a4' ? 'a4' : 'letter'; });
+    document.getElementById('sp-backs').addEventListener('change', e => { sp.backs = e.target.checked; });
     document.getElementById('sp-print-btn').addEventListener('click', spPrint);
     window.addEventListener('popstate', () => { spFromUrl(); render(); });
     window.addEventListener('storage', e => {

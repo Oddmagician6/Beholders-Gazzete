@@ -802,6 +802,15 @@ footer::before {
 }
 @media print { .npc-face { border-color: #999; } }
 
+/* The beholder mascot's moods (img/mascot/<mood>.webp) for empty lists, errors, and the like. */
+.mascot { display: block; width: 160px; max-width: 50%; height: auto; margin: 0 auto 12px; }
+
+/* The newspaper's woodcut spot art (img/woodcut/: black ink on clear). On the dark pages the ink
+   turns to old gold; on parchment (.on-paper) and on paper it stays black. */
+.woodcut { filter: invert(0.86) sepia(0.55) saturate(1.3) brightness(0.95); }
+.on-paper .woodcut { filter: none; }
+@media print { .woodcut { filter: none; } }
+
 /* ── READING PROGRESS ────────────────────────────────────── */
 .reading-progress { position: fixed; top: 0; left: 0; width: 100%; height: 3px; z-index: 1000; }
 .reading-progress-bar { height: 100%; background: linear-gradient(90deg, var(--crimson), var(--gold-bright)); width: 0%; transition: width 0.1s ease; }

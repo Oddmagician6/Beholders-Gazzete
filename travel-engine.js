@@ -920,13 +920,22 @@ const NIGHT_EVENTS_MORE = [
 ];
 
 // ── The sky: the moon and the daylight ───────────────────
+// art: the painted moon, img/calendar/moon-<art>.webp (moonArtHtml)
 const MOON_PHASES = [
-    { icon: '🌑', label: 'New moon' }, { icon: '🌒', label: 'Waxing crescent' },
-    { icon: '🌓', label: 'First quarter' }, { icon: '🌔', label: 'Waxing gibbous' },
-    { icon: '🌕', label: 'Full moon' }, { icon: '🌖', label: 'Waning gibbous' },
-    { icon: '🌗', label: 'Last quarter' }, { icon: '🌘', label: 'Waning crescent' }
+    { icon: '🌑', label: 'New moon', art: 'new' }, { icon: '🌒', label: 'Waxing crescent', art: 'waxing-crescent' },
+    { icon: '🌓', label: 'First quarter', art: 'first-quarter' }, { icon: '🌔', label: 'Waxing gibbous', art: 'waxing-gibbous' },
+    { icon: '🌕', label: 'Full moon', art: 'full' }, { icon: '🌖', label: 'Waning gibbous', art: 'waning-gibbous' },
+    { icon: '🌗', label: 'Last quarter', art: 'last-quarter' }, { icon: '🌘', label: 'Waning crescent', art: 'waning-crescent' }
 ];
 const MOON_MONTH = 29.5;
+
+// The painted pictures for a weather kind and a moon phase, as <img> tags (the icons stay for plain text).
+function weatherArtHtml(kind, cls = 'wx-art') {
+    return `<img class="${cls}" src="img/weather/${kind === 'icestorm' ? 'ice-storm' : kind}.webp" alt="" width="64" height="64" decoding="async">`;
+}
+function moonArtHtml(phase, cls = 'moon-art') {
+    return `<img class="${cls}" src="img/calendar/moon-${MOON_PHASES[phase].art}.webp" alt="" width="20" height="20" decoding="async">`;
+}
 
 // Rough hours from sunrise to sunset (a table ruling, not a rule).
 const TRAVEL_DAYLIGHT = {

@@ -50,10 +50,11 @@ function charLabel(c) {
     return `${c.name || 'Unnamed character'} · level ${c.level}${what ? ' ' + what : ''}`;
 }
 
+// The race and gender portrait, else the class's (img/class/), else ''.
 function portraitSrc(c) {
-    if (typeof npcPortraitSrc !== 'function') return '';
     const g = { male: 'male', female: 'female', nonbinary: 'nonbinary' }[String(c.gender).toLowerCase()];
-    return g ? npcPortraitSrc(CB_NPC_RACE[c.race], g) : '';
+    const face = g && typeof npcPortraitSrc === 'function' ? npcPortraitSrc(c.race, g) : '';
+    return face || (c.cls ? `img/class/${c.cls}-sm.webp` : '');
 }
 
 function spellLink(name) {

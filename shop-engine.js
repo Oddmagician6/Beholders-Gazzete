@@ -162,9 +162,8 @@ const SHOP_TYPES = {
         greetings: ["Sailing or sinking? I stock for both.", "Rope's by the fathom. Advice is free and usually wrong.", "The tide waits for no one. Neither do I. Make it quick.", "If it floats, I sell it. If it doesn't, I sell it cheaper."]
     },
     // The newer types (E8). A random roll lands on one of them through shopMoreType, under its own seed.
-    // art: a stand-in picture under img/ until the type has its own img/shop/<type>.webp.
     tavern: {
-        label: 'Taproom & Cellar', icon: '🍺', art: 'tavern/tavern-inn',
+        label: 'Taproom & Cellar', icon: '🍺',
         keepers: ['Innkeeper', 'Tapster', 'Cellarman', 'Barkeep'],
         categories: [],
         ids: ['ale-gallon', 'wine-bottle', 'wine-fine-bottle', 'flask-or-tankard', 'jug-or-pitcher', 'bread-loaf', 'cheese-wedge', 'meat-chunk', 'rations-1-day',
@@ -174,7 +173,7 @@ const SHOP_TYPES = {
         greetings: ["Drinking or sleeping? Both is fine. Both at once is extra.", "Barrels by the gallon, bottles by the bottle, regrets by the morning.", "We sell it to take away. Bring the jug back or I charge for the jug.", "The cellar's cool, the ale's cooler, and the cellarman is the coolest of all. He's a ghost.", "Room's upstairs. Lock's on the inside. Mostly.", "If it's wet and it's not water, I have it."]
     },
     bakery: {
-        label: 'Bakery', icon: '🥖', art: 'shop/provisioner',
+        label: 'Bakery', icon: '🥖',
         keepers: ['Baker', 'Pastry Cook', "Baker's Widow", 'Miller'],
         categories: [],
         ids: ['bread-loaf', 'flour-pound', 'sugar-pound', 'salt-pound', 'spices-pound', 'cheese-wedge', 'rations-1-day', 'basket', 'sack',
@@ -184,7 +183,7 @@ const SHOP_TYPES = {
         greetings: ["Mind the oven door. It bites harder than I do.", "Yesterday's loaves at half price. Last week's are for throwing at goblins.", "Up before the sun every day of my life. Don't ask me anything complicated.", "Flour on your boots means you've been somewhere good.", "Pies are fresh. The pie with the cross on it is for the baron. Don't touch the baron's pie.", "Waybread? No. Way-better-bread, yes."]
     },
     butcher: {
-        label: 'Butcher & Smokehouse', icon: '🥩', art: 'shop/provisioner',
+        label: 'Butcher & Smokehouse', icon: '🥩',
         keepers: ['Butcher', 'Smokehouse Keeper', 'Slaughterman', 'Sausage Maker'],
         categories: [],
         ids: ['meat-chunk', 'chicken', 'fish-fresh', 'salt-pound', 'spices-pound', 'rations-1-day', 'fur-pelt', 'leather-square-yard', 'hunting-trap',
@@ -194,7 +193,7 @@ const SHOP_TYPES = {
         greetings: ["Everything's fresh except the jokes.", "Don't mind the cleaver. It's for the meat. Usually.", "Smoked, salted, or still kicking. Your choice.", "I'll take any beast you bring me, as long as it stays dead.", "Every sausage has a secret. Mine's mostly pig.", "Wipe your hands before you shake mine. Actually, don't shake mine."]
     },
     brewery: {
-        label: 'Brewer & Vintner', icon: '🍷', art: 'tavern/brewhouse',
+        label: 'Brewer & Vintner', icon: '🍷',
         keepers: ['Brewer', 'Vintner', 'Distiller', 'Meadmaker'],
         categories: [],
         ids: ['ale-gallon', 'wine-bottle', 'wine-fine-bottle', 'brewer-s-supplies', 'barrel', 'bottle-glass', 'jug-or-pitcher', 'flask-or-tankard',
@@ -204,7 +203,7 @@ const SHOP_TYPES = {
         greetings: ["Tasting's free. Standing up afterward is your problem.", "This one's a good year. That one was a bad year, but it's a great wine.", "The vats are bubbling. That's normal. The singing isn't.", "We age it in oak. The oak was not consulted.", "Buy a barrel and I'll throw in the hangover.", "Keep it out of the sun and away from dwarves."]
     },
     carpenter: {
-        label: 'Carpenter & Cooper', icon: '🪚', art: 'shop/tinker',
+        label: 'Carpenter & Cooper', icon: '🪚',
         keepers: ['Carpenter', 'Cooper', 'Joiner', 'Cartwright'],
         categories: [],
         ids: ['carpenter-s-tools', 'woodcarver-s-tools', 'wood-cord', 'barrel', 'chest', 'ladder-10-foot', 'pole-10-foot', 'bucket', 'quarterstaff',
@@ -214,7 +213,7 @@ const SHOP_TYPES = {
         greetings: ["Measure twice, cut once, charge three times.", "Mind the sawdust. It gets everywhere. I've found it in my soup.", "Every barrel's watertight. I sat in one in the river to prove it.", "Oak for strength, pine for price, ash for the fellow who can't decide.", "That's not a coffin. That's a long chest. Don't ask who ordered it.", "Splinters are free with every purchase."]
     },
     mason: {
-        label: 'Stonemason & Builder', icon: '🧱', art: 'shop/blacksmith',
+        label: 'Stonemason & Builder', icon: '🧱',
         keepers: ['Stonemason', 'Master Builder', 'Quarryman', 'Bricklayer'],
         categories: [],
         ids: ['mason-s-tools', 'potter-s-tools', 'hammer', 'hammer-sledge', 'pick-miner-s', 'chalk-1-piece', 'shovel', 'block-and-tackle', 'crowbar',
@@ -224,7 +223,7 @@ const SHOP_TYPES = {
         greetings: ["Stone lasts forever. My invoices too.", "That wall's been standing three hundred years. I built the bit that's leaning.", "Mind the gargoyle. It's a commission, and it's being difficult.", "If you want it done fast, hire a carpenter.", "Dwarves say my work is acceptable. That's the highest praise there is.", "Every tower starts with one stone. Most of them end with a lawsuit."]
     },
     cartographer: {
-        label: 'Cartographer & Guide', icon: '🗺️', art: 'shop/scribe',
+        label: 'Cartographer & Guide', icon: '🗺️',
         keepers: ['Cartographer', 'Mapmaker', 'Guide', 'Surveyor'],
         categories: [],
         ids: ['cartographer-s-tools', 'navigation-tools', 'case-map-or-scroll', 'paper-sheet', 'parchment-sheet', 'ink-1-ounce-bottle', 'ink-pen', 'spyglass',
@@ -234,7 +233,7 @@ const SHOP_TYPES = {
         greetings: ["Where are you going? No, really, where? Most people point vaguely.", "Every map is right. The land just keeps changing.", "The blank bits are the interesting bits. They cost extra.", "Here be dragons. I checked. Personally.", "North is up. That's the only promise I make.", "That road's on the map, but I'd go around it."]
     },
     moneychanger: {
-        label: 'Moneylender & Bank', icon: '🏦', art: 'shop/jeweler',
+        label: 'Moneylender & Bank', icon: '🏦',
         keepers: ['Moneychanger', 'Moneylender', 'Banker', 'Clerk of the Counting House'],
         categories: [],
         ids: ['gold-pound', 'silver-pound', 'platinum-pound', 'copper-pound', 'gemstones-100gp', 'gemstones-500gp', 'gemstones-1000gp', 'scale-merchant-s',
@@ -244,7 +243,7 @@ const SHOP_TYPES = {
         greetings: ["Every coin is weighed, bitten, and remembered.", "Borrowing? Splendid. Paying back? We'll see.", "Interest is a tenth a month. Disinterest is free.", "Your money is safe here. Safer than you, frankly.", "We change any coin of the realm, and a few from realms that no longer exist.", "Sign here, here, and in blood here. Just a joke. Ink will do."]
     },
     herbalist: {
-        label: 'Herbalist & Healer', icon: '🌿', art: 'shop/alchemist',
+        label: 'Herbalist & Healer', icon: '🌿',
         keepers: ['Herbalist', 'Hedge Healer', 'Wise Woman', 'Root Doctor'],
         categories: [],
         ids: ['herbalism-kit', 'healer-s-kit', 'medicine-kit', 'antitoxin-vial', 'antidote', 'potion-of-healing', 'potion-of-animal-friendship',
@@ -254,7 +253,7 @@ const SHOP_TYPES = {
         greetings: ["Sit. Stick out your tongue. Hm. I've seen worse. Not often.", "Willow bark for the head, mint for the stomach, nothing for bad decisions.", "Everything here grows wild. Some of it grows wilder than it should.", "Don't eat the purple ones raw. Don't eat the purple ones cooked either.", "I don't do curses. I do the rash a curse leaves behind.", "Drink it all, and don't make that face."]
     },
     barber: {
-        label: 'Barber-Surgeon & Bathhouse', icon: '💈', art: 'tavern/temple-hostel',
+        label: 'Barber-Surgeon & Bathhouse', icon: '💈',
         keepers: ['Barber', 'Barber-Surgeon', 'Bathhouse Keeper', 'Tooth-Puller'],
         categories: [],
         ids: ['healer-s-kit', 'medicine-kit', 'soap', 'perfume-vial', 'mirror-steel', 'potion-of-healing', 'antitoxin-vial', 'whetstone', 'blanket',
@@ -264,7 +263,7 @@ const SHOP_TYPES = {
         greetings: ["Shave, haircut, or a leg off? The chair's the same for all three.", "Hold still. The razor's sharp and so am I.", "The bath's hot, the towels are clean, and the leeches are hungry.", "Every tooth I pull, I keep. Don't ask to see the jar.", "You've got a twig in your beard and a story in your eyes. Sit down.", "I used to cut for an army. Customers here complain less."]
     },
     gambling: {
-        label: 'Gambling Den', icon: '🎲', art: 'tavern/gambling-hall',
+        label: 'Gambling Den', icon: '🎲',
         keepers: ['Dealer', 'House Boss', 'Croupier', 'Bookmaker'],
         categories: [],
         ids: ['dice-set', 'playing-card-set', 'ale-gallon', 'wine-bottle', 'wine-fine-bottle', 'flask-or-tankard', 'signet-ring', 'disguise-kit',
@@ -274,7 +273,7 @@ const SHOP_TYPES = {
         greetings: ["The house always wins. The house is very proud of that.", "Cards or dice? Dice are honest. The cards are honest-ish.", "First drink's free. The second costs you the first.", "No spells at the tables. The last wizard who tried is still a frog.", "Feeling lucky? Good. We sell luck too, in a pouch, no refunds.", "Leave your weapons at the door. Leave your sense at the door as well."]
     },
     theater: {
-        label: 'Playhouse & Theater', icon: '🎭', art: 'tavern/festhall',
+        label: 'Playhouse & Theater', icon: '🎭',
         keepers: ['Impresario', 'Stage Manager', 'Playwright', 'Costumer'],
         categories: [],
         ids: ['clothes-costume', 'clothes-fine', 'disguise-kit', 'painter-s-supplies', 'perfume-vial', 'mirror-steel', 'candle', 'lamp', 'book',
@@ -284,7 +283,7 @@ const SHOP_TYPES = {
         greetings: ["Tickets? Costumes? Autographs? The lead is in, but she's in a mood.", "Tonight's play is a tragedy. So are our finances.", "Everything you see here has been worn by a king. Several kings, in several plays.", "Don't say the name of the play in the green room. You know which one.", "Every seat has a view. Some of them have a view of a pillar.", "The ghost in the rafters is part of the show. We think."]
     },
     tattoo: {
-        label: 'Tattooist & Inkwright', icon: '🖋️', art: 'tavern/cellar-bar',
+        label: 'Tattooist & Inkwright', icon: '🖋️',
         keepers: ['Tattooist', 'Inkwright', 'Needle Artist', 'Rune Carver'],
         categories: [],
         ids: ['ink-1-ounce-bottle', 'ink-pen', 'painter-s-supplies', 'calligrapher-s-supplies', 'healer-s-kit', 'soap', 'mirror-steel', 'candle',
@@ -294,7 +293,7 @@ const SHOP_TYPES = {
         greetings: ["Pick a picture off the wall, or tell me your sins and I'll draw one.", "It only hurts while I'm working. And after. And when it rains.", "Spell your mother's name for me. Twice. Slowly.", "I don't do faces. I did one face once. Never again.", "Ink's from a giant squid. It won't fade, and neither will the smell.", "Every mark means something. That one means you lost a bet."]
     },
     guild: {
-        label: 'Guildhall & Mercenaries', icon: '🛡️', art: 'tavern/dwarven-alehall',
+        label: 'Guildhall & Mercenaries', icon: '🛡️',
         keepers: ['Guildmaster', 'Quartermaster', 'Mercenary Captain', 'Guild Clerk'],
         categories: [],
         ids: ['rations-1-day', 'bedroll', 'tent-two-person', 'backpack', 'rope-hempen-50-feet', 'torch', 'healer-s-kit', 'shield', 'spear', 'crossbow-light',
@@ -304,7 +303,7 @@ const SHOP_TYPES = {
         greetings: ["Hiring or for hire? Sign the book either way.", "Every blade here has a contract. Read yours before it reads you.", "The board's full of jobs. The ones with blood on the corner pay best.", "Members get a discount. Nonmembers get a lecture.", "We don't ask who you're fighting. We ask how many.", "Dues are due. Dues are always due."]
     },
     monster: {
-        label: 'Monster Parts Dealer', icon: '🦴', art: 'shop/curio',
+        label: 'Monster Parts Dealer', icon: '🦴',
         keepers: ['Monster Parts Dealer', 'Trophy Hunter', 'Taxidermist', 'Beast Butcher'],
         categories: [],
         ids: ['dragon-scale', 'phoenix-feather', 'unicorn-horn', 'fur-pelt', 'leather-square-yard', 'poison-basic-vial', 'antitoxin-vial', 'acid-flask',

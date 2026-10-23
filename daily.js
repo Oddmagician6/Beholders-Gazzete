@@ -47,7 +47,7 @@ function rollDaily(date, rumors) {
     tryPart(() => {
         if (!rumors.length) return null;
         const idx = withSeed(dailySeed(date, 'rumor'), () => Math.floor(rand() * rumors.length));
-        return { icon: '🍺', kind: 'Rumor of the day', title: `“${rumors[idx].text}”`, quote: true, href: `rumors?rumor=${idx}`, cta: 'Overheard at the Tavern' };
+        return { icon: '🍺', kind: 'Rumor of the day', art: 'rumor', title: `“${rumors[idx].text}”`, quote: true, href: `rumors?rumor=${idx}`, cta: 'Overheard at the Tavern' };
     });
 
     tryPart(() => {
@@ -56,7 +56,7 @@ function rollDaily(date, rumors) {
         const years = parseInt(n.age, 10);
         const who = `${years ? `${years}-year-old ` : ''}${n.race} ${n.profession}`.toLowerCase();
         const doing = String(n.doing || '').replace(/[.!?]?$/, '.');
-        return { icon: n.portraitIcon || '🎭', kind: 'NPC of the day', title: n.name,
+        return { icon: n.portraitIcon || '🎭', kind: 'NPC of the day', art: 'npc-of-the-day', title: n.name,
             text: `${/^([aeiou8]|1[18]-)/.test(who) ? 'An' : 'A'} ${who}. ${doing}`,
             href: `npc-generator?seed=${seed}`, cta: 'Meet them' };
     });
@@ -64,7 +64,7 @@ function rollDaily(date, rumors) {
     tryPart(() => {
         const m = withSeed(dailySeed(date, 'monster'), () => MONSTERS[Math.floor(rand() * MONSTERS.length)]);
         const where = withSeed(dailySeed(date, 'sighting'), () => DAILY_SIGHTINGS[Math.floor(rand() * DAILY_SIGHTINGS.length)]);
-        return { icon: '👹', kind: 'Monster sighting', title: m.name, text: `CR ${m.cr} ${m.type}, seen ${where}.`, href: `monster/${m.id}`, cta: 'Stat block' };
+        return { icon: '👹', kind: 'Monster sighting', art: 'monster-sighting', title: m.name, text: `CR ${m.cr} ${m.type}, seen ${where}.`, href: `monster/${m.id}`, cta: 'Stat block' };
     });
 
     tryPart(() => {
@@ -73,7 +73,7 @@ function rollDaily(date, rumors) {
         const item = withSeed(seed, () => getMagicItem('random', 'any'));
         if (!item) return null;
         const rarity = item.rarity.replace('-', ' ');
-        return { icon: '✨', kind: 'Magic item', title: item.name,
+        return { icon: '✨', kind: 'Magic item', art: 'magic-item', title: item.name,
             text: `${rarity[0].toUpperCase() + rarity.slice(1)} ${item.type}${item.attune ? ', requires attunement' : ''}.`,
             href: `loot-generator?tab=magic&seed=${seed}`, cta: 'Open in Loot' };
     });
@@ -81,13 +81,13 @@ function rollDaily(date, rumors) {
     tryPart(() => {
         const seed = dailySeed(date, 'quest');
         const q = rollQuest(seed);
-        return { icon: '🗺️', kind: 'Side quest', title: q.title, text: q.task, href: `dnd-side-quest-generator?seed=${seed}`, cta: 'The full job' };
+        return { icon: '🗺️', kind: 'Side quest', art: 'side-quest', title: q.title, text: q.task, href: `dnd-side-quest-generator?seed=${seed}`, cta: 'The full job' };
     });
 
     tryPart(() => {
         const ad = adsToday().display[0];
         if (!ad) return null;
-        return { icon: '📯', kind: 'A word from our sponsors', title: ad.h, text: ad.t,
+        return { icon: '📯', kind: 'A word from our sponsors', art: 'sponsor', title: ad.h, text: ad.t,
             href: classifiedShopHref(ad) || ad.href || '', cta: ad.shop ? 'Step inside' : 'Find out more' };
     });
 
@@ -97,6 +97,7 @@ function rollDaily(date, rumors) {
 function dailyHtml(parts) {
     return '<h4 class="widget-title">🗞️ Today in the Realm</h4>' + parts.map(p => `
         <div class="daily-item">
+          ${p.art ? `<img class="daily-art woodcut" src="img/woodcut/${p.art}.webp" alt="" width="52" height="52" loading="lazy" decoding="async">` : ''}
           <span class="daily-kind"><span aria-hidden="true">${p.icon}</span> ${esc(p.kind)}</span>
           <h5${p.quote ? ' class="daily-quote"' : ''}>${p.href ? `<a href="${esc(p.href)}">${esc(p.title)}</a>` : esc(p.title)}</h5>
           ${p.text ? `<p>${esc(p.text)}</p>` : ''}

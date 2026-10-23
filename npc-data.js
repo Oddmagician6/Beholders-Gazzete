@@ -767,9 +767,10 @@ const NPC_PORTRAITS = {
     gnome: '🎩', orc: '👹', tiefling: '😈', dragonborn: '🐉'
 };
 
-// The painted portrait for a race and gender (img/npc/, one per pair), or '' for anything else.
+// The painted portrait for a race and gender (img/npc/, one per pair, plus the Character Builder's
+// half-elves and half-orcs), or '' for anything else.
 function npcPortraitSrc(race, gender) {
-    return NPC_RACES.includes(race) && NPC_GENDERS.includes(gender) ? `img/npc/${race}-${gender}.webp` : '';
+    return [...NPC_RACES, 'half-elf', 'half-orc'].includes(race) && NPC_GENDERS.includes(gender) ? `img/npc/${race}-${gender}.webp` : '';
 }
 
 // A rolled NPC's face for a card or a list: a round portrait (.npc-face in style.css), or its race emoji.

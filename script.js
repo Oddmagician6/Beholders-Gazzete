@@ -255,6 +255,7 @@ function displayAdHtml(ad) {
   const cta = ad.shop ? '🏪 Step inside' : '📜 Find out more';
   return `
     <aside class="display-ad" aria-label="Advertisement">
+      <img class="ad-art woodcut" src="img/woodcut/${CLASSIFIED_KINDS.display.art}.webp" alt="" width="56" height="56" loading="lazy" decoding="async">
       <span class="ad-label">Advertisement</span>
       <h3 class="ad-head">${esc(ad.h)}</h3>
       <p>${esc(ad.t)}</p>
@@ -268,6 +269,7 @@ function renderClassifieds() {
   if (!el || !ads.length) return;
   el.innerHTML = '<h4 class="widget-title">📯 Classifieds</h4>' + ads.map(ad => `
     <div class="classified">
+      <img class="classified-art woodcut" src="img/woodcut/${CLASSIFIED_KINDS[ad.k].art}.webp" alt="" width="44" height="44" loading="lazy" decoding="async">
       <span class="classified-kind">${CLASSIFIED_KINDS[ad.k].label}</span>
       <h5>${esc(ad.h)}</h5>
       <p>${esc(ad.t)}</p>
@@ -385,7 +387,7 @@ function esc(s) {
 
 function errorBox(msg) {
   return `<div style="background:var(--bg-card);border:var(--border-gold);border-radius:var(--radius-md);padding:40px;text-align:center;color:var(--text-dim);">
-    <p style="font-size:2rem;margin-bottom:16px;">📜</p>
+    <img class="mascot" src="img/mascot/error.webp" alt="" width="140" height="140" decoding="async">
     <p>${msg}</p>
   </div>`;
 }

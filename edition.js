@@ -52,6 +52,7 @@ function edAds(date) {
     const ads = dealClassifieds(date, 4);
     const small = ads.small.map(ad => `
         <div class="ed-ad">
+          <img class="ed-ad-art" src="img/woodcut/${CLASSIFIED_KINDS[ad.k].art}.webp" alt="" width="40" height="40" loading="lazy" decoding="async">
           <div class="ed-ad-kind">${edEsc(CLASSIFIED_KINDS[ad.k].label)}</div>
           <h3>${edEsc(ad.h)}</h3>
           <p>${edEsc(ad.t)}</p>
@@ -61,6 +62,7 @@ function edAds(date) {
         const href = classifiedShopHref(ad) || ad.href || '';
         return `
         <aside class="ed-display" aria-label="Advertisement">
+          <img class="ed-ad-art" src="img/woodcut/${CLASSIFIED_KINDS.display.art}.webp" alt="" width="40" height="40" loading="lazy" decoding="async">
           <h3>${edEsc(ad.h)}</h3>
           <p>${edEsc(ad.t)}</p>
           ${href ? `<a class="ed-ad-go" href="${edEsc(href)}">${ad.shop ? 'Step inside' : 'Find out more'} →</a>` : ''}
@@ -88,8 +90,13 @@ function edRender(date) {
     out.innerHTML = `
       <div class="ed-paper">
         <header class="ed-mast">
-          <div class="ed-mast-name">The Beholder's Gazette</div>
-          <div class="ed-mast-motto">All the News That's Fit to Scry</div>
+          <img class="ed-ear" src="img/woodcut/weather-vane.webp" alt="" width="296" height="320">
+          <div class="ed-mast-mid">
+            <img class="ed-mast-art" src="img/woodcut/masthead-beholder.webp" alt="" width="1024" height="654">
+            <div class="ed-mast-name">The Beholder's Gazette</div>
+            <div class="ed-mast-motto">All the News That's Fit to Scry</div>
+          </div>
+          <img class="ed-ear" src="img/woodcut/paperboy.webp" alt="" width="314" height="320">
         </header>
         <div class="ed-dateline">
           <span>No. ${no}</span>
@@ -97,14 +104,16 @@ function edRender(date) {
           <span>${items.length} ${items.length === 1 ? 'story' : 'stories'} · Two copper</span>
         </div>
         ${edStory(lead, true)}
+        ${rest.length ? `<img class="ed-rule" src="img/woodcut/section-rule.webp" alt="" width="1200" height="86">` : ''}
         ${rest.length ? `
         <nav class="ed-index" aria-label="In this edition">
           <h2>In This Edition</h2>
           <ol>${rest.map(a => `<li><span>${edKicker(a)}</span><a href="#s-${edEsc(a.id)}">${edEsc(a.title)}</a></li>`).join('')}</ol>
         </nav>` : ''}
         ${rest.map(a => edStory(a, false)).join('')}
+        <img class="ed-rule" src="img/woodcut/section-rule.webp" alt="" width="1200" height="86">
         ${edAds(date)}
-        <div class="ed-foot">Satire. Every name is a fictional stand-in · Printed by The Beholder's Gazette${host ? ' · ' + edEsc(host) : ''}</div>
+        <div class="ed-foot"><img class="ed-foot-art" src="img/woodcut/printing-press.webp" alt="" width="282" height="320">Satire. Every name is a fictional stand-in · Printed by The Beholder's Gazette${host ? ' · ' + edEsc(host) : ''}</div>
       </div>`;
 
     // Page numbers and the date in the print margins (Chrome and Edge draw @page margin boxes)

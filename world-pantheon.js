@@ -74,7 +74,7 @@ function panRosterHTML(p) {
     return `<div class="pan-roster">${p.gods.map((g, i) => {
         const d = PAN_DOMAINS[g.domain];
         return `<button type="button" class="pan-god${i === panState.god ? ' on' : ''}" data-god="${i}" aria-pressed="${i === panState.god}">
-            <span class="pan-god-icon" aria-hidden="true">${d.icon}</span>
+            <span class="pan-god-icon wb-emblem" style="--emblem:url('img/symbol/${g.domain}.webp')" aria-hidden="true"></span>
             <span class="pan-god-name">${esc(panCap(g.name))}</span>
             <span class="pan-god-sub">${esc(d.label)} · ${esc(g.alignment)}${i === p.leader && p.shape !== 'many' ? ' · 👑' : ''}</span>
             <span class="pan-god-role">${esc(g.role)}</span>
@@ -84,7 +84,8 @@ function panRosterHTML(p) {
 
 function panGodHTML(p, i, cal) {
     const g = p.gods[i], d = PAN_DOMAINS[g.domain];
-    return `<div class="wb-month-head">
+    return `<div class="wb-seal"><span class="wb-emblem" style="--emblem:url('img/symbol/${g.domain}.webp')"></span></div>
+        <div class="wb-month-head">
             <button type="button" class="btn wb-arrow" data-step="-1" aria-label="Previous god">◀</button>
             <h4>${d.icon} ${esc(panCap(g.name))}<small>${esc(panCap(g.epithet))} · god ${i + 1} of ${p.gods.length}</small></h4>
             <button type="button" class="btn wb-arrow" data-step="1" aria-label="Next god">▶</button>

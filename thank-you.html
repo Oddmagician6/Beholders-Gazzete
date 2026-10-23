@@ -21,19 +21,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
+        .thank-you-scene {
+            padding: 100px 20px;
+            background: linear-gradient(rgba(10, 8, 5, 0.3), rgba(10, 8, 5, 0.6)), url('img/hero-thank-you.webp') center / cover;
+        }
         .thank-you-container {
             max-width: 600px;
-            margin: 100px auto;
+            margin: 0 auto;
             text-align: center;
             padding: 40px;
             background: var(--parchment);
             color: var(--parchment-text);
             border: 2px solid var(--gold-bright);
             border-radius: 5px;
-        }
-        .thank-you-icon {
-            font-size: 5rem;
-            margin-bottom: 20px;
         }
         .thank-you-container h1 {
             color: var(--gold-bright);
@@ -51,12 +51,14 @@
         <div class="logo">👁️ The Beholder's Gazette</div>
     </header>
     
+    <div class="thank-you-scene">
     <div class="thank-you-container">
-        <div class="thank-you-icon">🦅</div>
+        <img class="mascot" src="img/mascot/celebrating.webp" alt="" width="180" height="180" decoding="async">
         <h1>Your Raven Has Been Sent!</h1>
         <p>Thank you for subscribing to The Beholder's Gazette. A raven will arrive at your location within 3-5 business days with the latest news from the realm.</p>
         <p>If the raven gets lost (they sometimes do), check your spam folder or send a owl instead.</p>
         <a href="./" class="btn">← Return to Gazette</a>
+    </div>
     </div>
     
     <footer>

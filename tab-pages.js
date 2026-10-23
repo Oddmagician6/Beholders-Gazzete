@@ -42,7 +42,7 @@ function tabPageAddress(params) {
     return [tabPagePath(tab), rest];
 }
 
-// The title, the hero kicker and text, and the how-it-works guide for the tab on screen.
+// The title, the hero kicker, text, and art, and the how-it-works guide for the tab on screen.
 function showTabPage(tab) {
     if (!TAB_PAGES) return;
     const page = tab === TAB_PAGES.first && !tabOfPage() ? TAB_PAGES.hub : TAB_PAGES.tabs[tab];
@@ -52,6 +52,8 @@ function showTabPage(tab) {
     if (kicker) kicker.textContent = page.kicker || '';
     const hero = document.querySelector('.page-hero-description');
     if (hero) hero.textContent = page.hero;
+    const art = document.querySelector('.page-hero.photo');
+    if (art && page.art) art.style.backgroundImage = `url('${page.art}')`;
     // A tab page carries only its own guide; it hides while another tab is on screen.
     document.querySelectorAll('.tool-guide[data-tab]').forEach(g => { g.hidden = g.dataset.tab !== tab; });
 }

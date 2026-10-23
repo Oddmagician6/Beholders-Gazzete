@@ -145,7 +145,7 @@ function renderRace() {
 function renderClass() {
     const c = cur, k = cbClass(c.cls), d = cbDerive(c);
     let h = `<h2>Class</h2><p class="cb-lead">Your class is what you do: it sets your hit points, proficiencies, and features at every level.</p>
-        <div class="cb-cards">${CB_CLASSES.map(x => `<button type="button" class="cb-card" data-act="class" data-v="${x.id}" aria-pressed="${c.cls === x.id}"><b>${x.icon} ${esc(x.name)}</b>d${x.hd} · ${x.primary.map(a => a.toUpperCase()).join(', ')}${x.cast ? ' · spells' : ''}</button>`).join('')}</div>`;
+        <div class="cb-cards">${CB_CLASSES.map(x => `<button type="button" class="cb-card cb-class-card" data-act="class" data-v="${x.id}" aria-pressed="${c.cls === x.id}"><img class="cb-class-art" src="img/class/${x.id}-sm.webp" srcset="img/class/${x.id}-sm.webp 160w, img/class/${x.id}.webp 480w" sizes="200px" alt="" width="160" height="160" loading="lazy" decoding="async"><b>${x.icon} ${esc(x.name)}</b>d${x.hd} · ${x.primary.map(a => a.toUpperCase()).join(', ')}${x.cast ? ' · spells' : ''}</button>`).join('')}</div>`;
     if (!k) return h + stepTodo('class') + nextButtons();
     const lv = Array.from({ length: 20 }, (_, i) => [i + 1, `Level ${i + 1}`]);
     h += `<h3>${k.icon} ${esc(k.name)}: ${esc(k.sub.name)}</h3>
@@ -434,10 +434,11 @@ function renderSpells() {
     return h + stepTodo('spells') + nextButtons();
 }
 
+// The race and gender portrait, else the class's (img/class/), else ''.
 function portraitSrc(c) {
-    if (typeof npcPortraitSrc !== 'function') return '';
     const g = { male: 'male', female: 'female', nonbinary: 'nonbinary' }[String(c.gender).toLowerCase()];
-    return g ? npcPortraitSrc(CB_NPC_RACE[c.race], g) : '';
+    const face = g && typeof npcPortraitSrc === 'function' ? npcPortraitSrc(c.race, g) : '';
+    return face || (c.cls ? `img/class/${c.cls}-sm.webp` : '');
 }
 
 function renderDetails() {

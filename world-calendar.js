@@ -150,7 +150,7 @@ function calMoonsHTML(c) {
         const ph = MOON_PHASES[calMoonPhase(mo, abs)];
         const every = mo.cycle === 29.5 ? 'Full every 29 or 30 days; each month begins at its new moon.' : `Full every ${mo.cycle} days.`;
         return `<div class="wb-moon">
-            <div class="wb-moon-name">${ph.icon} ${esc(mo.name)} <small>${esc(mo.epithet)}</small></div>
+            <div class="wb-moon-name">${moonArtHtml(calMoonPhase(mo, abs))} ${esc(mo.name)} <small>${esc(mo.epithet)}</small></div>
             <p class="wb-small">${esc(calCap(mo.color))}, ${esc(mo.size)}. ${every} Tonight: ${esc(ph.label.toLowerCase())}.</p>
             <p>${esc(mo.lore)}</p>
             <p><b>When it's full:</b> ${esc(mo.full)}</p>
@@ -199,7 +199,7 @@ function calMonthViewHTML(c) {
         let ph = '';
         if (c.moons[0]) {
             const p = calMoonPhase(c.moons[0], abs);
-            if (p % 2 === 0 && calMoonPhase(c.moons[0], abs - 1) !== p) ph = `<span class="ph" title="${esc(c.moons[0].name)}: ${esc(MOON_PHASES[p].label)}">${MOON_PHASES[p].icon}</span>`;
+            if (p % 2 === 0 && calMoonPhase(c.moons[0], abs - 1) !== p) ph = `<span class="ph" title="${esc(c.moons[0].name)}: ${esc(MOON_PHASES[p].label)}">${moonArtHtml(p)}</span>`;
         }
         const others = c.moons.slice(1).filter(mo => calMoonPhase(mo, abs) === 4 && calMoonPhase(mo, abs - 1) !== 4);
         const holyHere = holy.filter(h => h.day === d);
@@ -211,7 +211,8 @@ function calMonthViewHTML(c) {
     const heads = c.week.names.map((n, k) => `<div class="wb-wd${k === c.week.rest ? ' rest' : ''}" title="${esc(n)}">${esc(n.slice(0, 3))}</div>`).join('');
     const gap = c.gap && c.gap.after === i
         ? `<p class="wb-gapline"><b>Then ${esc(c.gap.name)}</b>: ${c.gap.days} day${c.gap.days === 1 ? '' : 's'} that belong${c.gap.days === 1 ? 's' : ''} to no month and no week. ${esc(c.gap.custom)}</p>` : '';
-    return `<div class="wb-month-head">
+    return `<img class="wb-season-art" src="img/calendar/${m.season}.webp" alt="" width="1600" height="400" decoding="async">
+        <div class="wb-month-head">
             <button type="button" class="btn wb-arrow" data-step="-1" aria-label="Previous month">◀</button>
             <h4>${esc(calMonthLabel(m))}<small>${esc(m.nickname)} · ${m.days} days · ${TRAVEL_SEASONS[m.season].icon} ${esc(calSeasonLabel(c, m.season))} · month ${i + 1} of ${c.months.length}</small></h4>
             <button type="button" class="btn wb-arrow" data-step="1" aria-label="Next month">▶</button>
