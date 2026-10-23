@@ -76,6 +76,8 @@
     .bb-swatch[aria-pressed="true"], .bb-item[aria-pressed="true"] { border-color: var(--gold-bright); box-shadow: 0 0 0 2px var(--gold-mid); color: var(--gold-bright); }
     .bb-items { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 0 0 10px; }
     .bb-item { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 5px 3px; font-family: var(--font-ui); font-size: 0.66rem; line-height: 1.2; color: var(--text-mid); background: #2b2519; border: 1px solid var(--gold-dim); border-radius: var(--radius-sm); cursor: pointer; }
+    .bb-group { grid-column: 1 / -1; font-family: var(--font-ui); font-size: 0.74rem; font-weight: 700; color: var(--gold-mid); margin: 6px 0 0; }
+    .bb-group:first-child { margin-top: 0; }
     .bb-item img { width: 40px; height: 40px; object-fit: contain; }
     .bb-item-s { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; font: 700 26px Georgia, serif; color: var(--gold-bright); }
     .bb-side select, .bb-side input[type="text"] { width: 100%; box-sizing: border-box; margin: 0; font-size: 0.9rem; padding: 6px 8px; }

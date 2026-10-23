@@ -17,6 +17,8 @@
 const SITE_FIELDS = { kind: 'site-kind', size: 'site-size', level: 'site-level', party: 'site-party' };
 // The linked history's URL keys → its option names (the same keys the History tab uses).
 const SITE_HIS_KEYS = { hages: 'ages', hspan: 'span', hstart: 'start' };
+// The kinds with a picture (img/site/<kind>.webp, from page-art.py); the rest show none until theirs is made.
+const SITE_ART = ['crypt', 'mine', 'tower', 'temple', 'fort', 'lair', 'keep', 'sewer', 'seacave', 'shipwreck', 'lighthouse', 'manor', 'barrow'];
 
 let siteState = { seed: null, data: null, his: null, history: null, hage: -1 };
 
@@ -164,7 +166,7 @@ function renderSite() {
     const ctx = siteCtx();
     const art = `img/site/${s.kind}`;
     document.getElementById('site-card').innerHTML = `
-        <div class="wb-art" aria-hidden="true"><img src="${art}.webp" srcset="${art}-sm.webp 480w, ${art}.webp 960w" sizes="(max-width: 1000px) 100vw, 960px" alt="" width="960" height="640" decoding="async"></div>
+        ${SITE_ART.includes(s.kind) ? `<div class="wb-art" aria-hidden="true"><img src="${art}.webp" srcset="${art}-sm.webp 480w, ${art}.webp 960w" sizes="(max-width: 1000px) 100vw, 960px" alt="" width="960" height="640" decoding="async"></div>` : ''}
         <header class="wb-head">
             <p class="wb-kicker">${K.icon} ${esc(K.label)} · ${Z.icon} ${esc(Z.label)} · ${esc(siteBandLabel(s))} · level ${s.level}, party of ${s.party}</p>
             <h3 class="wb-name">${esc(s.name)}</h3>

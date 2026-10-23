@@ -1270,19 +1270,19 @@ const SITE_FLOOR_TILE = SITE_SQUARE * 4;
 // Each kind's floor (and its corridors'), its ordinary door's picture (null: drawn plain), and its
 // locked door's (else iron-door).
 const SITE_ART_KINDS = {
-    crypt: { floor: 'flagstones', door: 'iron-door', props: ['coffin', 'rubble', 'bone-pile', 'brazier', 'spider-web', 'statue', 'sarcophagus'] },
-    mine: { floor: 'cave', door: 'wooden-door', props: ['crates', 'mine-cart', 'rubble', 'barrels', 'stalagmites', 'spider-web', 'crystal', 'sacks'] },
-    tower: { floor: 'planks', door: 'wooden-door', locked: 'magic-seal', props: ['bookshelf', 'table', 'chest', 'rug', 'brazier', 'desk', 'alchemy-table', 'mirror'] },
-    temple: { floor: 'temple-tiles', door: 'iron-door', locked: 'magic-seal', props: ['pillar', 'statue', 'rubble', 'brazier', 'altar', 'spider-web', 'idol'] },
-    fort: { floor: 'dirt', door: 'wooden-door', locked: 'barred-door', props: ['barrels', 'crates', 'table', 'campfire', 'weapon-rack', 'sacks', 'hay'] },
-    lair: { floor: 'cave', door: null, props: ['bone-pile', 'stalagmites', 'rubble', 'spider-web'] },
-    keep: { floor: 'flagstones', door: 'wooden-door', locked: 'barred-door', props: ['rubble', 'table', 'barrels', 'pillar', 'chest', 'weapon-rack', 'brazier', 'tapestry'] },
-    sewer: { floor: 'flagstones', door: 'iron-door', props: ['barrels', 'crates', 'rubble', 'spider-web', 'bone-pile'] },
-    seacave: { floor: 'cave', door: null, props: ['barrels', 'crates', 'rubble', 'stalagmites', 'chest'] },
-    shipwreck: { floor: 'planks', door: 'wooden-door', locked: 'barred-door', props: ['barrels', 'crates', 'chest', 'rubble', 'spider-web', 'sacks'] },
-    lighthouse: { floor: 'flagstones', door: 'wooden-door', locked: 'barred-door', props: ['barrels', 'crates', 'chest', 'table', 'brazier'] },
-    manor: { floor: 'planks', door: 'wooden-door', locked: 'barred-door', props: ['table', 'rug', 'bookshelf', 'chest', 'statue', 'spider-web', 'tapestry', 'mirror'] },
-    barrow: { floor: 'dirt', door: null, props: ['bone-pile', 'rubble', 'sarcophagus', 'spider-web', 'brazier'] }
+    crypt: { floor: 'flagstones', door: 'iron-door', props: ['coffin', 'rubble', 'bone-pile', 'brazier', 'spider-web', 'statue', 'sarcophagus', 'urns', 'candles', 'skeleton', 'burial-niche'] },
+    mine: { floor: 'cave', door: 'wooden-door', props: ['crates', 'mine-cart', 'rubble', 'barrels', 'stalagmites', 'spider-web', 'crystal', 'sacks', 'ladder', 'mushrooms', 'dead-adventurer'] },
+    tower: { floor: 'planks', door: 'wooden-door', locked: 'magic-seal', props: ['bookshelf', 'table', 'chest', 'rug', 'brazier', 'desk', 'alchemy-table', 'mirror', 'telescope', 'globe', 'scroll-pile', 'specimen-shelf', 'candelabra', 'chair'] },
+    temple: { floor: 'temple-tiles', door: 'iron-door', locked: 'magic-seal', props: ['pillar', 'statue', 'rubble', 'brazier', 'altar', 'spider-web', 'idol', 'pews', 'font', 'candles', 'gong'] },
+    fort: { floor: 'dirt', door: 'wooden-door', locked: 'barred-door', props: ['barrels', 'crates', 'table', 'campfire', 'weapon-rack', 'sacks', 'hay', 'bench', 'stool', 'shackles', 'fireplace'] },
+    lair: { floor: 'cave', door: null, props: ['bone-pile', 'stalagmites', 'rubble', 'spider-web', 'skeleton', 'dead-adventurer', 'carcass', 'blood-pool', 'slime', 'mushrooms', 'coin-pile', 'boulder'] },
+    keep: { floor: 'flagstones', door: 'wooden-door', locked: 'barred-door', props: ['rubble', 'table', 'barrels', 'pillar', 'chest', 'weapon-rack', 'brazier', 'tapestry', 'fireplace', 'bench', 'candelabra', 'shackles'] },
+    sewer: { floor: 'flagstones', door: 'iron-door', props: ['barrels', 'crates', 'rubble', 'spider-web', 'bone-pile', 'slime', 'ladder', 'skeleton', 'carcass', 'mushrooms', 'blood-pool'] },
+    seacave: { floor: 'cave', door: null, props: ['barrels', 'crates', 'rubble', 'stalagmites', 'chest', 'rowboat', 'nets', 'anchor', 'coin-pile', 'boulder', 'skeleton'] },
+    shipwreck: { floor: 'planks', door: 'wooden-door', locked: 'barred-door', props: ['barrels', 'crates', 'chest', 'rubble', 'spider-web', 'sacks', 'cannon', 'anchor', 'mast', 'nets', 'skeleton', 'coin-pile'] },
+    lighthouse: { floor: 'flagstones', door: 'wooden-door', locked: 'barred-door', props: ['barrels', 'crates', 'chest', 'table', 'brazier', 'stove', 'chair', 'nets', 'anchor', 'ladder', 'telescope'] },
+    manor: { floor: 'planks', door: 'wooden-door', locked: 'barred-door', props: ['table', 'rug', 'bookshelf', 'chest', 'statue', 'spider-web', 'tapestry', 'mirror', 'chair', 'wardrobe', 'fireplace', 'candelabra', 'piano', 'bathtub'] },
+    barrow: { floor: 'dirt', door: null, props: ['bone-pile', 'rubble', 'sarcophagus', 'spider-web', 'brazier', 'urns', 'burial-niche', 'skeleton', 'coin-pile'] }
 };
 // A room's own floor, by what its name and description say (first match). room: not in caves.
 const SITE_FLOOR_RULES = [
@@ -1321,7 +1321,7 @@ const SITE_PROP_RULES = [
     [/alchem|laborator|glassware|potion|distill/, 'alchemy-table'],
     [/forge|smelter|smithy|furnace/, 'forge'],
     [/anvil|smithy|armou?rer/, 'anvil'],
-    [/hearth|candles|brazier|lamp/, 'brazier'],
+    [/brazier|lamp|torches/, 'brazier'],
     [/cells?\b|prison|gaol|jail|oubliette|captives?|prisoners?/, 'prison-cell'],
     [/stocks|pillory/, 'stocks'],
     [/tortur|interrogat|the rack\b/, 'torture-rack'],
@@ -1345,14 +1345,60 @@ const SITE_PROP_RULES = [
     [/throne|big chair|high-backed/, 'throne'],
     [/weapons|armou?ry|training yard|swords|broken weapons/, 'weapon-rack'],
     [/\bwell\b/, 'well'],
-    [/fountain|baptistry|\bbath\b/, 'fountain'],
+    [/fountain|baptistry/, 'fountain'],
     [/chest|strongbox|trunks?\b|vessels/, 'chest'],
-    [/cellar|shaft|charnel pit|trapdoor/, 'trapdoor']
+    [/cellar|shaft|charnel pit|trapdoor/, 'trapdoor'],
+    [/tavern|taproom|\binn\b|common room|alehouse/, 'bar-counter'],
+    [/tavern|taproom|common room|card game|gambl/, 'round-table'],
+    [/chairs?\b|seats?\b|seated/, 'chair'],
+    [/bench/, 'bench'],
+    [/stools?\b/, 'stool'],
+    [/kitchen|\bcooks?\b|scullery|galley/, 'stove'],
+    [/kitchen|butcher|scullery/, 'kitchen-counter'],
+    [/hearth|fireplace|chimney|mantel/, 'fireplace'],
+    [/wardrobe|closet|dressing|gowns|clothes/, 'wardrobe'],
+    [/\bbath|\btub\b|washroom/, 'bathtub'],
+    [/candelabr|chandelier/, 'candelabra'],
+    [/harpsichord|piano|music room|ballroom/, 'piano'],
+    [/skeleton|corpse|remains|\bbod(y|ies)\b/, 'skeleton'],
+    [/fallen adventurer|dead adventurer|previous party|rival party|last expedition/, 'dead-adventurer'],
+    [/shackle|manacle|chained|chains?\b/, 'shackles'],
+    [/carcass|half-eaten|gnawed|feeding|\bkill\b/, 'carcass'],
+    [/slime|ooze|jelly|pudding|sludge/, 'slime'],
+    [/blood|slaughter/, 'blood-pool'],
+    [/mushroom|fung|toadstool|spore/, 'mushrooms'],
+    [/broken pillar|toppled|fallen column/, 'broken-pillar'],
+    [/ladder|hatch|climb/, 'ladder'],
+    [/coins?\b|purse|tribute|\btolls?\b|gold pieces|silver pieces/, 'coin-pile'],
+    [/telescope|observator|astrolog|stargaz/, 'telescope'],
+    [/globe|map room|cartograph|orrery/, 'globe'],
+    [/scrolls?\b|papers|archive|letters|scriptorium/, 'scroll-pile'],
+    [/specimen|\bjars\b|pickled|preserved|curiosit/, 'specimen-shelf'],
+    [/pews?\b|nave|chapel|congregation|sermon/, 'pews'],
+    [/\bfont\b|holy water|baptis/, 'font'],
+    [/candles|vigil|votive/, 'candles'],
+    [/gong|\bbells?\b|belfry/, 'gong'],
+    [/\burns?\b|ashes|cremat|columbarium/, 'urns'],
+    [/graveyard|cemetery|headstone|gravestone|churchyard/, 'headstone'],
+    [/\bgraves?\b|exhum|gravedigg|freshly dug/, 'open-grave'],
+    [/niche|catacomb|loculi|wrapped bod/, 'burial-niche'],
+    [/rowboat|skiff|dinghy|\bboats?\b|jetty|\bdocks?\b|landing|\bpier\b/, 'rowboat'],
+    [/cannon|gun deck|gunport|powder magazine/, 'cannon'],
+    [/anchor|chain locker|capstan|windlass/, 'anchor'],
+    [/\bnets?\b|\bfish|\bcrabs?\b|lobster/, 'nets'],
+    [/\bmasts?\b|rigging|\bsails?\b|\bspars?\b/, 'mast'],
+    [/\btrees?\b|grove|orchard|courtyard|garden/, 'tree'],
+    [/\bbush|shrub|hedge|thicket|bramble|overgrown|garden/, 'bush'],
+    [/boulder|rockfall|great stone/, 'boulder'],
+    [/fallen log|\blogs?\b|deadfall|fallen tree|stump/, 'fallen-log'],
+    [/\btents?\b|\bcamp\b|encampment|pavilion/, 'tent']
 ];
 // Pieces drawn wide (their pictures are long and low), pieces drawn big (two squares a side), and
 // pieces that lie flat under the room's number.
-const SITE_PROP_WIDE = ['altar', 'bookshelf', 'table', 'desk', 'weapon-rack', 'stocks', 'tapestry', 'alchemy-table'];
-const SITE_PROP_BIG = ['treasure-hoard', 'forge', 'prison-cell', 'egg-nest', 'gallows'];
+const SITE_PROP_WIDE = ['altar', 'bookshelf', 'table', 'desk', 'weapon-rack', 'stocks', 'tapestry', 'alchemy-table', 'bench', 'bar-counter',
+    'fireplace', 'kitchen-counter', 'wardrobe', 'bathtub', 'dead-adventurer', 'carcass', 'broken-pillar', 'ladder', 'specimen-shelf', 'pews',
+    'open-grave', 'burial-niche', 'rowboat', 'cannon', 'fallen-log', 'mast'];
+const SITE_PROP_BIG = ['treasure-hoard', 'forge', 'prison-cell', 'egg-nest', 'gallows', 'round-table', 'piano', 'tree', 'tent'];
 const SITE_PROP_MIDDLE = ['rug', 'magic-circle'];
 
 function siteArtFloor(s, i) {

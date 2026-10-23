@@ -481,6 +481,7 @@ const CONT_ART_POIS = { ruin: 'ruined-keep', barrow: 'barrow', dragon: 'dragon-l
 const CONT_ART_TOWNS = { hamlet: 19, village: 22, town: 25, city: 29, metropolis: 32 };   // icon sizes; a capital is 35
 // Ornaments: [file, width ÷ height].
 const CONT_ART_SEA = [['ship', 1.53], ['kraken', 1.65], ['whale', 1.61], ['sea-serpent', 1.79], ['galley', 1.59]];
+const CONT_ART_DRAGON = 2.12;
 const CONT_ART_BANNER = 3.96, CONT_ART_EDGE = 16.5, CONT_ART_FRAME = 9;
 const CONT_STYLES = { atlas: '🎨 Illustrated', classic: '✒️ Classic ink' };
 
@@ -1646,7 +1647,7 @@ function contArtTown(c, t) {
     return { file: `place/${t.size}`, s: CONT_ART_TOWNS[t.size] };
 }
 
-// The frame, the compass, the title scroll, and the sea creatures. boxes: taken spots, which
+// The frame, the compass, the title scroll, the sea creatures, and a dragon. boxes: taken spots, which
 // these join (labels keep off them). Returns { under, frame }: under goes below the labels,
 // the frame on top of everything (its patterns use ID for the map's id prefix).
 function contArtOrnaments(c, W, H, boxes, title) {
@@ -1699,6 +1700,21 @@ function contArtOrnaments(c, W, H, boxes, title) {
         placed.push(i);
         const flip = contHash(i, 17, m.jit) < 0.5 ? ` transform="translate(${f(p.x * 2)} 0) scale(-1 1)"` : '';
         under += contArtImg(`ornament/${file}`, p.x, p.y, w, h, 'cm-a-orn', flip);
+    }
+
+    // A dragon on the wing over the mountains or open plains, clear of the towns and places.
+    const sky = m.landIdx.filter(i => {
+        const x = i % m.cols, y = (i - x) / m.cols;
+        return (m.biome[i] === 'mountains' || m.biome[i] === 'plains') && x >= 6 && y >= 6 && x <= m.cols - 7 && y <= m.rows - 7;
+    }).map(i => ({ i, r: contHash(i % m.cols * 5 + 1, Math.floor(i / m.cols) * 11 + 4, m.jit) })).sort((a, b) => a.r - b.r);
+    for (const { i } of sky) {
+        const w = 54, h = w / CONT_ART_DRAGON, p = contPt(m, i);
+        const box = { x: p.x - w / 2, y: p.y - h / 2, w, h };
+        if (hits(box)) continue;
+        boxes.push(box);
+        const flip = contHash(i, 23, m.jit) < 0.5 ? ` transform="translate(${f(p.x * 2)} 0) scale(-1 1)"` : '';
+        under += contArtImg('ornament/dragon', p.x, p.y, w, h, 'cm-a-orn', flip);
+        break;
     }
 
     // A wind head at the west or east edge, blowing in toward the land.
