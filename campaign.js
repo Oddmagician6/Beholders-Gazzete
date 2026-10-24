@@ -306,32 +306,40 @@ function cpWorldEntry(W, tab) {
 function saveToNotebook() {
     const cp = cps.data, v = cp.villain;
     const href = 'dnd-campaign-generator?' + paramsQuery(cpParams(false));
-    const notes = [cp.pitch, `The scheme: ${osCap(v.name)} ${v.scheme}.`, `What everyone wants: ${cp.relic.text}.`,
-        'The front:', ...cp.front.map((t, i) => `${i + 1}. ${t}`)].join('\n');
-    const main = nbAdd({ kind: 'quest', title: cp.title, sub: `Campaign · ${cp.n} chapters · levels ${cp.start} to ${cp.end}`, href, notes,
-        dm: `Secret: ${v.secret}\nTheir people call ${v.name} ${cp.alias}.`, giver: cp.contacts[cp.contacts.length - 1].name, status: 'open' });
+    // The scheme and the front are the DM's alone, as on the page: the 🔒 notes, never the players' ones.
+    const dm = [`The scheme: ${osCap(v.name)} ${v.scheme}.`, `What everyone wants: ${cp.relic.text}.`,
+        'The front:', ...cp.front.map((t, i) => `${i + 1}. ${t}`), `Secret: ${v.secret}`, `Their people call ${v.name} ${cp.alias}.`].join('\n');
+    const main = nbAdd({ kind: 'quest', title: cp.title, sub: `Campaign · ${cp.n} chapters · levels ${cp.start} to ${cp.end}`, href, notes: cp.pitch,
+        dm, giver: cp.contacts[cp.contacts.length - 1].name, status: 'open' });
     if (!main || main.full) return flash(main && main.full ? 'The notebook is full; delete some entries first.' : 'Could not save: this browser\'s storage is full or blocked.', true);
     const ids = [];
+    let added = 0, missed = 0;
+    const tally = r => {
+        if (!r || !r.entry) { missed++; return; }
+        ids.push(r.entry.id);
+        if (!r.existed) added++;
+    };
     cp.chapters.forEach(ch => {
         const o = ch.o;
         const r = nbAdd({ kind: 'quest', title: `${cp.title}, chapter ${ch.i + 1}: ${o.title}`, sub: `Level ${ch.level} · ${o.site.name}`,
             href: 'dnd-campaign-generator?' + paramsQuery({ ...cpParams(false), ch: ch.i + 1 }),
             notes: [o.pitch, `In the campaign: ${ch.serves}`, ch.lead ? `The way on: ${ch.lead}` : ''].filter(Boolean).join('\n'),
             dm: `Twist: ${o.twist}\nPatron's secret: ${o.patron.secret}`, giver: o.patron.name, reward: formatCoins(o.reward), status: 'open' });
-        if (r && r.entry) ids.push(r.entry.id);
+        tally(r);
     });
     // A rolled world goes in as the Worldbuilder's own entries; a read one is already there (nbAdd links it).
     ['pantheon', 'factions', 'history'].forEach(tab => {
         const key = { pantheon: 'gods', factions: 'facs', history: 'his' }[tab];
         if (cp.world[key].read) return;
-        const r = nbAdd({ kind: tab, ...cpWorldEntry(cp.world, tab), href: cpWorldHref(cp.world, tab) });
-        if (r && r.entry) ids.push(r.entry.id);
+        tally(nbAdd({ kind: tab, ...cpWorldEntry(cp.world, tab), href: cpWorldHref(cp.world, tab) }));
     });
     const nb = nbLoad();
     let changed = false;
     ids.forEach(id => { changed = nbLink(nb, main.entry.id, id) || changed; });
     if (changed) nbStore(nb);
-    flash(main.existed ? '📒 Already in the notebook.' : `📒 Saved the campaign, its ${cp.n} chapters${cp.world.facs.read ? '' : ', and its world'} to the Campaign Notebook.`);
+    if (missed) return flash(`📒 Saved the campaign, but ${missed} of its chapters and world entries didn't fit (the notebook or this browser's storage is full). Make room and save again to add them.`, true);
+    flash(!main.existed ? `📒 Saved the campaign, its ${cp.n} chapters${cp.world.facs.read ? '' : ', and its world'} to the Campaign Notebook.`
+        : added ? '📒 Added what was missing to the campaign already in the notebook.' : '📒 Already in the notebook.');
 }
 
 function cpShowChapter(i, scroll) {

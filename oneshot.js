@@ -137,17 +137,18 @@ function rollNew() {
 function saveToNotebook() {
     const o = os.data;
     const href = 'dnd-one-shot-generator?' + paramsQuery(osParams());
-    const notes = [o.pitch, `Truth: ${o.truth}`, `Patron: ${o.patron.name}, ${o.patron.role}, at ${o.tavern.name} in ${o.town}.`,
+    const notes = [o.pitch, `Patron: ${o.patron.name}, ${o.patron.role}, at ${o.tavern.name} in ${o.town}.`,
         `The job: ${o.job}`, `Site: ${o.site.name}.`, ...o.threads.map(t => `Thread: ${t}`)].join('\n');
+    // What's really going on is the DM's alone, as on the page: the 🔒 notes, never the players' ones.
     const quest = nbAdd({ kind: 'quest', title: o.title, sub: `One-shot · ${OS_TONES[o.tone].label} · level ${o.level}`, href, notes,
-        dm: `Twist: ${o.twist}\nPatron's secret: ${o.patron.secret}`, giver: o.patron.name, reward: formatCoins(o.reward), status: 'open' });
+        dm: `Truth: ${o.truth}\nTwist: ${o.twist}\nPatron's secret: ${o.patron.secret}`, giver: o.patron.name, reward: formatCoins(o.reward), status: 'open' });
     if (!quest || quest.full) return flash(quest && quest.full ? 'The notebook is full; delete some entries first.' : 'Could not save: this browser\'s storage is full or blocked.', true);
     const site = nbAdd({ kind: 'sites', title: o.site.name, sub: siteSummary(o.site), href: osSiteLink(o) });
-    if (site && site.entry && quest.entry) {
-        const nb = nbLoad();
-        if (nbLink(nb, quest.entry.id, site.entry.id)) nbStore(nb);
-    }
-    flash(quest.existed ? '📒 Already in the notebook.' : '📒 Saved the quest and the site to the Campaign Notebook.');
+    if (!site || !site.entry) return flash('📒 Saved the quest, but the site didn\'t fit (the notebook or this browser\'s storage is full). Make room and save again to add it.', true);
+    const nb = nbLoad();
+    if (nbLink(nb, quest.entry.id, site.entry.id)) nbStore(nb);
+    flash(!quest.existed ? '📒 Saved the quest and the site to the Campaign Notebook.'
+        : site.existed ? '📒 Already in the notebook.' : '📒 Added the site to the quest already in the notebook.');
 }
 
 function osPrint() {

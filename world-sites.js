@@ -288,7 +288,8 @@ async function siteEditMap() {
         const p = bmPack(bmFromSite(s, siteStyle()));
         delete p.id;
         delete p.t;
-        location.href = 'dnd-battlemap-builder?m=' + await packShareCode(p);
+        // After the #, so a big site never makes the address too long for the server.
+        location.href = 'dnd-battlemap-builder#m=' + await packShareCode(p);
     } catch (err) {
         console.error(err);
         btn.disabled = false;

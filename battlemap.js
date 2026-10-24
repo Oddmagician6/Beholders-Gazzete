@@ -84,11 +84,14 @@ function bbFlash(msg, keep = false) {
 }
 
 // ── Saving and undo ───────────────────────────────────────
+// False (after a warning) when the browser wouldn't keep it.
 function bbSaveNow() {
     clearTimeout(BB.saveTimer);
     BB.dirty = false;
     BB.store.cur = BB.m.id;
-    if (!bmSaveStore(BB.store)) bbFlash('⚠️ This browser would not save the map (storage full or turned off). Copy a link to keep it.', true);
+    if (bmSaveStore(BB.store)) return true;
+    bbFlash('⚠️ This browser would not save the map (storage full or turned off). Copy a link to keep it.', true);
+    return false;
 }
 
 function bbSave() {
@@ -162,9 +165,9 @@ function bbAdd(m) {
     }
     BB.store.maps.unshift(m);
     BB.m = m;
-    bbSaveNow();
+    const saved = bbSaveNow();
     bbOpen(m.id);
-    return true;
+    return saved;
 }
 
 // ── The SVG ───────────────────────────────────────────────
@@ -695,8 +698,9 @@ async function bbCopyLink() {
     delete p.id;
     delete p.t;
     const code = await packShareCode(p);
+    // After the #: the browser keeps it to itself, so a big map can't make the address too long for the server.
     const url = new URL('dnd-battlemap-builder', location.href);
-    url.search = '?m=' + code;
+    url.hash = 'm=' + code;
     try {
         await navigator.clipboard.writeText(url.href);
         bbFlash(`🔗 Link copied (${url.href.length.toLocaleString('en-US')} characters). It opens this map as it is now.`);
@@ -767,8 +771,10 @@ async function bbPrint() {
 }
 
 // ── Opening a link ────────────────────────────────────────
+// The code is after the # (older links: in the query).
 async function bbFromLink() {
-    const p = new URLSearchParams(location.search), code = p.get('m');
+    const p = new URLSearchParams(location.search), h = new URLSearchParams(location.hash.slice(1));
+    const code = h.get('m') || p.get('m');
     if (!code) return;
     let m = null;
     try {
@@ -785,7 +791,8 @@ async function bbFromLink() {
     else if (!bbAdd({ ...m, id: bmId(), t: Date.now() })) return;
     else bbFlash(`📥 Opened “${m.name}” and saved it with your maps.`);
     p.delete('m');
-    history.replaceState(null, '', location.pathname + (p.toString() ? '?' + p : '') + location.hash);
+    h.delete('m');
+    history.replaceState(null, '', location.pathname + (p.toString() ? '?' + p : '') + (h.toString() ? '#' + h : ''));
 }
 
 // ── Set up ────────────────────────────────────────────────
@@ -920,9 +927,9 @@ function bbSetup() {
         BB.store.maps = BB.store.maps.filter(m => m !== BB.m);
         if (!BB.store.maps.length) BB.store.maps.push(bmBlank(30, 20, 'My battlemap'));
         BB.m = BB.store.maps[0];
-        bbSaveNow();
+        const saved = bbSaveNow();
         bbOpen(BB.m.id);
-        bbFlash(`🗑️ Deleted “${name}”.`);
+        if (saved) bbFlash(`🗑️ Deleted “${name}”.`);
     });
 
     $('bb-link').addEventListener('click', bbCopyLink);
@@ -931,10 +938,19 @@ function bbSetup() {
     window.addEventListener('afterprint', () => { document.body.classList.remove('print-bb'); $('bb-print').innerHTML = ''; });
     window.addEventListener('beforeunload', () => { if (BB.dirty) bbSaveNow(); });
     window.addEventListener('pagehide', () => { if (BB.dirty) bbSaveNow(); });
-    // Another tab saved: take its maps, unless this one has changes of its own on the way.
+    // Another tab saved: take its maps. With changes of this tab's own on the way, take all but the
+    // map being drawn on, so the save that follows doesn't put back the other tab's old copies.
     window.addEventListener('storage', e => {
-        if ((e.key !== BM_KEY && e.key !== null) || BB.dirty) return;
+        if (e.key !== BM_KEY && e.key !== null) return;
         const store = bmLoadStore(), id = BB.m.id;
+        if (BB.dirty) {
+            const i = store.maps.findIndex(m => m.id === id);
+            if (i >= 0) store.maps[i] = BB.m;
+            else store.maps.unshift(BB.m);
+            BB.store = store;
+            bbMapOptions();
+            return;
+        }
         const fresh = store.maps.find(m => m.id === id);
         const changed = !fresh || JSON.stringify(bmPack(fresh)) !== JSON.stringify(bmPack(BB.m));
         BB.store = store;
@@ -943,6 +959,8 @@ function bbSetup() {
         else { BB.m = fresh; BB.store.cur = id; bbMapOptions(); }
     });
     window.addEventListener('resize', () => { if (BB.zoom * BB.m.w > $('bb-stage').clientWidth * 3) bbFit(); });
+    // A map link pasted over this page's address only changes the part after the #.
+    window.addEventListener('hashchange', bbFromLink);
     bbFromLink();
 }
 
