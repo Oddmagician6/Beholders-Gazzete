@@ -2550,6 +2550,285 @@
         },
         "rumor": "They say the pearls work fine, it's the owl on the label that makes you feel sharper, and the owl is a minor enchantment."
       }
+    },
+    {
+      "id": "mortgage-rates-fall-732-fraddie-mace-loaves",
+      "title": "Mortgage Rates Slip to 7.32%, Hearth-Loans Still Dear",
+      "category": "Real Estate",
+      "author": "Barnaby Tallowmere",
+      "date": "2026-10-24",
+      "excerpt": "Mortgage rates eased to 7.32% from 7.40%, says Fraddie Mace. On a 400,000 gp hearth-loan that saves 320 gp a year, or 1,067 loaves.",
+      "content": "<p>Mortgage rates fell this week for the first time in a while, and I would like everyone to stay seated. Fraddie Mace Home-Loan Hall reports that the average thirty-year hearth-loan now costs 7.32 percent, down from 7.40 percent last week, while the fifteen-year loan eased to 6.68 percent from 6.71. A year ago the thirty-year stood at 6.19 percent. (I have checked this four times, and the year-ago figure is still 6.19.)</p>\n\n<p>Let us do the arithmetic, since nobody else will. A halfling couple borrowing 400,000 gold pieces pays eight hundredths of a percentage point less, which is 320 gp a year. On the current Loaf Index, at roughly 0.30 gp a loaf, that is 1,067 loaves. It is a real saving. It is also about what the couple will spend on roof thatch the first time the wind rises.</p>\n\n<p>Now the comparison that keeps me awake. Against last year's 6.19 percent, the same couple pays 1.13 points more, or 4,520 gp a year. That is 15,067 loaves, or a loaf a day for forty-one years, with a few left over for guests. The dip is a candle in a cellar. It is welcome, and it does not make the cellar a ballroom.</p>\n\n<p>The hall's own statement says the dip offers \"some relief to prospective homebuyers,\" which is polite wording for a loan that still costs more than the house did to build in my grandfather's day. As I wrote when rates last <a href=\"/a/mortgage-rates-740-percent-hearth-loans-loaf-index\">hit 7.40 percent</a>, the rate is set by what lenders pay to borrow, and that follows the Reserve's own mood. The Reserve, I note, has been talking about further hikes. One cheerful week does not change the weather.</p>\n\n<p>Sterling Vanmoor will, I assume, call this a turning point by lunchtime. It is a drop of eight hundredths. Please do not buy a manor on a drop of eight hundredths. My aunt Marigold, who keeps her savings in a boot, has asked me whether she should now move them to a slightly larger boot. I told her to wait for two consecutive weeks of decline, and then to wait one more.</p>\n\n<p>What this means for your pantry: if you are shopping for a hearth-loan, ask for a quote this week and compare it to next week's, because the rate moves on Thursdays and your patience is free. If you are not shopping, keep baking.</p>\n\n<p><em>— B.T. (Loaf Index: see sidebar)</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Thursday Rate Board",
+          "text": "A lending hall in town posts its loan rate on a chalkboard every Thursday, and this week someone has been quietly shaving a point off it overnight. The honest clerk who runs it wants the party to find out who, before borrowers sign loans at a rate that will vanish by Monday."
+        },
+        "npc": {
+          "name": "Perrin Dunwhistle",
+          "role": "Chalkboard Clerk of the Lending Hall",
+          "want": "To keep the Thursday rate board honest so nobody is ruined by a bad loan.",
+          "secret": "Perrin has been rounding rates down for friends and is terrified of being found out.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Patient Boot Inn",
+          "text": "A tavern where regulars wager loaves on next week's loan rate. The innkeeper keeps a boot behind the bar that is rumored to hold her entire savings.",
+          "tavern": true
+        },
+        "rumor": "They say the lending hall will cut rates by a full point by midwinter, though the man saying it sells hearth-loans."
+      }
+    },
+    {
+      "id": "state-workers-strike-golden-coast-lodge-1000",
+      "title": "State Workers Strike: Golden Coast Clerks Walk Out One Day",
+      "category": "Labor",
+      "author": "Brakka Stonesweat",
+      "date": "2026-10-24",
+      "excerpt": "Over 100,000 state workers staged a one-day strike, the first in their guild's history. They want 20% more pay and a chair at home.",
+      "content": "<p>The state workers strike happened. They walked out, all of them.</p>\n\n<p>Lodge 1000 of the Servitors' Guild-Union staged a one-day state workers strike across the Golden Coast on Wednesday, the first in the lodge's history. More than 100,000 clerks, auditors, healers, and counselors put down their quills over pay, healthcare, and a mandate to sit in the office four days a week. Regular readers will remember the <a href=\"/a/golden-coast-clerks-call-first-strike-margrave-rolls-initiative\">strike call</a> from two weeks back. The call has now become a picket line.</p>\n\n<p>Pickets went up in towns across the realm, including outside the Hall of Seals in Sacramantle. The lodge wants a 20 percent raise over three years and a bigger share of healthcare costs from the Margrave's treasury. They also want to work from home, which the lodge says saves the realm rent on drafty offices and saves the clerks a long ride on a long road.</p>\n\n<p>Margrave Gavin Newsoom of the Golden Coast ordered everyone back to the office four days a week as of the first of July. He says this brings 'collaboration and innovation.' That means he wants to see them. Last month he vetoed a bill that would have made him write down why. The Rosters Office, which handles the Margrave's bargaining, says it remains 'available at the table.' The contract ran out on the thirtieth of that month, and the lodge says nobody has bargained in good faith since.</p>\n\n<p>'Seventeen years I've kept the unemployment ledgers, and I feel disrespected,' said Orsolya Brightkettle, a ledger-keeper and lodge steward. 'They won't budge on pay. Then they tell me to commute four days to a desk I can do from my kitchen.'</p>\n\n<p>'Today we're saying enough is enough,' said Torvald Ironquill, a seal-clerk who carried a sign most of the morning. 'Give us a raise or let us save money. Pick one. I'd take either.'</p>\n\n<p>The members voted 96 percent to authorize the walkout. That is not a close vote. That is a whole hall of clerks agreeing on something, which I am told has never happened before in the history of paperwork.</p>\n\n<p>Meanwhile the Margrave is packing to leave his seat in January, and he is eyeing the High Seat in Waterdeep in 2028. Fine. Let him run on his record. His record is a hundred thousand clerks on a sidewalk and a vetoed bill with a very short sentence on it.</p>\n\n<p>No deal has been reported. The treasury still has not said whether the raise or the chair is on the table. The lodge went back to work after the day was done, and the ledgers were where they left them. Next time they may not be.</p>\n\n<p><em>Solidarity. And stretch your back. — Brakka</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Clerks Who Stayed Home",
+          "text": "A town's tax-and-deed office has walked out for a day, and the bailiff wants the party to guard the building so scabs and rats don't wreck the records. The striking clerks would pay double to have the party stand with them instead."
+        },
+        "npc": {
+          "name": "Orsolya Brightkettle",
+          "role": "Ledger-keeper and guild steward",
+          "want": "A fair contract and the right to work from her own kitchen.",
+          "secret": "She has kept a second copy of every ledger at home, in case the office is ever burned or sold.",
+          "race": "dwarf",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Idle Quill",
+          "text": "A pub across from the deed office where striking clerks gather between picket shifts. The barkeep takes payment in overdue forms and keeps a drawer of them.",
+          "tavern": true
+        },
+        "rumor": "They say the Margrave's own scribes were seen carrying their desks home the night before the walkout."
+      }
+    },
+    {
+      "id": "albarn-protests-rubber-bullets-167-arrested-ramah",
+      "title": "Albarn Protests Hit Day Five; Chancellor Ramah Won't Resign",
+      "category": "International",
+      "author": "Grashka Ironjaw",
+      "date": "2026-10-24",
+      "excerpt": "Student protests in Albarn reached a fifth day with rubber bullets and 167 arrests. Chancellor Ramah refuses to resign. Tension holds at six siege-days.",
+      "content": "<p>The Watch fired rubber bullets on the streets of Tiranor on the fifth day of antigovernment protests, the first time since the unrest began. Students are in the street. The Chancellor is in his office. Neither side has moved.</p>\n\n<p>The numbers, as the Watch reported them: 167 arrested over five days. 132 officers injured. Seven officers suspended pending inquiry into alleged excess force. The Watch commander said the rubber bullets were used \"in a limited manner.\" I have heard that phrase before. It usually means the second volley is already loaded.</p>\n\n<p>The protesters threw stones, fire-oil flasks, and fireworks. They burned carts and refuse bins to build barricades. The Watch answered with tear smoke, water cannon, and baton charges. Trouble spread to the port of Durrock, where a post office was damaged and roads were blocked. A post office. Even rebellions have targets they can reach.</p>\n\n<p>Chancellor Eddy Ramah the Painter has held the Chancellor's seat for a fourth term, and the Rosy Socialists have held the realm since 2013. He has refused to resign. He says he will listen to the students. He says he will defend their right to gather. He also says the opposition is inciting the violence, which is what every chancellor says on day five. I rate that claim as unverified and convenient.</p>\n\n<p>The students want lower tuition at the colleges, better lecture halls, and jobs. They want an end to graft. They also want the Chancellor gone. That last demand was added by the Pink Heron Fellowship, which began as a quarrel over a luxury resort on the southern coast tied to a firm founded by Jarrod Cushmare, son-in-law of <a href=\"/a/donwald-endorsement-nettleyahu-halruaa-election\">High Lord Donwald of the Golden Towers</a>. A resort fight turned into a regime fight. Wars start smaller.</p>\n\n<p>Handshake report: none. Ramah has not met the protesters. Nobody has offered a hand, firm or otherwise, and no dagger has been checked for because no one is within reach. Compare the <a href=\"/a/concord-kara-tur-trade-deal-rare-earth\">Concord's trade parley</a> of last week, which at least had chairs.</p>\n\n<p>Note for the Chancellor, from a field rations enthusiast: you cannot feed a crowd on promises to listen. Hungry students march faster than fed ones, and these have the whole city to march across. Open a table. Pass out something hot. Then bargain.</p>\n\n<p>Tension in Albarn holds at six siege-days and climbing. The students have time. The Chancellor has a fourth term and a shrinking list of friends. One of them will blink.</p>\n\n<p><em>Ironjaw, filed from the front.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "Barricades at the Post Office",
+          "text": "Student protests have turned a coastal city's streets into barricades, and the Watch has begun using rubber bullets. A frightened guildmaster hires the party to escort a cart of hot food and a letter of truce to the students' camp before someone loses an eye."
+        },
+        "npc": {
+          "name": "Marta Vennick",
+          "role": "Watch Captain, recently suspended",
+          "want": "To clear her name before the inquiry hears her side.",
+          "secret": "She was ordered to fire first and has the written order sewn into her coat lining.",
+          "race": "human",
+          "gender": "female",
+          "kind": "guard"
+        },
+        "location": {
+          "name": "The Burned Post Office",
+          "text": "A scorched stone building at the center of the barricades, used by both sides as a neutral meeting spot. The mail sorters still show up for work and refuse to take sides.",
+          "tavern": false
+        },
+        "rumor": "They say the Chancellor already has a ship waiting in the harbor, just in case."
+      }
+    },
+    {
+      "id": "revivify-claim-denied-pre-existing-condition-shieldwall",
+      "title": "Revivify Claim Denied as Pre-Existing Condition",
+      "category": "Adventurers",
+      "author": "Hollis Delvewright",
+      "date": "2026-10-24",
+      "excerpt": "Shieldwall Mutual refused to pay for a revivify spell, ruling the fighter's death a pre-existing condition. He had died once before. The mule was fine.",
+      "content": "<p>BRINDLEMOOR, SHIELDWALL MUTUAL CLAIMS OFFICE, GROUND FLOOR (0 FEET UNDERGROUND, WHICH I FOUND DISAPPOINTING) — Shieldwall Mutual Assurance Society has denied the Fourth Attempt's claim for a revivify spell, ruling that the fighter's death was a pre-existing condition. The fighter, who has asked me to say he was \"mostly dead and then entirely dead,\" is back on his feet. The bill for 300 gold pieces is not paid.</p>\n\n<p>The facts are these. On Level 4 of the Undermaw, the fighter took a rolling boulder to the chest and went to 0 hit points, then to something worse. The party's cleric cast revivify within the minute and brought him back at 1 hit point, a figure Shieldwall Mutual's own forms would call \"cosmetic.\" Then the claim went in.</p>\n\n<p>\"The member died previously,\" said claims adjuster Dunmar Hesk, holding a ledger open to a page I was not shown. \"Level 3, spring, a swarm of stirges. He was raised by the temple and signed a waiver. Under Clause 41, anything the member has been dead of before is a known condition.\" I asked whether a boulder and a stirge swarm were the same condition. \"Both are death,\" Hesk said. I rolled poorly on the follow-up question and asked if he meant the same death. He did not.</p>\n\n<p>Ansel Pottage, steward of the Fourth Attempt's hirelings, read the policy to the end, as he does. \"Clause 41 applies to illness,\" he said, bandaged hand on the page. \"Clause 44 lists boulders under accidents. Clause 44 is on the back.\" The party had not turned the page. The party's bard, who asked to be named, said the policy \"had a confident front.\" He added that he would write a ballad about it, then said he would not.</p>\n\n<p>Chapter 9 offered no comment, though Deputy Registrar Pell Oddingwick said the guild \"supports all appeals that are on track.\" Reeve Fennick, asked whether the town would weigh in, said she was aware of the denial and had asked that it not be read aloud.</p>\n\n<p>The fighter's current standing, box-score style: 1 hit point, up from 0, with one death on the season and one on the claim form. The wizard remains at 4. The mule, who is not covered, is at full health and has been seen near the appeals window. Ten-foot poles lost in the line of duty this season: seven. One went into the claims office door, which was a door.</p>\n\n<p>Shieldwall Mutual says an appeal may be filed within ten days at the same window. The window is also a counter. Nobody has tested whether it is a mimic.</p>\n\n<p><em>— H.D., filing from below</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "Clause 41 Is Not Your Friend",
+          "text": "An insurance guild refuses to pay for a revivify, claiming the dead fighter died of a known condition. The party must find the clause on the back of the policy, or the adjuster's missing ledger page, before the temple repossesses the fighter's second wind."
+        },
+        "npc": {
+          "name": "Dunmar Hesk",
+          "role": "Claims adjuster, Shieldwall Mutual",
+          "want": "To close denied claims before the end of the quarter.",
+          "secret": "He has died twice himself and has been hiding both from his employer.",
+          "race": "human",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Appeals Window",
+          "text": "A brass-grilled counter on a claims office ground floor, with a sign reading 'Take a Number.' The numbers are handed out by a small iron golem who has not called one since spring.",
+          "tavern": false
+        },
+        "rumor": "They say the adjuster keeps a second ledger in his boot, and that every page is a person who was raised and never asked."
+      }
+    },
+    {
+      "id": "foldable-phone-launch-walk-in-stock-duet",
+      "title": "Foldable Phone Launch Day: Duet Walk-In Stock 'Limited'",
+      "category": "Technology",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-10-24",
+      "excerpt": "The Pocketstone Duet foldable phone hits shops with limited walk-in stock. Ten realms get a reservation slip instead. Nyx queued anyway.",
+      "content": "<p>It is launch day for the Pocketstone Duet, the first foldable phone from the Apple of Discord Artificers, and I have been standing outside a Discord Apple storefront since the third bell of the night. The guild says the shop will carry \"limited\" walk-in stock, because preorder demand was, in their words, \"extraordinary.\" I am here. I am vibrating. I have a thermos.</p>\n\n<p>Here is the fine print, which I read twice because I am an artificer. Walk-in sales run in Waterdeep, the Silver Marches, Cormyr, Chult, Dolmen, the Low Marches and a handful of other realms, plus one Italian-adjacent province where the guild would only say \"some shops.\" Ten realms get no walk-in stock at all, including Tethyr, Kozakura and Kara-Tur. Buyers there must reserve a pickup slot through the guild's online scrying portal, which, as of this morning, told them to come back on the twenty-fourth. That is today, one day after launch. I have questions about the calendar.</p>\n\n<p>The guild says the walk-in limits are partly crowd control and partly an anti-scalping measure. Fair! Nobody wants a goblin reseller flipping a 1,999 gp folding stone out of a wheelbarrow. Earlier, rumor had it that shop staff were told to politely discourage anyone without a preorder. The guild then clarified that walk-ins are welcome, in the sense that a door is welcome to a wall.</p>\n\n<p>The runic latency on this announcement is fantastic, by the way. The statement went from \"no stock\" to \"limited stock\" in under a day, and I cannot name another product with firmware glyphs that fast. Meanwhile my familiar Byte, the pseudodragon who now speaks only in ad copy, has been reading the queue its own ad copy. \"Unfold your possibilities,\" he said, to a very tired halfling in a bathrobe. The halfling did not tip him.</p>\n\n<p>Reviews of the Duet, which I covered <a href=\"/a/foldable-phone-reviews-duet-crease-discord-apple\">when they landed</a>, call it heavy but hardly flawed, so I fully expect to love it. I have forgiven worse. I once forgave a scrying assistant that told me Byte was a toaster. Also, Brother Tumbleberry stopped by my spot in line to suggest I \"touch grass.\" I told him the grass is behind the queue, and the queue is the point.</p>\n\n<p>Update from the front: the shop door opened. A clerk walked out, counted the first eleven of us, and said, \"Congratulations, you are the limit.\" I am number twelve. I am now holding a reservation slip, a thermos, and a strong opinion about the word limited.</p>\n\n<p>Four out of five beholder eyes, for the stone I have not touched.</p>\n\n<p><em>— Nyx (they/them). Damage Report below.</em></p>\n\n<p>Damage Report: Hours queued: 11. Reservation slips: 1. Stones purchased: 0. Eyebrows: fine, because I never got close enough to anything.</p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Eleventh in Line",
+          "text": "A merchant's guild is selling a handful of enchanted folding stones and the line outside is turning ugly. A nervous runner in the crowd offers the party gold to hold her place while she delivers a secret message. If the stones are all snapped up by one buyer, the whole town riots."
+        },
+        "npc": {
+          "name": "Pell Tuckwick",
+          "role": "Harried Shop Queue Warden",
+          "want": "Keep the line orderly until the doors open without a riot.",
+          "secret": "She has already sold the first three places in line to a reseller.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Gilded Orchard Storefront",
+          "text": "A glass-fronted artifice shop with a velvet rope and a suspiciously large back door. The stock room is always guarded by an enchanted clock that counts down to nothing.",
+          "tavern": false
+        },
+        "rumor": "They say the shop only ever has eleven of anything, and the twelfth person in line is always told to come back tomorrow."
+      }
+    },
+    {
+      "id": "senate-race-lawsuit-frostmarch-sullow-inquisitors",
+      "title": "Senate Race Lawsuit Targets Frostmarch's Second Sullow",
+      "category": "Elections",
+      "author": "Ottoline Vex",
+      "date": "2026-10-24",
+      "excerpt": "The Royal Inquisitors sued to delay certification of a Frostmarch Senate race over a challenger who shares the incumbent's name. Minutes inside.",
+      "content": "<p>The Royal Inquisitors filed suit on Thursday to block certification of the Senate race in Frostmarch, asking a federal magistrate to hold the count while investigators work out whether votes cast for Daniel J. Sullow were secretly meant for Senator Dan Sullow. This is the same Senator Sullow who is running for re-election. It is also the same Daniel J. Sullow who is an independent, a separate man, and a lawful name on the ballot.</p>\n\n<p>The filing states that the second Sullow's inclusion creates a \"substantial likelihood\" of confusing voters. The gentleman from the Frostmarch Bar of Review did not find this persuasive in June, when the Frostmarch high court refused an earlier Red Oliphant attempt to strike the independent from the ballot. The Inquisitors have now taken the matter to a higher floor, which is the correct procedure for a thing you lost.</p>\n\n<p>Some background for the gallery. Frostmarch uses ranked-choice voting, under which a voter may mark both Sullows in order of preference, as one might mark two entries on a menu. The incumbent faces Mara Peltolan, a former Blue Donkey delegate, who held a one-point lead in a scrying poll earlier this month. That is inside the margin of error, and also inside the margin of the lawsuit.</p>\n\n<p>Inquisitor-General Todd Blenche said on Wednesday that his office would not interfere with certification \"unless extreme circumstances warranted it.\" The suit arrived the following day. The Promises Made / Promises Kept tally for the Inquisitors this week stands at one and zero, and the one is under review.</p>\n\n<p>High Lord Donwald, asked about the filing in Floridia on Friday, said he was \"the one that said 'do it.'\" I have entered this in the minutes as a statement against interest. A courtier who asked not to be named because they were not authorized to be awake told me the High Lord's remark was \"the first time the Inquisitors have been briefed by the person they were supposed to be briefing.\" It was.</p>\n\n<p>Scholars of election procedure, among them a lady from a Chamber-watching institute whose name I will not guess at, noted that certification belongs to the provinces, not the capital. The Inquisitors responded that the capital is also a place, and has opinions. Critics point to two other recent suits against a Blue Donkey provincial senator and a Blue Donkey delegate, both of whom call their cases politically motivated. The Inquisitors call them routine. Routine is a word with a long and distinguished history of being said at hearings.</p>\n\n<p>Election Day is 3 November. There are, by my count, eleven days in which a federal magistrate must decide whether a man may share a name with another man. The Chamber has handled harder questions, such as lunch, and taken longer.</p>\n\n<p>The motion was filed. Nobody has yet explained which Sullow is the confusing one.</p>\n\n<p><em>— O.V., from the gallery</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Other Sullow",
+          "text": "A provincial election is days away, and a powerful faction is suing to delay the count because two candidates share a name. The party's candidate, an independent with the same name, hires the heroes to prove he is a real person with a real platform before a magistrate rules him a typo."
+        },
+        "npc": {
+          "name": "Perrin Hollowmere",
+          "role": "Overworked Deputy Clerk of Ballots",
+          "want": "To certify the count on time and go home.",
+          "secret": "A second set of tallies, in her own handwriting, shows the independent drawing more votes than anyone has admitted.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Two Names Tavern",
+          "text": "A roadside inn where every regular answers to the same name, which the barkeep says is for efficiency. Arguments here are settled by whoever shouts first.",
+          "tavern": true
+        },
+        "rumor": "They say the magistrate's brother-in-law is also named Sullow, and nobody is brave enough to ask which one."
+      }
+    },
+    {
+      "id": "doorbell-camera-banana-joebid-mask-wataugh-watch",
+      "title": "Masked Man Eats Banana on Doorstep; Watch Finds No Crime",
+      "category": "Local Chaos",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-10-24",
+      "excerpt": "A stranger in an Archmage Joebid mask ate a banana at a family's door on camera, and the Wataugh Watch says weirdness alone is not a crime. Allegedly.",
+      "content": "<p>At roughly the second bell after sundown on Sunday, a doorbell camera in the Lone Star Marches town of Wataugh Hollow, some fifteen miles north of Fort Worthy, allegedly recorded a stranger in a mask of Archmage Joebid the Elder eating a banana on a family's doorstep. The Wataugh Watch looked at the footage, searched the lanes, found nobody, and ruled that no crime had occurred.</p>\n\n<p>Here is what the scrying-bell allegedly saw. The figure wore a rubbery Joebid face and a tunic reading FREEDOM. It carried the banana to the door, ran its fingers across the lens twice, peeled the fruit, and ate it through the mask. Then it walked off into the dark. That is the whole performance. I watched it eleven times.</p>\n\n<p>'I have never seen anyone commit to a snack like that,' said Odrin Pellwick, a neighbor, who was eating a turkey leg at the time and therefore felt qualified. 'Through the mouth hole, mind you. Not lifting the mask. That takes discipline.' The family called the visit scary, which I allegedly understand, because the thing happened on their own step.</p>\n\n<p>The Watch released a statement that I have copied onto my arm so I do not lose it: being bizarre is not, in itself, a criminal offense. I checked this with a wizard-lawyer in the Lower City, who said the Watch is correct and that this is also the entire plot of every tavern on Fish Street. The Watch has asked residents to report anything suspicious and, importantly, not to confront the figure. Good advice. Nobody wants to fight a man who is already holding a banana and a plan.</p>\n\n<p>Rumors say the Watch has heard of similar sightings, though nobody has filed an official report. So there may be a second banana out there, or a third. Allegedly.</p>\n\n<p>Also, the mask had a very glossy forehead, and I got distracted for a while thinking about how much it would shine on a hoard. Anyway. Back to the news. The Tower District nobles have not commented, which is typical, since a stranger who eats fruit in a mask is the least strange thing that has ever happened on a Tower District porch. Fort Worthy's own Watch says it is monitoring the situation. The banana, as of press time, has been fully eaten. We do not expect a recovery.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Banana Bandit of Larkspur Lane",
+          "text": "A masked figure keeps appearing on doorsteps at dusk, eating fruit and leaving without a word. The town Watch says it is not a crime, so a worried family hires the party to find out who is behind the mask and why they keep touching the scrying-bells."
+        },
+        "npc": {
+          "name": "Odrin Pellwick",
+          "role": "Retired lamplighter and neighbor",
+          "want": "To be the first to learn who is under the mask.",
+          "secret": "He owns the same mask and lent it out last month.",
+          "race": "gnome",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Peeled Pear",
+          "text": "A tiny inn at the end of Larkspur Lane where every table has a view of the street. The owner swears the fruit bowl refills itself each night.",
+          "tavern": true
+        },
+        "rumor": "They say the masked fellow is a guild apprentice on a dare, though my cousin swears he saw it levitate."
+      }
+    },
+    {
+      "id": "armorican-express-earnings-542-gp-share-squireri",
+      "title": "Armorican Express Earnings Leap 31% to 5.42 gp a Share",
+      "category": "Business",
+      "author": "Sterling Vanmoor",
+      "date": "2026-10-24",
+      "excerpt": "Armorican Express posted quarterly earnings of 5.42 gp a share and raised its yearly outlook. Sterling calls the rightsizing charge a bold pivot.",
+      "content": "<p>Armorican Express, the charge-card guild that lets adventurers buy now and be haunted later, reported third-quarter earnings of 5.42 gp a share on Friday, up 31% from 4.14 gp a year ago. Revenue climbed 9% to 20.1 billion gp, and Guildmaster Stefan Squireri raised the guild's full-year outlook. I read the scroll twice and then did my morning sword routine a third time out of sheer joy.</p>\n\n<p>Let's talk numbers, because I love numbers almost as much as I love guildmasters. Cardholders swung their purses to the tune of 454 billion gp in billed business, up 8%. That is a lot of rations, rope, and ten-foot poles. \"We had another strong quarter,\" Squireri said, which is exactly what a guildmaster should say and exactly what I would have said, only with more hustle.</p>\n\n<p>The headline, if you want to be a thought-leader about it, is the Grand Caravan Travel Guild. Armorican sold its stake there for a 982 million gp gain before tax, worth 1.11 gp a share. Strip that out and the earnings are 4.68 gp a share, up 13%, which still beats the 4.47 gp the scribes at the counting houses expected. Some people call that a one-time windfall. I call it monetizing a legacy caravan position, and I would like that on my gravestone.</p>\n\n<p>There was also a 336 million gp restructuring charge, which the guild booked in the same quarter. Translation for the unambitious: Armorican is rightsizing the adventuring party. Nobody has said how many clerks are leaving, and why should they? You don't announce the number of rats you removed from the cellar, you announce that the cellar is now a premium experience. Naturally, <a href=\"/a/automaker-earnings-20b-gp-buyback-general-mounts\">General Mounts</a> and <a href=\"/a/bank-earnings-equities-trading-72-goldmane\">Goldmane</a> have also had a good earnings season, so this is clearly a rising tide, or possibly a rising dragon.</p>\n\n<p>I met Squireri's predecessor's predecessor at a gala once, and he told me, 'Sterling, never leave home without a line of credit and a plan for the afterlife.' I have followed both ever since. Brakka Stonesweat will no doubt write a column asking who pays the interest on all that spending. To which I say: the answer is cardholders, and that is called a business model.</p>\n\n<p>Key takeaways for the ambitious adventurer:</p>\n\n<ul>\n<li>Sell the caravan stake when the market loves it, then call it a pivot.</li>\n<li>Book your restructuring charge in a quarter you are already beating.</li>\n<li>Raise guidance. Always raise guidance.</li>\n</ul>\n\n<p><em>— Sterling Vanmoor, Guild Visionary. Let's connect at the Yawning Portal.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Quiet Restructuring",
+          "text": "A charge-card guild in town just posted record profits, yet its clerks are vanishing from the counting house one by one. A worried bookkeeper hires the party to find out where they went before the guild's next audit."
+        },
+        "npc": {
+          "name": "Odrin Pellwick",
+          "role": "Senior Ledger Clerk",
+          "want": "To learn why his whole department was moved to the cellar overnight.",
+          "secret": "He has kept a copy of the restructuring list and is terrified his own name is on it.",
+          "race": "gnome",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Gilded Counting House",
+          "text": "A marble guildhall where every desk is empty by sundown. The cellar door is new, and it hums.",
+          "tavern": false
+        },
+        "rumor": "They say the guild booked a charge so big it could pay for a dragon's hoard, and they still came out ahead."
+      }
+    },
+    {
+      "id": "developmental-disability-rise-20-percent-disease-council",
+      "title": "Autism Diagnoses Up 42%; Disease Council Credits Earlier Looking",
+      "category": "Health",
+      "author": "Brother Wendell Tumbleberry",
+      "date": "2026-10-24",
+      "excerpt": "The Disease Council says autism and developmental disability reports rose sharply since 2019. Brother Wendell reads the numbers and recommends barley soup.",
+      "content": "<p>Friends, the Clerics' Disease Council reported this week that parent-reported developmental disability among children rose from 16.7 percent in 2019 to 20.5 percent in 2024, and that autism diagnoses climbed by more than 42 percent over the same stretch. That is one child in five, which is a great many small hands to hold, and it deserves a calm reading rather than a panic.</p>\n\n<p>The old herbals say that a thing which is looked for is a thing which is found. A midwife who never checks the baby's ears will report no ear trouble. Then comes the study, as it always does: the Council's own lead counter of heads said the rise \"could be related to earlier detection and awareness.\" In plain words, more parents, more healers, and more village schools are noticing, naming, and writing it down. A name on a scroll is how a child gets a tutor, a speech-wizard, or a quiet corner at the harvest fair.</p>\n\n<p>Now, I do not claim the Council's survey settles every question. It asks parents to report what they were told, and parents are not all asked the same way. Still, it is a sturdier basket than the hunches coming out of the Healing Ministry, where Royal Minister of Healing Robbert Fennedy the Younger, the Worm-Touched, has his own theories about pox vials. Friends will recall that the Council already warned of <a href=\"/a/hepatitis-b-newborn-vial-delay-fennedy\">a jump in newborn liver fever</a> if his vial plans go ahead. Naming a cause is easy. Finding one takes a ledger, a decade, and patience.</p>\n\n<p>What I would ask of the realm is dull and practical. Pay the speech-wizards fairly. Staff the village schools. Do not let the Council's counting rooms go dark, because a count nobody updates tells nobody anything. Meanwhile the Potion & Provisions Authority is still approving draughts at nine hundred gold a vial, and I will remind the realm that no draught has ever replaced a patient teacher.</p>\n\n<p>For the families reading this: you are not a statistic, and neither is your little one. Put the kettle on. This week's recommendation is a slow pot of lentil and carrot soup, soft enough for any appetite and cheap enough for any purse, with a spoonful of butter if the day was long. My friend Nyx Spindlecoil will no doubt ask for a dashboard of these figures. Go outside, Nyx.</p>\n\n<p><em>Rest well, friends. — Brother Wendell</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Quiet Corner Fund",
+          "text": "The village school's only speech-wizard is leaving unless the town can fund her post. The party is hired by a worried parent council to collect back-owed tithes from three stingy guilds before the term ends."
+        },
+        "npc": {
+          "name": "Mirabel Oakensworn",
+          "role": "Village school speech-wizard",
+          "want": "To keep her post and open a second quiet classroom.",
+          "secret": "She has been paying the classroom candles out of her own purse for two winters.",
+          "race": "gnome",
+          "gender": "female",
+          "kind": "magic"
+        },
+        "location": {
+          "name": "The Lantern Room",
+          "text": "A converted granary with soft lamplight, felt-lined walls, and no bells. Children from four villages walk here, which is odd because the nearest road is a goat path.",
+          "tavern": false
+        },
+        "rumor": "They say the Disease Council has stopped counting altogether and just guesses by the weight of the scrolls."
+      }
     }
   ]
 }
