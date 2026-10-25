@@ -18,7 +18,7 @@ const ENC_MAX_COUNT = 40;
 const ENC_PICKER_ROWS = 40;
 const ENC_DEFAULT_PARTY = [{ count: 4, level: 3 }];
 
-let enc = { party: encDefaultParty(), list: [], seed: null, band: null, open: new Set() };
+let enc = { party: encDefaultParty(), list: [], seed: null, band: null, lead: null, open: new Set() };
 let encTouched = false;   // false until the builder changes or opens a link
 
 // A first visit to the tab, untouched since the page loaded: start from the party as it is now.
@@ -205,7 +205,11 @@ function toggleAllBlocks() {
 // ── Scene ─────────────────────────────────────────────────
 function encScene() {
     if (!enc.list.length || !enc.seed) return null;
-    return rollEncounterScene(enc.list, enc.seed, { habitat: document.getElementById('en-env').value, band: enc.band, level: encBudget().avgLevel });
+    // A boss who came in person (a campaign link's `stand`) joined after their scene was rolled.
+    const L = enc.lead, stand = L && L.stand && enc.list.find(e => e.m.id === L.stand);
+    const list = stand ? enc.list.map(e => (e === stand ? { ...e, count: e.count - 1 } : e)).filter(e => e.count > 0) : enc.list;
+    const lead = L ? { name: L.name, stand: stand ? stand.m : null } : null;
+    return rollEncounterScene(list.length ? list : enc.list, enc.seed, { habitat: document.getElementById('en-env').value, band: enc.band, level: encBudget().avgLevel, lead });
 }
 
 function renderScene() {
@@ -243,7 +247,7 @@ function encChanged(push) {
     encTouched = true;
     if (enc.band && !encBandFits(ENC_BAND_BY_KEY[enc.band], enc.list)) enc.band = null;
     if (enc.list.length && !enc.seed) enc.seed = newSeed();
-    if (!enc.list.length) { enc.seed = null; enc.band = null; }
+    if (!enc.list.length) { enc.seed = null; enc.band = null; enc.lead = null; }
     enc.open = new Set([...enc.open].filter(id => enc.list.some(e => e.m.id === id)));
     renderEncounter();
     if (document.getElementById('en-cr').value === 'party') renderPicker();
@@ -263,6 +267,7 @@ function rollEncounterFor() {
     enc.list = res.list;
     enc.band = res.band;
     enc.seed = seed;
+    enc.lead = null;
     encChanged(true);
 }
 
@@ -300,7 +305,7 @@ function sendToInitiative() {
 }
 
 function clearEncounter() {
-    enc = { party: encDefaultParty(), list: [], seed: null, band: null, open: new Set() };
+    enc = { party: encDefaultParty(), list: [], seed: null, band: null, lead: null, open: new Set() };
     renderParty();
     encChanged(true);
 }
@@ -317,6 +322,8 @@ function encParams() {
         env: document.getElementById('en-env').value || null,
         band: document.getElementById('en-band').value || null,
         pack: enc.band,
+        lead: enc.lead ? enc.lead.name : null,
+        stand: enc.lead && enc.lead.stand ? enc.lead.stand : null,
         seed: enc.list.length ? enc.seed : null
     });
 }
@@ -329,7 +336,7 @@ function applyEncUrl(p) {
     enc.list = [];
     p.getAll('m').forEach(s => {
         const [id, n] = s.split('.');
-        const m = MONSTER_BY_ID[id];
+        const m = Object.hasOwn(MONSTER_BY_ID, id) ? MONSTER_BY_ID[id] : null;
         if (m && enc.list.length < ENC_MAX_KINDS && !enc.list.some(e => e.m === m)) enc.list.push({ m, count: clampInt(n, 1, ENC_MAX_COUNT, 1) });
     });
     const FIELDS = { diff: 'en-diff', type: 'en-roll-type', env: 'en-env', band: 'en-band' };
@@ -337,8 +344,11 @@ function applyEncUrl(p) {
         const el = document.getElementById(id);
         if (!setFieldValue(el, p.get(k))) el.value = defaultValue(el);
     });
-    enc.band = ENC_BAND_BY_KEY[p.get('pack')] ? p.get('pack') : null;
+    enc.band = Object.hasOwn(ENC_BAND_BY_KEY, p.get('pack')) ? p.get('pack') : null;
     enc.seed = parseSeed(p.get('seed'));
+    // A campaign's named boss (osFightLink): their name, and the monster they came as.
+    const lead = (p.get('lead') || '').trim().slice(0, 80), stand = p.get('stand');
+    enc.lead = lead ? { name: lead, stand: Object.hasOwn(MONSTER_BY_ID, stand) ? stand : null } : null;
     renderParty();
     renderPicker();
     // A link without a scene seed (older links, quest links) gets one, so it can be shared.

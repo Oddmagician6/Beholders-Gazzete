@@ -314,7 +314,7 @@ function rollCampaign(seed, opts = {}, set = {}) {
     const seeds = Object.fromEntries(CP_PARTS.map(id => [id, ps(id)]));
     const start = osClamp(opts.level, 1, 20, 1);
     const party = osClamp(opts.party, 1, 8, 4);
-    const length = CP_LENGTHS[opts.length] ? opts.length : 'standard';
+    const length = Object.hasOwn(CP_LENGTHS, opts.length) ? opts.length : 'standard';
     const Lc = CP_LENGTHS[length];
     const end = Math.min(20, start + Lc.span);
 
@@ -324,7 +324,7 @@ function rollCampaign(seed, opts = {}, set = {}) {
 
     // ── The arc ──
     const drawnTone = withSeed(deriveSeed(seeds.arc, 'tone'), () => osPick(OS_TONE_KEYS));
-    const tone = OS_TONES[opts.tone] ? opts.tone : drawnTone;
+    const tone = Object.hasOwn(OS_TONES, opts.tone) ? opts.tone : drawnTone;
     const arc = withSeed(seeds.arc, () => {
         const n = osInt(Lc.chapters[0], Lc.chapters[1]);
         const vi = cpWeighted(w.factions.map(f => [f.i, CP_VILLAIN_WEIGHT[f.type] || 1]));

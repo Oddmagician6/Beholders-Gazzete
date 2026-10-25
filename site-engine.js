@@ -611,7 +611,9 @@ const SITE_KIND_KEYS = Object.keys(SITE_KINDS);
 
 // One feature every room can have, besides its own kind's.
 const SITE_FEATURES = ['A table covered in old maps, all of the same place.', 'A chest that is empty except for a note: "Too late."', 'A well-made trap, already sprung, with nothing in it.', 'Old graffiti: a crude map, a joke, and a warning.', 'A skeleton sitting against the wall, holding a lantern.', 'A pile of rubble hiding a crawlspace.', 'A cracked mirror that shows the room as it was long ago.', 'A fresh bootprint in the dust, too small for a human.', 'A rope hanging from a hole in the ceiling.', "A circle of salt on the floor, broken in one place.", 'A rack of torches, two of them lit.', 'A message in chalk: "Second door. Not the first."', 'A dead adventurer with an empty pack and a full waterskin.', 'A statue whose pointing hand has been moved.', 'A heap of old campaign gear: a bedroll, a dented pot, a lute with two strings.', 'A stone with a hollow under it, as if for hiding things.', 'A wanted poster for someone in the party, nailed up recently.', 'A child\'s drawing of this very room, with a monster in it.', 'Three coins balanced on top of each other on the floor.', 'A scorch mark on the wall in the shape of a person.', 'A bucket of clean water, still cold.', 'A rusted helmet with a bird\'s nest in it.', 'Torn pages from a prayer book scattered across the floor.', 'A tripwire, cut, with the bell still attached.', 'A crude arrow scratched on the floor, pointing back the way you came.', 'A pair of boots by the wall, neatly placed, with nobody in them.'];
-const SITE_SENSES = ['Utter silence, as if the room is holding its breath.', 'A cold spot in the middle of the room.', 'A faint smell of smoke, from somewhere.', 'Your footsteps echo too long.', 'Something small scurries away out of the light.', 'A draft carries a smell of cooking from somewhere further in.', 'Your torch flame leans toward one wall.', 'A distant knocking, three times, then nothing.', 'The dust here has been disturbed, recently.', 'Faint voices, too far off to make out the words.', 'The air tastes stale, as if nobody has breathed it in years.', 'A slow drip, and an echo that does not match it.'];
+const SITE_SENSES = ['Utter silence, as if the room is holding its breath.', 'A cold spot in the middle of the room.', 'A faint smell of smoke, from somewhere.', 'Your footsteps echo too long.', 'Something small scurries away out of the light.'];
+// E2's newer senses swap in by their share after the draw (rollSite), so old seeds keep which rooms have one.
+const SITE_SENSES_MORE = ['A draft carries a smell of cooking from somewhere further in.', 'Your torch flame leans toward one wall.', 'A distant knocking, three times, then nothing.', 'The dust here has been disturbed, recently.', 'Faint voices, too far off to make out the words.', 'The air tastes stale, as if nobody has breathed it in years.', 'A slow drip, and an echo that does not match it.'];
 
 // What the foes in a room are doing when the party arrives. by: who acts like this
 // (folk: those who think and talk; beast: animals and monsters; mindless: undead,
@@ -994,6 +996,10 @@ function rollSite(seed, opts = {}) {
     const senses = part('senses.' + kind, () => {
         const pool = siteShuffle(K.senses.concat(SITE_SENSES));
         return Array.from({ length: 12 }, () => (rand() < 0.45 ? pool.shift() : null));
+    });
+    part('senses.more.' + kind, () => {
+        const more = siteShuffle(SITE_SENSES_MORE), share = more.length / (K.senses.length + SITE_SENSES.length + more.length);
+        senses.forEach((t, i) => { if (rand() < share && t && more.length) senses[i] = more.shift(); });
     });
 
     // Who holds it (a group that fits the level), and what wanders in.

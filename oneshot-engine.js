@@ -639,7 +639,7 @@ function rollOneShot(seed, opts = {}, set = {}) {
     const ps = id => (set && set[id]) || deriveSeed(seed, id);
     const level = osClamp(opts.level, 1, 20, 3);
     const party = osClamp(opts.party, 1, 8, 4);
-    const length = OS_LENGTHS[opts.length] ? opts.length : 'standard';
+    const length = Object.hasOwn(OS_LENGTHS, opts.length) ? opts.length : 'standard';
     const Lg = OS_LENGTHS[length];
     const given = opts.given || null;
     const slot = given && given.slot ? given.slot : null;
@@ -650,8 +650,8 @@ function rollOneShot(seed, opts = {}, set = {}) {
     // Always drawn, so picking one doesn't shift anything else.
     const drawnKind = siteMoreKind(seeds.site, withSeed(deriveSeed(seeds.site, 'kind'), () => osPick(SITE_KIND_FIRST)));
     const drawnTone = withSeed(deriveSeed(seeds.plot, 'tone'), () => osPick(OS_TONE_KEYS));
-    const tone = OS_TONES[opts.tone] ? opts.tone : drawnTone;
-    const kind = SITE_KINDS[opts.kind] ? opts.kind : drawnKind;
+    const tone = Object.hasOwn(OS_TONES, opts.tone) ? opts.tone : drawnTone;
+    const kind = Object.hasOwn(SITE_KINDS, opts.kind) ? opts.kind : drawnKind;
 
     // ── The site, and its boss as the villain ──
     const gv = given && given.villain && given.villain.name ? given.villain : null;
@@ -675,7 +675,7 @@ function rollOneShot(seed, opts = {}, set = {}) {
         if (stood) {
             guard = v0.name;
             lastFight.list.push({ id: stood.id, count: 1 });
-            site.boss.leader = { ...(L0 || {}), name: gv.name, role: stood.name, person: true, mark: L0 && L0.person ? L0.mark : 'came to see the end of it in person' };
+            site.boss.leader = encLeadAs(L0, gv.name, stood);
             named = true;
         }
     }
@@ -831,6 +831,12 @@ function osFightLink(o, f, habitat) {
     if (habitat) p.set('env', habitat);
     if (f.band) p.set('pack', f.band);
     p.set('seed', f.seed);
+    // A campaign chapter's named boss keeps their name (and the monster they came as) there.
+    const rooms = o.site.rooms, L = o.site.boss && o.site.boss.leader;
+    if (o.named && L && L.name && f === rooms[rooms.length - 1].fight) {
+        p.set('lead', L.name);
+        if (o.guard) p.set('stand', o.villain.monster);
+    }
     return 'toolbox?' + p.toString();
 }
 

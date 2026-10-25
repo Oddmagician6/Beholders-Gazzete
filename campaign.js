@@ -40,7 +40,8 @@ function cpLinkFrom(q, key) {
     return o;
 }
 
-// The notebook's latest pantheon, factions, and history, as links (a factions entry's own pantheon first).
+// The notebook's latest pantheon, factions, and history, as links (the factions' own pantheon first,
+// then the history's, so the gods they name are the ones the campaign uses).
 function cpNotebookWorld() {
     const nb = nbLoad();
     const latest = kind => nb.entries.filter(e => e.kind === kind && e.href && nbQuery(e.href).get('seed'))
@@ -53,7 +54,7 @@ function cpNotebookWorld() {
     };
     const fe = latest('factions'), pe = latest('pantheon'), he = latest('history');
     const links = { facs: fe ? own(fe, 'facs') : null, his: he ? own(he, 'his') : null };
-    links.gods = (fe && cpLinkFrom(nbQuery(fe.href), 'gods')) || (pe ? own(pe, 'gods') : null);
+    links.gods = (fe && cpLinkFrom(nbQuery(fe.href), 'gods')) || (he && cpLinkFrom(nbQuery(he.href), 'gods')) || (pe ? own(pe, 'gods') : null);
     return links;
 }
 
@@ -85,8 +86,8 @@ function cpFromUrl() {
         cps.level = cps.level || (list.length ? partyLevel(list) : 1);
         cps.party = cps.party || (list.length ? Math.min(8, list.length) : 4);
     }
-    cps.len = CP_LENGTHS[q.get('len')] ? q.get('len') : 'standard';
-    cps.tone = OS_TONES[q.get('tone')] ? q.get('tone') : '';
+    cps.len = Object.hasOwn(CP_LENGTHS, q.get('len')) ? q.get('len') : 'standard';
+    cps.tone = Object.hasOwn(OS_TONES, q.get('tone')) ? q.get('tone') : '';
     cps.set = {};
     (q.get('set') || '').split(',').forEach(t => {
         const [id, seed] = t.split('.');

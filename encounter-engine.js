@@ -641,13 +641,21 @@ function rollThemedEncounter(budget, diff, opts = {}) {
     return { list: pool.length ? fillEncounter(pool, budget, diff) : [], band: null };
 }
 
+// A named boss (a campaign's villain or lieutenant) over a scene's rolled leader. stand: the monster
+// they lead as, when they came in person (it joined the fight after the scene was rolled).
+function encLeadAs(leader, name, stand) {
+    if (!stand) return { ...leader, name };
+    return { ...(leader || {}), name, role: stand.name, person: true, mark: leader && leader.person ? leader.mark : "came to see the end of it in person" };
+}
+
 // The scene for a fight. Each part draws from its own child seed, so adding a monster
 // by hand changes only the parts that depend on who's there.
-// opts: { habitat ('' = pick one that suits them), band (a band key, or null to infer), level }
+// opts: { habitat ('' = pick one that suits them), band (a band key, or null to infer), level,
+//         lead ({ name, stand }: a named boss, see encLeadAs) }
 function rollEncounterScene(list, seed, opts = {}) {
     if (!list.length) return null;
     const part = (label, fn) => withSeed(deriveSeed(seed, label), fn);
-    const band = ENC_BAND_BY_KEY[opts.band] && encBandFits(ENC_BAND_BY_KEY[opts.band], list) ? ENC_BAND_BY_KEY[opts.band] : encInferBand(list);
+    const band = Object.hasOwn(ENC_BAND_BY_KEY, opts.band) && encBandFits(ENC_BAND_BY_KEY[opts.band], list) ? ENC_BAND_BY_KEY[opts.band] : encInferBand(list);
     const leadEntry = list.reduce((a, b) => (b.m.xp > a.m.xp ? b : a));
     const lead = leadEntry.m;
     const level = Math.min(20, Math.max(1, Math.round(opts.level || 1)));
@@ -699,7 +707,7 @@ function rollEncounterScene(list, seed, opts = {}) {
     });
 
     // The leader: the strongest of the group's leader roles that's here (a vampire, not its bats).
-    const leader = part("leader", () => {
+    const rolledLeader = part("leader", () => {
         const heads = band ? list.filter(e => band.leads.includes(e.m.id)) : [];
         const boss = (heads.length ? heads : list).reduce((a, b) => (b.m.xp > a.m.xp ? b : a));
         const lead = boss.m;
@@ -728,6 +736,7 @@ function rollEncounterScene(list, seed, opts = {}) {
         else return { name: null, role: lead.name, person: lead.type === "humanoid", mark };
         return { name, role: lead.name, person: lead.type === "humanoid", mark };
     });
+    const leader = opts.lead && opts.lead.name ? encLeadAs(rolledLeader, opts.lead.name, opts.lead.stand) : rolledLeader;
 
     const tactics = part("tactics", () => band ? pick(band.tactics) : typeScene.tactics);
     const morale = part("morale", () => band ? pick(band.morale) : typeScene.morale);

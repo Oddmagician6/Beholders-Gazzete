@@ -52,9 +52,9 @@ function osFromUrl() {
         os.level = os.level || (list.length ? partyLevel(list) : 3);
         os.party = os.party || (list.length ? Math.min(8, list.length) : 4);
     }
-    os.len = OS_LENGTHS[q.get('len')] ? q.get('len') : 'standard';
-    os.tone = OS_TONES[q.get('tone')] ? q.get('tone') : '';
-    os.kind = SITE_KINDS[q.get('kind')] ? q.get('kind') : '';
+    os.len = Object.hasOwn(OS_LENGTHS, q.get('len')) ? q.get('len') : 'standard';
+    os.tone = Object.hasOwn(OS_TONES, q.get('tone')) ? q.get('tone') : '';
+    os.kind = Object.hasOwn(SITE_KINDS, q.get('kind')) ? q.get('kind') : '';
     os.set = {};
     (q.get('set') || '').split(',').forEach(t => {
         const [id, seed] = t.split('.');
