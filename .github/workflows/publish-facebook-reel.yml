@@ -9,7 +9,7 @@ on:
         required: true
         type: string
       release_tag:
-        description: Temporary public GitHub Release containing <article-id>.mp4
+        description: Temporary public GitHub Release containing render.mp4
         required: true
         type: string
       custom_artwork_confirmed:
@@ -42,7 +42,7 @@ jobs:
           [[ "$CUSTOM_ARTWORK_CONFIRMED" == "true" ]] || { echo "Custom article-specific artwork must be confirmed before publishing." >&2; exit 1; }
           [[ "$ARTICLE_ID" =~ ^[a-z0-9][a-z0-9_-]*$ ]] || { echo "Invalid article ID." >&2; exit 1; }
           [[ "$RELEASE_TAG" =~ ^reel-stage-[a-z0-9-]+$ ]] || { echo "Release tag must start with reel-stage-." >&2; exit 1; }
-          url="https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}/${ARTICLE_ID}.mp4"
+          url="https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}/render.mp4"
           curl --fail --location --silent --show-error --retry 3 "$url" --output "$RUNNER_TEMP/$ARTICLE_ID.mp4"
           test -s "$RUNNER_TEMP/$ARTICLE_ID.mp4"
 
