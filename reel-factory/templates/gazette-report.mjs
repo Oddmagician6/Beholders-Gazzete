@@ -17,14 +17,19 @@ function htmlText(html) {
     .replace(/&rdquo;|&ldquo;/gi, '”')
     .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
     .replace(/&#x([\da-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
-    .replace(/\s+/g, ' ').trim();
+    .replace(/\s+/g, ' ').replace(/ ([,.;:!?])/g, '$1').trim();
 }
 
 function words(text) { return text.trim().split(/\s+/).filter(Boolean); }
 
 function sentences(text) {
   const decimalPoint = '\uE000';
-  const protectedText = text.replace(/(\d)\.(?=\d)/g, `$1${decimalPoint}`);
+  // Decimals, titles ("Dr. Vell"), and "a.m."/"e.g." don't end a sentence; "5 a.m." does only before a capital.
+  const protectedText = text.replace(/(\d)\.(?=\d)/g, `$1${decimalPoint}`)
+    .replace(/\b(Dr|Mr|Mrs|Ms|St|Mt|vs)\./g, `$1${decimalPoint}`)
+    .replace(/\b(e)\.g\.|\b(i)\.e\./gi, m => m.replaceAll('.', decimalPoint))
+    .replace(/\b([aApP])\.([mM])\.(?!\s+[A-Z"“])/g, `$1${decimalPoint}$2${decimalPoint}`)
+    .replace(/\b([aApP])\.([mM])\./g, `$1${decimalPoint}$2.`);
   return (protectedText.match(/[^.!?]+[.!?]+(?:["'”’)\]]+)?|[^.!?]+$/g) || [])
     .map(part => part.replaceAll(decimalPoint, '.').trim()).filter(Boolean);
 }
@@ -64,7 +69,8 @@ function choosePunchline(excerptSentences, bodySentences) {
   const unique = new Map();
   for (const candidate of candidates) {
     const key = normalize(candidate.text);
-    if (!key) continue;
+    // A sentence starting in lowercase is a fragment the splitter cut, not a line to read aloud.
+    if (!key || /^[a-z]/.test(candidate.text)) continue;
     if (candidate.source === 'article-body' && (excerpt.includes(key) || key.includes(excerpt))) continue;
     const prior = unique.get(key);
     if (!prior || candidate.source === 'excerpt') unique.set(key, candidate);

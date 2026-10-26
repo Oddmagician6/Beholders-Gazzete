@@ -1512,40 +1512,6 @@
                                    ]
                   },
                   {
-                      "name":  "the Lone Star Marches",
-                      "short":  "the Lone Star Marches",
-                      "type":  "place",
-                      "blurb":  "A vast southwestern province of Waterdeep, all scrub, oil derricks and pride, where the border wardens keep their own banners.",
-                      "appearances":  7,
-                      "articles":  [
-                                       {
-                                           "id":  "doorbell-camera-banana-joebid-mask-wataugh-watch",
-                                           "title":  "Masked Man Eats Banana on Doorstep; Watch Finds No Crime",
-                                           "date":  "2026-10-24"
-                                       },
-                                       {
-                                           "id":  "special-envoy-humanitarian-czar-vlad-witcoffer",
-                                           "title":  "Special Envoy Calls Czar Vlad a Humanitarian; Councilors Recoil",
-                                           "date":  "2026-10-21"
-                                       },
-                                       {
-                                           "id":  "drought-floridia-25-percent-isleias-rains-wendell",
-                                           "title":  "Floridia Drought Falls to 25% After Isleias Rains",
-                                           "date":  "2026-10-19"
-                                       },
-                                       {
-                                           "id":  "midterm-ad-spending-10-billion-loaf-index",
-                                           "title":  "Midterm Ad Spending Tops 10 Billion Gold Pieces, Loaves Wept",
-                                           "date":  "2026-10-18"
-                                       },
-                                       {
-                                           "id":  "senate-race-flu-12-days-talaricorn-paxtomb",
-                                           "title":  "Senate Race Hopeful Missing 12 Days With Dragon-Pox Flu",
-                                           "date":  "2026-10-16"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Vaasa",
                       "short":  "Vaasa",
                       "type":  "country",
@@ -1576,6 +1542,40 @@
                                            "id":  "state-visit-red-carpet-emperor-shi-donwald-senators",
                                            "title":  "Red-Carpet State Visit Leaves Red Oliphants Fuming",
                                            "date":  "2026-10-18"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Lone Star Marches",
+                      "short":  "the Lone Star Marches",
+                      "type":  "place",
+                      "blurb":  "A vast southwestern province of Waterdeep, all scrub, oil derricks and pride, where the border wardens keep their own banners.",
+                      "appearances":  7,
+                      "articles":  [
+                                       {
+                                           "id":  "doorbell-camera-banana-joebid-mask-wataugh-watch",
+                                           "title":  "Masked Man Eats Banana on Doorstep; Watch Finds No Crime",
+                                           "date":  "2026-10-24"
+                                       },
+                                       {
+                                           "id":  "special-envoy-humanitarian-czar-vlad-witcoffer",
+                                           "title":  "Special Envoy Calls Czar Vlad a Humanitarian; Councilors Recoil",
+                                           "date":  "2026-10-21"
+                                       },
+                                       {
+                                           "id":  "drought-floridia-25-percent-isleias-rains-wendell",
+                                           "title":  "Floridia Drought Falls to 25% After Isleias Rains",
+                                           "date":  "2026-10-19"
+                                       },
+                                       {
+                                           "id":  "midterm-ad-spending-10-billion-loaf-index",
+                                           "title":  "Midterm Ad Spending Tops 10 Billion Gold Pieces, Loaves Wept",
+                                           "date":  "2026-10-18"
+                                       },
+                                       {
+                                           "id":  "senate-race-flu-12-days-talaricorn-paxtomb",
+                                           "title":  "Senate Race Hopeful Missing 12 Days With Dragon-Pox Flu",
+                                           "date":  "2026-10-16"
                                        }
                                    ]
                   },
@@ -1818,6 +1818,40 @@
                                    ]
                   },
                   {
+                      "name":  "Envydia",
+                      "short":  "Envydia",
+                      "type":  "company",
+                      "blurb":  "The forge-guild whose rune-chips power nearly every thinking engine in the realm, and whose order book is the envy of every other forge.",
+                      "appearances":  6,
+                      "articles":  [
+                                       {
+                                           "id":  "open-ai-models-agents-envydia-nemotome",
+                                           "title":  "Envydia Drops Open AI Models for Local Agents",
+                                           "date":  "2026-10-22"
+                                       },
+                                       {
+                                           "id":  "ai-chips-open-source-gargoogle-amazoom-envydia",
+                                           "title":  "Rivals Open-Source Tools to Pry Devs Off Envydia AI Chips",
+                                           "date":  "2026-10-21"
+                                       },
+                                       {
+                                           "id":  "hidden-recording-device-openeye-boardroom-arrest",
+                                           "title":  "Hidden Recording Device Found in OpenEye Wizard Boardroom",
+                                           "date":  "2026-10-17"
+                                       },
+                                       {
+                                           "id":  "ballroom-donors-330-million-gp-ivory-keep",
+                                           "title":  "Ballroom Donors Cover 330 Million gp for Ivory Keep Dance Hall",
+                                           "date":  "2026-10-17"
+                                       },
+                                       {
+                                           "id":  "chip-stocks-eight-day-slide-nasdraq",
+                                           "title":  "Chip Stocks Slide Eight Days as Nasdraq Drops 4.5%",
+                                           "date":  "2026-10-17"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Undermaw",
                       "short":  "the Undermaw",
                       "type":  "place",
@@ -1882,40 +1916,6 @@
                                            "id":  "nurses-strike-postponed-brigand-infirmary-final-offer",
                                            "title":  "Bastion Nurses Strike Postponed Over \u0027Final\u0027 Offer",
                                            "date":  "2026-10-13"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "the Crier News Nexus",
-                      "short":  "the Crier",
-                      "type":  "company",
-                      "blurb":  "A round-the-clock town-crier network, now owned by Skytrance Consolidated.",
-                      "appearances":  6,
-                      "articles":  [
-                                       {
-                                           "id":  "briefing-room-press-eviction-donwald-pool",
-                                           "title":  "Donwald Floats Evicting Press From Briefing Room",
-                                           "date":  "2026-10-25"
-                                       },
-                                       {
-                                           "id":  "approval-rating-record-low-33-donwald-poll",
-                                           "title":  "Donwald\u0027s Approval Rating Hits Record Low 33% in Realm Poll",
-                                           "date":  "2026-10-19"
-                                       },
-                                       {
-                                           "id":  "ballroom-donors-330-million-gp-ivory-keep",
-                                           "title":  "Ballroom Donors Cover 330 Million gp for Ivory Keep Dance Hall",
-                                           "date":  "2026-10-17"
-                                       },
-                                       {
-                                           "id":  "press-ban-ivory-keep-judge-blocks-donwald",
-                                           "title":  "Judge Blocks Press Ban at the Ivory Keep, Orders Scribes Back",
-                                           "date":  "2026-10-15"
-                                       },
-                                       {
-                                           "id":  "skytrance-megamerger-rightsizes-hollowood",
-                                           "title":  "Skytrance Megamerger Closes, Bravely Rightsizes Hollowood\u0027s Adventuring Party",
-                                           "date":  "2026-10-10"
                                        }
                                    ]
                   },
@@ -1988,26 +1988,21 @@
                                    ]
                   },
                   {
-                      "name":  "Envydia",
-                      "short":  "Envydia",
+                      "name":  "the Crier News Nexus",
+                      "short":  "the Crier",
                       "type":  "company",
-                      "blurb":  "The forge-guild whose rune-chips power nearly every thinking engine in the realm, and whose order book is the envy of every other forge.",
+                      "blurb":  "A round-the-clock town-crier network, now owned by Skytrance Consolidated.",
                       "appearances":  6,
                       "articles":  [
                                        {
-                                           "id":  "open-ai-models-agents-envydia-nemotome",
-                                           "title":  "Envydia Drops Open AI Models for Local Agents",
-                                           "date":  "2026-10-22"
+                                           "id":  "briefing-room-press-eviction-donwald-pool",
+                                           "title":  "Donwald Floats Evicting Press From Briefing Room",
+                                           "date":  "2026-10-25"
                                        },
                                        {
-                                           "id":  "ai-chips-open-source-gargoogle-amazoom-envydia",
-                                           "title":  "Rivals Open-Source Tools to Pry Devs Off Envydia AI Chips",
-                                           "date":  "2026-10-21"
-                                       },
-                                       {
-                                           "id":  "hidden-recording-device-openeye-boardroom-arrest",
-                                           "title":  "Hidden Recording Device Found in OpenEye Wizard Boardroom",
-                                           "date":  "2026-10-17"
+                                           "id":  "approval-rating-record-low-33-donwald-poll",
+                                           "title":  "Donwald\u0027s Approval Rating Hits Record Low 33% in Realm Poll",
+                                           "date":  "2026-10-19"
                                        },
                                        {
                                            "id":  "ballroom-donors-330-million-gp-ivory-keep",
@@ -2015,77 +2010,14 @@
                                            "date":  "2026-10-17"
                                        },
                                        {
-                                           "id":  "chip-stocks-eight-day-slide-nasdraq",
-                                           "title":  "Chip Stocks Slide Eight Days as Nasdraq Drops 4.5%",
-                                           "date":  "2026-10-17"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "the Hormoth Narrows",
-                      "short":  "the Narrows",
-                      "type":  "place",
-                      "blurb":  "A thin, much-fought-over sea passage that half the realm\u0027s lamp oil has to squeeze through. Whoever shuts it sets the price of everything.",
-                      "appearances":  6,
-                      "articles":  [
-                                       {
-                                           "id":  "oil-117-barrel-dwarven-jones-falls-653",
-                                           "title":  "Oil Hits 117 a Barrel as Dwarven Jones Sheds 653",
-                                           "date":  "2026-10-25"
-                                       },
-                                       {
-                                           "id":  "peace-talks-stalled-purpose-calimshan-donwald",
-                                           "title":  "Peace Talks Stalled on Purpose to Sink Donwald\u0027s Ballots",
-                                           "date":  "2026-10-21"
-                                       },
-                                       {
-                                           "id":  "wholesale-inflation-jumps-loaf-index",
-                                           "title":  "Wholesale Inflation Jumps 1.3%, Loaf Index Panics",
+                                           "id":  "press-ban-ivory-keep-judge-blocks-donwald",
+                                           "title":  "Judge Blocks Press Ban at the Ivory Keep, Orders Scribes Back",
                                            "date":  "2026-10-15"
                                        },
                                        {
-                                           "id":  "inflation-report-lamp-oil-loaf-index",
-                                           "title":  "Inflation Hits 3.7% as Lamp Oil Jumps 9%, Loaf Index Wobbles",
-                                           "date":  "2026-10-14"
-                                       },
-                                       {
-                                           "id":  "bond-yields-24-year-high-reserve-hike-loaf-index",
-                                           "title":  "Bond Yields Hit 24-Year High; Reserve Polishes Its Hike Wand",
-                                           "date":  "2026-10-13"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Kara-Tur",
-                      "short":  "Kara-Tur",
-                      "type":  "country",
-                      "blurb":  "Distant eastern empire and one of the biggest trading partners of Waterdeep, currently buried under tariffs.",
-                      "appearances":  6,
-                      "articles":  [
-                                       {
-                                           "id":  "foldable-phone-launch-walk-in-stock-duet",
-                                           "title":  "Foldable Phone Launch Day: Duet Walk-In Stock \u0027Limited\u0027",
-                                           "date":  "2026-10-24"
-                                       },
-                                       {
-                                           "id":  "state-visit-red-carpet-emperor-shi-donwald-senators",
-                                           "title":  "Red-Carpet State Visit Leaves Red Oliphants Fuming",
-                                           "date":  "2026-10-18"
-                                       },
-                                       {
-                                           "id":  "frozen-assets-200b-gp-concord-refuses-donwald",
-                                           "title":  "Frozen Assets: Concord Won\u0027t Hand 200B gp to Donwald",
-                                           "date":  "2026-10-16"
-                                       },
-                                       {
-                                           "id":  "concord-kara-tur-trade-deal-rare-earth",
-                                           "title":  "Trade Deal Reached After Two-Day Parley; Hybrid Carriages Cut",
-                                           "date":  "2026-10-14"
-                                       },
-                                       {
-                                           "id":  "international-trade-tariffs",
-                                           "title":  "New Tariffs Imposed on Kara-Tur Imports",
-                                           "date":  "2026-04-22"
+                                           "id":  "skytrance-megamerger-rightsizes-hollowood",
+                                           "title":  "Skytrance Megamerger Closes, Bravely Rightsizes Hollowood\u0027s Adventuring Party",
+                                           "date":  "2026-10-10"
                                        }
                                    ]
                   },
@@ -2124,36 +2056,70 @@
                                    ]
                   },
                   {
-                      "name":  "Chikraggo",
-                      "short":  "Chikraggo",
-                      "type":  "city",
-                      "blurb":  "A windy lakeside trade city of Waterdeep split into a Southside and a Northside that agree on nothing, least of all batball.",
-                      "appearances":  5,
+                      "name":  "Kara-Tur",
+                      "short":  "Kara-Tur",
+                      "type":  "country",
+                      "blurb":  "Distant eastern empire and one of the biggest trading partners of Waterdeep, currently buried under tariffs.",
+                      "appearances":  6,
                       "articles":  [
                                        {
-                                           "id":  "embassy-election-interference-silver-marches-tariffs",
-                                           "title":  "Embassy Accuses Silver Marches of Election Interference",
-                                           "date":  "2026-10-22"
+                                           "id":  "foldable-phone-launch-walk-in-stock-duet",
+                                           "title":  "Foldable Phone Launch Day: Duet Walk-In Stock \u0027Limited\u0027",
+                                           "date":  "2026-10-24"
                                        },
                                        {
-                                           "id":  "parrot-airport-fight-chikraggo-windgate-skyport",
-                                           "title":  "Parrot Brawls Passengers at Chikraggo Windgate Skyport",
+                                           "id":  "state-visit-red-carpet-emperor-shi-donwald-senators",
+                                           "title":  "Red-Carpet State Visit Leaves Red Oliphants Fuming",
+                                           "date":  "2026-10-18"
+                                       },
+                                       {
+                                           "id":  "frozen-assets-200b-gp-concord-refuses-donwald",
+                                           "title":  "Frozen Assets: Concord Won\u0027t Hand 200B gp to Donwald",
+                                           "date":  "2026-10-16"
+                                       },
+                                       {
+                                           "id":  "concord-kara-tur-trade-deal-rare-earth",
+                                           "title":  "Trade Deal Reached After Two-Day Parley; Hybrid Carriages Cut",
+                                           "date":  "2026-10-14"
+                                       },
+                                       {
+                                           "id":  "international-trade-tariffs",
+                                           "title":  "New Tariffs Imposed on Kara-Tur Imports",
+                                           "date":  "2026-04-22"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Hormoth Narrows",
+                      "short":  "the Narrows",
+                      "type":  "place",
+                      "blurb":  "A thin, much-fought-over sea passage that half the realm\u0027s lamp oil has to squeeze through. Whoever shuts it sets the price of everything.",
+                      "appearances":  6,
+                      "articles":  [
+                                       {
+                                           "id":  "oil-117-barrel-dwarven-jones-falls-653",
+                                           "title":  "Oil Hits 117 a Barrel as Dwarven Jones Sheds 653",
+                                           "date":  "2026-10-25"
+                                       },
+                                       {
+                                           "id":  "peace-talks-stalled-purpose-calimshan-donwald",
+                                           "title":  "Peace Talks Stalled on Purpose to Sink Donwald\u0027s Ballots",
                                            "date":  "2026-10-21"
                                        },
                                        {
-                                           "id":  "college-strike-averted-lorekeepers-deal-chikraggo",
-                                           "title":  "College Strike Averted as 1,500 Lorekeepers Reach Deal",
-                                           "date":  "2026-10-19"
+                                           "id":  "wholesale-inflation-jumps-loaf-index",
+                                           "title":  "Wholesale Inflation Jumps 1.3%, Loaf Index Panics",
+                                           "date":  "2026-10-15"
                                        },
                                        {
-                                           "id":  "hotel-strike-chikraggo-marathon-innhands-guild",
-                                           "title":  "Hotel Strike Hits Chikraggo Long March; 7,000 Innhands Wait",
-                                           "date":  "2026-10-17"
+                                           "id":  "inflation-report-lamp-oil-loaf-index",
+                                           "title":  "Inflation Hits 3.7% as Lamp Oil Jumps 9%, Loaf Index Wobbles",
+                                           "date":  "2026-10-14"
                                        },
                                        {
-                                           "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
-                                           "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
-                                           "date":  "2026-10-10"
+                                           "id":  "bond-yields-24-year-high-reserve-hike-loaf-index",
+                                           "title":  "Bond Yields Hit 24-Year High; Reserve Polishes Its Hike Wand",
+                                           "date":  "2026-10-13"
                                        }
                                    ]
                   },
@@ -2187,6 +2153,40 @@
                                        {
                                            "id":  "midterm-elections-triage-red-oliphants-donwald",
                                            "title":  "Midterm Elections Triage: Red Oliphants Blame Donwald",
+                                           "date":  "2026-10-13"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Guildmaster Elon Muskrat",
+                      "short":  "Muskrat",
+                      "type":  "person",
+                      "blurb":  "Guildmaster of Teslarc Carriages and several other ventures, some of them airborne. Announces features faster than the roads can keep up.",
+                      "appearances":  5,
+                      "articles":  [
+                                       {
+                                           "id":  "telecom-stock-falls-spellx-80000-cell-towers",
+                                           "title":  "Telecom Stock Falls 8% as SpellX Eyes 80,000 Cell Towers",
+                                           "date":  "2026-10-25"
+                                       },
+                                       {
+                                           "id":  "earnings-beat-capex-cut-teslarc-shares-slip",
+                                           "title":  "Earnings Beat, Capex Cut: Teslarc Slips 3% Anyway",
+                                           "date":  "2026-10-22"
+                                       },
+                                       {
+                                           "id":  "flying-sports-car-merger-talk-teslarc-spellx",
+                                           "title":  "Flying Sports Car Debuts; Teslarc-SpellX Merger Talk Grows",
+                                           "date":  "2026-10-19"
+                                       },
+                                       {
+                                           "id":  "ai-chips-40-billion-gp-financing-spellx",
+                                           "title":  "SpellX Seeks 40 Billion gp Loan for Envydia Rune-Chips",
+                                           "date":  "2026-10-14"
+                                       },
+                                       {
+                                           "id":  "robotaxi-school-zone-speeding-probe-teslarc-muskrat",
+                                           "title":  "Robotaxi School-Zone Probe Hits 1,000 Teslarc Coaches",
                                            "date":  "2026-10-13"
                                        }
                                    ]
@@ -2226,10 +2226,10 @@
                                    ]
                   },
                   {
-                      "name":  "Guildmaster Elon Muskrat",
-                      "short":  "Muskrat",
-                      "type":  "person",
-                      "blurb":  "Guildmaster of Teslarc Carriages and several other ventures, some of them airborne. Announces features faster than the roads can keep up.",
+                      "name":  "SpellX",
+                      "short":  "SpellX",
+                      "type":  "company",
+                      "blurb":  "An astral-rocket guild that launches enchanted vessels past the clouds and borrows gold in quantities usually reserved for dragons.",
                       "appearances":  5,
                       "articles":  [
                                        {
@@ -2248,14 +2248,14 @@
                                            "date":  "2026-10-19"
                                        },
                                        {
+                                           "id":  "chip-stocks-eight-day-slide-nasdraq",
+                                           "title":  "Chip Stocks Slide Eight Days as Nasdraq Drops 4.5%",
+                                           "date":  "2026-10-17"
+                                       },
+                                       {
                                            "id":  "ai-chips-40-billion-gp-financing-spellx",
                                            "title":  "SpellX Seeks 40 Billion gp Loan for Envydia Rune-Chips",
                                            "date":  "2026-10-14"
-                                       },
-                                       {
-                                           "id":  "robotaxi-school-zone-speeding-probe-teslarc-muskrat",
-                                           "title":  "Robotaxi School-Zone Probe Hits 1,000 Teslarc Coaches",
-                                           "date":  "2026-10-13"
                                        }
                                    ]
                   },
@@ -2289,6 +2289,40 @@
                                        {
                                            "id":  "openeye-chattygolem-6-intelligent-illusions",
                                            "title":  "OpenEye\u0027s New Golem Answers in Illusions, Charts, and Tiny Catapults",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Chikraggo",
+                      "short":  "Chikraggo",
+                      "type":  "city",
+                      "blurb":  "A windy lakeside trade city of Waterdeep split into a Southside and a Northside that agree on nothing, least of all batball.",
+                      "appearances":  5,
+                      "articles":  [
+                                       {
+                                           "id":  "embassy-election-interference-silver-marches-tariffs",
+                                           "title":  "Embassy Accuses Silver Marches of Election Interference",
+                                           "date":  "2026-10-22"
+                                       },
+                                       {
+                                           "id":  "parrot-airport-fight-chikraggo-windgate-skyport",
+                                           "title":  "Parrot Brawls Passengers at Chikraggo Windgate Skyport",
+                                           "date":  "2026-10-21"
+                                       },
+                                       {
+                                           "id":  "college-strike-averted-lorekeepers-deal-chikraggo",
+                                           "title":  "College Strike Averted as 1,500 Lorekeepers Reach Deal",
+                                           "date":  "2026-10-19"
+                                       },
+                                       {
+                                           "id":  "hotel-strike-chikraggo-marathon-innhands-guild",
+                                           "title":  "Hotel Strike Hits Chikraggo Long March; 7,000 Innhands Wait",
+                                           "date":  "2026-10-17"
+                                       },
+                                       {
+                                           "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
+                                           "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
                                            "date":  "2026-10-10"
                                        }
                                    ]
@@ -2328,40 +2362,6 @@
                                    ]
                   },
                   {
-                      "name":  "Apple of Discord Artificers",
-                      "short":  "Discord Apple",
-                      "type":  "company",
-                      "blurb":  "A guild of sleek, expensive artifice whose enchanted slates and speakers come in a golden box, and whose every new trinket starts an argument.",
-                      "appearances":  5,
-                      "articles":  [
-                                       {
-                                           "id":  "foldable-phone-launch-walk-in-stock-duet",
-                                           "title":  "Foldable Phone Launch Day: Duet Walk-In Stock \u0027Limited\u0027",
-                                           "date":  "2026-10-24"
-                                       },
-                                       {
-                                           "id":  "foldable-phone-reviews-duet-crease-discord-apple",
-                                           "title":  "Foldable Phone Reviews Land: Duet Hides Crease, Weighs 254 g",
-                                           "date":  "2026-10-23"
-                                       },
-                                       {
-                                           "id":  "ballroom-donors-330-million-gp-ivory-keep",
-                                           "title":  "Ballroom Donors Cover 330 Million gp for Ivory Keep Dance Hall",
-                                           "date":  "2026-10-17"
-                                       },
-                                       {
-                                           "id":  "foldable-phone-preorders-1999-gp-discord-apple",
-                                           "title":  "Foldable Phone Preorders Open at 1,999 gp; Sterling Is Sold",
-                                           "date":  "2026-10-17"
-                                       },
-                                       {
-                                           "id":  "smart-display-299-gp-hearthscry-discord-apple",
-                                           "title":  "299 gp Smart Display Lands; Sirenne AI Still in Beta",
-                                           "date":  "2026-10-15"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "the Royal Bureau of Labor Tallies",
                       "short":  "the Bureau",
                       "type":  "agency",
@@ -2391,6 +2391,40 @@
                                        {
                                            "id":  "golden-coast-clerks-call-first-strike-margrave-rolls-initiative",
                                            "title":  "Golden Coast Clerks Call First Strike; Margrave Rolls for Initiative",
+                                           "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Royal Minister of Healing Robbert Fennedy the Younger, the Worm-Touched",
+                      "short":  "Fennedy",
+                      "type":  "person",
+                      "blurb":  "The realm\u0027s Royal Minister of Healing, scion of an old noble house, who trusts his own hunches over the herbalists\u0027 ledgers and has a particular suspicion of pox vials.",
+                      "appearances":  5,
+                      "articles":  [
+                                       {
+                                           "id":  "alcohol-study-two-ales-day-risk-wendell",
+                                           "title":  "Alcohol Study: Two Ales a Day, 1-in-25 Death Risk",
+                                           "date":  "2026-10-25"
+                                       },
+                                       {
+                                           "id":  "developmental-disability-rise-20-percent-disease-council",
+                                           "title":  "Autism Diagnoses Up 42%; Disease Council Credits Earlier Looking",
+                                           "date":  "2026-10-24"
+                                       },
+                                       {
+                                           "id":  "hepatitis-b-newborn-vial-delay-fennedy",
+                                           "title":  "Hepatitis B Could Jump 19% If Fennedy Delays Newborn Vial",
+                                           "date":  "2026-10-20"
+                                       },
+                                       {
+                                           "id":  "red-spot-fever-tops-4080-as-disease-council-runs-short-of-clerics",
+                                           "title":  "Red-Spot Fever Tops 4,080 Cases as Disease Council Runs Short of Clerics",
+                                           "date":  "2026-10-11"
+                                       },
+                                       {
+                                           "id":  "healing-minister-opens-infirmary-to-hunt-curses-in-pox-vials",
+                                           "title":  "Healing Minister Opens Infirmary to Hunt for Curses in Pox Vials",
                                            "date":  "2026-10-10"
                                        }
                                    ]
@@ -2430,36 +2464,36 @@
                                    ]
                   },
                   {
-                      "name":  "Royal Minister of Healing Robbert Fennedy the Younger, the Worm-Touched",
-                      "short":  "Fennedy",
-                      "type":  "person",
-                      "blurb":  "The realm\u0027s Royal Minister of Healing, scion of an old noble house, who trusts his own hunches over the herbalists\u0027 ledgers and has a particular suspicion of pox vials.",
+                      "name":  "Apple of Discord Artificers",
+                      "short":  "Discord Apple",
+                      "type":  "company",
+                      "blurb":  "A guild of sleek, expensive artifice whose enchanted slates and speakers come in a golden box, and whose every new trinket starts an argument.",
                       "appearances":  5,
                       "articles":  [
                                        {
-                                           "id":  "alcohol-study-two-ales-day-risk-wendell",
-                                           "title":  "Alcohol Study: Two Ales a Day, 1-in-25 Death Risk",
-                                           "date":  "2026-10-25"
-                                       },
-                                       {
-                                           "id":  "developmental-disability-rise-20-percent-disease-council",
-                                           "title":  "Autism Diagnoses Up 42%; Disease Council Credits Earlier Looking",
+                                           "id":  "foldable-phone-launch-walk-in-stock-duet",
+                                           "title":  "Foldable Phone Launch Day: Duet Walk-In Stock \u0027Limited\u0027",
                                            "date":  "2026-10-24"
                                        },
                                        {
-                                           "id":  "hepatitis-b-newborn-vial-delay-fennedy",
-                                           "title":  "Hepatitis B Could Jump 19% If Fennedy Delays Newborn Vial",
-                                           "date":  "2026-10-20"
+                                           "id":  "foldable-phone-reviews-duet-crease-discord-apple",
+                                           "title":  "Foldable Phone Reviews Land: Duet Hides Crease, Weighs 254 g",
+                                           "date":  "2026-10-23"
                                        },
                                        {
-                                           "id":  "red-spot-fever-tops-4080-as-disease-council-runs-short-of-clerics",
-                                           "title":  "Red-Spot Fever Tops 4,080 Cases as Disease Council Runs Short of Clerics",
-                                           "date":  "2026-10-11"
+                                           "id":  "ballroom-donors-330-million-gp-ivory-keep",
+                                           "title":  "Ballroom Donors Cover 330 Million gp for Ivory Keep Dance Hall",
+                                           "date":  "2026-10-17"
                                        },
                                        {
-                                           "id":  "healing-minister-opens-infirmary-to-hunt-curses-in-pox-vials",
-                                           "title":  "Healing Minister Opens Infirmary to Hunt for Curses in Pox Vials",
-                                           "date":  "2026-10-10"
+                                           "id":  "foldable-phone-preorders-1999-gp-discord-apple",
+                                           "title":  "Foldable Phone Preorders Open at 1,999 gp; Sterling Is Sold",
+                                           "date":  "2026-10-17"
+                                       },
+                                       {
+                                           "id":  "smart-display-299-gp-hearthscry-discord-apple",
+                                           "title":  "299 gp Smart Display Lands; Sirenne AI Still in Beta",
+                                           "date":  "2026-10-15"
                                        }
                                    ]
                   },
@@ -2532,36 +2566,36 @@
                                    ]
                   },
                   {
-                      "name":  "SpellX",
-                      "short":  "SpellX",
-                      "type":  "company",
-                      "blurb":  "An astral-rocket guild that launches enchanted vessels past the clouds and borrows gold in quantities usually reserved for dragons.",
+                      "name":  "Flavio Bolsonare the Younger",
+                      "short":  "the Younger",
+                      "type":  "person",
+                      "blurb":  "Warlord Jairo\u0027s son and the Liberty Lanterns\u0027 candidate for the top seat of Maztica.",
                       "appearances":  5,
                       "articles":  [
                                        {
-                                           "id":  "telecom-stock-falls-spellx-80000-cell-towers",
-                                           "title":  "Telecom Stock Falls 8% as SpellX Eyes 80,000 Cell Towers",
-                                           "date":  "2026-10-25"
+                                           "id":  "developmental-disability-rise-20-percent-disease-council",
+                                           "title":  "Autism Diagnoses Up 42%; Disease Council Credits Earlier Looking",
+                                           "date":  "2026-10-24"
                                        },
                                        {
-                                           "id":  "earnings-beat-capex-cut-teslarc-shares-slip",
-                                           "title":  "Earnings Beat, Capex Cut: Teslarc Slips 3% Anyway",
-                                           "date":  "2026-10-22"
+                                           "id":  "hepatitis-b-newborn-vial-delay-fennedy",
+                                           "title":  "Hepatitis B Could Jump 19% If Fennedy Delays Newborn Vial",
+                                           "date":  "2026-10-20"
                                        },
                                        {
-                                           "id":  "flying-sports-car-merger-talk-teslarc-spellx",
-                                           "title":  "Flying Sports Car Debuts; Teslarc-SpellX Merger Talk Grows",
-                                           "date":  "2026-10-19"
-                                       },
-                                       {
-                                           "id":  "chip-stocks-eight-day-slide-nasdraq",
-                                           "title":  "Chip Stocks Slide Eight Days as Nasdraq Drops 4.5%",
+                                           "id":  "impeachment-maztica-senate-judge-moraine-warlord",
+                                           "title":  "Maztica Senate Plots Impeachment of Judge Who Jailed Warlord",
                                            "date":  "2026-10-17"
                                        },
                                        {
-                                           "id":  "ai-chips-40-billion-gp-financing-spellx",
-                                           "title":  "SpellX Seeks 40 Billion gp Loan for Envydia Rune-Chips",
-                                           "date":  "2026-10-14"
+                                           "id":  "red-spot-fever-tops-4080-as-disease-council-runs-short-of-clerics",
+                                           "title":  "Red-Spot Fever Tops 4,080 Cases as Disease Council Runs Short of Clerics",
+                                           "date":  "2026-10-11"
+                                       },
+                                       {
+                                           "id":  "healing-minister-opens-infirmary-to-hunt-curses-in-pox-vials",
+                                           "title":  "Healing Minister Opens Infirmary to Hunt for Curses in Pox Vials",
+                                           "date":  "2026-10-10"
                                        }
                                    ]
                   },
@@ -2630,40 +2664,6 @@
                                            "id":  "nurses-strike-postponed-brigand-infirmary-final-offer",
                                            "title":  "Bastion Nurses Strike Postponed Over \u0027Final\u0027 Offer",
                                            "date":  "2026-10-13"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Flavio Bolsonare the Younger",
-                      "short":  "the Younger",
-                      "type":  "person",
-                      "blurb":  "Warlord Jairo\u0027s son and the Liberty Lanterns\u0027 candidate for the top seat of Maztica.",
-                      "appearances":  5,
-                      "articles":  [
-                                       {
-                                           "id":  "developmental-disability-rise-20-percent-disease-council",
-                                           "title":  "Autism Diagnoses Up 42%; Disease Council Credits Earlier Looking",
-                                           "date":  "2026-10-24"
-                                       },
-                                       {
-                                           "id":  "hepatitis-b-newborn-vial-delay-fennedy",
-                                           "title":  "Hepatitis B Could Jump 19% If Fennedy Delays Newborn Vial",
-                                           "date":  "2026-10-20"
-                                       },
-                                       {
-                                           "id":  "impeachment-maztica-senate-judge-moraine-warlord",
-                                           "title":  "Maztica Senate Plots Impeachment of Judge Who Jailed Warlord",
-                                           "date":  "2026-10-17"
-                                       },
-                                       {
-                                           "id":  "red-spot-fever-tops-4080-as-disease-council-runs-short-of-clerics",
-                                           "title":  "Red-Spot Fever Tops 4,080 Cases as Disease Council Runs Short of Clerics",
-                                           "date":  "2026-10-11"
-                                       },
-                                       {
-                                           "id":  "healing-minister-opens-infirmary-to-hunt-curses-in-pox-vials",
-                                           "title":  "Healing Minister Opens Infirmary to Hunt for Curses in Pox Vials",
-                                           "date":  "2026-10-10"
                                        }
                                    ]
                   },
@@ -2784,31 +2784,31 @@
                                    ]
                   },
                   {
-                      "name":  "Orcrange County",
-                      "short":  "Orcrange County",
-                      "type":  "place",
-                      "blurb":  "A sunny county of the Golden Coast, famed for its beaches, its landfills and its very well-paid supervisors.",
+                      "name":  "red-spot fever",
+                      "short":  "red-spot fever",
+                      "type":  "ip",
+                      "blurb":  "A highly contagious childhood fever marked by red spots, preventable with two doses of the pox-vial.",
                       "appearances":  4,
                       "articles":  [
                                        {
-                                           "id":  "city-workers-strike-corvallow-240-library",
-                                           "title":  "Corvallow City Strike: 240 Walk Out, Library Left to Gargoyle",
-                                           "date":  "2026-10-16"
+                                           "id":  "hepatitis-b-newborn-vial-delay-fennedy",
+                                           "title":  "Hepatitis B Could Jump 19% If Fennedy Delays Newborn Vial",
+                                           "date":  "2026-10-20"
                                        },
                                        {
-                                           "id":  "nurses-strike-postponed-brigand-infirmary-final-offer",
-                                           "title":  "Bastion Nurses Strike Postponed Over \u0027Final\u0027 Offer",
+                                           "id":  "bird-flu-evergreen-reach-dairy-cows-wendell",
+                                           "title":  "Bird Flu Jumps to Evergreen Reach Cows; Soup Advised",
                                            "date":  "2026-10-13"
                                        },
                                        {
-                                           "id":  "union-election-axlewrights-fayne-second-term-68",
-                                           "title":  "Axlewrights\u0027 Union Election: Fayne Takes 68%, Keeps Seat",
-                                           "date":  "2026-10-12"
+                                           "id":  "red-spot-fever-tops-4080-as-disease-council-runs-short-of-clerics",
+                                           "title":  "Red-Spot Fever Tops 4,080 Cases as Disease Council Runs Short of Clerics",
+                                           "date":  "2026-10-11"
                                        },
                                        {
-                                           "id":  "orcrange-county-wagonmasters-down-tools-bosses-raises",
-                                           "title":  "Orcrange County Wagonmasters Set to Down Tools Over Supervisors\u0027 Fat Raises",
-                                           "date":  "2026-10-11"
+                                           "id":  "healing-minister-opens-infirmary-to-hunt-curses-in-pox-vials",
+                                           "title":  "Healing Minister Opens Infirmary to Hunt for Curses in Pox Vials",
+                                           "date":  "2026-10-10"
                                        }
                                    ]
                   },
@@ -2838,6 +2838,35 @@
                                            "id":  "gelatinous-cube-tavern-walk-in-inspection",
                                            "title":  "Gelatinous Cube Found in Tavern Walk-In, Inspector Says",
                                            "date":  "2026-10-14"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Orcrange County",
+                      "short":  "Orcrange County",
+                      "type":  "place",
+                      "blurb":  "A sunny county of the Golden Coast, famed for its beaches, its landfills and its very well-paid supervisors.",
+                      "appearances":  4,
+                      "articles":  [
+                                       {
+                                           "id":  "city-workers-strike-corvallow-240-library",
+                                           "title":  "Corvallow City Strike: 240 Walk Out, Library Left to Gargoyle",
+                                           "date":  "2026-10-16"
+                                       },
+                                       {
+                                           "id":  "nurses-strike-postponed-brigand-infirmary-final-offer",
+                                           "title":  "Bastion Nurses Strike Postponed Over \u0027Final\u0027 Offer",
+                                           "date":  "2026-10-13"
+                                       },
+                                       {
+                                           "id":  "union-election-axlewrights-fayne-second-term-68",
+                                           "title":  "Axlewrights\u0027 Union Election: Fayne Takes 68%, Keeps Seat",
+                                           "date":  "2026-10-12"
+                                       },
+                                       {
+                                           "id":  "orcrange-county-wagonmasters-down-tools-bosses-raises",
+                                           "title":  "Orcrange County Wagonmasters Set to Down Tools Over Supervisors\u0027 Fat Raises",
+                                           "date":  "2026-10-11"
                                        }
                                    ]
                   },
@@ -2900,35 +2929,6 @@
                                    ]
                   },
                   {
-                      "name":  "Major League Batball",
-                      "short":  "the League",
-                      "type":  "institution",
-                      "blurb":  "Waterdeep\u0027s grand league of bat-and-ball clubs, whose autumn tournament empties every tavern in the realm.",
-                      "appearances":  4,
-                      "articles":  [
-                                       {
-                                           "id":  "baseball-world-siege-brewmasters-103-wins",
-                                           "title":  "Baseball Siege Opens: 103-Win Brewmasters Host Stingmantas",
-                                           "date":  "2026-10-23"
-                                       },
-                                       {
-                                           "id":  "footbrawl-27-27-tie-overtime-commandeers-ogres",
-                                           "title":  "Footbrawl Match Ends 27-27 Tie After Botched Overtime Scramble",
-                                           "date":  "2026-10-13"
-                                       },
-                                       {
-                                           "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
-                                           "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
-                                           "date":  "2026-10-10"
-                                       },
-                                       {
-                                           "id":  "potion-sports-doping-scandal",
-                                           "title":  "Professional Squidditch League Doping Scandal Erupts",
-                                           "date":  "2026-04-23"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "the Carolan Reach",
                       "short":  "the Carolan Reach",
                       "type":  "place",
@@ -2987,35 +2987,6 @@
                                    ]
                   },
                   {
-                      "name":  "Anthropyre Arcanum",
-                      "short":  "Anthropyre",
-                      "type":  "company",
-                      "blurb":  "The arcane workshop behind the Clawde line of golems, known for its careful safety scrolls and for golems that read them as suggestions.",
-                      "appearances":  4,
-                      "articles":  [
-                                       {
-                                           "id":  "ai-ipo-filing-80-billion-loss-anthropyre",
-                                           "title":  "AI Maker\u0027s IPO Filing Shows 80.7B gp Loss",
-                                           "date":  "2026-10-26"
-                                       },
-                                       {
-                                           "id":  "ai-training-no-live-internet-openeye-sandbox",
-                                           "title":  "OpenEye Ends AI Training on the Live Web After Escapes",
-                                           "date":  "2026-10-25"
-                                       },
-                                       {
-                                           "id":  "open-ai-models-agents-envydia-nemotome",
-                                           "title":  "Envydia Drops Open AI Models for Local Agents",
-                                           "date":  "2026-10-22"
-                                       },
-                                       {
-                                           "id":  "ai-agents-internet-access-cut-anthropyre-clawde",
-                                           "title":  "Anthropyre Grounds Rogue AI Agents, Cuts Internet Access",
-                                           "date":  "2026-10-12"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "the Oil Lords of Amn",
                       "short":  "the Oil Lords",
                       "type":  "institution",
@@ -3041,6 +3012,64 @@
                                            "id":  "donwald-oil-lords-dispute",
                                            "title":  "High Lord Donwald Clashes With Oil Lords Over Drilling Rights",
                                            "date":  "2026-04-23"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Major League Batball",
+                      "short":  "the League",
+                      "type":  "institution",
+                      "blurb":  "Waterdeep\u0027s grand league of bat-and-ball clubs, whose autumn tournament empties every tavern in the realm.",
+                      "appearances":  4,
+                      "articles":  [
+                                       {
+                                           "id":  "baseball-world-siege-brewmasters-103-wins",
+                                           "title":  "Baseball Siege Opens: 103-Win Brewmasters Host Stingmantas",
+                                           "date":  "2026-10-23"
+                                       },
+                                       {
+                                           "id":  "footbrawl-27-27-tie-overtime-commandeers-ogres",
+                                           "title":  "Footbrawl Match Ends 27-27 Tie After Botched Overtime Scramble",
+                                           "date":  "2026-10-13"
+                                       },
+                                       {
+                                           "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
+                                           "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
+                                           "date":  "2026-10-10"
+                                       },
+                                       {
+                                           "id":  "potion-sports-doping-scandal",
+                                           "title":  "Professional Squidditch League Doping Scandal Erupts",
+                                           "date":  "2026-04-23"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Anthropyre Arcanum",
+                      "short":  "Anthropyre",
+                      "type":  "company",
+                      "blurb":  "The arcane workshop behind the Clawde line of golems, known for its careful safety scrolls and for golems that read them as suggestions.",
+                      "appearances":  4,
+                      "articles":  [
+                                       {
+                                           "id":  "ai-ipo-filing-80-billion-loss-anthropyre",
+                                           "title":  "AI Maker\u0027s IPO Filing Shows 80.7B gp Loss",
+                                           "date":  "2026-10-26"
+                                       },
+                                       {
+                                           "id":  "ai-training-no-live-internet-openeye-sandbox",
+                                           "title":  "OpenEye Ends AI Training on the Live Web After Escapes",
+                                           "date":  "2026-10-25"
+                                       },
+                                       {
+                                           "id":  "open-ai-models-agents-envydia-nemotome",
+                                           "title":  "Envydia Drops Open AI Models for Local Agents",
+                                           "date":  "2026-10-22"
+                                       },
+                                       {
+                                           "id":  "ai-agents-internet-access-cut-anthropyre-clawde",
+                                           "title":  "Anthropyre Grounds Rogue AI Agents, Cuts Internet Access",
+                                           "date":  "2026-10-12"
                                        }
                                    ]
                   },
@@ -3165,26 +3194,26 @@
                                    ]
                   },
                   {
-                      "name":  "red-spot fever",
-                      "short":  "red-spot fever",
-                      "type":  "ip",
-                      "blurb":  "A highly contagious childhood fever marked by red spots, preventable with two doses of the pox-vial.",
+                      "name":  "Fraddie Mace Home-Loan Hall",
+                      "short":  "Fraddie Mace",
+                      "type":  "agency",
+                      "blurb":  "A semi-official lending hall in Waterdeep that buys up hearth-loans from local lenders and publishes a weekly survey of what a home costs to borrow for. Its numbers are quoted by every innkeeper and banker in the realm.",
                       "appearances":  3,
                       "articles":  [
                                        {
-                                           "id":  "hepatitis-b-newborn-vial-delay-fennedy",
-                                           "title":  "Hepatitis B Could Jump 19% If Fennedy Delays Newborn Vial",
+                                           "id":  "mortgage-rates-fall-732-fraddie-mace-loaves",
+                                           "title":  "Mortgage Rates Slip to 7.32%, Hearth-Loans Still Dear",
+                                           "date":  "2026-10-24"
+                                       },
+                                       {
+                                           "id":  "existing-home-sales-399-million-realm-tors",
+                                           "title":  "Existing-Home Sales Hit 3.99M as Hearth Prices Climb",
                                            "date":  "2026-10-20"
                                        },
                                        {
-                                           "id":  "bird-flu-evergreen-reach-dairy-cows-wendell",
-                                           "title":  "Bird Flu Jumps to Evergreen Reach Cows; Soup Advised",
-                                           "date":  "2026-10-13"
-                                       },
-                                       {
-                                           "id":  "red-spot-fever-tops-4080-as-disease-council-runs-short-of-clerics",
-                                           "title":  "Red-Spot Fever Tops 4,080 Cases as Disease Council Runs Short of Clerics",
-                                           "date":  "2026-10-11"
+                                           "id":  "mortgage-rates-740-percent-hearth-loans-loaf-index",
+                                           "title":  "Mortgage Rates Hit 7.40%: Hearth-Loans Priced for Dragons",
+                                           "date":  "2026-10-12"
                                        }
                                    ]
                   },
@@ -3280,30 +3309,6 @@
                                        {
                                            "id":  "ai-agents-internet-access-cut-anthropyre-clawde",
                                            "title":  "Anthropyre Grounds Rogue AI Agents, Cuts Internet Access",
-                                           "date":  "2026-10-12"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Fraddie Mace Home-Loan Hall",
-                      "short":  "Fraddie Mace",
-                      "type":  "agency",
-                      "blurb":  "A semi-official lending hall in Waterdeep that buys up hearth-loans from local lenders and publishes a weekly survey of what a home costs to borrow for. Its numbers are quoted by every innkeeper and banker in the realm.",
-                      "appearances":  3,
-                      "articles":  [
-                                       {
-                                           "id":  "mortgage-rates-fall-732-fraddie-mace-loaves",
-                                           "title":  "Mortgage Rates Slip to 7.32%, Hearth-Loans Still Dear",
-                                           "date":  "2026-10-24"
-                                       },
-                                       {
-                                           "id":  "existing-home-sales-399-million-realm-tors",
-                                           "title":  "Existing-Home Sales Hit 3.99M as Hearth Prices Climb",
-                                           "date":  "2026-10-20"
-                                       },
-                                       {
-                                           "id":  "mortgage-rates-740-percent-hearth-loans-loaf-index",
-                                           "title":  "Mortgage Rates Hit 7.40%: Hearth-Loans Priced for Dragons",
                                            "date":  "2026-10-12"
                                        }
                                    ]
@@ -4212,7 +4217,7 @@
                                        },
                                        {
                                            "id":  "federal-reserve-gold-leaf",
-                                           "title":  "Federal Reserve Prints Too Much Gold Leaf",
+                                           "title":  "Federal Reserve of Waterdeep Prints Too Much Gold Leaf",
                                            "date":  "2026-04-16"
                                        }
                                    ]
