@@ -992,3 +992,10 @@ body:has(.nav-open) .dice-fab, body:has(.nav-open) .dice-pop { display: none; }
 .tool-guide a { color: var(--gold-bright); }
 @media (max-width: 600px) { .tool-guide { padding: 18px 16px; } }
 @media print { .tool-guide { display: none !important; } }
+
+/* The Map Maker's two halves (the Battlemap Builder and the World Map Maker): a switch at the top of each */
+.map-maker-switch { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; margin: 0 auto 16px; }
+.map-maker-switch a { font-family: var(--font-ui); font-size: 0.9rem; text-decoration: none; padding: 9px 20px; border: 1px solid var(--gold-dim); border-radius: var(--radius-sm); background: var(--bg-card); color: var(--text-mid); }
+.map-maker-switch a:hover, .map-maker-switch a:focus-visible { color: var(--gold-bright); border-color: var(--gold-mid); }
+.map-maker-switch a[aria-current="page"] { color: #1a1206; background: var(--gold-mid); border-color: var(--gold-bright); font-weight: 700; }
+@media print { .map-maker-switch { display: none !important; } }

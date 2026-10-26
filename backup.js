@@ -17,7 +17,7 @@
    under the id its notebook entry got here (nbMerge's ids), and a picture with no entry
    here gets one, so it shows up on the Maps tab.
    Needs notebook.js, homebrew.js (hbClean, for homebrew monsters), battlemap-engine.js (bmCleanStore,
-   for battlemaps), and map-store.js on the page.
+   for battlemaps), worldmap-engine.js (wmCleanStore, for world maps), and map-store.js on the page.
    ============================================ */
 
 const BK_LIMITS = { file: 5000000, depth: 12, items: 5000, keys: 500, text: 20000 };
@@ -188,6 +188,16 @@ const BACKUP_KEYS = [
             if (!bkObj(v) || !Array.isArray(v.maps)) throw new Error("isn't in the shape this tool saves");
             const { cur, maps } = bmCleanStore(v);
             return { value: { v: 1, cur, maps: maps.map(bmPack) }, dropped: v.maps.length - maps.length };
+        },
+        count: v => bkN(v.maps.length, 'map')
+    },
+    {
+        key: 'gazette-worldmaps', tool: '🌍 World Map Maker', href: 'fantasy-world-map-maker', what: 'World maps',
+        // Typed names and labels, escaped by the page. Cleaned the way the page loads them (wmCleanStore).
+        clean: v => {
+            if (!bkObj(v) || !Array.isArray(v.maps)) throw new Error("isn't in the shape this tool saves");
+            const { cur, maps } = wmCleanStore(v);
+            return { value: { v: 1, cur, maps: maps.map(wmPack) }, dropped: v.maps.length - maps.length };
         },
         count: v => bkN(v.maps.length, 'map')
     },
