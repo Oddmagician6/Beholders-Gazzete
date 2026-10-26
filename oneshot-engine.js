@@ -605,7 +605,7 @@ function osFill(text, ctx) {
         if (!Object.hasOwn(ctx, low)) return m;
         const v = String(ctx[low]);
         return k === low ? v : osCap(v);
-    });
+    }).replace(/ Again again\b/g, ' Again');
     return typeof fillTemplate === 'function' ? fillTemplate(out) : out;
 }
 

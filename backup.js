@@ -16,7 +16,8 @@
    bytes must match its type and the browser must decode it before it is stored; it lands
    under the id its notebook entry got here (nbMerge's ids), and a picture with no entry
    here gets one, so it shows up on the Maps tab.
-   Needs notebook.js, homebrew.js (hbClean, for homebrew monsters), and map-store.js on the page.
+   Needs notebook.js, homebrew.js (hbClean, for homebrew monsters), battlemap-engine.js (bmCleanStore,
+   for battlemaps), and map-store.js on the page.
    ============================================ */
 
 const BK_LIMITS = { file: 5000000, depth: 12, items: 5000, keys: 500, text: 20000 };
@@ -182,9 +183,12 @@ const BACKUP_KEYS = [
     },
     {
         key: 'gazette-battlemaps', tool: '🧱 Battlemap Builder', href: 'dnd-battlemap-builder', what: 'Battlemaps',
-        // Typed names and labels, escaped by the page; bmClean (battlemap-engine.js) trims each map on load.
-        clean: v => bkWhole(v, s => bkObj(s) && Array.isArray(s.maps) && s.maps.length <= 30
-            && s.maps.every(m => bkObj(m) && Number.isInteger(m.w) && Number.isInteger(m.h) && typeof m.f === 'string'), false),
+        // Typed names and labels, escaped by the page. Cleaned the way the page loads them (bmCleanStore).
+        clean: v => {
+            if (!bkObj(v) || !Array.isArray(v.maps)) throw new Error("isn't in the shape this tool saves");
+            const { cur, maps } = bmCleanStore(v);
+            return { value: { v: 1, cur, maps: maps.map(bmPack) }, dropped: v.maps.length - maps.length };
+        },
         count: v => bkN(v.maps.length, 'map')
     },
     {

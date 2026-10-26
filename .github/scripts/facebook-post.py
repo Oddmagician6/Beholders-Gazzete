@@ -4,6 +4,8 @@ Run by .github/workflows/facebook.yml after a push to main. Finds the articles
 added since the previous commit (or the ids given with --ids), drops the
 Across the Multiverse ones ("real": true), and schedules each as a link post,
 spaced a few hours apart during the day so an edition doesn't land at once.
+Posts already scheduled on the Page count: the new ones go after the last of
+them, and an article already scheduled (a re-run) is skipped.
 
 Env: FB_PAGE_ID, FB_PAGE_TOKEN (a Page access token with pages_manage_posts).
 """
@@ -72,9 +74,13 @@ def day_open(t):
     return t
 
 
-def slots(n, now):
-    """n post times: the first soon, the rest spread to fill the day."""
-    start = day_open(now + FIRST_DELAY)
+def slots(n, now, after=None):
+    """n post times: the first soon (and a gap past `after`, the last post already
+    scheduled), the rest spread to fill the day."""
+    start = now + FIRST_DELAY
+    if after and after + MIN_GAP > start:
+        start = after + MIN_GAP
+    start = day_open(start)
     if n == 1:
         return [start]
     end = start.replace(hour=DAY_END, minute=0, second=0, microsecond=0) - dt.timedelta(minutes=30)
@@ -94,6 +100,30 @@ def graph(path, data):
             return json.load(r)
     except urllib.error.HTTPError as e:
         raise SystemExit(f"Graph API {path}: {e.code} {e.read().decode(errors='replace')}")
+
+
+def scheduled(page, token):
+    """The Page's scheduled posts as (time, message) pairs, or None when it can't read them
+    (the token needs pages_read_engagement for this)."""
+    out, url = [], f"{GRAPH}/{page}/scheduled_posts?" + urllib.parse.urlencode(
+        {"fields": "scheduled_publish_time,message", "limit": 100, "access_token": token})
+    try:
+        for _ in range(10):
+            with urllib.request.urlopen(url, timeout=60) as r:
+                body = json.load(r)
+            for post in body.get("data", []):
+                t = post.get("scheduled_publish_time")
+                if t:
+                    when = dt.datetime.fromtimestamp(int(t), TZ) if str(t).isdigit() else dt.datetime.fromisoformat(str(t).replace("+0000", "+00:00")).astimezone(TZ)
+                    out.append((when, post.get("message", "")))
+            url = body.get("paging", {}).get("next")
+            if not url:
+                break
+    except (urllib.error.URLError, ValueError, KeyError) as e:
+        detail = e.read().decode(errors="replace")[:200] if isinstance(e, urllib.error.HTTPError) else e
+        print(f"warning: couldn't read the Page's scheduled posts ({detail}); spacing from now only")
+        return None
+    return out
 
 
 def wait_live(url, minutes=15):
@@ -145,7 +175,23 @@ def main():
             raise SystemExit(f"{first} never came up; is GitHub Pages deploying?")
         now = dt.datetime.now(TZ)
 
-    for a, when in zip(articles, slots(len(articles), now)):
+    # Go after what's already scheduled (an earlier push today), and skip what a run that stopped
+    # partway already scheduled (the post's message is the excerpt).
+    after = None
+    if not args.dry_run:
+        queued = scheduled(page, token)
+        if queued:
+            after = max(t for t, _ in queued)
+            have = {m.strip() for _, m in queued}
+            for a in [a for a in articles if a["excerpt"].strip() in have]:
+                print(f"skip {a['id']}: already scheduled")
+            articles = [a for a in articles if a["excerpt"].strip() not in have]
+            if not articles:
+                print("Every article is already scheduled.")
+                return
+            print(f"after the {len(queued)} post(s) already scheduled, the last at {after:%a %I:%M %p %Z}")
+
+    for a, when in zip(articles, slots(len(articles), now, after)):
         url = f"{SITE}/a/{a['id']}"
         print(f"{when:%a %b %d %I:%M %p %Z}  {url}")
         if args.dry_run:

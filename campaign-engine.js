@@ -455,11 +455,12 @@ function rollCampaign(seed, opts = {}, set = {}) {
 
     const T = OS_TONES[tone];
     const title = arc.title.replace('{Short}', arc.relic[1]).replace('{Root}', root).replace('{Who}', villain.first)
-        .replace('{Fac}', c.faction).replace('{Noun}', arc.noun);
+        .replace('{Fac}', c.faction).replace('{Noun}', arc.noun).replace(/\b(\w+) \1\b/g, '$1');
     const levels = chapters.map(ch => ch.level);
+    const span = levels[0] === levels[levels.length - 1] ? `at level ${levels[0]}` : `from level ${levels[0]} to ${levels[levels.length - 1]}`;
     return {
         seed, seeds, start, end: levels[levels.length - 1], party, length, tone, n, title: osCap(title),
-        pitch: `${osA(T.adj)} campaign in ${n} chapters, from level ${levels[0]} to ${levels[levels.length - 1]}. ${villain.name}, ${villain.title.toLowerCase()} of ${c.faction}, ${villain.scheme}. Standing in the way: ${c.patronFaction}, and the party.`,
+        pitch: `${osA(T.adj)} campaign in ${n} chapters, ${span}. ${villain.name}, ${villain.title.toLowerCase()} of ${c.faction}, ${villain.scheme}. Standing in the way: ${c.patronFaction}, and the party.`,
         world: W, realm, root, god, deity,
         villain, doom,
         relic: { text: relicText, short: arc.relic[1], about: arc.relic[2] },
@@ -502,12 +503,17 @@ function cpWorldHref(W, tab) {
     return 'worldbuilder?' + paramsQuery({ tab, ...own, ...extra });
 }
 
+// "levels 3 to 10", or "level 20" when it starts at the top.
+function cpLevels(cp) {
+    return cp.start === cp.end ? `level ${cp.start}` : `levels ${cp.start} to ${cp.end}`;
+}
+
 // Plain text for Copy: the campaign's outline, then every chapter in short.
 function campaignText(cp) {
     const T = OS_TONES[cp.tone], v = cp.villain;
     const out = [
         cp.title.toUpperCase(),
-        `${T.icon} ${T.label} · ${cp.n} chapters · party of ${cp.party}, levels ${cp.start} to ${cp.end}`,
+        `${T.icon} ${T.label} · ${cp.n} chapters · party of ${cp.party}, ${cpLevels(cp)}`,
         cp.pitch, '',
         'THE VILLAIN',
         `${v.name}, ${v.title.toLowerCase()} of ${v.faction} (${v.race}, ${parseInt(v.age, 10)}). ${v.style}`,

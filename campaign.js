@@ -170,7 +170,7 @@ function cpOverviewHtml(cp) {
     ];
     return `
         <header class="os-title">
-            <p class="os-kicker">${T.icon} ${esc(T.label)} · ${cp.n} chapters · party of ${cp.party}, levels ${cp.start} to ${cp.end}</p>
+            <p class="os-kicker">${T.icon} ${esc(T.label)} · ${cp.n} chapters · party of ${cp.party}, ${cpLevels(cp)}</p>
             <h2>${esc(cp.title)}</h2>
             <p class="os-pitch">${esc(cp.pitch)}</p>
         </header>
@@ -310,7 +310,7 @@ function saveToNotebook() {
     // The scheme and the front are the DM's alone, as on the page: the 🔒 notes, never the players' ones.
     const dm = [`The scheme: ${osCap(v.name)} ${v.scheme}.`, `What everyone wants: ${cp.relic.text}.`,
         'The front:', ...cp.front.map((t, i) => `${i + 1}. ${t}`), `Secret: ${v.secret}`, `Their people call ${v.name} ${cp.alias}.`].join('\n');
-    const main = nbAdd({ kind: 'quest', title: cp.title, sub: `Campaign · ${cp.n} chapters · levels ${cp.start} to ${cp.end}`, href, notes: cp.pitch,
+    const main = nbAdd({ kind: 'quest', title: cp.title, sub: `Campaign · ${cp.n} chapters · ${cpLevels(cp)}`, href, notes: cp.pitch,
         dm, giver: cp.contacts[cp.contacts.length - 1].name, status: 'open' });
     if (!main || main.full) return flash(main && main.full ? 'The notebook is full; delete some entries first.' : 'Could not save: this browser\'s storage is full or blocked.', true);
     const ids = [];

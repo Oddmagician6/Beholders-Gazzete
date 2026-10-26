@@ -169,6 +169,11 @@ function bmClean(p) {
 function bmLoadStore() {
     let raw = null;
     try { raw = JSON.parse(localStorage.getItem(BM_KEY) || 'null'); } catch (e) {}
+    return bmCleanStore(raw);
+}
+
+// A saved store as the page keeps it (backup.js cleans an imported one with this too).
+function bmCleanStore(raw) {
     const maps = raw && Array.isArray(raw.maps) ? raw.maps.slice(0, BM_LIMITS.maps).map(bmClean).filter(Boolean) : [];
     const seen = new Set();
     maps.forEach(m => { if (seen.has(m.id)) m.id = bmId(); seen.add(m.id); });
