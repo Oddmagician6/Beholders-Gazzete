@@ -840,7 +840,9 @@ footer::before {
   .footer-links { flex-direction: column; gap: 12px; }
 
   /* ── Hamburger nav ── */
-  .nav-hamburger { display: block; }
+  /* On phones the bar is only its border line (the links are hidden), so the button hangs just
+     under it: centered on the line, its top half went off screen once the nav stuck at the top. */
+  .nav-hamburger { display: block; top: calc(100% + 6px); transform: none; }
 
   .main-nav {
     position: sticky;
@@ -854,7 +856,7 @@ footer::before {
     width: 100%;
     background: linear-gradient(180deg, #1a1712 0%, #0e0d0b 100%);
     border-top: 1px solid var(--gold-dim);
-    padding: 8px 0 12px;
+    padding: 52px 0 12px;        /* the ✕ button sits in the top strip */
     position: absolute;          /* drop down over content */
     top: 100%;
     left: 0;

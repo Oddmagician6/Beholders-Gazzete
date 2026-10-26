@@ -137,6 +137,14 @@ def main():
     if not args.dry_run and not (page and token):
         raise SystemExit("FB_PAGE_ID and FB_PAGE_TOKEN must be set.")
 
+    # Time the posts once the first article is live: Facebook refuses a time under 10 minutes away,
+    # and a slow deploy would eat the first post's lead.
+    if not args.dry_run:
+        first = f"{SITE}/a/{articles[0]['id']}"
+        if not wait_live(first):
+            raise SystemExit(f"{first} never came up; is GitHub Pages deploying?")
+        now = dt.datetime.now(TZ)
+
     for a, when in zip(articles, slots(len(articles), now)):
         url = f"{SITE}/a/{a['id']}"
         print(f"{when:%a %b %d %I:%M %p %Z}  {url}")

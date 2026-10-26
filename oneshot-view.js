@@ -146,3 +146,10 @@ function oneShotBodyHtml(o, opt = {}) {
             ${osStatBlocks(o)}
         </section>`}`;
 }
+
+// Offline site maps (One-Shot and Campaign): once the page has loaded, the service worker (sw.js)
+// saves the map art in the background.
+window.addEventListener('load', () => {
+    if (!('serviceWorker' in navigator) || !navigator.onLine) return;
+    navigator.serviceWorker.ready.then(reg => { if (reg.active) reg.active.postMessage('cache-map-art'); }).catch(() => {});
+});

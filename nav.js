@@ -32,14 +32,26 @@
     group.addEventListener('focusout', function(e) {
       if (!group.contains(e.relatedTarget)) setGroup(group, false);
     });
-    // Desktop dropdown: fit it into the space below the nav (it scrolls past that)
+    // Desktop dropdown: fit it into the space below the nav (it scrolls past that).
+    // Opened by a click, it first makes room; hovering never scrolls the page.
     group.addEventListener('mouseenter', fitSub);
-    toggle.addEventListener('click', fitSub);
+    toggle.addEventListener('click', function() {
+      if (group.classList.contains('open') && !(ul && ul.classList.contains('nav-open'))) makeRoom(212);
+      fitSub();
+    });
   });
+
+  // With less than `need` px below the nav, scroll the page (at most until the nav sticks at the
+  // top) so a menu opened by a click or tap fits.
+  function makeRoom(need) {
+    const r = nav.getBoundingClientRect();
+    const short = need - (window.innerHeight - r.bottom);
+    if (short > 0 && r.top > 0) window.scrollBy({ top: Math.min(short, r.top), behavior: 'instant' });
+  }
 
   function fitSub() {
     const room = window.innerHeight - nav.getBoundingClientRect().bottom - 12;
-    nav.style.setProperty('--nav-sub-max', Math.max(room, 200) + 'px');
+    nav.style.setProperty('--nav-sub-max', Math.max(room, 80) + 'px');
   }
   window.addEventListener('resize', fitSub);
   window.addEventListener('scroll', fitSub, { passive: true });
@@ -49,7 +61,7 @@
   function fitMenu() {
     if (!ul || !ul.classList.contains('nav-open')) return;
     const room = window.innerHeight - nav.getBoundingClientRect().bottom;
-    ul.style.setProperty('--nav-menu-max', Math.max(room, 200) + 'px');
+    ul.style.setProperty('--nav-menu-max', Math.max(room, 80) + 'px');
   }
   window.addEventListener('resize', fitMenu);
   window.addEventListener('scroll', fitMenu, { passive: true });
@@ -63,6 +75,7 @@
       btn.setAttribute('aria-expanded', open);
       // On a tool page, open its group so the current page is visible
       if (open) groups.forEach(function(g) { if (g.querySelector('a.active')) setGroup(g, true); });
+      if (open) makeRoom(200);
       fitMenu();
     });
     // Close when a link is tapped
