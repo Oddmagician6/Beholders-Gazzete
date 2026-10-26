@@ -214,7 +214,12 @@ function bbDrawUi() {
     const sel = bbSelected();
     if (sel && BB.sel.type === 'ob') {
         const it = BM_ITEMS[sel.k], w = Math.max(sel.w * (it.pw || 1), 0.6) * S, h = Math.max(sel.h * (it.ph || 1), 0.6) * S;
-        out.push(`<rect class="bb-sel" x="${-w / 2 - 1}" y="${-h / 2 - 1}" width="${w + 2}" height="${h + 2}" transform="translate(${sel.x * S} ${sel.y * S}) rotate(${sel.r})"/>`);
+        // k: one screen pixel, so the handles stay the same size at any zoom.
+        const k = S / BB.zoom, x = -w / 2 - 1, y = -h / 2 - 1;
+        out.push(`<g transform="translate(${sel.x * S} ${sel.y * S}) rotate(${sel.r})"><rect class="bb-sel" x="${x}" y="${y}" width="${w + 2}" height="${h + 2}"/>`
+            + `<line class="bb-sel" x1="0" y1="${y}" x2="0" y2="${y - 20 * k}"/>`
+            + `<circle class="bb-handle bb-rot" data-h="rot" cx="0" cy="${y - 20 * k}" r="${6 * k}"/>`
+            + `<rect class="bb-handle bb-scale" data-h="scale" x="${-x - 5 * k}" y="${-y - 5 * k}" width="${10 * k}" height="${10 * k}"/></g>`);
     } else if (sel) {
         out.push(`<circle class="bb-sel" cx="${sel.x * S}" cy="${sel.y * S}" r="7.5"/>`);
     }
@@ -431,6 +436,13 @@ function bbDown(e) {
     $('bb-svg').setPointerCapture(e.pointerId);
     BB.hover = null;
     const t = BB.tool;
+    // The selected thing's handles: the square resizes it, the round one turns it.
+    const handle = e.target.closest('[data-h]');
+    if (handle && bbSelected()) {
+        const s = bbSelected();
+        BB.drag = { kind: handle.dataset.h, w: s.w, h: s.h, x: s.x, y: s.y, moved: false, free };
+        return;
+    }
     if (t === 'floor') {
         const sq = { x: Math.floor(p.x), y: Math.floor(p.y) };
         const v = rub ? 0 : BB.floor;
@@ -530,6 +542,32 @@ function bbMove(e) {
     } else if (d.kind === 'ruler') {
         BB.ruler.b = free ? p : { x: Math.floor(p.x) + 0.5, y: Math.floor(p.y) + 0.5 };
         bbDrawUi();
+    } else if (d.kind === 'scale' || d.kind === 'rot') {
+        const s = bbSelected();
+        if (!s) return;
+        if (!d.moved) { bbMark(); d.moved = true; }
+        d.free = free;
+        const it = BM_ITEMS[s.k];
+        if (d.kind === 'rot') {
+            // Steps of 15° unless Alt is held.
+            const a = Math.atan2(p.y - s.y, p.x - s.x) * 180 / Math.PI + 90;
+            s.r = (((free ? Math.round(a) : Math.round(a / 15) * 15) % 360) + 360) % 360;
+        } else {
+            // The pointer in the thing's own turned frame, from its middle: half its new size.
+            const a = -s.r * Math.PI / 180, dx = p.x - d.x, dy = p.y - d.y;
+            let w = Math.abs(dx * Math.cos(a) - dy * Math.sin(a)) * 2 / (it.pw || 1);
+            let h = Math.abs(dx * Math.sin(a) + dy * Math.cos(a)) * 2 / (it.ph || 1);
+            // Shift keeps its shape.
+            if (e.shiftKey) { const f = Math.max(w / d.w, h / d.h); w = d.w * f; h = d.h * f; }
+            const step = free ? 0.05 : it.edge ? 0.25 : 1;
+            const to = v => Math.max(0.25, Math.min(20, Math.round(Math.max(step, Math.round(v / step) * step) * 100) / 100));
+            s.w = to(w);
+            s.h = to(h);
+            if (!free && !it.edge) Object.assign(s, bmSnap(s, d.x, d.y));
+            else { s.x = d.x; s.y = d.y; }
+        }
+        bbDrawObjs();
+        bbDrawUi();
     }
 }
 
@@ -562,6 +600,12 @@ function bbUp(e) {
     } else if (d.kind === 'move') {
         if (d.moved) bbSave();
         bbInspector();
+    } else if (d.kind === 'scale' || d.kind === 'rot') {
+        const s = bbSelected();
+        // Turned square to the grid: back onto the squares.
+        if (s && d.kind === 'rot' && !d.free && !BM_ITEMS[s.k].edge && s.r % 90 === 0) { Object.assign(s, bmSnap(s, s.x, s.y)); bbDrawObjs(); }
+        if (d.moved) bbSave();
+        bbInspector();
     }
     bbDrawUi();
 }
@@ -588,7 +632,7 @@ function bbHoverAt(p, e) {
 function bbInspector() {
     const box = $('bb-inspect'), s = BB.tool === 'select' ? bbSelected() : null;
     if (!s) {
-        box.innerHTML = BB.tool === 'select' ? '<p class="bb-hint">Click a door, a piece of furniture, or a label to pick it up. Drag to move it; it snaps to the grid unless you hold Alt.</p>' : '';
+        box.innerHTML = BB.tool === 'select' ? '<p class="bb-hint">Click a door, a piece of furniture, or a label to pick it up. Drag to move it; it snaps to the grid unless you hold Alt. Drag the square handle to resize it and the round one to turn it.</p>' : '';
         return;
     }
     if (BB.sel.type === 'lb') {

@@ -110,6 +110,9 @@
     .bm-lab { font-family: system-ui, sans-serif; font-size: 7px; font-weight: 700; fill: #f0e8d8; text-anchor: middle; dominant-baseline: central; }
     /* Only on screen */
     .bb-sel { fill: none; stroke: #ffd36b; stroke-width: 1; stroke-dasharray: 2 1.5; vector-effect: non-scaling-stroke; }
+    .bb-handle { fill: #ffd36b; stroke: #1a1206; stroke-width: 1; vector-effect: non-scaling-stroke; }
+    .bb-rot { cursor: grab; }
+    .bb-scale { cursor: nwse-resize; }
     .bb-ghost { opacity: 0.55; pointer-events: none; }
     .bb-ghost-rect { fill: rgba(212,168,67,0.18); stroke: #ffd36b; stroke-width: 1; vector-effect: non-scaling-stroke; pointer-events: none; }
     .bb-ghost-wall { stroke: #ffd36b; stroke-width: 3; stroke-linecap: round; opacity: 0.8; pointer-events: none; }
@@ -292,7 +295,7 @@
         </div>
         <div class="bb-opt" data-for="select" hidden>
           <div id="bb-inspect"></div>
-          <p class="bb-hint"><kbd>R</kbd> turn · arrow keys move it a square (<kbd>Alt</kbd>: a little) · <kbd>Ctrl</kbd>+<kbd>D</kbd> duplicate · <kbd>Delete</kbd> remove · <kbd>Esc</kbd> let go.</p>
+          <p class="bb-hint"><kbd>R</kbd> turn 90° (<kbd>Shift</kbd>+<kbd>R</kbd> back, <kbd>Alt</kbd>+<kbd>R</kbd> 15°) · drag the square handle to resize (<kbd>Shift</kbd> keeps its shape) and the round one to turn (<kbd>Alt</kbd>: any angle) · arrow keys move it a square (<kbd>Alt</kbd>: a little) · <kbd>Ctrl</kbd>+<kbd>D</kbd> duplicate · <kbd>Delete</kbd> remove · <kbd>Esc</kbd> let go.</p>
         </div>
         <div class="bb-opt" data-for="erase" hidden>
           <h3>🧽 Erase</h3>

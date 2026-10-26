@@ -19,7 +19,7 @@ const WE = {
     m: null,
     tool: 'land',
     lmode: 'land', brush: 6, bio: 1, tbrush: 6,
-    icon: 'city', scatter: false, iscale: 1,
+    icon: 'city', scatter: false, iscale: 1, turn: 0,
     line: 'border', text: 'realm', erase: 3,
     sel: null,          // { type: 'ic' | 'tx' | 'ln', i }
     zoom: 0.5,          // screen pixels per map unit
@@ -399,15 +399,15 @@ function weFinishDraft(close = false) {
 }
 
 // ── Putting things down ───────────────────────────────────
-function wePlaceIcon(k, p) {
+function wePlaceIcon(k, p, turn = WE.turn) {
     if (WE.m.ic.length >= WM_LIMITS.icons) { weFlash(`⚠️ A map holds up to ${WM_LIMITS.icons} icons.`); return null; }
-    WE.m.ic.push(wmNewIcon(k, p.x, p.y, WE.iscale));
+    WE.m.ic.push({ ...wmNewIcon(k, p.x, p.y, WE.iscale), r: turn });
     return WE.m.ic.length - 1;
 }
 
 function wePlaceText(k, p) {
     if (WE.m.tx.length >= WM_LIMITS.texts) { weFlash(`⚠️ A map holds up to ${WM_LIMITS.texts} labels.`); return null; }
-    WE.m.tx.push(wmNewText(k, p.x, p.y));
+    WE.m.tx.push({ ...wmNewText(k, p.x, p.y), r: WE.turn });
     return WE.m.tx.length - 1;
 }
 
@@ -549,7 +549,7 @@ function weMove(e) {
         const it = WM_ICONS[WE.icon], gap = it.w * WE.iscale * 0.8;
         if (Math.hypot(p.x - d.last.x, p.y - d.last.y) >= gap) {
             const jx = (Math.random() - 0.5) * gap * 0.5, jy = (Math.random() - 0.5) * gap * 0.5;
-            const i = wePlaceIcon(WE.icon, { x: p.x + jx, y: p.y + jy });
+            const i = wePlaceIcon(WE.icon, { x: p.x + jx, y: p.y + jy }, 0);
             if (i !== null) $('we-g-icons').insertAdjacentHTML('beforeend', wmIconSvg(m.ic[i], i, 'we'));
             d.last = p;
         }
@@ -643,7 +643,7 @@ function weHoverAt(p, e) {
         if (t === 'land') h = { brush: [p.x, p.y, WE.brush * WM_CELL], rub: e.shiftKey || WE.lmode === 'sea' };
         else if (t === 'terrain') h = { brush: [p.x, p.y, WE.tbrush * WM_CELL], rub: e.shiftKey };
         else if (t === 'erase') h = { brush: [p.x, p.y, WE.erase * WM_CELL], rub: true };
-        else if (t === 'icon') h = { icon: wmNewIcon(WE.icon, p.x, p.y, WE.iscale, () => 0) };
+        else if (t === 'icon') h = { icon: { ...wmNewIcon(WE.icon, p.x, p.y, WE.iscale, () => 0), r: WE.scatter && WM_ICONS[WE.icon].terrain ? 0 : WE.turn } };
     }
     if (t === 'line' && WE.draft) h = { pt: [p.x, p.y] };
     WE.hover = h;
@@ -814,6 +814,14 @@ function weKey(e) {
     if (k === 'escape') { WE.sel = null; WE.ruler = null; weDrawUi(); weInspector(); return; }
     if ((k === 'delete' || k === 'backspace') && weSelected()) { e.preventDefault(); weAct('del'); return; }
     if (k === 'r' && weSelected()) { e.preventDefault(); weAct(e.shiftKey ? 'unturn' : 'turn'); return; }
+    if (k === 'r' && (WE.tool === 'icon' || WE.tool === 'text')) {
+        // Nothing picked up: turn the next icon or label before it goes down.
+        e.preventDefault();
+        WE.turn = wmAngle(WE.turn + (e.shiftKey ? -15 : 15));
+        weFlash(`⟳ New icons and labels go down turned ${WE.turn}°.`);
+        if (WE.hover && WE.hover.icon) { WE.hover.icon.r = WE.turn; weDrawUi(); }
+        return;
+    }
     const arrows = { arrowleft: [-1, 0], arrowright: [1, 0], arrowup: [0, -1], arrowdown: [0, 1] };
     if (arrows[k] && weSelected()) { e.preventDefault(); const n = e.shiftKey ? 10 : 1; weNudge(arrows[k][0] * n, arrows[k][1] * n); return; }
     if (k === '=' || k === '+') { weZoomTo(WE.zoom * 1.25); return; }
