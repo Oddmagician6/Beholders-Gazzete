@@ -276,9 +276,11 @@
     }
 
     function renderRealm() {
-        const q = document.getElementById('realm-search').value.trim().toLowerCase();
+        // Phone keyboards type curly quotes; the data has straight ones
+        const fold = s => s.toLowerCase().replace(/[‘’]/g, "'").replace(/[“”]/g, '"');
+        const q = fold(document.getElementById('realm-search').value.trim());
         const rows = realm.filter(e => (activeType === 'all' || e.type === activeType) &&
-            (!q || `${e.name} ${e.short} ${e.blurb}`.toLowerCase().includes(q)));
+            (!q || fold(`${e.name} ${e.short} ${e.blurb}`).includes(q)));
         document.getElementById('realm-grid').innerHTML = rows.length ? rows.map(e => `
           <div class="realm-card">
             <div class="realm-top">

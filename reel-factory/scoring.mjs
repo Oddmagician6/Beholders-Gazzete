@@ -16,6 +16,13 @@ function roleText(script, role) {
   return script?.segments?.find(segment => segment.role === role)?.text || '';
 }
 
+// Counted from the segments as the template counts them, so a hand-edited script isn't scored on its old text.
+function scriptWords(script) {
+  return (script.segments || []).reduce((total, segment) => total + String(segment.text || '').trim().split(/\s+/).filter(Boolean).length, 0);
+}
+
+function estimatedSeconds(script) { return Number((scriptWords(script) / 140 * 60).toFixed(1)); }
+
 function clamp(value, max) { return Math.max(0, Math.min(max, value)); }
 
 function hasQuotedPhrase(text) {
@@ -128,8 +135,8 @@ function scoreShareability(script, title) {
 }
 
 function scoreShortForm(script, durationSeconds) {
-  const wordCount = script.editorial?.wordCount || (script.segments || []).reduce((total, segment) => total + words(segment.text).length, 0);
-  const duration = Number(durationSeconds || script.editorial?.estimatedDurationSeconds || 0);
+  const wordCount = scriptWords(script);
+  const duration = Number(durationSeconds || estimatedSeconds(script));
   const segmentCount = (script.segments || []).filter(segment => segment.role !== 'branding').length;
   const signals = [];
   const suggestions = [];
@@ -164,7 +171,7 @@ export function scoreReel(article, script, { artworkKind = 'category', durationS
     max: 100,
     band: bandFor(total),
     artworkKind,
-    durationSeconds: Number(durationSeconds || script.editorial?.estimatedDurationSeconds || 0),
+    durationSeconds: Number(durationSeconds || estimatedSeconds(script)),
     humanReviewRequired: true,
     criteria,
     limitations: [

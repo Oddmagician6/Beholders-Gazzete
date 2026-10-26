@@ -199,7 +199,10 @@
     document.getElementById('year').textContent = new Date().getFullYear();
 
     const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    const plain = html => String(html || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ');
+    const decoder = document.createElement('textarea');
+    const plain = html => { decoder.innerHTML = String(html || '').replace(/<[^>]*>/g, ' '); return decoder.value.replace(/\s+/g, ' '); };
+    // Phone keyboards type curly quotes; articles use straight ones
+    const fold = s => s.toLowerCase().replace(/[‘’]/g, "'").replace(/[“”]/g, '"');
     // Date-only strings parse as UTC midnight, which shows the day before in the Americas
     const day = s => new Date(s + 'T12:00:00');
     const PAGE = 30;
@@ -215,7 +218,7 @@
 
     function matches(a) {
         if (section !== 'all' && a.desk?.id !== section) return false;
-        const words = search.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+        const words = fold(search.value.trim()).split(/\s+/).filter(Boolean);
         return words.every(w => a.text.includes(w));
     }
 
@@ -305,7 +308,7 @@
         articles = (data.articles || []).map((a, i) => ({ ...a, i }))
             .sort((a, b) => b.date.localeCompare(a.date) || b.i - a.i)
             .map(a => ({ ...a, desk: deskOf(a),
-                text: `${a.title} ${a.excerpt} ${a.author} ${a.category} ${plain(a.content)}`.toLowerCase() }));
+                text: fold(`${a.title} ${a.excerpt} ${a.author} ${a.category} ${plain(a.content)}`) }));
         const wanted = params.get('section');
         if (wanted && desks.some(d => d.id === wanted)) section = wanted;
         renderChips(); render();
