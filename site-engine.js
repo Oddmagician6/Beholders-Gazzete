@@ -915,10 +915,15 @@ function siteFight(K, band, budget, diff, seed) {
     }
     if (!r.list.length) r = rollThemedEncounter(budget, diff, { habitat: K.habitat, band: 'none' });
     if (!r.list.length) return null;
-    const lead = r.list.reduce((a, b) => (b.m.xp > a.m.xp ? b : a)).m;
-    const mind = SITE_MINDS[lead.type] || 'beast';
-    const [seen, doing] = sitePick(SITE_DOING[mind].concat((K.doing && K.doing[mind]) || []));
+    const [seen, doing] = sitePick(siteDoingPool(K, r.list));
     return { list: r.list.map(e => ({ id: e.m.id, count: e.count })), band: r.band, diff, doing, seen, seed };
+}
+
+// What foes like these might be doing: by the mind of the strongest of them ([{ m, count }]).
+function siteDoingPool(K, list) {
+    const lead = list.reduce((a, b) => (b.m.xp > a.m.xp ? b : a)).m;
+    const mind = SITE_MINDS[lead.type] || 'beast';
+    return SITE_DOING[mind].concat((K.doing && K.doing[mind]) || []);
 }
 
 // The fight as the encounter engine's [{ m, count }].
@@ -1005,7 +1010,7 @@ function rollSite(seed, opts = {}) {
     // Who holds it (a group that fits the level), and what wanders in.
     const band = part(`band.${kind}.${level}.${party}`, () => siteChooseBand(K, budget, opts.bands));
 
-    const rooms = [], plans = [];
+    const rooms = [], plans = [], doingUsed = new Set();
     for (let i = 0; i < count; i++) {
         const last = i === count - 1;
         const type = i === 0 ? types.entry : last ? types.end : types.middle[(i - 1) % types.middle.length];
@@ -1019,6 +1024,13 @@ function rollSite(seed, opts = {}) {
         plans.push(plan);
         const fightSeed = deriveSeed(seed, `fight.${i}`);
         const fight = plan.fight ? part(`fight.${i}.${kind}.${level}.${party}`, () => siteFight(K, band, budget, plan.diff, fightSeed)) : null;
+        // Each room draws on its own, so two could be doing the same thing: the later one draws
+        // again from what's left, under its own seed (a room that didn't clash keeps its line).
+        if (fight && doingUsed.has(fight.doing)) {
+            const left = siteDoingPool(K, siteFightList(fight)).filter(([, t]) => !doingUsed.has(t));
+            if (left.length) [fight.seen, fight.doing] = part(`doing.${i}.again`, () => sitePick(left));
+        }
+        if (fight) doingUsed.add(fight.doing);
         const drawnTrap = plan.trap ? part(`trap.${i}.${kind}.${level}`, () => siteTrap(kind, tier)) : null;
         // The third pass (R6) may swap the trap for a newer one, under its own seed.
         const trap = drawnTrap && part(`trap.${i}.more.${kind}`, () => siteTrapMore(drawnTrap, kind, tier));

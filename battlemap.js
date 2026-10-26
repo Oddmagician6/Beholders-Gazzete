@@ -7,7 +7,7 @@
    Sites tab's (site-engine.js).
    Saves: every map in this browser under BM_KEY (battlemap-engine.js), up to 30, kept as
    you draw; another tab's changes show up here (the storage event).
-   Links: ?m=<share code> opens a shared map (or a site sent by the Sites tab's ✏️ Edit
+   Links: #m=<share code> (older links: ?m=) opens a shared map (or a site sent by the Sites tab's ✏️ Edit
    in the Battlemap Builder) as a new saved map, then drops the code from the address.
    Out: a PNG at 70, 100, or 140 pixels a square (map-export.js), and print at
    1 inch = 5 feet, page by page, or scaled to one page.
@@ -373,7 +373,8 @@ function bbNewObj(p, free) {
 }
 
 function bbNewLabel(p, free) {
-    return { x: free ? p.x : Math.floor(p.x) + 0.5, y: free ? p.y : Math.floor(p.y) + 0.5, t: BB.label || '?' };
+    const sq = (v, n) => Math.min(n - 1, Math.floor(v)) + 0.5;
+    return { x: free ? p.x : sq(p.x, BB.m.w), y: free ? p.y : sq(p.y, BB.m.h), t: BB.label || '?' };
 }
 
 function bbLabelNext() {
@@ -436,7 +437,14 @@ function bbDown(e) {
         if (BB.floorMode === 'fill') {
             if (!bmIn(m, sq.x, sq.y)) return;
             const copy = bmCopy(m);
-            if (bmFill(m, sq.x, sq.y, v)) { BB.undo.push(copy); BB.redo = []; bbUndoButtons(); bbDrawFloor(); bbSave(); }
+            if (bmFill(m, sq.x, sq.y, v)) {
+                BB.undo.push(copy);
+                if (BB.undo.length > BB_UNDO_MAX) BB.undo.shift();
+                BB.redo = [];
+                bbUndoButtons();
+                bbDrawFloor();
+                bbSave();
+            }
             return;
         }
         bbMark();
@@ -452,6 +460,9 @@ function bbDown(e) {
         const a = bbGridPoint(p);
         BB.drag = { kind: 'wall', a, b: a, p, rub };
         bbDrawUi();
+    } else if ((t === 'door' || t === 'prop' || t === 'label') && !bbOnMap(p)) {
+        // The dark margin around the map: nothing to put there.
+        return;
     } else if (t === 'door' || t === 'prop') {
         const o = bbNewObj(p, free);
         bbMark();
@@ -555,11 +566,14 @@ function bbUp(e) {
     bbDrawUi();
 }
 
+function bbOnMap(p) {
+    return p.x >= 0 && p.y >= 0 && p.x <= BB.m.w && p.y <= BB.m.h;
+}
+
 function bbHoverAt(p, e) {
     const t = BB.tool, free = e.altKey;
-    const inMap = p.x >= 0 && p.y >= 0 && p.x <= BB.m.w && p.y <= BB.m.h;
     let h = null;
-    if (inMap) {
+    if (bbOnMap(p)) {
         if (t === 'door' || t === 'prop') h = { obj: bbNewObj(p, free) };
         else if (t === 'floor' && BB.floorMode === 'brush') h = { brush: bbBrush(p.x, p.y, BB.brush), rub: e.shiftKey };
         else if (t === 'erase') h = { brush: bbBrush(p.x, p.y, BB.eraseSize), rub: true };
@@ -760,7 +774,9 @@ async function bbPrint() {
         html = P.pages.map((v, k) => `<div class="bb-sheet">${bmSvg(m, { ...o, view: v, uid: 'bp' + k }).replace('<svg ', `<svg style="width:${v.w}in;height:${v.h}in" `)}
             <p>${esc(m.name)} · page ${k + 1} of ${P.pages.length} (row ${Math.floor(k / P.cols) + 1}, column ${k % P.cols + 1}) · 1 inch = 5 feet</p></div>`).join('');
     }
-    box.innerHTML = `<style>@page { size: ${land && fit ? 'landscape' : land ? 'landscape' : 'portrait'}; margin: 0.5in; }\n${css}</style>${html}`;
+    // Scaled to one page, turned sideways: A4's 7.27 inches, less the caption (the page's own 9.4 is for upright).
+    const fitLand = fit && land ? '\n#bb-print .bb-sheet-fit svg { max-height: 6.9in; }' : '';
+    box.innerHTML = `<style>@page { size: ${land ? 'landscape' : 'portrait'}; margin: 0.5in; }${fitLand}\n${css}</style>${html}`;
     // Let the pictures arrive before the print dialog takes its copy.
     const hrefs = [...new Set([...box.innerHTML.matchAll(/href="(img\/[^"]+)"/g)].map(x => x[1]))];
     bbFlash('🖨️ Getting the pages ready…', true);
@@ -958,7 +974,15 @@ function bbSetup() {
         if (changed) { bbOpen(fresh ? id : store.maps[0].id); bbFlash('🔄 Updated from another tab.'); }
         else { BB.m = fresh; BB.store.cur = id; bbMapOptions(); }
     });
-    window.addEventListener('resize', () => { if (BB.zoom * BB.m.w > $('bb-stage').clientWidth * 3) bbFit(); });
+    // A narrower window (a phone turned) refits a map far wider than it. Only the width counts: a
+    // phone's address bar or keyboard changes the height, and that mustn't throw away the zoom.
+    let stageW = $('bb-stage').clientWidth;
+    window.addEventListener('resize', () => {
+        const sw = $('bb-stage').clientWidth;
+        if (sw === stageW) return;
+        stageW = sw;
+        if (BB.zoom * BB.m.w > sw * 3) bbFit();
+    });
     // A map link pasted over this page's address only changes the part after the #.
     window.addEventListener('hashchange', bbFromLink);
     bbFromLink();
