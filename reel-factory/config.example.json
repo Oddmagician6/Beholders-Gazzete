@@ -1,0 +1,12 @@
+{
+  "ffmpegPath": "ffmpeg",
+  "powershellPath": "powershell.exe",
+  "ttsProvider": "kokoro",
+  "pythonPath": "py",
+  "kokoroVoice": "am_fenrir",
+  "outputDirectory": ".reel-output/drafts",
+  "maxDurationSeconds": 35,
+  "speechRate": 0,
+  "speechVolume": 100,
+  "captionWordsPerLine": 6
+}

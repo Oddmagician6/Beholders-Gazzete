@@ -17,6 +17,11 @@ on:
         required: true
         type: boolean
         default: false
+      hashtags:
+        description: Story hashtags, space-separated (e.g. "#MooseRescue #SkatePark"); added after the standard D&D tags
+        required: false
+        type: string
+        default: ''
 
 concurrency:
   group: facebook-reel-${{ inputs.article_id }}
@@ -51,6 +56,7 @@ jobs:
           FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
           FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
           ARTICLE_ID: ${{ inputs.article_id }}
+          HASHTAGS: ${{ inputs.hashtags }}
           VIDEO_PATH: ${{ runner.temp }}/${{ inputs.article_id }}.mp4
         run: python3 .github/scripts/publish_facebook_reel.py
 

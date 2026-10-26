@@ -4,3 +4,12 @@ newsroom/
 
 # Original PNGs for the hero images (the site serves the WebP copies in img/)
 Website images/
+
+# Local Reel Factory configuration and generated drafts
+reel-factory/config.local.json
+reel-factory/.venv/
+reel-factory/.venv-kokoro/
+.reel-output/
+
+# Python bytecode from running the workflow scripts locally
+__pycache__/

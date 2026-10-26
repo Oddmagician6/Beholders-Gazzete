@@ -55,14 +55,25 @@ def graph_get(path, params, token):
     return request_json(request)
 
 
-def facebook_tags(article):
-    tags = ["#DnD", "#DungeonsAndDragons", "#TTRPG", "#FantasyHumor"]
-    title = re.sub(r"[^a-z0-9]+", " ", article.get("title", "").lower()).strip()
-    if "moose" in title:
-        tags.append("#MooseRescue")
-    if "skate park" in title:
-        tags.append("#SkatePark")
-    return tags[:7]
+BASE_TAGS = ["#DnD", "#DungeonsAndDragons", "#TTRPG", "#FantasyHumor"]
+MAX_TAGS = 8
+
+
+def facebook_tags(extra):
+    """Standard D&D tags plus the story tags chosen for this Reel."""
+    tags = list(BASE_TAGS)
+    for raw in re.split(r"[\s,]+", extra or ""):
+        name = raw.lstrip("#")
+        if not name:
+            continue
+        if not re.fullmatch(r"[A-Za-z0-9_]{1,50}", name):
+            raise RuntimeError(f"Invalid hashtag: {raw}")
+        tag = f"#{name}"
+        if tag.lower() not in {existing.lower() for existing in tags}:
+            tags.append(tag)
+    if len(tags) > MAX_TAGS:
+        raise RuntimeError(f"Too many hashtags: {len(tags)} (limit {MAX_TAGS}, including the {len(BASE_TAGS)} standard tags).")
+    return tags
 
 
 def wait_until_published(video_id, token):
@@ -85,7 +96,7 @@ def wait_until_published(video_id, token):
     raise RuntimeError(f"Meta accepted Reel {video_id}, but publication was not confirmed within 15 minutes. Check the Page before retrying.")
 
 
-def publish(article_id, video_path):
+def publish(article_id, video_path, extra_tags=""):
     page_id = os.environ.get("FB_PAGE_ID", "").strip()
     token = os.environ.get("FB_PAGE_TOKEN", "").strip()
     if not page_id or not token:
@@ -105,7 +116,7 @@ def publish(article_id, video_path):
         raise RuntimeError("The staged Reel MP4 is missing or empty.")
 
     article_url = f"{SITE}/a/{article_id}"
-    tags = facebook_tags(article)
+    tags = facebook_tags(extra_tags)
     description = f"{article_url}\n\n{' '.join(tags)}"
     print(f"Publishing Facebook Page Reel: {article['title']}")
     print(f"Description: {article_url} {' '.join(tags)}")
@@ -154,7 +165,7 @@ def main():
     video_path = os.environ.get("VIDEO_PATH", "").strip()
     if not article_id or not video_path:
         raise RuntimeError("ARTICLE_ID and VIDEO_PATH are required.")
-    publish(article_id, video_path)
+    publish(article_id, video_path, os.environ.get("HASHTAGS", ""))
 
 
 if __name__ == "__main__":
