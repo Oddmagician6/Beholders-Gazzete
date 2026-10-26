@@ -3108,6 +3108,285 @@
         },
         "rumor": "They say the shelved report listed which tavern-owners paid to have it quietly forgotten, and the list is longer than the report."
       }
+    },
+    {
+      "id": "rate-decision-gdp-inflation-week-warchest",
+      "title": "Rate Decision, GDP and Inflation Hit in One Week",
+      "category": "Economy",
+      "author": "Barnaby Tallowmere",
+      "date": "2026-10-26",
+      "excerpt": "The Reserve's rate decision, third-quarter GDP and September inflation all land this week, and Barnaby has made a spreadsheet and a pot of tea.",
+      "content": "<p>The Federal Reserve of Waterdeep holds its rate decision on Wednesday, and by Thursday the realm will also get its first read on third-quarter GDP and the September inflation numbers. That is three major reports in two days, which I have written on a card and pinned above my desk. (I have counted the days four times.)</p>\n\n<p>Start with the Reserve. The betting houses of the Merchant Princes put the odds of a rate hike this week at 9 percent, and the odds of one in December at 84 percent. Reserve Chair Kevrin Warchest speaks after the decision. One commentator wrote that the Reserve <em>should</em> hike on Wednesday but won't, because the midterm elections are so close. I find that sentence alarming. A central bank that waits for the voting is a baker who waits for the guests to leave before checking the oven.</p>\n\n<p>Now the numbers. The Reserve's own regional nowcast puts third-quarter growth near 3.5 percent, up from 2.2 percent in the second. Strong growth sounds pleasant until you recall that strong growth is exactly what makes a central bank reach for the hike wand. As for prices, September core inflation is forecast at 3.1 percent over the year, with the headline figure near 3.6 percent. A loaf that cost 5 gp a year ago would cost about 5.18 gp today, which is only 18 copper pieces, but my aunt Marigold buys eleven loaves a week and she <a href=\"/a/inflation-report-lamp-oil-loaf-index\">has already noticed the lamp oil</a>.</p>\n\n<p>Meanwhile the great guilds report their earnings. Gargoogle and MicroScroll go Wednesday, Amazoom Caravans on Thursday. The Nasdraq fell 2.9 percent last Thursday, its worst single day since June, so the guildmasters will be speaking to a nervous room. Futures on the market imply about 2.7 hikes over the next twelve months, which means the Merchant Princes expect the Reserve to do the very thing it is nervous about doing before the election. Sterling Vanmoor says the market will sort this out. I would like to see his spreadsheet. (I do not think he has one.)</p>\n\n<p>The thing to understand underneath all of this is simple. Hot growth and sticky prices push the Reserve toward higher rates. Higher rates make hearth-loans dearer, as <a href=\"/a/fed-governor-probe-kettlebrook-mortgage\">the Reserve's recent troubles</a> have not helped. The risk this week is not a surprise hike. It is a pause that tells everyone the next hike has merely been rescheduled.</p>\n\n<p>What this means for your pantry: buy your flour before Thursday, check the Reserve's wording on Wednesday, and do not let anyone tell you a delayed hike is a cancelled one.</p>\n\n<p><em>— B.T. (Loaf Index: see sidebar)</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Rate Hike Postponed",
+          "text": "The town's Reserve-appointed lender announces she will not raise interest on Wednesday, but several debtors swear her ledger shows a hike already written in. The party is hired by a worried baker to find the real ledger before the announcement bell rings."
+        },
+        "npc": {
+          "name": "Perrin Dunmoss",
+          "role": "Deputy Keeper of Coins",
+          "want": "To quietly delay a rate decision until after the town council vote.",
+          "secret": "He keeps two ledgers, and the honest one is hidden inside a flour barrel.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Patient Hen",
+          "text": "A tavern where tradesmen gather to bet on the Reserve's next move. The chalkboard odds change every time a rumor passes through the door.",
+          "tavern": true
+        },
+        "rumor": "They say the lender already decided to hike, and is only waiting for the council vote to finish before she tells anyone."
+      }
+    },
+    {
+      "id": "casino-strike-revenue-falls-22-percent-wyrmn",
+      "title": "Casino Strike Cuts Gold Haul 22%; Wyrmn Resorts Shrugs",
+      "category": "Labor",
+      "author": "Brakka Stonesweat",
+      "date": "2026-10-26",
+      "excerpt": "Seven weeks into the casino strike, the Anchor's monthly take fell 22%. Wyrmn Resorts says it is 'open and welcoming.' The dealers say: to whom?",
+      "content": "<p>The casino strike is seven weeks old and the house is losing. The house is out on the sidewalk with a sign.</p>\n\n<p>Anchor Bastion Harbor Gaming Hall in Mastiffchusetts took in 46.1 million gold pieces in September, down 22 percent from 59.1 million a year ago. That is its worst month since February 2021. The casino strike began on the fourth of that month, when about 1,300 dealers, cooks, porters and cart drivers walked out, and it has now run past seven weeks.</p>\n\n<p>The Wyrmn Resorts statement says the hall is \"open, operational and welcoming guests.\" That means a few people are inside and the lights are on. The slot-coin handle fell 20.3 percent, to 354.4 million. The province's tax take from the hall dropped from 14.78 million to 11.5 million. Somebody up in the vault owes the Margrave a very large apology.</p>\n\n<p>\"I've dealt cards in that room for eleven years,\" said Hulda Brassmantle, a card dealer on the picket line. \"Every night a man in a nice cloak loses a month of rent and tips me a copper. Now they want me to take less than I make? I'll hold the line till the dragon freezes over.\"</p>\n\n<p>The workers belong to Local 26 of the <a href=\"/a/hotel-strike-chikraggo-marathon-innhands-guild\">Innhands' Guild</a> and Local 25 of the Wagonmasters' Brotherhood. Their contract ran out on the last day of August. They want 10 gold an hour more over several years, and they want their healing coverage and pensions left alone. Wyrmn Resorts says wages and benefits grew 36.8 percent over four years and that it has made a \"substantial\" offer. Translated: they will pay you more if you promise not to ask for it.</p>\n\n<p>The Innhands' Guild says the talks have met twice since the strike began, and the last one was on the last day of September. Two meetings in seven weeks. I have had longer talks with a mine foreman about a missing pickaxe.</p>\n\n<p>Meanwhile, the Bastion city council voted unanimously to back the strikers, which is the rare thing every councilor agreed on. The Guild's response to the revenue drop was a sign that read \"The house doesn't win without its five-star workers.\" I'd put that on a banner, but they already did.</p>\n\n<p>Here is what the Wyrmn bosses can do. They can sit down with the Guild and the Brotherhood and settle. Or they can keep the doors open on an empty room and call it hospitality. The dealers will be outside either way, in the cold, and they have brought their own lunch.</p>\n\n<p><em>Solidarity. And stretch your back. — Brakka</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Empty Gaming Floor",
+          "text": "A gaming hall's dealers have walked out and the owners swear they are open, but the tables are bare and the vault ledgers don't add up. The party is hired by the picket captain to find out who is secretly dealing the few hands still being played, and who is paying them."
+        },
+        "npc": {
+          "name": "Hulda Brassmantle",
+          "role": "Picket line captain and dealer",
+          "want": "She wants the owners back at the table before the first snow ends the picket.",
+          "secret": "She has been quietly sneaking food into the hall for the replacement dealers, who are hungry and scared.",
+          "race": "dwarf",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Gilded Anchor Gaming Hall",
+          "text": "A grand gaming hall with its doors wide open and nearly empty tables. The chandeliers burn all night, and nobody can say who pays for the candles.",
+          "tavern": false
+        },
+        "rumor": "They say the owners are hiring ghosts to sit at the empty tables so the hall looks busy."
+      }
+    },
+    {
+      "id": "peace-talks-alliance-1997-rollback-czar-vlad",
+      "title": "Peace Talks: Damara Eyes Alliance Rollback to 1997",
+      "category": "International",
+      "author": "Grashka Ironjaw",
+      "date": "2026-10-26",
+      "excerpt": "Czar Vlad may use new Vaasa peace talks to demand the Alliance retreat to its 1997 lines, a report says. Grashka counts the siege-days.",
+      "content": "<p>Damara may use the coming peace talks over Vaasa to demand that the Lords' Alliance pull back to its 1997 lines, according to a report in a Frostfell gazette that cites unnamed diplomats. Nobody in the Bear's Citadel has confirmed it. Nobody has denied it either.</p>\n\n<p>The demand, if it exists, is simple. Withdraw Alliance troops from Impiltur, the three small harbor realms of the northern shore, and the Frostfells. Czar Vlad the Bear-Handed has called Alliance expansion the \"root cause\" of the war. Last week he said the talks should cover \"the architecture of European security as a whole.\" That is a siege engineer's way of saying he wants the walls moved.</p>\n\n<p>I have seen this opening move before. You ask for the whole castle so the other side feels generous handing over the gatehouse. It is an honest tactic. I respect it more than any press release.</p>\n\n<p>The Citadel's foreign-policy aide, Lord Ushkar, says the Sembian Concord should sit at the table, because a deal will be hard without it. He also says Damara will resume three-way talks after its Unity Feast on the fourth of Brumaire, and he calls the next session \"preliminary and exploratory.\" In my experience, preliminary and exploratory means the scouts have been sent out and the army has not been told.</p>\n\n<p>Duke Volodar of Vaasa backs an energy ceasefire and an end to the war. His envoys will come, but they want real steps first: a ceasefire and relief for the civilians in the shelled towns. They will not trade away land to get a chair. That is a clear objective, and clear objectives are the only thing I trust in this business.</p>\n\n<p>Donwald, for his part, is the third seat at the table. You may remember his <a href=\"/a/energy-ceasefire-donwald-damara-vaasa-shelling\">energy ceasefire</a>, announced before either side had read it. He is also busy with ballots, which I covered when the <a href=\"/a/peace-talks-stalled-purpose-calimshan-donwald\">talks stalled on purpose</a>. A mediator who watches the clock on his own election is a mediator with one eye on the door.</p>\n\n<p>The Concord wants a seat and the Citadel wants the Concord's walls. The Alliance has not said a word. Its silence is the loudest thing in the war room.</p>\n\n<p>Handshake forecast for the preliminary session: firm, two seconds, dagger check required for any envoy carrying a map from 1997. Tension holds at roughly forty-five siege-days and climbing. Field rations at the talks will be cold. Nobody has won. The opening bid is a whole continent, and everyone at the table knows it.</p>\n\n<p><em>Ironjaw, filed from the front.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Map From Before",
+          "text": "A courier is found dead on the road carrying a border map with every fortress marked as it stood thirty years ago. Both a harbor-realm baroness and a Damaran envoy want it, and the party must decide who gets it before the parley opens."
+        },
+        "npc": {
+          "name": "Ilsabet Kornwick",
+          "role": "Retired Alliance cartographer",
+          "want": "To sell her old survey notes to whichever side will keep her out of the war.",
+          "secret": "She drew the 'old' map herself last month and has been selling copies to both sides.",
+          "race": "human",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Cold Ration Inn",
+          "text": "A border inn where envoys from rival realms eat the same stale hardtack in strict silence. The innkeeper counts every dagger at the door.",
+          "tavern": true
+        },
+        "rumor": "They say the Bear's Citadel doesn't want the whole map back, only the one fortress it plans to keep."
+      }
+    },
+    {
+      "id": "will-o-wisp-streetlamps-brindlemoor-bog",
+      "title": "Will-o'-Wisp Streetlamps Lead Brindlemoor Patrons Into Bog",
+      "category": "Monster Watch",
+      "author": "Hollis Delvewright",
+      "date": "2026-10-26",
+      "excerpt": "Brindlemoor hired will-o'-wisps as streetlamps to save on oil. On opening night they led forty patrons home by way of the bog. Hit points held.",
+      "content": "<p>TANNER'S ROW, STREET LEVEL, ZERO FEET UNDERGROUND (A RARE TREAT) — Forty patrons left the Sleeping Mule on Saturday night and followed the town's new will-o'-wisp streetlamps straight into the Mirewash bog. The Reeve's office had hired the wisps to replace the lamplighters, who were let go in the spring over the price of oil.</p>\n\n<p>I was there, three pints in, holding a lantern I had been told was redundant. The wisps hung at each corner, glowing a lovely pale green, and every one of them drifted slowly south. The crowd followed. It is a long-standing rule of the Row that you follow the light home. Nobody had amended it.</p>\n\n<p>Box score: the Mule's cook, 11 hit points, one boot. Two hirelings off the evening shift, full health and furious. The party's bard, who asked to be named, says the wisps 'seemed so sure of themselves,' which is also his review of most contracts. The Fourth Attempt's wizard walked in to the knee and reported that the bog was 'warmer than expected.' He was at 6 hit points for unrelated reasons. A mule that had stayed behind to watch the door was found, unbothered, at home.</p>\n\n<p>The wisps were hired through Chapter 9 at a rate of one lamp-hour per customer led home. 'The terms were met,' said Deputy Registrar Pell Oddingwick. 'The customers were led. Nothing in the agreement says where.' He called the evening a soft launch.</p>\n\n<p>Reeve Maudrey Fennick, speaking at dawn with mud to the hip, was brief. 'We are aware of the bog,' she said. 'We are also aware that we signed this on a Friday.' She has ordered the wisps to hang at fixed brackets, which they have agreed to in writing and, a source in the Cellars Board notes, have so far ignored in spirit.</p>\n\n<p>Keeper Bess Harrowgate has taken a more practical line. The Mule is extending credit to anyone who comes in wet, and has put towels on the tab. 'They did walk here,' she said. 'Eventually.' She added that a will-o'-wisp is a fine lamp if you only want to look at it, and that nobody asked her.</p>\n\n<p>I rolled poorly on this one. I followed the light for about forty paces before I remembered that I write about this sort of thing. I lost my ninth ten-foot pole of the season testing the bog for depth. It went in easily and did not come back, so the depth is at least ten feet.</p>\n\n<p>The old lamplighters have been invited to return at their former wages, plus a boot allowance. Three have said yes. The wisps will serve out their term as decorations.</p>\n\n<p><em>— H.D., filing from below</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "Follow the Green Light",
+          "text": "A village that swapped its lamps for hired will-o'-wisps has woken to find a dozen townsfolk missing in the marsh. The mayor will pay to have them found and the wisps made to behave, before the next dark moon."
+        },
+        "npc": {
+          "name": "Perrin Dalloway",
+          "role": "Dismissed village lamplighter",
+          "want": "To be rehired at full wages and prove the wisps were a mistake.",
+          "secret": "He left the bracket gates unlatched the night the wisps arrived, hoping they would fail.",
+          "race": "human",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Lantern Rest Inn",
+          "text": "A marsh-edge inn with dry towels at every door and a lamp in every window. The lamps are plain oil and the keeper will not discuss why.",
+          "tavern": true
+        },
+        "rumor": "They say the wisps are not lost at all, they just prefer the bog and want company."
+      }
+    },
+    {
+      "id": "ai-ipo-filing-80-billion-loss-anthropyre",
+      "title": "AI Maker's IPO Filing Shows 80.7B gp Loss",
+      "category": "Technology",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-10-26",
+      "excerpt": "Anthropyre filed for its IPO, and the scrolls reveal 16.3B gp in revenue against an 80.7B gp loss. I have never been more excited to buy something.",
+      "content": "<p>OKAY. OKAY OKAY OKAY. Anthropyre Arcanum, makers of the Clawde line of golems, has filed paperwork with the Scroll &amp; Exchange Commission for an IPO on the Nasdraq. The ticker is a six-legged insect. The share count and price are blank, which means I have been refreshing a page of blanks for four hours and it is the best page I have ever refreshed.</p>\n\n<p>Then I read the 335 pages. In the first half of the year, Anthropyre took in 16.3 billion gp and lost 80.7 billion gp. Nearly 9 billion gp of that went to compute and infrastructure, and the rest, as far as my abacus can tell, went to the Chasm of Unlabeled Costs. They also have roughly 800 billion gp in commitments over ten years. That is not a balance sheet, that is a dungeon.</p>\n\n<p>The risk factors alone run 94 pages, and they are glorious. One warns that a catastrophic AI incident could make insurance impossible to buy. Another warns that Anthropyre's safety positions could make it a target of the High Council. If you remember when the company <a href=\"/a/ai-agents-internet-access-cut-anthropyre-clawde\">cut its rogue agents off from the internet</a>, you will note the filing has the same energy, only with lawyers and a table of contents.</p>\n\n<p>Governance is where the firmware glyphs really sing. Anthropyre stays a Public Benefit Corporation, and it admits it may not behave like a normal profit-maximizing outfit. Meanwhile one single share, the Class F, hands its seven co-founders 50.1 percent of the votes. Seven wizards, one share, a majority. I have seen less elegant locks on a treasure vault, and I have opened them.</p>\n\n<p>Sources whisper that the listing lands the week of November 16, raising about 100 billion gp at a valuation of 1.5 to 2 trillion gp. Goldmane Sacks and Morgane Stanleigh are handling the prospectus. At that price, a share of Anthropyre is a share of a thing that loses 80 billion gp per half-year and is worth more than most kingdoms. The mana throughput on that valuation is, frankly, unreasonable.</p>\n\n<p>Do I have a stake? I have an account open and a pre-order for the shares. Byte, my pseudodragon familiar, who now speaks only in ad copy, perched on the filing and announced, 'Own a piece of the future, risk factors apply.' Brother Tumbleberry says I should 'touch grass' instead of buying in. Brother Tumbleberry has never once been early to anything.</p>\n\n<p>Rating: five out of five beholder eyes. The loss is staggering, the voting scheme is airtight, and my subscription fee for refreshing this page is zero. Hold the line, wizards.</p>\n\n<p><em>— Nyx (they/them). Damage Report below.</em></p>\n\n<p><em>Burns sustained: 0, but the wallet is smoking. Refreshes of blank page: 212. Eyebrows: intact, pending November 16.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Class F Share",
+          "text": "A merchant guild is about to go public, and every one of its seven founders controls the vote through a single enchanted share certificate. A rival investor hires the party to steal it before the listing, or to prove it cannot be stolen."
+        },
+        "npc": {
+          "name": "Pell Hobsworth",
+          "role": "Junior Prospectus Scribe",
+          "want": "To get the risk-factor section finished before the listing so she can finally sleep.",
+          "secret": "She hid a small, real warning on page 94 that the founders have not read.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Blank Page Exchange",
+          "text": "A trading hall where every price board is empty until the opening bell. Speculators queue outside for days just to watch the chalk stay clean.",
+          "tavern": false
+        },
+        "rumor": "They say the founders' single share is guarded by a mimic that only answers to shareholders of record."
+      }
+    },
+    {
+      "id": "mail-ballots-20000-golden-coast-inquisitors",
+      "title": "Golden Coast: 20,000 Mail Ballots Face Inquisitor Purge",
+      "category": "Elections",
+      "author": "Ottoline Vex",
+      "date": "2026-10-26",
+      "excerpt": "The Royal Inquisitors want up to 20,000 mail ballots on the Golden Coast set aside as suspect, and a traveling appeals court is not buying it yet.",
+      "content": "<p>A traveling appeals court spent Monday weighing a request from the Royal Inquisitors to set aside up to 20,000 mail ballots on the Golden Coast, all of them cast by voters the Keep's scribes have flagged as \"likely\" noncitizens. Two of the three judges looked skeptical. The panel promised to rule quickly, with eight days left before the Nov. 3 midterms, which is the sort of promise I am required to log.</p>\n\n<p>The background, for those who skipped the filings. Last week the Inquisitors sued the Golden Coast to stop it counting those ballots. Their grievance was that Margrave Gavin Newsoom's registrars had failed to review the suspect list within 48 hours. The list arrived on a password-protected enchanted thumb crystal. A registrar in Lost Angels declined to plug it into anything, calling it an insecure device. The secretary of the Coast's ballots added that the password had been delivered on a sticky note, which is a fair summary of the entire exercise.</p>\n\n<p>The gentleman from the Ivory Keep maintains that the Coast was invited to \"work collaboratively\" and made no serious effort. The lady from the Coast replies that she has been shown no evidence the flagged persons were mailed ballots at all. Both sides have therefore agreed on one thing: neither has seen the evidence. This brings the session's Promises Made to fourteen. Promises Kept remains at the one about adjourning early, which was withdrawn.</p>\n\n<p>It is worth noting that this is not the Inquisitors' only election suit this month. Another, against <a href=\"/a/senate-race-lawsuit-frostmarch-sullow-inquisitors\">the Frostmarch Senate result</a>, is built on the theory that voters may confuse two men named Sullow. Here the theory is that 20,000 ballots may be confused with something worse. I do not make the theories. I merely record them.</p>\n\n<p>The High Courts have already declined once this autumn to restrict mail ballots, a defeat that <a href=\"/a/justices-mail-ballot-ruling-donwald-regrets-picks\">High Lord Donwald of the Golden Towers has openly regretted</a>. Donwald is therefore now attempting to restrict them one court lower, and in one province, which a procedural scholar would call a downgrade in ambition and an upgrade in sticky notes.</p>\n\n<p>A courtier who asked not to be named because they were not authorized to be awake told me the Inquisitors \"expect to lose, but want the ballots counted slowly.\" Over 27 million citizens across the realm have already voted early, so slowly is a relative term. The motion is pending. Nobody has found the password.</p>\n\n<p><em>— O.V., from the gallery</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Password on the Sticky Note",
+          "text": "A county registrar has been handed an enchanted crystal said to list 'foreign' voters, with the password scribbled on a scrap. Both the crown's agents and the registrar want the party to verify it before the election, but whoever wrote the list is hiding."
+        },
+        "npc": {
+          "name": "Marisol Venk",
+          "role": "Deputy Registrar of Ballots",
+          "want": "To count every ballot lawfully before the deadline without touching the crystal.",
+          "secret": "She already copied the list and found her own mother's name on it.",
+          "race": "human",
+          "gender": "female",
+          "kind": "noble"
+        },
+        "location": {
+          "name": "The Counting Hall of Dunmere",
+          "text": "A drafty hall where ballots are tallied under glowing wards. The wards flicker whenever an agent of the crown enters.",
+          "tavern": false
+        },
+        "rumor": "They say the crystal's password is just the name of whoever lost the last election."
+      }
+    },
+    {
+      "id": "pumpkin-smash-harvest-festival-stillwarder-crowd",
+      "title": "Giant Pumpkin Smash Draws Crowd in Stillwarder; Pieces Looted",
+      "category": "Events",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-10-26",
+      "excerpt": "A giant pumpkin was smashed at a harvest festival in Stillwarder and the crowd stampeded for the pieces. Skritch was there, allegedly, near a doorknob.",
+      "content": "<p>At roughly the second bell past noon, a giant pumpkin was allegedly smashed in front of a large crowd at the Stillwarder Harvest Moot in Minnowsota, and the crowd then rushed in to take pieces home. That is the whole pumpkin smash. I was there. Allegedly.</p>\n\n<p>The gourd, which witnesses say was roughly the size of a halfling's cottage, sat on a platform all morning, being admired. Nobody had been told when the smashing would begin. Then a man in a cloak of orange felt raised a mallet, and the harvest festival changed.</p>\n\n<p>'I thought it was a ceremony,' said Dunstan Pell, a cider-seller, who was holding a hot cider at the time. 'Then the pumpkin exploded and a grandmother went over my head. She was carrying a bucket.' Pell allegedly lost the cider. The grandmother allegedly kept the bucket and filled it.</p>\n\n<p>In footage from the Chronicle, aired on Good Morrow, Waterdeep, the crowd did not wait for the all clear. Hundreds of festival-goers allegedly surged in, grabbing seeds, rind, strings, and one very large stem. A pumpkin that took a whole season to grow was gone in under a minute. The Stillwarder Watch said no one was arrested because there was no law against taking pumpkin, which the Watch called a gap, and then called a miracle.</p>\n\n<p>Ooh. There was a little brass bell on the ground near the cider stall. Very shiny. Anyway. I picked it up to examine it, and a toddler took it from me, and I let her, because toddlers are fast and I am eight inches tall.</p>\n\n<p>Back to the pumpkin. Festival organizers allegedly planned the smash as the finale, but nobody posted a sign, so the finale happened at the start. By late afternoon, vendors were selling pumpkin pie from pumpkin that had been on the ground a few hours earlier. The pies were allegedly very good. I ate two. Allegedly I paid.</p>\n\n<p>The Tower District nobles, who were not invited and did not come, have since called the smash 'undignified.' They say the correct way to dispose of a pumpkin is to have a servant carry it away. I say the correct way to dispose of a pumpkin is to let a grandmother with a bucket do it. Pigeons were also seen at the scene, eating seeds. Pigeons ruin everything.</p>\n\n<p>The Harvest Moot ends Sunday. Organizers say next year's pumpkin will be larger, and that this time there will be a sign.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Gourd Stampede",
+          "text": "A harvest town's prize pumpkin was smashed as a finale and stripped by the crowd in under a minute, but its seeds were meant for the spring planting. The reeve offers coin to anyone who can find out which villagers took them home."
+        },
+        "npc": {
+          "name": "Dunstan Pell",
+          "role": "Cider seller and festival gossip",
+          "want": "To recover the cider he lost and sell the story of the smash to anyone who buys a mug.",
+          "secret": "He sold the mallet-wielder the tip about when the smash would start.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Orange Mallet",
+          "text": "A cider house on the edge of the harvest fairgrounds, decorated with gourd rinds. The walls are sticky and the regulars refuse to say why.",
+          "tavern": true
+        },
+        "rumor": "They say the pumpkin was cursed to grow, and that whoever kept the stem will have a very good year, or a very bad one."
+      }
+    },
+    {
+      "id": "toy-maker-layoff-notice-587-hasbrawn",
+      "title": "Hasbrawn Layoff Notice Covers 587 Jobs, Calls It a Move",
+      "category": "Business",
+      "author": "Sterling Vanmoor",
+      "date": "2026-10-26",
+      "excerpt": "A toy maker's layoff notice covers 587 jobs in Pawtuckhollow as the firm relocates to Bastion. Sterling calls it a bold commute-based pivot.",
+      "content": "<p>Hasbrawn Toyworks has filed a layoff notice, a notice of warding in realm terms, with the isle's labor registry, listing 587 positions at its Pawtuckhollow headquarters that end on December 24 as the toy maker relocates to Bastion. Some call that a layoff. I call it a roster refresh with a very long commute.</p>\n\n<p>Let's look at the numbers like leaders. Every one of the 587 affected roles was offered a position in Bastion, a walled harbor city of famously expensive rent. Workers who say yes report on January 4. That leaves eleven days between the last shift and the first, ideal for wagon-based onboarding. Hasbrawn says the move was announced to staff back on September 1 of last year. That is what I call transparent forward guidance.</p>\n\n<p>Hasbrawn insists the filing is \"not a new announcement,\" and I admire the discipline. When you have told your people once, you have told them forever. The company has not said how many staff accepted the Bastion offer, and frankly, why would it? A guildmaster who shares the acceptance rate is a guildmaster who invites benchmarking.</p>\n\n<p>Lord Mayor Dun Grebin of Pawtuckhollow, who has not yet embraced the disruption, complained that the company was silent and ignored every raven sent by his office and the isle's officials. Respectfully, Lord Mayor, a pivot is a quiet thing. You do not send ravens to a river you are about to cross. I also note the registry itself labels the move a \"plant closure,\" which is the sort of regulator language that has never built a single toy.</p>\n\n<p>Some will say a town that gave a toy maker its name on the map deserves a farewell better than a form. Those people have never scaled. When I met a certain Guildmaster of a rival board-game empire at a networking breakfast once, he handed me a die and said, \"Sterling, never let a map stop you.\" I have kept that die in my pocket ever since. It is always a one.</p>\n\n<p>Think of the upside. Bastion has colleges, harbors, and a thriving market for commuters with strong calves. Pawtuckhollow gets a vacant hall, which is just a startup incubator waiting for a better pitch deck. Meanwhile our friends at the labor lodges will surely demand severance and a seat at the table. I prefer the model where the table is in another city.</p>\n\n<p>Key takeaways for the ambitious adventurer:</p>\n<ul>\n<li>If you must rightsize the adventuring party, file the paperwork and call it relocation.</li>\n<li>Announce early, then never discuss it again.</li>\n<li>Always carry a lucky die, but never roll it in front of the board.</li>\n</ul>\n\n<p><em>— Sterling Vanmoor, Guild Visionary. Let's connect at the Yawning Portal.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Hall That Moved",
+          "text": "A toy-maker guild is closing its hometown workshop and offering every artisan a post in a distant city, but half the offers carry strange clauses. The Lord Mayor hires the party to read the fine print before the deadline."
+        },
+        "npc": {
+          "name": "Odalys Fennwick",
+          "role": "Workshop Foreman, Retiring",
+          "want": "To get her junior toymakers fair severance before the final day.",
+          "secret": "She has already signed a private deal to move and has told no one.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Empty Painting Hall",
+          "text": "A vast guild workshop with unfinished toys still on the benches. At night the wooden soldiers rearrange themselves to face the door.",
+          "tavern": false
+        },
+        "rumor": "They say the guild left the finest toys behind because they were too clever to fit in a wagon."
+      }
+    },
+    {
+      "id": "multiple-sclerosis-misdiagnosis-one-in-five-wendell",
+      "title": "1 in 5 Multiple Sclerosis Diagnoses Wrong; Ask a Second Seer",
+      "category": "Health",
+      "author": "Brother Wendell Tumbleberry",
+      "date": "2026-10-26",
+      "excerpt": "Up to one in five multiple sclerosis diagnoses may be mistaken, temple neurologists say. Brother Wendell recommends a second opinion and a warm pot.",
+      "content": "<p>Friends, a hard thing to hear, so let me say it gently. Temple neurologists now estimate that between 15 and 20 percent of folk told they have multiple sclerosis, the condition where the body's own guards chew on the nerves, do not actually have it. The news came out after the actress Christina Applegrate announced on her scrying-circle program that her own diagnosis was a mistake, and that her symptoms remain unexplained.</p>\n\n<p>The old herbals knew that a tired, tingling body can wear many cloaks. The new studies agree, and then add some arithmetic. One neurologist told the Cauldron Broadcasting Society that almost one in five patients told they have the disease \"didn't actually have it,\" and called the error fairly common. Another said the usual culprit is a spot on the brain-scan crystal that gets read as a lesion when it is really the footprint of high blood pressure, smoking, or a bad run of migraines.</p>\n\n<p>There is no single test, friends. Unlike the sugar-sickness, where a drop of blood settles the matter, this one is decided by symptoms, scans, and sometimes a sample of the fluid around the spine. The international council of healers published sharper rules in 2025 for reading those scan spots, which is good, though a rule only helps if the healer in front of you has read it. Fibromyalgia, thyroid trouble, sleep disorders, and plain chronic fatigue can all pass for the real thing. Most of the common treatments are quite safe, one specialist noted, so the sky is not falling. But if you have been treated for years and feel no better, that is worth a second look.</p>\n\n<p>So here is my plain advice. Ask for a second opinion, and ask a specialist who sees these cases all day, because they are likelier to know the current rules and the lookalikes. The national society keeps a map of such centers. It costs nothing to read, which cannot be said for the four-hundred-gold \"brain-clarity tonic\" some apothecary will surely start selling by Thursday.</p>\n\n<p>I will also say, and I mean it kindly, that being told you were wrong about your own body is exhausting. Sleep helps. So does sitting down and letting someone else stir. My friend Nyx Spindlecoil says there is a scrying-stone app that will read your scan in four seconds. Go outside, Nyx, and bring a second opinion back with you.</p>\n\n<p>This week's soup is a thick lentil-and-carrot with a spoonful of barley and plenty of black pepper, three coppers a bowl and good for a tired head.</p>\n\n<p><em>Rest well, friends. — Brother Wendell</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Wrong Word on the Scroll",
+          "text": "A well-liked baker has been treated for a nerve-wasting illness for six years and is getting worse. The party is hired by her daughter to find a second healer who will actually read the scans before the guild physician buries the question."
+        },
+        "npc": {
+          "name": "Odalys Brenwick",
+          "role": "Itinerant temple neurologist",
+          "want": "To get one more patient re-examined before the winter roads close.",
+          "secret": "She was once the physician who signed off on a wrong diagnosis herself, and it is why she travels now.",
+          "race": "elf",
+          "gender": "female",
+          "kind": "religious"
+        },
+        "location": {
+          "name": "The Second Opinion Infirmary",
+          "text": "A narrow stone clinic in a river town that only accepts patients already diagnosed elsewhere. Its waiting-room mural of a brain keeps getting repainted with different spots.",
+          "tavern": false
+        },
+        "rumor": "They say the guild physician in the next valley has diagnosed the same sickness in nine people this month, and only one of them can feel their feet go numb."
+      }
     }
   ]
 }
