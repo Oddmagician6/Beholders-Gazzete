@@ -1,0 +1,62 @@
+name: Publish approved Facebook Reel
+run-name: Publish Reel — ${{ inputs.article_id }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      article_id:
+        description: Article ID for the approved Reel
+        required: true
+        type: string
+      release_tag:
+        description: Temporary public GitHub Release containing <article-id>.mp4
+        required: true
+        type: string
+      custom_artwork_confirmed:
+        description: Confirm the Reel uses custom article-specific artwork
+        required: true
+        type: boolean
+        default: false
+
+concurrency:
+  group: facebook-reel-${{ inputs.article_id }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Validate and download staged Reel
+        env:
+          ARTICLE_ID: ${{ inputs.article_id }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+          CUSTOM_ARTWORK_CONFIRMED: ${{ inputs.custom_artwork_confirmed }}
+        run: |
+          set -euo pipefail
+          [[ "$CUSTOM_ARTWORK_CONFIRMED" == "true" ]] || { echo "Custom article-specific artwork must be confirmed before publishing." >&2; exit 1; }
+          [[ "$ARTICLE_ID" =~ ^[a-z0-9][a-z0-9_-]*$ ]] || { echo "Invalid article ID." >&2; exit 1; }
+          [[ "$RELEASE_TAG" =~ ^reel-stage-[a-z0-9-]+$ ]] || { echo "Release tag must start with reel-stage-." >&2; exit 1; }
+          url="https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}/${ARTICLE_ID}.mp4"
+          curl --fail --location --silent --show-error --retry 3 "$url" --output "$RUNNER_TEMP/$ARTICLE_ID.mp4"
+          test -s "$RUNNER_TEMP/$ARTICLE_ID.mp4"
+
+      - name: Upload and publish Facebook Reel
+        env:
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+          ARTICLE_ID: ${{ inputs.article_id }}
+          VIDEO_PATH: ${{ runner.temp }}/${{ inputs.article_id }}.mp4
+        run: python3 .github/scripts/publish_facebook_reel.py
+
+      - name: Remove temporary public staging release
+        if: ${{ success() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        run: gh release delete "$RELEASE_TAG" --cleanup-tag --yes
