@@ -843,6 +843,9 @@ footer::before {
   /* On phones the bar is only its border line (the links are hidden), so the button hangs just
      under it: centered on the line, its top half went off screen once the nav stuck at the top. */
   .nav-hamburger { display: block; top: calc(100% + 6px); transform: none; }
+  /* It hangs over the ticker and, once stuck, over the page: a solid face keeps text from showing through */
+  .nav-hamburger { background: #0e0d0b; }
+  .nav-hamburger:hover { background: linear-gradient(var(--gold-glow), var(--gold-glow)), #0e0d0b; }
 
   .main-nav {
     position: sticky;
