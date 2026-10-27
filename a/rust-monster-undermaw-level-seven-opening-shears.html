@@ -463,7 +463,7 @@
 
     <div id="campaign"></div>
 
-    <p class="article-satire" id="article-satire">📰 Satire. Not real news. This story parodies real events, and every name in it is a fictional stand-in.</p>
+    <p class="article-satire" id="article-satire">&#x1F4DC; Fiction. Not real news. This story happened only in the realm, and nobody in it stands for anyone real.</p>
 
     <hr class="article-divider">
 
@@ -693,8 +693,11 @@
       el.innerHTML = deskTag(article, desks, 'article-category-badge');
       // Real-news stories (Across the Multiverse) aren't satire, so drop the satire note (export-articles.ps1 does the same)
       if (article.real) document.getElementById('article-satire').innerHTML = REAL_NOTE;
+      // Made-up realm stories parody nothing real (export-articles.ps1 does the same)
+      else if (article.fiction) document.getElementById('article-satire').textContent = FICTION_NOTE;
     }
     const REAL_NOTE = '🌀 Real news, not satire. <a href="multiverse">Across the Multiverse</a> covers the tabletop hobby straight, under real names.';
+    const FICTION_NOTE = '📜 Fiction. Not real news. This story happened only in the realm, and nobody in it stands for anyone real.';
 
     // Handout: the article as an in-world newspaper clipping. Printing the page prints only this
     // (body.has-handout); ?handout shows it on screen with Print and Back buttons.
