@@ -22,6 +22,11 @@ on:
         required: false
         type: string
         default: ''
+      scheduled_publish_time:
+        description: Optional Facebook schedule time as a Unix timestamp in seconds
+        required: false
+        type: string
+        default: ''
 
 concurrency:
   group: facebook-reel-${{ inputs.article_id }}
@@ -57,6 +62,7 @@ jobs:
           FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
           ARTICLE_ID: ${{ inputs.article_id }}
           HASHTAGS: ${{ inputs.hashtags }}
+          SCHEDULED_PUBLISH_TIME: ${{ inputs.scheduled_publish_time }}
           VIDEO_PATH: ${{ runner.temp }}/${{ inputs.article_id }}.mp4
         run: python3 .github/scripts/publish_facebook_reel.py
 

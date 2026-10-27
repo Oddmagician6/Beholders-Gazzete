@@ -76,7 +76,7 @@ def facebook_tags(extra):
     return tags
 
 
-def wait_until_published(video_id, token):
+def wait_until_ready(video_id, token, scheduled):
     deadline = time.monotonic() + MAX_WAIT_SECONDS
     while time.monotonic() < deadline:
         payload = graph_get(video_id, {"fields": "status"}, token)
@@ -88,15 +88,20 @@ def wait_until_published(video_id, token):
         ]
         if video_state in {"error", "failed"} or "error" in phase_states or "failed" in phase_states:
             raise RuntimeError(f"Meta reported a failed Reel state: {video_state or phase_states}")
-        if video_state in {"published", "live"} or (phase_states[-1] == "complete" and phase_states[1] == "complete"):
+        publishing_state = phase_states[-1]
+        if scheduled and (video_state == "scheduled" or publishing_state == "scheduled"):
+            print(f"Facebook confirmed Reel scheduling. Reel video ID: {video_id}")
+            return
+        if not scheduled and (video_state in {"published", "live"} or (publishing_state == "complete" and phase_states[1] == "complete")):
             print(f"Facebook confirmed publication. Reel video ID: {video_id}")
             return
         print(f"Reel {video_id}: status={video_state or 'processing'}, phases={phase_states}")
         time.sleep(POLL_SECONDS)
-    raise RuntimeError(f"Meta accepted Reel {video_id}, but publication was not confirmed within 15 minutes. Check the Page before retrying.")
+    outcome = "schedule" if scheduled else "publication"
+    raise RuntimeError(f"Meta accepted Reel {video_id}, but {outcome} was not confirmed within 15 minutes. Check the Page before retrying.")
 
 
-def publish(article_id, video_path, extra_tags=""):
+def publish(article_id, video_path, extra_tags="", scheduled_publish_time=""):
     page_id = os.environ.get("FB_PAGE_ID", "").strip()
     token = os.environ.get("FB_PAGE_TOKEN", "").strip()
     if not page_id or not token:
@@ -118,7 +123,17 @@ def publish(article_id, video_path, extra_tags=""):
     article_url = f"{SITE}/a/{article_id}"
     tags = facebook_tags(extra_tags)
     description = f"{article_url}\n\n{' '.join(tags)}"
-    print(f"Publishing Facebook Page Reel: {article['title']}")
+    scheduled = bool(scheduled_publish_time)
+    if scheduled:
+        try:
+            publish_at = int(scheduled_publish_time)
+        except ValueError:
+            raise RuntimeError("SCHEDULED_PUBLISH_TIME must be a Unix timestamp in seconds.") from None
+        if publish_at < int(time.time()) + 600:
+            raise RuntimeError("Scheduled publish time must be at least 10 minutes in the future.")
+        if publish_at > int(time.time()) + 29 * 24 * 60 * 60:
+            raise RuntimeError("Facebook Page Reels can only be scheduled up to 29 days ahead.")
+    print(f"Scheduling Facebook Page Reel: {article['title']}" if scheduled else f"Publishing Facebook Page Reel: {article['title']}")
     print(f"Description: {article_url} {' '.join(tags)}")
 
     session = graph_post(f"{page_id}/video_reels", {"upload_phase": "start"}, token)
@@ -149,15 +164,16 @@ def publish(article_id, video_path, extra_tags=""):
         {
             "video_id": video_id,
             "upload_phase": "finish",
-            "video_state": "PUBLISHED",
+            "video_state": "SCHEDULED" if scheduled else "PUBLISHED",
             "title": article["title"],
             "description": description,
+            **({"scheduled_publish_time": publish_at} if scheduled else {}),
         },
         token,
     )
     if finish.get("success") is not True:
         raise RuntimeError("Meta did not confirm the Reel publish request.")
-    wait_until_published(video_id, token)
+    wait_until_ready(video_id, token, scheduled)
 
 
 def main():
@@ -165,7 +181,7 @@ def main():
     video_path = os.environ.get("VIDEO_PATH", "").strip()
     if not article_id or not video_path:
         raise RuntimeError("ARTICLE_ID and VIDEO_PATH are required.")
-    publish(article_id, video_path, os.environ.get("HASHTAGS", ""))
+    publish(article_id, video_path, os.environ.get("HASHTAGS", ""), os.environ.get("SCHEDULED_PUBLISH_TIME", "").strip())
 
 
 if __name__ == "__main__":
