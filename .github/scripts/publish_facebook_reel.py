@@ -7,6 +7,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -76,10 +77,10 @@ def facebook_tags(extra):
     return tags
 
 
-def wait_until_ready(video_id, token, scheduled):
+def wait_until_ready(video_id, token, scheduled, scheduled_publish_time=None):
     deadline = time.monotonic() + MAX_WAIT_SECONDS
     while time.monotonic() < deadline:
-        payload = graph_get(video_id, {"fields": "status"}, token)
+        payload = graph_get(video_id, {"fields": "status,scheduled_publish_time,published"}, token)
         status = payload.get("status") or {}
         video_state = str(status.get("video_status", "")).lower()
         phase_states = [
@@ -89,7 +90,18 @@ def wait_until_ready(video_id, token, scheduled):
         if video_state in {"error", "failed"} or "error" in phase_states or "failed" in phase_states:
             raise RuntimeError(f"Meta reported a failed Reel state: {video_state or phase_states}")
         publishing_state = phase_states[-1]
-        if scheduled and (video_state == "scheduled" or publishing_state == "scheduled"):
+        meta_schedule = payload.get("scheduled_publish_time")
+        schedule_matches = False
+        if scheduled and meta_schedule:
+            try:
+                if isinstance(meta_schedule, (int, float)):
+                    meta_epoch = int(meta_schedule)
+                else:
+                    meta_epoch = int(datetime.fromisoformat(str(meta_schedule).replace("Z", "+00:00")).timestamp())
+                schedule_matches = abs(meta_epoch - int(scheduled_publish_time)) <= 60
+            except (TypeError, ValueError, OverflowError):
+                pass
+        if scheduled and (video_state == "scheduled" or publishing_state == "scheduled" or (schedule_matches and payload.get("published") is False)):
             print(f"Facebook confirmed Reel scheduling. Reel video ID: {video_id}")
             return
         if not scheduled and (video_state in {"published", "live"} or (publishing_state == "complete" and phase_states[1] == "complete")):
@@ -173,7 +185,7 @@ def publish(article_id, video_path, extra_tags="", scheduled_publish_time=""):
     )
     if finish.get("success") is not True:
         raise RuntimeError("Meta did not confirm the Reel publish request.")
-    wait_until_ready(video_id, token, scheduled)
+    wait_until_ready(video_id, token, scheduled, publish_at if scheduled else None)
 
 
 def main():
