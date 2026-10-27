@@ -113,6 +113,32 @@ def wait_until_ready(video_id, token, scheduled, scheduled_publish_time=None):
     raise RuntimeError(f"Meta accepted Reel {video_id}, but {outcome} was not confirmed within 15 minutes. Check the Page before retrying.")
 
 
+def confirm_existing_schedule(video_id, scheduled_publish_time, token):
+    if not re.fullmatch(r"[0-9]+", video_id):
+        raise RuntimeError("VIDEO_ID must be a numeric Facebook video ID.")
+    try:
+        expected = int(scheduled_publish_time)
+    except (TypeError, ValueError):
+        raise RuntimeError("SCHEDULED_PUBLISH_TIME must be a Unix timestamp in seconds.") from None
+    payload = graph_get(video_id, {"fields": "status,scheduled_publish_time,published"}, token)
+    status = payload.get("status") or {}
+    if payload.get("published") is True or str(status.get("video_status", "")).lower() in {"published", "live"}:
+        print(f"Facebook confirms Reel is published. Reel video ID: {video_id}")
+        return "published"
+    actual = payload.get("scheduled_publish_time")
+    try:
+        if isinstance(actual, (int, float)):
+            actual_epoch = int(actual)
+        else:
+            actual_epoch = int(datetime.fromisoformat(str(actual).replace("Z", "+00:00")).timestamp())
+    except (TypeError, ValueError, OverflowError):
+        actual_epoch = None
+    if actual_epoch is not None and abs(actual_epoch - expected) <= 60 and payload.get("published") is False:
+        print(f"Facebook confirms Reel is scheduled for {actual}. Reel video ID: {video_id}")
+        return "scheduled"
+    raise RuntimeError(f"Meta did not report the expected schedule for Reel {video_id}; status={status}, scheduled_publish_time={actual!r}, published={payload.get('published')!r}.")
+
+
 def publish(article_id, video_path, extra_tags="", scheduled_publish_time=""):
     page_id = os.environ.get("FB_PAGE_ID", "").strip()
     token = os.environ.get("FB_PAGE_TOKEN", "").strip()
@@ -189,6 +215,18 @@ def publish(article_id, video_path, extra_tags="", scheduled_publish_time=""):
 
 
 def main():
+    operation = os.environ.get("OPERATION", "publish").strip()
+    if operation == "confirm_schedule":
+        page_id = os.environ.get("FB_PAGE_ID", "").strip()
+        token = os.environ.get("FB_PAGE_TOKEN", "").strip()
+        video_id = os.environ.get("VIDEO_ID", "").strip()
+        scheduled_publish_time = os.environ.get("SCHEDULED_PUBLISH_TIME", "").strip()
+        if not page_id or not token:
+            raise RuntimeError("FB_PAGE_ID and FB_PAGE_TOKEN must be configured as repository secrets.")
+        confirm_existing_schedule(video_id, scheduled_publish_time, token)
+        return
+    if operation != "publish":
+        raise RuntimeError("OPERATION must be publish or confirm_schedule.")
     article_id = os.environ.get("ARTICLE_ID", "").strip()
     video_path = os.environ.get("VIDEO_PATH", "").strip()
     if not article_id or not video_path:

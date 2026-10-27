@@ -8,15 +8,28 @@ on:
         description: Article ID for the approved Reel
         required: true
         type: string
+      operation:
+        description: Publish a Reel or verify an existing schedule
+        required: false
+        type: choice
+        options:
+          - publish
+          - confirm_schedule
+        default: publish
       release_tag:
         description: Temporary public GitHub Release containing render.mp4
-        required: true
+        required: false
         type: string
       custom_artwork_confirmed:
         description: Confirm the Reel uses custom article-specific artwork
-        required: true
+        required: false
         type: boolean
         default: false
+      video_id:
+        description: Existing Facebook video ID (confirm_schedule operation only)
+        required: false
+        type: string
+        default: ''
       hashtags:
         description: Story hashtags, space-separated (e.g. "#MooseRescue #SkatePark"); added after the standard D&D tags
         required: false
@@ -43,6 +56,7 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Validate and download staged Reel
+        if: ${{ inputs.operation != 'confirm_schedule' }}
         env:
           ARTICLE_ID: ${{ inputs.article_id }}
           RELEASE_TAG: ${{ inputs.release_tag }}
@@ -60,14 +74,16 @@ jobs:
         env:
           FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
           FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+          OPERATION: ${{ inputs.operation }}
           ARTICLE_ID: ${{ inputs.article_id }}
+          VIDEO_ID: ${{ inputs.video_id }}
           HASHTAGS: ${{ inputs.hashtags }}
           SCHEDULED_PUBLISH_TIME: ${{ inputs.scheduled_publish_time }}
           VIDEO_PATH: ${{ runner.temp }}/${{ inputs.article_id }}.mp4
         run: python3 .github/scripts/publish_facebook_reel.py
 
       - name: Remove temporary public staging release
-        if: ${{ success() }}
+        if: ${{ success() && inputs.operation != 'confirm_schedule' }}
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ inputs.release_tag }}
