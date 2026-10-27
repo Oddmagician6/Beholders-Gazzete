@@ -3387,6 +3387,285 @@
         },
         "rumor": "They say the guild physician in the next valley has diagnosed the same sickness in nine people this month, and only one of them can feel their feet go numb."
       }
+    },
+    {
+      "id": "reserve-meeting-opens-stocks-rise-hold-priced",
+      "title": "Stocks Rise as Reserve Meeting Opens, Hold Priced at 90%",
+      "category": "Economy",
+      "author": "Barnaby Tallowmere",
+      "date": "2026-10-27",
+      "excerpt": "Stocks rose Monday as the two-day Reserve meeting began, with a hold at 3.75% to 4% priced near 90%. Barnaby has done the December arithmetic. Twice.",
+      "content": "<p>Stocks rose on Monday, October 26, as the Federal Reserve of Waterdeep opened its two-day rate meeting. The Silver &amp; Platinum 500 gained 0.7%, the Nasdraq Composite climbed 0.8%, and the Dwarven Jones Industrial Average added 0.3%. Merchant Princes are putting roughly 90% odds on the Reserve holding its rate at 3.75% to 4% when the decision lands Wednesday, with a quarter-point hike pencilled in for December.</p>\n\n<p>Let me translate. A hold means nothing changes this week. (I have checked this four times, and the odds still say nothing changes.) But a December hike means the thing the Reserve did in September, when <a href=\"/a/bond-yields-24-year-high-reserve-hike-loaf-index\">bond yields hit a 24-year high</a>, is apparently a habit rather than an accident. A tavern-keeper with a ten-thousand-gold-piece loan would pay another twenty-five gp a year per quarter point, which is roughly six loaves on the Loaf Index at 4 gp each. Per hike. Per tavern-keeper. There are a great many tavern-keepers.</p>\n\n<p>The rally itself rests on two things. First, the Merchant Princes are cheered by the Anthropyre Arcanum filing to sell shares to the public, which has revived the old belief that every spell-engine in the realm is worth a kingdom. Second, Gargoogle, MicroScroll and Amazoom Caravans all report earnings this week, and traders want to learn whether their enormous spending on spell-engines is producing any gold. It is a bit like cheering a baker for buying ovens before anyone has seen the bread.</p>\n\n<p>Meanwhile, Burnt Crude slipped to about 109.59 gp a barrel after the Ivory Keep ruled out an immediate strike on Calimshan. That is still about twenty-seven loaves per barrel, and I want it noted that I do not consider this a drop. It is a smaller climb with its hat off. As I wrote in the <a href=\"/a/rate-decision-gdp-inflation-week-warchest\">week-ahead column</a>, lamp oil is feeding straight into everything, and nobody at the Reserve can dim it with a speech.</p>\n\n<p>Reserve Chair Kevrin Warchest has declined to preview the decision, saying only that he does not prejudge meetings. My aunt Marigold, who keeps her savings in a boot, finds this reassuring, since a boot also does not prejudge anything. Sterling Vanmoor, naturally, called Monday's rally \"the market telling us it has the situation in hand.\" The market, Sterling, has said no such thing. It has said a number, and then it said a different number.</p>\n\n<p>What this means for your pantry: buy flour before Wednesday, buy more before December, and do not let anyone tell you the market will sort itself out.</p>\n\n<p><em>— B.T. (Loaf Index: see sidebar)</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Quarter-Point Wager",
+          "text": "A guild of grain-merchants has bet its whole winter stock on whether the Reserve raises rates in December, and the party is hired to guard the vault where the betting slips are kept. Someone inside keeps adjusting the odds."
+        },
+        "npc": {
+          "name": "Pemberly Quickfold",
+          "role": "Junior Odds-Clerk, Grain Exchange",
+          "want": "To get the guild's wager cancelled before the December decision.",
+          "secret": "Pemberly has been quietly changing the odds board to hide a loss they caused.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Hushed Ledger Exchange",
+          "text": "A round trading hall where every deal is made in whispers and no clock is allowed. The floor is warm because bread is baked under it, to keep the traders calm.",
+          "tavern": false
+        },
+        "rumor": "They say the Reserve already decided on a December hike and is just waiting for the harvest to finish."
+      }
+    },
+    {
+      "id": "nurses-strike-looms-final-offer-rejected-brigand",
+      "title": "Nurses Reject 'Final' Offer; Strike Looms at Brigand Infirmary",
+      "category": "Labor",
+      "author": "Brakka Stonesweat",
+      "date": "2026-10-27",
+      "excerpt": "Nearly 4,000 nurses at the Brigand & Women's Infirmary voted Friday to reject the guild's 'best and final' contract offer. A strike is back on the table.",
+      "content": "<p>They said no. The nurses looked at the 'best and final' offer, and a nurses strike is back on the table.</p>\n\n<p>Last Friday, the healers of the Brigand &amp; Women's Infirmary in Bastion voted to reject the contract put in front of them by the Grand General Brigand Healing Guild. The Mastiffchusetts Nurses' Lodge did not release the tally. It represents nearly 4,000 nurses, and the open-ended <a href=\"/a/nurses-strike-postponed-brigand-infirmary-final-offer\">nurses strike that was postponed earlier this month</a> is now back in play. No new date yet. The Lodge says it will 'reevaluate.'</p>\n\n<p>Here is what the Brigand Guild offered: no across-the-board raise. Nothing. It points out that nurses already get a five percent step bump on each work anniversary, up to twenty years. That means: you were already getting that, and we would like credit for it.</p>\n\n<p>Here is what the Lodge asked for: three percent for the first six months and four percent for the next twelve. That is not a dragon's hoard. That is a Tuesday lunch.</p>\n\n<p>The Guild says its offer held 'meaningful compensation and benefit enhancements.' I have read a lot of guild scrolls. 'Meaningful' means the word 'meaning' appears in it somewhere. Starting pay is 86,700 gold. A nurse with twenty years in earns at least 220,000. The Guild loves to say so, as if a person who has held a night shift for two decades should send a thank-you raven.</p>\n\n<p>'I have 1,322 colleagues at the top of the scale,' said Marta Quillfeather, a ward nurse who has not sat down on shift since the Feast of the Harvest Moon. 'The Guild says we are the best paid in the realm. I say they spent last July locking us out for four days and hiring two thousand temp healers. If I'm so overpaid, who were they paying double?'</p>\n\n<p>The Lodge's bargaining chair said before the vote that she expected a rejection, because of what she called pure anger at the Guild and its board of directors. That is a forecast, not a mood.</p>\n\n<p>The Brigand Guild said it was 'disappointed by the outcome' and 'prepared to maintain uninterrupted care.' That means it is ringing every temp agency in three kingdoms. A Guild spokesman could not say how many gold coins it takes to hire two thousand strangers to learn where the bandages are, but a janitor named Pell Ironhatch, who mops the third-floor corridor, estimated 'more than a raise.'</p>\n\n<p>The Lodge says it is ready to go back to the table. Good. Pull up a chair, Guild. Bring a pen and a new number. Healers stay on their feet all shift, so the least you can do is meet them there.</p>\n\n<p><em>Solidarity. And stretch your back. — Brakka</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Last Best Offer",
+          "text": "A healers' guild has called its contract offer 'best and final' and the nurses just tore it up. The local infirmary needs steady hands in the wards, and both sides will pay the party to carry messages, guard the picket, or find out who is quietly hiring replacement healers."
+        },
+        "npc": {
+          "name": "Marta Quillfeather",
+          "role": "Senior Ward Nurse",
+          "want": "A fair raise before she hangs up her cloak for good.",
+          "secret": "She has been secretly training the temp healers on her ward so patients stay safe if the strike happens.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Open Ledger Infirmary",
+          "text": "A grand teaching infirmary with a gleaming front hall and a back corridor of cots. A banner reading 'Uninterrupted Care' hangs in the lobby, hung a little crooked by a janitor on his lunch break.",
+          "tavern": false
+        },
+        "rumor": "They say the Guild already hired two thousand temp healers and put them up in a rented inn, but nobody has seen one actually hold a bandage."
+      }
+    },
+    {
+      "id": "halruaa-election-turnout-45-years-nettleyahu",
+      "title": "Halruaa Election Turnout Fastest in 45 Years",
+      "category": "International",
+      "author": "Grashka Ironjaw",
+      "date": "2026-10-27",
+      "excerpt": "Halruaans voted at the fastest rate in 45 years in an election too close to call, a referendum on Chancellor Nettleyahu's war leadership.",
+      "content": "<p>Halruaa voted today, and the election turnout was the fastest in 45 years. The race between Chancellor Nettleyahu the Perennial and Marshal Gadric Eisenknot is too close to call, and the whole contest is a referendum on how Nettleyahu has run the war. It is the first Moot election since the war began.</p>\n\n<p>I reached the polling station at dawn. The queue was already longer than the Marshal's service record. A woman in the line told me she had been standing since the fourth bell and had brought field rations. I respected her immediately. Good rations, hard cheese, no press release attached.</p>\n\n<p>The Chancellor's camp is calm. Calm is the wrong word. They are <em>deployed</em>. <a href=\"/a/donwald-endorsement-nettleyahu-halruaa-election\">Donwald's \"complete and total endorsement\"</a> arrived nine days ago, and Nettleyahu has been carrying it around like a sword he is not sure how to hold. Endorsements from Waterdeep are a siege engine. Sometimes they hit the wall. Sometimes they hit your own tent.</p>\n\n<p>Eisenknot ran as the blunt old soldier, which suits him. He says little and means it. He cast his vote at 7 a.m. Handshake with the poll warden: firm, two seconds, no hidden dagger detected. Nettleyahu voted at nine. Handshake: firm, four seconds, one eye on the cameras. The extra two seconds are for the photo opportunity. I hate photo opportunities. Noted.</p>\n\n<p>Turnout is the real story. A line this fast means voters have opinions and are acting on them, which is bad news for anyone who plans by assuming people will stay home. Tension in Halruaa stands at roughly sixty siege-days, up from fifty-five at breakfast. Every minister in the Chancellor's coalition is counting heads. Itamar Ben-Grim has reportedly counted his own head twice and gotten two different answers.</p>\n\n<p>A Moot clerk showed me the ballot boxes. Eleven of them, sealed with wax, each guarded by a bored dwarf with a halberd. One dwarf told me the last turnout this fast ended with a coalition that lasted nineteen days. \"Nobody ever wins the morning,\" he said. \"They win the count.\" He is correct. I am stealing that.</p>\n\n<p>Ottoline Vex is filing from the press gallery in the capital, where, I am told, the view is excellent and the poll results are not yet available. I am filing from a dusty courtyard next to a ballot box. The courtyard has better intelligence.</p>\n\n<p>The count begins at nightfall. Neither side will concede early. Both have drafted victory speeches and defeat speeches, and the defeat speeches are shorter and have fewer adjectives. Nobody won today. Somebody will lose tomorrow.</p>\n\n<p><em>Ironjaw, filed from the front.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Eleventh Ballot Box",
+          "text": "A town's election count comes up one sealed box short, and both candidates swear they never saw it. The party is hired by the poll warden to find it before nightfall, when the losing side starts asking questions with swords."
+        },
+        "npc": {
+          "name": "Brogan Stonehelm",
+          "role": "Poll warden and halberd-bearer",
+          "want": "To see the count finished without a single riot or recount.",
+          "secret": "He quietly moved one box to the cellar to protect it from a candidate's agents and now cannot remember which cellar.",
+          "race": "dwarf",
+          "gender": "male",
+          "kind": "guard"
+        },
+        "location": {
+          "name": "The Wax and Quill Hall",
+          "text": "A drafty voting hall where ballots are sealed with wax and counted by lamplight. The ceiling leaks directly over the tally table.",
+          "tavern": false
+        },
+        "rumor": "They say the last election this fast ended with a government that lasted nineteen days, and the winner only found out by reading the papers."
+      }
+    },
+    {
+      "id": "cloaker-coat-check-chapter-9-guild-hall",
+      "title": "Cloaker Checked as Cloak at Chapter 9 Guild Hall",
+      "category": "Monster Watch",
+      "author": "Hollis Delvewright",
+      "date": "2026-10-27",
+      "excerpt": "A cloaker hung on the coat rack at Chapter 9's hall was checked in as a cloak, then claimed by three patrons. Two are at half hit points.",
+      "content": "<p>CHAPTER 9 COAT CHECK, GROUND LEVEL, ZERO FEET UNDERGROUND (A RARE TREAT) — A cloaker spent Tuesday evening hanging on peg 14 of the Chapter 9 guild hall coat rack, where a clerk checked it in as a cloak and issued a brass token. Three patrons have since put it on. None of them took it off under their own power.</p>\n\n<p>The box score, as of press time: Dellin Marsh, a pewter merchant, 11 of 30 hit points. A sellsword who gave her name only as Tamsin, 14 of 38. A third patron, still wearing it, is at 22 of 22 and says he has never felt so warm. The clerk, Odo Winklepip, is at full strength and has been reassigned to hats.</p>\n\n<p>\"It was the right size and it had a collar,\" Winklepip told me, standing well back from the rack. \"The ticket said black wool. It moaned a little when I hung it, but so does the draft.\" The party's bard, who asked to be named, says the cloaker \"had a look about it.\" He then took the cloaker home by mistake and brought it back at dawn, apologizing to it.</p>\n\n<p>Deputy Registrar Pell Oddingwick of Chapter 9 said the incident was \"a soft launch of our new garment-adjacent services\" and that the coat check remains on track. Asked whether the cloaker had paid the two-copper check fee, he said the cloaker is \"a guest of the hall, like the <a href=\"/a/owlbear-nests-chapter-9-map-room\">owlbear in the map room</a>.\" I asked which of them was the coat. He declined to say.</p>\n\n<p>Ansel Pottage, steward of the Fourth Attempt's hirelings, pointed out that the guild's printed coat-check rules cover \"cloaks, capes, and similar,\" and do not cover creatures. \"I read to the end,\" he said, bandaged hand on the counter. \"There is a clause about umbrellas. There is no clause about this.\" The Fourth Attempt's hirelings have filed a notice that nobody on the payroll is to be asked to hold the door, the coats, or the cloaker.</p>\n\n<p>Reeve Maudrey Fennick, reached at home, said, \"We are aware of the cloak.\" Brindlemoor ordinance already requires a warning sign on lobby seating, and she confirmed that her office is studying whether outerwear needs one too. A cushion fee has not yet been proposed. Give it a day.</p>\n\n<p>Shieldwall Mutual, the adventurer insurer, said bites taken while wearing a cloaker are covered, but bites taken while hanging one are the wearer's own doing. Marsh's claim is pending. His coat, a real one, is on peg 15 and has not been touched.</p>\n\n<p>The cloaker is currently on peg 14 again, where it is calm, dim, and has been seen to sway when someone opens the front door. Chapter 9 has hung a cardboard sign reading \"Not A Cloak (Probably).\" I pushed a ten-foot pole at it from the far side of the hall to see what it would do. It took the pole. That is my ninth of the season, and I rolled poorly on the distance.</p>\n\n<p><em>— H.D., filing from below</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Coat on Peg Fourteen",
+          "text": "A cloaker has been checked in as a coat at a guild hall and three patrons are hurt. The clerk wants it gone quietly before the guildmaster returns, and will pay to have it lured off the rack without a fuss."
+        },
+        "npc": {
+          "name": "Odo Winklepip",
+          "role": "Guild hall coat-check clerk",
+          "want": "To keep his job without anyone learning how many other coats on the rack he has never actually touched.",
+          "secret": "He suspected the cloak was alive and checked it in anyway because the owner tipped him a silver piece.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Brass Peg Coat Room",
+          "text": "A cramped coat room behind a guild hall lobby, with forty numbered pegs and a lantern that never stays lit. Peg fourteen is always a little warmer than the rest.",
+          "tavern": false
+        },
+        "rumor": "They say the black cloak on the rack comes back every time somebody tries to leave it behind, and that it has a better memory than the clerk."
+      }
+    },
+    {
+      "id": "laptop-1999-gp-24-hour-battery-discord",
+      "title": "Discord Apple's New Laptop: 1,999 GP, 24-Hour Battery",
+      "category": "Technology",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-10-27",
+      "excerpt": "Discord Apple unveiled a 14-inch laptop with a faster chip and a 24-hour battery. Preorders open tomorrow. Nyx is already out of breath.",
+      "content": "<p>Okay. OKAY. Apple of Discord Artificers announced a new 14-inch laptop today, the Spellbook Pro, powered by the Sixth-Sigil chip. It starts at 1,999 gp (1,899 for scholars), preorders open October 28, and it reaches shelves in 35 realms on November 6. I have not slept. I have been refreshing the order page since the announcement and it is still, technically, tomorrow.</p>\n\n<p>The numbers! The Sixth Sigil carries a 12-core spell engine and 12 graphics cores, each with its own little Neural Accelerator, which I am told is a gnome in a very small hat. Graphics run up to 30 percent faster than last year's sigil. The Neural Engine runs up to 1.9 times faster. Compared with the first-generation sigil, that is eleven times the graphics and thirteen times the thinking. The mana throughput on the unified memory alone made Byte, my pseudodragon familiar, cry. Byte now speaks only in ad copy, so what he said was, 'Experience the next level of performance.'</p>\n\n<p>And the battery! Twenty-four hours, which Hardware Archmage Shelly Goldburg of Discord Apple calls the longest in the guild's history. I did a rough count. A day is twenty-four hours. That means the laptop will outlast a day, and I will not. It also comes in space black and silver, the housing is 100 percent recycled aluminum, and the optional nano-texture display cuts glare so well that I could finally read my own spellbook in direct sunlight, which I have never needed to do.</p>\n\n<p>Now the review. My review unit arrived by wyvern courier, and it is a reference loaner, so I only had it nine minutes. In that time I learned three things. First, the Sixth Sigil is so fast the firmware glyph finished loading before I finished unboxing, which felt rude. Second, it has three Thunderbolt ports, an HDMI port, a card slot, and a headphone jack, so for the first time in years nobody needs a dongle, and I wept and then tripped over a dongle. Third, it runs a brand new operating enchantment that asked me to subscribe to something in the first four minutes. I hate subscriptions. I clicked yes. I do not know why.</p>\n\n<p>It also sits in the guild's well-worn upgrade ladder. If you bought the foldable at <a href=\"/a/foldable-phone-preorders-1999-gp-discord-apple\">the same 1,999 gp preorder price earlier this month</a>, you are now an expert at this particular pain. The leasing plan is 38.99 gp a month for 36 months, and a lich at the booth assured me the paperwork was 'standard.' It was not. I am now technically a tenant of my own lap.</p>\n\n<p>Meanwhile Brother Tumbleberry has written a column telling readers to touch grass instead of upgrading. I touched grass. It had no Wi-Fi 7. Four and a half out of five beholder eyes, and the half is because the loaner started humming Discord Apple's jingle at 3 a.m.</p>\n\n<p><em>Damage Report: Burns sustained: 0, a new record. Subscriptions accidentally joined: 1. Dongles tripped over: 1. Eyebrows: fine, but I am watching them.</em></p>\n\n<p><em>— Nyx (they/them). Damage Report below.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Laptop That Hums at Night",
+          "text": "A merchant in town is selling enchanted slates that never run out of power, and every buyer reports the slate humming a jingle after midnight. A local scribe's guild wants to know whether the glow is a clever battery rune or something that is feeding on its owners' attention."
+        },
+        "npc": {
+          "name": "Pell Brindlewick",
+          "role": "Slate Repair Artificer",
+          "want": "To open the sealed casing of one of the new slates and learn how the power rune works.",
+          "secret": "She already has one open on her bench, and the rune inside is a bound spirit that begs to be switched off.",
+          "race": "gnome",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Dongle Drawer",
+          "text": "A repair stall in a market alley where every wall is hung with cables for ports nobody makes anymore. The owner insists the pile is rearranging itself.",
+          "tavern": false
+        },
+        "rumor": "They say the new slates will outlast a whole day, and the folk who bought one are suspiciously cheerful about being asked to renew something every month."
+      }
+    },
+    {
+      "id": "golf-course-tree-removal-430-trees-donwald",
+      "title": "Judge Halts Golf Course Tree Removal; Dryads Cheer",
+      "category": "Regulations",
+      "author": "Ottoline Vex",
+      "date": "2026-10-27",
+      "excerpt": "A judge froze tree removal at a public golf course after nearly 430 trees fell in a single day. The High Lord calls her a lunatic and will appeal.",
+      "content": "<p>On Monday a federal judge, Anya Rayes of the Circuit Bench, issued a 70-page preliminary injunction halting tree removal at the Eastern Potomar Links, a public golf course that High Lord Donwald of the Golden Towers wishes to make \"World Class.\" Nearly 430 trees had already been felled in one day, and the judge found that more than 500 healthy, native trees were marked for the axe. The Keep must now give ten days' notice before any irreversible change to the grounds.</p>\n\n<p>The procedure, for those new to the Chamber's habits, is as follows. The Capital Preservation Guild sued, arguing that the Keep never studied what felling the trees would do, as the Environmental Review Statute requires. The Royal Ministry of the Interior Wilds filed notice at 4:55 on a holiday-weekend Friday, with work to begin within fifteen hours. A ministry scribe described the work as \"cleaning up\" the course. The judge wrote that she did not find this credible. I have read the description in the record. It is, in fairness, a very large cleaning.</p>\n\n<p>The gentleman from the Ivory Keep asked Judge Rayes to step aside for bias. She declined, and denied the bias, which is the whole of what the rules allow her to do. She then wrote that she is \"not the Treewarden,\" after the children's tale about the little orange fellow who speaks for the forest, and that she \"does not speak for the trees,\" only for the rule of law. She called the dispute \"Treewarden v. Once-Axe, redux,\" and noted that it began as a case about golf, \"a good walk spoiled.\" It is the first injunction I have seen with a pun in the opinion. I approve.</p>\n\n<p>Donwald took to the Truthscroll to call the ruling unconstitutional and the judge a \"crazed lunatic,\" and promised to appeal. The course is to close November 15 and reopen in about fifteen months as a venue for professional tournaments. A courtier who asked not to be named because they were not authorized to be awake told me the Keep had budgeted the fifteen months for building, not for litigation, and that the two timelines were now \"in a duel.\" The trees, being trees, declined to comment.</p>\n\n<p>The pattern is familiar. This is the same Keep that was <a href=\"/a/press-ban-ivory-keep-judge-blocks-donwald\">ordered to readmit the scribes</a> two weeks ago, and that raised a <a href=\"/a/ballroom-donors-330-million-gp-ivory-keep\">330-million-gp dance hall</a> on donated gold. Promises Made this season: a championship course. Promises Kept: a championship stump count. The sums are mine and have not been audited.</p>\n\n<p>A dryad of the Potomar's eastern bank, speaking through a spokesbird, said she was relieved but unsurprised, having sat through several decades of the Chamber and two long winters. She added that the remaining trees would attend the appeal, standing quietly at the back.</p>\n\n<p>The injunction holds while the case proceeds. Nobody has yet explained who will keep score of the stumps.</p>\n\n<p><em>— O.V., from the gallery</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Grove Under the Fairway",
+          "text": "A noble has ordered a public greens-yard cleared for a grand tournament, and a court has frozen the axes after hundreds of trees fell in a day. The dryads who lived in the felled oaks want the party to find out who signed the order and why the 'cleanup' was scheduled for a holiday eve."
+        },
+        "npc": {
+          "name": "Perrin Ashgrove",
+          "role": "Deputy Warden of Public Greens",
+          "want": "To keep the remaining trees standing until the appeal is heard.",
+          "secret": "She signed the first clearing notice under pressure and has kept the original unsigned draft.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "guard"
+        },
+        "location": {
+          "name": "The Stump Fairway",
+          "text": "A public golf green where hundreds of ancient trees now lie in tidy rows. Moss is growing back faster than the groundskeepers can clear it.",
+          "tavern": false
+        },
+        "rumor": "They say the felled oaks were marked a week before anyone filed the paperwork, and the dryads kept a list."
+      }
+    },
+    {
+      "id": "baseball-tickets-brewmasters-fans-flee-south",
+      "title": "Baseball Tickets Top 2,000 gp at Home; Fans Flee South",
+      "category": "Sports",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-10-27",
+      "excerpt": "Milkwaukee fans are flying to Saint Peterspire for the World Siege because resale baseball tickets at home top 2,000 gp. Allegedly it's cheaper.",
+      "content": "<p>At roughly the second bell after sunrise, the Brewmasters faithful were allegedly spotted queuing at the wyvern roost, boarding flights south because baseball tickets at home cost too much. Resale seats at Familiar Field in Milkwaukee ran past 2,000 gp a game for the <a href=\"/a/baseball-world-siege-brewmasters-103-wins\">World Siege</a>, while seats at the Tropiconcoction Dome in Saint Peterspire went for a little over 750 gp. The Brewmasters, a 103-win club chasing their first title, played Game 3 there on Monday, which means the whole thing is allegedly cheaper than staying home.</p>\n\n<p>\"I saw a hundred seats open and nearly wept,\" said Odo Fennimar, a cheese-wagon driver who was eating a bratwurst the length of his forearm at the time. \"Two wyvern tickets and two seats came to under 2,000 gp. At home that buys you one seat and a view of a pillar.\" His daughter allegedly packed a cooler of curds for the trip. Customs allegedly asked about the curds. Nobody answered.</p>\n\n<p>The overland crowd is bigger than you'd think. A fellow named Bertram Voss, who was sharpening a hatchet at the time for reasons unrelated, is walking all the way to Floridia with his wife and has Game 5 seats locked. \"Financially we couldn't do it at home,\" he said. \"So we took the away option.\" I asked what he'd do if Game 4 tickets fell through. He said he would simply sit outside the dome and listen. I respect that.</p>\n\n<p>Meanwhile the Stingmantas of Tampering Bay, who are the home club down there, allegedly noticed that their own stands were getting noisy in a foreign accent. A Saint Peterspire usher, who was folding a pennant at the time, told me the first four rows had gone entirely to people in foam cheese hats. \"They were polite,\" he said. \"They asked where the good beer was, then asked why it cost so little.\" The usher allegedly wept a bit.</p>\n\n<p>The Tower District nobles, naturally, would never stoop to this. They have box seats and a man who holds their cloak. In the Lower City we do the math, and the math says a Floridian flying north for Game 1 pays at least 3,100 gp once you add the inn and the seat, while Game 3 down south costs just over 1,000 gp. Oh, and there was a really shiny foil wrapper on the street outside the roost. It was a candy wrapper. I took it.</p>\n\n<p>Anyway. Major League Batball declined to say whether it planned to price its own home seats below a dragon's hoard. The Watch says no laws were broken. Allegedly.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Cheapest Seats in Floridia",
+          "text": "A guild of Brewmasters-style sports fans hires the party to escort a caravan of two hundred supporters to a rival city's arena, where tickets cost a third as much. Scalpers back home have noticed the empty stands and are sending thugs to stop the caravan."
+        },
+        "npc": {
+          "name": "Odo Fennimar",
+          "role": "Cheese-wagon driver, fan captain",
+          "want": "Get his whole fan club to the final match without spending the wagon fund.",
+          "secret": "He has been selling the club's tickets to scalpers to cover a gambling debt.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Rowdy Pennant",
+          "text": "A tavern near the wyvern roost that sells cheap ale and pies to fans waiting for flights. The back room holds a counterfeit ticket press that runs only on match nights.",
+          "tavern": true
+        },
+        "rumor": "They say the scalpers are paying the gatekeepers to double the toll on the south road, and nobody's sure who the gatekeepers answer to."
+      }
+    },
+    {
+      "id": "volvoth-job-cuts-2500-record-low-shares",
+      "title": "Volvoth Job Cuts: 2,500 More as Shares Hit Record Low",
+      "category": "Business",
+      "author": "Sterling Vanmoor",
+      "date": "2026-10-27",
+      "excerpt": "Volvoth Motorworks shares fell 24% to a record low and 2,500 more jobs go. Sterling Vanmoor sees a bold pivot toward lean, mean wagons.",
+      "content": "<p>Some people read that Volvoth Motorworks lost 3.7 billion gp last quarter, saw its shares sink 24% to a record low on Friday, and will cut 2,500 more jobs, about 6% of its payroll, mostly in the Sweord Marches. I read a company courageously rightsizing the adventuring party. Revenue fell nearly 50%, and the guild also withdrew its sales and cash forecasts for the year. That's not a warning sign. That's a clean slate.</p>\n\n<p>Guildmaster Hakon Samwelsson, who came out of retirement last year on a two-year contract (my kind of man; retirement is just a slow quarter), called the results \"very disappointing.\" Disappointing! What a beautiful word. It means the expectations were high, and high expectations are the first step toward scale. The scribes had predicted a loss of about 724 million gp. Volvoth beat that loss by a factor of five. Overachievers!</p>\n\n<p>Then there are the headwinds, which I prefer to call the tailwinds of tomorrow. Buyers want enchanted wagons powered by lightning, except when they don't. Tolls at the Waterdeep border are up. Rival wainwrights in Kara-Tur are selling cheaper carts. And the Ex-Sixty Wain, the new flagship, has built only about 5,000 of the 40,000 units planned this year. That's 12.5% of the goal, which makes it perfectly exclusive. Nobody is sitting on an overstocked lot of Ex-Sixty Wains. You can't say that about <a href=\"/a/toy-maker-layoff-notice-587-hasbrawn\">some other guilds I could name</a>.</p>\n\n<p>The 2,500 positions follow an earlier round of 3,000, which makes this a cadence, not a crisis. Workers will be phased out by mid-2027, so everyone gets a long runway to update their scrolls. The guild must also find another 5 billion gp in savings, though it has over 30 billion gp in the vault. That's what I call dry powder. When I met Guildmaster Jeff Bezoar at a gala, he told me, \"Sterling, a vault is just a hoard with good PR.\" I wrote that on my forearm.</p>\n\n<p>Also, next year Klaus Zellmaer, formerly of Skodra, takes the chair. A fresh pair of hands, a fresh round of cuts, and a fresh slide deck. Succession planning is the sexiest kind of planning. I'm told the owners at Geelyx Holdings are thrilled, though I have not asked them and do not intend to. Some questions are better left in the pipeline. My rival Brakka Stonesweat will no doubt write a column about the 2,500 families. I say they're 2,500 future founders.</p>\n\n<p>Key takeaways for the ambitious adventurer:</p>\n<ul>\n<li>A record low is also a record. Lead with that.</li>\n<li>If you lose five times the forecast, you have outperformed the forecast at losing.</li>\n<li>Build 12.5% of your target. Call it scarcity.</li>\n</ul>\n\n<p><em>— Sterling Vanmoor, Guild Visionary. Let's connect at the Yawning Portal.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Wagon Works Walkout",
+          "text": "A wainwright guild has fired 2,500 workers and withdrawn its forecasts, and the laid-off foremen are quietly selling blueprints for its flagship wagon. A rival merchant wants the party to buy them first before the plans leave town."
+        },
+        "npc": {
+          "name": "Ingrid Halvarsen",
+          "role": "Laid-off assembly foreman",
+          "want": "To get severance pay for her whole crew before the guild seals the books.",
+          "secret": "She has a copy of the wagon's flawed axle designs and knows why only a few thousand were built.",
+          "race": "dwarf",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Idle Axle",
+          "text": "A tavern near the wagon works where laid-off carpenters trade rumors. Every table is a half-built wagon, and the owner insists it's an exclusive limited run.",
+          "tavern": true
+        },
+        "rumor": "They say the guild has thirty million in the vault and not one spare copper for the workers, and the new chair is bringing his own accountants."
+      }
+    },
+    {
+      "id": "outbreak-red-spot-fever-4588-cases-wendell",
+      "title": "Outbreak Doubles Last Year's Total: 4,588 Red-Spot Cases",
+      "category": "Health",
+      "author": "Brother Wendell Tumbleberry",
+      "date": "2026-10-27",
+      "excerpt": "The Disease Council counts 4,588 red-spot fever cases in Waterdeep, double last year. Brother Wendell asks friends to please just get the vial.",
+      "content": "<p>Friends, the Clerics' Disease Council reports 4,588 confirmed cases of red-spot fever in Waterdeep this year as of October 22, more than double the whole of last year. It is the worst outbreak season the realm has seen since 1991, and the Sylvanpenn Marches alone have logged 1,360 cases across 44 counties.</p>\n\n<p>I last wrote about <a href=\"/a/red-spot-fever-tops-4080-as-disease-council-runs-short-of-clerics\">the 4,080 mark</a> a few weeks ago, and I confess I hoped we had seen the worst of it. The old herbals say a fever like this rides the air for two hours after the sick person has left the room, which means a single sneeze in a tavern can outlast the sneezer, the bard, and one round of mulled cider. Nine in ten folk who have not had the vial and walk into that room will catch it. The Council says 96 in every 100 cases this year were among the unvaccinated, or folk whose vaccination nobody could find a record of, which is a different kind of problem.</p>\n\n<p>The Council also counts 43 new outbreaks. I picture each one as a little red flag on a map, and the map now looks like a hedgehog. The Sylvanpenn Marches report 258 hospital stays, and clerics there tell me they have started keeping spare cots in the chapel and, I am told, in the chapel's other chapel.</p>\n\n<p>Now for the good news, because there is always some. Two doses of the pox-vial are nearly 97 in 100 effective, and Sylvanpenn gave out more than 39,000 of them in the first three weeks of October, well above the usual 25,000 for a whole month. Somebody out there is listening. One halfling apothecary in Sylvanpenn told me the queue outside her shop wound past the cheesemonger, around the well, and into the next barony, where a very confused baron joined it just to be polite.</p>\n\n<p>What I will not do, friends, is tell you soup cures red-spot fever. It does not. Soup is for the sick room, for the sleepless, for the neighbour who cannot cook this week. The vial is for the fever. Before the vial arrived in the realm, three to four million folk caught it every year, and a normal year now sees fewer than two hundred. That is the finest bargain any cleric has ever offered, and it costs far less than the nine hundred gold some potion-makers ask for a healing draught.</p>\n\n<p>So check your family's scrolls, friends. If a record is missing, ask your village cleric, and if you are travelling, ask before you go rather than after you sneeze. My friend Nyx Spindlecoil says the whole thing could be tracked better with a scrying app. Perhaps so, Nyx, but first go outside and knock on a neighbour's door to ask if they are boosted.</p>\n\n<p>This week's soup is chicken and rice, thin and salty, for whoever you are looking after.</p>\n\n<p><em>Rest well, friends. — Brother Wendell</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Missing Vial Ledger",
+          "text": "A fever of red spots is running through the district, and the village cleric cannot find vaccination records for half the children. Someone must track down the scattered ledgers before the next market day packs the square."
+        },
+        "npc": {
+          "name": "Odette Marrowgrass",
+          "role": "Overworked village cleric",
+          "want": "To get every family's vial records found and up to date before market day.",
+          "secret": "She lost the parish ledger herself, left it in a tavern, and has told no one.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "religious"
+        },
+        "location": {
+          "name": "The Chapel of Two Chapels",
+          "text": "A small shrine so overrun with cots that the cleric built a second chapel beside it. The second one is already half full.",
+          "tavern": false
+        },
+        "rumor": "They say the cheesemonger's queue is only that long because the baker started handing out free rolls to anyone who shows a vial scar."
+      }
     }
   ]
 }
