@@ -1,0 +1,49 @@
+/* ============================================
+   BATTLEMAP: the map's look (battlemap-engine.js draws it), for the Battlemap Builder and
+   its Player View window (F76). map-export.js copies these .bm- rules into a downloaded PNG.
+   ============================================ */
+
+.bm-bg { fill: #16130f; }
+.bm-classic .bm-bg { fill: #120f0b; }
+.bm-floor { fill: #2b2519; }
+.bm-fl-water { fill: #1d2f36; }
+.bm-wall { fill: none; stroke: #0c0a07; stroke-width: 3; stroke-linecap: square; }
+.bm-classic .bm-wall { stroke: #b8922e; stroke-width: 2.5; }
+.bm-door { fill: #6b5226; stroke: #d4a843; stroke-width: 1; }
+.bm-lock { fill: #d4a843; }
+.bm-s { font-family: Georgia, serif; font-weight: 700; fill: #d4a843; text-anchor: middle; dominant-baseline: central; }
+.bm-port { stroke: #d4a843; stroke-width: 3; stroke-dasharray: 2 2; }
+.bm-stair { fill: none; stroke: #d4a843; stroke-width: 1.2; }
+.bm-trap { fill: #3a301a; stroke: #d4a843; stroke-width: 1; }
+.bm-grid { fill: none; stroke: rgba(0,0,0,0.38); stroke-width: 0.5; }
+.bm-classic .bm-grid { stroke: rgba(240,230,200,0.14); }
+.bm-lab-bg { fill: #15130f; stroke: #b8922e; stroke-width: 1; }
+.bm-lab { font-family: system-ui, sans-serif; font-size: 7px; font-weight: 700; fill: #f0e8d8; text-anchor: middle; dominant-baseline: central; }
+
+/* Table play: tokens (the ring's color is the kind) and fog */
+.bm-tok-bg { fill: #2b2519; }
+.bm-tok-ring { fill: none; stroke: #d4a843; stroke-width: 0.9; }
+.bm-tok-pc .bm-tok-ring { stroke: #6fb3e0; }
+.bm-tok-foe .bm-tok-ring { stroke: #d9534f; }
+.bm-tok-npc .bm-tok-ring { stroke: #7cc47a; }
+.bm-tok-bloodied .bm-tok-ring { stroke-dasharray: 1.6 0.8; }
+.bm-tok-sel .bm-tok-ring { stroke: #ffd36b; stroke-width: 1.5; }
+.bm-tok-ini { font-family: Georgia, serif; font-weight: 700; fill: #f0e8d8; text-anchor: middle; dominant-baseline: central; }
+.bm-tok-turn { fill: none; stroke: #ffd36b; stroke-width: 1.3; stroke-dasharray: 2.4 1.4; animation: bm-turn 2s linear infinite; }
+.bm-tok-down image, .bm-tok-down .bm-tok-ini { opacity: 0.45; }
+.bm-tok-x { fill: none; stroke: #ff6b5b; stroke-width: 1.3; stroke-linecap: round; }
+.bm-tok-hpbg { fill: rgba(0,0,0,0.8); }
+.bm-tok-hp { fill: #6cc46a; }
+.bm-tok-hplow { fill: #e5534b; }
+.bm-tok-cond { fill: #8b1e1a; stroke: #f0e8d8; stroke-width: 0.4; }
+.bm-tok-condn { font-family: system-ui, sans-serif; font-size: 2.6px; font-weight: 700; fill: #fff; text-anchor: middle; dominant-baseline: central; }
+.bm-tok-name { font-family: system-ui, sans-serif; font-size: 3px; font-weight: 700; fill: #fff; stroke: #000; stroke-width: 0.8px; paint-order: stroke; text-anchor: middle; dominant-baseline: central; }
+.bm-tok-hid { opacity: 0.45; }
+.bm-fog-dm { fill: rgba(6,5,4,0.6); }
+.bm-fog-pl { fill: #000; stroke: #000; stroke-width: 0.4; }
+.bm-fog-pl, .bm-fog-dm, .bm-tok-name { pointer-events: none; }
+.bm-pruler { stroke: #7fd4ff; stroke-width: 1.2; stroke-dasharray: 3 2; }
+.bm-pruler-end { fill: #7fd4ff; }
+.bm-pruler-text { font-family: system-ui, sans-serif; font-weight: 700; fill: #fff; stroke: #000; stroke-width: 0.25em; paint-order: stroke; text-anchor: middle; }
+@keyframes bm-turn { to { stroke-dashoffset: -7.6; } }
+@media (prefers-reduced-motion: reduce) { .bm-tok-turn { animation: none; } }

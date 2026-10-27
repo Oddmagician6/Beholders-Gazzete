@@ -11,7 +11,10 @@
    in the Battlemap Builder) as a new saved map, then drops the code from the address.
    Out: a PNG at 70, 100, or 140 pixels a square (map-export.js), and print at
    1 inch = 5 feet, page by page, or scaled to one page.
-   Needs rng.js, site-engine.js, map-export.js, and battlemap-engine.js.
+   🎲 Play (F76) runs the fight on the map: tokens, fog of war, and the Player View window
+   (battlemap-table.js, which these handlers pass Play mode's tools to).
+   Needs rng.js, site-engine.js, map-export.js, battlemap-engine.js, init-view.js, monsters-data.js,
+   battlemap-play.js, and battlemap-table.js.
    ============================================ */
 
 const BB = {
@@ -27,7 +30,12 @@ const BB = {
     zoom: 32,           // screen pixels per square
     undo: [], redo: [],
     drag: null, hover: null, ruler: null,
-    space: false, saveTimer: 0, dirty: false
+    space: false, saveTimer: 0, dirty: false,
+    // Play mode (battlemap-table.js)
+    mode: 'build', fight: { raw: null, round: 1, turn: null, list: [] }, popts: bpCleanOpts(null),
+    tsel: null,         // the picked-up token's id
+    placing: null,      // a token waiting for a click on the map
+    fogMode: 'room', fogSize: 1
 };
 const BB_UNDO_MAX = 80;
 const BB_ZOOM = { min: 6, max: 96 };
@@ -99,6 +107,7 @@ function bbSave() {
     BB.dirty = true;
     clearTimeout(BB.saveTimer);
     BB.saveTimer = setTimeout(bbSaveNow, 400);
+    btPost();
 }
 
 // Call before a change.
@@ -116,7 +125,9 @@ function bbSwap(from, to) {
     BB.m = from.pop();
     BB.store.maps[BB.store.maps.indexOf(was)] = BB.m;
     BB.sel = null;
+    if (BB.mode === 'play') btEnsureFog(true);
     bbSave();
+    if (BB.mode === 'play') btFightList();
     if (was.w !== BB.m.w || was.h !== BB.m.h || was.style !== BB.m.style) bbBuild(false);
     else bbDrawAll();
     bbFillMapFields();
@@ -137,9 +148,13 @@ function bbOpen(id) {
     BB.redo = [];
     BB.sel = null;
     BB.ruler = null;
+    BB.tsel = null;
+    BB.placing = null;
+    if (BB.mode === 'play') btEnsureFog();
     bbUndoButtons();
     bbFillMapFields();
     bbBuild(true);
+    if (BB.mode === 'play') btRefresh();
 }
 
 function bbMapOptions() {
@@ -171,13 +186,14 @@ function bbAdd(m) {
 }
 
 // ── The SVG ───────────────────────────────────────────────
-const BB_LAYERS = ['floor', 'props', 'walls', 'doors', 'grid', 'labels', 'tokens', 'fog', 'ui'];
+// The DM's fog is see-through, so the tokens go on top of it.
+const BB_LAYERS = ['floor', 'props', 'walls', 'doors', 'grid', 'labels', 'fog', 'tokens', 'ui'];
 
 // A new SVG for the map (its size or style changed). fit: zoom to fit the stage.
 function bbBuild(fit) {
     const m = BB.m, S = SITE_SQUARE, art = m.style === 'art';
     $('bb-canvas').innerHTML = `<svg id="bb-svg" class="bm-map bm-${art ? 'art' : 'classic'}" viewBox="0 0 ${m.w * S} ${m.h * S}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(m.name)}">
-        <defs>${art ? bmDefs('bb') : ''}</defs>
+        <defs>${art ? bmDefs('bb') : ''}${bmTokenDefs('bb')}</defs>
         <rect class="bm-bg" x="0" y="0" width="${m.w * S}" height="${m.h * S}"/>
         ${BB_LAYERS.map(k => `<g id="bb-g-${k}"${k === 'tokens' ? ' class="bm-tokens"' : k === 'fog' ? ' class="bm-fog"' : ''}></g>`).join('')}
     </svg>`;
@@ -202,8 +218,7 @@ function bbDrawAll() {
     bbDrawObjs();
     $('bb-g-labels').innerHTML = bmLabelsSvg(BB.m);
     $('bb-g-grid').innerHTML = $('bb-grid-on').checked ? bmGridSvg(BB.m) : '';
-    $('bb-g-tokens').innerHTML = bmTokenSvg(BB.m);
-    $('bb-g-fog').innerHTML = bmFogSvg(BB.m);
+    btDraw();
     bbDrawUi();
     bbInspector();
 }
@@ -224,7 +239,7 @@ function bbDrawUi() {
         out.push(`<circle class="bb-sel" cx="${sel.x * S}" cy="${sel.y * S}" r="7.5"/>`);
     }
     const d = BB.drag;
-    if (d && d.kind === 'rect') {
+    if (d && (d.kind === 'rect' || d.kind === 'btbox')) {
         const [x0, y0, x1, y1] = bbRectOf(d);
         out.push(`<rect class="bb-ghost-rect${d.v ? '' : ' bb-rub'}" x="${x0 * S}" y="${y0 * S}" width="${(x1 - x0 + 1) * S}" height="${(y1 - y0 + 1) * S}"/>`);
     }
@@ -235,6 +250,7 @@ function bbDrawUi() {
         if (h.brush) out.push(`<rect class="bb-ghost-rect${h.rub ? ' bb-rub' : ''}" x="${h.brush[0] * S}" y="${h.brush[1] * S}" width="${h.brush[2] * S}" height="${h.brush[2] * S}"/>`);
         if (h.edge) out.push(`<line class="bb-ghost-wall" x1="${h.edge[0] * S}" y1="${h.edge[1] * S}" x2="${h.edge[2] * S}" y2="${h.edge[3] * S}"/>`);
         if (h.label) out.push(`<g class="bb-ghost">${bmLabelSvg(h.label)}</g>`);
+        if (h.tok) out.push(`<g class="bb-ghost">${bmTokenSvg([h.tok], { uid: 'bb', names: false })}</g>`);
     }
     const r = BB.ruler;
     if (r) {
@@ -285,13 +301,18 @@ function bbPoint(e) {
 }
 
 // ── Tools ─────────────────────────────────────────────────
+function bbTools() {
+    return BB.mode === 'play' ? BT_TOOLS : BB_TOOLS;
+}
+
 function bbSetTool(t) {
-    if (!BB_TOOLS[t]) return;
+    if (!bmHas(bbTools(), t)) return;
     BB.tool = t;
     BB.hover = null;
+    if (t !== 'token') BB.placing = null;
     if (t !== 'ruler') BB.ruler = null;
     if (t !== 'select') BB.sel = null;
-    document.querySelectorAll('#bb-tools button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.tool === t)));
+    document.querySelectorAll('#bb-tools [data-tool]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.tool === t)));
     document.querySelectorAll('.bb-opt').forEach(p => { p.hidden = p.dataset.for !== t; });
     $('bb-stage').classList.toggle('bb-panning', t === 'pan');
     bbDrawUi();
@@ -436,6 +457,7 @@ function bbDown(e) {
     $('bb-svg').setPointerCapture(e.pointerId);
     BB.hover = null;
     const t = BB.tool;
+    if (BB.mode === 'play' && (t === 'token' || t === 'fog')) { btDown(e, p, rub, free); return; }
     // The selected thing's handles: the square resizes it, the round one turns it.
     const handle = e.target.closest('[data-h]');
     if (handle && bbSelected()) {
@@ -500,13 +522,15 @@ function bbDown(e) {
         BB.ruler = { a, b: a };
         BB.drag = { kind: 'ruler' };
         bbDrawUi();
+        btPost();
     }
 }
 
 function bbMove(e) {
     if (!$('bb-svg')) return;
     const d = BB.drag, p = bbPoint(e), free = e.altKey, m = BB.m;
-    if (!d) { bbHoverAt(p, e); return; }
+    if (!d) { if (BB.mode === 'play') btHover(p, e); else bbHoverAt(p, e); return; }
+    if (d.kind.startsWith('bt')) { btMove(d, p, e); return; }
     if (d.kind === 'pan') {
         const stage = $('bb-stage');
         stage.scrollLeft = d.sl - (e.clientX - d.cx);
@@ -542,6 +566,7 @@ function bbMove(e) {
     } else if (d.kind === 'ruler') {
         BB.ruler.b = free ? p : { x: Math.floor(p.x) + 0.5, y: Math.floor(p.y) + 0.5 };
         bbDrawUi();
+        btPost();
     } else if (d.kind === 'scale' || d.kind === 'rot') {
         const s = bbSelected();
         if (!s) return;
@@ -576,6 +601,7 @@ function bbUp(e) {
     BB.drag = null;
     if (!d) return;
     const m = BB.m;
+    if (d.kind.startsWith('bt')) { btUp(d); bbDrawUi(); return; }
     if (d.kind === 'rect') {
         const [x0, y0, x1, y1] = bbRectOf(d);
         for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (bmIn(m, x, y)) m.fl[y * m.w + x] = d.v;
@@ -630,6 +656,7 @@ function bbHoverAt(p, e) {
 
 // ── The selected thing ────────────────────────────────────
 function bbInspector() {
+    if (BB.mode === 'play') { btInspector(); return; }
     const box = $('bb-inspect'), s = BB.tool === 'select' ? bbSelected() : null;
     if (!s) {
         box.innerHTML = BB.tool === 'select' ? '<p class="bb-hint">Click a door, a piece of furniture, or a label to pick it up. Drag to move it; it snaps to the grid unless you hold Alt. Drag the square handle to resize it and the round one to turn it.</p>' : '';
@@ -732,9 +759,11 @@ function bbKey(e) {
     if (ctrl && k === 'd') { e.preventDefault(); bbAct('dup'); return; }
     if (ctrl || e.metaKey) return;
     if (k === ' ') { e.preventDefault(); BB.space = true; $('bb-stage').classList.add('bb-panning'); return; }
+    const build = BB.mode === 'build';
+    if (!build && btKey(e, k)) return;
     if (k === 'escape') { BB.sel = null; BB.ruler = null; bbDrawUi(); bbInspector(); return; }
     if ((k === 'delete' || k === 'backspace') && bbSelected()) { e.preventDefault(); bbAct('del'); return; }
-    if (k === 'r') {
+    if (k === 'r' && build) {
         e.preventDefault();
         if (bbSelected()) { bbAct(e.altKey ? 'nudge' : e.shiftKey ? 'unturn' : 'turn'); return; }
         BB.turn = (((BB.turn + (e.altKey ? 15 : e.shiftKey ? -90 : 90)) % 360) + 360) % 360;
@@ -746,7 +775,7 @@ function bbKey(e) {
     if (k === '=' || k === '+') { bbZoomTo(BB.zoom * 1.25); return; }
     if (k === '-') { bbZoomTo(BB.zoom / 1.25); return; }
     if (k === '0') { bbFit(); return; }
-    const tool = Object.keys(BB_TOOLS).find(t => BB_TOOLS[t].key === k);
+    const tools = bbTools(), tool = Object.keys(tools).find(t => tools[t].key === k);
     if (tool) bbSetTool(tool);
 }
 
@@ -856,9 +885,17 @@ async function bbFromLink() {
 }
 
 // ── Set up ────────────────────────────────────────────────
+// The Build / Play switch and the mode's tools.
+function bbToolButtons() {
+    $('bb-tools').innerHTML = `<div class="bb-mode" role="group" aria-label="Mode">
+            <button type="button" data-mode="build" aria-pressed="${BB.mode === 'build'}" title="Draw the map">🧱 Build</button>
+            <button type="button" data-mode="play" aria-pressed="${BB.mode === 'play'}" title="Run the fight on it: tokens, fog of war, and a Player View for the TV">🎲 Play</button>
+        </div>` + Object.entries(bbTools()).map(([t, v]) =>
+        `<button type="button" data-tool="${t}" aria-pressed="${t === BB.tool}" title="${esc(v.label.replace(/^\S+ /, ''))} (${v.key.toUpperCase()})">${v.label}</button>`).join('');
+}
+
 function bbPickers() {
-    $('bb-tools').innerHTML = Object.entries(BB_TOOLS).map(([t, v]) =>
-        `<button type="button" data-tool="${t}" aria-pressed="false" title="${esc(v.label.replace(/^\S+ /, ''))} (${v.key.toUpperCase()})">${v.label}</button>`).join('');
+    bbToolButtons();
     $('bb-floors').innerHTML = BM_FLOORS.map((f, k) =>
         `<button type="button" class="bb-swatch" data-floor="${k + 1}" aria-pressed="${k + 1 === BB.floor}" title="${esc(BM_FLOOR_NAMES[f])}"><span style="background-image:url('${SITE_ART_DIR}floor/${f}.webp')"></span>${esc(BM_FLOOR_NAMES[f])}</button>`).join('');
     const item = (k, it, attr) => `<button type="button" class="bb-item" data-${attr}="${k}" aria-pressed="false" title="${esc(it.label)}">${it.file
@@ -881,6 +918,7 @@ function bbPressed() {
 
 function bbSetup() {
     bbPickers();
+    btSetup();
     BB.store = bmLoadStore();
     if (!BB.store.maps.length) {
         BB.store.maps.push(bmBlank(30, 20, 'My battlemap'));
@@ -888,8 +926,17 @@ function bbSetup() {
     }
     bbOpen(BB.store.cur);
     bbSetTool('floor');
+    // Back in Play mode after a reload.
+    let mode = 'build';
+    try { mode = sessionStorage.getItem('gazette-battlemap-mode'); } catch (e) {}
+    if (mode === 'play') btSetMode('play');
 
-    $('bb-tools').addEventListener('click', e => { const b = e.target.closest('[data-tool]'); if (b) bbSetTool(b.dataset.tool); });
+    $('bb-tools').addEventListener('click', e => {
+        const m = e.target.closest('[data-mode]');
+        if (m) { if (m.dataset.mode !== BB.mode) btSetMode(m.dataset.mode); return; }
+        const b = e.target.closest('[data-tool]');
+        if (b) bbSetTool(b.dataset.tool);
+    });
     $('bb-side').addEventListener('click', e => {
         const b = e.target.closest('button');
         if (!b) return;

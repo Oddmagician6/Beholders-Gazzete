@@ -11,8 +11,11 @@
      vw: h × (w + 1) walls drawn on grid lines down (vw[y * (w + 1) + x]: left of square x, y),
      ob: [{ k (a BM_ITEMS key), x, y (its middle, in squares), w, h (squares), r (degrees) }],
      lb: [{ x, y, t }] labels,
-     tk: [] tokens and fog: null, for table play (F76): every map has them, nothing fills
-       or draws them yet, and bmClean resets them until F76 gives them a shape. }
+     tk: table play's tokens (F76): [{ id, n (name), x, y (its top-left square; fractions when put
+       down with Alt), s (size: a BM_TOKEN_SIZES key), c (kind: a BM_TOKEN_KINDS key), a (picture:
+       'creature/<type>', 'class/<class>', or ''), f (the Initiative Tracker combatant it stands for,
+       or 0), hid (hidden from the players) }],
+     fog: null until Play mode first opens the map, then w × h, row by row: 1 revealed, 0 hidden. }
    Walls are also drawn wherever floor meets bare rock.
    Saved under BM_KEY as { cur, maps: [bmPack(map)] } and shared as one share code
    (rng.js packShareCode) of bmPack(map). bmClean reads either back, trimming what's out
@@ -21,7 +24,7 @@
    ============================================ */
 
 const BM_KEY = 'gazette-battlemaps';
-const BM_LIMITS = { side: 60, maps: 30, objs: 800, labels: 300, name: 60, label: 24, code: 200000, bytes: 2000000 };
+const BM_LIMITS = { side: 60, maps: 30, objs: 800, labels: 300, tokens: 120, name: 60, label: 24, tname: 40, code: 200000, bytes: 2000000 };
 const BM_STYLES = { art: '🎨 Illustrated', classic: '✒️ Classic ink' };
 // Floor numbers in fl are these plus one (img/map/floor).
 // New floors go on the end: saved maps keep their numbers.
@@ -75,6 +78,21 @@ const BM_PROP_GROUPS = [
 ];
 BM_PROP_GROUPS.forEach(([, items]) => items.forEach(([k, label, w = 1, h = 1]) => { BM_ITEMS[k] = { label, file: 'prop/' + k, w, h }; }));
 
+// Table play (F76). A token's width in squares by creature size (a tiny one has a square to itself, drawn small).
+const BM_TOKEN_SIZES = { T: 1, S: 1, M: 1, L: 2, H: 3, G: 4 };
+const BM_TOKEN_SIZE_NAMES = { T: 'Tiny', S: 'Small', M: 'Medium', L: 'Large (2 × 2)', H: 'Huge (3 × 3)', G: 'Gargantuan (4 × 4)' };
+const BM_TOKEN_KINDS = { pc: '👤 Player character', foe: '👹 Monster', npc: '🧑 Ally or NPC', mark: '📍 Marker' };
+// Token pictures: the Bestiary's creature types (img/creature) and the class portraits (img/class).
+const BM_CREATURE_ART = ['aberration', 'beast', 'celestial', 'construct', 'dragon', 'elemental', 'fey', 'fiend', 'giant',
+    'humanoid', 'monstrosity', 'ooze', 'plant', 'undead'];
+const BM_CLASS_ART = ['barbarian', 'bard', 'cleric', 'druid', 'fighter', 'monk', 'paladin', 'ranger', 'rogue', 'sorcerer', 'warlock', 'wizard'];
+const bmHas = (o, k) => typeof k === 'string' && Object.prototype.hasOwnProperty.call(o, k);
+
+function bmArtOk(a) {
+    const m = typeof a === 'string' && a.match(/^(creature|class)\/([a-z]+)$/);
+    return !!m && (m[1] === 'creature' ? BM_CREATURE_ART : BM_CLASS_ART).includes(m[2]);
+}
+
 function bmId() {
     return (Date.now().toString(36) + Math.random().toString(36).slice(2, 6)).slice(0, 16);
 }
@@ -88,7 +106,8 @@ function bmBlank(w = 30, h = 20, name = 'New battlemap', style = 'art') {
 }
 
 function bmCopy(m) {
-    return { ...m, fl: m.fl.slice(), hw: m.hw.slice(), vw: m.vw.slice(), ob: m.ob.map(o => ({ ...o })), lb: m.lb.map(l => ({ ...l })), tk: m.tk.slice() };
+    return { ...m, fl: m.fl.slice(), hw: m.hw.slice(), vw: m.vw.slice(), ob: m.ob.map(o => ({ ...o })), lb: m.lb.map(l => ({ ...l })),
+        tk: m.tk.map(t => ({ ...t })), fog: m.fog && m.fog.slice() };
 }
 
 // ── The saved and shared form ─────────────────────────────
@@ -128,8 +147,8 @@ function bmPack(m) {
         o: m.ob.map(o => [o.k, bmR2(o.x), bmR2(o.y), bmR2(o.w), bmR2(o.h), Math.round(o.r) % 360]),
         l: m.lb.map(l => [bmR2(l.x), bmR2(l.y), l.t])
     };
-    if (m.tk.length) p.tk = m.tk;
-    if (m.fog !== null) p.fog = m.fog;
+    if (m.tk.length) p.k = m.tk.map(t => [t.id, t.n, bmR2(t.x), bmR2(t.y), t.s, t.c, t.a, t.f, t.hid ? 1 : 0]);
+    if (m.fog) p.g = bmRle(m.fog);
     return p;
 }
 
@@ -156,12 +175,25 @@ function bmClean(p) {
         const x = num(l[0], 0, w), y = num(l[1], 0, h), t = text(l[2], BM_LIMITS.label);
         return x === null || y === null || !t ? null : { x, y, t };
     }).filter(Boolean);
+    const ids = new Set();
+    const tk = (Array.isArray(p.k) ? p.k : []).slice(0, BM_LIMITS.tokens).map(t => {
+        if (!Array.isArray(t)) return null;
+        const x = num(t[2], 0, w - 1), y = num(t[3], 0, h - 1), n = text(t[1], BM_LIMITS.tname);
+        if (x === null || y === null || !n) return null;
+        let id = typeof t[0] === 'string' && /^[a-z0-9]{1,16}$/.test(t[0]) ? t[0] : bmId();
+        while (ids.has(id)) id = bmId();
+        ids.add(id);
+        return {
+            id, n, x, y, s: bmHas(BM_TOKEN_SIZES, t[4]) ? t[4] : 'M', c: bmHas(BM_TOKEN_KINDS, t[5]) ? t[5] : 'mark',
+            a: bmArtOk(t[6]) ? t[6] : '', f: Number.isInteger(t[7]) && t[7] > 0 && t[7] < 1e9 ? t[7] : 0, hid: t[8] === 1
+        };
+    }).filter(Boolean);
     return {
         id: typeof p.id === 'string' && /^[a-z0-9]{1,16}$/.test(p.id) ? p.id : bmId(),
         name: text(p.n, BM_LIMITS.name) || 'Untitled battlemap', w, h,
         style: BM_STYLES[p.s] ? p.s : 'art',
         t: num(p.t, 0, 1e15) || 0,
-        fl, hw: e.slice(0, nh), vw: e.slice(nh), ob, lb, tk: [], fog: null
+        fl, hw: e.slice(0, nh), vw: e.slice(nh), ob, lb, tk, fog: bmUnRle(p.g, w * h, 1)
     };
 }
 
@@ -202,7 +234,13 @@ function bmFloorAt(m, x, y) {
 
 // The map at a new size, cut or grown at the right and bottom. Things left off it go.
 function bmResize(m, w, h) {
-    const n = { ...bmBlank(w, h, m.name, m.style), id: m.id, t: m.t, tk: m.tk.slice(), fog: m.fog };
+    const n = { ...bmBlank(w, h, m.name, m.style), id: m.id, t: m.t };
+    // New squares come in hidden.
+    if (m.fog) {
+        n.fog = new Array(w * h).fill(0);
+        for (let y = 0; y < Math.min(h, m.h); y++) for (let x = 0; x < Math.min(w, m.w); x++) n.fog[y * w + x] = m.fog[y * m.w + x];
+    }
+    n.tk = m.tk.filter(t => t.x < w && t.y < h).map(t => ({ ...t }));
     for (let y = 0; y < Math.min(h, m.h); y++) {
         for (let x = 0; x < Math.min(w, m.w); x++) n.fl[y * w + x] = m.fl[y * m.w + x];
     }
@@ -394,26 +432,134 @@ function bmLabelsSvg(m) {
     return m.lb.map(bmLabelSvg).join('');
 }
 
-// Table play (F76) draws these. Until then they are empty layers above the map.
-function bmTokenSvg(m) {
-    return '';
+// ── Table play (F76) ──────────────────────────────────────
+// The squares a token stands on: [x0, y0, x1, y1], the last ones included.
+function bmTokenFoot(t) {
+    const n = BM_TOKEN_SIZES[t.s] || 1;
+    return [Math.floor(t.x + 0.01), Math.floor(t.y + 0.01), Math.ceil(t.x + n - 0.01) - 1, Math.ceil(t.y + n - 0.01) - 1];
 }
 
-function bmFogSvg(m) {
-    return '';
+// Can the players see any of the squares under it?
+function bmTokenSeen(m, t) {
+    if (!m.fog) return true;
+    const [x0, y0, x1, y1] = bmTokenFoot(t);
+    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) if (bmIn(m, x, y) && m.fog[y * m.w + x]) return true;
+    return false;
+}
+
+// The room (or run of corridor) at square x, y, for the fog: the floor joined to it, stopped by drawn
+// walls and by doors, and the bare rock around it, so its walls show whole. [] on bare rock.
+function bmRoom(m, x, y) {
+    if (!bmFloorAt(m, x, y)) return [];
+    const hw = m.hw.slice(), vw = m.vw.slice();
+    m.ob.forEach(o => {
+        if (!BM_ITEMS[o.k].edge) return;
+        if (o.r % 180 === 0) {
+            const gx = Math.floor(o.x), gy = Math.round(o.y);
+            if (gx >= 0 && gx < m.w && gy >= 0 && gy <= m.h) hw[gy * m.w + gx] = 1;
+        } else if (o.r % 180 === 90) {
+            const gx = Math.round(o.x), gy = Math.floor(o.y);
+            if (gy >= 0 && gy < m.h && gx >= 0 && gx <= m.w) vw[gy * (m.w + 1) + gx] = 1;
+        }
+    });
+    const seen = new Uint8Array(m.w * m.h), out = [], stack = [[x, y]];
+    seen[y * m.w + x] = 1;
+    const go = (nx, ny, wall) => {
+        if (wall || !bmFloorAt(m, nx, ny) || seen[ny * m.w + nx]) return;
+        seen[ny * m.w + nx] = 1;
+        stack.push([nx, ny]);
+    };
+    while (stack.length) {
+        const [cx, cy] = stack.pop();
+        out.push(cy * m.w + cx);
+        go(cx - 1, cy, vw[cy * (m.w + 1) + cx]);
+        go(cx + 1, cy, vw[cy * (m.w + 1) + cx + 1]);
+        go(cx, cy - 1, hw[cy * m.w + cx]);
+        go(cx, cy + 1, hw[(cy + 1) * m.w + cx]);
+    }
+    out.slice().forEach(i => {
+        const cx = i % m.w, cy = (i - cx) / m.w;
+        for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+            const nx = cx + dx, ny = cy + dy;
+            if (bmIn(m, nx, ny) && !m.fl[ny * m.w + nx] && !seen[ny * m.w + nx]) { seen[ny * m.w + nx] = 1; out.push(ny * m.w + nx); }
+        }
+    });
+    return out;
+}
+
+// The round frame the token pictures are cut to (one per SVG, in its defs).
+function bmTokenDefs(uid) {
+    return `<clipPath id="${uid}-tok" clipPathUnits="objectBoundingBox"><circle cx="0.5" cy="0.5" r="0.5"/></clipPath>`;
+}
+
+function bmInitials(name) {
+    const w = String(name).replace(/\s+\d+$/, '').split(/\s+/).filter(Boolean);
+    const num = (String(name).match(/\s(\d+)$/) || [])[1];
+    return ((w.length > 1 ? w[0][0] + w[1][0] : (w[0] || '?').slice(0, 2)) + (num || '')).toUpperCase().slice(0, 3);
+}
+
+// The tokens as the page has worked them out: each { x, y, s, c, a, n (the name to show),
+// now (its turn), bar (hit points, 0 to 1, or null), health ('bloodied' | 'down' | null),
+// conds (names), hp (hit points as text, for the hover tip), hid (hidden from the players: drawn
+// faint), sel (picked up) }.
+// opts: uid (the SVG's), names (a name under each token).
+function bmTokenSvg(list, opts = {}) {
+    const { uid = 'bm', names = true } = opts, S = SITE_SQUARE;
+    return list.map(t => {
+        const n = BM_TOKEN_SIZES[t.s] || 1, r = (t.s === 'T' ? 0.3 : n * 0.44) * S;
+        const cls = `bm-tok bm-tok-${t.c}${t.now ? ' bm-tok-now' : ''}${t.health ? ' bm-tok-' + t.health : ''}${t.hid ? ' bm-tok-hid' : ''}${t.sel ? ' bm-tok-sel' : ''}`;
+        const R = bmF1(r), D = bmF1(r * 2);
+        let body = t.now ? `<circle class="bm-tok-turn" r="${bmF1(r + 1.8)}"/>` : '';
+        body += `<circle class="bm-tok-bg" r="${R}"/>`;
+        body += t.a
+            ? `<image href="img/${t.a}-sm.webp" x="-${R}" y="-${R}" width="${D}" height="${D}" preserveAspectRatio="xMidYMid slice" clip-path="url(#${uid}-tok)"/>`
+            : `<text class="bm-tok-ini" style="font-size:${bmF1(r * (bmInitials(t.n).length > 2 ? 0.62 : 0.8))}px">${siteAttr(bmInitials(t.n))}</text>`;
+        body += `<circle class="bm-tok-ring" r="${R}"/>`;
+        if (t.health === 'down') body += `<path class="bm-tok-x" d="M-${bmF1(r * 0.6)} -${bmF1(r * 0.6)}L${bmF1(r * 0.6)} ${bmF1(r * 0.6)}M${bmF1(r * 0.6)} -${bmF1(r * 0.6)}L-${bmF1(r * 0.6)} ${bmF1(r * 0.6)}"/>`;
+        if (typeof t.bar === 'number') {
+            const bw = Math.max(r * 1.6, 6), f = Math.max(0, Math.min(1, t.bar));
+            body += `<rect class="bm-tok-hpbg" x="${bmF1(-bw / 2)}" y="${bmF1(r - 1.2)}" width="${bmF1(bw)}" height="1.6" rx="0.5"/>`
+                + `<rect class="bm-tok-hp${f <= 0.5 ? ' bm-tok-hplow' : ''}" x="${bmF1(-bw / 2)}" y="${bmF1(r - 1.2)}" width="${bmF1(bw * f)}" height="1.6" rx="0.5"/>`;
+        }
+        if (t.conds && t.conds.length) {
+            const bx = bmF1(r * 0.75), by = bmF1(-r * 0.75);
+            body += `<circle class="bm-tok-cond" cx="${bx}" cy="${by}" r="2"/><text class="bm-tok-condn" x="${bx}" y="${by}">${t.conds.length}</text>`;
+        }
+        if (names) body += `<text class="bm-tok-name" y="${bmF1(r + 3.6)}">${siteAttr(t.n)}</text>`;
+        const tip = [t.n, t.hp || '', t.conds && t.conds.length ? t.conds.join(', ') : ''].filter(Boolean).join(' · ');
+        return `<g class="${cls}" transform="translate(${bmF1((t.x + n / 2) * S)} ${bmF1((t.y + n / 2) * S)})"><title>${siteAttr(tip)}</title>${body}</g>`;
+    }).join('');
+}
+
+// The hidden squares. players: solid black; otherwise the DM's see-through shade.
+function bmFogSvg(m, players = false) {
+    if (!m.fog) return '';
+    const S = SITE_SQUARE;
+    let d = '';
+    for (let y = 0; y < m.h; y++) {
+        for (let x = 0; x < m.w;) {
+            const v = m.fog[y * m.w + x];
+            let e = x + 1;
+            while (e < m.w && m.fog[y * m.w + e] === v) e++;
+            if (!v) d += `M${x * S} ${y * S}h${(e - x) * S}v${S}h${(x - e) * S}z`;
+            x = e;
+        }
+    }
+    return d ? `<path class="${players ? 'bm-fog-pl' : 'bm-fog-dm'}" d="${d}"/>` : '';
 }
 
 // The whole map. opts: style (the map's own unless given), grid, labels, secret (false leaves
 // the secret doors out, for the players' copy), view ({ x, y, w, h } in squares: just that
 // part, for printing a page at a time), uid (pattern ids: one per SVG on the page).
+// The token and fog layers are left empty: table play fills them (bmTokenSvg, bmFogSvg).
 function bmSvg(m, opts = {}) {
     const { style = m.style, grid = true, labels = true, secret = true, view = null, uid = 'bm', title = m.name } = opts;
     const S = SITE_SQUARE, art = style === 'art', v = view || { x: 0, y: 0, w: m.w, h: m.h };
     return `<svg class="bm-map bm-${art ? 'art' : 'classic'}" viewBox="${v.x * S} ${v.y * S} ${v.w * S} ${v.h * S}" role="img" aria-label="${siteAttr(title)}" xmlns="http://www.w3.org/2000/svg">
-        <defs>${art ? bmDefs(uid, bmFloorsUsed(m)) : ''}</defs>
+        <defs>${art ? bmDefs(uid, bmFloorsUsed(m)) : ''}${bmTokenDefs(uid)}</defs>
         <rect class="bm-bg" x="${v.x * S}" y="${v.y * S}" width="${v.w * S}" height="${v.h * S}"/>
         ${bmFloorSvg(m, art, uid)}${bmPropSvg(m, art)}${bmWallSvg(m)}${bmDoorSvg(m, art, secret)}${grid ? bmGridSvg(m, v) : ''}${labels ? bmLabelsSvg(m) : ''}
-        <g class="bm-tokens">${bmTokenSvg(m)}</g><g class="bm-fog">${bmFogSvg(m)}</g>
+        <g class="bm-tokens"></g><g class="bm-fog"></g>
     </svg>`;
 }
 
