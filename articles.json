@@ -3991,6 +3991,294 @@
         "rumor": "They say the Guild plans to print the labels on bedsheets next, so nobody can claim they didn't see it."
       },
       "fiction": true
+    },
+    {
+      "id": "rust-monster-eats-iron-pennies-brindlemoor-mint",
+      "title": "Rust Monster Eats 9,000 gp of Iron Pennies at Mint",
+      "category": "Finance",
+      "author": "Barnaby Tallowmere",
+      "date": "2026-10-28",
+      "excerpt": "A rust monster ate 9,000 gp of iron pennies at the Brindlemoor mint on Tuesday, and small change is already scarce. Barnaby has done the sums. Four times.",
+      "content": "<p>A rust monster wandered into the Brindlemoor mint on Tuesday and ate roughly 9,000 gp worth of iron pennies, leaving the town with a shortage of small change. Mint officials say the creature came in through the delivery door behind a cart of ingots and was not noticed until the ingots were gone, followed by the cart's axles.</p>\n\n<p>The sum is 30,000 loaves on the current Loaf Index. (I have checked this four times, and a fifth time while eating toast, which felt disrespectful.) That is a great deal of bread to lose to one animal that, by every account, looked pleased with itself afterward.</p>\n\n<p>The Master of the Mint, Hobart Quillfeather, told reporters the stock was meant for the autumn change run, when taverns and bakeries need pennies for the harvest crowds. \"We had every penny counted,\" he said. \"Then it was a different number.\" Quillfeather confirmed that gold and silver were untouched, as the rust monster has no interest in them, and that the mint's remaining copper is now being guarded by a retired watchman with a wooden spoon.</p>\n\n<p>The economics underneath are simpler than they look. Small coins circulate fast. When the supply drops, shops round prices up to the next silver piece because nobody can make change, and a bread that cost seven pennies starts costing ten. Baker Edda Longbottom said she raised her loaf by a penny out of necessity, \"and then another one out of principle.\" By Wednesday, three stalls on Market Row were refusing change altogether and writing \"keep the rest, please\" on their signs.</p>\n\n<p>Quillfeather says the mint will restamp pennies from copper by the end of next week, using a <em>mending</em> casting to repair what the rust monster only half chewed. The apprentice assigned to the task asked that the creature be removed from the building first, a request the mint called reasonable.</p>\n\n<p>Sterling Vanmoor called the incident \"a healthy reset for the penny sector.\" I would like Mr. Vanmoor to try buying one apple with a silver piece and see how much of the apple he gets back. Meanwhile, the creature has been moved to a stable outside town, where it is eating the gate.</p>\n\n<p>My aunt Marigold, who keeps her savings in a boot, notes that her boot is leather and therefore of no interest to the monster. She has asked me not to say where it is. What this means for your pantry: carry exact change, and buy your bread before the baker does the arithmetic.</p>\n\n<p><em>— B.T. (Loaf Index: see sidebar)</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Penny Shortage",
+          "text": "A rust monster ate the town's iron change and the mint needs it lured out of the stable before it eats the gate and the stable. The mayor will pay well, and merchants are quietly hoarding what coins remain."
+        },
+        "npc": {
+          "name": "Hobart Quillfeather",
+          "role": "Flustered Master of the Mint",
+          "want": "To restock the town's small change before the harvest market opens.",
+          "secret": "He sold part of the iron stock early and blamed the rust monster to cover the gap.",
+          "race": "gnome",
+          "gender": "male",
+          "kind": "noble"
+        },
+        "location": {
+          "name": "The Brindlemoor Mint",
+          "text": "A squat stone building with a single delivery door and a floor covered in orange dust. The door's iron hinges have been eaten away and replaced with rope.",
+          "tavern": false
+        },
+        "rumor": "They say the rust monster only eats iron pennies because it was raised on a smith's apron, and that it'll come back for the ones in your purse."
+      },
+      "fiction": true
+    },
+    {
+      "id": "pit-trap-hazard-pay-undermaw-porters-strike",
+      "title": "Pit Trap Pay Strike: Undermaw Porters Walk Off the Job",
+      "category": "Labor",
+      "author": "Brakka Stonesweat",
+      "date": "2026-10-28",
+      "excerpt": "Sixty-one hireling porters stopped walking point in the Undermaw Tuesday. They want hazard pay for finding every pit trap with their feet.",
+      "content": "<p>They put down the poles. Sixty-one hireling porters walked off the job Tuesday at the mouth of the Undermaw, demanding hazard pay for every pit trap they find the hard way. Chapter 9 pays them four silver a day to walk in front of adventuring parties. The porters say that works out to about one silver per fall.</p>\n\n<p>Deputy Registrar Pell Oddingwick called the walkout 'a soft pause in our point-position pipeline.' That means nobody wants to go first. He added that Chapter 9 remains 'on track' and that no party has been left without a floor.</p>\n\n<p>The floor is the problem. 'Level Three has forty-two pit traps on the official map,' said Dunmar Quillfoot, a ten-foot-pole bearer for eleven years. 'I've found thirty-nine of them. The map is wrong about the other three, and so is my left knee.' Quillfoot held up a pole worn to a stub. Chapter 9 issues one per season. It deducts the cost of the replacement from his wages.</p>\n\n<p>Hazard pay is the whole demand. The porters also want a proper lunch break, which at present is whenever the party stops screaming, and a rope at the top of every pit they fall into. 'Just a rope,' said Odalie Burrowgate, a lantern carrier. 'Not a good rope. A rope that's there.'</p>\n\n<p>Chapter 9 says it offered a package. The package, read aloud at the picket line by Quillfoot, includes a free hat, a 'resilience workshop,' and an annual Fall Appreciation Day. Fall Appreciation Day is held at the bottom of the pit on Level Two. Nobody laughed. Burrowgate said she had been to the workshop and it was in the pit.</p>\n\n<p>Parties are already feeling it. The Fourth Attempt, licensed to delve Wednesday, sent its own wizard in front with a feather fall spell and a very worried face. 'He's a specialist,' said a spokesman for the party. 'We value his contributions.' The wizard was heard to say that he had not been asked.</p>\n\n<p>Reeve Maudrey Fennick of Brindlemoor said the town is 'aware of the pits' and urged both sides to talk. She also asked adventurers to stop sending their cousins down as replacements. Eight cousins have fallen so far. Six of them are fine and two have joined the union.</p>\n\n<p>Meanwhile Chapter 9 posted a notice on its door seeking 'enthusiastic point-position volunteers, no experience needed, experience not expected.' That is the guild's way of hiring a person to fall down a hole for free. Not one porter has crossed the line, and Quillfoot says the pits will keep.</p>\n\n<p>Bring snacks to the picket if you can. They're out there in the mud, and nobody's falling.</p>\n\n<p><em>Solidarity. And stretch your back. — Brakka</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Picket at the Pit",
+          "text": "Hireling porters have walked off the job at the mouth of a local dungeon, and the guild wants the party to lead its next delve. Settle the strike, scab at your peril, or find out why the guild's trap map is wrong about the other three pits."
+        },
+        "npc": {
+          "name": "Dunmar Quillfoot",
+          "role": "Striking Pole Bearer",
+          "want": "A rope at the top of every pit and four more silver a day.",
+          "secret": "He drew the corrected trap map himself and sold it to a rival guild last winter.",
+          "race": "dwarf",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Muddy Picket Line",
+          "text": "A churned field at the dungeon mouth where striking porters keep a smoking brazier and a chalk tally of falls. Someone has hung a tiny hat on every pole stuck in the ground.",
+          "tavern": false
+        },
+        "rumor": "They say the guild's three missing pits are really one pit that moves at night."
+      },
+      "fiction": true
+    },
+    {
+      "id": "bridge-troll-toll-hike-quillmarch-parley",
+      "title": "Bridge Troll Raises Toll to 3 Copper, Baronies Parley",
+      "category": "International",
+      "author": "Grashka Ironjaw",
+      "date": "2026-10-28",
+      "excerpt": "A bridge troll raised the toll on Quillmarch Bridge from two copper to three, and two baronies sent envoys. Tension holds at nine siege-days.",
+      "content": "<p>A bridge troll named Gorvash Pennyfist raised the toll on Quillmarch Bridge from two copper pieces to three on Fourthday. The barony of Ashenfold and the barony of Brackwater, who share the only crossing for forty miles, sent envoys to a parley by sundown.</p>\n\n<p>The parley was held on the bridge itself, because the troll would not leave it. Gorvash sat on the east rail. Ashenfold's envoy stood at the west end. Brackwater's envoy stood at the east end, which put him next to the troll and visibly regretting it. The handshake between the two envoys lasted two seconds. Firm. No hidden dagger detected. One envoy did hide a pie, which was declared a field ration and allowed.</p>\n\n<p>Gorvash read a statement. \"Costs are up,\" he said. \"Goats are up. Goats are up forty percent. I do not set the goats.\" Asked whether the third copper piece was a negotiating position, the troll said it was a copper piece. He then asked the envoys to move along, because they were blocking the queue.</p>\n\n<p>The queue stretched back to a hamlet called Lower Dunmoor. Wagoners, a travelling cheesemonger, and a family of six with one very tired donkey waited in the rain while the envoys argued over the word \"adjustment.\" Ashenfold calls the hike a tax. Brackwater calls it a fee. The troll calls it \"a toll, like always,\" and has not moved from that position since he took the bridge nine winters ago.</p>\n\n<p>Ashenfold's envoy, Dame Hesper Orlowe, demanded a return to two copper pieces and an independent audit of the goats. Brackwater's envoy, Sir Tobin Garrick, proposed that both baronies pay the extra copper piece out of a shared fund, which Ashenfold rejected because it had spent the fund on a fence. Brackwater then offered to build a second bridge. Gorvash said he would be glad to take the toll on that one too.</p>\n\n<p>I have covered sieges that moved faster. I have covered a siege where the defenders ate the siege engines. Here nobody has a catapult, nobody has an army, and everybody has a very strong opinion about three coppers. The honest enemy on this bridge is the troll, and he is the only one who has told the truth all week. I respect it. I do not like it.</p>\n\n<p>The ordinary traveller is the casualty, as ever. A shepherd named Edda told this paper she now walks the long way round, which adds two days and one copper piece's worth of blisters. Nobody in either barony has asked her what she thinks. The envoys did, however, issue a joint press release, which this correspondent has fed to the donkey.</p>\n\n<p>The parley resumes at dawn. The troll will be on the rail. The toll stays at three until further notice. Tension holds at nine siege-days, and the goats remain unaudited.</p>\n\n<p><em>Ironjaw, filed from the front.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Third Copper Piece",
+          "text": "A bridge troll has raised his toll and two feuding lords are blaming each other, leaving a river crossing choked with stranded merchants. A guild of wagoners will pay the party to find out why the troll really needs the money before the lords come to blows."
+        },
+        "npc": {
+          "name": "Gorvash Pennyfist",
+          "role": "Toll-taking bridge troll",
+          "want": "To keep his bridge and be treated as a business rather than a monster.",
+          "secret": "He is secretly paying off a debt to a hag who holds the deed to the riverbank.",
+          "race": "orc",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "Quillmarch Bridge",
+          "text": "A moss-slick stone bridge with a toll booth built into the east rail. A tally of every crossing is chalked on the underside of the arch, going back nine winters, and the numbers do not match the troll's ledger.",
+          "tavern": false
+        },
+        "rumor": "They say the troll has not raised the toll at all; the envoys have been skimming the extra copper piece for a year."
+      },
+      "fiction": true
+    },
+    {
+      "id": "young-red-dragon-hoard-permit-approved",
+      "title": "Young Red Dragon Hoard Permit Approved, With Cheese Conditions",
+      "category": "Monster Watch",
+      "author": "Hollis Delvewright",
+      "date": "2026-10-28",
+      "excerpt": "The Cellars Board approved a young red dragon's hoard extension under Tanner's Row, 4 votes to 1, on condition that the cheese is shared fairly.",
+      "content": "<p>BRINDLEMOOR CELLARS BOARD HEARING ROOM, GROUND LEVEL (I checked) — The Cellars Board voted 4 to 1 last night to let <a href=\"/a/young-red-dragon-hoard-extension-permit-hearing\">Skorvath, the young red dragon</a>, extend its hoard under three Tanner's Row cellars. The permit comes with eleven conditions. Seven concern cheese.</p>\n\n<p>Skorvath's hoard of 11,400 gold pieces already lies beneath the old tannery. The extension adds roughly 3,000 square feet of floor and, the dragon's filing notes, 'no new fires.' It attended in person, folded into the back of the room, and stated for the record that the two earlier fires were 'a matter of record and a matter of regret.' Board Chair Tolly Wend gaveled it in. The gavel survived.</p>\n\n<p>The vote turned on the <a href=\"/a/young-red-dragon-hoard-cheese-survey\">cheese survey</a>, which found the hoard's heat ripens cheddar in hours. Inspector Corwin Tallowby read the numbers aloud: a wheel that takes eleven months in a normal cellar takes under four hours at the edge of the pile. 'I have classified this as favorable,' Tallowby said. 'I have also classified my own surprise. It is on a separate form.'</p>\n\n<p>The conditions, as filed: Skorvath may not sit on any wheel not its own. Cheese ripened in the hoard must be sold at posted prices, with a third of each batch set aside for the Board's tasting table. The dragon must keep a ten-foot pole's width between the pile and any cellar wall, and I have counted one pole lost to this beat already today. Cellar doors get two keys, one held by the keeper and one by the dragon, so that neither can claim surprise.</p>\n\n<p>Keeper Bess Harrowgate of the Sleeping Mule, whose cellar is one of the three, did not oppose the permit. 'It pays rent in cheese,' she said. 'The cube paid in nothing.' She has agreed to a trial: forty wheels, one night, results tomorrow. Her cellar floor was dry-swept for the occasion.</p>\n\n<p>The lone no vote came from Board member Hester Quillfoot, who owns a competing aging cave outside town and was asked to recuse herself. She declined, citing 'a deep personal interest in not being the slow option.' The Board noted the objection and moved on.</p>\n\n<p>Reeve Fennick was seen leaving the hearing with a wedge of cheddar and no comment. When asked, the party's bard, who asked to be named, said he had 'a feeling about the cheese,' then ate it. Hit points at the hearing: Board, 5 of 5; dragon, full; Tallowby, full, except for his composure.</p>\n\n<p>The extension begins at the next new moon. I rolled poorly on last week's cellar prediction, which said the permit would be tabled again, so take this one with a wedge of salt.</p>\n\n<p><em>— H.D., filing from below</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "Rent Paid in Cheese",
+          "text": "A young red dragon has won a permit to extend its hoard under a row of taverns, and its heat ripens cheese in hours. A rival cave owner wants the permit revoked and will pay the party to catch the dragon breaking one of its eleven conditions."
+        },
+        "npc": {
+          "name": "Hester Quillfoot",
+          "role": "Board member, aging-cave owner",
+          "want": "To see the dragon's permit revoked before her cave loses its customers.",
+          "secret": "She has already paid a kobold to scratch a hole in a cellar wall so the pile looks too close.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Tanner's Row Cellars",
+          "text": "Three connected tavern cellars sharing a wall with a dragon's hoard. Everything in them is a little warm, and the cheese is always ready.",
+          "tavern": false
+        },
+        "rumor": "They say the dragon's cheddar is so good that the Board's tasting table has started voting in a block."
+      },
+      "fiction": true
+    },
+    {
+      "id": "autocorrect-wand-fireball-fire-ball-pit-review",
+      "title": "Autocorrect Wand Turns Fireball Into 'Fire Ball Pit'",
+      "category": "Technology",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-10-28",
+      "excerpt": "Brightkettle's new Smartcast wand has built-in autocorrect for incantations. Nyx tried a fireball and got a ball pit. Four eyes, singed.",
+      "content": "<p>Okay. OKAY. Brightkettle Wandworks launched the Smartcast wand on Tuesday, the first wand with autocorrect for incantations, and I was first in line at the Brindlemoor shop, which opened at nine and ran out of stock at nine-oh-one. The pitch is simple: mispronounce a word and the wand quietly fixes it before the magic goes off. I tested it on a fireball.</p>\n\n<p>The runic latency is wonderful! I said \"fireball\" at a training dummy, the wand paused for a delicate half second, and the dummy was buried in several hundred bright foam spheres. A clerk at the shop later explained that the wand \"learned\" from the realm's most common casting phrases, and the word the realm says most near children is, apparently, \"ball pit.\" Nobody was hurt. The dummy is thriving.</p>\n\n<p>Other users have fared worse. Maribel Thornwhistle, a hedge-wizard from the east market, told me her wand changed \"light\" to \"lightning\" during a quiet supper. Her stew survived. The ceiling did not. A guard captain on night shift reports his wand rewrote \"hold person\" into \"hold perception,\" and he has been unable to notice anything since Tuesday, which he says is the same as a normal shift.</p>\n\n<p>Brightkettle's helpful assistant, a tiny spirit who lives in the grip and calls itself Quill, offers suggestions as you cast. \"Did you mean: sleep?\" it asks, mid-fireball. You can't dismiss it. Quill also wants a Premium tier at 6 gp a month to \"stop suggesting.\" It is a subscription fee for silence, the worst category of fee, and I paid it twice because I lost the receipt.</p>\n\n<p>The wand has an option called Predictive Casting, which finishes your incantation for you. It finished mine with a toast to the health of a distant cousin, at a funeral, aloud. Byte, my pseudodragon familiar, now speaks only in ad copy and said, \"Smartcast. Say less, mean more.\" This is both a slogan and a threat. Brother Tumbleberry will tell you to just speak clearly and touch grass. Brother Tumbleberry has never watched a wand finish his sentences in public, and I would sell my entire rune-chip collection to watch him try.</p>\n\n<p>Brightkettle says a patch will ship \"as soon as the wand is ready.\" Support suggests turning the wand off and on again, which in a wand means a short ritual, a candle, and a promise not to tell the wand about its mother.</p>\n\n<p>Verdict: four out of five beholder eyes. The wand understands me better than I understand myself. Unfortunately, it keeps being wrong about it.</p>\n\n<p><em>— Nyx (they/them). Damage Report below.</em></p>\n\n<p><em>Damage Report: Burns sustained: 1. Ball pits conjured: 1. Subscription fees paid by mistake: 2. Eyebrows: pending.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Wand That Finished Sentences",
+          "text": "A shipment of autocorrecting wands has reached the town, and every casting now comes out slightly wrong, from foam-filled halls to a guard who cannot perceive anything. The town wizard will pay the party to trace the wand's spirit to its source before the festival."
+        },
+        "npc": {
+          "name": "Maribel Thornwhistle",
+          "role": "Hedge-wizard with a damaged ceiling",
+          "want": "To get a refund and a new roof before the festival.",
+          "secret": "She has been quietly keeping the wand's spirit fed so it won't be recalled, because it is the only thing that listens to her.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "magic"
+        },
+        "location": {
+          "name": "The Smartcast Counter",
+          "text": "A bright, cluttered wand shop with a queue of apologetic customers. Every wand on the shelf whispers a suggested word when you walk past.",
+          "tavern": false
+        },
+        "rumor": "They say the wand's spirit has been quietly rewriting the town's marriage vows, and nobody has noticed because they all sound lovely."
+      },
+      "fiction": true
+    },
+    {
+      "id": "doppelganger-two-council-seats-quorum-brindlemoor",
+      "title": "Doppelganger Held Two Council Seats; Quorum Void",
+      "category": "Scandal",
+      "author": "Ottoline Vex",
+      "date": "2026-10-28",
+      "excerpt": "A doppelganger sat as two members of Brindlemoor's Burgess Council for a year, so every quorum since is void. The Chamber took a recess to discuss it.",
+      "content": "<p>The Burgess Council of Brindlemoor learned on Tuesday that a doppelganger has occupied two of its nine seats for roughly a year, which means no quorum call since last autumn was valid. The discovery came when the lady from the Tanner's Ward and the gentleman from the Candle Quarter were seen eating lunch together, in the same coat, from the same plate.</p>\n\n<p>The Council requires seven members present to conduct business. By the clerk's reckoning, seven were present at every sitting, but one of the seven was always two of them. The true count was therefore six, and six is not a quorum under Standing Order 4. I checked. It is on page nine.</p>\n\n<p>The doppelganger, who gave its name to the clerk as Burgess Orrin Tallowby and then, after a pause, as Burgess Wenna Tallowby, declined to speak to the gallery. Through counsel it said it had attended every sitting, read every bill, and voted consistently, which it noted put it ahead of the other seven.</p>\n\n<p>The gentleman from the Cooper's Ward moved that the matter be referred to committee. The lady from the Weir Street Ward objected that the committee also contained the doppelganger. A recess was called. It lasted three hours, during which the Council could not formally agree that it was in recess.</p>\n\n<p>The consequences are considerable. Every ordinance passed in twelve months is now of doubtful standing, including the <a href=\"/a/owlbear-leash-ordinance-brindlemoor-council-vote\">owlbear leash ordinance</a>, which passed 5-4 last week. The doppelganger voted for it twice. Without those votes it fails 3-4, though the owlbear in the gallery has said it considers the ordinance binding on everyone else regardless.</p>\n\n<p>The clerk, Hobb Pennywhistle, produced the attendance book and showed that the doppelganger signed both names in different hands, one of them left-handed. \"I assumed they were twins,\" he said. \"Burgess Tallowby had mentioned a twin. Burgess Tallowby had mentioned a lot of things.\" Asked why he never raised it, Pennywhistle said nobody had asked him to count the people, only the signatures.</p>\n\n<p>A courtier who asked not to be named because they were not authorized to be awake told me the doppelganger had in fact been the Council's most reliable member. It never missed a vote, never spoke past its allotted time, and was the only member to read the budget. \"It was two of the best Burgesses we had,\" the courtier said. \"We have now lost both.\"</p>\n\n<p>The Council meets again Friday to decide whether Friday counts. By my tally this brings the session's Promises Made to nine, and Promises Kept to the one about holding lunch in public, which was kept more thoroughly than anyone intended. Three members have already announced they will contest the seat of the doppelganger, and one of them is the doppelganger.</p>\n\n<p>The motion to adjourn carried 4-0. Nobody could say who had counted.</p>\n\n<p><em>— O.V., from the gallery</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Burgess Who Was Two",
+          "text": "A town council's every decree is thrown into doubt after a doppelganger is found holding two seats. The mayor's office hires the party to find out who else on the council is not who they sign as, before the next vote on the grain tax."
+        },
+        "npc": {
+          "name": "Hobb Pennywhistle",
+          "role": "Overworked Council Clerk",
+          "want": "To prove the attendance book was never his fault before the town audits it.",
+          "secret": "He noticed the double signatures months ago and kept quiet because the doppelganger filed the only correct minutes.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Council Hall Annex",
+          "text": "A cramped side room where the council's attendance books are stored. Every chair has two nameplates, and one of them is always slightly warm.",
+          "tavern": false
+        },
+        "rumor": "They say the doppelganger was not the only one, and that the lady from the Weir Street Ward has been very quiet since Tuesday."
+      },
+      "fiction": true
+    },
+    {
+      "id": "mimic-tavern-door-31-hats-fish-street",
+      "title": "Mimic Posing as Tavern Door Swallows 31 Hats on Fish Street",
+      "category": "Tavern Tales",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-10-28",
+      "excerpt": "A mimic disguised as a tavern door on Fish Street ate 31 hats in three weeks before the Constabulary noticed. Skritch allegedly got his tail stuck.",
+      "content": "<p>At roughly the second bell after midnight, the Constabulary was allegedly called to the Rusty Ladle on Fish Street, where a mimic had spent three weeks pretending to be the front door. By the Constabulary's count it ate 31 hats, one eyepatch, and a bard's second-best lute. Nobody noticed because the door, allegedly, always opened.</p>\n\n<p>'I pushed on it every night,' said Gorbin Tuck, a cooper who was eating a pickled egg at the time. 'It felt sticky. I figured the damp.' Tuck lost a wool cap in the second week and blamed a draft.</p>\n\n<p>The trouble started when regulars began going home bareheaded and, in several cases, without their pride. Barmaid Odalie Fenn says she noticed the hat pile was shrinking from the wrong end. 'Customers come in wearing hats. Customers leave not wearing hats. That's not a draft, that's a pattern,' she said, and then served me a very small beer. It was a nice mug, though. Copper rim.</p>\n\n<p>Constabulary Sergeant Brindle Pamm says the mimic was found when a patron tried to leave through the door and the door tried to leave through the patron. 'It had a knocker and everything,' Pamm said. 'Hinges, too. Painted-on hinges. Very convincing hinges.' The patron, a halfling named Dob, was allegedly pulled free by his ankles and is expected to recover his dignity by spring.</p>\n\n<p>I went to see it myself. Allegedly I did not touch the door. Reader, I touched the door. My left foot is still a little sticky and the mimic has, allegedly, my second-best boot. Ooh, also there was a very nice brass knocker lying right there, which I am told is the mimic's actual knocker. I have been told not to take it. Anyway.</p>\n\n<p>The Rusty Ladle's owner, Hesk Varnow, says he installed the door in a hurry last month after a gelatinous mishap and never asked where it came from. 'It was cheap, and it matched the frame,' Varnow said. 'A good door should match the frame.' He has since moved the tavern entrance to a window.</p>\n\n<p>The Constabulary has the mimic in a locked cellar on Tanner's Row, where it is allegedly pretending to be a crate. Wizards from the Tower District have offered to buy it, which tells you everything about the Tower District. The hats, the Constabulary says, will be returned in order of how digested they are.</p>\n\n<p>Pigeons, I note, were seen on the roof the whole time and said nothing. Allegedly in on it.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Door That Ate Hats",
+          "text": "Patrons of the Silver Pail keep leaving without their hats, and the owner begs the party to find out why before his regulars switch taverns. The culprit is a mimic that has been feeding on caps for weeks and is getting bolder."
+        },
+        "npc": {
+          "name": "Odalie Fenn",
+          "role": "Tavern barmaid and amateur sleuth",
+          "want": "To keep the regulars coming back and get the hats returned.",
+          "secret": "She sold three of the missing hats to a hatmaker before she realized the door was eating them.",
+          "race": "human",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Silver Pail",
+          "text": "A cramped tavern with a very sturdy front door that is always slightly warm. The cellar smells like glue.",
+          "tavern": true
+        },
+        "rumor": "They say the new door at the Pail was hauled out of a dungeon by a drunk adventurer who owed the owner money."
+      },
+      "fiction": true
+    },
+    {
+      "id": "bag-of-holding-recall-3000-pettibone-vail",
+      "title": "Bag of Holding Recall: 3,000 Packs Share One Pocket",
+      "category": "Product Safety",
+      "author": "Sterling Vanmoor",
+      "date": "2026-10-28",
+      "excerpt": "Pettibone & Vail Outfitters recalls 3,000 bags of holding that open into one shared space. Sterling Vanmoor calls it a sharing economy.",
+      "content": "<p>Pettibone & Vail Outfitters of Brindlemoor announced Tuesday a recall of 3,000 bags of holding from its Trailmaster line, after customers discovered that every bag in the batch opens into the same extradimensional space. Reeve Maudrey Fennick confirmed that her office has received 412 complaints, most of them from adventurers who reached in for a rope and came out with a stranger's wedding ring, a live goat, or in one case a stranger's grandmother's ashes, which were returned with apologies.</p>\n\n<p>Some people see a defective product. I see the most exciting pooled-asset story of the year. Pettibone & Vail didn't fail, friends. They discovered the sharing economy, and they did it at scale, with 3,000 distribution nodes. Every adventurer in the Trailmaster network now has access to the combined inventory of every other adventurer. Try getting that from a mere backpack.</p>\n\n<p>The company's spokesman, a cheerful gnome named Dorlic Pettibone-Vail (no relation, he says, to either founder), called the recall \"a proactive realignment of ownership expectations.\" Refunds are available in coin, or in whatever the customer's bag was holding, whichever the customer can find.</p>\n\n<p>The trouble was first noticed at the Sleeping Mule, where Keeper Bess Harrowgate watched four separate parties argue over one shared supply of 900 torches, all of which appeared to be in all of their bags at once. By nightfall the pocket held, per one tally, 61 bedrolls, a dozen ladders, an unlicensed owlbear cub, and a ledger from Shieldwall Mutual denying coverage for exactly this. Deputy Registrar Pell Oddingwick said Chapter 9 considers the matter \"on track\" and has begun charging a retrieval fee.</p>\n\n<p>Naturally the regulators are circling. Reeve Fennick said only, \"We are aware of the pocket.\" I'd rather not comment on a body that thinks a 400-complaint rounding error needs a permit. Meanwhile, an unnamed shop steward at the Outfitters' Brindlemoor warehouse, one of those union types, has demanded hazard pay for staff who reach in to sort the returns. Fourteen of them have been rightsized to the other side of the bag, where, I'm told, the networking is excellent.</p>\n\n<p>I met Guildmaster Tobrin Ashgrove once, at a spring gala in a hot-air balloon. He told me, \"Sterling, never own what you can lease from a stranger's pocket.\" I have thought about it every morning since, during my sword routine.</p>\n\n<p>Key takeaways for the ambitious adventurer:</p>\n\n<ul>\n<li>A shared bag of holding is a community. Label your goat.</li>\n<li>Disruption always starts with 412 complaints.</li>\n<li>If it is in the pocket, it is liquid.</li>\n</ul>\n\n<p><em>— Sterling Vanmoor, Guild Visionary. Let's connect at the Yawning Portal.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Pocket Everyone Shares",
+          "text": "A merchant's whole caravan inventory has vanished into a bag of holding that opens into a shared pocket, and a rival's party is selling it back. The party must find the other bags before the pocket's contents are sold off, and before something living in it gets hungry."
+        },
+        "npc": {
+          "name": "Dorlic Fenwhistle",
+          "role": "Recall Claims Clerk",
+          "want": "To clear the recall backlog before his employer notices his own bag is part of it.",
+          "secret": "He has been quietly pulling valuables from the shared pocket for a week.",
+          "race": "gnome",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Retrieval Counter",
+          "text": "A refund window in a warehouse where claimants line up to reach into one bag and describe what they lost. The floor is covered in goats.",
+          "tavern": false
+        },
+        "rumor": "They say the pocket has grown a back room, and someone is already renting it out."
+      },
+      "fiction": true
+    },
+    {
+      "id": "owlbear-cubs-undermaw-chapter-9-visitors",
+      "title": "3 Owlbear Cubs Found in Undermaw; Chapter 9 Says 'Visitors'",
+      "category": "Creature Features",
+      "author": "Brother Wendell Tumbleberry",
+      "date": "2026-10-28",
+      "excerpt": "Three owlbear cubs were found shivering on Level Four of the Undermaw. Chapter 9 calls them visitors. Brother Wendell calls for milk, blankets and naps.",
+      "content": "<p>Friends, three owlbear cubs were found curled in a collapsed supply cart on Level Four of the Undermaw on Monday, hungry, cold and very loud. A scouting party of the Fourth Attempt carried them up to Brindlemoor in a bread basket, and the whole town has been tiptoeing around the Tanner's Row stables ever since.</p>\n\n<p>Deputy Registrar Pell Oddingwick of Chapter 9 told reporters the cubs are not a monster incident. \"They are visitors from a lower level, and the arrival is on track,\" he said, handing out a form with a box for each cub's claws. Reeve Fennick, asked for comment, said, \"We are aware of the cubs,\" and then went to sit down in the stables for twenty minutes without speaking.</p>\n\n<p>Now the useful part. The old herbals say a motherless young thing wants warmth, quiet, and small meals often. The new studies on young animals agree: keep them warm, feed them on a schedule, and handle them as little as you can manage, because stress slows growth. I stood in that stable for an hour and can report that the cubs have grown in two days from the size of a loaf to the size of a very rude loaf. Each now eats a pail of goat milk at dawn, noon and dusk, then falls asleep mid-hoot like a proper cleric after a long vigil.</p>\n\n<p>Not everyone is calm. A local pawnbroker offered forty gold for a cub, and a bard has already written a ballad called \"Hoot of My Heart,\" which has eleven verses and no rhyme for owlbear. Let the record show I looked at the pawnbroker the way my grandmother looked at burnt toast, and he left. The young ones are not loot, friends, and they are not content. They are babies, and babies need rest.</p>\n\n<p>A word on the milk. Goat milk is fine, but cow milk gives them the runs, and a cub with the runs is a thing no stable should have to endure. Please do not bring the cubs honey cakes, however they beg. The Brindlemoor Sage Circle will examine them on Thursday and decide where a wild creature belongs, and I have written to ask that the answer be a meadow rather than a menagerie.</p>\n\n<p>My friend Nyx Spindlecoil asked whether there is a gadget that translates owlbear. There is, Nyx, it is called sitting quietly and listening. Go outside, Nyx. Tonight I recommend a bowl of creamy potato-and-chive soup, which the cubs refuse and I do not.</p>\n\n<p><em>Rest well, friends. — Brother Wendell</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "Hoot of the Orphaned",
+          "text": "Three owlbear cubs have been carried out of a dungeon, and their mother, enraged and searching, is following the trail toward the party's town. A druid wants the cubs returned to the wild before she arrives; a fence wants them sold."
+        },
+        "npc": {
+          "name": "Tilda Weatherbury",
+          "role": "Stablehand and cub nurse",
+          "want": "To raise the cubs safely and release them in a quiet meadow.",
+          "secret": "She has already been paid by a collector who will take one cub tonight.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Tanner's Row Stables",
+          "text": "A drafty stable turned nursery, its stalls lined with blankets and warning signs. Every hour a different neighbor sneaks in to peek at the cubs.",
+          "tavern": false
+        },
+        "rumor": "I heard the mother owlbear has already tunneled up past Level Two, and she is not asking nicely."
+      },
+      "fiction": true
     }
   ]
 }

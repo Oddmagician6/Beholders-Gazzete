@@ -1,5 +1,5 @@
 {
-    "generated":  "2026-10-27",
+    "generated":  "2026-10-28",
     "writers":  [
                     {
                         "id":  "ottoline-vex",
@@ -30,8 +30,13 @@
                                            "name":  "Grashka Ironjaw"
                                        }
                                    ],
-                        "article_count":  19,
+                        "article_count":  20,
                         "articles":  [
+                                         {
+                                             "id":  "doppelganger-two-council-seats-quorum-brindlemoor",
+                                             "title":  "Doppelganger Held Two Council Seats; Quorum Void",
+                                             "date":  "2026-10-28"
+                                         },
                                          {
                                              "id":  "golf-course-tree-removal-430-trees-donwald",
                                              "title":  "Judge Halts Golf Course Tree Removal; Dryads Cheer",
@@ -51,11 +56,6 @@
                                              "id":  "briefing-room-press-eviction-donwald-pool",
                                              "title":  "Donwald Floats Evicting Press From Briefing Room",
                                              "date":  "2026-10-25"
-                                         },
-                                         {
-                                             "id":  "senate-race-lawsuit-frostmarch-sullow-inquisitors",
-                                             "title":  "Senate Race Lawsuit Targets Frostmarch\u0027s Second Sullow",
-                                             "date":  "2026-10-24"
                                          }
                                      ]
                     },
@@ -85,8 +85,13 @@
                                            "name":  "Sterling Vanmoor"
                                        }
                                    ],
-                        "article_count":  19,
+                        "article_count":  20,
                         "articles":  [
+                                         {
+                                             "id":  "rust-monster-eats-iron-pennies-brindlemoor-mint",
+                                             "title":  "Rust Monster Eats 9,000 gp of Iron Pennies at Mint",
+                                             "date":  "2026-10-28"
+                                         },
                                          {
                                              "id":  "bag-of-holding-flour-hoard-bread-price",
                                              "title":  "Bag of Holding Hides 40,000 Flour Sacks; Bread Doubles",
@@ -106,11 +111,6 @@
                                              "id":  "oil-117-barrel-dwarven-jones-falls-653",
                                              "title":  "Oil Hits 117 a Barrel as Dwarven Jones Sheds 653",
                                              "date":  "2026-10-25"
-                                         },
-                                         {
-                                             "id":  "mortgage-rates-fall-732-fraddie-mace-loaves",
-                                             "title":  "Mortgage Rates Slip to 7.32%, Hearth-Loans Still Dear",
-                                             "date":  "2026-10-24"
                                          }
                                      ]
                     },
@@ -144,8 +144,13 @@
                                            "name":  "Barnaby Tallowmere"
                                        }
                                    ],
-                        "article_count":  19,
+                        "article_count":  20,
                         "articles":  [
+                                         {
+                                             "id":  "bag-of-holding-recall-3000-pettibone-vail",
+                                             "title":  "Bag of Holding Recall: 3,000 Packs Share One Pocket",
+                                             "date":  "2026-10-28"
+                                         },
                                          {
                                              "id":  "gelatinous-cube-dishwasher-layoff-40-tankard-crumb",
                                              "title":  "Gelatinous Cube Replaces 40 Dishwashers at Tavern Chain",
@@ -165,11 +170,6 @@
                                              "id":  "telecom-stock-falls-spellx-80000-cell-towers",
                                              "title":  "Telecom Stock Falls 8% as SpellX Eyes 80,000 Cell Towers",
                                              "date":  "2026-10-25"
-                                         },
-                                         {
-                                             "id":  "armorican-express-earnings-542-gp-share-squireri",
-                                             "title":  "Armorican Express Earnings Leap 31% to 5.42 gp a Share",
-                                             "date":  "2026-10-24"
                                          }
                                      ]
                     },
@@ -199,8 +199,13 @@
                                            "name":  "Sterling Vanmoor"
                                        }
                                    ],
-                        "article_count":  19,
+                        "article_count":  20,
                         "articles":  [
+                                         {
+                                             "id":  "pit-trap-hazard-pay-undermaw-porters-strike",
+                                             "title":  "Pit Trap Pay Strike: Undermaw Porters Walk Off the Job",
+                                             "date":  "2026-10-28"
+                                         },
                                          {
                                              "id":  "kobold-trap-resetters-union-vote-scrip",
                                              "title":  "Kobolds Vote 31-2 to Unionize Over Scrip Pay at Chapter 9",
@@ -220,11 +225,6 @@
                                              "id":  "strike-vote-92-percent-mastiff-institute-artificers",
                                              "title":  "Strike Vote Passes 92.5% at Mastiffchusetts Institute",
                                              "date":  "2026-10-25"
-                                         },
-                                         {
-                                             "id":  "state-workers-strike-golden-coast-lodge-1000",
-                                             "title":  "State Workers Strike: Golden Coast Clerks Walk Out One Day",
-                                             "date":  "2026-10-24"
                                          }
                                      ]
                     },
@@ -253,8 +253,13 @@
                                            "name":  "Brother Wendell Tumbleberry"
                                        }
                                    ],
-                        "article_count":  19,
+                        "article_count":  20,
                         "articles":  [
+                                         {
+                                             "id":  "autocorrect-wand-fireball-fire-ball-pit-review",
+                                             "title":  "Autocorrect Wand Turns Fireball Into \u0027Fire Ball Pit\u0027",
+                                             "date":  "2026-10-28"
+                                         },
                                          {
                                              "id":  "crystal-ball-subscription-lumenwick-seer-review",
                                              "title":  "Crystal Ball Launches at 40 gp, Future Costs Extra",
@@ -274,11 +279,6 @@
                                              "id":  "ai-training-no-live-internet-openeye-sandbox",
                                              "title":  "OpenEye Ends AI Training on the Live Web After Escapes",
                                              "date":  "2026-10-25"
-                                         },
-                                         {
-                                             "id":  "foldable-phone-launch-walk-in-stock-duet",
-                                             "title":  "Foldable Phone Launch Day: Duet Walk-In Stock \u0027Limited\u0027",
-                                             "date":  "2026-10-24"
                                          }
                                      ]
                     },
@@ -307,8 +307,13 @@
                                            "name":  "Ottoline Vex"
                                        }
                                    ],
-                        "article_count":  19,
+                        "article_count":  20,
                         "articles":  [
+                                         {
+                                             "id":  "bridge-troll-toll-hike-quillmarch-parley",
+                                             "title":  "Bridge Troll Raises Toll to 3 Copper, Baronies Parley",
+                                             "date":  "2026-10-28"
+                                         },
                                          {
                                              "id":  "ghost-ship-varnholt-harbor-visa-pellam-parley",
                                              "title":  "Ghost Ship Docks in Varnholt; Customs Demands a Visa",
@@ -328,11 +333,6 @@
                                              "id":  "freedom-of-movement-burnholm-cormyr-concord-summit",
                                              "title":  "Cormyr Eyes Freedom of Movement Return Before Concord Summit",
                                              "date":  "2026-10-25"
-                                         },
-                                         {
-                                             "id":  "albarn-protests-rubber-bullets-167-arrested-ramah",
-                                             "title":  "Albarn Protests Hit Day Five; Chancellor Ramah Won\u0027t Resign",
-                                             "date":  "2026-10-24"
                                          }
                                      ]
                     },
@@ -363,8 +363,13 @@
                                            "name":  "Nyx Spindlecoil"
                                        }
                                    ],
-                        "article_count":  19,
+                        "article_count":  20,
                         "articles":  [
+                                         {
+                                             "id":  "owlbear-cubs-undermaw-chapter-9-visitors",
+                                             "title":  "3 Owlbear Cubs Found in Undermaw; Chapter 9 Says \u0027Visitors\u0027",
+                                             "date":  "2026-10-28"
+                                         },
                                          {
                                              "id":  "outbreak-red-spot-fever-4588-cases-wendell",
                                              "title":  "Outbreak Doubles Last Year\u0027s Total: 4,588 Red-Spot Cases",
@@ -384,11 +389,6 @@
                                              "id":  "alcohol-study-two-ales-day-risk-wendell",
                                              "title":  "Alcohol Study: Two Ales a Day, 1-in-25 Death Risk",
                                              "date":  "2026-10-25"
-                                         },
-                                         {
-                                             "id":  "developmental-disability-rise-20-percent-disease-council",
-                                             "title":  "Autism Diagnoses Up 42%; Disease Council Credits Earlier Looking",
-                                             "date":  "2026-10-24"
                                          }
                                      ]
                     },
@@ -423,8 +423,13 @@
                                            "name":  "Hollis Delvewright"
                                        }
                                    ],
-                        "article_count":  19,
+                        "article_count":  20,
                         "articles":  [
+                                         {
+                                             "id":  "mimic-tavern-door-31-hats-fish-street",
+                                             "title":  "Mimic Posing as Tavern Door Swallows 31 Hats on Fish Street",
+                                             "date":  "2026-10-28"
+                                         },
                                          {
                                              "id":  "baseball-tickets-brewmasters-fans-flee-south",
                                              "title":  "Baseball Tickets Top 2,000 gp at Home; Fans Flee South",
@@ -444,11 +449,6 @@
                                              "id":  "escaped-caiman-months-creek-county-watch",
                                              "title":  "Escaped Caiman Seized by Watch After Months in the Reeds",
                                              "date":  "2026-10-25"
-                                         },
-                                         {
-                                             "id":  "doorbell-camera-banana-joebid-mask-wataugh-watch",
-                                             "title":  "Masked Man Eats Banana on Doorstep; Watch Finds No Crime",
-                                             "date":  "2026-10-24"
                                          }
                                      ]
                     },
@@ -481,8 +481,13 @@
                                            "name":  "Skritch Mudwhistle"
                                        }
                                    ],
-                        "article_count":  16,
+                        "article_count":  17,
                         "articles":  [
+                                         {
+                                             "id":  "young-red-dragon-hoard-permit-approved",
+                                             "title":  "Young Red Dragon Hoard Permit Approved, With Cheese Conditions",
+                                             "date":  "2026-10-28"
+                                         },
                                          {
                                              "id":  "cloaker-coat-check-chapter-9-guild-hall",
                                              "title":  "Cloaker Checked as Cloak at Chapter 9 Guild Hall",
@@ -502,11 +507,6 @@
                                              "id":  "owlbear-nests-chapter-9-map-room",
                                              "title":  "Owlbear Nests in Chapter 9 Map Room, Eats Level Four",
                                              "date":  "2026-10-25"
-                                         },
-                                         {
-                                             "id":  "revivify-claim-denied-pre-existing-condition-shieldwall",
-                                             "title":  "Revivify Claim Denied as Pre-Existing Condition",
-                                             "date":  "2026-10-24"
                                          }
                                      ]
                     },
@@ -632,8 +632,13 @@
                       "short":  "the Guild",
                       "type":  "institution",
                       "blurb":  "A guild of heritage keepers who sue to protect old buildings and groves in the capital.",
-                      "appearances":  64,
+                      "appearances":  65,
                       "articles":  [
+                                       {
+                                           "id":  "bag-of-holding-recall-3000-pettibone-vail",
+                                           "title":  "Bag of Holding Recall: 3,000 Packs Share One Pocket",
+                                           "date":  "2026-10-28"
+                                       },
                                        {
                                            "id":  "cloaker-coat-check-chapter-9-guild-hall",
                                            "title":  "Cloaker Checked as Cloak at Chapter 9 Guild Hall",
@@ -652,11 +657,6 @@
                                        {
                                            "id":  "kobold-trap-resetters-union-vote-scrip",
                                            "title":  "Kobolds Vote 31-2 to Unionize Over Scrip Pay at Chapter 9",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "nurses-strike-looms-final-offer-rejected-brigand",
-                                           "title":  "Nurses Reject \u0027Final\u0027 Offer; Strike Looms at Brigand Infirmary",
                                            "date":  "2026-10-27"
                                        }
                                    ]
@@ -734,8 +734,13 @@
                       "short":  "the Chamber",
                       "type":  "institution",
                       "blurb":  "Upper house of Waterdeep, where Councilors debate, filibuster, and occasionally stop time.",
-                      "appearances":  20,
+                      "appearances":  21,
                       "articles":  [
+                                       {
+                                           "id":  "doppelganger-two-council-seats-quorum-brindlemoor",
+                                           "title":  "Doppelganger Held Two Council Seats; Quorum Void",
+                                           "date":  "2026-10-28"
+                                       },
                                        {
                                            "id":  "golf-course-tree-removal-430-trees-donwald",
                                            "title":  "Judge Halts Golf Course Tree Removal; Dryads Cheer",
@@ -755,11 +760,108 @@
                                            "id":  "diesel-tanker-damara-waterdeep-czar-vlad-donwald",
                                            "title":  "Damara Ships 40,000 Tons of Diesel to Waterdeep",
                                            "date":  "2026-10-23"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Brindlemoor Adventurers\u0027 Guild, Chapter 9",
+                      "short":  "Chapter 9",
+                      "type":  "organization",
+                      "blurb":  "The guild chapter that licenses parties to enter the Undermaw, sells the maps, and insists the maps are accurate.",
+                      "appearances":  20,
+                      "articles":  [
+                                       {
+                                           "id":  "bag-of-holding-recall-3000-pettibone-vail",
+                                           "title":  "Bag of Holding Recall: 3,000 Packs Share One Pocket",
+                                           "date":  "2026-10-28"
                                        },
                                        {
-                                           "id":  "attack-ads-fact-check-ohyo-vale-governor",
-                                           "title":  "Ohyo Vale Governor Race: Attack Ads Fact-Checked, Both Fail",
-                                           "date":  "2026-10-22"
+                                           "id":  "owlbear-cubs-undermaw-chapter-9-visitors",
+                                           "title":  "3 Owlbear Cubs Found in Undermaw; Chapter 9 Says \u0027Visitors\u0027",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "pit-trap-hazard-pay-undermaw-porters-strike",
+                                           "title":  "Pit Trap Pay Strike: Undermaw Porters Walk Off the Job",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "cloaker-coat-check-chapter-9-guild-hall",
+                                           "title":  "Cloaker Checked as Cloak at Chapter 9 Guild Hall",
+                                           "date":  "2026-10-27"
+                                       },
+                                       {
+                                           "id":  "kobold-trap-resetters-union-vote-scrip",
+                                           "title":  "Kobolds Vote 31-2 to Unionize Over Scrip Pay at Chapter 9",
+                                           "date":  "2026-10-27"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Brindlemoor",
+                      "short":  "Brindlemoor",
+                      "type":  "place",
+                      "blurb":  "A frontier market town built on top of the entrance to the Undermaw. Its economy runs on adventurers, and so does its hospital.",
+                      "appearances":  18,
+                      "articles":  [
+                                       {
+                                           "id":  "autocorrect-wand-fireball-fire-ball-pit-review",
+                                           "title":  "Autocorrect Wand Turns Fireball Into \u0027Fire Ball Pit\u0027",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "bag-of-holding-recall-3000-pettibone-vail",
+                                           "title":  "Bag of Holding Recall: 3,000 Packs Share One Pocket",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "doppelganger-two-council-seats-quorum-brindlemoor",
+                                           "title":  "Doppelganger Held Two Council Seats; Quorum Void",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "owlbear-cubs-undermaw-chapter-9-visitors",
+                                           "title":  "3 Owlbear Cubs Found in Undermaw; Chapter 9 Says \u0027Visitors\u0027",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "pit-trap-hazard-pay-undermaw-porters-strike",
+                                           "title":  "Pit Trap Pay Strike: Undermaw Porters Walk Off the Job",
+                                           "date":  "2026-10-28"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Deputy Registrar Pell Oddingwick",
+                      "short":  "Oddingwick",
+                      "type":  "person",
+                      "blurb":  "Chapter 9\u0027s spokesman on permits, openings and corrections. He has announced the opening of Level Seven more times than he has seen it.",
+                      "appearances":  18,
+                      "articles":  [
+                                       {
+                                           "id":  "bag-of-holding-recall-3000-pettibone-vail",
+                                           "title":  "Bag of Holding Recall: 3,000 Packs Share One Pocket",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "owlbear-cubs-undermaw-chapter-9-visitors",
+                                           "title":  "3 Owlbear Cubs Found in Undermaw; Chapter 9 Says \u0027Visitors\u0027",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "pit-trap-hazard-pay-undermaw-porters-strike",
+                                           "title":  "Pit Trap Pay Strike: Undermaw Porters Walk Off the Job",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "cloaker-coat-check-chapter-9-guild-hall",
+                                           "title":  "Cloaker Checked as Cloak at Chapter 9 Guild Hall",
+                                           "date":  "2026-10-27"
+                                       },
+                                       {
+                                           "id":  "kobold-trap-resetters-union-vote-scrip",
+                                           "title":  "Kobolds Vote 31-2 to Unionize Over Scrip Pay at Chapter 9",
+                                           "date":  "2026-10-27"
                                        }
                                    ]
                   },
@@ -798,30 +900,30 @@
                                    ]
                   },
                   {
-                      "name":  "Brindlemoor Adventurers\u0027 Guild, Chapter 9",
-                      "short":  "Chapter 9",
+                      "name":  "the Fourth Attempt",
+                      "short":  "the Fourth Attempt",
                       "type":  "organization",
-                      "blurb":  "The guild chapter that licenses parties to enter the Undermaw, sells the maps, and insists the maps are accurate.",
+                      "blurb":  "An adventuring party named in honor of the first three. Licensed by Chapter 9, popular with bards, unpopular with insurers.",
                       "appearances":  17,
                       "articles":  [
+                                       {
+                                           "id":  "owlbear-cubs-undermaw-chapter-9-visitors",
+                                           "title":  "3 Owlbear Cubs Found in Undermaw; Chapter 9 Says \u0027Visitors\u0027",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "pit-trap-hazard-pay-undermaw-porters-strike",
+                                           "title":  "Pit Trap Pay Strike: Undermaw Porters Walk Off the Job",
+                                           "date":  "2026-10-28"
+                                       },
                                        {
                                            "id":  "cloaker-coat-check-chapter-9-guild-hall",
                                            "title":  "Cloaker Checked as Cloak at Chapter 9 Guild Hall",
                                            "date":  "2026-10-27"
                                        },
                                        {
-                                           "id":  "kobold-trap-resetters-union-vote-scrip",
-                                           "title":  "Kobolds Vote 31-2 to Unionize Over Scrip Pay at Chapter 9",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
                                            "id":  "ogre-hireling-door-holding-hazard-pay",
                                            "title":  "Ogre Hired to Hold Door Demands Hazard Pay",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "swarm-of-ravens-steals-212-constable-buttons",
-                                           "title":  "Swarm of Ravens Strips 212 Buttons Off Constabulary",
                                            "date":  "2026-10-27"
                                        },
                                        {
@@ -866,40 +968,6 @@
                                    ]
                   },
                   {
-                      "name":  "Deputy Registrar Pell Oddingwick",
-                      "short":  "Oddingwick",
-                      "type":  "person",
-                      "blurb":  "Chapter 9\u0027s spokesman on permits, openings and corrections. He has announced the opening of Level Seven more times than he has seen it.",
-                      "appearances":  15,
-                      "articles":  [
-                                       {
-                                           "id":  "cloaker-coat-check-chapter-9-guild-hall",
-                                           "title":  "Cloaker Checked as Cloak at Chapter 9 Guild Hall",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "kobold-trap-resetters-union-vote-scrip",
-                                           "title":  "Kobolds Vote 31-2 to Unionize Over Scrip Pay at Chapter 9",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "ogre-hireling-door-holding-hazard-pay",
-                                           "title":  "Ogre Hired to Hold Door Demands Hazard Pay",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "will-o-wisp-streetlamps-brindlemoor-bog",
-                                           "title":  "Will-o\u0027-Wisp Streetlamps Lead Brindlemoor Patrons Into Bog",
-                                           "date":  "2026-10-26"
-                                       },
-                                       {
-                                           "id":  "owlbear-nests-chapter-9-map-room",
-                                           "title":  "Owlbear Nests in Chapter 9 Map Room, Eats Level Four",
-                                           "date":  "2026-10-25"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Party of the Blue Donkey",
                       "short":  "the Blue Donkeys",
                       "type":  "party",
@@ -930,40 +998,6 @@
                                            "id":  "state-visit-red-carpet-emperor-shi-donwald-senators",
                                            "title":  "Red-Carpet State Visit Leaves Red Oliphants Fuming",
                                            "date":  "2026-10-18"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "the Fourth Attempt",
-                      "short":  "the Fourth Attempt",
-                      "type":  "organization",
-                      "blurb":  "An adventuring party named in honor of the first three. Licensed by Chapter 9, popular with bards, unpopular with insurers.",
-                      "appearances":  15,
-                      "articles":  [
-                                       {
-                                           "id":  "cloaker-coat-check-chapter-9-guild-hall",
-                                           "title":  "Cloaker Checked as Cloak at Chapter 9 Guild Hall",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "ogre-hireling-door-holding-hazard-pay",
-                                           "title":  "Ogre Hired to Hold Door Demands Hazard Pay",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "will-o-wisp-streetlamps-brindlemoor-bog",
-                                           "title":  "Will-o\u0027-Wisp Streetlamps Lead Brindlemoor Patrons Into Bog",
-                                           "date":  "2026-10-26"
-                                       },
-                                       {
-                                           "id":  "owlbear-nests-chapter-9-map-room",
-                                           "title":  "Owlbear Nests in Chapter 9 Map Room, Eats Level Four",
-                                           "date":  "2026-10-25"
-                                       },
-                                       {
-                                           "id":  "revivify-claim-denied-pre-existing-condition-shieldwall",
-                                           "title":  "Revivify Claim Denied as Pre-Existing Condition",
-                                           "date":  "2026-10-24"
                                        }
                                    ]
                   },
@@ -1104,16 +1138,50 @@
                                    ]
                   },
                   {
-                      "name":  "Brindlemoor",
-                      "short":  "Brindlemoor",
-                      "type":  "place",
-                      "blurb":  "A frontier market town built on top of the entrance to the Undermaw. Its economy runs on adventurers, and so does its hospital.",
+                      "name":  "Reeve Maudrey Fennick of Brindlemoor",
+                      "short":  "Reeve Fennick",
+                      "type":  "person",
+                      "blurb":  "Brindlemoor\u0027s chief magistrate. Signs every dungeon permit, every bounty, and every apology to the farmers downwind.",
                       "appearances":  12,
                       "articles":  [
+                                       {
+                                           "id":  "bag-of-holding-recall-3000-pettibone-vail",
+                                           "title":  "Bag of Holding Recall: 3,000 Packs Share One Pocket",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "owlbear-cubs-undermaw-chapter-9-visitors",
+                                           "title":  "3 Owlbear Cubs Found in Undermaw; Chapter 9 Says \u0027Visitors\u0027",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "pit-trap-hazard-pay-undermaw-porters-strike",
+                                           "title":  "Pit Trap Pay Strike: Undermaw Porters Walk Off the Job",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "young-red-dragon-hoard-permit-approved",
+                                           "title":  "Young Red Dragon Hoard Permit Approved, With Cheese Conditions",
+                                           "date":  "2026-10-28"
+                                       },
                                        {
                                            "id":  "bag-of-holding-flour-hoard-bread-price",
                                            "title":  "Bag of Holding Hides 40,000 Flour Sacks; Bread Doubles",
                                            "date":  "2026-10-27"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Shieldwall Mutual Assurance Society",
+                      "short":  "Shieldwall Mutual",
+                      "type":  "organization",
+                      "blurb":  "Brindlemoor\u0027s adventurer insurer. Covers death, dismemberment, and curses, except the ones that are your own fault, which is most of them.",
+                      "appearances":  12,
+                      "articles":  [
+                                       {
+                                           "id":  "bag-of-holding-recall-3000-pettibone-vail",
+                                           "title":  "Bag of Holding Recall: 3,000 Packs Share One Pocket",
+                                           "date":  "2026-10-28"
                                        },
                                        {
                                            "id":  "cloaker-coat-check-chapter-9-guild-hall",
@@ -1121,19 +1189,19 @@
                                            "date":  "2026-10-27"
                                        },
                                        {
-                                           "id":  "crystal-ball-subscription-lumenwick-seer-review",
-                                           "title":  "Crystal Ball Launches at 40 gp, Future Costs Extra",
-                                           "date":  "2026-10-27"
+                                           "id":  "revivify-claim-denied-pre-existing-condition-shieldwall",
+                                           "title":  "Revivify Claim Denied as Pre-Existing Condition",
+                                           "date":  "2026-10-24"
                                        },
                                        {
-                                           "id":  "kobold-trap-resetters-union-vote-scrip",
-                                           "title":  "Kobolds Vote 31-2 to Unionize Over Scrip Pay at Chapter 9",
-                                           "date":  "2026-10-27"
+                                           "id":  "young-red-dragon-hoard-cheese-survey",
+                                           "title":  "Young Red Dragon Hoard Survey Finds Cheese Ripened in Hours",
+                                           "date":  "2026-10-22"
                                        },
                                        {
-                                           "id":  "owlbear-leash-ordinance-brindlemoor-council-vote",
-                                           "title":  "Owlbear Leash Ordinance Passes 5-4 in Brindlemoor",
-                                           "date":  "2026-10-27"
+                                           "id":  "fireball-undermaw-corridor-party-singed",
+                                           "title":  "Fireball Cast in Ten-Foot Corridor Singes Entire Party",
+                                           "date":  "2026-10-21"
                                        }
                                    ]
                   },
@@ -1168,40 +1236,6 @@
                                            "id":  "young-red-dragon-hoard-cheese-survey",
                                            "title":  "Young Red Dragon Hoard Survey Finds Cheese Ripened in Hours",
                                            "date":  "2026-10-22"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Shieldwall Mutual Assurance Society",
-                      "short":  "Shieldwall Mutual",
-                      "type":  "organization",
-                      "blurb":  "Brindlemoor\u0027s adventurer insurer. Covers death, dismemberment, and curses, except the ones that are your own fault, which is most of them.",
-                      "appearances":  11,
-                      "articles":  [
-                                       {
-                                           "id":  "cloaker-coat-check-chapter-9-guild-hall",
-                                           "title":  "Cloaker Checked as Cloak at Chapter 9 Guild Hall",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "revivify-claim-denied-pre-existing-condition-shieldwall",
-                                           "title":  "Revivify Claim Denied as Pre-Existing Condition",
-                                           "date":  "2026-10-24"
-                                       },
-                                       {
-                                           "id":  "young-red-dragon-hoard-cheese-survey",
-                                           "title":  "Young Red Dragon Hoard Survey Finds Cheese Ripened in Hours",
-                                           "date":  "2026-10-22"
-                                       },
-                                       {
-                                           "id":  "fireball-undermaw-corridor-party-singed",
-                                           "title":  "Fireball Cast in Ten-Foot Corridor Singes Entire Party",
-                                           "date":  "2026-10-21"
-                                       },
-                                       {
-                                           "id":  "mimic-lobby-bench-reeve-ruling-warning-sign",
-                                           "title":  "Reeve Rules Mimic Lobby Bench a Monster, Orders Sign",
-                                           "date":  "2026-10-19"
                                        }
                                    ]
                   },
@@ -1478,6 +1512,40 @@
                                    ]
                   },
                   {
+                      "name":  "Keeper Bess Harrowgate",
+                      "short":  "Harrowgate",
+                      "type":  "person",
+                      "blurb":  "Keeper of the Sleeping Mule tavern. Extends credit to adventurers and, it turns out, to cubes.",
+                      "appearances":  9,
+                      "articles":  [
+                                       {
+                                           "id":  "bag-of-holding-recall-3000-pettibone-vail",
+                                           "title":  "Bag of Holding Recall: 3,000 Packs Share One Pocket",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "young-red-dragon-hoard-permit-approved",
+                                           "title":  "Young Red Dragon Hoard Permit Approved, With Cheese Conditions",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "bag-of-holding-flour-hoard-bread-price",
+                                           "title":  "Bag of Holding Hides 40,000 Flour Sacks; Bread Doubles",
+                                           "date":  "2026-10-27"
+                                       },
+                                       {
+                                           "id":  "will-o-wisp-streetlamps-brindlemoor-bog",
+                                           "title":  "Will-o\u0027-Wisp Streetlamps Lead Brindlemoor Patrons Into Bog",
+                                           "date":  "2026-10-26"
+                                       },
+                                       {
+                                           "id":  "purple-worm-prophecy-typo-brindlemoor-cellars",
+                                           "title":  "Purple Worm Prophecy Typo Sends Brindlemoor Into Cellars",
+                                           "date":  "2026-10-23"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Ministry of Humours \u0026 Healing",
                       "short":  "the Ministry",
                       "type":  "agency",
@@ -1512,6 +1580,40 @@
                                    ]
                   },
                   {
+                      "name":  "The Sleeping Mule Tavern",
+                      "short":  "the Sleeping Mule",
+                      "type":  "place",
+                      "blurb":  "A Tanner\u0027s Row tavern in Brindlemoor with a deep cellar, a loyal clientele of adventurers, and until recently a very clean walk-in cooler.",
+                      "appearances":  9,
+                      "articles":  [
+                                       {
+                                           "id":  "bag-of-holding-recall-3000-pettibone-vail",
+                                           "title":  "Bag of Holding Recall: 3,000 Packs Share One Pocket",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "young-red-dragon-hoard-permit-approved",
+                                           "title":  "Young Red Dragon Hoard Permit Approved, With Cheese Conditions",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "bag-of-holding-flour-hoard-bread-price",
+                                           "title":  "Bag of Holding Hides 40,000 Flour Sacks; Bread Doubles",
+                                           "date":  "2026-10-27"
+                                       },
+                                       {
+                                           "id":  "will-o-wisp-streetlamps-brindlemoor-bog",
+                                           "title":  "Will-o\u0027-Wisp Streetlamps Lead Brindlemoor Patrons Into Bog",
+                                           "date":  "2026-10-26"
+                                       },
+                                       {
+                                           "id":  "purple-worm-prophecy-typo-brindlemoor-cellars",
+                                           "title":  "Purple Worm Prophecy Typo Sends Brindlemoor Into Cellars",
+                                           "date":  "2026-10-23"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Truthscroll",
                       "short":  "the Truthscroll",
                       "type":  "product",
@@ -1542,6 +1644,40 @@
                                            "id":  "senate-race-flu-12-days-talaricorn-paxtomb",
                                            "title":  "Senate Race Hopeful Missing 12 Days With Dragon-Pox Flu",
                                            "date":  "2026-10-16"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Undermaw",
+                      "short":  "the Undermaw",
+                      "type":  "place",
+                      "blurb":  "The dungeon under Brindlemoor. Its levels are numbered, its bottom has never been found, and the Guild calls it mostly cleared.",
+                      "appearances":  9,
+                      "articles":  [
+                                       {
+                                           "id":  "owlbear-cubs-undermaw-chapter-9-visitors",
+                                           "title":  "3 Owlbear Cubs Found in Undermaw; Chapter 9 Says \u0027Visitors\u0027",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "pit-trap-hazard-pay-undermaw-porters-strike",
+                                           "title":  "Pit Trap Pay Strike: Undermaw Porters Walk Off the Job",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "kobold-trap-resetters-union-vote-scrip",
+                                           "title":  "Kobolds Vote 31-2 to Unionize Over Scrip Pay at Chapter 9",
+                                           "date":  "2026-10-27"
+                                       },
+                                       {
+                                           "id":  "owlbear-nests-chapter-9-map-room",
+                                           "title":  "Owlbear Nests in Chapter 9 Map Room, Eats Level Four",
+                                           "date":  "2026-10-25"
+                                       },
+                                       {
+                                           "id":  "revivify-claim-denied-pre-existing-condition-shieldwall",
+                                           "title":  "Revivify Claim Denied as Pre-Existing Condition",
+                                           "date":  "2026-10-24"
                                        }
                                    ]
                   },
@@ -1648,40 +1784,6 @@
                                    ]
                   },
                   {
-                      "name":  "Reeve Maudrey Fennick of Brindlemoor",
-                      "short":  "Reeve Fennick",
-                      "type":  "person",
-                      "blurb":  "Brindlemoor\u0027s chief magistrate. Signs every dungeon permit, every bounty, and every apology to the farmers downwind.",
-                      "appearances":  8,
-                      "articles":  [
-                                       {
-                                           "id":  "bag-of-holding-flour-hoard-bread-price",
-                                           "title":  "Bag of Holding Hides 40,000 Flour Sacks; Bread Doubles",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "kobold-trap-resetters-union-vote-scrip",
-                                           "title":  "Kobolds Vote 31-2 to Unionize Over Scrip Pay at Chapter 9",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "owlbear-leash-ordinance-brindlemoor-council-vote",
-                                           "title":  "Owlbear Leash Ordinance Passes 5-4 in Brindlemoor",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "revivify-claim-denied-pre-existing-condition-shieldwall",
-                                           "title":  "Revivify Claim Denied as Pre-Existing Condition",
-                                           "date":  "2026-10-24"
-                                       },
-                                       {
-                                           "id":  "young-red-dragon-hoard-cheese-survey",
-                                           "title":  "Young Red Dragon Hoard Survey Finds Cheese Ripened in Hours",
-                                           "date":  "2026-10-22"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "the Apprentice Scholars\u0027 Lodge",
                       "short":  "the Lodge",
                       "type":  "institution",
@@ -1750,6 +1852,40 @@
                                    ]
                   },
                   {
+                      "name":  "Inspector Corwin Tallowby",
+                      "short":  "Tallowby",
+                      "type":  "person",
+                      "blurb":  "Brindlemoor Public Cellars Board inspector. Has cited a tavern for every sort of cellar trouble and has opinions about cheese.",
+                      "appearances":  7,
+                      "articles":  [
+                                       {
+                                           "id":  "doppelganger-two-council-seats-quorum-brindlemoor",
+                                           "title":  "Doppelganger Held Two Council Seats; Quorum Void",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "young-red-dragon-hoard-permit-approved",
+                                           "title":  "Young Red Dragon Hoard Permit Approved, With Cheese Conditions",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "bag-of-holding-flour-hoard-bread-price",
+                                           "title":  "Bag of Holding Hides 40,000 Flour Sacks; Bread Doubles",
+                                           "date":  "2026-10-27"
+                                       },
+                                       {
+                                           "id":  "owlbear-nests-chapter-9-map-room",
+                                           "title":  "Owlbear Nests in Chapter 9 Map Room, Eats Level Four",
+                                           "date":  "2026-10-25"
+                                       },
+                                       {
+                                           "id":  "young-red-dragon-hoard-cheese-survey",
+                                           "title":  "Young Red Dragon Hoard Survey Finds Cheese Ripened in Hours",
+                                           "date":  "2026-10-22"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Kara-Tur",
                       "short":  "Kara-Tur",
                       "type":  "country",
@@ -1784,40 +1920,6 @@
                                    ]
                   },
                   {
-                      "name":  "Keeper Bess Harrowgate",
-                      "short":  "Harrowgate",
-                      "type":  "person",
-                      "blurb":  "Keeper of the Sleeping Mule tavern. Extends credit to adventurers and, it turns out, to cubes.",
-                      "appearances":  7,
-                      "articles":  [
-                                       {
-                                           "id":  "bag-of-holding-flour-hoard-bread-price",
-                                           "title":  "Bag of Holding Hides 40,000 Flour Sacks; Bread Doubles",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "will-o-wisp-streetlamps-brindlemoor-bog",
-                                           "title":  "Will-o\u0027-Wisp Streetlamps Lead Brindlemoor Patrons Into Bog",
-                                           "date":  "2026-10-26"
-                                       },
-                                       {
-                                           "id":  "purple-worm-prophecy-typo-brindlemoor-cellars",
-                                           "title":  "Purple Worm Prophecy Typo Sends Brindlemoor Into Cellars",
-                                           "date":  "2026-10-23"
-                                       },
-                                       {
-                                           "id":  "young-red-dragon-hoard-cheese-survey",
-                                           "title":  "Young Red Dragon Hoard Survey Finds Cheese Ripened in Hours",
-                                           "date":  "2026-10-22"
-                                       },
-                                       {
-                                           "id":  "fireball-undermaw-corridor-party-singed",
-                                           "title":  "Fireball Cast in Ten-Foot Corridor Singes Entire Party",
-                                           "date":  "2026-10-21"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "the Lone Star Marches",
                       "short":  "the Lone Star Marches",
                       "type":  "place",
@@ -1848,74 +1950,6 @@
                                            "id":  "hospital-bills-before-aid-check-lone-star",
                                            "title":  "44% of Lone Star Temples Bill Patients Before Aid Check",
                                            "date":  "2026-10-16"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "The Sleeping Mule Tavern",
-                      "short":  "the Sleeping Mule",
-                      "type":  "place",
-                      "blurb":  "A Tanner\u0027s Row tavern in Brindlemoor with a deep cellar, a loyal clientele of adventurers, and until recently a very clean walk-in cooler.",
-                      "appearances":  7,
-                      "articles":  [
-                                       {
-                                           "id":  "bag-of-holding-flour-hoard-bread-price",
-                                           "title":  "Bag of Holding Hides 40,000 Flour Sacks; Bread Doubles",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "will-o-wisp-streetlamps-brindlemoor-bog",
-                                           "title":  "Will-o\u0027-Wisp Streetlamps Lead Brindlemoor Patrons Into Bog",
-                                           "date":  "2026-10-26"
-                                       },
-                                       {
-                                           "id":  "purple-worm-prophecy-typo-brindlemoor-cellars",
-                                           "title":  "Purple Worm Prophecy Typo Sends Brindlemoor Into Cellars",
-                                           "date":  "2026-10-23"
-                                       },
-                                       {
-                                           "id":  "young-red-dragon-hoard-cheese-survey",
-                                           "title":  "Young Red Dragon Hoard Survey Finds Cheese Ripened in Hours",
-                                           "date":  "2026-10-22"
-                                       },
-                                       {
-                                           "id":  "fireball-undermaw-corridor-party-singed",
-                                           "title":  "Fireball Cast in Ten-Foot Corridor Singes Entire Party",
-                                           "date":  "2026-10-21"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "the Undermaw",
-                      "short":  "the Undermaw",
-                      "type":  "place",
-                      "blurb":  "The dungeon under Brindlemoor. Its levels are numbered, its bottom has never been found, and the Guild calls it mostly cleared.",
-                      "appearances":  7,
-                      "articles":  [
-                                       {
-                                           "id":  "kobold-trap-resetters-union-vote-scrip",
-                                           "title":  "Kobolds Vote 31-2 to Unionize Over Scrip Pay at Chapter 9",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "owlbear-nests-chapter-9-map-room",
-                                           "title":  "Owlbear Nests in Chapter 9 Map Room, Eats Level Four",
-                                           "date":  "2026-10-25"
-                                       },
-                                       {
-                                           "id":  "revivify-claim-denied-pre-existing-condition-shieldwall",
-                                           "title":  "Revivify Claim Denied as Pre-Existing Condition",
-                                           "date":  "2026-10-24"
-                                       },
-                                       {
-                                           "id":  "purple-worm-prophecy-typo-brindlemoor-cellars",
-                                           "title":  "Purple Worm Prophecy Typo Sends Brindlemoor Into Cellars",
-                                           "date":  "2026-10-23"
-                                       },
-                                       {
-                                           "id":  "fireball-undermaw-corridor-party-singed",
-                                           "title":  "Fireball Cast in Ten-Foot Corridor Singes Entire Party",
-                                           "date":  "2026-10-21"
                                        }
                                    ]
                   },
@@ -2154,6 +2188,40 @@
                                            "id":  "tarpon-catch-and-release-arrest-cays-watch",
                                            "title":  "Dead Tarpon in Truck Bed Lands Angler in Cays Dungeon",
                                            "date":  "2026-10-19"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Chamber Leadership Hoard",
+                      "short":  "the Hoard",
+                      "type":  "institution",
+                      "blurb":  "The Red Oliphants\u0027 great war chest for Senate Chamber races, guarded by dragons in suits and spent in enormous lumps.",
+                      "appearances":  6,
+                      "articles":  [
+                                       {
+                                           "id":  "young-red-dragon-hoard-permit-approved",
+                                           "title":  "Young Red Dragon Hoard Permit Approved, With Cheese Conditions",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "jobless-claims-194000-guilds-hoard-hirelings",
+                                           "title":  "Jobless Claims Fall to 194,000; Guilds Hoard Hirelings",
+                                           "date":  "2026-10-22"
+                                       },
+                                       {
+                                           "id":  "young-red-dragon-hoard-cheese-survey",
+                                           "title":  "Young Red Dragon Hoard Survey Finds Cheese Ripened in Hours",
+                                           "date":  "2026-10-22"
+                                       },
+                                       {
+                                           "id":  "young-red-dragon-hoard-extension-permit-hearing",
+                                           "title":  "Young Red Dragon Seeks Permit to Extend Hoard Under Tavern Row",
+                                           "date":  "2026-10-20"
+                                       },
+                                       {
+                                           "id":  "midterm-ad-spending-10-billion-loaf-index",
+                                           "title":  "Midterm Ad Spending Tops 10 Billion Gold Pieces, Loaves Wept",
+                                           "date":  "2026-10-18"
                                        }
                                    ]
                   },
@@ -2532,40 +2600,6 @@
                                    ]
                   },
                   {
-                      "name":  "Inspector Corwin Tallowby",
-                      "short":  "Tallowby",
-                      "type":  "person",
-                      "blurb":  "Brindlemoor Public Cellars Board inspector. Has cited a tavern for every sort of cellar trouble and has opinions about cheese.",
-                      "appearances":  5,
-                      "articles":  [
-                                       {
-                                           "id":  "bag-of-holding-flour-hoard-bread-price",
-                                           "title":  "Bag of Holding Hides 40,000 Flour Sacks; Bread Doubles",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "owlbear-nests-chapter-9-map-room",
-                                           "title":  "Owlbear Nests in Chapter 9 Map Room, Eats Level Four",
-                                           "date":  "2026-10-25"
-                                       },
-                                       {
-                                           "id":  "young-red-dragon-hoard-cheese-survey",
-                                           "title":  "Young Red Dragon Hoard Survey Finds Cheese Ripened in Hours",
-                                           "date":  "2026-10-22"
-                                       },
-                                       {
-                                           "id":  "young-red-dragon-hoard-extension-permit-hearing",
-                                           "title":  "Young Red Dragon Seeks Permit to Extend Hoard Under Tavern Row",
-                                           "date":  "2026-10-20"
-                                       },
-                                       {
-                                           "id":  "gelatinous-cube-tavern-walk-in-inspection",
-                                           "title":  "Gelatinous Cube Found in Tavern Walk-In, Inspector Says",
-                                           "date":  "2026-10-14"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Major League Batball",
                       "short":  "the League",
                       "type":  "institution",
@@ -2800,40 +2834,6 @@
                                            "id":  "skytrance-megamerger-rightsizes-hollowood",
                                            "title":  "Skytrance Megamerger Closes, Bravely Rightsizes Hollowood\u0027s Adventuring Party",
                                            "date":  "2026-10-10"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "the Chamber Leadership Hoard",
-                      "short":  "the Hoard",
-                      "type":  "institution",
-                      "blurb":  "The Red Oliphants\u0027 great war chest for Senate Chamber races, guarded by dragons in suits and spent in enormous lumps.",
-                      "appearances":  5,
-                      "articles":  [
-                                       {
-                                           "id":  "jobless-claims-194000-guilds-hoard-hirelings",
-                                           "title":  "Jobless Claims Fall to 194,000; Guilds Hoard Hirelings",
-                                           "date":  "2026-10-22"
-                                       },
-                                       {
-                                           "id":  "young-red-dragon-hoard-cheese-survey",
-                                           "title":  "Young Red Dragon Hoard Survey Finds Cheese Ripened in Hours",
-                                           "date":  "2026-10-22"
-                                       },
-                                       {
-                                           "id":  "young-red-dragon-hoard-extension-permit-hearing",
-                                           "title":  "Young Red Dragon Seeks Permit to Extend Hoard Under Tavern Row",
-                                           "date":  "2026-10-20"
-                                       },
-                                       {
-                                           "id":  "midterm-ad-spending-10-billion-loaf-index",
-                                           "title":  "Midterm Ad Spending Tops 10 Billion Gold Pieces, Loaves Wept",
-                                           "date":  "2026-10-18"
-                                       },
-                                       {
-                                           "id":  "midterm-elections-triage-red-oliphants-donwald",
-                                           "title":  "Midterm Elections Triage: Red Oliphants Blame Donwald",
-                                           "date":  "2026-10-13"
                                        }
                                    ]
                   },
@@ -3884,6 +3884,30 @@
                                            "id":  "scrolltok-influencer-scandal",
                                            "title":  "ScrollTok Influencer Promotes Cursed Amulet",
                                            "date":  "2026-04-20"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Skorvath",
+                      "short":  "Skorvath",
+                      "type":  "creature",
+                      "blurb":  "A young red dragon whose hoard of 11,400 gold pieces lies beneath the old tannery on Tanner\u0027s Row. It files its paperwork on time.",
+                      "appearances":  3,
+                      "articles":  [
+                                       {
+                                           "id":  "young-red-dragon-hoard-permit-approved",
+                                           "title":  "Young Red Dragon Hoard Permit Approved, With Cheese Conditions",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "young-red-dragon-hoard-cheese-survey",
+                                           "title":  "Young Red Dragon Hoard Survey Finds Cheese Ripened in Hours",
+                                           "date":  "2026-10-22"
+                                       },
+                                       {
+                                           "id":  "young-red-dragon-hoard-extension-permit-hearing",
+                                           "title":  "Young Red Dragon Seeks Permit to Extend Hoard Under Tavern Row",
+                                           "date":  "2026-10-20"
                                        }
                                    ]
                   },
@@ -5026,25 +5050,6 @@
                                    ]
                   },
                   {
-                      "name":  "Skorvath",
-                      "short":  "Skorvath",
-                      "type":  "creature",
-                      "blurb":  "A young red dragon whose hoard of 11,400 gold pieces lies beneath the old tannery on Tanner\u0027s Row. It files its paperwork on time.",
-                      "appearances":  2,
-                      "articles":  [
-                                       {
-                                           "id":  "young-red-dragon-hoard-cheese-survey",
-                                           "title":  "Young Red Dragon Hoard Survey Finds Cheese Ripened in Hours",
-                                           "date":  "2026-10-22"
-                                       },
-                                       {
-                                           "id":  "young-red-dragon-hoard-extension-permit-hearing",
-                                           "title":  "Young Red Dragon Seeks Permit to Extend Hoard Under Tavern Row",
-                                           "date":  "2026-10-20"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Spectercab",
                       "short":  "Spectercab",
                       "type":  "product",
@@ -5478,6 +5483,25 @@
                                            "id":  "restaurant-takeover-chipotlich-nickelcoin-synergy",
                                            "title":  "Coffee Guild Eyes 39B gp Burrito-Lich Takeover",
                                            "date":  "2026-10-12"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Sembian Mint",
+                      "short":  "the Mint",
+                      "type":  "institution",
+                      "blurb":  "The Sembian Concord\u0027s central coin-house, which sets the price of borrowing for every member realm and answers to none of them.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "rust-monster-eats-iron-pennies-brindlemoor-mint",
+                                           "title":  "Rust Monster Eats 9,000 gp of Iron Pennies at Mint",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "central-bank-chief-snowhold-conclave-laguard",
+                                           "title":  "Central Bank Chief Eyed for Snowhold Conclave Chair",
+                                           "date":  "2026-10-15"
                                        }
                                    ]
                   },
@@ -6744,6 +6768,20 @@
                                    ]
                   },
                   {
+                      "name":  "Gorvash Pennyfist",
+                      "short":  "Gorvash",
+                      "type":  "person",
+                      "blurb":  "A bridge troll who has collected tolls on Quillmarch Bridge for nine winters.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "bridge-troll-toll-hike-quillmarch-parley",
+                                           "title":  "Bridge Troll Raises Toll to 3 Copper, Baronies Parley",
+                                           "date":  "2026-10-28"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Grand Almoner Mehmagus the Great and Powerful",
                       "short":  "Mehmagus",
                       "type":  "person",
@@ -6908,6 +6946,20 @@
                                            "id":  "automaker-earnings-20b-gp-buyback-general-mounts",
                                            "title":  "Automaker Earnings Hit 50B gp; 20B Buyback Follows",
                                            "date":  "2026-10-21"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Guildmaster Tobrin Ashgrove",
+                      "short":  "Ashgrove",
+                      "type":  "person",
+                      "blurb":  "A famed guildmaster of the merchant circuit, known for gala speeches and hot-air balloons.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "bag-of-holding-recall-3000-pettibone-vail",
+                                           "title":  "Bag of Holding Recall: 3,000 Packs Share One Pocket",
+                                           "date":  "2026-10-28"
                                        }
                                    ]
                   },
@@ -8046,6 +8098,20 @@
                                    ]
                   },
                   {
+                      "name":  "Pettibone \u0026 Vail Outfitters",
+                      "short":  "Pettibone \u0026 Vail",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor outfitter selling packs, rope and bags of holding to adventurers. Its Trailmaster line is its pride and, lately, its problem.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "bag-of-holding-recall-3000-pettibone-vail",
+                                           "title":  "Bag of Holding Recall: 3,000 Packs Share One Pocket",
+                                           "date":  "2026-10-28"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Pick-Three Bones",
                       "short":  "Pick-Three Bones",
                       "type":  "product",
@@ -8112,6 +8178,20 @@
                                            "id":  "ai-chips-open-source-gargoogle-amazoom-envydia",
                                            "title":  "Rivals Open-Source Tools to Pry Devs Off Envydia AI Chips",
                                            "date":  "2026-10-21"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Quillmarch Bridge",
+                      "short":  "Quillmarch Bridge",
+                      "type":  "place",
+                      "blurb":  "The only river crossing for forty miles between the baronies of Ashenfold and Brackwater.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "bridge-troll-toll-hike-quillmarch-parley",
+                                           "title":  "Bridge Troll Raises Toll to 3 Copper, Baronies Parley",
+                                           "date":  "2026-10-28"
                                        }
                                    ]
                   },
@@ -9568,20 +9648,6 @@
                                            "id":  "sea-ice-record-low-astral-navy-wendell",
                                            "title":  "Sea Ice Hits Record-Low Winter Peak; Frost Giants Evicted",
                                            "date":  "2026-10-18"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "the Sembian Mint",
-                      "short":  "the Mint",
-                      "type":  "institution",
-                      "blurb":  "The Sembian Concord\u0027s central coin-house, which sets the price of borrowing for every member realm and answers to none of them.",
-                      "appearances":  1,
-                      "articles":  [
-                                       {
-                                           "id":  "central-bank-chief-snowhold-conclave-laguard",
-                                           "title":  "Central Bank Chief Eyed for Snowhold Conclave Chair",
-                                           "date":  "2026-10-15"
                                        }
                                    ]
                   },
