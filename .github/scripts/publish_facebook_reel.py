@@ -141,6 +141,31 @@ def confirm_existing_schedule(video_id, scheduled_publish_time, token):
     raise RuntimeError(f"Meta did not report the expected schedule for Reel {video_id}; status={status}, scheduled_publish_time={actual!r}, published={payload.get('published')!r}.")
 
 
+def reschedule_existing(video_id, scheduled_publish_time, token):
+    if not re.fullmatch(r"[0-9]+", video_id):
+        raise RuntimeError("VIDEO_ID must be a numeric Facebook video ID.")
+    try:
+        publish_at = int(scheduled_publish_time)
+    except (TypeError, ValueError):
+        raise RuntimeError("SCHEDULED_PUBLISH_TIME must be a Unix timestamp in seconds.") from None
+    if publish_at < int(time.time()) + 600:
+        raise RuntimeError("Scheduled publish time must be at least 10 minutes in the future.")
+    if publish_at > int(time.time()) + 29 * 24 * 60 * 60:
+        raise RuntimeError("Facebook Page Reels can only be scheduled up to 29 days ahead.")
+
+    current = graph_get(video_id, {"fields": "status,scheduled_publish_time,published"}, token)
+    status = current.get("status") or {}
+    if current.get("published") is True or str(status.get("video_status", "")).lower() in {"published", "live"}:
+        raise RuntimeError(f"Facebook Reel {video_id} is already published; refusing to change it.")
+    if current.get("published") is not False or not current.get("scheduled_publish_time"):
+        raise RuntimeError(f"Facebook Reel {video_id} is not confirmed as scheduled; refusing to change it.")
+
+    result = graph_post(video_id, {"scheduled_publish_time": publish_at}, token)
+    if result.get("success") is not True:
+        raise RuntimeError(f"Meta did not confirm rescheduling Reel {video_id}.")
+    confirm_existing_schedule(video_id, publish_at, token)
+
+
 def publish(article_id, video_path, extra_tags="", scheduled_publish_time=""):
     page_id = os.environ.get("FB_PAGE_ID", "").strip()
     token = os.environ.get("FB_PAGE_TOKEN", "").strip()
@@ -221,7 +246,7 @@ def publish(article_id, video_path, extra_tags="", scheduled_publish_time=""):
 
 def main():
     operation = os.environ.get("OPERATION", "publish").strip()
-    if operation == "confirm_schedule":
+    if operation in {"confirm_schedule", "reschedule"}:
         page_id = os.environ.get("FB_PAGE_ID", "").strip()
         token = os.environ.get("FB_PAGE_TOKEN", "").strip()
         video_id = os.environ.get("VIDEO_ID", "").strip()
@@ -229,10 +254,13 @@ def main():
         if not page_id or not token:
             raise RuntimeError("FB_PAGE_ID and FB_PAGE_TOKEN must be configured as repository secrets.")
         token = get_page_context(page_id, token)["access_token"]
-        confirm_existing_schedule(video_id, scheduled_publish_time, token)
+        if operation == "reschedule":
+            reschedule_existing(video_id, scheduled_publish_time, token)
+        else:
+            confirm_existing_schedule(video_id, scheduled_publish_time, token)
         return
     if operation != "publish":
-        raise RuntimeError("OPERATION must be publish or confirm_schedule.")
+        raise RuntimeError("OPERATION must be publish, confirm_schedule, or reschedule.")
     article_id = os.environ.get("ARTICLE_ID", "").strip()
     video_path = os.environ.get("VIDEO_PATH", "").strip()
     if not article_id or not video_path:
