@@ -308,6 +308,9 @@ const ENC_HABITATS = ruleTable({
         twists: ["The door slams and locks on round 2: the lever is on the far side of the room.", "A wandering patrol of the dungeon's other residents hears the fight and turns up on round 5, as eager to fight the winners as either side."] }
 });
 const ENC_HABITAT_KEYS = Object.keys(ENC_HABITATS);
+// Pathfinder creatures carry their own habitats (pf2e-creatures-data.js), so the lists above
+// are swapped for theirs.
+if (ENC_PF2E) ENC_HABITAT_KEYS.forEach(h => (ENC_HABITATS[h].monsters = PF2E_CREATURES.filter(c => c.habs.includes(h)).map(c => c.id).join(" ")));
 const ENC_MONSTER_HABITATS = {};
 ENC_HABITAT_KEYS.forEach(h => ENC_HABITATS[h].monsters.split(" ").forEach(id => (ENC_MONSTER_HABITATS[id] = ENC_MONSTER_HABITATS[id] || []).push(h)));
 
@@ -714,8 +717,7 @@ function rollThemedEncounter(budget, diff, opts = {}) {
     const maxCr = encMaxCr(budget);
     const fits = m => m && m.xp > 0 && m.xp <= target && crValue(m.cr) <= maxCr && (!type || m.type === type);
     const floor = encFloor(budget, diff);
-    // Pathfinder creatures have no habitats yet: the habitat only sets the scene.
-    const inHab = m => !habitat || ENC_PF2E || (ENC_MONSTER_HABITATS[m.id] || []).includes(habitat);
+    const inHab = m => !habitat || (ENC_MONSTER_HABITATS[m.id] || []).includes(habitat);
     // The whole group keeps to one habitat (the one picked, or one of theirs) when it can,
     // so swamp crocodiles don't turn up with mountain bears. Untagged members go anywhere.
     // strict: give up (rather than leave the habitat) when no leader lives there.
@@ -781,7 +783,7 @@ function rollEncounterScene(list, seed, opts = {}) {
         const shared = own.filter(h => list.every(e => !ENC_MONSTER_HABITATS[e.m.id] || ENC_MONSTER_HABITATS[e.m.id].includes(h)));
         const homes = shared.length ? shared : own;
         const both = band ? homes.filter(h => band.habs.includes(h)) : homes;
-        const choices = both.length ? both : own.length ? own : band ? band.habs : ENC_PF2E ? ENC_HABITAT_KEYS : ["dungeon"];
+        const choices = both.length ? both : own.length ? own : band ? band.habs : ["dungeon"];
         return pick(choices);
     });
     const H = ENC_HABITATS[habitat];

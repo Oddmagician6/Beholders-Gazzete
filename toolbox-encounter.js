@@ -286,7 +286,7 @@ function rollEncounterFor() {
     };
     const seed = newSeed();
     const res = withSeed(seed, () => rollThemedEncounter(encBudget(), diff, opts));
-    if (!res.list.length) { flash('enc-status', ENC_PF2E ? '⚠️ No creatures fit that type and this budget. Try another type or a higher difficulty.' : '⚠️ No monsters fit those choices and this budget. Try another type, group, or habitat, or a higher difficulty.'); return; }
+    if (!res.list.length) { flash('enc-status', ENC_PF2E ? '⚠️ No creatures fit those choices and this budget. Try another type or habitat, or a higher difficulty.' : '⚠️ No monsters fit those choices and this budget. Try another type, group, or habitat, or a higher difficulty.'); return; }
     enc.list = res.list;
     enc.band = res.band;
     enc.seed = seed;
