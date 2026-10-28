@@ -11,6 +11,8 @@ from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlparse
 
+from meta_page import get_page_context
+
 GRAPH = "https://graph.facebook.com/v26.0"
 SITE = "https://gazette.ashforgestudio.com"
 MAX_WAIT_SECONDS = 15 * 60
@@ -144,6 +146,9 @@ def publish(article_id, video_path, extra_tags="", scheduled_publish_time=""):
     token = os.environ.get("FB_PAGE_TOKEN", "").strip()
     if not page_id or not token:
         raise RuntimeError("FB_PAGE_ID and FB_PAGE_TOKEN must be configured as repository secrets.")
+    # FB_PAGE_TOKEN stores the Meta User Access Token. Resolve the Page token
+    # at runtime so Facebook and Instagram publishing share one credential.
+    token = get_page_context(page_id, token)["access_token"]
     if not re.fullmatch(r"[a-z0-9][a-z0-9_-]*", article_id):
         raise RuntimeError("Invalid article ID.")
 
@@ -223,6 +228,7 @@ def main():
         scheduled_publish_time = os.environ.get("SCHEDULED_PUBLISH_TIME", "").strip()
         if not page_id or not token:
             raise RuntimeError("FB_PAGE_ID and FB_PAGE_TOKEN must be configured as repository secrets.")
+        token = get_page_context(page_id, token)["access_token"]
         confirm_existing_schedule(video_id, scheduled_publish_time, token)
         return
     if operation != "publish":

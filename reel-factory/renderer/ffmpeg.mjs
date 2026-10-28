@@ -30,7 +30,7 @@ export async function renderVideo({ ffmpegPath, imagePath, audioPath, assPath, v
     '-y', '-hide_banner', '-loglevel', 'error', '-loop', '1', '-framerate', String(FPS), '-i', imagePath,
     '-i', audioPath, '-filter_complex_script', filterPath, '-map', '[v]', '-map', '1:a:0',
     '-t', durationSeconds.toFixed(3), '-r', String(FPS), '-c:v', 'libx264', '-preset', 'medium', '-crf', '21',
-    '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', videoPath,
+    '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-ar', '48000', '-b:a', '112k', '-movflags', '+faststart', videoPath,
   ];
   try { await execFileAsync(ffmpegPath, args, { windowsHide: true, maxBuffer: 4 * 1024 * 1024 }); }
   catch (error) {

@@ -1,0 +1,73 @@
+name: Publish approved Instagram Reel
+run-name: Publish Instagram Reel — ${{ inputs.article_id }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      article_id:
+        description: Article ID for the approved Reel
+        required: true
+        type: string
+      release_tag:
+        description: Temporary public GitHub Release containing render.mp4
+        required: true
+        type: string
+      custom_artwork_confirmed:
+        description: Confirm the Reel uses custom article-specific artwork
+        required: true
+        type: boolean
+        default: false
+      hashtags:
+        description: Story hashtags, space-separated (e.g. "#MooseRescue #SkatePark")
+        required: false
+        type: string
+        default: ''
+      share_to_feed:
+        description: Also show the Reel in the Instagram feed
+        required: false
+        type: boolean
+        default: true
+
+concurrency:
+  group: instagram-reel-${{ inputs.article_id }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Validate and locate staged Reel
+        id: reel
+        env:
+          ARTICLE_ID: ${{ inputs.article_id }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+          CUSTOM_ARTWORK_CONFIRMED: ${{ inputs.custom_artwork_confirmed }}
+        run: |
+          set -euo pipefail
+          [[ "$CUSTOM_ARTWORK_CONFIRMED" == "true" ]] || { echo "Custom article-specific artwork must be confirmed before publishing." >&2; exit 1; }
+          [[ "$ARTICLE_ID" =~ ^[a-z0-9][a-z0-9_-]*$ ]] || { echo "Invalid article ID." >&2; exit 1; }
+          [[ "$RELEASE_TAG" =~ ^reel-stage-[a-z0-9-]+$ ]] || { echo "Release tag must start with reel-stage-." >&2; exit 1; }
+          echo "video_url=https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}/render.mp4" >> "$GITHUB_OUTPUT"
+
+      - name: Publish Instagram Reel
+        env:
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+          ARTICLE_ID: ${{ inputs.article_id }}
+          VIDEO_URL: ${{ steps.reel.outputs.video_url }}
+          HASHTAGS: ${{ inputs.hashtags }}
+          SHARE_TO_FEED: ${{ inputs.share_to_feed }}
+        run: python3 .github/scripts/publish_instagram_reel.py
+
+      - name: Remove temporary public staging release
+        if: ${{ success() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        run: gh release delete "$RELEASE_TAG" --cleanup-tag --yes

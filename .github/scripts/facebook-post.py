@@ -7,7 +7,8 @@ spaced a few hours apart during the day so an edition doesn't land at once.
 Posts already scheduled on the Page count: the new ones go after the last of
 them, and an article already scheduled (a re-run) is skipped.
 
-Env: FB_PAGE_ID, FB_PAGE_TOKEN (a Page access token with pages_manage_posts).
+Env: FB_PAGE_ID and FB_PAGE_TOKEN (a Meta User Access Token with pages_show_list,
+pages_manage_posts, and pages_read_engagement; resolved to a Page token at runtime).
 """
 import argparse
 import datetime as dt
@@ -20,6 +21,8 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from zoneinfo import ZoneInfo
+
+from meta_page import get_page_context
 
 GRAPH = "https://graph.facebook.com/v26.0"
 SITE = "https://gazette.ashforgestudio.com"
@@ -166,6 +169,10 @@ def main():
     page, token = (os.environ.get(k, "").strip() for k in ("FB_PAGE_ID", "FB_PAGE_TOKEN"))
     if not args.dry_run and not (page and token):
         raise SystemExit("FB_PAGE_ID and FB_PAGE_TOKEN must be set.")
+    if not args.dry_run:
+        # The repository secret contains a User Access Token; resolve the
+        # Page token needed for Page feed and scheduled-post operations.
+        token = get_page_context(page, token)["access_token"]
 
     # Time the posts once the first article is live: Facebook refuses a time under 10 minutes away,
     # and a slow deploy would eat the first post's lead.
