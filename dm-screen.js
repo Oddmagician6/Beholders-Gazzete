@@ -759,7 +759,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         if (e.key === CLOCKS_KEY) renderTypes('clock');
-        else if (e.key === 'gazette-tables') renderTypes('table');
+        else if (e.key === ruleKey('gazette-tables')) renderTypes('table');
         else if (e.key === PARTY_KEY) renderTypes('party');
         else if (e.key === INIT_VIEW_KEY) renderTypes('init');
     });

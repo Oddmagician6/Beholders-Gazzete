@@ -224,7 +224,7 @@ function famSummary(fam) {
 function famPersonLine(fam, p) {
     const bits = [];
     if (p.title) bits.push(p.title + '.');
-    if (p.race !== famRace(fam)) bits.push(famCapital(p.race) + '.');
+    if (p.race !== famRace(fam)) bits.push(famCapital(ruleWord('race', p.race)) + '.');
     bits.push(famAgeText(p));
     const partners = famPartners(fam, p).filter(x => x.other);
     if (partners.length) {
@@ -460,7 +460,7 @@ function famSvg(fam, lay, o = {}) {
     });
     const boxes = lay.boxes.map(b => {
         const p = famPerson(fam, b.id);
-        const second = p.title || (p.race !== race ? famCapital(p.race) : b.blood ? '' : 'Married in');
+        const second = p.title || (p.race !== race ? famCapital(ruleWord('race', p.race)) : b.blood ? '' : 'Married in');
         const label = `${p.name}${p.title ? ', ' + p.title : ''}. ${famAgeText(p)}`;
         const cls = [`${c}-p`, b.blood ? `${c}-blood` : `${c}-in`, p.dead ? `${c}-dead` : '', p.id === fam.root ? `${c}-root` : '', p.id === o.sel ? `${c}-sel` : ''].filter(Boolean).join(' ');
         return `<g class="${cls}" data-person="${e(p.id)}" tabindex="0" role="button" aria-label="${e(label)}" aria-pressed="${p.id === o.sel}">

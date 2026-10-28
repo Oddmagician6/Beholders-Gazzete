@@ -211,7 +211,7 @@ const NB_SHEETS = {
         const pinned = Object.fromEntries(p.getAll('lock').map(t => parseNpcLock(t)).filter(Boolean));
         const n = rollNpcPinned(fields, seed, pinned);
         return [{ head: '', lines: nbLinesOf('', [
-            ['Who', `${facCap(n.race)} ${n.profession.toLowerCase()}, aged ${parseInt(n.age, 10)}.`],
+            ['Who', `${facCap(ruleWord('race', n.race))} ${ruleWord('class', n.profession).toLowerCase()}, aged ${parseInt(n.age, 10)}.`],
             ['Build', n.build + '.'],
             [n.hairLabel, facCap(n.hairLook) + '.'],
             ['Eyes', facCap(n.eyes) + '.'],
@@ -221,7 +221,7 @@ const NB_SHEETS = {
             ['Manner', nbStop(n.trait)],
             ['When you meet them', nbStop(n.doing)],
             ['Says', `"${n.dialogue.replace(/^"|"$/g, '')}"`],
-            ['Alignment', nbStop(n.alignment)],
+            ...(ruleHasAlignment() ? [['Alignment', nbStop(n.alignment)]] : []),
             ['Ideal', nbStop(n.ideal)],
             ['Bond', nbStop(n.bond)],
             ['Flaw', nbStop(n.flaw)],

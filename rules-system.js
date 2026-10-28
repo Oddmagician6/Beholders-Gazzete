@@ -71,3 +71,24 @@ function ruleTable(t) {
     }
     return t;
 }
+
+// A word another system names differently: ruleWord('race', 'tiefling') is "nephilim" in Pathfinder.
+// Keeps a capital first letter.
+function ruleWord(kind, word) {
+    const map = (ruleSystem().words || {})[kind];
+    const to = map && typeof word === 'string' && map[word.toLowerCase()];
+    if (!to) return word;
+    return word[0] !== word[0].toLowerCase() ? to[0].toUpperCase() + to.slice(1) : to;
+}
+
+// Whether the system gives gods and people an alignment (the Pathfinder Remaster doesn't).
+function ruleHasAlignment() {
+    return ruleSystem().alignment !== false;
+}
+
+// The localStorage key (or database name) for this system's saves, so a Pathfinder party or
+// notebook never shows up in the D&D tools: 5e keeps the old key, others add "-<system>".
+function ruleKey(key) {
+    const id = ruleSystemId();
+    return id === '5e' ? key : `${key}-${id}`;
+}

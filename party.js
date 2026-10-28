@@ -14,9 +14,9 @@
    Needs no other script; the chip escapes its own text.
    ============================================ */
 
-const PARTY_KEY = 'gazette-party';
+const PARTY_KEY = ruleKey('gazette-party');
 const PARTY_MAX = 8;
-const PARTY_FIGHT_KEY = 'gazette-initiative';   // the Initiative tab's fight (toolbox-table.js INIT_KEY)
+const PARTY_FIGHT_KEY = ruleKey('gazette-initiative');   // the Initiative tab's fight (toolbox-table.js INIT_KEY)
 const PARTY_CLASSES = ['Barbarian', 'Bard', 'Cleric', 'Druid', 'Fighter', 'Monk', 'Paladin', 'Ranger', 'Rogue', 'Sorcerer', 'Warlock', 'Wizard'];
 
 function partyInt(v, lo, hi, def) {

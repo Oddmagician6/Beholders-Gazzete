@@ -7,7 +7,7 @@
    Loads after toolbox.js and toolbox-table.js (uses esc(), flash(), copyText(), armedClick()).
    ============================================ */
 
-const TABLES_KEY = 'gazette-tables';
+const TABLES_KEY = ruleKey('gazette-tables');
 const TABLES_MAX = 50;
 const TABLE_RESULTS_MAX = 20;
 

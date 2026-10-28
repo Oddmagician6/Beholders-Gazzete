@@ -36,7 +36,7 @@
    The page side lives in world-notebook.js. Needs rng.js (paramsQuery) on the page.
    ============================================ */
 
-const NB_KEY = 'gazette_notebook';
+const NB_KEY = ruleKey('gazette_notebook');
 const NB_KINDS = {
     calendar: { icon: '📅', label: 'Calendar' },
     pantheon: { icon: '⛪', label: 'Pantheon' },
@@ -204,19 +204,21 @@ function nbClean(raw) {
     return { nb, dropped };
 }
 
-function nbLoad() {
+// key: another system's notebook (the backup page restores the Pathfinder one too).
+function nbLoad(key = NB_KEY) {
     try {
-        const raw = localStorage.getItem(NB_KEY);
+        const raw = localStorage.getItem(key);
         return raw ? nbClean(JSON.parse(raw)).nb : nbEmpty();
     } catch (e) {
         return nbEmpty();
     }
 }
 
-// Store the notebook. quiet: skip the listeners (a note being typed). Returns false if storage failed.
-function nbStore(nb, quiet = false) {
+// Store the notebook. quiet: skip the listeners (a note being typed). key: as nbLoad.
+// Returns false if storage failed.
+function nbStore(nb, quiet = false, key = NB_KEY) {
     try {
-        localStorage.setItem(NB_KEY, JSON.stringify(nb));
+        localStorage.setItem(key, JSON.stringify(nb));
     } catch (e) {
         return false;
     }

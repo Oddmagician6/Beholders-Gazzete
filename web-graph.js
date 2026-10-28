@@ -15,7 +15,7 @@
    The page side is world-web.js. Needs rng.js (mulberry32, hashString).
    ============================================ */
 
-const WEB_KEY = 'gazette-web';
+const WEB_KEY = ruleKey('gazette-web');
 const WEB_GAP = 125;   // the distance entries settle at
 const WEB_LIMITS = { nodes: 500, coord: 100000 };
 const WEB_EDGE_TYPES = {

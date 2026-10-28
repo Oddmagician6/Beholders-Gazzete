@@ -155,7 +155,7 @@ function famTreeHTML(fam) {
 }
 
 function famRaceLabel(race) {
-    return `${NPC_PORTRAITS[race] || '👤'} ${famCapital(race)}`;
+    return `${NPC_PORTRAITS[race] || '👤'} ${famCapital(ruleWord('race', race))}`;
 }
 
 function famOptionsHTML(map, value) {
@@ -203,7 +203,7 @@ function famPersonHTML(nb, fam, e) {
             ${f('name', 'Name', p.name, ` maxlength="${FAM_LIMITS.name}"`)}
             ${f('title', 'Title', p.title, ` maxlength="${FAM_LIMITS.title}" placeholder="Heir, Knight, the black sheep"`)}
             <label>Gender <select class="fam-f" data-f="gender">${famOptionsHTML(FAM_GENDERS, p.gender)}</select></label>
-            <label>Race <select class="fam-f" data-f="race">${famOptionsHTML(Object.fromEntries(FAM_RACES.map(r => [r, famRaceLabel(r)])), p.race)}</select></label>
+            <label>${ruleText('{alt:Race|Ancestry}')} <select class="fam-f" data-f="race">${famOptionsHTML(Object.fromEntries(FAM_RACES.map(r => [r, famRaceLabel(r)])), p.race)}</select></label>
             ${f('age', p.dead ? 'Age at death' : 'Age', String(p.age), ' inputmode="numeric" maxlength="4"')}
             <label class="fam-check"><input type="checkbox" class="fam-f" data-f="dead"${p.dead ? ' checked' : ''}> ✝ Dead</label>
             ${p.dead ? `${f('ago', 'Years ago', String(p.ago), ' inputmode="numeric" maxlength="4"')}${f('cause', 'How they died', p.cause, ` maxlength="${FAM_LIMITS.cause}" placeholder="of a fever"`)}` : ''}
@@ -390,7 +390,7 @@ function famSaveNpc() {
     const { fam } = famNow();
     const p = fam && famPerson(fam, famState.sel);
     if (!p || !p.npc) return;
-    const r = nbAdd({ kind: 'npc', title: p.name, sub: `${famCapital(p.race)}${p.title ? ', ' + p.title : ''}, of ${fam.name}`, href: 'npc-generator?' + p.npc });
+    const r = nbAdd({ kind: 'npc', title: p.name, sub: `${famCapital(ruleWord('race', p.race))}${p.title ? ', ' + p.title : ''}, of ${fam.name}`, href: 'npc-generator?' + p.npc });
     if (!r || r.full) { flash('fam-status', r ? '⚠️ The notebook is full. Remove an entry first.' : "⚠️ This browser won't keep a notebook (storage is full or off)."); return; }
     if (famEdit(f => { const q = famPerson(f, p.id); if (!q) return false; q.to = r.entry.id; }))
         flash('fam-status', `📓 ${p.name} is ${r.existed ? 'already' : 'now'} in the notebook, linked to this family.`);

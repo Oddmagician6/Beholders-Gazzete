@@ -360,6 +360,8 @@ const PAN_DOMAINS = {
         omens: ['A raven on the roof means a death in the house within the month.', 'A candle that burns blue means the dead are near.', 'Hearing your name called from an empty room means you have a year left. Probably.']
     }
 };
+// Another system's names for the domains (Life is Healing in Pathfinder); 5e keeps these.
+Object.values(PAN_DOMAINS).forEach(d => { d.label = ruleWord('domain', d.label); });
 
 const PAN_DOMAIN_KEYS = Object.keys(PAN_DOMAINS);
 
@@ -881,6 +883,11 @@ function panNameGods(gods, style) {
 // ── Shape: who rules, who is whose ───────────────────────
 function panGood(a) { return /G$/.test(a); }
 function panEvil(a) { return /E$/.test(a); }
+
+// Without alignments (the Pathfinder Remaster), a god's good or evil shows as holy or unholy.
+function panAlignShort(a) {
+    return ruleHasAlignment() ? a : panGood(a) ? 'Holy' : panEvil(a) ? 'Unholy' : '';
+}
 function panLawful(a) { return /^L/.test(a); }
 function panChaotic(a) { return /^C/.test(a); }
 
@@ -1204,13 +1211,13 @@ function panGodLines(p, i, cal) {
     const lines = [
         ['Rules over', `${formWord} of ${panList(g.portfolio)}`],
         ['Domain', panDomainText(g)],
-        ['Alignment', PAN_ALIGN_LABELS[g.alignment]],
+        ruleHasAlignment() ? ['Alignment', PAN_ALIGN_LABELS[g.alignment]] : ['Sanctification', panAlignShort(g.alignment) || 'None'],
         ['Place', g.role + (g.rel ? `. ${g.rel}` : '') + '.'],
         ['Holy symbol', panCap(panSymbolText(g))],
         ['Shown as', panCap(panDepiction(g))],
         ['Holy day', `${panCap(g.holyName)}, ${when}. ${g.rite}`],
-        ['The faithful must', g.must.join(' ')],
-        ['The faithful must not', g.mustnt.join(' ')],
+        [ruleText('{alt:The faithful must|Edicts}'), g.must.join(' ')],
+        [ruleText('{alt:The faithful must not|Anathema}'), g.mustnt.join(' ')],
         ['Temple', panCap(g.temple) + '.'],
         ['Priests', `Called ${g.priests}; they wear ${g.vestments}. Offerings: ${g.offering}.`],
         ['Worshipped by', panCap(g.followers) + '.'],

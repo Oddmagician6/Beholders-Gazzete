@@ -715,7 +715,7 @@ function townList(items) {
 
 function townFolkText(t) {
     const [main, ...rest] = t.folk;
-    const name = r => TOWN_RACE_PLURALS[r] || r;
+    const name = r => ruleWord('race', TOWN_RACE_PLURALS[r] || r);
     return `Mostly ${name(main[0])} (${main[1]}%)` + (rest.length ? `, with ${townList(rest.map(([r, p]) => `${name(r)} (${p}%)`))}` : '') + '.';
 }
 

@@ -76,7 +76,7 @@ function panRosterHTML(p) {
         return `<button type="button" class="pan-god${i === panState.god ? ' on' : ''}" data-god="${i}" aria-pressed="${i === panState.god}">
             <span class="pan-god-icon wb-emblem" style="--emblem:url('img/symbol/${g.domain}.webp')" aria-hidden="true"></span>
             <span class="pan-god-name">${esc(panCap(g.name))}</span>
-            <span class="pan-god-sub">${esc(d.label)} · ${esc(g.alignment)}${i === p.leader && p.shape !== 'many' ? ' · 👑' : ''}</span>
+            <span class="pan-god-sub">${esc(d.label)}${panAlignShort(g.alignment) ? ' · ' + esc(panAlignShort(g.alignment)) : ''}${i === p.leader && p.shape !== 'many' ? ' · 👑' : ''}</span>
             <span class="pan-god-role">${esc(g.role)}</span>
         </button>`;
     }).join('')}</div>`;

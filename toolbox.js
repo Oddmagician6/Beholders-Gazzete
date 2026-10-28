@@ -23,7 +23,7 @@
 const TOOLBOX_TABS = ['names', 'tavern', 'quest', 'travel', 'dice', 'init', 'split', 'enc', 'down', 'clocks', 'party', 'tables'];
 // Tabs whose state is all in localStorage (nothing in the URL beyond ?tab=, except a shared table's ?t=).
 const TOOLBOX_STORED_TABS = ['dice', 'init', 'clocks', 'party', 'tables'];
-const KEPT_KEY = 'gazette-kept-names';
+const KEPT_KEY = ruleKey('gazette-kept-names');
 const KEPT_MAX = 100;
 
 let names = { seed: null, list: [] };
@@ -49,7 +49,7 @@ function copyText(text, statusId, what) {
 // ── Tabs ──────────────────────────────────────────────────
 function currentTab() {
     const t = urlParams().get('tab') || tabOfPage();
-    return TOOLBOX_TABS.includes(t) ? t : TOOLBOX_TABS[0];
+    return TOOLBOX_TABS.includes(t) && tabOnPage(t) ? t : TOOLBOX_TABS[0];
 }
 
 function showTab(tab) {

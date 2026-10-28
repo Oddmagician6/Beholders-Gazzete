@@ -147,7 +147,7 @@ function dsSaveClocks(list) {
 
 // The Toolbox's tables ('gazette-tables'), each with its id.
 function dsTables() {
-    const saved = dsReadJson('gazette-tables');
+    const saved = dsReadJson(ruleKey('gazette-tables'));
     if (!Array.isArray(saved)) return [];
     return saved.map(t => {
         const c = tableClean(t);

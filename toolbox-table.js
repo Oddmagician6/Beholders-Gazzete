@@ -19,8 +19,8 @@
    Loads after toolbox.js (uses its esc() and flash()).
    ============================================ */
 
-const INIT_KEY = 'gazette-initiative';
-const INIT_FOLLOW_KEY = 'gazette-init-follow';
+const INIT_KEY = ruleKey('gazette-initiative');
+const INIT_FOLLOW_KEY = ruleKey('gazette-init-follow');
 const INIT_MAX = 40;
 // The SRD 5.1 conditions, from rules-data.js (the Rules page uses the same list).
 const SRD_CONDITIONS = Object.keys(SRD_CONDITION_TEXT);

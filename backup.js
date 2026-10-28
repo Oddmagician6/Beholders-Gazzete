@@ -242,6 +242,15 @@ const BACKUP_KEYS = [
     }
 ];
 
+// The Pathfinder pages (ROADMAP L3) keep their own saves under these keys plus "-pf2e" (ruleKey);
+// each gets the same row as its D&D key. Their map pictures aren't in backups yet.
+const BK_PF2E = { 'gazette_notebook': 'pathfinder-campaign-notebook', 'gazette-web': 'pathfinder-npc-relationship-web',
+    'gazette-kept-names': 'pathfinder-tavern-name-generator',
+    'gazette-clocks': 'pathfinder-progress-clocks', 'gazette-tables': 'pathfinder-random-table-roller' };
+BACKUP_KEYS.push(...BACKUP_KEYS.filter(k => Object.hasOwn(BK_PF2E, k.key)).map(k => ({
+    ...k, key: k.key + '-pf2e', tool: '🗡️ Pathfinder Toolkit', href: BK_PF2E[k.key], pf2e: true
+})));
+
 // The map pictures row (not a localStorage key: they're in IndexedDB).
 const BK_MAPS = {
     key: 'maps', maps: true, tool: '🗺️ Worldbuilder', href: 'worldbuilder?tab=maps', what: 'Map pictures',
@@ -379,9 +388,10 @@ async function bkRestore(rows) {
                 pics = await bkRestoreMaps(r.value, ids);
                 if (!pics.put) throw new Error('none stored');
             } else if (r.k.merge) {
-                const nb = nbLoad();
-                ids = nbMerge(nb, r.value).ids;
-                if (!nbStore(nb)) throw new Error('storage');
+                const nb = nbLoad(r.k.key);
+                const merged = nbMerge(nb, r.value).ids;
+                if (!r.k.pf2e) ids = merged;   // the map pictures are the D&D notebook's
+                if (!nbStore(nb, false, r.k.key)) throw new Error('storage');
             } else {
                 localStorage.setItem(r.k.key, r.k.raw ? r.value : JSON.stringify(r.value));
             }

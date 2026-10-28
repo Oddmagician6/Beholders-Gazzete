@@ -15,7 +15,7 @@
      mapFileEntry(nb, rec)    a notebook entry for an image that has none (needs notebook.js)
    ============================================ */
 
-const MAP_DB = 'gazette-maps';
+const MAP_DB = ruleKey('gazette-maps');
 const MAP_STORE = 'images';
 // bytes: one file; side, pixels: one picture; maps: in the notebook; backup: the pictures one backup file holds.
 const MAP_LIMITS = { bytes: 25 * 1024 * 1024, side: 16384, pixels: 100000000, maps: 30, backup: 140 * 1024 * 1024 };

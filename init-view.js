@@ -10,7 +10,7 @@
    Needs no other script, so the DM screen (F57) can load it too.
    ============================================ */
 
-const INIT_VIEW_KEY = 'gazette-initiative';
+const INIT_VIEW_KEY = ruleKey('gazette-initiative');
 const INIT_VIEW_CHANNEL = 'gazette-initiative';
 
 function initViewEsc(s) {

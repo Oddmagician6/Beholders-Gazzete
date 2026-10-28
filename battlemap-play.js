@@ -15,8 +15,8 @@
 
 const BP_CHANNEL = 'gazette-battlemap-view';
 const BP_OPTS_KEY = 'gazette-battlemap-play';
-const BP_FIGHT_KEY = 'gazette-initiative';   // toolbox-table.js INIT_KEY
-const BP_PARTY_KEY = 'gazette-party';        // party.js PARTY_KEY
+const BP_FIGHT_KEY = ruleKey('gazette-initiative');   // toolbox-table.js INIT_KEY
+const BP_PARTY_KEY = ruleKey('gazette-party');      // party.js PARTY_KEY
 
 // names: names under the tokens; labels: room labels on the players' map; hp: monsters' health on
 // the players' map ('hide', or 'words': bloodied and down); show: the players' map frames what

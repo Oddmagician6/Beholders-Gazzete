@@ -1218,7 +1218,7 @@ function facSymbolText(f, ctx) {
 
 function facPersonLine(p) {
     const n = p.npc;
-    return `${n.name}, ${n.race} ${n.profession.toLowerCase()}, aged ${parseInt(n.age, 10)}`;
+    return `${n.name}, ${ruleWord('race', n.race)} ${ruleWord('class', n.profession).toLowerCase()}, aged ${parseInt(n.age, 10)}`;
 }
 
 // The faction's facts as [label, text] pairs (the page, Copy, and print all use these).

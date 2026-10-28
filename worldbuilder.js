@@ -102,7 +102,7 @@ function copyText(text, statusId, what) {
 // ── Tabs ──────────────────────────────────────────────────
 function currentWorldTab() {
     const t = urlParams().get('tab') || tabOfPage();
-    return WORLD_TAB_ORDER.includes(t) ? t : WORLD_TAB_ORDER[0];
+    return WORLD_TAB_ORDER.includes(t) && tabOnPage(t) ? t : WORLD_TAB_ORDER[0];
 }
 
 let worldShown = null;   // the tab on screen, which may still be loading

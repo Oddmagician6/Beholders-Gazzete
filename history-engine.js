@@ -726,7 +726,7 @@ function hisAgeLines(h, i, ctx) {
     const lines = [
         ['When', hisCap(hisWhen(age)) + (age.ongoing ? ' (this age is still going on)' : '') + '.'],
         ['What happened', `${age.began} ${g(age.text)}`],
-        ['Who mattered', `${age.figure.name}, ${age.figure.race}, ${age.figure.role}.`],
+        ['Who mattered', `${age.figure.name}, ${ruleWord('race', age.figure.race)}, ${age.figure.role}.`],
         ['Faith', g(age.faith)]
     ];
     if (age.realmAfter) lines.push(['Who ruled after', hisCap(age.realmAfter) + '.']);

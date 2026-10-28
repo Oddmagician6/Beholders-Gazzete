@@ -28,5 +28,14 @@ RULE_SYSTEMS.pf2e = {
     skill: (abil, skill, other) => ruleTitle(other || PF2E_SKILL_SWAP[skill] || skill),
     save: (abil, other) => other ? ruleTitle(other) : PF2E_SAVES[abil],
     ability: (abil, other) => ruleTitle(other || PF2E_ABILITY_CHECK[abil]),
-    alt: (five, other) => other
+    alt: (five, other) => other,
+    // The Remaster dropped alignment; gods keep edicts and anathema instead.
+    alignment: false,
+    // People keep their 5e keys (names and ages are rolled by them); this is what they're called.
+    words: {
+        race: { tiefling: 'nephilim', tieflings: 'nephilim', dragonborn: 'dragonblood' },
+        class: { paladin: 'champion', warlock: 'witch', artificer: 'inventor' },
+        // The pantheon's domains, as Pathfinder's cleric domains
+        domain: { life: 'healing', light: 'sun', tempest: 'air', war: 'might' }
+    }
 };

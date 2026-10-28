@@ -42,7 +42,7 @@ async function keepAwake() {
     } catch (e) {}
 }
 
-const SV_KEYS = [DS_KEY, CLOCKS_KEY, 'gazette-tables', PARTY_KEY, INIT_VIEW_KEY, NB_KEY];
+const SV_KEYS = [DS_KEY, CLOCKS_KEY, ruleKey('gazette-tables'), PARTY_KEY, INIT_VIEW_KEY, NB_KEY];
 
 document.addEventListener('DOMContentLoaded', () => {
     renderScreenView();

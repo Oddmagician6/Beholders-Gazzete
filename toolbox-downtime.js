@@ -10,7 +10,7 @@
    With nothing saved and no party in the URL, the characters are the Party tab's (party.js).
    ============================================ */
 
-const DOWNTIME_KEY = 'gazette-downtime';
+const DOWNTIME_KEY = ruleKey('gazette-downtime');
 const DOWNTIME_MAX_CHARS = 8;
 const DT_VALUE_MAX = 1000000;
 

@@ -8,7 +8,7 @@
    The DM screen loads it too, without the tab: the tab's setup skips a page without #clk-list.
    ============================================ */
 
-const CLOCKS_KEY = 'gazette-clocks';
+const CLOCKS_KEY = ruleKey('gazette-clocks');
 const CLOCKS_MAX = 30;
 const CLOCK_SIZES = [4, 6, 8, 12];
 

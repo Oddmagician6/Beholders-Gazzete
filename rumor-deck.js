@@ -7,7 +7,7 @@
    If rumors.json changes size, every deck starts fresh. Shuffles use rand() (rng.js).
    ============================================ */
 
-const RUMOR_DECK_KEY = 'gazette-rumor-deck';
+const RUMOR_DECK_KEY = ruleKey('gazette-rumor-deck');
 
 function loadRumorDecks(baseCount) {
     try {
