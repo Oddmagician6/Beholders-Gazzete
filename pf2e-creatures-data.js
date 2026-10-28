@@ -810,10 +810,10 @@ const PF2E_CREATURES = [
   ["greater-herexen", "Greater Herexen", 8, "M", "u", ["undead", "unholy"], 26, 135, 13, 16, 19, 16, "MC", "dungeon"],
   ["guildmaster", "Guildmaster", 8, "M", "c", ["human", "humanoid"], 26, 135, 14, 14, 17, 16, "NC", "town"],
   ["hadrinnex", "Hadrinnex", 8, "L", "u", ["aberration"], 27, 118, 18, 14, 17, 17, "MC2", "underdark"],
-  ["hellknight-cavalry-brigade", "Hellknight Cavalry Brigade", 8, "G", "c", ["animal", "human", "humanoid", "troop"], 27, 135, 18, 13, 16, 16, "NC", "grassland town"],
   ["hobgoblin-vanguard", "Hobgoblin Vanguard", 8, "M", "c", ["hobgoblin", "humanoid"], 27, 150, 19, 13, 16, 16, "NC", "hills"],
   ["horned-dragon-young", "Horned Dragon (Young)", 8, "L", "c", ["amphibious", "dragon", "primal"], 28, 135, 16, 16, 17, 16, "MC", "forest swamp"],
   ["horned-dragon-young-spellcaster", "Horned Dragon (Young, Spellcaster)", 8, "L", "c", ["amphibious", "dragon", "primal"], 28, 135, 16, 16, 17, 16, "MC", "forest swamp"],
+  ["infernal-knight-cavalry-brigade", "Infernal Knight Cavalry Brigade", 8, "G", "c", ["animal", "human", "humanoid", "troop"], 27, 135, 18, 13, 16, 16, "NC", "grassland town"],
   ["jah-tohl", "Jah-Tohl", 8, "L", "u", ["aberration"], 26, 140, 15, 13, 18, 18, "MC", "underdark"],
   ["krooth", "Krooth", 8, "L", "c", ["amphibious", "animal"], 26, 150, 20, 17, 14, 16, "MC", "swamp coast"],
   ["lamia-matriarch", "Lamia Matriarch", 8, "L", "c", ["beast", "humanoid"], 27, 135, 13, 18, 17, 15, "MC", "desert"],
@@ -1208,11 +1208,8 @@ const PF2E_CREATURES = [
   ["ravener", "Ravener", 21, "G", "r", ["dragon", "fire", "primal", "undead", "unholy"], 47, 500, 38, 34, 37, 37, "MC2", "mountain dungeon"],
   ["tor-linnorm", "Tor Linnorm", 21, "G", "u", ["dragon", "fire"], 47, 440, 38, 35, 33, 37, "MC", "hills mountain"],
   ["thanatotic-titan", "Thanatotic Titan", 22, "G", "r", ["humanoid", "titan"], 46, 540, 37, 34, 35, 36, "MC2", "mountain dungeon"],
-  ["volnagur", "Volnagur", 22, "G", "q", ["beast"], 48, 515, 39, 36, 33, 39, "MC2", "underdark"],
   ["danava-titan", "Danava Titan", 23, "G", "r", ["humanoid", "titan", "water"], 49, 470, 41, 37, 37, 41, "MC2", "sea"],
   ["green-man", "Green Man", 24, "M", "r", ["leshy", "plant"], 51, 525, 43, 39, 42, 42, "MC2", "forest"],
-  ["hekatonkheires-titan", "Hekatonkheires Titan", 24, "G", "r", ["aberration", "titan"], 52, 500, 44, 40, 37, 43, "MC2", "mountain sea"],
-  ["sorvuth-ka", "Sorvuth-Ka", 24, "G", "q", ["beast"], 52, 550, 42, 38, 36, 42, "MC2", "mountain"],
-  ["treerazer", "Treerazer", 25, "H", "q", ["amphibious", "demon", "fiend", "unholy"], 54, 550, 42, 40, 43, 46, "MC", "forest swamp"]
+  ["hekatonkheires-titan", "Hekatonkheires Titan", 24, "G", "r", ["aberration", "titan"], 52, 500, 44, 40, 37, 43, "MC2", "mountain sea"]
 ].map(([id, name, level, size, rarity, traits, ac, hp, fort, ref, will, per, book, habs]) =>
   ({ id, name, level, size, rarity, traits, ac, hp, fort, ref, will, per, book, habs: habs.split(" ") }));

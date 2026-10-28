@@ -11,7 +11,8 @@
    URL: ?tab=enc&party=4x3&party=1x5&m=goblin.4&m=bugbear.1&diff=moderate&type=&env=&band=&pack=&seed=
    (env/band: the roll pickers; pack: the group a roll landed on; seed: the scene).
    On a Pathfinder page (ENC_PF2E in encounter-engine.js) the creatures are Pathfinder's, with five
-   difficulties, Pathfinder's foe groups, no homebrew, and no stat blocks yet; Send to Initiative uses Perception.
+   difficulties, Pathfinder's foe groups, Pathfinder stat blocks (pf2e-creature-blocks.js), and no homebrew;
+   Send to Initiative uses Perception.
    ============================================ */
 
 const ENC_MAX_GROUPS = 8;
@@ -64,7 +65,7 @@ function encHbRows() {
     return ENC_PF2E ? [] : hbRows;
 }
 
-// A row's numbers: CR or level, XP, AC, HP, and (Pathfinder, which has no stat blocks here yet) saves.
+// A row's numbers: CR or level, XP, AC, HP, and (Pathfinder) saves and Perception.
 function encStats(m, each = '') {
     const fmt = n => n.toLocaleString('en-US');
     const sign = n => (n >= 0 ? '+' : '') + n;
@@ -80,11 +81,10 @@ function setupEncounterForm() {
         types.forEach(t => sel.add(new Option(typeName(t), t)));
     });
     if (ENC_PF2E) {
-        // Five difficulties; no stat blocks yet.
+        // Five difficulties.
         const diff = document.getElementById('en-diff');
         diff.innerHTML = '';
         ENC_DIFFS.forEach(k => diff.add(new Option(`${ENCOUNTER_LEVELS[k].icon} ${ENCOUNTER_LEVELS[k].label}`, k, k === 'moderate', k === 'moderate')));
-        document.getElementById('en-sb-all').style.display = 'none';
         document.querySelector('#en-band option[value="none"]').text = 'Mixed: any creatures, no group';
     } else document.getElementById('en-type').add(new Option('🐲 Homebrew', 'homebrew'), 1);
     const env = document.getElementById('en-env');
@@ -170,7 +170,7 @@ function renderEncounter() {
     box.innerHTML = enc.list.map((e, i) => `
         <li data-i="${i}">
             <div class="en-row-main">
-                ${ENC_PF2E ? `<span class="en-name">${esc(e.m.name)}</span>` : `<button type="button" class="sb-toggle" aria-expanded="${enc.open.has(e.m.id)}" title="Show or hide the stat block"><span class="en-name sb-name">${esc(e.m.name)}</span> <span class="sb-hint" aria-hidden="true">📜</span></button>`}
+                <button type="button" class="sb-toggle" aria-expanded="${enc.open.has(e.m.id)}" title="Show or hide the stat block"><span class="en-name sb-name">${esc(e.m.name)}</span> <span class="sb-hint" aria-hidden="true">📜</span></button>
                 <span class="en-meta">${encStats(e.m, ' each')}${ENC_PF2E ? '' : ` · Init ${e.m.dex >= 0 ? '+' : ''}${e.m.dex}`}</span>
             </div>
             <div class="en-count">
@@ -428,7 +428,7 @@ function setupEncounter() {
     document.getElementById('en-roll').addEventListener('click', rollEncounterFor);
     document.getElementById('en-send').addEventListener('click', sendToInitiative);
     // Copy adds the stat blocks, loading them first if none has been opened yet.
-    document.getElementById('en-copy').addEventListener('click', () => (ENC_PF2E ? Promise.resolve() : loadMonsterBlocks().catch(() => {}))
+    document.getElementById('en-copy').addEventListener('click', () => loadMonsterBlocks().catch(() => {})
         .then(() => copyText(encounterText(), 'enc-status', blocksReady() ? 'the encounter and its stat blocks' : 'the encounter')));
     document.getElementById('en-sb-all').addEventListener('click', toggleAllBlocks);
     document.getElementById('en-link').addEventListener('click', () =>

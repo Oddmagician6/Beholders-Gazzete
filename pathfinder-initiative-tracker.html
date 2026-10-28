@@ -297,6 +297,12 @@
     .sb-box .sb-spell { background: none; border: none; border-bottom: 1px dotted var(--gold-dim); padding: 0; color: var(--gold-bright); font: inherit; font-style: italic; cursor: pointer; }
     .sb-box .sb-spell:hover, .sb-box .sb-spell:focus-visible, .sb-box .sb-spell[aria-expanded="true"] { color: var(--text-bright); border-bottom-style: solid; outline: none; }
     .sb-box .sb-note { font-size: 0.85rem; color: var(--text-dim); margin: 0; }
+    /* Pathfinder blocks (sbPf2eHtml): trait chips, action icons, universal ability summaries */
+    .sb-box .sb-traits { display: inline-flex; flex-wrap: wrap; gap: 4px; margin-left: 6px; vertical-align: middle; font-style: normal; }
+    .sb-box .sb-traits span { font-family: var(--font-ui); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-bright); border: 1px solid var(--gold-dim); border-radius: 3px; padding: 1px 6px; }
+    .sb-box .sb-act { color: var(--gold-bright); font-size: 0.8em; letter-spacing: -0.08em; }
+    .sb-box .sb-gloss { display: block; font-size: 0.86rem; font-style: italic; color: var(--text-dim); }
+    .sb-box .sb-props + .sb-props { margin-top: 6px; }
     .sb-box .sb-spell-detail { background: rgba(0,0,0,0.3); border: 1px solid var(--gold-dim); border-left: 3px solid var(--gold-mid); border-radius: 6px; padding: 12px 14px; margin: 8px 0; font-size: 0.88rem; line-height: 1.55; color: var(--text-mid); }
     .sb-box .sb-spell-detail[hidden] { display: none; }
     .sb-box .sb-spell-detail h5 { font-family: var(--font-head); font-size: 1rem; color: var(--gold-bright); margin: 0 0 2px; }
@@ -916,7 +922,7 @@ Or with die ranges:
     <section class="tool-panel" id="tab-enc" role="tabpanel" hidden>
       <div class="tool-card">
         <h2 class="tool-h">👹 Encounter Builder</h2>
-        <p class="tool-intro">Set up the party, add creatures, and see how hard the fight is, from Trivial to Extreme. Or let the dice pick a fight that fits. When it looks right, send it to the Initiative tab.</p>
+        <p class="tool-intro">Set up the party, add creatures, and see how hard the fight is, from Trivial to Extreme. Or let the dice pick a fight that fits. Click a creature's name for its full stat block. When it looks right, send it to the Initiative tab.</p>
 
         <h3 class="en-h">👥 The party</h3>
         <div id="en-party-chip"></div>
@@ -970,13 +976,13 @@ Or with die ranges:
         <ul class="en-results" id="en-results"></ul>
         <p class="en-results-note" id="en-results-note"></p>
       </div>
-      <p class="tool-note">Difficulty uses the encounter budget from Pathfinder GM Core: Trivial 40, Low 60, Moderate 80, Severe 120, and Extreme 160 XP for four characters, adjusted by 10 to 40 XP for each character more or fewer. Each creature is worth XP by its level against the party level (the party's average level, rounded). A creature more than 4 levels above the party is past the end of that table, so its XP here is the Gazette's guess. Creatures and their level, AC, HP, saves, and Perception come from Pathfinder Monster Core, Monster Core 2, and NPC Core, used under the ORC License (<a href="pathfinder-license">ORC notice</a>). The warnings under the meter are the Gazette's advice.<br>Rolled encounters stop at two creatures per character. Most rolls keep to one group of foes that belong together (goblins with their wargs, a cult with its imps), and the habitat picker keeps the leader to creatures that live there. A group only fights a party it can still challenge: a creature more than 4 levels below the party is worth no XP, so goblins drop out of the rolls once the party outgrows them. Every fight gets a scene: where it happens, what the foes are doing, who notices whom, distance, light, the ground, a leader, tactics, morale, a price to parley, and sometimes a twist. Hazard DCs follow GM Core's DCs by level; the habitats, groups, scenes, hazard damage, and parley prices are the Gazette's own. 🎲 New Scene redraws it without touching the creatures. The address bar holds the party and the creatures, so 🔗 Copy Link shares the fight. Send to Initiative rolls each creature's initiative with its Perception. Full stat blocks are still to come.</p>
+      <p class="tool-note">Difficulty uses the encounter budget from Pathfinder GM Core: Trivial 40, Low 60, Moderate 80, Severe 120, and Extreme 160 XP for four characters, adjusted by 10 to 40 XP for each character more or fewer. Each creature is worth XP by its level against the party level (the party's average level, rounded). A creature more than 4 levels above the party is past the end of that table, so its XP here is the Gazette's guess. Creatures, their numbers, and their stat blocks come from Pathfinder Monster Core, Monster Core 2, and NPC Core, used under the ORC License (<a href="pathfinder-license">ORC notice</a>). The warnings under the meter are the Gazette's advice.<br>Rolled encounters stop at two creatures per character. Most rolls keep to one group of foes that belong together (goblins with their wargs, a cult with its imps), and the habitat picker keeps the leader to creatures that live there. A group only fights a party it can still challenge: a creature more than 4 levels below the party is worth no XP, so goblins drop out of the rolls once the party outgrows them. Every fight gets a scene: where it happens, what the foes are doing, who notices whom, distance, light, the ground, a leader, tactics, morale, a price to parley, and sometimes a twist. Hazard DCs follow GM Core's DCs by level; the habitats, groups, scenes, hazard damage, and parley prices are the Gazette's own. 🎲 New Scene redraws it without touching the creatures. The address bar holds the party and the creatures, so 🔗 Copy Link shares the fight. Send to Initiative rolls each creature's initiative with its Perception. The short summaries under universal abilities such as Grab and Reactive Strike are the Gazette's own.</p>
     </section>
 
     <section class="tool-panel" id="tab-init" role="tabpanel">
       <div class="tool-card">
         <h2 class="tool-h">⚔️ Initiative Tracker</h2>
-        <p class="tool-intro">Add everyone in the fight, then step through the turns. Conditions keep their values, and frightened goes down by itself. It survives a refresh.</p>
+        <p class="tool-intro">Add everyone in the fight, then step through the turns. Click a creature's name for its stat block. Conditions keep their values, and frightened goes down by itself. It survives a refresh.</p>
         <div id="init-party"></div>
         <form class="init-add" id="init-add">
           <label class="init-name">Name <input type="text" id="ia-name" maxlength="40" placeholder="Goblin" required autocomplete="off" list="ia-monsters"></label>
@@ -988,7 +994,7 @@ Or with die ranges:
           <label>How many <input type="number" id="ia-count" value="1" min="1" max="20" step="1"></label>
           <button type="submit" class="btn btn-gold">➕ Add</button>
         </form>
-        <p class="init-hint">Leave Initiative blank to roll d20 + bonus. Several of the same creature are numbered (Goblin 1, Goblin 2…) and roll separately. A creature's name from the Encounter Builder's list fills a blank HP and AC, and a bonus left at 0 with its Perception.</p>
+        <p class="init-hint">Leave Initiative blank to roll d20 + bonus. Several of the same creature are numbered (Goblin 1, Goblin 2…) and roll separately. A creature's name from the Encounter Builder's list brings its stat block (click the name), and fills a blank HP and AC, and a bonus left at 0 with its Perception.</p>
         <div class="tool-toolbar init-bar">
           <button type="button" class="btn" id="init-prev">◀ Back</button>
           <span class="init-round" id="init-round">Round 1</span>

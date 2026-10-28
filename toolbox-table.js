@@ -34,8 +34,8 @@ const condTip = k => INIT_PF2E ? PF2E_CONDITIONS[k].text : SRD_CONDITION_TEXT[k]
 const condMax = k => INIT_PF2E ? PF2E_CONDITIONS[k].max : 0;
 const condBase = s => s.replace(/ \d+$/, '');
 const condValue = s => Number((s.match(/ (\d+)$/) || [0, 0])[1]);
-// Stat blocks open from the tracker (none for Pathfinder creatures yet).
-const INIT_BLOCKS = ruleHasStatBlocks();
+// Stat blocks open from the tracker (Pathfinder creatures' through toolbox-statblock.js's sbPf2eHtml).
+const INIT_BLOCKS = ruleHasStatBlocks() || INIT_PF2E;
 
 // A saved condition: one of the list's, with a value from 1 to its max when it takes one.
 function condOk(s) {

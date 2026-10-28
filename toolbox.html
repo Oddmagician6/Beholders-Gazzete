@@ -296,6 +296,12 @@
     .sb-box .sb-spell { background: none; border: none; border-bottom: 1px dotted var(--gold-dim); padding: 0; color: var(--gold-bright); font: inherit; font-style: italic; cursor: pointer; }
     .sb-box .sb-spell:hover, .sb-box .sb-spell:focus-visible, .sb-box .sb-spell[aria-expanded="true"] { color: var(--text-bright); border-bottom-style: solid; outline: none; }
     .sb-box .sb-note { font-size: 0.85rem; color: var(--text-dim); margin: 0; }
+    /* Pathfinder blocks (sbPf2eHtml): trait chips, action icons, universal ability summaries */
+    .sb-box .sb-traits { display: inline-flex; flex-wrap: wrap; gap: 4px; margin-left: 6px; vertical-align: middle; font-style: normal; }
+    .sb-box .sb-traits span { font-family: var(--font-ui); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-bright); border: 1px solid var(--gold-dim); border-radius: 3px; padding: 1px 6px; }
+    .sb-box .sb-act { color: var(--gold-bright); font-size: 0.8em; letter-spacing: -0.08em; }
+    .sb-box .sb-gloss { display: block; font-size: 0.86rem; font-style: italic; color: var(--text-dim); }
+    .sb-box .sb-props + .sb-props { margin-top: 6px; }
     .sb-box .sb-spell-detail { background: rgba(0,0,0,0.3); border: 1px solid var(--gold-dim); border-left: 3px solid var(--gold-mid); border-radius: 6px; padding: 12px 14px; margin: 8px 0; font-size: 0.88rem; line-height: 1.55; color: var(--text-mid); }
     .sb-box .sb-spell-detail[hidden] { display: none; }
     .sb-box .sb-spell-detail h5 { font-family: var(--font-head); font-size: 1rem; color: var(--gold-bright); margin: 0 0 2px; }
