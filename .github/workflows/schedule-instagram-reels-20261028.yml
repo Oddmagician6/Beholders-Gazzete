@@ -1,0 +1,72 @@
+name: Schedule approved Instagram Reels for October 28
+run-name: Scheduled Instagram Reel — ${{ github.event.schedule }}
+
+on:
+  schedule:
+    - cron: '0 15 28 10 *' # 10 a.m. Chicago
+    - cron: '0 18 28 10 *' # 1 p.m. Chicago
+    - cron: '0 21 28 10 *' # 4 p.m. Chicago
+    - cron: '0 0 29 10 *'  # 7 p.m. Chicago
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Select the approved Reel for this time slot
+        id: reel
+        env:
+          SCHEDULE_CRON: ${{ github.event.schedule }}
+        run: |
+          set -euo pipefail
+          case "$SCHEDULE_CRON" in
+            '0 15 28 10 *')
+              article_id='owlbear-cubs-undermaw-chapter-9-visitors'
+              release_tag='reel-stage-owlbear-cubs-undermaw-chapter-9-visitors-ig-20261028'
+              hashtags='#Owlbear #Undermaw #Chapter9 #CreatureFeatures'
+              ;;
+            '0 18 28 10 *')
+              article_id='bridge-troll-toll-hike-quillmarch-parley'
+              release_tag='reel-stage-bridge-troll-toll-hike-quillmarch-parley-ig-20261028'
+              hashtags='#BridgeTroll #Quillmarch #FantasyPolitics #TTRPG'
+              ;;
+            '0 21 28 10 *')
+              article_id='autocorrect-wand-fireball-fire-ball-pit-review'
+              release_tag='reel-stage-autocorrect-wand-fireball-fire-ball-pit-review-ig-20261028'
+              hashtags='#MagicWand #Fireball #FantasyTech #WizardProblems'
+              ;;
+            '0 0 29 10 *')
+              article_id='bag-of-holding-recall-3000-pettibone-vail'
+              release_tag='reel-stage-bag-of-holding-recall-3000-pettibone-vail-ig-20261028'
+              hashtags='#BagOfHolding #PettiboneAndVail #FantasyRecall #Adventurers'
+              ;;
+            *)
+              echo "Unexpected schedule: $SCHEDULE_CRON" >&2
+              exit 1
+              ;;
+          esac
+          echo "article_id=$article_id" >> "$GITHUB_OUTPUT"
+          echo "release_tag=$release_tag" >> "$GITHUB_OUTPUT"
+          echo "hashtags=$hashtags" >> "$GITHUB_OUTPUT"
+
+      - name: Publish Instagram Reel
+        env:
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+          ARTICLE_ID: ${{ steps.reel.outputs.article_id }}
+          VIDEO_URL: https://github.com/${{ github.repository }}/releases/download/${{ steps.reel.outputs.release_tag }}/render.mp4
+          HASHTAGS: ${{ steps.reel.outputs.hashtags }}
+          SHARE_TO_FEED: 'true'
+        run: python3 .github/scripts/publish_instagram_reel.py
+
+      - name: Remove temporary public staging release
+        if: ${{ success() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.reel.outputs.release_tag }}
+        run: gh release delete "$RELEASE_TAG" --cleanup-tag --yes
