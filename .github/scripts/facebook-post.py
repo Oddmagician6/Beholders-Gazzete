@@ -173,6 +173,14 @@ def main():
         # The repository secret contains a User Access Token; resolve the
         # Page token needed for Page feed and scheduled-post operations.
         token = get_page_context(page, token)["access_token"]
+    elif page and token:
+        # Dry run with secrets: check the token with read-only calls, post nothing.
+        ctx = get_page_context(page, token)
+        print(f"token ok: Page token resolved for {ctx['name']}; "
+              f"Instagram {'linked' if ctx['instagram_business_account'] else 'NOT linked'}")
+        queued = scheduled(page, ctx["access_token"])
+        if queued is not None:
+            print(f"scheduled posts readable: {len(queued)} queued")
 
     # Time the posts once the first article is live: Facebook refuses a time under 10 minutes away,
     # and a slow deploy would eat the first post's lead.
