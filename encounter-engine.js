@@ -314,39 +314,103 @@ if (ENC_PF2E) ENC_HABITAT_KEYS.forEach(h => (ENC_HABITATS[h].monsters = PF2E_CRE
 const ENC_MONSTER_HABITATS = {};
 ENC_HABITAT_KEYS.forEach(h => ENC_HABITATS[h].monsters.split(" ").forEach(id => (ENC_MONSTER_HABITATS[id] = ENC_MONSTER_HABITATS[id] || []).push(h)));
 
+// Pathfinder's members for each group (same keys; a group with no entry, like the drow, isn't on
+// Pathfinder pages). The dragon group takes every true dragon at its three ages.
+const ENC_PF2E_BANDS = {
+    goblins: ["big-boss-goblin goblin-war-chanter goblin-commando goblin-pyro bugbear-tormentor bugbear-prowler goblin-get-gang", "goblin-warrior goblin-commando goblin-pyro goblin-dog goblin-snake goblin-chef goblin-scavenger gobmob-snake wolf warg giant-rat"],
+    hobgoblins: ["hobgoblin-general hobgoblin-vanguard hobgoblin-battalion hobgoblin-spellbreaker hobgoblin-archer bugbear-tormentor", "hobgoblin-soldier hobgoblin-archer goblin-warrior warg wolf"],
+    orcs: ["orc-veteran-master orc-skullcrushers orc-commander ogre-boss ogre-warrior orc-veteran", "orc-scrapper orc-veteran warg dire-wolf"],
+    gnolls: ["kholo-outrider kholo-sergeant kholo-bonekeeper kholo-hunter", "kholo-hunter kholo-pragmatist hyena hyaenodon"],
+    kobolds: ["kobold-cavern-mage kobold-trapper kobold-egg-guardian kobold-earth-diver kobold-scout", "kobold-warrior kobold-scout giant-centipede flash-beetle giant-rat"],
+    bandits: ["crime-kingpin gang-leader bandit-gang mercenary-band bounty-hunter legbreaker ruffian", "bandit ruffian poacher archer-sentry guard-dog"],
+    pirates: ["ship-captain bosun pirate", "pirate rigger navigator dockhand"],
+    cult: ["cult-leader rancorous-priesthood demonologist fiend-caller blasphemer-of-pain false-priest", "cultist zealot-of-tyranny deluded-mob imp pusk"],
+    watch: ["captain-of-the-guard watch-officer knight equestrian-constable gendarme", "guard city-guard-squadron archer-sentry palace-guard arrester-squadron guard-dog"],
+    nobles: ["veteran-noble noble knight watchmage advisor", "bodyguard palace-guard knight guard-dog spy"],
+    shadows: ["assassin mastermind master-of-disguise spy", "ruffian spy burglar legbreaker guard-dog"],
+    lies: ["raja-krodha succubus mountain-oni master-of-disguise vishkanya-infiltrator coil-spy", "spy ruffian cultist noble guard"],
+    pits: ["peerless-duelist black-belt mixed-martial-artist tournament-combatant", "ruffian martial-student lion gorilla grizzly-bear guard-dog"],
+    clans: ["spirit-priest pack-leader beast-tamer hunter tracker centaur-herbalist", "tracker forager archer-sentry wolf riding-dog riding-horse"],
+    druids: ["dedicated-druid druid-initiate arboreal-regent arboreal-warden awakened-tree", "leaf-leshy gourd-leshy fungus-leshy wolf grizzly-bear giant-badger wasp-swarm giant-eagle moose boar"],
+    undead: ["graveknight-captain skeletal-hulk zombie-hulk skeletal-giant wight draugr skeletal-champion zombie-brute", "skeleton-guard zombie-shambler plague-zombie ghoul-soldier ghoul-stalker wolf-skeleton skeletal-horse"],
+    haunt: ["banshee war-wraith ghost-mage wraith hungry-ghost poltergeist ghost-commoner will-o-wisp", "shadow will-o-wisp ghost-commoner"],
+    vampire: ["nosferatu-overlord nosferatu-malefactor vampire-mastermind vampire-count vampire-servitor", "vampire-servitor nosferatu-thrall vampire-bat-swarm rat-swarm wolf dire-wolf giant-bat"],
+    tomb: ["mummy-pharaoh mummy-guardian sphinx maftet-guardian", "mummy-guardian skeleton-guard scorpion-swarm giant-scorpion gargoyle"],
+    necromancer: ["lich ghost-mage bone-prophet necromancer", "skeleton-guard zombie-shambler ghoul-soldier zombie-brute wight skeletal-champion zombie-hulk"],
+    weres: ["werebear weretiger werewolf", "wolf dire-wolf boar tiger grizzly-bear"],
+    wererats: ["wererat", "giant-rat rat-swarm ruffian"],
+    wolves: ["witchwarg warg dire-wolf wolf", "wolf dire-wolf warg"],
+    hunters: ["smilodon cave-bear grizzly-bear tiger lion leopard giant-anaconda python deinosuchus megalania crocodile", "lion leopard boar gorilla python"],
+    spiders: ["goliath-spider ogre-spider giant-tarantula ether-spider hunting-spider", "hunting-spider spider-swarm giant-tarantula"],
+    vermin: ["ankhrav-hive-mother deadly-mantis giant-mantis ankhrav giant-scorpion giant-wasp giant-stag-beetle", "giant-centipede flash-beetle centipede-swarm wasp-swarm army-ant-swarm giant-ant cockroach-swarm"],
+    lurkers: ["carnivorous-blob verdurous-ooze tomb-jelly mimic giant-amoeba", "gutter-ooze sewer-ooze amoeba-swarm slime-mold"],
+    workshop: ["golem clay-effigy clockwork-mage stalker-automaton clockwork-soldier watchmage mage-for-hire gargoyle", "animated-armor animated-statue animated-broom homunculus clockwork-spy gargoyle"],
+    duergar: ["hryngar-taskmaster hryngar-bombardier", "hryngar-sharpshooter hryngar-bombardier giant-monitor-lizard"],
+    grimlocks: ["caligni-caller caligni-vanguard caligni-hunter caligni-skulker", "caligni-dancer caligni-skulker giant-bat vampire-bat-swarm"],
+    lizardfolk: ["lizardfolk-stargazer lizardfolk-defender lizardfolk-scout", "lizardfolk-scout lizardfolk-defender crocodile giant-frog giant-monitor-lizard"],
+    sahuagin: ["sedacthy-speaker sedacthy-marauder", "sedacthy-scout brine-shark great-white-shark"],
+    deep: ["kraken dragon-turtle sea-serpent megalodon tylosaurus elasmosaurus giant-octopus orca great-white-shark giant-moray-eel", "brine-shark giant-crab reefclaw electric-eel giant-hippocampus"],
+    hags: ["moon-hag cuckoo-hag blood-hag winter-hag iron-hag storm-hag sweet-hag sea-hag", "will-o-wisp ogre-warrior giant-frog raven-swarm wolf forest-troll"],
+    fey: ["dryad-queen unicorn dryad satyr pixie", "sprite pixie brownie satyr leaf-leshy awakened-tree"],
+    "giants-hill": ["cave-giant ogre-boss ogre-glutton ogre-warrior", "ogre-warrior dire-wolf boar goblin-warrior"],
+    "giants-frost": ["frost-giant", "ice-troll woolly-rhinoceros dire-wolf ogre-warrior"],
+    "giants-fire": ["fire-giant", "hell-hound greater-hell-hound living-wildfire flame-drake fire-scamp"],
+    "giants-high": ["rune-giant cloud-giant stone-giant", "griffon giant-eagle stone-giant living-landslide living-whirlwind"],
+    brutes: ["jotund-troll troll-warleader two-headed-troll mountain-oni cavern-troll forest-troll ogre-boss minotaur-hunter", "ogre-warrior goblin-warrior orc-scrapper warg"],
+    elementals: ["elemental-avalanche elemental-hurricane elemental-inferno elemental-tsunami ifrit living-landslide living-whirlwind living-wildfire living-waterfall jann", "air-scamp earth-scamp fire-scamp water-scamp air-wisp earth-wisp fire-wisp water-wisp"],
+    devils: ["nessari deimavigga gylou ferrugon phistophilus sarglagon levaloch coarti vordine hellbound-attorney zebub", "imp ort zebub hell-hound nightmare"],
+    demons: ["vrolikai katpaskir shemhazian seraptis urglid omox kithangian succubus brimorak vloriak abrikandilu", "pusk vermlek abrikandilu brimorak"],
+    dragon: [null, "kobold-warrior kobold-scout lizardfolk-defender house-drake fey-dragonet"],
+    sky: ["roc wyvern chimera manticore-quill-tail manticore-scorpion-tail griffon hippogriff giant-eagle harpy", "terror-shrike harpy hippogriff giant-eagle zephyr-hawk"],
+    burrowers: ["magma-worm cave-worm ankhrav-hive-mother ankhrav", "ankhrav giant-centipede"],
+    oldworld: ["sphinx lamia-matriarch medusa lamia basilisk girtablilu-seer", "gargoyle basilisk cockatrice giant-scorpion mummy-guardian"],
+    celestial: ["ninkonda kadamel giylea sramana okenevem zhuraita tabellia exscinder aeolaeka raelis rekhep balisse tennin aesra kanya choral gnokesh yamah qarna gancanagh unicorn pegasus", "pegasus giant-eagle unicorn cassisian zoaem lyrakien"],
+    aberrant: ["shoggoth irlgaunt gogiteth nilith gug denizen-of-leng nightgaunt", "grothlut nightgaunt"],
+    dinos: ["brontosaurus spinosaurus tyrannosaurus triceratops stegosaurus allosaurus ankylosaurus mammoth elephant woolly-rhinoceros rhinoceros", "velociraptor deinonychus pachycephalosaurus giant-monitor-lizard terror-bird giant-frog"]
+};
+
+// The groups for this page's system: 5e's as written, or the ones Pathfinder has, with its creatures.
+function encSystemBands(bands) {
+    if (!ENC_PF2E) return bands;
+    return bands.filter(b => ENC_PF2E_BANDS[b.key]).map(b => {
+        const [lead, support] = ENC_PF2E_BANDS[b.key];
+        return { ...b, lead: lead || PF2E_CREATURES.filter(c => /-dragon-(young|adult|ancient)/.test(c.id)).map(c => c.id).join(" "), support };
+    });
+}
+
 // Groups of foes that belong together. lead: who can be in charge; support: who comes along.
 // names: how the leader is named (encLeaderName); races: for 'folk' names. loot: a source in
 // loot-engine.js's LOOT_SOURCES ('hoard:<key>' opens the Hoard tab). doing: [tag, text]
 // (tags: ambush camp travel guard hunt work parley). parley: null = no talking them down.
-const ENC_BANDS = ruleTable([
+const ENC_BANDS = encSystemBands(ruleTable([
     { key: "goblins", label: "Goblin raiders", icon: "👺", hab: "forest hills mountain underdark dungeon grassland", lead: "bugbear hobgoblin goblin", support: "goblin wolf worg giant-rat", names: "goblin", loot: "raider",
         doing: [["ambush", "crouched behind a tripwire strung across the path, giggling"], ["camp", "squabbling over a stolen ham around a smoky fire"], ["travel", "hauling a cart of stolen pots back to their warren"], ["guard", "guarding a cave mouth, badly: two of them are playing knucklebones"], ["work", "trying to teach a wolf to fetch, with poor results"], ["hunt", "following the party's tracks, arguing about whose turn it is to lead"]],
-        tactics: ["They shoot from cover, then fall back and do it again; goblins Disengage or Hide as a bonus action every turn.", "The boss stays at the back and shoves the smallest goblins forward. Wolves go for anyone who falls prone.", "They'd rather steal a pack and run than win the fight."],
+        tactics: ["{alt:They shoot from cover, then fall back and do it again; goblins Disengage or Hide as a bonus action every turn.|They shoot from cover, Step back out of reach, and do it again.}", "The boss stays at the back and shoves the smallest goblins forward. Wolves go for anyone who falls prone.", "They'd rather steal a pack and run than win the fight."],
         morale: ["When the boss drops or half of them fall, the rest scatter, shrieking, and argue about it later.", "They flee the moment a fight looks fair."],
         parley: ["They'll let the party pass for {gp} in coin, or one of their shiny things.", "Their boss wants to be called 'Your Majesty'. Do it and they'll talk."] },
     { key: "hobgoblins", label: "Hobgoblin warband", icon: "⚔️", hab: "forest hills grassland mountain dungeon", lead: "hobgoblin bugbear", support: "hobgoblin goblin worg wolf", names: "goblin", loot: "soldier",
         doing: [["travel", "marching in step down the road, banners furled"], ["guard", "manning a palisade across the pass with drilled precision"], ["camp", "sharpening blades in a neat, ditched camp"], ["ambush", "lying in a disciplined line behind the ridge, waiting for a signal horn"], ["work", "putting goblin prisoners to work digging a ditch"], ["parley", "escorting a tax collector who demands a toll in the name of their warlord"]],
-        tactics: ["They hold a shield line and fight in pairs so every hobgoblin gets its Martial Advantage.", "Archers in the back, spears in front; the captain calls targets.", "If the party has a spellcaster, the whole band goes for them first."],
+        tactics: ["{alt:They hold a shield line and fight in pairs so every hobgoblin gets its Martial Advantage.|They hold a shield line and fight in pairs so every hobgoblin has someone flanking with it.}", "Archers in the back, spears in front; the captain calls targets.", "If the party has a spellcaster, the whole band goes for them first."],
         morale: ["They retreat in good order when their leader falls, carrying their wounded.", "Hobgoblins never surrender to people they think are weaker. Prove otherwise and they'll negotiate."],
         parley: ["They'll accept a formal surrender, and a toll of {gp}.", "Their captain respects a duel: win one and the band lets you pass."] },
     { key: "orcs", label: "Orc war band", icon: "🪓", hab: "forest hills mountain grassland arctic underdark", lead: "ogre orc", support: "orc worg", names: "orc", loot: "raider",
         doing: [["travel", "on the march, drums thumping, toward the next village"], ["camp", "roasting a stolen ox and boasting of the day's raid"], ["ambush", "waiting in the trees beside the road with axes ready"], ["hunt", "tracking a wounded elk, and now the party"], ["work", "burning a farmstead they've already looted"], ["guard", "guarding a shrine of skulls to their god of slaughter"]],
-        tactics: ["They charge straight in: Aggressive lets every orc close the distance as a bonus action.", "The biggest orc picks a duel with the party's strongest fighter; the rest swarm whoever is alone.", "Worg riders circle around to hit the back line."],
+        tactics: ["{alt:They charge straight in: Aggressive lets every orc close the distance as a bonus action.|They charge straight in, Striding twice to close the distance before the first swing.}", "The biggest orc picks a duel with the party's strongest fighter; the rest swarm whoever is alone.", "{alt:Worg|Warg} riders circle around to hit the back line."],
         morale: ["They fight until the war chief falls, then the survivors run for the hills to tell the tale.", "An orc that surrenders loses face forever. They'd rather die, unless the chief tells them to stop."],
         parley: ["They'd take weapons or meat as tribute, about {gp} worth.", "Their chief wants a worthy foe killed and would let the party live to do it."] },
-    { key: "gnolls", label: "Gnoll pack", icon: "🐾", hab: "grassland hills desert forest", lead: "gnoll giant-hyena", support: "gnoll hyena giant-hyena death-dog", names: "gnoll", loot: "raider",
+    { key: "gnolls", label: "{alt:Gnoll pack|Kholo pack}", icon: "🐾", hab: "grassland hills desert forest", lead: "gnoll giant-hyena", support: "gnoll hyena giant-hyena death-dog", names: "gnoll", loot: "raider",
         doing: [["hunt", "loping after the party's scent, laughing to each other"], ["camp", "cracking bones for the marrow in a ring of skulls"], ["ambush", "lying in the tall grass, downwind"], ["work", "dragging off the last of a caravan's mules"], ["travel", "crossing the plain in a loose, fast line"]],
-        tactics: ["They split the party and gang up on whoever is left alone; Rampage lets a gnoll that drops someone move and bite again.", "Hyenas harry the edges. Gnolls throw spears first, then close.", "They go for the wounded first, every time."],
+        tactics: ["{alt:They split the party and gang up on whoever is left alone; Rampage lets a gnoll that drops someone move and bite again.|They split the party and gang up on whoever is left alone, and drag the fallen off to feed.}", "Hyenas harry the edges. {alt:Gnolls|Kholo} throw spears first, then close.", "They go for the wounded first, every time."],
         morale: ["They break and run when the pack leader falls.", "Hunger keeps them fighting past sense; they flee only when more than half are dead."],
         parley: null },
     { key: "kobolds", label: "Kobold warren", icon: "🦎", hab: "underdark dungeon hills mountain", lead: "kobold", support: "kobold giant-centipede giant-fire-beetle stirge giant-weasel", names: "kobold", loot: "raider",
         doing: [["ambush", "waiting behind murder holes in a trapped corridor"], ["work", "setting a new trap and arguing about the springs"], ["guard", "guarding the tunnel to their dragon's lair, very nervously"], ["camp", "polishing a pile of 'treasure' that's mostly copper and buttons"]],
-        tactics: ["They swarm in packs for Pack Tactics and never fight fair.", "They fight from behind traps and lure the party into them.", "They throw jars of centipedes, then rocks, then themselves."],
+        tactics: ["{alt:They swarm in packs for Pack Tactics and never fight fair.|They swarm in packs, flank everyone they can, and never fight fair.}", "They fight from behind traps and lure the party into them.", "They throw jars of centipedes, then rocks, then themselves."],
         morale: ["They run when the fight turns, and come back later through a side tunnel.", "They'll surrender instantly and offer to show the party 'the good treasure'. It's a trap."],
         parley: ["They'd sell out their own dragon for {gp} and a promise.", "Bring them something shiny and they'll talk all day."] },
     { key: "bandits", label: "Bandit gang", icon: "🗡️", hab: "forest grassland hills mountain desert town coast dungeon", lead: "bandit-captain veteran thug spy berserker", support: "bandit thug scout mastiff", names: "folk", races: "human human human halfling dwarf elf orc tiefling", loot: "bandit",
         doing: [["ambush", "lying in wait behind a fallen tree they dragged across the road"], ["parley", "running a 'toll bridge' that wasn't there last week"], ["camp", "counting the take around a fire in a hidden camp"], ["travel", "riding hard, with a posse somewhere behind them"], ["work", "robbing a merchant's wagon when the party arrives"], ["guard", "guarding a cave where they keep a ransomed hostage"]],
-        tactics: ["Archers in the rocks, swords in front; the captain stays out of reach until someone's down.", "They grab the weakest-looking traveler as a hostage first.", "Mastiffs go in first to knock people down."],
+        tactics: ["Archers in the rocks, swords in front; the captain stays out of reach until someone's down.", "They grab the weakest-looking traveler as a hostage first.", "{alt:Mastiffs|Dogs} go in first to knock people down."],
         morale: ["They're in it for the money. Once three of them fall, the rest drop their weapons or run.", "They run when the captain falls, each in a different direction."],
         parley: ["The 'toll' is {gp}, and they'll haggle.", "Their captain will let the party go if they forget they ever saw this camp.", "One of them owes another gang money and would sell the captain out for {gp}."] },
     { key: "pirates", label: "Pirate crew", icon: "🏴‍☠️", hab: "coast sea town", lead: "bandit-captain veteran thug", support: "bandit thug scout", names: "folk", races: "human human human halfling elf orc tiefling dwarf", loot: "pirate",
@@ -361,7 +425,7 @@ const ENC_BANDS = ruleTable([
         parley: ["The leader offers the party a share of their god's favor. It's a lie, but an interesting one.", "A frightened acolyte would talk for {gp} and safe passage out of town."] },
     { key: "watch", label: "Town watch or soldiers", icon: "🛡️", hab: "town grassland hills forest coast", lead: "knight veteran priest", support: "guard veteran mastiff scout", names: "folk", races: "human human human dwarf elf halfling", loot: "soldier",
         doing: [["guard", "manning a checkpoint and demanding papers"], ["hunt", "searching for someone who looks a lot like one of the party"], ["parley", "politely asking the party to come along to the magistrate"], ["travel", "on patrol, bored, and looking for something to do"], ["work", "escorting a prisoner to the gallows"]],
-        tactics: ["They try to arrest, not kill: they grapple and shove prone, and use the flat of the blade until someone draws blood.", "One of them runs for help as soon as the fight starts.", "The sergeant sets dogs on anyone who runs."],
+        tactics: ["They try to arrest, not kill: they grapple and {alt:shove prone|trip}, and use the flat of the blade until someone draws blood.", "One of them runs for help as soon as the fight starts.", "The sergeant sets dogs on anyone who runs."],
         morale: ["They back off if outmatched and come back with a lot more soldiers.", "They surrender to anyone who promises a fair trial."],
         parley: ["A bribe of {gp} makes the problem go away, this time.", "Show a writ, a seal, or a good enough lie ({dc:15} {skill:cha:deception}) and they wave the party through."] },
     { key: "nobles", label: "Noble's retinue", icon: "👑", hab: "town grassland forest", lead: "noble knight mage", support: "guard knight veteran mastiff spy", names: "folk", races: "human human elf halfling dwarf tiefling", loot: "noble",
@@ -391,7 +455,7 @@ const ENC_BANDS = ruleTable([
         parley: ["A gift worth {gp} and a shared meal, and the party are guests, not trespassers.", "Help them with the thing that's been killing their herds and they'll guide the party anywhere."] },
     { key: "druids", label: "Druid circle", icon: "🌿", hab: "forest swamp hills arctic grassland", lead: "druid awakened-tree", support: "awakened-shrub wolf black-bear giant-badger swarm-of-insects giant-owl elk boar shambling-mound", names: "folk", races: "human elf elf halfling gnome dwarf", loot: "otherworld",
         doing: [["guard", "guarding a sacred grove the party just wandered into"], ["hunt", "tracking the party, who are carrying something taken from the forest"], ["parley", "asking the party, firmly, to leave the forest the way they came"], ["work", "healing a wounded stag at a standing stone"]],
-        tactics: ["Animals in front, the druid behind them casting Entangle and Thunderwave.", "The trees themselves move to block the way out.", "They'd rather drive the party off than kill: they wound and scare."],
+        tactics: ["Animals in front, the druid behind them {alt:casting Entangle and Thunderwave|snaring the ground with vines and calling down lightning}.", "The trees themselves move to block the way out.", "They'd rather drive the party off than kill: they wound and scare."],
         morale: ["The beasts flee when the druid falls; the druid flees when half the beasts are down.", "They stop the moment the party drops whatever they took from the forest."],
         parley: ["Plant something, return something, or swear an oath, and the forest lets them go.", "They'd forgive the trespass if the party deals with the loggers upriver."] },
     { key: "undead", label: "Walking dead", icon: "💀", hab: "dungeon swamp grassland desert hills arctic town", lead: "wight ghast ogre-zombie minotaur-skeleton warhorse-skeleton", support: "skeleton zombie ghoul", names: "undead", loot: "undead",
@@ -401,7 +465,7 @@ const ENC_BANDS = ruleTable([
         parley: null },
     { key: "haunt", label: "Restless spirits", icon: "👻", hab: "dungeon swamp town grassland desert", lead: "wraith ghost specter wight will-o-wisp", support: "shadow specter will-o-wisp", names: "undead", loot: "undead",
         doing: [["guard", "drifting through the walls of the room they died in"], ["work", "reenacting their last moments, over and over"], ["ambush", "waiting in the dark for a light to come close"], ["parley", "asking, in a whisper, who has disturbed their rest"]],
-        tactics: ["They come through walls and floors, strike, and drift out again.", "Shadows go for the strongest; their Strength drain makes fighters fold.", "They herd the party toward the deepest dark."],
+        tactics: ["They come through walls and floors, strike, and drift out again.", "Shadows go for the strongest; {alt:their Strength drain makes fighters fold|their touch leaves fighters enfeebled}.", "They herd the party toward the deepest dark."],
         morale: ["They fight until destroyed, or until whatever binds them is set right.", "Bright light and holy symbols hold them back but don't drive them off."],
         parley: ["The ghost will rest if the party finishes what it left undone.", "Speak the name of the one who wronged them and they turn their rage elsewhere."] },
     { key: "vampire", label: "Vampire's brood", icon: "🧛", hab: "town dungeon forest", lead: "vampire-vampire vampire-spawn", support: "vampire-spawn swarm-of-bats swarm-of-rats wolf dire-wolf giant-bat", names: "folk", races: "human human elf halfling tiefling", loot: "noble",
@@ -416,7 +480,7 @@ const ENC_BANDS = ruleTable([
         parley: ["Answer the riddle and the guardian lets the party pass.", "Swear an oath to the old king and they bow you through."] },
     { key: "necromancer", label: "Necromancer and servants", icon: "☠️", hab: "dungeon town swamp", lead: "lich archmage mage", support: "skeleton zombie ghoul ghast wight flesh-golem shield-guardian ogre-zombie", names: "folk", races: "human human elf tiefling gnome", loot: "mage",
         doing: [["work", "stitching something together on a slab, humming"], ["guard", "standing behind a wall of servants in a library of forbidden books"], ["parley", "offering the party a demonstration"], ["travel", "moving the lab to a new hideout, under cover of night"]],
-        tactics: ["The servants hold the line while the caster blasts from behind them.", "The caster turns any party member who falls into a new servant (the Gazette's flourish; let them get up on your say).", "The guardian absorbs damage meant for its master."],
+        tactics: ["The servants hold the line while the caster blasts from behind them.", "The caster turns any party member who falls into a new servant (the Gazette's flourish; let them get up on your say).", "{alt:The guardian absorbs damage meant for its master.|The biggest servant stands between its master and the blades.}"],
         morale: ["The dead fight on until destroyed; the caster teleports away when hurt.", "The caster surrenders if their notes are threatened."],
         parley: ["They'd trade a secret of death for {gp} in rare ink and bone.", "They want a body, any body, and would pay well for one."] },
     { key: "weres", label: "Moon-cursed", icon: "🌕", hab: "forest hills grassland arctic", lead: "werewolf-hybrid werebear-hybrid weretiger-hybrid wereboar-hybrid", support: "wolf dire-wolf boar tiger brown-bear werewolf-wolf", names: "folk", races: "human human human elf halfling", loot: "beast",
@@ -431,7 +495,7 @@ const ENC_BANDS = ruleTable([
         parley: ["{gp} buys safe passage through their tunnels.", "Hand over a rival and they'll owe the party a favor."] },
     { key: "wolves", label: "Wolf pack", icon: "🐺", hab: "forest hills grassland arctic mountain", lead: "winter-wolf dire-wolf wolf", support: "wolf dire-wolf", names: "beast", loot: "beast",
         doing: [["hunt", "trailing the party, keeping just out of bowshot"], ["camp", "resting in a den under the roots, cubs nearby"], ["work", "feeding on a fresh kill in the middle of the path"], ["ambush", "fanned out in a half circle in the brush"]],
-        tactics: ["They circle, then close on one target from several sides for Pack Tactics.", "Every bite tries to knock someone prone; the rest pile on.", "They test the line and go for the horses or the slowest."],
+        tactics: ["They circle, then close on one target from several sides {alt:for Pack Tactics|to flank it}.", "Every bite tries to knock someone prone; the rest pile on.", "They test the line and go for the horses or the slowest."],
         morale: ["They break off once the leader is hurt or half the pack is down.", "Fire and loud noise make them hesitate (the leader holds them together)."],
         parley: null },
     { key: "hunters", label: "Apex predator", icon: "🐅", hab: "forest grassland hills arctic mountain swamp", lead: "owlbear brown-bear polar-bear tiger lion saber-toothed-tiger panther giant-boar black-bear giant-constrictor-snake crocodile giant-crocodile", support: "lion panther black-bear boar giant-ape constrictor-snake", names: "beast", loot: "beast",
@@ -446,17 +510,17 @@ const ENC_BANDS = ruleTable([
         parley: null },
     { key: "vermin", label: "Swarming vermin", icon: "🪲", hab: "dungeon underdark desert grassland swamp forest", lead: "ankheg giant-scorpion giant-wasp rust-monster giant-centipede", support: "giant-centipede giant-fire-beetle swarm-of-beetles swarm-of-centipedes swarm-of-insects swarm-of-wasps swarm-of-poisonous-snakes stirge", names: "beast", loot: "beast",
         doing: [["hunt", "boiling up out of the ground at the party's footsteps"], ["camp", "nesting in a collapsed cellar"], ["work", "stripping a carcass to the bone"], ["ambush", "burrowed just under the surface"]],
-        tactics: ["The swarms bury the front line while the big ones go for the back.", "They go for anything that moves, and anything that's metal, if it's a rust monster."],
+        tactics: ["The swarms bury the front line while the big ones go for the back.", "They go for anything that moves{alt:, and anything that's metal, if it's a rust monster|, and the smallest first}."],
         morale: ["Fire and smoke drive them off.", "They fight until the nest is safe or they're all dead."],
         parley: null },
     { key: "lurkers", label: "Dungeon lurkers", icon: "🫧", hab: "dungeon underdark town", lead: "black-pudding gelatinous-cube roper cloaker otyugh mimic ochre-jelly gibbering-mouther", support: "gray-ooze darkmantle grick ochre-jelly rug-of-smothering violet-fungus shrieker", names: "beast", loot: "beast",
         doing: [["ambush", "pretending to be part of the room"], ["work", "slowly cleaning the corridor of everything organic"], ["hunt", "sliding down the corridor after the party's lantern light"], ["guard", "sitting on the only way across the room"]],
-        tactics: ["They wait for someone to walk into them and then hold on.", "Acid and slime ruin weapons: anyone hitting them with metal should worry.", "Darkmantles drop from the ceiling and snuff the light."],
+        tactics: ["They wait for someone to walk into them and then hold on.", "Acid and slime ruin weapons: anyone hitting them with metal should worry.", "{alt:Darkmantles drop from the ceiling and snuff the light.|Smaller oozes drop from the ceiling onto the lights.}"],
         morale: ["Mindless: they fight until destroyed or until their prey gets out of reach.", "Most are slow: walking away works."],
         parley: null },
     { key: "workshop", label: "Wizard's guardians", icon: "🔮", hab: "dungeon town mountain", lead: "iron-golem stone-golem clay-golem flesh-golem shield-guardian mage gargoyle", support: "animated-armor flying-sword rug-of-smothering homunculus gargoyle", names: null, loot: "mage",
         doing: [["guard", "standing perfectly still in alcoves until the wrong word is spoken"], ["work", "still dusting the wizard's library, decades after the wizard died"], ["ambush", "posing as furniture, decoration, and a very ordinary rug"], ["parley", "a homunculus asks for the password, politely"]],
-        tactics: ["Constructs follow their last orders exactly, and only those.", "The flying swords harry spellcasters; the armor blocks doorways.", "Golems go for whoever damaged them last."],
+        tactics: ["Constructs follow their last orders exactly, and only those.", "{alt:The flying swords|The smaller constructs} harry spellcasters; the armor blocks doorways.", "Golems go for whoever damaged them last."],
         morale: ["Constructs never flee. They stop if given the right password or if their maker commands it.", "They don't follow past the edge of the place they guard."],
         parley: ["The password is somewhere in the wizard's notes, if anyone can find it.", "The homunculus would trade its master's secrets for its freedom."] },
     { key: "drow", label: "Drow patrol", icon: "🕸️", hab: "underdark", lead: "drider mage drow", support: "drow giant-spider giant-lizard", names: "drow", loot: "soldier",
@@ -464,14 +528,14 @@ const ENC_BANDS = ruleTable([
         tactics: ["They open with Darkness and Faerie Fire, then shoot poisoned bolts at anyone outlined.", "Sleeping-poison bolts first; the unconscious are taken alive for the slave pens.", "The mage stays behind the spiders."],
         morale: ["They fall back to report the moment the fight turns, abandoning anyone too slow.", "A captured drow lies about everything, beautifully."],
         parley: ["They'd sell a rival house's secrets for {gp} in surface gold.", "They'd let the party pass if they kill a target in a rival house."] },
-    { key: "duergar", label: "Duergar prospectors", icon: "⛏️", hab: "underdark mountain", lead: "duergar", support: "duergar giant-lizard rust-monster", names: "folk", races: "dwarf", loot: "miner",
+    { key: "duergar", label: "{alt:Duergar|Hryngar} prospectors", icon: "⛏️", hab: "underdark mountain", lead: "duergar", support: "duergar giant-lizard rust-monster", names: "folk", races: "dwarf", loot: "miner",
         doing: [["work", "mining a seam of something that glows faintly"], ["travel", "driving slaves in chains toward their city"], ["guard", "guarding a forge-gate with unblinking stares"], ["parley", "offering to sell the party a map, at a terrible price"]],
-        tactics: ["They grow to giant size on the first round and fight shoulder to shoulder.", "They go invisible to slip away or flank."],
+        tactics: ["{alt:They grow to giant size on the first round and fight shoulder to shoulder.|They fight shoulder to shoulder and throw bombs at anyone in the open.}", "{alt:They go invisible to slip away or flank.|They slip into side tunnels to flank, and know every one of them.}"],
         morale: ["They fight with grim persistence and retreat only on their leader's order.", "They'll surrender if it's profitable."],
-        parley: ["They'd take {gp} or a good weapon to look the other way.", "Duergar honor written contracts, to the letter and not one word beyond."] },
+        parley: ["They'd take {gp} or a good weapon to look the other way.", "{alt:Duergar|Hryngar} honor written contracts, to the letter and not one word beyond."] },
     { key: "grimlocks", label: "Deep dwellers", icon: "🦇", hab: "underdark dungeon", lead: "grimlock grick", support: "grimlock darkmantle swarm-of-bats giant-bat grick", names: null, loot: "beast",
         doing: [["hunt", "sniffing the air and moving toward the party's scent"], ["ambush", "waiting in silence along the walls"], ["camp", "gnawing bones in a cave full of bats"]],
-        tactics: ["They don't need to see: they fight in total darkness and like it that way.", "Bats and darkmantles go for the light sources first."],
+        tactics: ["They don't need to see: they fight in total darkness and like it that way.", "{alt:Bats and darkmantles go for the light sources first.|Bats go for the light sources first, and the deep dwellers snuff out the rest.}"],
         morale: ["They flee from bright light and loud noise.", "They fight to the end in their own lair."],
         parley: null },
     { key: "lizardfolk", label: "Lizardfolk hunters", icon: "🐊", hab: "swamp coast forest", lead: "lizardfolk", support: "lizardfolk crocodile giant-lizard giant-frog", names: "lizard", loot: "raider",
@@ -479,10 +543,10 @@ const ENC_BANDS = ruleTable([
         tactics: ["They drag people into the water and hold them under.", "Crocodiles go in first; the hunters attack anyone the crocs have grappled."],
         morale: ["They stop the moment the fight stops being worth the meat.", "Purely practical: they retreat if losing and come back later."],
         parley: ["They'd trade a safe route through the swamp for meat or iron worth {gp}.", "They see no shame in switching sides."] },
-    { key: "sahuagin", label: "Sahuagin raid", icon: "🦈", hab: "sea coast", lead: "sahuagin merrow", support: "sahuagin reef-shark hunter-shark", names: null, loot: "raider",
+    { key: "sahuagin", label: "{alt:Sahuagin|Sedacthy} raid", icon: "🦈", hab: "sea coast", lead: "sahuagin merrow", support: "sahuagin reef-shark hunter-shark", names: null, loot: "raider",
         doing: [["hunt", "circling beneath the boat"], ["work", "raiding a fishing village under a moonless sky"], ["guard", "guarding a sunken shrine to their shark god"], ["ambush", "waiting in the kelp for anything that falls in the water"]],
         tactics: ["They drive their sharks into a frenzy and drag swimmers under.", "They attack from below, where the party can't see them."],
-        morale: ["They retreat into the deep if the priestess or baron falls.", "Blood in the water makes them reckless: they fight until half are gone."],
+        morale: ["They retreat into the deep if {alt:the priestess or baron|their leader} falls.", "Blood in the water makes them reckless: they fight until half are gone."],
         parley: null },
     { key: "deep", label: "Beasts of the deep", icon: "🐙", hab: "sea coast", lead: "kraken dragon-turtle giant-shark killer-whale plesiosaurus giant-octopus hunter-shark giant-crab", support: "reef-shark quipper swarm-of-quippers giant-crab octopus giant-sea-horse", names: "beast", loot: "beast",
         doing: [["hunt", "rising beneath the party's boat"], ["guard", "guarding its territory in the reef"], ["work", "feeding on a wreck"]],
@@ -496,17 +560,17 @@ const ENC_BANDS = ruleTable([
         parley: ["She'll trade anything. Her price is never coin: a voice, a year, a name.", "She'd give up the child for a better bargain."] },
     { key: "fey", label: "Grove wardens", icon: "🧚", hab: "forest", lead: "treant dryad unicorn blink-dog satyr", support: "sprite satyr blink-dog awakened-shrub awakened-tree", names: "fey", loot: "otherworld",
         doing: [["parley", "a satyr with a pipe challenges the party to a riddle contest"], ["guard", "guarding a ring of mushrooms that glows at dusk"], ["work", "holding a revel that's been going for three days"], ["ambush", "watching invisibly as the party camps in the wrong place"]],
-        tactics: ["Sprites put people to sleep with arrows; the dryad charms the strongest.", "They play tricks, not murder: they want the party humiliated and gone."],
+        tactics: ["{alt:Sprites put people to sleep with arrows|Sprites and pixies play tricks from the air}; the dryad charms the strongest.", "They play tricks, not murder: they want the party humiliated and gone."],
         morale: ["They melt into the trees when the fight turns.", "An apology with a gift ends the fight at once."],
         parley: ["Win a contest, or give a promise they'll hold you to forever.", "They'd let the party pass for a song, a secret, or a lock of hair."] },
-    { key: "giants-hill", label: "Hill giants and ogres", icon: "🗿", hab: "hills grassland forest mountain", lead: "hill-giant ettin ogre", support: "ogre dire-wolf giant-boar goblin", names: "giant", loot: "raider",
+    { key: "giants-hill", label: "{alt:Hill|Cave} giants and ogres", icon: "🗿", hab: "hills grassland forest mountain", lead: "hill-giant ettin ogre", support: "ogre dire-wolf giant-boar goblin", names: "giant", loot: "raider",
         doing: [["work", "stealing cattle from a farm, one under each arm"], ["camp", "eating a whole sheep, raw"], ["hunt", "following the smell of the party's dinner"], ["guard", "sitting on a bridge they've decided is theirs"]],
         tactics: ["They hit whatever's closest, as hard as they can.", "They throw rocks first, then wade in.", "They pick people up and throw them."],
         morale: ["They wander off when bored or badly hurt.", "Food stops them faster than steel."],
         parley: ["They'd take a cow, or {gp} in food, to let the party go.", "Trick them: they're not clever ({dc:12} {skill:cha:deception})."] },
     { key: "giants-frost", label: "Frost giants", icon: "🧊", hab: "arctic mountain", lead: "frost-giant", support: "winter-wolf polar-bear ogre ice-mephit", names: "giant", loot: "raider",
         doing: [["travel", "marching through the snow toward a lowland village"], ["hunt", "hunting mammoth, and now the party"], ["camp", "feasting in a hall of ice"], ["parley", "challenging the party to a contest of strength"]],
-        tactics: ["Winter wolves breathe cold to soften the party; the giants finish.", "They throw boulders of ice from range."],
+        tactics: ["{alt:Winter wolves breathe cold|Trolls and beasts go in first} to soften the party; the giants finish.", "They throw boulders of ice from range."],
         morale: ["They respect strength: beat one in single combat and the rest hold back.", "They retreat when the leader falls, to return with more."],
         parley: ["Win a contest of strength or drinking and they treat you as guests.", "They'd trade passage for news of their enemies."] },
     { key: "giants-fire", label: "Fire giants' forge", icon: "🔥", hab: "mountain underdark", lead: "fire-giant salamander", support: "hell-hound azer magmin salamander fire-elemental", names: "giant", loot: "miner",
@@ -526,22 +590,22 @@ const ENC_BANDS = ruleTable([
         parley: ["The toll is {gp}, or a goat.", "Ask it a riddle; it can't resist and isn't good at them."] },
     { key: "elementals", label: "Elemental rift", icon: "🌋", hab: "mountain desert underdark dungeon coast arctic", lead: "djinni efreeti invisible-stalker xorn fire-elemental earth-elemental air-elemental water-elemental salamander azer", support: "dust-mephit ice-mephit magma-mephit steam-mephit magmin azer", names: null, loot: "otherworld",
         doing: [["work", "tearing at the edges of a rift that's opening wider"], ["guard", "bound to guard a summoner's circle, long after the summoner left"], ["hunt", "drifting through the area, burning or freezing everything it touches"]],
-        tactics: ["The mephits explode when they die: keep them away from the front line.", "Bound elementals fight only within the circle."],
+        tactics: ["{alt:The mephits explode when they die: keep them away from the front line.|Scamps and wisps swarm the front line while the big elemental waits for an opening.}", "Bound elementals fight only within the circle."],
         morale: ["They fight until banished or destroyed.", "Close the rift and they return home."],
         parley: ["A genie wants freedom, and would grant much for it.", "Bound spirits would bargain to be released."] },
     { key: "devils", label: "Devils and their bargains", icon: "😈", hab: "dungeon town underdark", lead: "pit-fiend ice-devil horned-devil erinyes bone-devil chain-devil barbed-devil bearded-devil", support: "imp lemure hell-hound nightmare bearded-devil barbed-devil", names: "fiend", loot: "otherworld",
         doing: [["parley", "offering a contract with the party's names already written in"], ["guard", "guarding a summoning circle"], ["hunt", "collecting on a debt one of the party doesn't know they owe"], ["work", "torturing a prisoner who owes them a soul"]],
-        tactics: ["They fight in formation, devils behind lemures.", "They target the one with a debt or a bargain first."],
-        morale: ["Devils retreat when it stops being profitable.", "Lemures fight until destroyed."],
+        tactics: ["They fight in formation, {alt:devils behind lemures|the great devils behind the small ones}.", "They target the one with a debt or a bargain first."],
+        morale: ["Devils retreat when it stops being profitable.", "{alt:Lemures|The smallest devils} fight until destroyed."],
         parley: ["A devil will always make a deal.", "They'd trade the prisoner's soul for a better one."] },
     { key: "demons", label: "Demonic incursion", icon: "👿", hab: "dungeon underdark swamp", lead: "balor marilith nalfeshnee glabrezu hezrou vrock", support: "dretch quasit vrock hezrou", names: "fiend", loot: "otherworld",
-        doing: [["hunt", "spilling out of a rift and slaughtering anything nearby"], ["work", "tearing a temple apart, stone by stone"], ["guard", "infesting an old shrine"], ["parley", "a glabrezu offers to grant a wish"]],
-        tactics: ["Demons fight with no plan: they attack whatever's nearest.", "The stench of the hezrou poisons the front line."],
+        doing: [["hunt", "spilling out of a rift and slaughtering anything nearby"], ["work", "tearing a temple apart, stone by stone"], ["guard", "infesting an old shrine"], ["parley", "{alt:a glabrezu|a demon} offers to grant a wish"]],
+        tactics: ["Demons fight with no plan: they attack whatever's nearest.", "{alt:The stench of the hezrou poisons the front line.|The biggest demon wades in; the small ones swarm whoever falls.}"],
         morale: ["They never flee unless banished.", "They turn on each other if the leader falls."],
-        parley: ["A glabrezu or succubus will deal; the price is always a betrayal."] },
+        parley: ["{alt:A glabrezu or succubus|A succubus, or any demon clever enough,} will deal; the price is always a betrayal."] },
     { key: "dragon", label: "Dragon and its servants", icon: "🐉", hab: "forest grassland hills mountain swamp coast sea arctic desert", lead: "ancient-red-dragon ancient-blue-dragon ancient-green-dragon ancient-black-dragon ancient-white-dragon ancient-gold-dragon ancient-silver-dragon ancient-bronze-dragon ancient-copper-dragon ancient-brass-dragon adult-red-dragon adult-blue-dragon adult-green-dragon adult-black-dragon adult-white-dragon adult-gold-dragon adult-silver-dragon adult-bronze-dragon adult-copper-dragon adult-brass-dragon young-red-dragon young-blue-dragon young-green-dragon young-black-dragon young-white-dragon young-gold-dragon young-silver-dragon young-bronze-dragon young-copper-dragon young-brass-dragon red-dragon-wyrmling blue-dragon-wyrmling green-dragon-wyrmling black-dragon-wyrmling white-dragon-wyrmling gold-dragon-wyrmling silver-dragon-wyrmling bronze-dragon-wyrmling copper-dragon-wyrmling brass-dragon-wyrmling", support: "kobold lizardfolk half-red-dragon-veteran pseudodragon", names: "dragon", loot: "hoard:dragon",
         doing: [["guard", "sleeping on its hoard, one eye half open"], ["hunt", "flying low over the land, looking for something to eat"], ["parley", "watching the party with curiosity, and asking them a question"], ["work", "taking tribute from a terrified village"]],
-        tactics: ["It opens with its breath weapon, then flies out of reach until it recharges.", "It fights from the air and never lands within reach of the strongest fighter.", "Its servants hold the party where the breath can catch them all."],
+        tactics: ["It opens with its breath weapon, then flies out of reach until {alt:it recharges|it can breathe again}.", "It fights from the air and never lands within reach of the strongest fighter.", "Its servants hold the party where the breath can catch them all."],
         morale: ["Proud and wise: it flees when badly hurt, and remembers the party forever.", "It fights to the death only on its hoard."],
         parley: ["Flattery works wonders. So does treasure worth {gp}.", "It wants a rival dragon dead and would pay handsomely for the deed."] },
     { key: "sky", label: "Sky hunters", icon: "🦅", hab: "mountain hills coast desert grassland", lead: "roc wyvern manticore chimera griffon hippogriff giant-eagle harpy", support: "blood-hawk giant-vulture harpy hippogriff giant-eagle", names: "beast", loot: "beast",
@@ -574,7 +638,7 @@ const ENC_BANDS = ruleTable([
         tactics: ["It charges, tramples, and keeps going.", "It goes for the biggest moving thing it can see."],
         morale: ["It flees when hurt, unless defending a nest.", "Loud noises and fire can drive it off."],
         parley: null }
-]);
+]));
 const ENC_BAND_BY_KEY = Object.fromEntries(ENC_BANDS.map(b => [b.key, b]));
 ENC_BANDS.forEach(b => {
     b.habs = b.hab.split(" ");
@@ -649,7 +713,7 @@ const ENC_LEADER_MARKS = ["wears a stolen magistrate's chain of office", "has a 
 const ENC_NAME_TYPES = {
     folk: ["humanoid", "undead"], goblin: ["humanoid", "giant"], orc: ["humanoid", "giant"], gnoll: ["humanoid", "giant"],
     kobold: ["humanoid"], lizard: ["humanoid"], drow: ["humanoid", "monstrosity"], giant: ["giant"], brute: ["giant", "monstrosity"],
-    hag: ["fey"], fey: ["fey", "plant", "celestial"], dragon: ["dragon"], fiend: ["fiend"], celestial: ["celestial"], undead: ["undead"]
+    hag: ["fey", "humanoid"], fey: ["fey", "plant", "celestial"], dragon: ["dragon"], fiend: ["fiend"], celestial: ["celestial"], undead: ["undead"]
 };
 // Humanoids whose names aren't 'folk' names (null: no name).
 const ENC_ID_STYLE = { goblin: "goblin", hobgoblin: "goblin", bugbear: "goblin", orc: "orc", gnoll: "gnoll", kobold: "kobold", lizardfolk: "lizard",
@@ -691,7 +755,7 @@ function encAn(word) {
 // The group a list of monsters belongs to: the band holding the most of them (lead first),
 // ties to the earlier band. Null when no band holds the strongest monster.
 function encInferBand(list) {
-    if (!list.length || ENC_PF2E) return null;
+    if (!list.length) return null;
     const lead = list.reduce((a, b) => (b.m.xp > a.m.xp ? b : a)).m;
     let best = null, bestN = 0;
     ENC_BANDS.forEach(b => {
@@ -711,8 +775,7 @@ function encBandFits(band, list) {
 // Returns { list, band } (band = the key, or null).
 function rollThemedEncounter(budget, diff, opts = {}) {
     const { type = "", habitat = "" } = opts;
-    // Pathfinder has no foe groups yet (theirs are written around 5e monsters and rules).
-    const band = ENC_PF2E ? "none" : opts.band || "";
+    const band = opts.band || "";
     const target = budget[diff];
     const maxCr = encMaxCr(budget);
     const fits = m => m && m.xp > 0 && m.xp <= target && crValue(m.cr) <= maxCr && (!type || m.type === type);
