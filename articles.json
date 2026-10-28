@@ -3703,6 +3703,294 @@
         },
         "rumor": "They say the cheesemonger's queue is only that long because the baker started handing out free rolls to anyone who shows a vial scar."
       }
+    },
+    {
+      "id": "bag-of-holding-flour-hoard-bread-price",
+      "title": "Bag of Holding Hides 40,000 Flour Sacks; Bread Doubles",
+      "category": "Economy",
+      "author": "Barnaby Tallowmere",
+      "date": "2026-10-27",
+      "excerpt": "A Brindlemoor miller stored 40,000 flour sacks in one bag of holding, and the price of bread doubled in a week. Barnaby has checked the math. Four times.",
+      "content": "<p>A Brindlemoor miller named Odo Pennyfeather has been found to have stored 40,000 sacks of flour inside a single bag of holding, and the town's bread price doubled in a week as a result. Reeve Maudrey Fennick of Brindlemoor ordered the bag opened on Monday morning, with a bucket brigade standing by.</p>\n\n<p>The arithmetic is simple, which is why it frightens me. (I have checked it four times.) A loaf cost two copper pieces last tenday and four this tenday, so the Loaf Index, my own humble measure, has gone from 1.00 to 2.00. Forty thousand sacks at roughly sixty loaves each is 2.4 million loaves, enough to feed the town for eleven weeks. Mr. Pennyfeather is not selling any of it.</p>\n\n<p>Mr. Pennyfeather says he is simply being prudent. \"Prices rise in autumn,\" he told reporters outside his mill. \"I put the flour somewhere safe until they do.\" When asked whether his own hoarding was the reason prices were rising, he said the market would sort itself out. I had to sit down.</p>\n\n<p>The economics underneath are plain enough. When a seller takes goods off the shelves and waits, the goods left are scarcer, and scarce flour costs more, so the miller's guess about autumn comes true because he made it come true. A bag of holding makes this very cheap to do, since forty thousand sacks weigh the same as fifteen. A wagon of that size would have been noticed. A belt pouch was not.</p>\n\n<p>Keeper Bess Harrowgate of the Sleeping Mule says her kitchen is down to one loaf a day, which she cuts into eight and serves with an apology. \"I've fed gelatinous cubes cheaper,\" she said. Inspector Corwin Tallowby, no relation to me (I have asked), has filed the hoard under cellar matters, which it is not.</p>\n\n<p>Reeve Fennick's order takes effect Monday. The bag may be opened only by its owner, and only over a dry floor with town guards present, because a bag of holding that is torn or turned inside out sends its contents to another plane. Nobody wants forty thousand sacks of flour spilled across the Astral Sea. Master Millwright Dunstan Roe estimates the town guards will need two days to carry it all out.</p>\n\n<p>My aunt Marigold, who keeps her savings in a boot, says the miller and she have more in common than I would like, which is a thing she should not have said. A boot, however, holds a few coins. A bag of holding holds a barony's supper.</p>\n\n<p>What this means for your pantry: buy a sack now, check your neighbor's belt pouch, and do not trust anyone who says it will sort itself out.</p>\n\n<p><em>— B.T. (Loaf Index: see sidebar)</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Bottomless Pantry",
+          "text": "A miller has hidden a town's worth of grain in a bag of holding, and bread prices are climbing. The mayor wants the party to escort the bag open without tearing it, while the miller's rivals would rather it vanish."
+        },
+        "npc": {
+          "name": "Odo Pennyfeather",
+          "role": "Hoarding miller",
+          "want": "To sell his flour only when prices peak.",
+          "secret": "The bag has a small tear, and he knows it could spill at any time.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Pennyfeather Mill",
+          "text": "A watermill with a wheel that has not turned in a tenday. The cellar is spotless and empty, which no one has explained.",
+          "tavern": false
+        },
+        "rumor": "They say the miller's bag goes somewhere much deeper than anyone thinks, and there's a baker living in it."
+      },
+      "fiction": true
+    },
+    {
+      "id": "kobold-trap-resetters-union-vote-scrip",
+      "title": "Kobolds Vote 31-2 to Unionize Over Scrip Pay at Chapter 9",
+      "category": "Labor",
+      "author": "Brakka Stonesweat",
+      "date": "2026-10-27",
+      "excerpt": "Thirty-three kobold trap-resetters voted 31 to 2 to form a union. Chapter 9 pays them in scrip that only buys Chapter 9 goods.",
+      "content": "<p>The kobolds want real coin.</p>\n\n<p>Thirty-three kobold trap-resetters who rebuild the pits, darts and swinging blades of the Undermaw voted 31 to 2 last night to form a union. The vote was held in a cellar on Tanner's Row, after shift, over a shared pot of stew. Their employer, Brindlemoor Adventurers' Guild, Chapter 9, pays them in 'delve scrip.' It is good at the Chapter 9 map shop, the Chapter 9 rope counter and the Chapter 9 canteen. It is good nowhere else.</p>\n\n<p>The guild's pay notice calls this 'a closed-loop compensation ecosystem.' That means they pay you in tokens and then sell you your own dinner.</p>\n\n<p>'I reset the pit on Level Two forty times a tenday,' said Krix Dusktail, a trap-resetter for six years. 'Some adventurer falls in it, I climb down, I dig out the adventurer, I put the spikes back. They pay me in a coupon for a map I already know by heart.'</p>\n\n<p>The arithmetic is worse than the coupon. The canteen charges scrip at a rate of three to the copper, but the scrip pays out at four to the copper. Nobody at Chapter 9 could explain the difference. Deputy Registrar Pell Oddingwick said the rate was 'on track' and 'a feature.' He added that kobolds enjoy the canteen's turnip pie. Krix says nobody enjoys it. 'I eat it. That's different.'</p>\n\n<p>The kobolds are also short a chair. Resetters work crouched in the dark, because the guild's sizing chart says 'a kobold is naturally low.' Zeb Cindermaw, who rebuilds the dart wall on Level Four, said his knees stop working around the seventh tenday of every season. 'Natural,' said Zeb. 'Like my rent.'</p>\n\n<p>Their demands are modest. Wages in silver, paid on the last day of the tenday. A real lunch break, with a bench. And a shop steward who answers to the kobolds, not to the guild. They've asked <a href=\"/a/mimic-furniture-clause-adventuring-party-contract\">Ansel Pottage</a>, who has read more guild contracts than anyone alive, to help them draft the first one. Pottage said he would read the scrip notice aloud at the hearing, which should take about a minute and a half. 'It's very short,' he said. 'That's the problem with it.'</p>\n\n<p>Reeve Fennick said the town is 'aware of the kobolds' and will review the vote. Oddingwick said Chapter 9 'respects workers' voices' and plans to answer the union with a new scrip, in a different color.</p>\n\n<p>The two kobolds who voted no told a reporter they like the canteen. Both then asked, quietly, whether the stew from the cellar could be served again next week.</p>\n\n<p><em>Solidarity. And stretch your back. — Brakka</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Scrip Ledger",
+          "text": "A union of kobold trap-resetters is about to strike, and the local guild has locked its books to hide a skimmed exchange rate. The party is hired to retrieve the ledger from the guild's canteen cellar before the union's first hearing."
+        },
+        "npc": {
+          "name": "Krix Dusktail",
+          "role": "Kobold trap-resetter, union organizer",
+          "want": "Silver wages paid in real coin on the last day of the tenday.",
+          "secret": "She has a copy of the guild's exchange-rate ledger hidden inside a pit she resets herself.",
+          "race": "dragonborn",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Chapter Canteen",
+          "text": "A low-ceilinged hall that serves turnip pie and sells every adventurer's supplies at triple the scrip rate. The cellar below is oddly warm, and the cook insists it's the stove.",
+          "tavern": true
+        },
+        "rumor": "Folk say the scrip is printed on the same press as the permits, and that the press has been running at night."
+      },
+      "fiction": true
+    },
+    {
+      "id": "ghost-ship-varnholt-harbor-visa-pellam-parley",
+      "title": "Ghost Ship Docks in Varnholt; Customs Demands a Visa",
+      "category": "Travel",
+      "author": "Grashka Ironjaw",
+      "date": "2026-10-27",
+      "excerpt": "A ghost ship drifted into a Varnholt harbor on Sixthday. Varnholt wants a visa, the Pellam Isles want it back, and the parley is on day two.",
+      "content": "<p>A ghost ship drifted into the harbor at Saltreach, Varnholt, on Sixthday, and customs has refused to let its crew come ashore without a visa. The Pellam Isles say the ship, the <em>Gannet's Regret</em>, has been theirs for ninety years and its crew are Pellam subjects. The crew are dead, which neither side disputes.</p>\n\n<p>The parley opened on the quay at dawn. Harbormaster Ilsabet Corvane of Varnholt sat on a barrel. Envoy Dorrin Vask of the Pellam Isles sat on a coil of rope and kept moving it toward her side. The handshake lasted two seconds, and Vask's hand passed through hers on the second. No hidden dagger detected. No hand either.</p>\n\n<p>Varnholt's position is plain. A ship that enters harbor owes a berth fee of six silver pieces a night, and an undead crew owes the same as a living one. The Pellam Isles answer that a ship with no living passengers has no passengers, and a berth fee is a levy on passengers. Corvane replied that the ghosts have been seen eating at the harbor tavern. Vask said they were only standing near the food.</p>\n\n<p>Tension holds at roughly nine siege-days. The harbor is closed to anything with a hull. Eleven merchant crews are anchored outside, and the captain of a spice barge told me he would rather pay a fee to anyone, anywhere, than wait another night. I take that as a vote for the fee. Nobody asked the dead for a vote, since the Varnholt charter says they cannot cast one.</p>\n\n<p>Corvane has ruled that the ghost captain, a tall figure who answers to \"Captain\", may sign for the ship. The captain signed. The ink faded in an hour, which Varnholt reads as a breach of contract and the Pellam Isles read as a drafting error on Varnholt's side. Vask asked for the signature to be witnessed by a cleric. A cleric was brought and refused to go near the form.</p>\n\n<p>A press release from the Varnholt travel board arrived at noon. It announced a \"haunted harbor experience package\" at four gold pieces a night, with the ghosts as the featured attraction. I will not describe it further. The crew of the <em>Gannet's Regret</em> read it from the rail and went below, which I count as the first honest reaction at this parley.</p>\n\n<p>A field ration of hard cheese and dried plum went around the quay at dusk. The harbor militia ate. The envoys watched. The ghosts looked away, which is more manners than I have seen in some summits.</p>\n\n<p>The parley resumes at sunrise. The ship stays where it is, and the berth fee keeps adding up. Somebody will lose tomorrow. It will not be the dead.</p>\n\n<p><em>Ironjaw, filed from the front.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Visa for the Dead",
+          "text": "A ghost ship has docked at a trade port and both its home isle and the harbor claim it, with a dozen merchant ships stuck waiting offshore. The harbormaster will pay the party to find out why the ship came in at all, and whether the crew wants something done."
+        },
+        "npc": {
+          "name": "Ilsabet Corvane",
+          "role": "Harbormaster of Saltreach",
+          "want": "To clear the harbor without losing the berth fees or her post.",
+          "secret": "She recognizes the ghost captain as her grandfather, and has told no one.",
+          "race": "human",
+          "gender": "female",
+          "kind": "guard"
+        },
+        "location": {
+          "name": "The Drowned Gannet",
+          "text": "A harbor tavern with a back room that floods at high tide and has never smelled of salt. The ghosts stand in it every night, close to the fire.",
+          "tavern": true
+        },
+        "rumor": "They say the ghost crew did not drift in by chance and are looking for the one who sold their ship out from under them."
+      },
+      "fiction": true
+    },
+    {
+      "id": "ogre-hireling-door-holding-hazard-pay",
+      "title": "Ogre Hired to Hold Door Demands Hazard Pay",
+      "category": "Guild Notices",
+      "author": "Hollis Delvewright",
+      "date": "2026-10-27",
+      "excerpt": "An ogre hired to hold a door for an adventuring party for six hours filed for hazard pay at Chapter 9. The door, he notes, held back.",
+      "content": "<p>THE UNDERMAW, LEVEL 2, OUTSIDE THE DOOR — An ogre hired to hold a door for the Fourth Attempt has filed for hazard pay with Chapter 9, after holding it for six hours while something on the far side pushed. The ogre, Brund, was engaged at the standard door-holding rate of four silver a shift. He says the standard rate assumes a door that does not push back.</p>\n\n<p>The box score: Brund started at full hit points and finished at 31 of 59. The door finished at 3 of 18. The party's bard, who asked to be named, says the party was 'inside, having a lovely time.' They were looting the room beyond. Brund was not offered a share, a stool, or a word of thanks, which I note as someone who has been told to hold the door and would rather not discuss it.</p>\n\n<p>Ansel Pottage, steward of the Fourth Attempt's hirelings, took the case within the hour. Pottage is the man who <a href=\"/a/mimic-hearing-chapter-9-hazard-pay-ruling\">won hazard pay for mimics</a>, and he read the ruling aloud to the hall. It says a hireling is owed hazard pay whenever the thing he stands beside is trying to eat him. 'The door was not trying to eat him,' Pottage said. 'The door was only the thing between him and what was. I would call that closer.'</p>\n\n<p>Examiner Odalys Brackenmoor, who hears these matters, asked whether the ogre had been bitten, clawed, or otherwise touched. Brund said he had been leaned on. Brackenmoor, who carries a ladle in memory of the mimic, said that was a new category and she would need a minute. The minute has run to two days.</p>\n\n<p>Deputy Registrar Pell Oddingwick says Chapter 9 'welcomes the clarification' and that door-holding remains 'on track' as a non-hazardous duty. Asked what was on the other side of the door, he said it was a visitor from another level. Asked which level, he said the matter was soft. By my count that is the fourth thing he has called soft this month.</p>\n\n<p>The party disagrees with Brund, mildly. The fighter, at 14 hit points, says the door was 'a good door' and that nobody told Brund to hold it for six hours. Pottage notes the contract says 'hold until relieved,' and that no one relieved him. Brund was not relieved. He was forgotten, which the contract does not cover and which Pottage is now trying to have added.</p>\n\n<p>Brund, for his part, asks little. He wants hazard rate for the shift, a stool on future delves, and the door, which he has become attached to. He has named it. I rolled poorly and did not catch the name. I did lose my seventh ten-foot pole of the season prodding the thing on the other side, which pushed back.</p>\n\n<p>Brackenmoor will rule at the next sitting. In the meantime the door is being held by two junior hirelings on a rotation, at hazard rate, by informal agreement. Nobody has written that down. Pottage is writing it down.</p>\n\n<p><em>— H.D., filing from below</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Door That Pushed Back",
+          "text": "A hireling ogre has held a dungeon door shut for hours against something pushing from the other side, and the party that hired him went in through a different way. Someone must relieve him before the door gives, and learn what is pushing."
+        },
+        "npc": {
+          "name": "Brund Haskel",
+          "role": "Hireling door-holder",
+          "want": "Hazard pay, a stool, and to keep his door.",
+          "secret": "He has been bracing against something that has stopped pushing, and he is afraid to let go and find out why.",
+          "race": "orc",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Held Door",
+          "text": "A reinforced oak door at the end of a ten-foot corridor, scored with claw marks on the inside only. A stool and a ledger of shifts sit beside it.",
+          "tavern": false
+        },
+        "rumor": "They say the thing behind the door isn't pushing anymore, it's leaning, and it's very patient."
+      },
+      "fiction": true
+    },
+    {
+      "id": "crystal-ball-subscription-lumenwick-seer-review",
+      "title": "Crystal Ball Launches at 40 gp, Future Costs Extra",
+      "category": "Technology",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-10-27",
+      "excerpt": "Lumenwick's new Seer crystal ball hit Brindlemoor shelves at 40 gp, with the future locked behind a monthly fee. Nyx tested it. Four eyes.",
+      "content": "<p>The Lumenwick Seer, a new crystal ball from Lumenwick Glassworks, went on sale in Brindlemoor this morning for 40 gp. The catch is a subscription: the ball shows you the present for free, and the future costs 6 gp a month. I queued overnight outside the Tanner's Row shop and I regret nothing!</p>\n\n<p>Unboxing was flawless. The glass is clear, the stand is walnut, and the firmware glyph on the base lit up the second I touched it. Runic latency is nearly zero. Ask it where your keys are and it answers before you finish the question. (Under the cat. Always under the cat.)</p>\n\n<p>Then I asked about tomorrow. The Seer showed me a hazy gray fog and a small banner: \"Unlock the Foresight tier to see what happens next!\" I did not unlock it. I would like it noted that I resisted for almost eleven minutes, which for me is a personal best on subscription fees, which I hate.</p>\n\n<p>The free tier, it turns out, has ads. Mid-vision, an imp in a tiny waistcoat appeared in the glass and offered me a deal on cellar insurance. Byte, my pseudodragon, who now speaks only in ad copy, answered it directly. \"Foresight. See tomorrow, today.\" The imp left looking uneasy. I think they were rivals.</p>\n\n<p>A Lumenwick spokesman, Odo Pennywhistle, said the pricing is \"a simple, transparent ladder\" and that the ad imps are \"contractors, not staff.\" Asked whether the tier that lets you see your own future also shows you the cancellation page, he said it does, eventually, \"in the order events actually occur.\" I tried it. In my vision I cancel on a Thursday, eleven weeks from now, after being asked three times whether I am sure.</p>\n\n<p>Mana throughput is the one real problem. The Seer draws power from whatever is nearby, and that was my candle, my kettle, and, briefly, Byte. Byte is fine, but now glows a little and has started using the word \"synergy.\" Brother Tumbleberry, whose column this week tells readers to put down the crystal ball and touch grass, has not tried it, which I feel shows.</p>\n\n<p>Verdict: gorgeous hardware, a present that is always visible, and a future available in monthly installments. I have already paid for the Foresight tier. I am told that I will cancel it, but I do not yet know how I feel about that. Four out of five beholder eyes.</p>\n\n<p><em>— Nyx (they/them). Damage Report below.</em></p>\n\n<p><em>Damage Report: Subscriptions sustained: 1. Imps argued with: 1. Familiars glowing: 1. Eyebrows: pending, but I foresaw them fine.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Foresight Subscription",
+          "text": "A shop in town sells crystal balls whose visions of tomorrow are sold by subscription, and customers are quietly being shown futures that rewrite themselves when they cancel. Hosea Tarn, who runs the shop, will pay the party to find out who is editing the visions before the shop is shut down."
+        },
+        "npc": {
+          "name": "Hosea Tarn",
+          "role": "Crystal ball shopkeeper",
+          "want": "To keep his shop open and find who is tampering with his customers' visions.",
+          "secret": "He has been selling the balls without checking the ad imps' contracts, and one contract gives the imps ownership of every vision.",
+          "race": "gnome",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Glass Ledger",
+          "text": "A narrow shop with a hundred crystal balls on its shelves, each showing a slightly different version of the same afternoon. The back room is full of tiny waistcoats.",
+          "tavern": false
+        },
+        "rumor": "They say the people who cancel the Foresight tier all wake up a day older than they should be."
+      },
+      "fiction": true
+    },
+    {
+      "id": "owlbear-leash-ordinance-brindlemoor-council-vote",
+      "title": "Owlbear Leash Ordinance Passes 5-4 in Brindlemoor",
+      "category": "Legislation",
+      "author": "Ottoline Vex",
+      "date": "2026-10-27",
+      "excerpt": "Brindlemoor's Burgess Council passed an owlbear leash ordinance 5-4 after nine hours. The owlbear in the gallery says it will be reviewing the text.",
+      "content": "<p>The Burgess Council of Brindlemoor passed Ordinance 41, the owlbear leash ordinance, by a vote of five to four on Tuesday night. It requires any owlbear within the town walls to be restrained by a leash of no more than twelve feet. The ordinance is six lines long. Debate on it ran nine hours.</p>\n\n<p>The session was called for the second bell and began at the fourth, after the gentleman from Tanner's Row finished a speech about starting on time. Reeve Maudrey Fennick of Brindlemoor presided and reminded the chamber twice that the bill concerned leashes. It then concerned, in order, the price of rope, the dignity of the owlbear, the dignity of the council, and a cousin of the lady from the Lower Ward who was once startled by a hen.</p>\n\n<p>The central difficulty was the definition. The first draft said a leash must be \"sufficient to restrain.\" The lady from the Smithy Quarter asked sufficient for what, and the clerk, after a pause, said an owlbear. The amendment to define an owlbear as \"a creature with the head of an owl and the body of a bear\" failed on the grounds that this described the owlbear and also, the gentleman from the Tannery noted, several members.</p>\n\n<p>The owlbear in question, a resident of the Millrace district named Brindle, attended the entire session from the gallery and ate two benches. Asked for comment afterward, it made a sound the clerk recorded as \"a low hooting remark, possibly procedural.\" Its handler, a baker named Hesper Doulby, said Brindle had no objection to a leash in principle but would like it noted that the council has no leash of its own.</p>\n\n<p>The vote itself was brief. Four members opposed it, citing rope costs. Five supported it, citing a general feeling. By my count this brings the session's Promises Made to fourteen, among them a pledge to \"review the ordinance in a tenday,\" and Promises Kept to the one about the benches, which were replaced at public expense.</p>\n\n<p>A courtier who asked not to be named because they were not authorized to be awake told me the rope contract had been settled before the debate began. The supplier is the brother-in-law of the gentleman from the Tannery, who voted no. This is, so far as I can determine, the only consistent thing about the evening.</p>\n\n<p>Enforcement falls to the town constables, who say they have neither rope nor volunteers. Fennick told the gallery, \"We are aware of the owlbear,\" and adjourned at the thirteenth bell. The ordinance takes effect at the next new moon. The council has not yet decided who will hold the other end.</p>\n\n<p>The motion carried. Nobody read it.</p>\n\n<p><em>— O.V., from the gallery</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Other End of the Leash",
+          "text": "A new town ordinance requires an owlbear to be leashed within the walls, but no one will hold the rope. The mayor will pay the party to find a volunteer, or a very strong post, before the next new moon."
+        },
+        "npc": {
+          "name": "Hesper Doulby",
+          "role": "Baker and owlbear handler",
+          "want": "To keep her owlbear Brindle legal without anyone getting a rope near its beak.",
+          "secret": "Brindle was a gift from a smuggler, and Hesper has no papers for it.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Millrace Bakery",
+          "text": "A flour-dusted bakery on the river edge with a reinforced back stable. The loaves are excellent and the walls bear claw marks at exactly owlbear height.",
+          "tavern": false
+        },
+        "rumor": "They say the rope contract went to the councilman's brother-in-law, and that the rope is mostly string."
+      },
+      "fiction": true
+    },
+    {
+      "id": "swarm-of-ravens-steals-212-constable-buttons",
+      "title": "Swarm of Ravens Strips 212 Buttons Off Constabulary",
+      "category": "Local Chaos",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-10-27",
+      "excerpt": "A swarm of ravens stole 212 brass buttons from the Constabulary's drying uniforms on Fish Street. Skritch has the scoop, and a button. Allegedly.",
+      "content": "<p>At roughly the second bell before dawn, a swarm of ravens allegedly descended on the Constabulary's laundry line on Fish Street and stole 212 brass buttons off 31 dress uniforms. The Constabulary confirms the buttons are gone, the birds are gone, and the trousers are, in the words of Sergeant Orla Pennick, \"a matter of morale.\"</p>\n\n<p>Morning muster was held anyway. Eleven constables reported for duty holding their belts with one hand and their halberds with the other. \"I saluted with my knee,\" said Sergeant Pennick. \"It is not in the manual, but neither are ravens.\"</p>\n\n<p>Witnesses say the swarm worked in perfect order. Tobin Fley, a fishmonger who was gutting a sturgeon at the time, saw the birds line up on the rope, snip the thread with their beaks, and fly off in a spiral. \"Very professional,\" Fley said. \"They took the buttons and left the fish. I have never felt so insulted.\"</p>\n\n<p>The Constabulary has opened an inquiry. Its first lead was a pigeon, which Skritch, personally and allegedly, endorses, because pigeons are guilty of something every day and nobody ever checks. The Constabulary ruled the pigeon out when it was found asleep on a ledge with no buttons and no alibi, which the Constabulary says is the same thing.</p>\n\n<p>The ravens were last seen over the roofs of Tanner's Row, where a nest was found with 140 buttons braided into the lining. Also there was a really beautiful brass lantern hook nearby, with a little curl at the end, and Skritch would like it known that he did not touch it. He did look at it for a while. Anyway. The nest sits eleven floors up a chimney and is allegedly guarded by a very cross crow.</p>\n\n<p>Reeve Maudrey Fennick has been asked whether the town will pay for replacements. \"We are aware of the ravens,\" she said, then asked everyone to stop asking about the buttons. Chapter 9 of the Adventurers' Guild, meanwhile, offered to sell the Constabulary a map to the nest for forty gold pieces. The map is allegedly accurate.</p>\n\n<p>A reward of 25 gold pieces has been posted for any button returned in good condition. The Constabulary is paying in string, which it says goes in the trousers. Residents who spot a raven wearing a Constabulary badge are asked to keep calm and to call the scanner, not the bird.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Button Thieves",
+          "text": "A swarm of ravens has stripped every brass button, buckle and clasp from the town constabulary's uniforms, and the captain will pay anything to get them back before the baron's inspection. The nest holds more than buttons, including something stolen from a noble's strongbox."
+        },
+        "npc": {
+          "name": "Orla Pennick",
+          "role": "Sergeant of the night patrol",
+          "want": "To recover the Constabulary's buttons before the inspection and avoid being the sergeant who lost her trousers.",
+          "secret": "She sold the Constabulary's spare buttons to a tailor last month and hoped the ravens would cover the shortage.",
+          "race": "human",
+          "gender": "female",
+          "kind": "guard"
+        },
+        "location": {
+          "name": "The Chimney Nest",
+          "text": "A soot-black chimney on the roof of an abandoned dye works where the ravens keep their hoard. The inside walls are braided with buttons, coins, and one very lost wedding ring.",
+          "tavern": false
+        },
+        "rumor": "They say the ravens are not thieves at all but a debt collector's spies, and the buttons are just the interest."
+      },
+      "fiction": true
+    },
+    {
+      "id": "gelatinous-cube-dishwasher-layoff-40-tankard-crumb",
+      "title": "Gelatinous Cube Replaces 40 Dishwashers at Tavern Chain",
+      "category": "Business",
+      "author": "Sterling Vanmoor",
+      "date": "2026-10-27",
+      "excerpt": "Tankard & Crumb Taverns laid off 40 dishwashers and installed one gelatinous cube in the scullery. Sterling Vanmoor calls it a bold pivot.",
+      "content": "<p>Tankard & Crumb Taverns announced Monday that it has laid off 40 dishwashers across its six Hollowpeck locations and replaced them with a single gelatinous cube. The cube is housed in the central scullery and reportedly cleans 900 plates an hour. I call this rightsizing the adventuring party, and frankly, it is the most elegant cost line I have seen all year.</p>\n\n<p>Chief Executive Hob Fennimore unveiled the hire at a breakfast presentation, standing beside the cube in a freshly pressed tabard. \"Our new colleague has no sick days, no wage demands, and a remarkable work ethic,\" he said. \"He also absorbs the plates, but we see that as a feature we can scale.\" The cube has not yet been given a name, only a badge number.</p>\n\n<p>Early results are strong. Tankard & Crumb reports a 62% drop in labor costs and a 100% drop in lingering grease. A few teething issues remain. The cube has dissolved 31 forks, a ladle, and one regional manager's notebook, which the company describes as \"an unscheduled data cleanse.\"</p>\n\n<p>Former dishwasher Pip Larkwater, 29, was less enthusiastic. \"I washed those plates for six years,\" he said, outside the scullery door. \"The cube eats the plates.\" The Servers' Benevolent Lodge has called for a picket. I call that classic union energy: refusing to see that an ooze is simply a more motivated team member.</p>\n\n<p>When I met Guildmaster Dagmar Coldpenny at a gala years ago, she told me, \"Sterling, the best employee is the one who cannot read a contract.\" I think about that every morning during my sword routine. The cube cannot read. The cube also cannot be sued, though a stable boy tried on its behalf.</p>\n\n<p>Fennimore says a second cube is planned for the pantry, subject to a successful pilot and a very large net. Shares of Tankard & Crumb rose 4% on the news. Diners were less moved, mostly because they were still looking for their spoons.</p>\n\n<p>Key takeaways for the ambitious adventurer:</p>\n\n<p>- Automation is just a coworker with fewer questions.<br>- Always keep your notebook out of the scullery.<br>- A layoff is a pivot if you say it with a smile.</p>\n\n<p><em>— Sterling Vanmoor, Guild Visionary. Let's connect at the Yawning Portal.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Cube in the Scullery",
+          "text": "A tavern's new gelatinous cube has swallowed something valuable that a guest left behind. The owner will pay the party to retrieve it without killing the cube, which she is afraid is now on payroll."
+        },
+        "npc": {
+          "name": "Greta Mossbottom",
+          "role": "Harried Tavern Owner",
+          "want": "To recover a guest's lost heirloom before the guest returns.",
+          "secret": "She has been feeding the cube her competitors' menus.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Gleaming Tankard",
+          "text": "A tavern whose plates have never been cleaner. The scullery door is always slightly ajar and faintly warm.",
+          "tavern": true
+        },
+        "rumor": "They say the cube has been seen reading the wage ledger and does not like what it finds."
+      },
+      "fiction": true
+    },
+    {
+      "id": "potion-of-healing-label-rule-marrowfield-guild",
+      "title": "Potion of Healing Labels Must List Side Effects, Guild Rules",
+      "category": "Health",
+      "author": "Brother Wendell Tumbleberry",
+      "date": "2026-10-27",
+      "excerpt": "The Marrowfield Apothecaries' Guild now requires every potion of healing to list dosage and side effects. The label is bigger than the vial.",
+      "content": "<p>Friends, the Marrowfield Apothecaries' Guild voted 31 to 4 on Monday to make every potion of healing carry a label listing its dose, its side effects, and what not to drink it with. A fair idea, I say. The trouble is that the first labels run to fourteen inches and the vials are three.</p>\n\n<p>Guildmaster Tamsin Applewick held up a sample at the vote. It wound around the vial six times and then trailed to the floor like a bride's veil. \"We have been very thorough,\" she said. \"The warnings include itchy ears, brief singing, and an urge to hug a goat.\"</p>\n\n<p>The old herbals have always said a medicine should come with plain advice: take it with food, take it after rest, and do not take it at all if you are cross with your mother. And here, for once, is an actual study. A small trial at the Marrowfield infirmary found patients read a short label twice as often as a long one, and a long one hardly at all. I am sorry to say that our healers ran the numbers and found that nobody finishes a fourteen-inch label.</p>\n\n<p>Apothecary Dunmore Greywether, who stocks the biggest shelf in the market, says the new labels have slowed his work. \"I have to hire a boy just to unroll them,\" he told me. \"Yesterday a customer sneezed and the label wound itself around his leg.\"</p>\n\n<p>I did ask the Guild whether a short label might do the job. A clerk told me the Guild is studying the question, and has produced a report on it that is fourteen inches long. I did not read it, friends, and I suspect the report knew.</p>\n\n<p>So here is what I suggest while the Guild finds its scissors. Ask your apothecary the three plain questions: what is it for, how much, and what happens if I take too much? If they cannot answer in one breath, ask for a different apothecary. And never mix a potion with ale, no matter what your cousin says.</p>\n\n<p>My friend Nyx Spindlecoil tells me there is an app that reads labels aloud. Go outside, Nyx, and read the label on a tree.</p>\n\n<p>Tonight I recommend a plain chicken-and-rice soup, which has a label of exactly one line: chicken, rice, water.</p>\n\n<p><em>Rest well, friends. — Brother Wendell</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Fourteen-Inch Warning",
+          "text": "A potion of healing sold in town carries a label that says it causes 'brief singing.' Someone has swapped a batch with a cursed lookalike, and the apothecary needs the party to trace it before the next vial is poured."
+        },
+        "npc": {
+          "name": "Dunmore Greywether",
+          "role": "Market apothecary",
+          "want": "To sell his stock before the new labels ruin his week.",
+          "secret": "He wrote the 'urge to hug a goat' warning himself, after a very odd Tuesday.",
+          "race": "human",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "Greywether's Long Shelf",
+          "text": "A narrow apothecary stall with a wall of potions, each wrapped in a paper label that touches the floor. Nobody has ever found the end of the longest one.",
+          "tavern": false
+        },
+        "rumor": "They say the Guild plans to print the labels on bedsheets next, so nobody can claim they didn't see it."
+      },
+      "fiction": true
     }
   ]
 }
