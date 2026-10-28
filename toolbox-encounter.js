@@ -10,6 +10,8 @@
    picker too (type 🐲 Homebrew lists only them), but never in a rolled encounter.
    URL: ?tab=enc&party=4x3&party=1x5&m=goblin.4&m=bugbear.1&diff=moderate&type=&env=&band=&pack=&seed=
    (env/band: the roll pickers; pack: the group a roll landed on; seed: the scene).
+   On a Pathfinder page (ENC_PF2E in encounter-engine.js) the creatures are Pathfinder's, with five
+   difficulties, no homebrew, no foe groups, no stat blocks yet, and no Initiative tab to send to.
    ============================================ */
 
 const ENC_MAX_GROUPS = 8;
@@ -57,20 +59,39 @@ function typeName(type) {
     return type.charAt(0).toUpperCase() + type.slice(1);
 }
 
+// The homebrew monsters in the picker (5e only).
+function encHbRows() {
+    return ENC_PF2E ? [] : hbRows;
+}
+
+// A row's numbers: CR or level, XP, AC, HP, and (Pathfinder, which has no stat blocks here yet) saves.
+function encStats(m, each = '') {
+    const fmt = n => n.toLocaleString('en-US');
+    const sign = n => (n >= 0 ? '+' : '') + n;
+    const base = `${crLabel(m.cr)} · ${fmt(m.xp)} XP${each} · AC ${m.ac} · HP ${m.hp}`;
+    return ENC_PF2E ? `${base} · Fort ${sign(m.fort)} Ref ${sign(m.ref)} Will ${sign(m.will)} · Perception ${sign(m.per)}` : base;
+}
+
 // ── Setup ─────────────────────────────────────────────────
 function setupEncounterForm() {
-    const types = [...new Set(MONSTERS.map(m => m.type))].sort();
+    const types = [...new Set(ENC_MONSTERS.map(m => m.type))].sort();
     ['en-type', 'en-roll-type'].forEach(id => {
         const sel = document.getElementById(id);
         types.forEach(t => sel.add(new Option(typeName(t), t)));
     });
-    document.getElementById('en-type').add(new Option('🐲 Homebrew', 'homebrew'), 1);
+    if (ENC_PF2E) {
+        // Five difficulties; no foe groups, stat blocks, or Initiative tab yet.
+        const diff = document.getElementById('en-diff');
+        diff.innerHTML = '';
+        ENC_DIFFS.forEach(k => diff.add(new Option(`${ENCOUNTER_LEVELS[k].icon} ${ENCOUNTER_LEVELS[k].label}`, k, k === 'moderate', k === 'moderate')));
+        ['en-band', 'en-send', 'en-sb-all'].forEach(id => { document.getElementById(id).style.display = 'none'; });
+    } else document.getElementById('en-type').add(new Option('🐲 Homebrew', 'homebrew'), 1);
     const env = document.getElementById('en-env');
     ENC_HABITAT_KEYS.forEach(k => env.add(new Option(`${ENC_HABITATS[k].icon} ${ENC_HABITATS[k].label}`, k)));
     const band = document.getElementById('en-band');
     [...ENC_BANDS].sort((a, b) => a.label.localeCompare(b.label)).forEach(b => band.add(new Option(`${b.icon} ${b.label}`, b.key)));
     const crSel = document.getElementById('en-cr');
-    [...new Set(MONSTERS.map(m => m.cr))].forEach(cr => crSel.add(new Option(`CR ${cr}`, cr)));
+    [...new Set(ENC_MONSTERS.map(m => m.cr))].forEach(cr => crSel.add(new Option(crLabel(cr), cr)));
 }
 
 // ── Party ─────────────────────────────────────────────────
@@ -103,8 +124,8 @@ function pickerMatches() {
     const q = document.getElementById('en-search').value.trim().toLowerCase();
     const cr = document.getElementById('en-cr').value;
     const type = document.getElementById('en-type').value;
-    const maxCr = Math.max(0.125, Math.floor(encBudget().avgLevel));
-    return [...hbRows, ...MONSTERS].filter(m => (!q || m.name.toLowerCase().includes(q))
+    const maxCr = ENC_PF2E ? encBudget().level : Math.max(0.125, Math.floor(encBudget().avgLevel));
+    return [...encHbRows(), ...ENC_MONSTERS].filter(m => (!q || m.name.toLowerCase().includes(q))
         && (!type || (type === 'homebrew' ? m.hb : m.type === type))
         && (!cr || (cr === 'party' ? crValue(m.cr) <= maxCr : m.cr === cr)));
 }
@@ -115,12 +136,12 @@ function renderPicker() {
     document.getElementById('en-results').innerHTML = shown.map(m => `
         <li><button type="button" class="en-pick" data-id="${m.id}" title="Add a ${esc(m.name)}">
             <span class="en-name">${m.hb ? '🐲 ' : ''}${esc(m.name)}</span>
-            <span class="en-meta">${m.hb ? 'Homebrew · ' : ''}CR ${m.cr} · ${m.xp.toLocaleString('en-US')} XP · AC ${m.ac} · HP ${m.hp} · ${esc(typeName(m.type))}</span>
+            <span class="en-meta">${m.hb ? 'Homebrew · ' : ''}${encStats(m)} · ${esc(typeName(m.type))}</span>
             <span class="en-plus" aria-hidden="true">➕</span>
         </button></li>`).join('');
     document.getElementById('en-results-note').textContent = !all.length ? (document.getElementById('en-type').value === 'homebrew'
             ? 'No homebrew yet. Make one in the Monster Maker and save it to the notebook.' : 'No monsters match. Try a shorter name or another filter.')
-        : all.length > shown.length ? `Showing ${shown.length} of ${all.length}. Search or filter to narrow it down.` : `${all.length} monster${all.length === 1 ? '' : 's'}.`;
+        : all.length > shown.length ? `Showing ${shown.length} of ${all.length}. Search or filter to narrow it down.` : `${all.length} ${ENC_PF2E ? 'creature' : 'monster'}${all.length === 1 ? '' : 's'}.`;
 }
 
 function addMonster(m, count = 1) {
@@ -141,15 +162,15 @@ function renderEncounter() {
     const fmt = n => n.toLocaleString('en-US');
 
     document.getElementById('en-budget').innerHTML = `Budget for ${budget.chars} character${budget.chars === 1 ? '' : 's'}:
-        ${['low', 'moderate', 'high'].map(k => `<span>${ENCOUNTER_LEVELS[k].icon} ${ENCOUNTER_LEVELS[k].label} <b>${fmt(budget[k])}</b></span>`).join(' ')} XP`;
+        ${ENC_DIFFS.map(k => `<span>${ENCOUNTER_LEVELS[k].icon} ${ENCOUNTER_LEVELS[k].label} <b>${fmt(budget[k])}</b></span>`).join(' ')} XP${ENC_PF2E ? ` (party level ${budget.level})` : ''}`;
 
     const box = document.getElementById('en-list');
     document.getElementById('en-empty').hidden = enc.list.length > 0;
     box.innerHTML = enc.list.map((e, i) => `
         <li data-i="${i}">
             <div class="en-row-main">
-                <button type="button" class="sb-toggle" aria-expanded="${enc.open.has(e.m.id)}" title="Show or hide the stat block"><span class="en-name sb-name">${esc(e.m.name)}</span> <span class="sb-hint" aria-hidden="true">📜</span></button>
-                <span class="en-meta">CR ${e.m.cr} · ${fmt(e.m.xp)} XP each · AC ${e.m.ac} · HP ${e.m.hp} · Init ${e.m.dex >= 0 ? '+' : ''}${e.m.dex}</span>
+                ${ENC_PF2E ? `<span class="en-name">${esc(e.m.name)}</span>` : `<button type="button" class="sb-toggle" aria-expanded="${enc.open.has(e.m.id)}" title="Show or hide the stat block"><span class="en-name sb-name">${esc(e.m.name)}</span> <span class="sb-hint" aria-hidden="true">📜</span></button>`}
+                <span class="en-meta">${encStats(e.m, ' each')}${ENC_PF2E ? '' : ` · Init ${e.m.dex >= 0 ? '+' : ''}${e.m.dex}`}</span>
             </div>
             <div class="en-count">
                 <button type="button" class="en-minus" aria-label="One fewer ${esc(e.m.name)}">−</button>
@@ -165,15 +186,16 @@ function renderEncounter() {
     allBtn.textContent = allOpen ? '📜 Hide Stat Blocks' : '📜 Show Stat Blocks';
     allBtn.setAttribute('aria-pressed', allOpen);
 
-    // The meter runs a quarter past the High budget, or further when the fight is bigger.
-    const scale = Math.max(budget.high * 1.25, xp) || 1;
+    // The meter runs a quarter past the top budget, or further when the fight is bigger.
+    const top = ENC_DIFFS[ENC_DIFFS.length - 1];
+    const scale = Math.max(budget[top] * 1.25, xp) || 1;
     const pct = n => Math.min(100, n / scale * 100).toFixed(1);
     const level = rating ? ENCOUNTER_LEVELS[rating] : null;
     document.getElementById('en-meter').innerHTML = `
         <div class="en-rating"><b>${level ? `${level.icon} ${level.label}` : 'No monsters yet'}</b><span>${fmt(xp)} XP</span></div>
-        <div class="en-bar" role="img" aria-label="${fmt(xp)} XP against budgets of ${fmt(budget.low)}, ${fmt(budget.moderate)}, and ${fmt(budget.high)}">
+        <div class="en-bar" role="img" aria-label="${fmt(xp)} XP against budgets of ${ENC_DIFFS.slice(0, -1).map(k => fmt(budget[k])).join(', ')}, and ${fmt(budget[top])}">
             <span class="en-fill en-fill-${rating || 'none'}" style="width:${pct(xp)}%"></span>
-            ${['low', 'moderate', 'high'].map(k => `<i style="left:${pct(budget[k])}%" title="${ENCOUNTER_LEVELS[k].label}: ${fmt(budget[k])} XP"></i>`).join('')}
+            ${ENC_DIFFS.map(k => `<i style="left:${pct(budget[k])}%" title="${ENCOUNTER_LEVELS[k].label}: ${fmt(budget[k])} XP"></i>`).join('')}
         </div>
         ${level ? `<p class="en-desc">${esc(level.text)}</p>` : ''}
         ${encounterNotes(enc.list, budget).map(n => `<p class="en-note">⚠️ ${esc(n)}</p>`).join('')}`;
@@ -218,12 +240,13 @@ function renderScene() {
     box.hidden = !s;
     if (!s) { box.innerHTML = ''; return; }
     const loot = s.loot.startsWith('hoard:') ? '🏆 Roll Their Hoard' : '💰 Roll What They Carry';
+    const lootHref = encLootLink(s);
     box.innerHTML = `
         <div class="en-scene-head"><h4 class="en-scene-title">${esc(s.title)}</h4></div>
         <dl class="dt-scene">${encSceneLines(s).map(([label, text]) => `<div><dt>${esc(label)}</dt><dd>${esc(text)}</dd></div>`).join('')}</dl>
         <div class="tool-toolbar en-scene-bar">
             <button type="button" class="btn" id="en-rescene">🎲 New Scene</button>
-            <a class="btn" href="${esc(encLootLink(s))}">${loot}</a>
+            ${ruleLinkOk(lootHref) ? `<a class="btn" href="${esc(lootHref)}">${loot}</a>` : ''}
         </div>`;
 }
 
@@ -263,7 +286,7 @@ function rollEncounterFor() {
     };
     const seed = newSeed();
     const res = withSeed(seed, () => rollThemedEncounter(encBudget(), diff, opts));
-    if (!res.list.length) { flash('enc-status', '⚠️ No monsters fit those choices and this budget. Try another type, group, or habitat, or a higher difficulty.'); return; }
+    if (!res.list.length) { flash('enc-status', ENC_PF2E ? '⚠️ No creatures fit that type and this budget. Try another type or a higher difficulty.' : '⚠️ No monsters fit those choices and this budget. Try another type, group, or habitat, or a higher difficulty.'); return; }
     enc.list = res.list;
     enc.band = res.band;
     enc.seed = seed;
@@ -277,9 +300,10 @@ function encounterText() {
     const rating = rateEncounter(xp, budget);
     const lines = [
         `Encounter: ${rating ? ENCOUNTER_LEVELS[rating].label : 'empty'}, ${xp.toLocaleString('en-US')} XP`,
-        `Party: ${enc.party.map(g => `${g.count} × level ${g.level}`).join(', ')} (Low ${budget.low.toLocaleString('en-US')} / Moderate ${budget.moderate.toLocaleString('en-US')} / High ${budget.high.toLocaleString('en-US')} XP)`
+        `Party: ${enc.party.map(g => `${g.count} × level ${g.level}`).join(', ')} (${ENC_DIFFS.map(k => `${ENCOUNTER_LEVELS[k].label} ${budget[k].toLocaleString('en-US')}`).join(' / ')} XP)`
     ];
-    enc.list.forEach(e => lines.push(`  ${e.count} × ${e.m.name} (CR ${e.m.cr}, ${e.m.xp.toLocaleString('en-US')} XP each; AC ${e.m.ac}, HP ${e.m.hp})`));
+    enc.list.forEach(e => lines.push(ENC_PF2E ? `  ${e.count} × ${e.m.name} (${encStats(e.m, ' each').replace(/ · /g, ', ')})`
+        : `  ${e.count} × ${e.m.name} (CR ${e.m.cr}, ${e.m.xp.toLocaleString('en-US')} XP each; AC ${e.m.ac}, HP ${e.m.hp})`));
     const s = encScene();
     if (s) {
         lines.push('', s.title.toUpperCase());
@@ -403,7 +427,7 @@ function setupEncounter() {
     document.getElementById('en-roll').addEventListener('click', rollEncounterFor);
     document.getElementById('en-send').addEventListener('click', sendToInitiative);
     // Copy adds the stat blocks, loading them first if none has been opened yet.
-    document.getElementById('en-copy').addEventListener('click', () => loadMonsterBlocks().catch(() => {})
+    document.getElementById('en-copy').addEventListener('click', () => (ENC_PF2E ? Promise.resolve() : loadMonsterBlocks().catch(() => {}))
         .then(() => copyText(encounterText(), 'enc-status', blocksReady() ? 'the encounter and its stat blocks' : 'the encounter')));
     document.getElementById('en-sb-all').addEventListener('click', toggleAllBlocks);
     document.getElementById('en-link').addEventListener('click', () =>

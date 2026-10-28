@@ -4,6 +4,8 @@
    (CC-BY 4.0): add up each character's number for the difficulty, then spend it on monsters.
    Monster XP and CR: monsters-data.js (SRD 5.1). Rolls use rand() from rng.js.
    Habitats, foe groups, and scenes (rollThemedEncounter, rollEncounterScene) are the Gazette's own.
+   Pathfinder pages (rules-pf2e.js plus pf2e-creatures-data.js, ROADMAP L3 P4) use the same code
+   with Pathfinder's creatures and math: see ENC_PF2E below.
    ============================================ */
 
 // Level → [Low, Moderate, High] XP per character.
@@ -13,22 +15,81 @@ const ENCOUNTER_BUDGET = [null,
     [1900, 2900, 4100], [2200, 3700, 4700], [2600, 4200, 5400], [2900, 4900, 6200], [3300, 5400, 7800],
     [3800, 6100, 9800], [4500, 7200, 11700], [5000, 8700, 14200], [5500, 10700, 17200], [6400, 13200, 22000]];
 
-const ENCOUNTER_LEVELS = {
+/* Pathfinder 2e (GM Core, ORC): the party has one level (the average, rounded), a creature is worth
+   XP by how far its level is from the party's, and the budget is a fixed number per difficulty for
+   four characters, adjusted for each character more or fewer. A creature's `cr` is its level (as
+   text, like 5e's CR) and its `xp` is read against the current party (partyBudget sets it), so the
+   code below runs unchanged. `dex` is its Perception, the usual initiative roll. */
+const ENC_PF2E = ruleSystemId() === 'pf2e' && typeof PF2E_CREATURES !== 'undefined';
+// Creature level − party level, from −4 → XP. Further below is worth nothing; above +4 is past the
+// table, so the Gazette carries on its doubling every two levels.
+const ENC_PF2E_XP = { '-4': 10, '-3': 15, '-2': 20, '-1': 30, 0: 40, 1: 60, 2: 80, 3: 120, 4: 160 };
+// Difficulty → [XP for four characters, XP per character more or fewer].
+const ENC_PF2E_BUDGET = { trivial: [40, 10], low: [60, 20], moderate: [80, 20], severe: [120, 30], extreme: [160, 40] };
+let encPartyLevel = 1;
+
+function encPf2eXp(level) {
+    const d = level - encPartyLevel;
+    if (d < -4) return 0;
+    if (d <= 4) return ENC_PF2E_XP[d];
+    return d % 2 ? 240 * 2 ** ((d - 5) / 2) : 160 * 2 ** ((d - 4) / 2);
+}
+
+// The creature's main kind, for the type pickers and the scene.
+const ENC_PF2E_TYPES = ['undead', 'dragon', 'fiend', 'celestial', 'monitor', 'fey', 'elemental', 'construct', 'ooze', 'plant', 'fungus',
+    'aberration', 'giant', 'spirit', 'astral', 'ethereal', 'dream', 'time', 'beast', 'animal', 'humanoid'];
+
+function encPf2eMonster(c) {
+    const type = ENC_PF2E_TYPES.find(t => c.traits.includes(t)) || 'humanoid';
+    return { ...c, cr: String(c.level), dex: c.per, type, get xp() { return encPf2eXp(c.level); } };
+}
+
+// A Pathfinder kind → the 5e type whose scene lines fit it (scenes are written by 5e type).
+const ENC_PF2E_SCENE_TYPE = { animal: 'beast', beast: 'monstrosity', fungus: 'plant', monitor: 'celestial', spirit: 'undead',
+    astral: 'aberration', ethereal: 'aberration', dream: 'fey', time: 'aberration' };
+
+function encSceneType(m) {
+    return ENC_PF2E ? ENC_PF2E_SCENE_TYPE[m.type] || m.type : m.type;
+}
+
+const ENC_MONSTERS = ENC_PF2E ? PF2E_CREATURES.map(encPf2eMonster) : MONSTERS;
+// The difficulties, easiest first.
+const ENC_DIFFS = ENC_PF2E ? ['trivial', 'low', 'moderate', 'severe', 'extreme'] : ['low', 'moderate', 'high'];
+
+const ENCOUNTER_LEVELS = ENC_PF2E ? {
+    trivial: { label: 'Trivial', icon: '⚪', text: 'Barely a fight. The party wins without spending much: good for showing off a new creature or setting the mood.' },
+    low: { label: 'Low', icon: '🟢', text: 'A real fight, but the party should come through it with spells and healing to spare.' },
+    moderate: { label: 'Moderate', icon: '🟡', text: 'A serious fight. The party will spend resources, and a careless character can go down.' },
+    severe: { label: 'Severe', icon: '🟠', text: 'The hardest fight a party at full strength can expect to win with good tactics. Someone will probably drop.' },
+    extreme: { label: 'Extreme', icon: '🔴', text: 'A coin flip, even for a party at full strength. Save it for the final battle, and give them a way out.' },
+    over: { label: 'Beyond Extreme', icon: '💀', text: 'More XP than the Extreme budget. Expect deaths, or give the party a way to run, parley, or even the odds.' }
+} : {
     low: { label: 'Low', icon: '🟢', text: 'A scary moment or two, but the party should win without losing anyone. Some may need healing afterwards.' },
     moderate: { label: 'Moderate', icon: '🟡', text: 'Could go badly without healing and other resources. Weaker characters may drop, and someone could die.' },
     high: { label: 'High', icon: '🔴', text: 'Could be lethal for one or more characters. The party needs smart tactics, quick thinking, and some luck.' },
     over: { label: 'Beyond High', icon: '💀', text: 'More XP than the High budget. Expect deaths, or give the party a way to run, parley, or even the odds.' }
 };
 
-const MONSTER_BY_ID = Object.fromEntries(MONSTERS.map(m => [m.id, m]));
+const MONSTER_BY_ID = Object.fromEntries(ENC_MONSTERS.map(m => [m.id, m]));
 
 function crValue(cr) {
     const [a, b] = String(cr).split('/').map(Number);
     return b ? a / b : a;
 }
 
+// "CR 1/2", or a Pathfinder creature's "Level 3".
+function crLabel(cr) {
+    return `${ENC_PF2E ? 'Level' : 'CR'} ${cr}`;
+}
+
+// The highest CR (Pathfinder: level) a rolled encounter uses.
+function encMaxCr(budget) {
+    return ENC_PF2E ? budget.level + 4 : Math.max(0.125, Math.floor(budget.avgLevel));
+}
+
 // groups: [{ count, level }] → each difficulty's budget for the whole party.
 function partyBudget(groups) {
+    if (ENC_PF2E) return partyBudgetPf2e(groups);
     const b = { low: 0, moderate: 0, high: 0, chars: 0, levels: 0 };
     groups.forEach(({ count, level }) => {
         const row = ENCOUNTER_BUDGET[level];
@@ -40,6 +101,23 @@ function partyBudget(groups) {
     return b;
 }
 
+// Pathfinder: the party level is the average, rounded, and every creature's XP follows it.
+function partyBudgetPf2e(groups) {
+    const b = { chars: 0, levels: 0 };
+    groups.forEach(({ count, level }) => {
+        if (!(level >= 1 && level <= 20) || count < 1) return;
+        b.chars += count; b.levels += level * count;
+    });
+    b.avgLevel = b.chars ? b.levels / b.chars : 0;
+    b.level = Math.max(1, Math.round(b.avgLevel));
+    encPartyLevel = b.level;
+    ENC_DIFFS.forEach(k => {
+        const [four, each] = ENC_PF2E_BUDGET[k];
+        b[k] = b.chars ? Math.max(each, four + (b.chars - 4) * each) : 0;
+    });
+    return b;
+}
+
 // list: [{ m, count }]
 function encounterXp(list) {
     return list.reduce((t, e) => t + e.m.xp * e.count, 0);
@@ -47,11 +125,12 @@ function encounterXp(list) {
 
 function rateEncounter(xp, budget) {
     if (!xp || !budget.chars) return null;
-    return xp <= budget.low ? 'low' : xp <= budget.moderate ? 'moderate' : xp <= budget.high ? 'high' : 'over';
+    return ENC_DIFFS.find(k => xp <= budget[k]) || 'over';
 }
 
 // Warnings in the spirit of the SRD 5.2 troubleshooting advice (the wording is the Gazette's).
 function encounterNotes(list, budget) {
+    if (ENC_PF2E) return encounterNotesPf2e(list, budget);
     const notes = [];
     const creatures = list.reduce((t, e) => t + e.count, 0);
     if (!creatures || !budget.chars) return notes;
@@ -64,6 +143,30 @@ function encounterNotes(list, budget) {
     return notes;
 }
 
+// The same kind of advice for Pathfinder, where levels matter more than numbers (the wording is the Gazette's).
+function encounterNotesPf2e(list, budget) {
+    const notes = [];
+    const creatures = list.reduce((t, e) => t + e.count, 0);
+    if (!creatures || !budget.chars) return notes;
+    const lv = budget.level;
+    if (budget.avgLevel !== lv) notes.push(`The party's levels are mixed, so the budget uses party level ${lv}, the average rounded.`);
+    if (creatures > budget.chars * 2) notes.push(`${creatures} creatures against ${budget.chars} character${budget.chars === 1 ? '' : 's'}: more than two each means a lot of turns to run. Pathfinder troops and swarms do the job of a crowd with one stat block.`);
+    const boss = list.filter(e => e.m.level >= lv + 3);
+    if (boss.length) notes.push(`${boss.map(e => e.m.name).join(', ')} ${boss.length === 1 ? 'is' : 'are'} 3 or more levels above the party: its attacks land critical hits often, and the party will miss it a lot. Fine for a solo boss; deadly with friends.`);
+    const past = list.filter(e => e.m.level > lv + 4);
+    if (past.length) notes.push(`${past.map(e => e.m.name).join(', ')} ${past.length === 1 ? 'is' : 'are'} more than 4 levels above the party, past the end of the XP table. Its XP here is the Gazette's guess.`);
+    const fodder = list.filter(e => e.m.level <= lv - 4).reduce((t, e) => t + e.count, 0);
+    if (fodder) notes.push(`${fodder} creature${fodder === 1 ? ' is' : 's are'} 4 or more levels below the party: barely a threat, and ${fodder === 1 ? 'it' : 'they'} add${fodder === 1 ? 's' : ''} little or no XP.`);
+    if (list.length > 3) notes.push(`${list.length} different stat blocks to run. Two or three is easier to manage at the table.`);
+    return notes;
+}
+
+// The budget of the difficulty below diff: a roll should spend more than that.
+function encFloor(budget, diff) {
+    const i = ENC_DIFFS.indexOf(diff);
+    return i > 0 ? budget[ENC_DIFFS[i - 1]] : 0;
+}
+
 function pick(arr) {
     return arr[Math.floor(rand() * arr.length)];
 }
@@ -73,8 +176,8 @@ function pick(arr) {
 // no CR above the party's level, at most two creatures per character.
 function rollEncounter(budget, diff, type = '') {
     const target = budget[diff];
-    const maxCr = Math.max(0.125, Math.floor(budget.avgLevel));
-    const pool = MONSTERS.filter(m => m.xp > 0 && m.xp <= target && crValue(m.cr) <= maxCr && (!type || m.type === type));
+    const maxCr = encMaxCr(budget);
+    const pool = ENC_MONSTERS.filter(m => m.xp > 0 && m.xp <= target && crValue(m.cr) <= maxCr && (!type || m.type === type));
     if (!pool.length) return [];
     return fillEncounter(pool, budget, diff);
 }
@@ -84,7 +187,7 @@ function rollEncounter(budget, diff, type = '') {
 function fillEncounter(pool, budget, diff, leadPool = null) {
     const target = budget[diff];
     const cap = Math.max(2, budget.chars * 2);
-    const floor = diff === 'high' ? budget.moderate : diff === 'moderate' ? budget.low : 0;
+    const floor = encFloor(budget, diff);
     let best = [], bestXp = 0;
     for (let t = 0; t < 120 && !(bestXp > floor && bestXp >= target * 0.8); t++) {
         const rolledKinds = 1 + (rand() < 0.45 ? 1 : 0) + (rand() < 0.25 ? 1 : 0);
@@ -477,7 +580,7 @@ ENC_BANDS.forEach(b => {
 });
 
 // Generic scene lines for fights with no group (hand-built, or mixed): by creature type.
-const ENC_TYPE_SCENE = {
+const ENC_TYPE_SCENE = ruleTable({
     aberration: { doing: [["hunt", "drawn to the party's thoughts"], ["guard", "lurking where it shouldn't be"]], tactics: "It uses its strangest power first and studies the party.", morale: "It retreats when hurt and plots revenge." },
     beast: { doing: [["hunt", "hungry and on the party's trail"], ["work", "feeding on a kill"], ["guard", "defending its den"], ["camp", "resting, and startled by the party"]], tactics: "It goes for the closest or the weakest.", morale: "It flees once it's bloodied, unless cornered." },
     celestial: { doing: [["parley", "barring the way"], ["guard", "guarding something holy"]], tactics: "It uses the least force needed.", morale: "It stops when convinced the party isn't evil." },
@@ -493,18 +596,19 @@ const ENC_TYPE_SCENE = {
     plant: { doing: [["ambush", "lying still among other plants"], ["guard", "rooted in place"]], tactics: "It holds whatever comes close.", morale: "It never flees." },
     swarm: { doing: [["hunt", "boiling out of the dark"], ["camp", "nesting"]], tactics: "It overwhelms whoever's closest.", morale: "Fire or smoke disperses it." },
     undead: { doing: [["hunt", "drawn to the living"], ["guard", "guarding its tomb"], ["ambush", "lying still among the dead"]], tactics: "It attacks the living without pause.", morale: "It fights until destroyed." }
-};
+});
 
-// Who notices whom, by what the foes are doing (SRD 5.1 surprise: Stealth vs passive Perception).
-const ENC_AWARENESS = {
-    ambush: "They're hidden and waiting. Roll their Stealth against each character's passive Perception: anyone who doesn't notice them is surprised in the first round.",
-    camp: "They haven't seen the party. A group Stealth check against their passive Perception lets the party choose the moment, and any foe who doesn't notice the party is surprised.",
-    work: "They're busy and haven't looked up. The party can watch, sneak closer, or strike first: any foe who doesn't notice the party is surprised.",
-    guard: "They're watching the approach. No one is surprised, but the party can see the setup before deciding.",
-    travel: "Both sides spot each other at the same moment. No one is surprised.",
-    hunt: "They've already picked up the party's trail. Roll their Stealth against the party's passive Perception to see if they get the first strike.",
+// Who notices whom, by what the foes are doing (SRD 5.1 surprise: Stealth vs passive Perception;
+// Pathfinder has no surprise round: whoever is sneaking rolls Stealth for initiative).
+const ENC_AWARENESS = ruleTable({
+    ambush: "{alt:They're hidden and waiting. Roll their Stealth against each character's passive Perception: anyone who doesn't notice them is surprised in the first round.|They're hidden and waiting. They roll Stealth for initiative; a character whose Perception DC their roll beats doesn't know where they are when the fight starts.}",
+    camp: "{alt:They haven't seen the party. A group Stealth check against their passive Perception lets the party choose the moment, and any foe who doesn't notice the party is surprised.|They haven't seen the party. The party can choose the moment: anyone sneaking up rolls Stealth for initiative against the foes' Perception DCs.}",
+    work: "{alt:They're busy and haven't looked up. The party can watch, sneak closer, or strike first: any foe who doesn't notice the party is surprised.|They're busy and haven't looked up. The party can watch, sneak closer, or strike first, rolling Stealth for initiative if they sneak.}",
+    guard: "{alt:They're watching the approach. No one is surprised, but the party can see the setup before deciding.|They're watching the approach. Everyone rolls Perception for initiative, but the party can see the setup before deciding.}",
+    travel: "{alt:Both sides spot each other at the same moment. No one is surprised.|Both sides spot each other at the same moment. Everyone rolls Perception for initiative.}",
+    hunt: "{alt:They've already picked up the party's trail. Roll their Stealth against the party's passive Perception to see if they get the first strike.|They've already picked up the party's trail. They roll Stealth for initiative against the party's Perception DCs to see if they strike first, unseen.}",
     parley: "They've seen the party and call out before anyone draws steel. Talking comes first, if the party wants it."
-};
+});
 const ENC_TITLE_EVENTS = {
     ambush: ["Ambush", "Trap", "Bushwhacking", "Snare"], camp: ["Raid", "Night Raid", "Surprise", "Fire"],
     work: ["Interruption", "Business", "Trouble", "Discovery"], guard: ["Standoff", "Crossing", "Checkpoint", "Gate"],
@@ -551,7 +655,7 @@ const ENC_MONSTER_MARKS = ["is bigger than the rest of them", "bears old scars f
 const ENC_BEAST_MARKS = ["has a torn ear and a white muzzle", "is the biggest of them, by a good margin", "has an old arrow wound that still weeps", "has one clouded eye", "is scarred all down one side", "moves with a limp, and is twice as angry for it", "has an odd coloring: pale, almost silver", "wears a broken collar, so someone once owned it"];
 const ENC_UNDEAD_MARKS = ["still wears the rusted crown it was buried in", "drags a broken chain", "has a mouth that never stops moving", "whispers a name over and over", "has a dagger still buried in its chest", "glows faintly with grave light"];
 
-const ENC_TWISTS = [
+const ENC_TWISTS = ruleTable([
     "On round {n}, {a monster} drawn by the noise arrives, and it goes for whoever is bloodied.",
     "They have a prisoner: {captive}, gagged and tied up. If the fight turns, they'll use them as a shield.",
     "One of them is already hurt (half hit points) and wants out of this life.",
@@ -562,14 +666,18 @@ const ENC_TWISTS = [
     "One of them has something the party wants: {thing}.",
     "A witness hides nearby: {witness}, who'll tell the story however it benefits them.",
     "Halfway through, one of them recognizes a party member from somewhere, and stops to stare."
-];
+]);
 const ENC_CAPTIVES = ["a merchant's son", "a priest of the local temple", "a halfling peddler", "a terrified tax collector", "a dwarf miner", "a young noble in muddy silks", "a goatherd", "a messenger with a sealed letter", "a captured scout of a rival band", "a dog that won't stop barking"];
 const ENC_MISTAKEN = ["the people who robbed them last week", "tax collectors", "agents of the local lord", "the bounty hunters they've been warned about", "a rival band", "the ones their master told them to expect"];
 const ENC_THINGS = ["a map with a mark on it", "a stolen holy symbol", "a letter addressed to a party member", "the key to a nearby vault", "a sword the party has seen before", "a ledger listing bribes", "a strange glowing stone", "a lockbox that rattles"];
 const ENC_WITNESSES = ["a farmer behind a hedge", "a child up a tree", "a bard taking notes", "a nervous merchant under a cart", "a priest on the road", "a wandering tinker"];
 
 // SRD 5.1 Damage Severity by Level (setback) and an easy-to-medium DC by party level.
+// Pathfinder: GM Core's DC by level, and the Gazette's damage for a setback that scales the same way.
+const ENC_PF2E_LEVEL_DC = [14, 15, 16, 18, 19, 20, 22, 23, 24, 26, 27, 28, 30, 31, 32, 34, 35, 36, 38, 39, 40];
+
 function encHazardNumbers(level) {
+    if (ENC_PF2E) return { dc: ENC_PF2E_LEVEL_DC[Math.min(20, Math.max(0, level))], dmg: `${2 + 2 * Math.floor((level - 1) / 3)}d6` };
     return level <= 4 ? { dc: 11, dmg: "1d10" } : level <= 10 ? { dc: 13, dmg: "2d10" } : level <= 16 ? { dc: 15, dmg: "4d10" } : { dc: 17, dmg: "10d10" };
 }
 
@@ -580,7 +688,7 @@ function encAn(word) {
 // The group a list of monsters belongs to: the band holding the most of them (lead first),
 // ties to the earlier band. Null when no band holds the strongest monster.
 function encInferBand(list) {
-    if (!list.length) return null;
+    if (!list.length || ENC_PF2E) return null;
     const lead = list.reduce((a, b) => (b.m.xp > a.m.xp ? b : a)).m;
     let best = null, bestN = 0;
     ENC_BANDS.forEach(b => {
@@ -599,12 +707,15 @@ function encBandFits(band, list) {
 // band: '' = any group, 'none' = no group (any monster, like before), or a band key.
 // Returns { list, band } (band = the key, or null).
 function rollThemedEncounter(budget, diff, opts = {}) {
-    const { type = "", habitat = "", band = "" } = opts;
+    const { type = "", habitat = "" } = opts;
+    // Pathfinder has no foe groups yet (theirs are written around 5e monsters and rules).
+    const band = ENC_PF2E ? "none" : opts.band || "";
     const target = budget[diff];
-    const maxCr = Math.max(0.125, Math.floor(budget.avgLevel));
+    const maxCr = encMaxCr(budget);
     const fits = m => m && m.xp > 0 && m.xp <= target && crValue(m.cr) <= maxCr && (!type || m.type === type);
-    const floor = diff === "high" ? budget.moderate : diff === "moderate" ? budget.low : 0;
-    const inHab = m => !habitat || (ENC_MONSTER_HABITATS[m.id] || []).includes(habitat);
+    const floor = encFloor(budget, diff);
+    // Pathfinder creatures have no habitats yet: the habitat only sets the scene.
+    const inHab = m => !habitat || ENC_PF2E || (ENC_MONSTER_HABITATS[m.id] || []).includes(habitat);
     // The whole group keeps to one habitat (the one picked, or one of theirs) when it can,
     // so swamp crocodiles don't turn up with mountain bears. Untagged members go anywhere.
     // strict: give up (rather than leave the habitat) when no leader lives there.
@@ -637,7 +748,7 @@ function rollThemedEncounter(budget, diff, opts = {}) {
         }
         if (best) return best;
     }
-    const pool = MONSTERS.filter(m => fits(m) && inHab(m));
+    const pool = ENC_MONSTERS.filter(m => fits(m) && inHab(m));
     return { list: pool.length ? fillEncounter(pool, budget, diff) : [], band: null };
 }
 
@@ -659,7 +770,7 @@ function rollEncounterScene(list, seed, opts = {}) {
     const leadEntry = list.reduce((a, b) => (b.m.xp > a.m.xp ? b : a));
     const lead = leadEntry.m;
     const level = Math.min(20, Math.max(1, Math.round(opts.level || 1)));
-    const typeScene = ENC_TYPE_SCENE[lead.type] || ENC_TYPE_SCENE.humanoid;
+    const typeScene = ENC_TYPE_SCENE[encSceneType(lead)] || ENC_TYPE_SCENE.humanoid;
     const num = encHazardNumbers(level);
     const fill = s => s.replace(/\{dc\}/g, num.dc).replace(/\{dmg\}/g, num.dmg);
 
@@ -670,7 +781,7 @@ function rollEncounterScene(list, seed, opts = {}) {
         const shared = own.filter(h => list.every(e => !ENC_MONSTER_HABITATS[e.m.id] || ENC_MONSTER_HABITATS[e.m.id].includes(h)));
         const homes = shared.length ? shared : own;
         const both = band ? homes.filter(h => band.habs.includes(h)) : homes;
-        const choices = both.length ? both : own.length ? own : band ? band.habs : ["dungeon"];
+        const choices = both.length ? both : own.length ? own : band ? band.habs : ENC_PF2E ? ENC_HABITAT_KEYS : ["dungeon"];
         return pick(choices);
     });
     const H = ENC_HABITATS[habitat];
@@ -687,16 +798,16 @@ function rollEncounterScene(list, seed, opts = {}) {
     });
 
     const light = part("light", () => {
-        if (!H.sky) return pick([
-            "Darkness, unless someone brought a light: heavily obscured beyond it.",
+        if (!H.sky) return ruleText(pick([
+            "Darkness, unless someone brought a light: {alt:heavily obscured|anyone without darkvision can't see} beyond it.",
             "A few guttering torches on the walls: dim light, and darkness in the corners.",
-            "Darkness. Their eyes are used to it; check who in the party has darkvision."]);
+            "Darkness. Their eyes are used to it; check who in the party has darkvision."]));
         const t = rand();
-        return t < 0.15 ? "Dawn: dim light until the sun is up (lightly obscured; disadvantage on Perception checks that rely on sight)."
+        return ruleText(t < 0.15 ? "Dawn: dim light until the sun is up ({alt:lightly obscured; disadvantage on Perception checks that rely on sight|anything in it is concealed from anyone without low-light vision})."
             : t < 0.6 ? "Daylight: bright light. Nowhere to hide but cover."
             : t < 0.8 ? "Dusk: dim light, and getting darker each round."
             : rand() < 0.4 ? "Night under a bright moon: dim light in the open, darkness under cover."
-            : "Night: darkness beyond any torches or lanterns (heavily obscured).";
+            : "Night: darkness beyond any torches or lanterns ({alt:heavily obscured|anyone without darkvision can't see into it}).");
     });
 
     const ground = part("ground", () => {
@@ -711,17 +822,18 @@ function rollEncounterScene(list, seed, opts = {}) {
         const heads = band ? list.filter(e => band.leads.includes(e.m.id)) : [];
         const boss = (heads.length ? heads : list).reduce((a, b) => (b.m.xp > a.m.xp ? b : a));
         const lead = boss.m;
-        const fallback = { humanoid: "folk", dragon: "dragon", fiend: "fiend", celestial: "celestial", beast: "beast", swarm: "beast" }[lead.type] || null;
+        const type = encSceneType(lead);
+        const fallback = { humanoid: "folk", dragon: "dragon", fiend: "fiend", celestial: "celestial", beast: "beast", swarm: "beast" }[type] || null;
         const own = ENC_ID_STYLE[lead.id];
         const want = own !== undefined ? own : band ? band.names : fallback;
-        const style = ["beast", "swarm"].includes(lead.type) ? "beast"
-            : want && (ENC_NAME_TYPES[want] || [lead.type]).includes(lead.type) ? want : fallback;
+        const style = ["beast", "swarm"].includes(type) ? "beast"
+            : want && (ENC_NAME_TYPES[want] || [type]).includes(type) ? want : fallback;
         const r = { a: rand(), b: rand(), c: rand(), d: rand() };
         const at = (arr, x) => arr[Math.floor(x * arr.length)];
         const N = ENC_NAMES[style];
-        const markList = lead.type === "humanoid" ? ENC_LEADER_MARKS : style === "beast" ? ENC_BEAST_MARKS : lead.type === "undead" ? ENC_UNDEAD_MARKS : ENC_MONSTER_MARKS;
+        const markList = type === "humanoid" ? ENC_LEADER_MARKS : style === "beast" ? ENC_BEAST_MARKS : type === "undead" ? ENC_UNDEAD_MARKS : ENC_MONSTER_MARKS;
         const mark = at(markList, r.d);
-        if (style === "beast") return { name: null, role: lead.name, person: lead.type === "humanoid", mark, beast: list.length > 1 || boss.count > 1 };
+        if (style === "beast") return { name: null, role: lead.name, person: type === "humanoid", mark, beast: list.length > 1 || boss.count > 1 };
         let name = null;
         if (style === "folk" && typeof buildName === "function") {
             const races = (band && band.races ? band.races : "human").split(" ");
@@ -731,20 +843,22 @@ function rollEncounterScene(list, seed, opts = {}) {
         else if (style === "hag") name = `${at(N.titles, r.a)} ${at(N.names, r.b)}`;
         else if (style === "dragon") name = `${at(N.a, r.a)}${at(N.b, r.b)}${r.c < 0.5 ? " " + at(N.epithets, r.c * 2) : ""}`;
         else if (style === "fiend") name = `${at(N.a, r.a)}${at(N.b, r.b)}`;
-        else if (style === "undead") { if (!/wight|ghost|wraith|mummy|lich|vampire|specter/.test(lead.id)) return { name: null, role: lead.name, person: lead.type === "humanoid", mark }; name = `${typeof buildName === "function" ? buildName(r.b < 0.5 ? "human" : "elf", r.c < 0.5 ? "male" : "female").first : at(ENC_NAMES.giant.first, r.a)} the Unburied`; }
+        else if (style === "undead") { if (!/wight|ghost|wraith|mummy|lich|vampire|specter/.test(lead.id)) return { name: null, role: lead.name, person: type === "humanoid", mark }; name = `${typeof buildName === "function" ? buildName(r.b < 0.5 ? "human" : "elf", r.c < 0.5 ? "male" : "female").first : at(ENC_NAMES.giant.first, r.a)} the Unburied`; }
         else if (N && N.first) name = `${at(N.first, r.a)}${N.epithets && r.c < 0.6 ? " " + at(N.epithets, r.b) : ""}`;
-        else return { name: null, role: lead.name, person: lead.type === "humanoid", mark };
-        return { name, role: lead.name, person: lead.type === "humanoid", mark };
+        else return { name: null, role: lead.name, person: type === "humanoid", mark };
+        return { name, role: lead.name, person: type === "humanoid", mark };
     });
     const leader = opts.lead && opts.lead.name ? encLeadAs(rolledLeader, opts.lead.name, opts.lead.stand) : rolledLeader;
 
     const tactics = part("tactics", () => band ? pick(band.tactics) : typeScene.tactics);
     const morale = part("morale", () => band ? pick(band.morale) : typeScene.morale);
     const parley = part("parley", () => {
-        const talk = band ? band.parley : (["humanoid", "giant", "fiend", "dragon", "fey", "celestial"].includes(lead.type) ? ["They'd talk, for {gp} or a good reason."] : null);
+        const talk = band ? band.parley : (["humanoid", "giant", "fiend", "dragon", "fey", "celestial"].includes(encSceneType(lead)) ? ["They'd talk, for {gp} or a good reason."] : null);
         if (!talk) return null;
         const xp = encounterXp(list);
-        const gp = Math.max(5, xp >= 2000 ? Math.round(xp / 5 / 100) * 100 : Math.round(xp / 5 / 5) * 5);
+        // Pathfinder's XP doesn't grow with level, so its price does: the Gazette's guess.
+        const gp = ENC_PF2E ? Math.max(5, Math.round(level * level * xp / 80 / 5) * 5)
+            : Math.max(5, xp >= 2000 ? Math.round(xp / 5 / 100) * 100 : Math.round(xp / 5 / 5) * 5);
         return pick(talk).replace("{gp}", `${gp.toLocaleString("en-US")} gp`);
     });
 
@@ -769,7 +883,7 @@ function rollEncounterScene(list, seed, opts = {}) {
     });
 
     return { seed, band: band ? band.key : null, habitat, title, doing: doing[1], tag, awareness: ENC_AWARENESS[tag], distance, light, ground, leader, tactics, morale, parley, twist,
-        loot: band ? band.loot : { beast: "beast", undead: "undead", fiend: "otherworld", fey: "otherworld", celestial: "otherworld", elemental: "otherworld", dragon: "hoard:dragon", humanoid: "bandit" }[lead.type] || "beast",
+        loot: band ? band.loot : { beast: "beast", undead: "undead", fiend: "otherworld", fey: "otherworld", celestial: "otherworld", elemental: "otherworld", dragon: "hoard:dragon", humanoid: "bandit" }[encSceneType(lead)] || "beast",
         lootCr: crValue(lead.cr) };
 }
 

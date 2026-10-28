@@ -33,6 +33,16 @@ RULE_SYSTEMS.pf2e = {
     alignment: false,
     // NPC stat blocks come with the Pathfinder rules tools (ROADMAP L3 P4).
     statBlocks: false,
+    // 5e terms in the generators' text, in Pathfinder's words.
+    phrases: [
+        [/\bsaving throws\b/g, 'saves'], [/\bsaving throw\b/g, 'save'],
+        [/\blightly obscured\b/g, 'concealed'], [/\bheavily obscured\b/g, 'hidden from sight'],
+        [/\bthree-quarters cover\b/g, 'greater cover'], [/\bhalf cover\b/g, 'standard cover'],
+        [/\bpassive Perception\b/g, 'Perception DC'],
+        [/\bDashes\b/g, 'runs'], [/\bDash again\b/g, 'run again'],
+        [/\bbloodied\b/g, 'badly hurt'],
+        [/\bhas disadvantage\b/g, 'takes a −2 penalty'], [/\broll with disadvantage\b/g, 'take a −2 penalty']
+    ],
     // People keep their 5e keys (names and ages are rolled by them); this is what they're called.
     words: {
         race: { tiefling: 'nephilim', tieflings: 'nephilim', dragonborn: 'dragonblood' },

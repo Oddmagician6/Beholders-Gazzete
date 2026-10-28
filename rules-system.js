@@ -44,10 +44,12 @@ function ruleSystem() {
 
 const RULE_TOKEN = /\{(dc|skill|save|ability|alt):([^{}]*)\}/g;
 
-// Render every token in one string.
+// Render every token in one string. A system's phrases (5e terms it words differently) swap first.
 function ruleText(s) {
-    if (typeof s !== 'string' || s.indexOf('{') < 0) return s;
+    if (typeof s !== 'string') return s;
     const sys = ruleSystem();
+    if (sys.phrases) sys.phrases.forEach(([from, to]) => { s = s.replace(from, to); });
+    if (s.indexOf('{') < 0) return s;
     return s.replace(RULE_TOKEN, (m, kind, body) => {
         if (kind === 'alt') {
             const bar = body.indexOf('|');

@@ -191,6 +191,8 @@ function partyFillLevelSize(levelEl, sizeEl) {
 function partyChip(el, use) {
     const e = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const draw = () => {
+        // No Party tab in this system's toolkit yet (Pathfinder): nothing to show or link to.
+        if (typeof ruleLinkOk === 'function' && !ruleLinkOk('toolbox?tab=party')) { el.innerHTML = ''; return; }
         const list = loadParty();
         el.classList.add('party-chip');
         el.innerHTML = list.length
