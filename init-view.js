@@ -11,7 +11,8 @@
    ============================================ */
 
 const INIT_VIEW_KEY = ruleKey('gazette-initiative');
-const INIT_VIEW_CHANNEL = 'gazette-initiative';
+const INIT_VIEW_CHANNEL = ruleKey('gazette-initiative');   // a Pathfinder fight never reaches the D&D player view
+const INIT_VIEW_PF2E = ruleSystemId() === 'pf2e';
 
 function initViewEsc(s) {
     return String(s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch]);
@@ -72,12 +73,12 @@ function initCleanView(v) {
     };
 }
 
-const INIT_HEALTH_WORDS = { healthy: '💚 Healthy', bloodied: '🩸 Bloodied', down: '💀 Down' };
+const INIT_HEALTH_WORDS = { healthy: '💚 Healthy', bloodied: INIT_VIEW_PF2E ? '🩸 Badly hurt' : '🩸 Bloodied', down: '💀 Down' };
 
 // The turn order as a list for the player view (and the DM screen's mini initiative card).
 function initViewListHtml(view) {
     return view.list.map(c => {
-        const word = c.health === 'down' && c.pc ? '🩸 Down: death saves' : INIT_HEALTH_WORDS[c.health];
+        const word = c.health === 'down' && c.pc ? (INIT_VIEW_PF2E ? '🩸 Down: dying' : '🩸 Down: death saves') : INIT_HEALTH_WORDS[c.health];
         return `<li class="pv-row${c.now ? ' pv-now' : ''}${c.health === 'down' ? ' pv-down' : ''}${c.pc ? ' pv-pc' : ''}${c.hidden ? ' pv-hidden' : ''}"${c.now ? ' aria-current="true"' : ''}>
             <span class="pv-mark" aria-hidden="true">${c.now ? '▶' : ''}</span>
             <span class="pv-who">${c.pc ? '<span class="pv-icon" aria-hidden="true">👤</span>' : c.hidden ? '<span class="pv-icon" aria-hidden="true">❓</span>' : '<span class="pv-icon" aria-hidden="true">👹</span>'}<span class="pv-name">${initViewEsc(c.name)}</span></span>

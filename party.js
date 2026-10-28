@@ -17,7 +17,13 @@
 const PARTY_KEY = ruleKey('gazette-party');
 const PARTY_MAX = 8;
 const PARTY_FIGHT_KEY = ruleKey('gazette-initiative');   // the Initiative tab's fight (toolbox-table.js INIT_KEY)
-const PARTY_CLASSES = ['Barbarian', 'Bard', 'Cleric', 'Druid', 'Fighter', 'Monk', 'Paladin', 'Ranger', 'Rogue', 'Sorcerer', 'Warlock', 'Wizard'];
+// Pathfinder (Player Core 1 and 2): Perception is the usual initiative, so its party keeps
+// Perception in init (to +40) and no passive Perception.
+const PARTY_PF2E = ruleSystemId() === 'pf2e';
+const PARTY_CLASSES = PARTY_PF2E
+    ? ['Alchemist', 'Barbarian', 'Bard', 'Champion', 'Cleric', 'Druid', 'Fighter', 'Investigator', 'Monk', 'Oracle', 'Ranger', 'Rogue', 'Sorcerer', 'Swashbuckler', 'Witch', 'Wizard']
+    : ['Barbarian', 'Bard', 'Cleric', 'Druid', 'Fighter', 'Monk', 'Paladin', 'Ranger', 'Rogue', 'Sorcerer', 'Warlock', 'Wizard'];
+const PARTY_INIT_MAX = PARTY_PF2E ? 40 : 20;
 
 function partyInt(v, lo, hi, def) {
     if (v === '' || v === null || v === undefined) return def;
@@ -41,7 +47,7 @@ function cleanPartyMember(c) {
         ac: partyInt(c.ac, 0, 40, null),
         hp: partyInt(c.hp, 1, 999, null),
         pp: partyInt(c.pp, 1, 40, null),
-        init: partyInt(c.init, -10, 20, 0),
+        init: partyInt(c.init, -10, PARTY_INIT_MAX, 0),
         live: cleanPartyLive(c.live)
     };
 }

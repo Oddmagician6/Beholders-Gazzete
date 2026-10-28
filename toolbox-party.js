@@ -5,6 +5,8 @@
    the other tabs start from them. Typing saves as you go, without redrawing the cards.
    A character added from the Character Builder shows its Play Sheet's hit points,
    conditions, and concentration as they change in another tab (F68: party.js live).
+   On a Pathfinder page (PARTY_PF2E in party.js) a character has Perception in place of passive
+   Perception and the initiative bonus, and the budget line shows the five Pathfinder threats.
    Loads after toolbox.js, toolbox-table.js, and toolbox-encounter.js
    (uses esc(), flash(), copyText(), armedClick(), addPartyToFight(), encUseParty()).
    ============================================ */
@@ -12,7 +14,7 @@
 let party = [];
 
 // Number fields: their party.js limits.
-const PARTY_NUMS = { ac: [0, 40], hp: [1, 999], pp: [1, 40], init: [-10, 20] };
+const PARTY_NUMS = { ac: [0, 40], hp: [1, 999], pp: [1, 40], init: [-10, PARTY_INIT_MAX] };
 
 function partyCardHtml(c, i) {
     const levels = Array.from({ length: 20 }, (_, l) => `<option value="${l + 1}"${l + 1 === c.level ? ' selected' : ''}>${l + 1}</option>`).join('');
@@ -32,8 +34,8 @@ function partyCardHtml(c, i) {
             <label>Level <select class="pt-f" data-k="level">${levels}</select></label>
             ${num('ac', 'AC', '—')}
             ${num('hp', 'Max HP', '—')}
-            ${num('pp', 'Passive Perception', '—')}
-            ${num('init', 'Init bonus', '0')}
+            ${PARTY_PF2E ? num('init', 'Perception', '0') : `${num('pp', 'Passive Perception', '—')}
+            ${num('init', 'Init bonus', '0')}`}
         </div>
         <div class="pt-live-box">${partyLiveHtml(c)}</div>
     </li>`;
@@ -58,13 +60,15 @@ function renderPartySum() {
     if (!party.length) { box.innerHTML = ''; return; }
     const b = partyBudget(partyGroups(party));
     const fmt = n => n.toLocaleString('en-US');
-    const watch = party.filter(c => c.pp !== null);
-    const best = watch.length ? watch.reduce((a, c) => (c.pp > a.pp ? c : a)) : null;
+    // Pathfinder keeps Perception in init; 5e has passive Perception.
+    const eyes = c => (PARTY_PF2E ? c.init : c.pp);
+    const watch = party.filter(c => eyes(c) !== null);
+    const best = watch.length ? watch.reduce((a, c) => (eyes(c) > eyes(a) ? c : a)) : null;
     box.innerHTML = `
         <div class="split-total">${party.length} character${party.length === 1 ? '' : 's'}</div>
         <div class="split-each">${esc(partyLabel(party))}</div>
-        <p class="pt-line">Encounter budget: ${['low', 'moderate', 'high'].map(k => `${ENCOUNTER_LEVELS[k].icon} ${ENCOUNTER_LEVELS[k].label} <b>${fmt(b[k])}</b>`).join(' · ')} XP</p>
-        ${best ? `<p class="pt-line">Sharpest eyes: ${esc(partyMemberName(best, party.indexOf(best)))}, passive Perception <b>${best.pp}</b></p>` : ''}`;
+        <p class="pt-line">Encounter budget: ${ENC_DIFFS.map(k => `${ENCOUNTER_LEVELS[k].icon} ${ENCOUNTER_LEVELS[k].label} <b>${fmt(b[k])}</b>`).join(' · ')} XP</p>
+        ${best ? `<p class="pt-line">Sharpest eyes: ${esc(partyMemberName(best, party.indexOf(best)))}, ${PARTY_PF2E ? `Perception <b>${best.init >= 0 ? '+' : '−'}${Math.abs(best.init)}</b>` : `passive Perception <b>${best.pp}</b>`}</p>` : ''}`;
 }
 
 function partySave() {
@@ -125,8 +129,8 @@ function partyCopyText() {
         const bits = [`level ${c.level}${c.cls ? ' ' + c.cls : ''}`];
         if (c.ac !== null) bits.push(`AC ${c.ac}`);
         if (c.hp !== null) bits.push(`HP ${c.hp}`);
-        if (c.pp !== null) bits.push(`passive Perception ${c.pp}`);
-        bits.push(`init ${c.init >= 0 ? '+' : ''}${c.init}`);
+        if (c.pp !== null && !PARTY_PF2E) bits.push(`passive Perception ${c.pp}`);
+        bits.push(`${PARTY_PF2E ? 'Perception' : 'init'} ${c.init >= 0 ? '+' : ''}${c.init}`);
         return `${who}: ${bits.join(', ')}`;
     }).join('\n');
 }

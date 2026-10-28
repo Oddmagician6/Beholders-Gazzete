@@ -16,15 +16,48 @@
    📺 Player View (F47) opens player-view.html: init-view.js turns the fight into what the players
    may see, and saveFight() posts it on INIT_VIEW_CHANNEL. Other creatures' names stay hidden
    there until the DM reveals them (shown: true; 🙈/👁️ on each row).
+   Pathfinder pages (INIT_PF2E, ROADMAP L3 P4): Pathfinder's conditions (rules-pf2e.js), the valued
+   ones saved with their value ("Frightened 2") and stepped with − and +; frightened drops by 1 at the
+   end of its owner's turn; a character dropped to 0 HP becomes dying (1 + wounded) and unconscious,
+   and healing clears dying and adds wounded; creatures come from ENC_MONSTERS, with no stat blocks.
    Loads after toolbox.js (uses its esc() and flash()).
    ============================================ */
 
 const INIT_KEY = ruleKey('gazette-initiative');
 const INIT_FOLLOW_KEY = ruleKey('gazette-init-follow');
 const INIT_MAX = 40;
-// The SRD 5.1 conditions, from rules-data.js (the Rules page uses the same list).
-const SRD_CONDITIONS = Object.keys(SRD_CONDITION_TEXT);
-const condTip = k => SRD_CONDITION_TEXT[k].join(' ');
+// The SRD 5.1 conditions, from rules-data.js (the Rules page uses the same list). On a Pathfinder
+// page, Pathfinder's (rules-pf2e.js): some carry a value, stored with it ("Frightened 2").
+const INIT_PF2E = ruleSystemId() === 'pf2e' && typeof PF2E_CONDITIONS !== 'undefined';
+const SRD_CONDITIONS = INIT_PF2E ? Object.keys(PF2E_CONDITIONS) : Object.keys(SRD_CONDITION_TEXT);
+const condTip = k => INIT_PF2E ? PF2E_CONDITIONS[k].text : SRD_CONDITION_TEXT[k].join(' ');
+const condMax = k => INIT_PF2E ? PF2E_CONDITIONS[k].max : 0;
+const condBase = s => s.replace(/ \d+$/, '');
+const condValue = s => Number((s.match(/ (\d+)$/) || [0, 0])[1]);
+// Stat blocks open from the tracker (none for Pathfinder creatures yet).
+const INIT_BLOCKS = ruleHasStatBlocks();
+
+// A saved condition: one of the list's, with a value from 1 to its max when it takes one.
+function condOk(s) {
+    if (typeof s !== 'string') return false;
+    const k = condBase(s);
+    if (!SRD_CONDITIONS.includes(k)) return false;
+    const v = condValue(s);
+    return condMax(k) ? s === `${k} ${v}` && v >= 1 && v <= condMax(k) : s === k;
+}
+
+// c's value for condition k: 0 without it, 1 for a condition with no value.
+function condOf(c, k) {
+    const s = c.conds.find(x => condBase(x) === k);
+    return s ? (condMax(k) ? condValue(s) : 1) : 0;
+}
+
+// Gives c condition k at value v (0 takes it away).
+function setCond(c, k, v) {
+    c.conds = c.conds.filter(x => condBase(x) !== k);
+    if (v > 0) c.conds.push(condMax(k) ? `${k} ${Math.min(v, condMax(k))}` : k);
+    c.conds.sort();
+}
 
 // Two clicks: the first arms the button for a few seconds.
 function armedClick(btn, label, action) {
@@ -136,14 +169,15 @@ let openConds = null;   // id whose condition menu is open, kept across re-rende
 let openBlocks = new Set();   // ids whose stat block is open (this page only)
 let autoBlock = null;   // the id whose block opened because its turn came up
 
-// An SRD monster first, then homebrew (homebrew.js) by that name.
+// An SRD monster first, then homebrew (homebrew.js) by that name. Pathfinder: its creatures
+// (encounter-engine.js ENC_MONSTERS, with Perception as the bonus) and no homebrew.
 function monsterNamed(name) {
     const key = name.replace(/\s+\d+$/, '').toLowerCase();
-    return [...MONSTERS, ...hbRows].find(m => m.name.toLowerCase() === key) || null;
+    return [...ENC_MONSTERS, ...(INIT_PF2E ? [] : hbRows)].find(m => m.name.toLowerCase() === key) || null;
 }
 
 function fillMonsterNames() {
-    document.getElementById('ia-monsters').innerHTML = [...hbRows, ...MONSTERS].map(m => `<option value="${esc(m.name)}"></option>`).join('');
+    document.getElementById('ia-monsters').innerHTML = [...(INIT_PF2E ? [] : hbRows), ...ENC_MONSTERS].map(m => `<option value="${esc(m.name)}"></option>`).join('');
 }
 
 function followTurns() {
@@ -163,7 +197,7 @@ function loadFight() {
                 hp: num(c.hp), max: num(c.max), ac: num(c.ac),
                 monster: typeof c.monster === 'string' && Object.hasOwn(MONSTER_BY_ID, c.monster) ? c.monster : null,
                 pc: c.pc === true, pp: num(c.pp), shown: c.shown === true,
-                conds: Array.isArray(c.conds) ? c.conds.filter(x => SRD_CONDITIONS.includes(x)) : [],
+                conds: Array.isArray(c.conds) ? c.conds.filter(condOk) : [],
                 party: typeof c.party === 'string' && /^[a-z0-9]{1,16}$/.test(c.party) ? c.party : null,
                 temp: Math.max(0, num(c.temp) ?? 0), exh: Math.min(6, Math.max(0, num(c.exh) ?? 0)),
                 conc: typeof c.conc === 'string' ? c.conc.slice(0, 40) : '',
@@ -240,7 +274,7 @@ function addCombatants(e) {
     const m = monsterNamed(name);
     const mod = num(v('ia-mod')) ?? 0;
     const added = addToFight({
-        name, mod: Math.max(-10, Math.min(20, m && mod === 0 ? m.dex : mod)), fixed: num(v('ia-init')),
+        name, mod: Math.max(-10, Math.min(INIT_PF2E ? 40 : 20, m && mod === 0 ? m.dex : mod)), fixed: num(v('ia-init')),
         hp: num(v('ia-hp')) ?? (m ? m.hp : null), ac: num(v('ia-ac')) ?? (m ? m.ac : null),
         count: Math.max(1, Math.min(20, num(v('ia-count')) ?? 1)), monster: m ? m.id : null
     });
@@ -249,7 +283,7 @@ function addCombatants(e) {
     saveFight();
     renderFight();
     flash('init-status', (added.length === 1 ? `➕ ${added[0].name} rolls in at ${added[0].init}.` : `➕ Added ${added.length}: ${added.map(c => `${c.name} (${c.init})`).join(', ')}.`)
-        + (m ? ' 📜 Click the name for its stat block.' : ''));
+        + (m && INIT_BLOCKS ? ' 📜 Click the name for its stat block.' : ''));
     document.getElementById('ia-name').value = '';
     document.getElementById('ia-mod').value = '0';
     document.getElementById('ia-init').value = '';
@@ -269,7 +303,7 @@ function followTurn() {
     if (autoBlock !== null) openBlocks.delete(autoBlock);
     autoBlock = null;
     const c = fight.list.find(x => x.id === fight.turn);
-    if (!followTurns() || !c || !c.monster || openBlocks.has(c.id)) return;
+    if (!INIT_BLOCKS || !followTurns() || !c || !c.monster || openBlocks.has(c.id)) return;
     openBlocks.add(c.id);
     autoBlock = c.id;
 }
@@ -280,9 +314,49 @@ function nextTurn() {
     if (i < 0) fight.turn = fight.list[0].id;
     else if (i === fight.list.length - 1) { fight.turn = fight.list[0].id; fight.round++; }
     else fight.turn = fight.list[i + 1].id;
+    const note = INIT_PF2E ? pf2eTurnNote(fight.list[i], fight.list.find(c => c.id === fight.turn)) : '';
     saveFight();
     followTurn();
     renderFight(true);
+    if (note) flash('init-status', note);
+}
+
+// Pathfinder, as a turn passes: frightened drops by 1 at the end of its owner's turn, and a dying
+// character starts theirs with a recovery check. Returns what to say ('' for nothing).
+function pf2eTurnNote(ended, now) {
+    const notes = [];
+    const fear = ended ? condOf(ended, 'Frightened') : 0;
+    if (fear) {
+        setCond(ended, 'Frightened', fear - 1);
+        notes.push(fear > 1 ? `😨 ${ended.name} is frightened ${fear - 1} now.` : `😌 ${ended.name} is no longer frightened.`);
+    }
+    const dying = now ? condOf(now, 'Dying') : 0;
+    if (dying && !pf2eDead(now)) notes.push(`🎲 ${now.name} rolls a recovery check: DC ${10 + dying} flat check.`);
+    return notes.join(' ');
+}
+
+// Pathfinder: dying has reached 4, less the doomed value.
+function pf2eDead(c) {
+    const d = condOf(c, 'Dying');
+    return d > 0 && d >= Math.max(1, 4 - condOf(c, 'Doomed'));
+}
+
+// Pathfinder: a character dropped to 0 HP is dying (1 plus their wounded value) and unconscious;
+// healed from 0, they lose dying, wake, and gain wounded 1 (or 1 more). Returns what to say.
+function pf2eKnockout(c, wasUp) {
+    if (!INIT_PF2E || !c.pc) return '';
+    if (wasUp && c.hp === 0) {
+        setCond(c, 'Dying', 1 + condOf(c, 'Wounded'));
+        setCond(c, 'Unconscious', 1);
+        return pf2eDead(c) ? ` ${c.name} dies.` : ` Dying ${condOf(c, 'Dying')} (a critical hit makes it 1 more: press +).`;
+    }
+    if (!wasUp && c.hp > 0 && condOf(c, 'Dying')) {
+        setCond(c, 'Dying', 0);
+        setCond(c, 'Unconscious', 0);
+        setCond(c, 'Wounded', condOf(c, 'Wounded') + 1);
+        return ` They wake up, wounded ${condOf(c, 'Wounded')}.`;
+    }
+    return '';
 }
 
 function prevTurn() {
@@ -328,12 +402,14 @@ function changeHp(id, sign) {
     if (!amt) { flash('init-status', 'Type an amount in the HP box first.'); if (box) box.focus(); return; }
     // Temporary hit points take damage first.
     const soak = sign < 0 ? Math.min(c.temp, amt) : 0;
+    const wasUp = c.hp > 0;
     c.temp -= soak;
     c.hp = sign < 0 ? Math.max(0, c.hp - (amt - soak)) : Math.min(c.max ?? Infinity, c.hp + amt);
+    const ko = pf2eKnockout(c, wasUp);
     saveFight();
     renderFight();
     flash('init-status', (sign < 0 ? `🩸 ${c.name} takes ${amt}${soak ? ` (${soak} off temporary HP)` : ''}${c.hp === 0 ? ' and falls' : ''}.` : `💚 ${c.name} heals ${amt}.`)
-        + (c.party ? ' Their Play Sheet decides from its next change.' : ''));
+        + ko + (c.party ? ' Their Play Sheet decides from its next change.' : ''));
     const again = document.querySelector(`.hp-amt[data-id="${id}"]`);
     if (again) again.focus();
 }
@@ -347,16 +423,19 @@ function toggleShown(id) {
     renderFight();
 }
 
-function toggleCond(id, cond) {
+// On or off, or (step: ±1) a valued condition up or down; down from 1 takes it away.
+function toggleCond(id, cond, step = 0) {
     const c = fight.list.find(x => x.id === id);
-    if (!c) return;
-    c.conds = c.conds.includes(cond) ? c.conds.filter(x => x !== cond) : [...c.conds, cond].sort();
+    if (!c || !SRD_CONDITIONS.includes(cond)) return;
+    const have = condOf(c, cond);
+    setCond(c, cond, step ? have + step : have ? 0 : 1);
     saveFight();
     renderFight();
 }
 
 // A player character at 0 HP: its death saves, from its Play Sheet when it has one.
 function deathSaveText(c) {
+    if (INIT_PF2E) return pf2eDead(c) ? '💀 dead' : condOf(c, 'Dying') ? `🩸 dying ${condOf(c, 'Dying')}` : '🩸 at 0 HP';
     if (c.ds[1] >= 3) return '💀 dead';
     if (c.ds[0] >= 3) return '🩹 stable';
     return c.party ? `🩸 death saves ${c.ds[0]}✓ ${c.ds[1]}✗` : '🩸 death saves';
@@ -376,16 +455,20 @@ function renderFight(scroll = false) {
             <div class="init-score"><input type="number" class="init-val" data-id="${c.id}" value="${c.init}" min="-10" max="50" aria-label="Initiative for ${esc(c.name)}"></div>
             <div class="init-main">
                 <div class="init-top">
-                    ${c.monster ? `<button type="button" class="sb-toggle" data-act="sb" data-id="${c.id}" aria-expanded="${openBlocks.has(c.id)}" title="Show or hide the stat block"><span class="init-who sb-name">${esc(c.name)}</span> <span class="sb-hint" aria-hidden="true">📜</span></button>`
+                    ${c.monster && INIT_BLOCKS ? `<button type="button" class="sb-toggle" data-act="sb" data-id="${c.id}" aria-expanded="${openBlocks.has(c.id)}" title="Show or hide the stat block"><span class="init-who sb-name">${esc(c.name)}</span> <span class="sb-hint" aria-hidden="true">📜</span></button>`
                         : `<span class="init-who">${esc(c.name)}</span>`}
                     ${c.pc ? '' : `<button type="button" class="init-reveal${c.shown ? ' on' : ''}" data-act="reveal" data-id="${c.id}" aria-pressed="${c.shown}" title="${c.shown ? 'The player view shows this name. Click to hide it again.' : 'The player view calls this one an unknown creature. Click to show its name.'}">${c.shown ? '👁️ Name shown' : '🙈 Name hidden'}</button>`}
                     <span class="init-meta">${c.pc ? '👤 PC · ' : ''}${c.party ? '<span title="Follows this character&#39;s Play Sheet in this browser">🔗 sheet</span> · ' : ''}${c.ac !== null ? `🛡️ AC ${c.ac} · ` : ''}bonus ${c.mod >= 0 ? '+' + c.mod : '−' + -c.mod}${c.pp !== null ? ` · 👁️ passive ${c.pp}` : ''}${c.exh ? ` · 😩 exhaustion ${c.exh}` : ''}${c.conc ? ` · 🧠 ${esc(c.conc)}` : ''}${down ? (c.pc ? ` · ${deathSaveText(c)}` : ' · 💀 down') : ''}</span>
                 </div>
                 <div class="init-conds">
-                    ${c.conds.map(k => `<button type="button" class="init-cond" data-id="${c.id}" data-cond="${k}" title="Remove ${k}">${k} ✕</button>`).join('')}
+                    ${c.conds.map(s => {
+                        const k = condBase(s);
+                        const chip = `<button type="button" class="init-cond" data-id="${c.id}" data-cond="${k}" title="Remove ${k}">${s} ✕</button>`;
+                        return condMax(k) ? `<span class="init-cond-v"><button type="button" class="init-cond-step" data-id="${c.id}" data-cond="${k}" data-step="-1" aria-label="Lower ${k}">−</button>${chip}<button type="button" class="init-cond-step" data-id="${c.id}" data-cond="${k}" data-step="1" aria-label="Raise ${k}"${condValue(s) >= condMax(k) ? ' disabled' : ''}>+</button></span>` : chip;
+                    }).join('')}
                     <details class="init-cond-add" data-id="${c.id}"${openConds === c.id ? ' open' : ''}>
                         <summary>+ condition</summary>
-                        <div class="init-cond-menu">${SRD_CONDITIONS.map(k => `<button type="button" data-id="${c.id}" data-cond="${k}" title="${esc(condTip(k))}" class="${c.conds.includes(k) ? 'on' : ''}" aria-pressed="${c.conds.includes(k)}">${k}</button>`).join('')}</div>
+                        <div class="init-cond-menu">${SRD_CONDITIONS.map(k => `<button type="button" data-id="${c.id}" data-cond="${k}" title="${esc(condTip(k))}" class="${condOf(c, k) ? 'on' : ''}" aria-pressed="${condOf(c, k) > 0}">${k}</button>`).join('')}</div>
                     </details>
                 </div>
             </div>
@@ -397,7 +480,7 @@ function renderFight(scroll = false) {
                 <button type="button" data-act="heal" data-id="${c.id}" title="Heal" aria-label="Heal ${esc(c.name)}">+</button>`}
             </div>
             <button type="button" class="init-x" data-act="remove" data-id="${c.id}" title="Remove" aria-label="Remove ${esc(c.name)}">✕</button>
-            ${c.monster && openBlocks.has(c.id) ? `<div class="sb-box">${MONSTER_BY_ID[c.monster] ? monsterBlockHtml(MONSTER_BY_ID[c.monster]) : '<p class="sb-note">This homebrew monster is no longer in the notebook.</p>'}</div>` : ''}
+            ${c.monster && INIT_BLOCKS && openBlocks.has(c.id) ? `<div class="sb-box">${MONSTER_BY_ID[c.monster] ? monsterBlockHtml(MONSTER_BY_ID[c.monster]) : '<p class="sb-note">This homebrew monster is no longer in the notebook.</p>'}</div>` : ''}
         </li>`;
     }).join('');
     // Open blocks say "Loading…" until the data arrives, then draw again.
@@ -418,7 +501,7 @@ function onFightClick(e) {
     if (!b) return;
     const id = Number(b.dataset.id);
     if (b.dataset.act === 'sb') toggleFightBlock(id);
-    else if (b.dataset.cond) toggleCond(id, b.dataset.cond);
+    else if (b.dataset.cond) toggleCond(id, b.dataset.cond, Number(b.dataset.step) || 0);
     else if (b.dataset.act === 'dmg') changeHp(id, -1);
     else if (b.dataset.act === 'heal') changeHp(id, 1);
     else if (b.dataset.act === 'remove') removeCombatant(id);
@@ -433,6 +516,8 @@ function setupInitiative() {
     fillMonsterNames();
     nbOnChange(fillMonsterNames);
     const follow = document.getElementById('init-follow');
+    if (!INIT_BLOCKS) follow.closest('label').style.display = 'none';
+    if (INIT_PF2E) document.getElementById('ia-mod').max = 40;
     follow.checked = followTurns();
     follow.addEventListener('change', () => {
         try { localStorage.setItem(INIT_FOLLOW_KEY, follow.checked ? 'on' : 'off'); } catch (e) {}
@@ -486,7 +571,7 @@ function setupInitiative() {
     document.getElementById('init-defeated').addEventListener('click', () => {
         // Player characters at 0 HP are making death saves, so they stay.
         const fallen = fight.list.filter(c => !c.pc && c.hp !== null && c.hp <= 0);
-        if (!fallen.length) { flash('init-status', fight.list.some(c => c.pc && c.hp === 0) ? 'No monster is down. Characters at 0 HP stay for their death saves.' : 'No one is down.'); return; }
+        if (!fallen.length) { flash('init-status', fight.list.some(c => c.pc && c.hp === 0) ? ruleText("No {alt:monster|creature} is down. Characters at 0 HP stay {alt:for their death saves|while they're dying}.") : 'No one is down.'); return; }
         fallen.forEach(c => removeCombatant(c.id));
         flash('init-status', `💀 Removed ${fallen.map(c => c.name).join(', ')}.`);
     });

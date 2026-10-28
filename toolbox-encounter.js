@@ -11,7 +11,7 @@
    URL: ?tab=enc&party=4x3&party=1x5&m=goblin.4&m=bugbear.1&diff=moderate&type=&env=&band=&pack=&seed=
    (env/band: the roll pickers; pack: the group a roll landed on; seed: the scene).
    On a Pathfinder page (ENC_PF2E in encounter-engine.js) the creatures are Pathfinder's, with five
-   difficulties, no homebrew, no foe groups, no stat blocks yet, and no Initiative tab to send to.
+   difficulties, no homebrew, no foe groups, and no stat blocks yet; Send to Initiative uses Perception.
    ============================================ */
 
 const ENC_MAX_GROUPS = 8;
@@ -80,11 +80,11 @@ function setupEncounterForm() {
         types.forEach(t => sel.add(new Option(typeName(t), t)));
     });
     if (ENC_PF2E) {
-        // Five difficulties; no foe groups, stat blocks, or Initiative tab yet.
+        // Five difficulties; no foe groups or stat blocks yet.
         const diff = document.getElementById('en-diff');
         diff.innerHTML = '';
         ENC_DIFFS.forEach(k => diff.add(new Option(`${ENCOUNTER_LEVELS[k].icon} ${ENCOUNTER_LEVELS[k].label}`, k, k === 'moderate', k === 'moderate')));
-        ['en-band', 'en-send', 'en-sb-all'].forEach(id => { document.getElementById(id).style.display = 'none'; });
+        ['en-band', 'en-sb-all'].forEach(id => { document.getElementById(id).style.display = 'none'; });
     } else document.getElementById('en-type').add(new Option('🐲 Homebrew', 'homebrew'), 1);
     const env = document.getElementById('en-env');
     ENC_HABITAT_KEYS.forEach(k => env.add(new Option(`${ENC_HABITATS[k].icon} ${ENC_HABITATS[k].label}`, k)));
@@ -313,7 +313,7 @@ function encounterText() {
     return lines.join('\n');
 }
 
-// Each monster joins the tracker with its Dex modifier as the initiative bonus.
+// Each monster joins the tracker with its Dex modifier as the initiative bonus (Pathfinder: Perception).
 function sendToInitiative() {
     if (!enc.list.length) return;
     const want = enc.list.reduce((t, e) => t + e.count, 0);
@@ -324,8 +324,8 @@ function sendToInitiative() {
     saveFight();
     renderFight();
     flash('init-status', added.length < want
-        ? `⚔️ Added ${added.length} of ${want} monsters; the tracker holds ${INIT_MAX}.`
-        : `⚔️ Added ${added.length} monster${added.length === 1 ? '' : 's'} from the encounter. Add the party, then Start Combat.`);
+        ? ruleText(`⚔️ Added ${added.length} of ${want} {alt:monsters|creatures}; the tracker holds ${INIT_MAX}.`)
+        : ruleText(`⚔️ Added ${added.length} {alt:monster|creature}${added.length === 1 ? '' : 's'} from the encounter. Add the party, then Start Combat.`));
 }
 
 function clearEncounter() {

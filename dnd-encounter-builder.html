@@ -177,6 +177,10 @@
     .init-conds { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; margin-top: 5px; }
     .init-cond { font-family: var(--font-ui); font-size: 0.72rem; padding: 2px 8px; border-radius: 10px; background: var(--crimson); color: var(--text-bright); border: none; cursor: pointer; }
     .init-cond:hover { background: var(--crimson-bright); }
+    .init-cond-v { display: inline-flex; align-items: center; gap: 2px; }
+    .init-cond-step { font-family: var(--font-ui); font-size: 0.72rem; line-height: 1; width: 20px; height: 20px; padding: 0; border-radius: 50%; background: var(--bg-deep); color: var(--text-mid); border: 1px solid var(--crimson); cursor: pointer; }
+    .init-cond-step:hover:not(:disabled) { color: var(--gold-bright); border-color: var(--crimson-bright); }
+    .init-cond-step:disabled { opacity: 0.35; cursor: default; }
     .init-cond-add { position: relative; }
     .init-cond-add summary { font-family: var(--font-ui); font-size: 0.72rem; color: var(--text-dim); cursor: pointer; list-style: none; padding: 2px 6px; border: 1px dashed var(--gold-dim); border-radius: 10px; }
     .init-cond-add summary::-webkit-details-marker { display: none; }
@@ -634,6 +638,7 @@
           <li><a href="pathfinder-calendar-generator">🗺️ Worldbuilder</a></li>
           <li><a href="pathfinder-npc-generator">🎭 NPC Generator</a></li>
           <li><a href="pathfinder-encounter-builder">👹 Encounter Builder</a></li>
+          <li><a href="pathfinder-initiative-tracker">⚔️ Initiative Tracker</a></li>
           <li><a href="pathfinder-license">⚖️ ORC License</a></li>
         </ul>
       </li>

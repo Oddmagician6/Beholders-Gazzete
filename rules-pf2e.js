@@ -51,3 +51,41 @@ RULE_SYSTEMS.pf2e = {
         domain: { life: 'healing', light: 'sun', tempest: 'air', war: 'might' }
     }
 };
+
+// The conditions the Initiative tab tracks (Player Core), in the Gazette's own short words.
+// max: the highest value a condition takes (frightened 2); 0 for one with no value.
+const PF2E_CONDITIONS = {
+    'Blinded': { max: 0, text: "Can't see. What you could only see is undetected to you, Perception checks that need sight fail, other Perception checks take a −4 status penalty, and visual effects can't touch you." },
+    'Clumsy': { max: 4, text: 'A status penalty equal to the value on Dexterity-based rolls and DCs: AC, Reflex saves, ranged attacks, Acrobatics, Stealth, and Thievery.' },
+    'Concealed': { max: 0, text: 'Hard to make out (fog, dim light). Anyone targeting you rolls a DC 5 flat check; on a failure the attack or effect misses you.' },
+    'Confused': { max: 0, text: "Off-guard, no reactions, no Delay or Ready. You spend your actions attacking whoever the dice pick. Damage from an attack or spell gives a DC 11 flat check to snap out of it." },
+    'Controlled': { max: 0, text: 'Someone else chooses your actions.' },
+    'Dazzled': { max: 0, text: 'Your eyes are overwhelmed: everything you see is concealed to you.' },
+    'Deafened': { max: 0, text: "Can't hear. Checks that need hearing fail, Perception for initiative and checks that mix sound with sight take a −2 status penalty, and auditory actions need a DC 5 flat check." },
+    'Doomed': { max: 3, text: 'You die at dying 4 minus this value. It drops by 1 after a full night\'s rest.' },
+    'Drained': { max: 4, text: 'A status penalty on Constitution-based rolls and DCs (Fortitude saves), and your HP and maximum HP drop by your level times the value. It drops by 1 after a full night\'s rest.' },
+    'Dying': { max: 4, text: "At 0 HP, unconscious, and close to death. Roll a recovery check (flat check, DC 10 + the value) at the start of each turn. You die at dying 4, less your doomed value." },
+    'Encumbered': { max: 0, text: 'Carrying too much: clumsy 1 and a 10-foot penalty to all your Speeds.' },
+    'Enfeebled': { max: 4, text: 'A status penalty equal to the value on Strength-based rolls and DCs: melee attacks and their damage, and Athletics.' },
+    'Fascinated': { max: 0, text: "A −2 status penalty to Perception and skill checks, and no concentrate actions except about what holds your attention. Ends when anyone turns hostile toward you or your allies." },
+    'Fatigued': { max: 0, text: 'A −1 status penalty to AC and saves, and no exploration activities while traveling. A full night\'s rest ends it.' },
+    'Fleeing': { max: 0, text: 'You spend your actions getting away from the source, and you can\'t Delay or Ready.' },
+    'Frightened': { max: 4, text: 'A status penalty equal to the value on all checks and DCs. It drops by 1 at the end of each of your turns (the tracker does this for you).' },
+    'Grabbed': { max: 0, text: 'Held in place: off-guard and immobilized, and a manipulate action needs a DC 5 flat check or it\'s lost.' },
+    'Hidden': { max: 0, text: "They know which square you're in but can't see you: you're off-guard to them, and they roll a DC 11 flat check to target you." },
+    'Immobilized': { max: 0, text: "You can't use actions with the move trait." },
+    'Invisible': { max: 0, text: "No one can see you: you're undetected until someone works out where you are, and hidden after that." },
+    'Off-Guard': { max: 0, text: 'A −2 circumstance penalty to AC.' },
+    'Paralyzed': { max: 0, text: "Off-guard, and you can't act, apart from Recall Knowledge and other purely mental actions." },
+    'Petrified': { max: 0, text: "Turned to stone: you can't act or sense anything, and you count as an object." },
+    'Prone': { max: 0, text: 'On the ground: off-guard, a −2 circumstance penalty to attack rolls, and Crawl and Stand are your only move actions.' },
+    'Quickened': { max: 0, text: 'One extra action at the start of each turn, for whatever the effect allows.' },
+    'Restrained': { max: 0, text: "Tied up or pinned: off-guard and immobilized, and no attack or manipulate actions except to Escape or Force Open." },
+    'Sickened': { max: 4, text: "A status penalty equal to the value on all checks and DCs, and you can't willingly eat or drink. Spend an action retching for a Fortitude save to lower it." },
+    'Slowed': { max: 3, text: 'Lose this many actions at the start of each of your turns.' },
+    'Stunned': { max: 9, text: 'Lose this many actions as you regain them; each one lost lowers the value. A stun with a duration costs every action for that long instead.' },
+    'Stupefied': { max: 4, text: 'A status penalty equal to the value on Intelligence-, Wisdom-, and Charisma-based rolls and DCs (Will saves, spell attacks and DCs), and casting a spell needs a DC 5 + value flat check.' },
+    'Unconscious': { max: 0, text: "Asleep or knocked out: you can't act, you're blinded and off-guard, you take a −4 status penalty to AC, Perception, and Reflex saves, and you fall prone and drop what you hold." },
+    'Undetected': { max: 0, text: "They don't know which square you're in: they have to guess, and even a right guess needs a DC 11 flat check." },
+    'Wounded': { max: 3, text: "You've come back from dying. The next time you're dying, add this value. Treat Wounds that heals you, or full HP and 10 minutes' rest, ends it." }
+};
