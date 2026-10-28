@@ -109,7 +109,7 @@ function contPoiHTML(c, p, n) {
     const P = CONT_POIS[p.kind];
     return `<li id="cn-p${p.id}" tabindex="-1"><span class="site-n">${n + 1}</span> <b>${esc(facCap(p.name))}</b> <span class="wb-tag">${esc(P.label)}</span>
         <p>${esc(contPoiWhere(c, p))} ${esc(contPoiHook(c, p))}</p>
-        <a class="town-go" href="${esc(contSiteLink(p))}">🏚️ Explore ${esc(contMid(p.site))} →</a></li>`;
+        ${ruleLinkOk(contSiteLink(p)) ? `<a class="town-go" href="${esc(contSiteLink(p))}">🏚️ Explore ${esc(contMid(p.site))} →</a>` : ''}</li>`;
 }
 
 function contTownOptions(c) {
@@ -183,7 +183,7 @@ function renderContinent() {
         <section class="wb-block wb-wide">
             <h4>🛤️ Roads</h4>
             <ul class="wb-list">${c.roads.map(r => `<li>${esc(contRoadLine(c, r))}
-                <a class="town-go" href="${esc(contTravelLink(c, r.a, r.b, r))}">Travel it →</a></li>`).join('')}</ul>
+                ${ruleLinkOk(contTravelLink(c, r.a, r.b, r)) ? `<a class="town-go" href="${esc(contTravelLink(c, r.a, r.b, r))}">Travel it →</a>` : ''}</li>`).join('')}</ul>
         </section>`;
     if (contBoard) contBoard.render();
 }
@@ -204,7 +204,7 @@ function contShowJourney() {
     contState.journey = j;
     path.setAttribute('d', contJourneyPath(c, j));
     out.textContent = contJourneyText(c, j);
-    links.innerHTML = j ? `<a class="btn" href="${esc(contTravelLink(c, +a, +b, j))}">🧭 Travel it in the Toolbox</a>` : '';
+    links.innerHTML = j && ruleLinkOk(contTravelLink(c, +a, +b, j)) ? `<a class="btn" href="${esc(contTravelLink(c, +a, +b, j))}">🧭 Travel it in the Toolbox</a>` : '';
 }
 
 // ── Pins (F53, map-pins.js and world-pins.js) ─────────────

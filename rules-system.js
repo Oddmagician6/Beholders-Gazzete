@@ -86,6 +86,24 @@ function ruleHasAlignment() {
     return ruleSystem().alignment !== false;
 }
 
+// Whether the NPC page gives people a stat block in this system (Pathfinder's come with its NPC
+// stat blocks, ROADMAP L3 P4; until then its NPC page rolls the person only).
+function ruleHasStatBlocks() {
+    return ruleSystem().statBlocks !== false;
+}
+
+// Whether a link to another tool belongs on this system's page. A Pathfinder page leaves out links to
+// D&D tools that have no Pathfinder page yet; tab-pages.js's moves (TAB_PAGES) list the ones that do.
+function ruleLinkOk(href) {
+    if (ruleSystemId() === '5e') return true;
+    const moves = (typeof TAB_PAGES !== 'undefined' && TAB_PAGES && TAB_PAGES.moves) || {};
+    const url = new URL(href, location.href);
+    const name = decodeURIComponent(url.pathname.split('/').pop()).replace(/\.html$/, '');
+    if (name.startsWith('pathfinder')) return true;
+    const tab = url.searchParams.get('tab');
+    return !!(tab ? moves[`${name}?tab=${tab}`] : moves[name]);
+}
+
 // The localStorage key (or database name) for this system's saves, so a Pathfinder party or
 // notebook never shows up in the D&D tools: 5e keeps the old key, others add "-<system>".
 function ruleKey(key) {

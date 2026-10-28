@@ -245,7 +245,7 @@ const BACKUP_KEYS = [
 // The Pathfinder pages (ROADMAP L3) keep their own saves under these keys plus "-pf2e" (ruleKey);
 // each gets the same row as its D&D key. Their map pictures aren't in backups yet.
 const BK_PF2E = { 'gazette_notebook': 'pathfinder-campaign-notebook', 'gazette-web': 'pathfinder-npc-relationship-web',
-    'gazette-kept-names': 'pathfinder-tavern-name-generator',
+    'gazette-kept-names': 'pathfinder-tavern-name-generator', 'saved_npcs': 'pathfinder-npc-generator',
     'gazette-clocks': 'pathfinder-progress-clocks', 'gazette-tables': 'pathfinder-random-table-roller' };
 BACKUP_KEYS.push(...BACKUP_KEYS.filter(k => Object.hasOwn(BK_PF2E, k.key)).map(k => ({
     ...k, key: k.key + '-pf2e', tool: '🗡️ Pathfinder Toolkit', href: BK_PF2E[k.key], pf2e: true

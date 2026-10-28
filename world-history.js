@@ -123,7 +123,7 @@ function hisAgeHTML(h, i, ctx) {
             <button type="button" class="btn wb-arrow" data-step="1" aria-label="Later age">▶</button>
         </div>
         ${hisDl(hisAgeLines(h, i, ctx))}
-        <p class="pan-links"><a class="btn" href="${esc(hisSiteLink(h, i))}">🏚️ Explore a ruin from this age</a></p>`;
+        ${ruleLinkOk(hisSiteLink(h, i)) ? `<p class="pan-links"><a class="btn" href="${esc(hisSiteLink(h, i))}">🏚️ Explore a ruin from this age</a></p>` : ''}`;
 }
 
 // The Sites tab, on a site built in age i of this history (its own seed per age, so it stays put).

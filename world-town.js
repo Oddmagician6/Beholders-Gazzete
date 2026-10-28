@@ -201,9 +201,9 @@ function townFactionsHTML(t, ctx) {
 
 function townPlacesHTML(t, rumorIdx) {
     const taverns = t.taverns.map((tv, k) => `<li>🍺 ${esc(townTavernLine(t, tv, townTavern(tv)))}
-        <a class="town-go" href="${esc(townTavernLink(tv, k, rumorIdx))}">Step inside →</a></li>`).join('');
+        ${ruleLinkOk(townTavernLink(tv, k, rumorIdx)) ? `<a class="town-go" href="${esc(townTavernLink(tv, k, rumorIdx))}">Step inside →</a>` : ''}</li>`).join('');
     const shops = t.shops.map(sh => `<li>${SHOP_TYPES[sh.type].icon} ${esc(townShopLine(t, sh, townShop(sh)))}
-        <a class="town-go" href="${esc(townShopLink(sh))}">Browse the stock →</a></li>`).join('');
+        ${ruleLinkOk(townShopLink(sh)) ? `<a class="town-go" href="${esc(townShopLink(sh))}">Browse the stock →</a>` : ''}</li>`).join('');
     return `<div class="wb-grid">
         <section class="wb-block"><h4>🍺 Taverns and inns</h4><ul class="wb-list">${taverns}</ul></section>
         <section class="wb-block"><h4>🏪 Shops</h4><ul class="wb-list">${shops}</ul></section>
@@ -280,8 +280,8 @@ function renderTown() {
         <section class="wb-block wb-wide">
             <h4>🗡️ A job in town: ${esc(q.title)}</h4>
             <p>${esc(q.task)} Ask ${esc(q.giver.name)}.</p>
-            <p class="pan-links"><a class="btn" href="${esc(townQuestLink(t))}">📜 Open the quest in the Toolbox</a></p>
-            <p class="wb-small town-quest-note">Set the party's level and size there to see the pay and any fight.</p>
+            ${ruleLinkOk(townQuestLink(t)) ? `<p class="pan-links"><a class="btn" href="${esc(townQuestLink(t))}">📜 Open the quest in the Toolbox</a></p>
+            <p class="wb-small town-quest-note">Set the party's level and size there to see the pay and any fight.</p>` : ''}
         </section>`;
 }
 

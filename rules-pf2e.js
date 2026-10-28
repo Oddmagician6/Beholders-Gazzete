@@ -31,6 +31,8 @@ RULE_SYSTEMS.pf2e = {
     alt: (five, other) => other,
     // The Remaster dropped alignment; gods keep edicts and anathema instead.
     alignment: false,
+    // NPC stat blocks come with the Pathfinder rules tools (ROADMAP L3 P4).
+    statBlocks: false,
     // People keep their 5e keys (names and ages are rolled by them); this is what they're called.
     words: {
         race: { tiefling: 'nephilim', tieflings: 'nephilim', dragonborn: 'dragonblood' },

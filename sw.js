@@ -8,7 +8,7 @@
 // Cache keys drop the query string (?seed=, ?t=, ?id= ...): pages rebuild their state from the URL.
 // Links use clean addresses (about, a/<id>); keyFor maps each one to its file's key (about.html).
 
-const VERSION = '18f5772996d4';
+const VERSION = '86a2e4b56aa4';
 const STATIC = 'gazette-static-' + VERSION;
 const PAGES = 'gazette-pages';
 const FONTS = 'gazette-fonts';
@@ -16,7 +16,7 @@ const FONTS = 'gazette-fonts';
 const PRECACHE = [
   // Tool pages
   'npc-generator.html', 'loot-generator.html', 'rumors.html', 'spellbook.html',
-  'economy.html', 'shop.html', 'session-kit.html', 'dnd-one-shot-generator.html', 'dnd-campaign-generator.html', 'toolbox.html', 'worldbuilder.html', 'rules.html', 'bestiary.html', 'monster-maker.html', 'handouts.html', 'privacy.html', 'player-view.html', 'battlemap-view.html', 'dm-screen.html', 'screen-view.html', 'character-builder.html', 'dnd-point-buy-calculator.html', 'dnd-backstory-generator.html', 'dnd-multiclass-calculator.html', 'dnd-spell-planner.html', 'dnd-character-cards.html', 'dnd-attack-calculator.html', 'dnd-player-journal.html', 'dnd-character-sheet.html', 'dnd-battlemap-builder.html', 'fantasy-world-map-maker.html', 'edition.html', 'pathfinder.html', 'pathfinder-license.html', 'pathfinder-tavern-name-generator.html', 'pathfinder-calendar-generator.html',
+  'economy.html', 'shop.html', 'session-kit.html', 'dnd-one-shot-generator.html', 'dnd-campaign-generator.html', 'toolbox.html', 'worldbuilder.html', 'rules.html', 'bestiary.html', 'monster-maker.html', 'handouts.html', 'privacy.html', 'player-view.html', 'battlemap-view.html', 'dm-screen.html', 'screen-view.html', 'character-builder.html', 'dnd-point-buy-calculator.html', 'dnd-backstory-generator.html', 'dnd-multiclass-calculator.html', 'dnd-spell-planner.html', 'dnd-character-cards.html', 'dnd-attack-calculator.html', 'dnd-player-journal.html', 'dnd-character-sheet.html', 'dnd-battlemap-builder.html', 'fantasy-world-map-maker.html', 'edition.html', 'pathfinder.html', 'pathfinder-license.html', 'pathfinder-tavern-name-generator.html', 'pathfinder-calendar-generator.html', 'pathfinder-npc-generator.html',
   // Styles and scripts
   'style.css', 'homepage.css', 'economy-page.css', 'handouts.css', 'cards.css', 'sw-register.js',
   'rules-system.js', 'rules-pf2e.js', 'rng.js', 'tab-pages.js', 'npc-data.js', 'npc-statblock.js', 'spell-detail.js', 'npc-generator.js', 'loot-data.js', 'loot-engine.js', 'loot-generator.js', 'magic-items-data.js',

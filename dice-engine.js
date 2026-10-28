@@ -87,7 +87,7 @@ function rollDice(formula, mode = 'normal') {
     let d20 = -1;
     if (mode === 'adv' || mode === 'dis') {
         d20 = terms.findIndex(t => t.sides === 20 && t.count === 1 && !t.keep);
-        if (d20 < 0) note = 'No single d20 in this roll, so advantage and disadvantage don\'t apply.';
+        if (d20 < 0) note = `No single d20 in this roll, so ${diceModeLabel('adv')} and ${diceModeLabel('dis')} don't apply.`;
         else terms[d20] = { ...terms[d20], count: 2, keep: { how: mode === 'adv' ? 'kh' : 'kl', n: 1 } };
     }
     const parts = terms.map(t => {
@@ -117,8 +117,10 @@ function diceDetail(r) {
     }).join('');
 }
 
+// Pathfinder calls them fortune and misfortune (a page without the system layer is 5e).
 function diceModeLabel(mode) {
-    return mode === 'adv' ? 'advantage' : mode === 'dis' ? 'disadvantage' : '';
+    const word = mode === 'adv' ? '{alt:advantage|fortune}' : mode === 'dis' ? '{alt:disadvantage|misfortune}' : '';
+    return typeof ruleText === 'function' ? ruleText(word) : word.replace(/^\{alt:([^|]*)\|.*\}$/, '$1');
 }
 
 // ── History (localStorage) ───────────────────────────────

@@ -12,6 +12,18 @@ let currentNPC = null;
 // URL param -> picker. The pickers plus a seed (rng.js) rebuild the same NPC.
 const NPC_FIELDS = { race: 'npc-race', profession: 'npc-profession', age: 'npc-age', gender: 'npc-gender', cls: 'npc-class', level: 'npc-level' };
 
+// The grimoire's saves; a Pathfinder page keeps its own (ruleKey).
+const SAVED_KEY = ruleKey('saved_npcs');
+
+// What the page's system calls a person's race and job, and their alignment ('' when the
+// system has none). The NPC keeps its 5e keys, so its link rolls the same person in both.
+const npcRace = npc => { const r = ruleWord('race', npc.race || ''); return r.charAt(0).toUpperCase() + r.slice(1); };
+const npcJob = npc => ruleWord('class', npc.profession);
+const npcAlign = npc => ruleHasAlignment() ? npc.alignment || '' : '';
+
+// The stat block toggle, off for good where the system has no NPC stat blocks yet.
+const showStatsOn = () => ruleHasStatBlocks() && document.getElementById('include-stats').checked;
+
 // Locked parts (NPC_PARTS in npc-data.js) keep their seed when the rest rerolls.
 const locks = new Set();
 
@@ -49,7 +61,7 @@ function generateNPC(seed = newSeed(), push = true, pinned = null, given = null)
     if (push !== null) setUrlParams(npcParams(), push);
 
     displayNPC(
-        document.getElementById('include-stats').checked,
+        showStatsOn(),
         document.getElementById('include-secrets').checked,
         document.getElementById('include-quest').checked
     );
@@ -74,18 +86,19 @@ function displayNPC(includeStats, includeSecrets, includeQuest) {
     document.getElementById('portrait-icon').hidden = !!portrait;
     document.getElementById('npc-portrait').classList.toggle('has-img', !!portrait);
     document.getElementById('npc-name').textContent = currentNPC.name;
-    document.getElementById('npc-race-display').textContent = currentNPC.race.charAt(0).toUpperCase() + currentNPC.race.slice(1);
+    document.getElementById('npc-race-display').textContent = npcRace(currentNPC);
     document.getElementById('npc-age-display').textContent = currentNPC.age;
     document.getElementById('npc-gender-display').textContent = currentNPC.gender.charAt(0).toUpperCase() + currentNPC.gender.slice(1);
-    document.getElementById('npc-profession-display').textContent = currentNPC.profession;
+    document.getElementById('npc-profession-display').textContent = npcJob(currentNPC);
     // Alignment, first impression, and pockets came later; older saves don't have them.
-    document.getElementById('npc-alignment-display').parentElement.hidden = !currentNPC.alignment;
-    document.getElementById('npc-alignment-display').textContent = currentNPC.alignment || '';
+    document.getElementById('npc-alignment-display').parentElement.hidden = !npcAlign(currentNPC);
+    document.getElementById('npc-alignment-display').textContent = npcAlign(currentNPC);
     document.getElementById('impression-section').hidden = !currentNPC.doing;
     document.getElementById('npc-doing').textContent = currentNPC.doing || '';
     document.getElementById('npc-pockets').textContent = pocketsText(currentNPC);
 
     // Stats
+    includeStats = includeStats && ruleHasStatBlocks();
     document.getElementById('stats-section').style.display = includeStats ? 'block' : 'none';
     if (includeStats) renderStatBlock(currentNPC);
 
@@ -295,13 +308,13 @@ function copyLink() {
 function copyNPC() {
     if (!currentNPC) return;
     // Same "include" boxes as the card and Print Selected.
-    const showStats = document.getElementById('include-stats').checked;
+    const showStats = showStatsOn();
     const showSecrets = document.getElementById('include-secrets').checked;
     const showQuest = showSecrets && document.getElementById('include-quest').checked;
 
     const text = `
-${currentNPC.name} (${currentNPC.race}, ${currentNPC.profession})
-Age: ${currentNPC.age} | Gender: ${currentNPC.gender}${currentNPC.alignment ? ` | ${currentNPC.alignment}` : ''}
+${currentNPC.name} (${npcRace(currentNPC).toLowerCase()}, ${npcJob(currentNPC)})
+Age: ${currentNPC.age} | Gender: ${currentNPC.gender}${npcAlign(currentNPC) ? ` | ${npcAlign(currentNPC)}` : ''}
 ${currentNPC.doing ? `
 WHEN YOU MEET THEM: ${currentNPC.doing}
 POCKETS: ${pocketsText(currentNPC)}
@@ -345,7 +358,7 @@ function saveNPC() {
     saved.unshift(currentNPC);
     if (saved.length > 20) saved.pop();
 
-    localStorage.setItem('saved_npcs', JSON.stringify(saved));
+    localStorage.setItem(SAVED_KEY, JSON.stringify(saved));
     renderSavedNPCs();
     alert('NPC saved to favorites!');
 }
@@ -359,7 +372,7 @@ function saveToNotebook() {
     const r = nbAdd({
         kind: 'npc',
         title: currentNPC.name,
-        sub: [cap(currentNPC.race), currentNPC.profession].filter(Boolean).join(' ') + (currentNPC.block ? `, ${currentNPC.block.title.replace(/ \(.*\)$/, '')}` : '') + (currentNPC.trait ? `. ${currentNPC.trait}` : ''),
+        sub: [npcRace(currentNPC), npcJob(currentNPC)].filter(Boolean).join(' ') + (currentNPC.block && ruleHasStatBlocks() ? `, ${currentNPC.block.title.replace(/ \(.*\)$/, '')}` : '') + (currentNPC.trait ? `. ${currentNPC.trait}` : ''),
         href: 'npc-generator?' + paramsQuery(npcParams())
     });
     say(!r ? '⚠️ Storage is off' : r.full ? '⚠️ Notebook is full' : r.existed ? '📓 Already saved' : '✅ Saved to the notebook');
@@ -382,7 +395,7 @@ const pickedSaved = new Set();
 function readSaved() {
     // Drop anything that isn't a saved NPC object, so a damaged save can't break the page.
     try {
-        const saved = JSON.parse(localStorage.getItem('saved_npcs'));
+        const saved = JSON.parse(localStorage.getItem(SAVED_KEY));
         return Array.isArray(saved) ? saved.filter(n => n && typeof n === 'object' && !Array.isArray(n)) : [];
     } catch (e) { return []; }
 }
@@ -416,7 +429,7 @@ function renderSavedNPCs() {
                 aria-label="Pick ${esc(npc.name)} for printing" onclick="event.stopPropagation()" onchange="togglePicked(this)">
             <div class="saved-text">
                 <h4>${esc(npc.name)}</h4>
-                <p>${esc(npc.race)} ${esc(npc.profession)}${npc.block ? ` · ${esc(npc.block.title.replace(/ \(.*\)$/, ''))}` : ''}</p>
+                <p>${esc(npcRace(npc).toLowerCase())} ${esc(npcJob(npc))}${npc.block && ruleHasStatBlocks() ? ` · ${esc(npc.block.title.replace(/ \(.*\)$/, ''))}` : ''}</p>
                 <div class="saved-meta">${new Date(npc.generatedAt).toLocaleDateString()}</div>
             </div>
         </div>`;
@@ -447,7 +460,7 @@ function selectAllSaved() {
 
 // One compact block per NPC; follows the Stats / Secrets / Quest Hook toggles.
 function sheetBlock(npc) {
-    const showStats = document.getElementById('include-stats').checked;
+    const showStats = showStatsOn();
     const showSecrets = document.getElementById('include-secrets').checked;
     const showQuest = showSecrets && document.getElementById('include-quest').checked;
     const cap = s => String(s ?? '').charAt(0).toUpperCase() + String(s ?? '').slice(1);
@@ -456,7 +469,7 @@ function sheetBlock(npc) {
     return `
         <div class="sheet-npc">
             <h4>${esc(npc.name)}</h4>
-            <div class="sheet-sub">${esc([cap(npc.race), cap(npc.gender), npc.age, npc.profession, npc.alignment].filter(Boolean).join(' · '))}</div>
+            <div class="sheet-sub">${esc([npcRace(npc), cap(npc.gender), npc.age, npcJob(npc), npcAlign(npc)].filter(Boolean).join(' · '))}</div>
             ${showStats && npc.block ? sheetStatBlock(npc.block) : showStats && npc.stats ? `<div class="sheet-stats">
                 ${['str', 'dex', 'con', 'int', 'wis', 'cha'].map(k => `<span><strong>${k.toUpperCase()}</strong> ${esc(s[k])}</span>`).join('')}
                 <span><strong>HP</strong> ${esc(npc.hp)}</span><span><strong>AC</strong> ${esc(npc.ac)}</span><span><strong>Speed</strong> ${esc(npc.speed)}</span>
@@ -513,7 +526,7 @@ function rollNameList() {
     });
     document.getElementById('name-list').innerHTML = rolledNames.map((n, i) => `
         <li><button type="button" class="name-chip" data-i="${i}" title="Copy ${esc(n.name)}">
-            <strong>${esc(n.name)}</strong><span>${esc(n.race)} · ${n.gender === 'nonbinary' ? 'non-binary' : esc(n.gender)}</span>
+            <strong>${esc(n.name)}</strong><span>${esc(ruleWord('race', n.race))} · ${n.gender === 'nonbinary' ? 'non-binary' : esc(n.gender)}</span>
         </button></li>`).join('');
     document.getElementById('copy-names').disabled = !rolledNames.length;
     document.getElementById('name-status').textContent = '';
@@ -558,7 +571,7 @@ function showUnlinkedNPC() {
 
 function clearSaved() {
     if (confirm('Clear all saved NPCs?')) {
-        localStorage.removeItem('saved_npcs');
+        localStorage.removeItem(SAVED_KEY);
         renderSavedNPCs();
     }
 }
@@ -567,6 +580,10 @@ function clearSaved() {
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('year').textContent = new Date().getFullYear();
+    // No stat blocks in this system yet: the class, level, and stat block pickers go.
+    if (!ruleHasStatBlocks()) {
+        ['npc-class', 'npc-level', 'include-stats'].forEach(id => { document.getElementById(id).closest('.control-group, .toggle').hidden = true; });
+    }
     renderSavedNPCs();
     document.querySelectorAll('.lock-btn').forEach(btn => btn.addEventListener('click', () => toggleLock(btn.dataset.lock)));
     document.getElementById('unlock-all').addEventListener('click', () => { locks.clear(); renderLocks(); });

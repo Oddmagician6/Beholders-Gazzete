@@ -248,7 +248,7 @@ function renderCalendar() {
         </header>
         <div class="wb-today">
             ${today.map(t => `<p>${esc(t)}</p>`).join('')}
-            <a class="btn" href="${esc(calTravelLink(c))}">🗺️ Travel in this season</a>
+            ${ruleLinkOk(calTravelLink(c)) ? `<a class="btn" href="${esc(calTravelLink(c))}">🗺️ Travel in this season</a>` : ''}
         </div>
         <div class="wb-grid">
             <section class="wb-block">

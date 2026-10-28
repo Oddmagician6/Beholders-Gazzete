@@ -76,13 +76,15 @@ function onTabLinks(go) {
 }
 
 // On a Pathfinder page, a link to a D&D tool that has a Pathfinder page opens that page (the
-// notebook's entries link to worldbuilder?tab=..., written by either system).
+// notebook's entries link to worldbuilder?tab=..., written by either system). The standalone Pathfinder
+// pages (pathfinder-npc-generator) carry the same moves with no tabs.
 (function moveLinks() {
     const moves = TAB_PAGES && TAB_PAGES.moves;
     if (!moves) return;
     const move = e => {
         const a = e.target.closest && e.target.closest('a[href]');
-        if (!a || a.target || a.hasAttribute('download')) return;
+        // The nav's links mean what they say: its 5e Toolkit group opens the D&D tools.
+        if (!a || a.target || a.hasAttribute('download') || a.closest('.main-nav')) return;
         const url = new URL(a.href, location.href);
         if (url.origin !== location.origin) return;
         const name = tabPageName(url.pathname);
