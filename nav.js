@@ -1,4 +1,4 @@
-// Main nav: mobile hamburger plus the "DM Tools" dropdown (every page).
+// Main nav: mobile hamburger plus the dropdown groups: Sections and the 5e and Pathfinder toolkits (every page).
 (function() {
   const nav = document.querySelector('.main-nav');
   if (!nav) return;

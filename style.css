@@ -136,6 +136,11 @@ p:last-child { margin-bottom: 0; }
   position: relative;
 }
 
+/* Laptop widths: tighter items so the bar stays one row */
+@media (min-width: 769px) and (max-width: 1199px) {
+  .main-nav a, .nav-group-toggle { padding-left: 10px; padding-right: 10px; letter-spacing: 0.05em; }
+}
+
 .main-nav a::after,
 .nav-group-toggle::after {
   content: '';
@@ -157,7 +162,7 @@ p:last-child { margin-bottom: 0; }
 .nav-group-toggle:hover::after, .nav-group.open > .nav-group-toggle::after,
 .nav-group:has(a.active) > .nav-group-toggle::after { left: 0; right: 0; }
 
-/* ── "DM Tools" dropdown (nav.js) ────────────────────────── */
+/* ── Toolkit dropdowns (nav.js) ────────────────────────── */
 .nav-group { position: relative; }
 .nav-group-toggle {
   background: none;
@@ -898,7 +903,7 @@ footer::before {
     padding-left: 21px;
   }
 
-  /* DM Tools: an expandable group inside the menu */
+  /* Nav groups (Sections, toolkits): expandable inside the menu */
   .nav-group-toggle { width: 100%; text-align: left; }
   .nav-group-toggle:hover { border-left: 3px solid var(--gold-bright); padding-left: 21px; }
   .nav-sub {
