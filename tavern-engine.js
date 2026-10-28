@@ -168,7 +168,7 @@ function tavernDish(band) {
     return rand() < 0.6 ? `${prep} ${main} with ${side}` : `${tavernCap(main)} ${form}`;
 }
 
-const TAVERN_QUIRKS = [
+const TAVERN_QUIRKS = ruleTable([
     'A stuffed owlbear stands by the door. Patrons tip it on the way out, for luck.',
     'Every mug is a different shape, and regulars have their own. Taking someone else\'s mug starts fights.',
     'The bard has played the same song for three years and refuses to learn another.',
@@ -190,7 +190,7 @@ const TAVERN_QUIRKS = [
     'Arm-wrestling settles every argument here, including the bill.',
     'A parrot behind the bar repeats secrets it overheard, loudly, at random.',
     'The stew pot has not been emptied since the place opened. It is "seasoned."',
-    'The stairs creak in a tune. Sneaking up them is a DC 15 Dexterity (Stealth) check.',
+    'The stairs creak in a tune. Sneaking up them is a {dc:15} {skill:dex:stealth} check.',
     'The tavern sits on a crossroads shrine, and travelers leave offerings on the bar.',
     'Every hour the barkeep shouts "Last orders!" and nothing happens.',
     'A notice board covered in job offers, most of them for rat catchers.',
@@ -234,7 +234,7 @@ const TAVERN_QUIRKS = [
     'Stools at the bar are bolted to the floor, after an incident.',
     'One room upstairs has no door, only a painted outline of one.',
     'A dragon\'s tooth hangs over the bar, and every so often it hums.'
-];
+]);
 
 const TAVERN_SCENES = {
     look: ['Low beams hung with dried herbs and old horseshoes', 'Smoke-black rafters and a fire big enough to roast an ox',
@@ -376,30 +376,30 @@ const TAVERN_RULES = ['Pay before you drink.', 'Peace-bond your blades at the do
     'Speak Common at the bar, so the barkeep can eavesdrop.'];
 
 // A game in the corner: how it plays, and stakes off the tier's night in a room.
-const TAVERN_GAMES = [
+const TAVERN_GAMES = ruleTable([
     { name: 'Dragonbones', how: 'Everyone rolls 3d6. Highest total takes the pot, any double beats a plain total, and triples take double from everyone.' },
-    { name: 'Liar\'s dice', how: 'Five d6 each under a cup, bidding on how many of a face are on the table. A Wisdom (Insight) check opposed by Charisma (Deception) reads a bluff.' },
-    { name: 'Knucklebones', how: 'Toss the bones and catch them on the back of the hand. Dexterity (Sleight of Hand), DC 10, then 13, then 16. Most catches wins.' },
-    { name: 'Arm-wrestling', how: 'Opposed Strength (Athletics) checks, best two of three. The loser buys a round too.' },
-    { name: 'A drinking contest', how: 'Each round, a Constitution saving throw: DC 10, rising by 2 each round. Fail twice and you pay the tab, and you are poisoned for an hour.' },
-    { name: 'Find the pea', how: 'Three cups and a pea. A DC 15 Wisdom (Perception) check follows it. The dealer cheats on a 1 or 2 on a d6 (Sleight of Hand +5).' },
-    { name: 'Kings and Beggars', how: 'A card game of bluff. Three hands of opposed Charisma (Deception) against Wisdom (Insight); win two to take the pot.' },
-    { name: 'Knife toss', how: 'Three throws at a board across the room: Dexterity checks at DC 12, 15, and 18. Hit all three and the house pays double.' },
+    { name: 'Liar\'s dice', how: 'Five d6 each under a cup, bidding on how many of a face are on the table. A {skill:wis:insight} check opposed by {skill:cha:deception} reads a bluff.' },
+    { name: 'Knucklebones', how: 'Toss the bones and catch them on the back of the hand. {skill:dex:sleight-of-hand}, {alt:DC 10, then 13, then 16|DC 13, then 16, then 19}. Most catches wins.' },
+    { name: 'Arm-wrestling', how: 'Opposed {skill:str:athletics} checks, best two of three. The loser buys a round too.' },
+    { name: 'A drinking contest', how: 'Each round, a {save:con} saving throw: {dc:10}, rising by 2 each round. Fail twice and you pay the tab, and you are poisoned for an hour.' },
+    { name: 'Find the pea', how: 'Three cups and a pea. A {dc:15} {skill:wis:perception} check follows it. The dealer cheats on a 1 or 2 on a d6 (Sleight of Hand +5).' },
+    { name: 'Kings and Beggars', how: 'A card game of bluff. Three hands of opposed {skill:cha:deception} against {skill:wis:insight}; win two to take the pot.' },
+    { name: 'Knife toss', how: 'Three throws at a board across the room: {ability:dex} checks at {alt:DC 12, 15, and 18|DC 15, 18, and 21}. Hit all three and the house pays double.' },
     { name: 'Beetle racing', how: 'Pick a beetle (there are six) and roll a d6 for it each round. The first to six steps wins. The house beetle never seems to lose.' },
-    { name: 'Coin in the cup', how: 'Bounce a coin off the table into a mug. Dexterity, DC 13. Miss and the coin is the house\'s.' },
-    { name: 'Riddle duel', how: 'Trade riddles until someone fails. Intelligence checks, DC 12, rising by 1 a riddle. The barkeep judges, badly.' },
-    { name: 'Rat-catching', how: 'Turn over a cup on the floor and hope. Dexterity (Acrobatics), DC 14. There are a lot of rats and they are fast.' },
-    { name: 'Stare-down', how: 'Two players stare until one looks away. Opposed Wisdom saving throws. Blinking counts.' },
+    { name: 'Coin in the cup', how: 'Bounce a coin off the table into a mug. {ability:dex}, {dc:13}. Miss and the coin is the house\'s.' },
+    { name: 'Riddle duel', how: 'Trade riddles until someone fails. {ability:int} checks, {dc:12}, rising by 1 a riddle. The barkeep judges, badly.' },
+    { name: 'Rat-catching', how: 'Turn over a cup on the floor and hope. {skill:dex:acrobatics}, {dc:14}. There are a lot of rats and they are fast.' },
+    { name: 'Stare-down', how: 'Two players stare until one looks away. Opposed {save:wis} saving throws. Blinking counts.' },
     { name: 'High-low', how: 'The dealer rolls a d20; guess if the next roll is higher or lower. Five right in a row breaks the bank.' }
-];
+]);
 
 // Trouble brewing tonight (a hook, often with a check).
-const TAVERN_TROUBLE = [
+const TAVERN_TROUBLE = ruleTable([
     'A pickpocket is working the room (Sleight of Hand +5). A passive Perception of 14 spots them.',
-    'Two caravan guards are one insult away from a brawl. A DC 13 Charisma (Persuasion) check calms them; otherwise chairs fly within the hour.',
+    'Two caravan guards are one insult away from a brawl. A {dc:13} {skill:cha:persuasion} check calms them; otherwise chairs fly within the hour.',
     'The ale is watered, and a regular is about to say so loudly.',
     'There is a body in the cellar, and the cook will find it within the hour.',
-    'Someone has slipped something into one of the party\'s drinks. DC 12 Wisdom (Perception) to notice the taste; DC 12 Constitution save or sleep till dawn.',
+    'Someone has slipped something into one of the party\'s drinks. {dc:12} {skill:wis:perception} to notice the taste; {dc:12} {save:con} save or sleep till dawn.',
     'A bounty hunter is checking faces against a stack of posters, and one of them looks like a party member.',
     'The owner owes money to the wrong people, and the wrong people just walked in.',
     'A fire starts in the kitchen. It is small now.',
@@ -407,15 +407,15 @@ const TAVERN_TROUBLE = [
     'One of the guests upstairs isn\'t a guest. They came in through the window.',
     'The till is short, and the owner is looking hard at the newcomers.',
     'A courier collapses through the door with a sealed letter and a crossbow bolt in the back.',
-    'Someone is cheating at the card table (DC 14 Wisdom (Insight) to spot it), and the loser is armed.',
+    'Someone is cheating at the card table ({dc:14} {skill:wis:insight} to spot it), and the loser is armed.',
     'The watch arrives with a warrant for someone in the room and won\'t say who.',
     'A rat king is nesting in the cellar, and the rats are getting bold.',
     'The bard has insulted a noble in song. The noble has guards.',
     'A guest has died in their room. It looks natural. It isn\'t.',
-    'The stew has gone off, and half the room is about to find out (DC 10 Constitution save or poisoned until morning).',
+    'The stew has gone off, and half the room is about to find out ({dc:10} {save:con} save or poisoned until morning).',
     'A cult is meeting in the back room, under the name of a book club.',
     'A child has come in looking for their parent, who is one of the regulars and pretending not to be.'
-];
+]);
 
 // A room with a story, sometimes. mult: of the tier's SRD stay.
 const TAVERN_SPECIAL_ROOMS = [
@@ -499,34 +499,34 @@ const TAVERN_RULES_MORE = ['No spells above a whisper.', 'The cat outranks you.'
     'No invisible patrons. Everyone gets counted.', 'Leave the fire alone. It has been lit for forty years.', 'Wager disputes go to the cook, whose ruling is final.',
     'Talk business in the back room, not at the bar.', 'No drinking from your own flask.', 'Mounts stay in the stable, however small.',
     'Lie to the barkeep and you drink elsewhere.'];
-const TAVERN_GAMES_MORE = [
-    { name: 'Shove-copper', how: 'Slide a copper down the bar toward the edge. Dexterity checks: the highest total wins, but a 20 or more sails off the end and loses.' },
+const TAVERN_GAMES_MORE = ruleTable([
+    { name: 'Shove-copper', how: 'Slide a copper down the bar toward the edge. {ability:dex} checks: the highest total wins, but a 20 or more sails off the end and loses.' },
     { name: 'Toad racing', how: 'Pick a toad (there are five) and roll a d4 for it each round. The first to ten hops wins. One toad always just sits there.' },
-    { name: 'Candle and coin', how: 'Snuff a candle across the table by flicking a coin at it. Dexterity, DC 15. The house relights it for a copper.' },
-    { name: 'Tankard tower', how: 'Stack empty tankards in turns. Dexterity (Sleight of Hand), DC 8 plus the number already stacked. Whoever topples it buys the round.' },
-    { name: 'Slaps', how: 'Hands stacked on the table. Opposed Dexterity checks; the winner slaps, and the loser pays a copper a slap. Three slaps ends it.' },
-    { name: 'The dragon\'s hoard', how: 'Everyone puts a coin in and draws a token from a bag; whoever draws the dragon takes the hoard. A DC 16 Sleight of Hand check palms a second token.' },
-    { name: 'Tall tales', how: 'Each player tells a story of their own deeds and the table votes. Charisma (Performance) checks; a DC 13 Wisdom (Insight) catches an outright lie, which forfeits.' },
+    { name: 'Candle and coin', how: 'Snuff a candle across the table by flicking a coin at it. {ability:dex}, {dc:15}. The house relights it for a copper.' },
+    { name: 'Tankard tower', how: 'Stack empty tankards in turns. {skill:dex:sleight-of-hand}, {dc:8} plus the number already stacked. Whoever topples it buys the round.' },
+    { name: 'Slaps', how: 'Hands stacked on the table. Opposed {ability:dex} checks; the winner slaps, and the loser pays a copper a slap. Three slaps ends it.' },
+    { name: 'The dragon\'s hoard', how: 'Everyone puts a coin in and draws a token from a bag; whoever draws the dragon takes the hoard. A {dc:16} Sleight of Hand check palms a second token.' },
+    { name: 'Tall tales', how: 'Each player tells a story of their own deeds and the table votes. {skill:cha:performance} checks; a {dc:13} {skill:wis:insight} catches an outright lie, which forfeits.' },
     { name: 'Axe throwing', how: 'Three throws at a log in the yard: attack rolls against AC 12, 14, and 16. Hit all three to take the pot; miss all three and pay for the log.' },
-    { name: 'Stones and pits', how: 'A board of pits and pebbles. Opposed Intelligence checks, best of three; a natural 20 clears the board.' },
+    { name: 'Stones and pits', how: 'A board of pits and pebbles. Opposed {ability:int} checks, best of three; a natural 20 clears the board.' },
     { name: 'Last one standing', how: 'Everyone rolls a d12; the lowest drops out each round until one is left. Pay double the stake once to reroll.' }
-];
-const TAVERN_TROUBLE_MORE = [
+]);
+const TAVERN_TROUBLE_MORE = ruleTable([
     'A noble\'s runaway child is hiding upstairs, and the noble\'s men are asking questions downstairs.',
-    'The new barmaid is a doppelganger, and the real one is tied up in the pantry. DC 15 Wisdom (Insight) to notice she doesn\'t know the regulars.',
+    'The new barmaid is a doppelganger, and the real one is tied up in the pantry. {dc:15} {skill:wis:insight} to notice she doesn\'t know the regulars.',
     'A smuggler has stashed a crate under the party\'s table and is coming back for it, with friends.',
     'A wizard\'s familiar has got loose and is stealing shiny things from the guests.',
-    'Someone has been adding drinks to the party\'s tab all night. A DC 13 Intelligence (Investigation) check on the slate shows the handwriting changes.',
+    'Someone has been adding drinks to the party\'s tab all night. A {dc:13} {skill:int:investigation} check on the slate shows the handwriting changes.',
     'A gang is collecting protection money tonight, and the owner can\'t pay.',
     'Two guests were sold the same room, and both of them have swords.',
-    'The common-room floor is sagging over the cellar. A DC 12 Wisdom (Perception) check hears it crack.',
+    'The common-room floor is sagging over the cellar. A {dc:12} {skill:wis:perception} check hears it crack.',
     'A drunk has stolen a horse from the stable and is riding it round and round the yard.',
-    'A rival tavern has paid someone to start a brawl tonight. A DC 14 Wisdom (Insight) check spots the plant.',
+    'A rival tavern has paid someone to start a brawl tonight. A {dc:14} {skill:wis:insight} check spots the plant.',
     'A guest\'s pet snake has got into the walls, and the guest won\'t say how big it is.',
     'The new strongbox behind the bar is a mimic, and the barkeep is about to open it.',
     'An old enemy of the owner has taken a room under a false name, and has brought a crossbow.',
     'A traveler upstairs is coughing badly, and the guests in the next rooms have started coughing too.'
-];
+]);
 const TAVERN_SPECIAL_ROOMS_MORE = [
     { name: 'The room with the round bed (a gnome designed it)', mult: 1.3 },
     { name: 'The attic with a view of the stars (and the drafts)', mult: 0.7 },

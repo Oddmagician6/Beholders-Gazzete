@@ -332,7 +332,7 @@ const TRAP_DAMAGE = {
   '17+':   { setback: '10d10', dangerous: '18d10', deadly: '24d10' }
 };
 // save: the saving throw; dmg: damage type. Traps without dmg do what effect says.
-const LOOT_TRAPS = [
+const LOOT_TRAPS = ruleTable([
   { name: 'Poison needle', where: 'in the lock', save: 'Constitution', dmg: 'poison', after: 'and be poisoned for 1 hour' },
   { name: 'Gas vent', where: 'under the lid', save: 'Constitution', dmg: 'poison', from: 'from a cloud of green gas (10-foot radius)' },
   { name: 'Fire glyph', where: 'carved on the lid', save: 'Dexterity', dmg: 'fire' },
@@ -345,8 +345,8 @@ const LOOT_TRAPS = [
   { name: 'Shrieking rune', where: 'on the keyhole', save: 'Wisdom', dmg: 'psychic' },
   { name: 'Falling weight', where: 'above it', save: 'Dexterity', dmg: 'bludgeoning' },
   { name: 'Alarm', where: 'on the lid', effect: 'A magical shriek sounds for 1 minute, loud enough to hear 300 feet away. Anything nearby comes to look.' },
-  { name: 'Dye bladder', where: 'inside the lock', effect: 'Indelible blue dye sprays out: DC {dc} Dexterity saving throw or be stained bright blue for a week.' }
-];
+  { name: 'Dye bladder', where: 'inside the lock', effect: 'Indelible blue dye sprays out: DC {dc} {save:dex} saving throw or be stained bright blue for a week.' }
+]);
 
 // SRD 5.1 trade goods: price in gp per unit, quantity range (a hoard's cargo at most), how it's packed.
 // Livestock (name = [one, many]) only turns up where a source lists it.
@@ -573,7 +573,7 @@ function lootTrap(cr) {
   const t = lootPick(LOOT_TRAPS);
   const [sev, , dcs] = lootWeighted(TRAP_SEVERITY);
   const dc = lootRoll(dcs[0], dcs[1]);
-  const find = `DC ${dc} Wisdom (Perception) to spot, DC ${dc} Dexterity check with thieves' tools to disarm.`;
+  const find = ruleText(`DC ${dc} {skill:wis:perception} to spot, DC ${dc} {ability:dex:thievery} check{alt: with thieves' tools|} to disarm.`);
   const effect = t.dmg
     ? `DC ${dc} ${t.save} saving throw or take ${TRAP_DAMAGE[cr][sev]} ${t.dmg} damage${t.from ? ' ' + t.from : ''}${t.after ? ' ' + t.after : ''}; half damage on a success${t.after ? ' and no other effect' : ''}.`
     : t.effect.replace('{dc}', dc);
@@ -623,7 +623,7 @@ function decorateTreasure(t, kind, cr, opts = {}) {
     if (rand() < (hoard ? 0.7 : 0.25)) {
       const [lo, hi] = LOOT_LOCK_DC[cr];
       const dc = rand() < 0.5 ? lo : hi;
-      t.lock = { dc, text: `DC ${dc} Dexterity check with thieves' tools to pick, or DC ${Math.min(30, dc + 5)} Strength to force. ${lootPick(LOOT_LOCK_KEYS)}` };
+      t.lock = { dc, text: ruleText(`DC ${dc} {ability:dex:thievery} check{alt: with thieves' tools|} to pick, or DC ${Math.min(30, dc + 5)} {ability:str} to force. ${lootPick(LOOT_LOCK_KEYS)}`) };
     }
     if (rand() < (hoard ? 0.35 : 0.08)) t.trap = lootTrap(cr);
   }

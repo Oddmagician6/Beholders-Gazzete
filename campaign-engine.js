@@ -176,12 +176,12 @@ const CP_SERVES = {
 };
 
 // How each chapter points to the next. {boss}, {Boss}, {nextSite}, {nextTown}, {faction}, {Patron}.
-const CP_LEADS = [
+const CP_LEADS = ruleTable([
     "A letter in the last room, sealed with {faction}'s mark, orders supplies sent to {nextSite}.",
     '{Boss} carries a map with {nextTown} circled, and a date written beside it.',
     'A prisoner freed in the last room overheard where the next shipment goes: {nextSite}.',
     'The hoard holds a ledger, and one name in it keeps getting paid in {nextTown}.',
-    'A coded note (DC 13 Intelligence (Investigation) to read it) names {nextSite} and a day.',
+    'A coded note ({dc:13} {skill:int:investigation} to read it) names {nextSite} and a day.',
     "{Patron} sends word: {faction}'s people have been seen near {nextTown}.",
     'A survivor swears the rest went to {nextSite}, and took the cart with them.',
     "{Boss}'s orders, half burned in a brazier, name {nextTown} and a buyer there.",
@@ -195,7 +195,7 @@ const CP_LEADS = [
     'A chandler in {nextTown} has been selling the same black candles the party found here.',
     'Tracks from a back way out lead toward {nextSite}, and they are only a day old.',
     "{Faction}'s courier is caught on the road with a letter for {nextTown}, and talks for a pardon."
-];
+]);
 
 // What the villain's own people call them before the party learns the name.
 const CP_ALIASES = ['the Lantern', 'the Grey Hand', 'the Quiet One', 'the Patron', 'the Black Candle', 'the Hollow Crown',

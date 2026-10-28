@@ -36,13 +36,13 @@ const DOWNTIME_ACTIVITIES = {
 };
 
 // Gambling (house rule): each week, d20 + the character's check bonus against the game's DC.
-const DOWNTIME_GAMES = {
+const DOWNTIME_GAMES = ruleTable({
     dice:   { label: 'Dice in the back room', check: 'Wisdom (dice set)', dc: 12 },
     cards:  { label: 'Cards at a tavern table', check: 'Charisma (playing card set)', dc: 14 },
-    pits:   { label: 'Betting on the pits', check: 'Wisdom (Animal Handling)', dc: 15 },
-    races:  { label: 'Betting on the races', check: 'Intelligence (Investigation)', dc: 15 },
-    high:   { label: 'A private high-stakes game', check: 'Charisma (Deception) or a gaming set', dc: 18 }
-};
+    pits:   { label: 'Betting on the pits', check: '{skill:wis:animal-handling}', dc: 15 },
+    races:  { label: 'Betting on the races', check: '{skill:int:investigation}', dc: 15 },
+    high:   { label: 'A private high-stakes game', check: '{skill:cha:deception} or a gaming set', dc: 18 }
+});
 const TRAIN_GP_PER_DAY = 1;      // house rule: a tutor's fee per day of lessons
 const GAMBLE_MAX_BONUS = 20;
 
@@ -221,7 +221,7 @@ const DOWNTIME_QUIET = [
     "The week passes in small errands.", "A calm week. You catch up on sleep you didn't know you'd missed.",
     "Market days come and go. Nobody tries to kill you.", "A week of fog. Everyone keeps to themselves."
 ];
-const DOWNTIME_TOWN = {
+const DOWNTIME_TOWN = ruleTable({
     low: [
         { k: 'good', t: "You help pull a drunk out of the canal. He turns out to be a ferryman, and you ride free for a month." },
         { k: 'good', t: "A street kid named {name} decides to be your guide, and knows every shortcut and every fence in the district." },
@@ -232,7 +232,7 @@ const DOWNTIME_TOWN = {
         { k: 'odd', t: "Someone has chalked a strange mark on your door. The neighbors have the same mark, upside down." },
         { k: 'odd', t: "A rag-and-bone man swaps you a cracked mirror for an old boot. The mirror shows the room as it was a day ago." },
         { k: 'good', t: "The local soup kitchen needs a hand. In return you hear every rumor in the district." },
-        { k: 'bad', t: "Fever goes round the boarding houses. Make a DC 11 Constitution save or spend the week in bed." }
+        { k: 'bad', t: "Fever goes round the boarding houses. Make a {dc:11} {save:con} save or spend the week in bed." }
     ],
     middle: [
         { k: 'good', t: "A guild clerk named {name} owes you a small favor after you return a lost purse." },
@@ -258,7 +258,7 @@ const DOWNTIME_TOWN = {
         { k: 'good', t: "A wealthy collector asks to hear your war stories over dinner, and pays for the privilege." },
         { k: 'bad', t: "Someone has been using your name to run up bills at the tailor's." }
     ]
-};
+});
 const DOWNTIME_EVENTS = {
     craft: [
         { k: 'good', t: "A supplier has a surplus. Your materials cost a tenth less this week." },
@@ -529,9 +529,9 @@ function downtimeFor(c, days, seed, i = 0, opts = {}) {
         lines.push({ text: `Research expenses: ${formatCoins(RESEARCH_GP_PER_DAY)} a day. The DM decides what can be learned and how long it takes.`, src: 'SRD' });
     } else if (c.act === 'recup') {
         const tries = Math.floor(days / 3);
-        lines.push({ text: tries
-            ? `${tries} recovery attempt${tries === 1 ? '' : 's'} (one per 3 days): DC 15 Constitution save. On a success, end one effect that stops hit point recovery, or gain advantage on saves against one disease or poison for 24 hours.`
-            : 'Recuperating takes 3 days of downtime before the DC 15 Constitution save.', src: 'SRD' });
+        lines.push({ text: ruleText(tries
+            ? `${tries} recovery attempt${tries === 1 ? '' : 's'} (one per 3 days): {dc:15} {save:con} save. On a success, end one effect that stops hit point recovery, or gain advantage on saves against one disease or poison for 24 hours.`
+            : 'Recuperating takes 3 days of downtime before the {dc:15} {save:con} save.'), src: 'SRD' });
     } else if (c.act === 'carouse') {
         // House rule: carousing costs the lifestyle's daily price again on top (at least 1 sp a day).
         out.extraGp += days * Math.max(0.1, full);

@@ -318,7 +318,7 @@ const CAL_FEST_NAMES_MORE = {
 
 // s: seasons it fits. climates: only these climates (else any). Each party activity has a check
 // and an optional prize (gp, shown through formatCoins()).
-const CAL_FESTIVALS = {
+const CAL_FESTIVALS = ruleTable({
     harvest: {
         icon: '🌾', s: ['autumn'],
         names: ['Harvest Home', 'The Last Sheaf', 'The Reaping Feast', 'The Feast of the Full Barn', 'Gathering Day'],
@@ -328,9 +328,9 @@ const CAL_FESTIVALS = {
             'Wagons decked in ribbons race the last of the grain to the mill, and the miller pretends not to take bets.'
         ],
         party: [
-            { t: 'Join the scything race: three rounds of DC 12 Strength (Athletics) checks, most successes wins.', prize: 'a barrel of cider', gp: 2 },
-            { t: 'Guess the weight of the prize pumpkin with a DC 14 Wisdom (Survival) check.', prize: 'the pumpkin and a silver spoon', gp: 1 },
-            { t: 'Help bring in a late field before the rain: a DC 13 Constitution check, or gain a level of exhaustion.', prize: 'a farmer\'s gratitude and a week of free meals', gp: 0 }
+            { t: 'Join the scything race: three rounds of {dc:12} {skill:str:athletics} checks, most successes wins.', prize: 'a barrel of cider', gp: 2 },
+            { t: 'Guess the weight of the prize pumpkin with a {dc:14} {skill:wis:survival} check.', prize: 'the pumpkin and a silver spoon', gp: 1 },
+            { t: 'Help bring in a late field before the rain: a {dc:13} {alt:Constitution check|Fortitude save}, or gain a level of exhaustion.', prize: 'a farmer\'s gratitude and a week of free meals', gp: 0 }
         ],
         food: ['Harvest loaf baked in the shape of a sheaf', 'Roast goose with apples', 'New cider and old cheese'],
         custom: ['The last sheaf is kept over the hearth until next year, for luck.', 'Whoever finds the bean in the harvest loaf rules the feast.', 'Nobody may refuse a dance tonight.'],
@@ -345,9 +345,9 @@ const CAL_FESTIVALS = {
             'Young people leap the bonfires in pairs; a clean jump means a good year.'
         ],
         party: [
-            { t: 'Leap the big bonfire with a DC 13 Dexterity (Acrobatics) check; a failure deals 1d6 fire damage and a lot of laughter.', prize: 'a lucky ember charm', gp: 1 },
-            { t: 'Write a grudge on a scrap and burn it. A DC 12 Wisdom (Insight) check reads the scraps blowing loose: someone in town plans a murder.', prize: null, gp: 0 },
-            { t: 'Carry the town flame home without letting it go out through the wind: a DC 14 Dexterity check.', prize: 'free lodging from the grateful innkeeper', gp: 5 }
+            { t: 'Leap the big bonfire with a {dc:13} {skill:dex:acrobatics} check; a failure deals 1d6 fire damage and a lot of laughter.', prize: 'a lucky ember charm', gp: 1 },
+            { t: 'Write a grudge on a scrap and burn it. A {dc:12} {skill:wis:insight} check reads the scraps blowing loose: someone in town plans a murder.', prize: null, gp: 0 },
+            { t: 'Carry the town flame home without letting it go out through the wind: a {dc:14} {ability:dex} check.', prize: 'free lodging from the grateful innkeeper', gp: 5 }
         ],
         food: ['Chestnuts roasted in the coals', 'Spiced wine kept hot on the fire', 'Burnt-sugar toffee'],
         custom: ['Whatever is burned tonight is forgiven, in theory.', 'Nobody may lend fire to a neighbor tonight, or the luck goes with it.', 'Ashes from the bonfire are scattered on the fields at dawn.'],
@@ -362,9 +362,9 @@ const CAL_FESTIVALS = {
             'The town\'s doors are left unlatched all night, and nobody asks who came in.'
         ],
         party: [
-            { t: 'Keep the graveyard vigil until dawn: a DC 13 Wisdom saving throw against the cold and the whispers, or be frightened until sunrise.', prize: 'the temple\'s blessing and a silver coin from each family', gp: 3 },
-            { t: 'Listen for the truth in a ghost story told by an old woman: a DC 14 Intelligence (History) check finds where the treasure in it was really buried.', prize: null, gp: 0 },
-            { t: 'Find a lost child among the lanterns before midnight: a DC 12 Wisdom (Perception) check.', prize: 'a family\'s gratitude', gp: 0 }
+            { t: 'Keep the graveyard vigil until dawn: a {dc:13} {save:wis} saving throw against the cold and the whispers, or be frightened until sunrise.', prize: 'the temple\'s blessing and a silver coin from each family', gp: 3 },
+            { t: 'Listen for the truth in a ghost story told by an old woman: a {dc:14} {skill:int:history} check finds where the treasure in it was really buried.', prize: null, gp: 0 },
+            { t: 'Find a lost child among the lanterns before midnight: a {dc:12} {skill:wis:perception} check.', prize: 'a family\'s gratitude', gp: 0 }
         ],
         food: ['Soul cakes marked with a cross', 'The dead one\'s favorite dish, served cold', 'Black bread and honey'],
         custom: ['Speaking ill of the dead tonight brings them to your door to argue.', 'Mirrors are covered so the dead don\'t get lost in them.', 'An empty chair is left at every inn table.'],
@@ -379,9 +379,9 @@ const CAL_FESTIVALS = {
             'Seed is blessed in the temple and handed out to every farm, an exact sackful each.'
         ],
         party: [
-            { t: 'Help the newlyweds steer the old plow straight: a DC 13 Strength (Athletics) check.', prize: 'a sack of blessed seed', gp: 1 },
-            { t: 'Beat the bounds and spot the boundary stone someone moved in the night: a DC 14 Wisdom (Perception) check.', prize: 'a farmer\'s reward', gp: 5 },
-            { t: 'Calm the plow ox, which has opinions: a DC 12 Wisdom (Animal Handling) check.', prize: null, gp: 0 }
+            { t: 'Help the newlyweds steer the old plow straight: a {dc:13} {skill:str:athletics} check.', prize: 'a sack of blessed seed', gp: 1 },
+            { t: 'Beat the bounds and spot the boundary stone someone moved in the night: a {dc:14} {skill:wis:perception} check.', prize: 'a farmer\'s reward', gp: 5 },
+            { t: 'Calm the plow ox, which has opinions: a {dc:12} {skill:wis:animal-handling} check.', prize: null, gp: 0 }
         ],
         food: ['Seed cake with caraway', 'The first greens of the year, boiled hard', 'Barley ale from the last of the old grain'],
         custom: ['Nobody lends anything today, or the harvest goes with it.', 'A coin is buried in the first furrow for the earth.', 'Girls wash their faces in dew for beauty, and boys for luck.'],
@@ -396,9 +396,9 @@ const CAL_FESTIVALS = {
             'Doors and carts are hung with garlands, and the best-dressed house wins a cask of mead.'
         ],
         party: [
-            { t: 'Dance the ribbon pole without tangling: a DC 12 Dexterity (Performance) check.', prize: 'a flower crown and a kiss from the Queen', gp: 0 },
-            { t: 'Bring a dispute before the Spring Queen and argue it: a DC 14 Charisma (Persuasion) check wins.', prize: 'whatever was in dispute', gp: 10 },
-            { t: 'Climb the pole for the prize at the top: a DC 15 Strength (Athletics) check.', prize: 'a purse at the top', gp: 5 }
+            { t: 'Dance the ribbon pole without tangling: a {dc:12} {skill:dex:performance} check.', prize: 'a flower crown and a kiss from the Queen', gp: 0 },
+            { t: 'Bring a dispute before the Spring Queen and argue it: a {dc:14} {skill:cha:persuasion} check wins.', prize: 'whatever was in dispute', gp: 10 },
+            { t: 'Climb the pole for the prize at the top: a {dc:15} {skill:str:athletics} check.', prize: 'a purse at the top', gp: 5 }
         ],
         food: ['Elderflower cordial', 'Honey cakes with candied petals', 'Spring lamb'],
         custom: ['Whatever the Spring Queen rules today is law until sunset.', 'Flowers given today are an offer of marriage, so give them carefully.', 'Nobody may sleep indoors tonight.'],
@@ -413,9 +413,9 @@ const CAL_FESTIVALS = {
             'Folk wander the woods all night looking for the fern that flowers only tonight.'
         ],
         party: [
-            { t: 'Find the midsummer fern-flower in the woods: a DC 15 Intelligence (Nature) check, and something guards it.', prize: 'a flower that grants a wish, or so they say', gp: 0 },
-            { t: 'Steer the burning wheel to the river: a DC 13 Strength check to keep it upright.', prize: 'free ale until sunrise', gp: 2 },
-            { t: 'Stay awake and sober until dawn: a DC 12 Constitution saving throw at midnight and at the last hour.', prize: 'a lucky sun charm', gp: 1 }
+            { t: 'Find the midsummer fern-flower in the woods: a {dc:15} {skill:int:nature} check, and something guards it.', prize: 'a flower that grants a wish, or so they say', gp: 0 },
+            { t: 'Steer the burning wheel to the river: a {dc:13} {ability:str} check to keep it upright.', prize: 'free ale until sunrise', gp: 2 },
+            { t: 'Stay awake and sober until dawn: a {dc:12} {save:con} saving throw at midnight and at the last hour.', prize: 'a lucky sun charm', gp: 1 }
         ],
         food: ['Strawberries and cream', 'Whole roast pig', 'Sun-wine, gold and sweet'],
         custom: ['Whatever you dream tonight will come true within the year.', 'It\'s the one night the fey may walk in town, and they are welcome.', 'Promises made at sunrise can\'t be broken.'],
@@ -430,9 +430,9 @@ const CAL_FESTIVALS = {
             'A race is swum across the river, and the winner\'s family draws water first all year.'
         ],
         party: [
-            { t: 'Dive for the gold ring the priest throws: a DC 14 Strength (Athletics) check, holding your breath.', prize: 'the ring itself, if you dare keep it', gp: 25 },
-            { t: 'Swim the river race: a DC 13 Strength (Athletics) check against the current.', prize: 'a laurel and a cask of wine', gp: 3 },
-            { t: 'Judge the well dressings, and survive the families\' opinions: a DC 13 Charisma (Persuasion) check.', prize: 'a feast in your honor', gp: 0 }
+            { t: 'Dive for the gold ring the priest throws: a {dc:14} {skill:str:athletics} check, holding your breath.', prize: 'the ring itself, if you dare keep it', gp: 25 },
+            { t: 'Swim the river race: a {dc:13} {skill:str:athletics} check against the current.', prize: 'a laurel and a cask of wine', gp: 3 },
+            { t: 'Judge the well dressings, and survive the families\' opinions: a {dc:13} {skill:cha:persuasion} check.', prize: 'a feast in your honor', gp: 0 }
         ],
         food: ['Fried river fish', 'Watercress soup', 'Small beer, cold from the well'],
         custom: ['Nobody may draw water before the priest does.', 'A wish whispered into the well today is heard.', 'Fishermen don\'t fish today; the water gets a rest.'],
@@ -447,9 +447,9 @@ const CAL_FESTIVALS = {
             'Everyone wears their clothes backwards and says the opposite of what they mean, and the watch arrests nobody.'
         ],
         party: [
-            { t: 'Get chosen Lord of Misrule (you find the dried pea in your cake on a DC 15 Wisdom (Perception) check), then rule the town until dawn.', prize: 'one ridiculous order that must be obeyed', gp: 0 },
-            { t: 'Out-fool the town fool in a contest of wit: a DC 14 Charisma (Performance) check.', prize: 'the fool\'s bells and a purse', gp: 4 },
-            { t: 'Spot the pickpocket working the confused crowd: a DC 13 Wisdom (Perception) check.', prize: 'the reward from the merchants', gp: 10 }
+            { t: 'Get chosen Lord of Misrule (you find the dried pea in your cake on a {dc:15} {skill:wis:perception} check), then rule the town until dawn.', prize: 'one ridiculous order that must be obeyed', gp: 0 },
+            { t: 'Out-fool the town fool in a contest of wit: a {dc:14} {skill:cha:performance} check.', prize: 'the fool\'s bells and a purse', gp: 4 },
+            { t: 'Spot the pickpocket working the confused crowd: a {dc:13} {skill:wis:perception} check.', prize: 'the reward from the merchants', gp: 10 }
         ],
         food: ['Twelfth cake with a pea and a bean inside', 'Pottage served on the wrong side of the plate', 'Hot spiced ale'],
         custom: ['No insult spoken today may be answered with a blade.', 'The mayor must do one thing the Lord of Misrule orders.', 'A secret said today must be kept forever.'],
@@ -464,9 +464,9 @@ const CAL_FESTIVALS = {
             'Horse dealers trot their animals up and down the high street, and every one of them swears theirs is the fastest.'
         ],
         party: [
-            { t: 'Haggle for a horse: a DC 14 Wisdom (Animal Handling) check spots the one that\'s been doped.', prize: 'a fair price on a riding horse', gp: 0 },
-            { t: 'Try the strongman\'s challenge: a DC 15 Strength (Athletics) check to ring the bell.', prize: 'a purse', gp: 5 },
-            { t: 'Hire on for a day\'s work and spot what the employer is hiding: a DC 13 Wisdom (Insight) check.', prize: 'a day\'s wages and a job lead', gp: 1 }
+            { t: 'Haggle for a horse: a {dc:14} {skill:wis:animal-handling} check spots the one that\'s been doped.', prize: 'a fair price on a riding horse', gp: 0 },
+            { t: 'Try the strongman\'s challenge: a {dc:15} {skill:str:athletics} check to ring the bell.', prize: 'a purse', gp: 5 },
+            { t: 'Hire on for a day\'s work and spot what the employer is hiding: a {dc:13} {skill:wis:insight} check.', prize: 'a day\'s wages and a job lead', gp: 1 }
         ],
         food: ['Fried dough with honey', 'Meat pies of doubtful origin', 'Roast chestnuts and hot cider'],
         custom: ['Any deal sealed with a handshake at the fair can\'t be undone until next year\'s fair.', 'The fair has its own court, and its judge can hang a cheat by sundown.', 'Tolls are suspended for the fair\'s length.'],
@@ -481,9 +481,9 @@ const CAL_FESTIVALS = {
             'Archers shoot at a target that moves back ten paces each round until only one can hit it.'
         ],
         party: [
-            { t: 'Enter the wrestling: three bouts, each a contested Strength (Athletics) check against a +5 local.', prize: 'a silver belt', gp: 15 },
+            { t: 'Enter the wrestling: three bouts, each a contested {skill:str:athletics} check against a +5 local.', prize: 'a silver belt', gp: 15 },
             { t: 'Shoot in the archery: hit AC 13, then AC 15, then AC 17 with ranged attacks.', prize: 'a golden arrow', gp: 25 },
-            { t: 'Run the hill race: a DC 13 Constitution check, then a DC 14 Dexterity (Acrobatics) check on the way down.', prize: 'a laurel and a ham', gp: 2 }
+            { t: 'Run the hill race: a {dc:13} {alt:Constitution check|Fortitude save}, then a {dc:14} {skill:dex:acrobatics} check on the way down.', prize: 'a laurel and a ham', gp: 2 }
         ],
         food: ['Grilled sausages', 'Barley water and strong ale', 'Victor\'s cake, shared by the winning village'],
         custom: ['Outsiders may compete, but must declare a village to compete for.', 'The losing team buys the first round.', 'A champion may not be arrested on the day of the games.'],
@@ -498,9 +498,9 @@ const CAL_FESTIVALS = {
             'Folk put ash on their foreheads and say aloud one wrong they did this year.'
         ],
         party: [
-            { t: 'Keep the fast and the silence until dusk: a DC 12 Constitution saving throw.', prize: 'the temple\'s blessing', gp: 0 },
-            { t: 'Hear a confession that wasn\'t meant for you: a DC 14 Wisdom (Insight) check tells whether it was true.', prize: null, gp: 0 },
-            { t: 'Keep your candle lit from dusk to dawn through the wind and the sleepiness: a DC 13 Wisdom saving throw.', prize: 'a blessed candle', gp: 1 }
+            { t: 'Keep the fast and the silence until dusk: a {dc:12} {save:con} saving throw.', prize: 'the temple\'s blessing', gp: 0 },
+            { t: 'Hear a confession that wasn\'t meant for you: a {dc:14} {skill:wis:insight} check tells whether it was true.', prize: null, gp: 0 },
+            { t: 'Keep your candle lit from dusk to dawn through the wind and the sleepiness: a {dc:13} {save:wis} saving throw.', prize: 'a blessed candle', gp: 1 }
         ],
         food: ['Nothing until dusk, then plain bread', 'Lentil broth', 'Water from the temple well'],
         custom: ['No trade is allowed, and the shops are shuttered.', 'Weapons are left at the door of every home.', 'Anyone may ask forgiveness today, and it\'s a sin to refuse.'],
@@ -515,9 +515,9 @@ const CAL_FESTIVALS = {
             'Folk go door to door masked, and must be given something sweet or play a trick.'
         ],
         party: [
-            { t: 'Find someone in the crowd by their walk alone: a DC 15 Wisdom (Perception) check.', prize: null, gp: 0 },
-            { t: 'Pass as a noble at the masked ball: a DC 14 Charisma (Deception) check, rolled again whenever someone asks you to dance.', prize: 'a night among the powerful', gp: 0 },
-            { t: 'Win the prize for the best mask: a DC 13 Charisma (Performance) check, or a Dexterity check with artisan\'s tools.', prize: 'a silver mask', gp: 10 }
+            { t: 'Find someone in the crowd by their walk alone: a {dc:15} {skill:wis:perception} check.', prize: null, gp: 0 },
+            { t: 'Pass as a noble at the masked ball: a {dc:14} {skill:cha:deception} check, rolled again whenever someone asks you to dance.', prize: 'a night among the powerful', gp: 0 },
+            { t: 'Win the prize for the best mask: a {dc:13} {skill:cha:performance} check, or a {ability:dex} check with artisan\'s tools.', prize: 'a silver mask', gp: 10 }
         ],
         food: ['Sugared almonds', 'Masked pies with a surprise inside', 'Black wine'],
         custom: ['Anything said behind a mask before midnight can\'t be held against the speaker.', 'Removing someone\'s mask by force is a crime.', 'Unmasking at midnight is done all at once, with a shout.'],
@@ -532,9 +532,9 @@ const CAL_FESTIVALS = {
             'A procession re-enacts the founding, with the founder played by whoever paid the most.'
         ],
         party: [
-            { t: 'Be the first through the gates: a DC 13 Dexterity (Acrobatics) check through the crush.', prize: 'a year without tolls', gp: 5 },
-            { t: 'Spot the mistake in the charter as it\'s read: a DC 15 Intelligence (Investigation) check, and the mistake is worth a fortune to someone.', prize: null, gp: 0 },
-            { t: 'Play a part in the founding pageant: a DC 12 Charisma (Performance) check.', prize: 'a place at the mayor\'s table', gp: 0 }
+            { t: 'Be the first through the gates: a {dc:13} {skill:dex:acrobatics} check through the crush.', prize: 'a year without tolls', gp: 5 },
+            { t: 'Spot the mistake in the charter as it\'s read: a {dc:15} {skill:int:investigation} check, and the mistake is worth a fortune to someone.', prize: null, gp: 0 },
+            { t: 'Play a part in the founding pageant: a {dc:12} {skill:cha:performance} check.', prize: 'a place at the mayor\'s table', gp: 0 }
         ],
         food: ["Founder's pie, made to the old recipe", 'Bread and salt, given to every guest', 'The good wine from the town cellar'],
         custom: ['Every citizen may bring one complaint to the mayor today.', 'Debts under a gold piece are forgiven.', 'The founder\'s statue is washed by the youngest citizens.'],
@@ -549,9 +549,9 @@ const CAL_FESTIVALS = {
             'Lovers exchange silver rings under {moon}, and the old folk read fortunes in its face.'
         ],
         party: [
-            { t: 'Read the omens in {moon}\'s face with a DC 14 Intelligence (Arcana) check. A success tells you something true about the next week.', prize: null, gp: 0 },
-            { t: 'Walk to the stone circle with no lantern: a DC 13 Wisdom (Survival) check, and something walks with you.', prize: 'a moonstone left on the altar', gp: 15 },
-            { t: 'Win the moonlit boat race on the lake: a DC 13 Strength (Athletics) check.', prize: 'a silver ring', gp: 5 }
+            { t: 'Read the omens in {moon}\'s face with a {dc:14} {skill:int:arcana} check. A success tells you something true about the next week.', prize: null, gp: 0 },
+            { t: 'Walk to the stone circle with no lantern: a {dc:13} {skill:wis:survival} check, and something walks with you.', prize: 'a moonstone left on the altar', gp: 15 },
+            { t: 'Win the moonlit boat race on the lake: a {dc:13} {skill:str:athletics} check.', prize: 'a silver ring', gp: 5 }
         ],
         food: ['Pale cakes dusted with sugar', 'White wine chilled in the stream', 'Moon-bread, round and flat'],
         custom: ['Nobody may light a fire until {moon} sets.', 'Children born tonight are named for the moon.', 'It\'s bad luck to look at {moon} through glass.'],
@@ -566,9 +566,9 @@ const CAL_FESTIVALS = {
             'The boar is carried in on a pole, roasted whole in the square, and the hunter who killed it gets the head.'
         ],
         party: [
-            { t: 'Join the hunt and track the quarry: a DC 14 Wisdom (Survival) check, and a ranged attack against AC 13 to bring it down.', prize: 'the head of the boar, a hero\'s seat at the feast', gp: 10 },
-            { t: 'Find the white stag with a DC 16 Wisdom (Perception) check. Shooting it is a terrible idea.', prize: 'a year of luck, or a curse', gp: 0 },
-            { t: 'Keep the lord\'s hounds in hand: a DC 13 Wisdom (Animal Handling) check.', prize: 'the huntsman\'s favor', gp: 2 }
+            { t: 'Join the hunt and track the quarry: a {dc:14} {skill:wis:survival} check, and a ranged attack against AC 13 to bring it down.', prize: 'the head of the boar, a hero\'s seat at the feast', gp: 10 },
+            { t: 'Find the white stag with a {dc:16} {skill:wis:perception} check. Shooting it is a terrible idea.', prize: 'a year of luck, or a curse', gp: 0 },
+            { t: 'Keep the lord\'s hounds in hand: a {dc:13} {skill:wis:animal-handling} check.', prize: 'the huntsman\'s favor', gp: 2 }
         ],
         food: ['Roast boar with apple in its mouth', 'Venison stew', 'Hot mulled ale from the hunters\' flasks'],
         custom: ['Poaching on this day is pardoned, but only this day.', 'The first blood of the hunt is daubed on the youngest hunter.', 'Nobody may eat until the lord carves.'],
@@ -583,9 +583,9 @@ const CAL_FESTIVALS = {
             'Children leave their shoes by the hearth and find them filled with nuts and copper by morning.'
         ],
         party: [
-            { t: 'Find a gift for a stranger that actually suits them: a DC 13 Wisdom (Insight) check.', prize: 'a gift in return', gp: 1 },
-            { t: 'Tell the best story at the long table: a DC 14 Charisma (Performance) check.', prize: 'the goose', gp: 2 },
-            { t: 'Make sure the poorest family on the street gets a feast: buy it (5 gp) or win it at dice (DC 13 Charisma check with a gaming set).', prize: 'a blessing that may matter later', gp: 0 }
+            { t: 'Find a gift for a stranger that actually suits them: a {dc:13} {skill:wis:insight} check.', prize: 'a gift in return', gp: 1 },
+            { t: 'Tell the best story at the long table: a {dc:14} {skill:cha:performance} check.', prize: 'the goose', gp: 2 },
+            { t: 'Make sure the poorest family on the street gets a feast: buy it (5 gp) or win it at dice ({dc:13} {ability:cha} check with a gaming set).', prize: 'a blessing that may matter later', gp: 0 }
         ],
         food: ['Plum pudding set alight', 'Roast goose', 'Spiced gingerbread and hot milk'],
         custom: ['A stranger at the door must be let in and fed.', 'Gifts are given unwrapped, so nobody can hide a cheap one.', 'Old quarrels are set aside for one night.'],
@@ -600,9 +600,9 @@ const CAL_FESTIVALS = {
             'Drovers bring the herds in from the hills, and the town counts every head by torchlight.'
         ],
         party: [
-            { t: 'Ride in the goat race: a DC 14 Wisdom (Animal Handling) check to stay on, and another to steer.', prize: 'the golden horns', gp: 10 },
-            { t: 'Win best in show with an animal companion or mount: a DC 13 Charisma (Performance) check.', prize: 'a ribbon and a sack of oats', gp: 1 },
-            { t: 'Help count the herd and notice the brand that\'s been altered: a DC 14 Intelligence (Investigation) check.', prize: 'the drovers\' reward', gp: 8 }
+            { t: 'Ride in the goat race: a {dc:14} {skill:wis:animal-handling} check to stay on, and another to steer.', prize: 'the golden horns', gp: 10 },
+            { t: 'Win best in show with an animal companion or mount: a {dc:13} {skill:cha:performance} check.', prize: 'a ribbon and a sack of oats', gp: 1 },
+            { t: 'Help count the herd and notice the brand that\'s been altered: a {dc:14} {skill:int:investigation} check.', prize: 'the drovers\' reward', gp: 8 }
         ],
         food: ['Goat\'s cheese pie', 'Ox roasted on a spit', 'Milk punch'],
         custom: ['Animals may not be worked today.', 'Whoever comes last in the goat race must carry the goat home.', 'A hair from each animal is burned in the temple for luck.'],
@@ -617,9 +617,9 @@ const CAL_FESTIVALS = {
             'An ice palace is carved on the lake and lit from inside with lanterns.'
         ],
         party: [
-            { t: 'Win the skating race: a DC 13 Dexterity (Acrobatics) check each leg, three legs.', prize: 'a pair of silver skates', gp: 10 },
-            { t: 'Hear the ice crack under a stall before it goes: a DC 14 Wisdom (Perception) check.', prize: 'the stall owner\'s life, and gratitude', gp: 0 },
-            { t: 'Carve something worthy in the ice: a DC 13 Dexterity check with mason\'s or woodcarver\'s tools.', prize: 'a place in the ice palace', gp: 2 }
+            { t: 'Win the skating race: a {dc:13} {skill:dex:acrobatics} check each leg, three legs.', prize: 'a pair of silver skates', gp: 10 },
+            { t: 'Hear the ice crack under a stall before it goes: a {dc:14} {skill:wis:perception} check.', prize: 'the stall owner\'s life, and gratitude', gp: 0 },
+            { t: 'Carve something worthy in the ice: a {dc:13} {ability:dex} check with mason\'s or woodcarver\'s tools.', prize: 'a place in the ice palace', gp: 2 }
         ],
         food: ['Hot gingerbread from the ice-stalls', 'Ox roasted on the ice', 'Brandy-warmed milk'],
         custom: ['Whatever is bought on the ice is tax-free.', 'Names printed on the ice press are good luck all year.', 'The first to fall through the ice is said to marry within the year.'],
@@ -634,15 +634,15 @@ const CAL_FESTIVALS = {
             'Children throw water on every adult they meet, and the adults pretend to be outraged.'
         ],
         party: [
-            { t: 'Drum or dance until the rain comes: a DC 13 Constitution check each hour, and it takes 1d6 hours.', prize: 'a jar of first rain', gp: 1 },
-            { t: 'Read the sky and say when the rain will arrive: a DC 14 Wisdom (Survival) check.', prize: 'a rainmaker\'s fee', gp: 10 },
-            { t: 'Keep a jar of first rain safe from thieves through the night: a DC 13 Wisdom (Perception) check.', prize: 'the elders\' thanks', gp: 0 }
+            { t: 'Drum or dance until the rain comes: a {dc:13} {alt:Constitution check|Fortitude save} each hour, and it takes 1d6 hours.', prize: 'a jar of first rain', gp: 1 },
+            { t: 'Read the sky and say when the rain will arrive: a {dc:14} {skill:wis:survival} check.', prize: 'a rainmaker\'s fee', gp: 10 },
+            { t: 'Keep a jar of first rain safe from thieves through the night: a {dc:13} {skill:wis:perception} check.', prize: 'the elders\' thanks', gp: 0 }
         ],
         food: ['Flatbread with dates', 'Cold mint tea', 'Spiced lamb eaten in the rain'],
         custom: ['Nobody may carry an umbrella or seek cover today.', 'Water may not be sold, only given.', 'The first rain is touched to every newborn\'s forehead.'],
         trouble: ['The rain doesn\'t come.', 'The rain that comes is red.', 'A water seller has been hoarding, and the dancers find out.']
     }
-};
+});
 
 // Who keeps the festival.
 const CAL_KEEPERS = ['the whole town', 'the farmers', 'the temple', 'the guilds', 'the children', 'the old families', 'the young folk', 'the market traders', 'the lord\'s household', 'the poor quarter'];

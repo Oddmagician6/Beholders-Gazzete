@@ -52,11 +52,11 @@ const TRAVEL_TERRAIN = {
 };
 
 // SRD 5.1 Travel Pace table: miles per hour and per (8-hour) day.
-const TRAVEL_PACES = {
+const TRAVEL_PACES = ruleTable({
     slow:   { label: 'Slow', mph: 2, day: 18, note: 'Slow pace: the party can move stealthily.' },
     normal: { label: 'Normal', mph: 3, day: 24, note: '' },
-    fast:   { label: 'Fast', mph: 4, day: 30, note: 'Fast pace: −5 to passive Wisdom (Perception) scores.' }
-};
+    fast:   { label: 'Fast', mph: 4, day: 30, note: 'Fast pace: −5 to passive {skill:wis:perception} scores.' }
+});
 
 // ── Weather tables ───────────────────────────────────────
 // Temperature bands: index 0..7, each with the range the day's high is drawn from (°F).
@@ -228,7 +228,7 @@ const ROAD_EVENT_KINDS = {
     quiet:     { icon: '🍃', label: 'A quiet day' }
 };
 
-const ROAD_EVENTS = [
+const ROAD_EVENTS = ruleTable([
     // Travelers
     { k: 'travelers', t: 'Pilgrims, lost', d: 'A dozen pilgrims are walking to a shrine in the wrong direction, and they are very sure about it.', hook: 'Their relic is a fake, and someone has been following them to learn where the real one is kept.' },
     { k: 'travelers', t: 'A peddler with a cart', d: 'A peddler offers trinkets, gossip, and a Gazette only three days out of date. One item in the cart is genuinely useful and priced at double.' },
@@ -247,9 +247,9 @@ const ROAD_EVENTS = [
 
     // Obstacles
     { k: 'obstacle', t: 'Washed-out bridge', w: ['wet', 'storm'], terr: ['road', 'forest', 'hills', 'plains', 'moor'], d: 'The bridge is gone. The nearest ford is a mile upstream, and the river is running high.' },
-    { k: 'obstacle', t: 'Fallen tree', terr: ['forest', 'jungle', 'road'], d: 'A great tree lies across the trail. Clearing it takes an hour or one very good Strength check.' },
+    { k: 'obstacle', t: 'Fallen tree', terr: ['forest', 'jungle', 'road'], d: 'A great tree lies across the trail. Clearing it takes an hour or one very good {ability:str} check.' },
     { k: 'obstacle', t: 'Fresh rockslide', terr: ['hills', 'mountains', 'badlands'], d: 'Rubble blocks the path, and some of it looks like it was dug out from below.' },
-    { k: 'obstacle', t: 'Mud to the axles', w: ['wet'], terr: ['road', 'plains', 'swamp', 'forest', 'moor'], d: 'The road is a bog. A cart or mount gets stuck; a DC 12 Strength (Athletics) check frees it, or the party loses an hour.' },
+    { k: 'obstacle', t: 'Mud to the axles', w: ['wet'], terr: ['road', 'plains', 'swamp', 'forest', 'moor'], d: 'The road is a bog. A cart or mount gets stuck; a {dc:12} {skill:str:athletics} check frees it, or the party loses an hour.' },
     { k: 'obstacle', t: 'Snowbound pass', w: ['snow', 'cold'], terr: ['mountains', 'tundra', 'hills'], d: 'Drifts have closed the pass. Digging through takes two hours; the long way around takes the rest of the day.' },
     { k: 'obstacle', t: 'The well is dry', w: ['hot', 'clear'], terr: ['desert', 'plains', 'road', 'badlands'], d: 'The well on the map is dry. A note at the bottom reads: "Sorry. —Management."' },
     { k: 'obstacle', t: 'Flooded road', w: ['wet', 'storm'], terr: ['road', 'plains', 'swamp'], d: 'Brown water covers the road for half a mile. Wade it and hope, or take a detour that costs half the day.' },
@@ -294,7 +294,7 @@ const ROAD_EVENTS = [
     { k: 'travelers', t: 'Tax collector, alone', terr: ['road', 'plains', 'hills'], d: 'A tax collector with a heavy strongbox and no guards asks to travel with the party. Several people along the road would like a word with him.' },
     { k: 'travelers', t: 'A gnome on a giant tortoise', d: 'A gnome riding a giant tortoise is heading the same way, very slowly. She has been on the road for six years and has excellent gossip.' },
     { k: 'obstacle', t: 'A toll goat', terr: ['hills', 'mountains', 'road', 'badlands'], d: 'A huge goat stands in the narrowest part of the path and will not move. It eats one item from each traveler that passes, by its own rules.' },
-    { k: 'obstacle', t: 'Wasps in the pass', w: ['hot', 'clear'], terr: ['hills', 'forest', 'plains'], d: 'A wasp nest the size of a barrel hangs over the trail. Passing quietly is a DC 12 Dexterity (Stealth) check for the whole party.' },
+    { k: 'obstacle', t: 'Wasps in the pass', w: ['hot', 'clear'], terr: ['hills', 'forest', 'plains'], d: 'A wasp nest the size of a barrel hangs over the trail. Passing quietly is a {dc:12} {skill:dex:stealth} check for the whole party.' },
     { k: 'obstacle', t: 'Sandstorm wall', terr: ['desert', 'badlands'], d: 'A brown wall of sand rolls across the horizon. Shelter now, or lose the trail and half a day.' },
     { k: 'discovery', t: 'A message in a bottle', terr: ['swamp', 'road', 'plains', 'forest', 'coast'], d: 'A bottle in a stream holds a plea for help, dated next week.' },
     { k: 'discovery', t: 'The overgrown orchard', terr: ['forest', 'hills', 'plains', 'coast'], d: 'An orchard gone wild, heavy with fruit no one has picked in decades. The scarecrow has been recently repainted.' },
@@ -311,10 +311,10 @@ const ROAD_EVENTS = [
     { k: 'travelers', t: 'Peat cutters', terr: ['moor', 'swamp'], d: 'Peat cutters stop work to stare. They have dug up something with fingers, and they would like someone else to decide what to do about it.' },
     { k: 'travelers', t: 'A prospector and his mule', terr: ['badlands', 'mountains', 'desert'], d: 'A sun-cooked prospector shows off a nugget the size of a thumb and asks the party to witness his claim. Three other men claim the same gully.' },
     { k: 'travelers', t: 'Canyon echo-speakers', terr: ['badlands', 'mountains'], d: 'A trio of monks stand at the canyon rim and shout questions into it. The echoes come back with different answers.' },
-    { k: 'obstacle', t: 'The tide comes in', terr: ['coast'], d: 'The beach path is a race against the tide. A DC 12 Wisdom (Survival) check reads the water right; a miss means wading waist-deep or waiting six hours.' },
-    { k: 'obstacle', t: 'Crumbling cliff path', terr: ['coast', 'mountains', 'badlands'], d: 'The cliff path has lost a ten-foot stretch to the sea. A DC 13 Strength (Athletics) check climbs around it; the inland detour costs two hours.' },
-    { k: 'obstacle', t: 'The green ground', terr: ['moor'], d: 'A bright green patch of moor turns out to be a sucking bog. The lead traveler sinks to the waist and needs a rope and a DC 12 Strength (Athletics) check to get out.' },
-    { k: 'obstacle', t: 'Flash flood', w: ['wet', 'storm'], terr: ['badlands', 'desert'], d: 'A dry wash fills with roaring brown water in minutes. Get to high ground with a DC 12 Dexterity (Acrobatics) check, or lose something heavy to the flood.' },
+    { k: 'obstacle', t: 'The tide comes in', terr: ['coast'], d: 'The beach path is a race against the tide. A {dc:12} {skill:wis:survival} check reads the water right; a miss means wading waist-deep or waiting six hours.' },
+    { k: 'obstacle', t: 'Crumbling cliff path', terr: ['coast', 'mountains', 'badlands'], d: 'The cliff path has lost a ten-foot stretch to the sea. A {dc:13} {skill:str:athletics} check climbs around it; the inland detour costs two hours.' },
+    { k: 'obstacle', t: 'The green ground', terr: ['moor'], d: 'A bright green patch of moor turns out to be a sucking bog. The lead traveler sinks to the waist and needs a rope and a {dc:12} {skill:str:athletics} check to get out.' },
+    { k: 'obstacle', t: 'Flash flood', w: ['wet', 'storm'], terr: ['badlands', 'desert'], d: 'A dry wash fills with roaring brown water in minutes. Get to high ground with a {dc:12} {skill:dex:acrobatics} check, or lose something heavy to the flood.' },
     { k: 'obstacle', t: 'Dead-end canyon', terr: ['badlands'], d: 'The canyon the map says goes through doesn\'t. Backtracking costs half the day, unless someone fancies a 60-foot climb.' },
     { k: 'discovery', t: 'A beached sea monster', terr: ['coast'], d: 'A whale-sized carcass with too many fins lies on the sand. Gulls avoid it. So does the smell, somehow.', hook: 'A harpoon in its side bears a guild mark, and the guild says it has never hunted at sea.' },
     { k: 'discovery', t: 'A drowned village', terr: ['coast', 'swamp'], d: 'At low tide the roofs of a sunken village show above the water, and a bell rings somewhere beneath it.' },
@@ -336,7 +336,7 @@ const ROAD_EVENTS = [
     { k: 'wildlife', t: 'A stag', terr: ['forest', 'hills', 'moor'], d: 'A white stag stands in the trail and watches the party pass. It does not run. Hunters would pay a fortune to know where it was.' },
     { k: 'wildlife', t: 'A tortoise on the road', terr: ['road', 'desert', 'plains', 'badlands'], d: 'A tortoise the size of a shield is crossing the road. Its shell is painted with a tiny, careful map.' },
     { k: 'wildlife', t: 'Seals on the rocks', terr: ['coast'], d: 'A colony of seals bark at the party from the rocks. One of them has very human eyes and follows along in the water for a while.' },
-    { k: 'wildlife', t: 'Crocodile slide', terr: ['swamp', 'jungle'], d: 'Logs along the bank turn out to be crocodiles, sunning. A DC 11 Dexterity (Stealth) check gets everyone past without waking them.' },
+    { k: 'wildlife', t: 'Crocodile slide', terr: ['swamp', 'jungle'], d: 'Logs along the bank turn out to be crocodiles, sunning. A {dc:11} {skill:dex:stealth} check gets everyone past without waking them.' },
     { k: 'wildlife', t: 'Monkeys with taste', terr: ['jungle'], d: 'A troop of monkeys raids the packs and makes off with one shiny object. They give it back later in exchange for a better one.' },
     { k: 'wildlife', t: 'Vultures overhead', terr: ['desert', 'badlands', 'plains'], d: 'Vultures circle high over the party for most of the day, with what feels like optimism.' },
     { k: 'wildlife', t: 'A snow fox', terr: ['tundra', 'mountains'], w: ['cold', 'snow'], d: 'A white fox trots along behind the party, waiting for scraps. If fed, it stays with them until the next town and leaves before anyone wakes.' },
@@ -346,12 +346,12 @@ const ROAD_EVENTS = [
     { k: 'wildlife', t: 'Wolves on the ridge', terr: ['forest', 'hills', 'tundra', 'mountains', 'moor'], d: 'A wolf pack watches from a ridge all afternoon and never comes closer. At dusk they howl once, together, and are gone.' },
     { k: 'wildlife', t: 'Giant moths', terr: ['forest', 'jungle', 'swamp'], d: 'Moths with wings as wide as a hand gather at the lanterns, their wings marked with patterns like staring eyes.' },
     { k: 'wildlife', t: 'Sea turtles nesting', terr: ['coast'], w: ['clear'], d: 'Sea turtles are hauling themselves up the beach to lay eggs. Someone has staked out a nest with a little sign: "PROPERTY OF THE DUKE".' },
-    { k: 'wildlife', t: 'Rattlesnake in the shade', terr: ['desert', 'badlands', 'plains'], w: ['hot', 'clear'], d: 'A rattlesnake has claimed the only shade for a mile. Moving it is a DC 12 Wisdom (Animal Handling) check; failing earns a bite (1 piercing damage plus a DC 10 Constitution save against 2d4 poison damage).' },
+    { k: 'wildlife', t: 'Rattlesnake in the shade', terr: ['desert', 'badlands', 'plains'], w: ['hot', 'clear'], d: 'A rattlesnake has claimed the only shade for a mile. Moving it is a {dc:12} {skill:wis:animal-handling} check; failing earns a bite (1 piercing damage plus a {dc:10} {save:con} save against 2d4 poison damage).' },
     { k: 'wildlife', t: 'A herd of bison', terr: ['plains'], d: 'A sea of bison blocks the horizon. Crossing through takes patience, quiet, and nerves.' },
     { k: 'wildlife', t: 'Owls at dusk', terr: ['forest', 'moor', 'road', 'plains', 'hills'], d: 'Owls call to each other across the trail at dusk, three on the left, three on the right, as if counting the party.' },
     { k: 'wildlife', t: 'Puffins', terr: ['coast'], w: ['cold', 'clear'], d: 'A cliff full of puffins. The party loses a quarter-hour to watching them, and nobody regrets it.' },
-    { k: 'wildlife', t: 'Fish in the shallows', terr: ['road', 'forest', 'plains', 'hills', 'moor'], d: 'The ford is full of fat trout. A DC 12 Wisdom (Survival) check means fresh fish for supper.' }
-];
+    { k: 'wildlife', t: 'Fish in the shallows', terr: ['road', 'forest', 'plains', 'hills', 'moor'], d: 'The ford is full of fat trout. A {dc:12} {skill:wis:survival} check means fresh fish for supper.' }
+]);
 
 const QUIET_DAYS = [
     'Nothing happens all day, which is its own kind of suspicious.',
@@ -789,12 +789,12 @@ const CAMP_SITES = [
     { t: 'under the roots of a toppled tree', terr: ['forest', 'jungle', 'swamp'] }
 ];
 
-const CAMP_GOOD = [
+const CAMP_GOOD = ruleTable([
     { t: 'Fresh water close by.' },
     { t: 'Plenty of dry firewood.', terr: ['road', 'plains', 'forest', 'hills', 'moor', 'coast', 'mountains', 'jungle', 'badlands'] },
     { t: 'Out of the wind entirely, so everyone sleeps warm.' },
     { t: 'A long view of the way ahead: the watch will see anything coming.', terr: ['plains', 'hills', 'moor', 'coast', 'mountains', 'desert', 'badlands', 'tundra'] },
-    { t: 'Berries and mushrooms nearby: a DC 10 Wisdom (Survival) check stretches supper.', terr: ['forest', 'hills', 'moor', 'jungle', 'swamp', 'road', 'plains'] },
+    { t: 'Berries and mushrooms nearby: a {dc:10} {skill:wis:survival} check stretches supper.', terr: ['forest', 'hills', 'moor', 'jungle', 'swamp', 'road', 'plains'] },
     { t: 'Soft ground and sweet grass to sleep on.', terr: ['plains', 'moor', 'hills', 'forest', 'road'] },
     { t: 'A stack of firewood left by the last campers, with a note: "Pay it forward."' },
     { t: 'Fish in the stream, if anyone has a line.', terr: ['forest', 'plains', 'hills', 'moor', 'road', 'swamp', 'mountains'] },
@@ -804,7 +804,7 @@ const CAMP_GOOD = [
     { t: 'A clear sky and good stars to steer by tomorrow.', w: ['clear'] },
     { t: 'Shade all afternoon and a cool breeze after dark.', w: ['hot'] },
     { t: 'Mussels on the rocks at low tide: supper for free.', terr: ['coast'] }
-];
+]);
 
 const CAMP_BAD = [
     { t: 'The ground is all roots and stones. Nobody sleeps well.' },
@@ -825,7 +825,7 @@ const CAMP_BAD = [
 
 const NIGHT_WATCHES = ['First watch', 'Middle watch', 'Last watch'];
 
-const NIGHT_EVENTS = [
+const NIGHT_EVENTS = ruleTable([
     { t: 'A fox steals a boot and is chased, in vain, by the paladin.' },
     { t: 'Something large splashes in the water nearby. Then all is quiet.', terr: ['swamp', 'coast', 'forest', 'jungle'] },
     { t: 'A shooting star falls very close. In the morning there is a scorched hole a few hundred yards off.', w: ['clear'] },
@@ -837,7 +837,7 @@ const NIGHT_EVENTS = [
     { t: 'A small fire flickers on a far hill for most of the night, then goes out all at once.' },
     { t: 'Wolves howl far off, then much closer, then far off again.', terr: ['forest', 'hills', 'mountains', 'tundra', 'moor', 'plains'] },
     { t: 'A cold draft blows through the camp, and the fire leans east.' },
-    { t: 'Footsteps circle just outside the firelight. A DC 13 Wisdom (Perception) check spots a curious young goblin, who flees.' },
+    { t: 'Footsteps circle just outside the firelight. A {dc:13} {skill:wis:perception} check spots a curious young goblin, who flees.' },
     { t: 'Rain starts in the night and finds every hole in every tent.', w: ['wet'] },
     { t: 'Snow falls softly overnight, and morning shows four-toed tracks right up to the fire.', w: ['snow'] },
     { t: 'Lights move on the water, slow and steady, then sink.', terr: ['coast', 'swamp'] },
@@ -848,10 +848,10 @@ const NIGHT_EVENTS = [
     { t: 'The tide comes up farther than anyone expected and soaks the bedrolls.', terr: ['coast'] },
     { t: 'Bats pour out of somewhere close by at dusk, thousands of them.', terr: ['badlands', 'mountains', 'jungle', 'desert', 'hills'] },
     { t: 'Out in the dark a woman calls a name, over and over, never getting closer.' },
-    { t: 'A thief tries to slip a purse from a sleeper. A DC 12 Wisdom (Perception) check from the watch catches them.' },
+    { t: 'A thief tries to slip a purse from a sleeper. A {dc:12} {skill:wis:perception} check from the watch catches them.' },
     { t: 'Nothing happens, but the watch can\'t shake the feeling of being watched.' },
     { t: 'A figure stands perfectly still on a distant ridge all night. At dawn it is a dead tree. Probably.' }
-];
+]);
 
 // ── More lines (R8). Swapped in by their share of the whole list through later draws:
 // discovery hooks under their own seed (travelMoreHook), camp notes and night-watch lines
@@ -870,20 +870,20 @@ const DISCOVERY_HOOK_MORE = [
     'Under it, wrapped in oilcloth, is a letter addressed to one of the party.',
     'Every full moon, something comes to it out of the dark to grieve.'
 ];
-const CAMP_GOOD_MORE = [
+const CAMP_GOOD_MORE = ruleTable([
     { t: 'A shepherd\'s dog adopts the camp and keeps watch all night.', terr: ['hills', 'moor', 'plains', 'mountains', 'road'] },
     { t: 'Flat stones ring the fire and stay warm long after it dies.' },
     { t: 'A hollow tree keeps the packs dry.', terr: ['forest', 'jungle', 'swamp', 'hills'] },
     { t: 'Wild herbs grow nearby, and supper tastes like an inn\'s for once.', terr: ['forest', 'hills', 'moor', 'plains', 'road', 'mountains'] },
     { t: 'Someone left a dry bundle of kindling and a tinderbox under a rock.' },
     { t: 'A brook loud enough to cover the snoring.', terr: ['forest', 'hills', 'mountains', 'moor', 'plains', 'road'] },
-    { t: 'A rabbit warren close by: a DC 12 Wisdom (Survival) check means stew.', terr: ['plains', 'hills', 'moor', 'forest', 'road'] },
+    { t: 'A rabbit warren close by: a {dc:12} {skill:wis:survival} check means stew.', terr: ['plains', 'hills', 'moor', 'forest', 'road'] },
     { t: 'The wind drops at sunset, and the night is perfectly still.' },
     { t: 'Rock walls on three sides: only one way in to watch.' },
     { t: 'A pool of clean, cold water in a cave that never freezes.', terr: ['mountains', 'hills', 'tundra', 'badlands'] },
     { t: 'A sea breeze keeps the bugs away all night.', terr: ['coast'] },
     { t: 'A big flat rock holds the day\'s heat well into the night.', terr: ['desert', 'badlands', 'mountains'] }
-];
+]);
 const CAMP_BAD_MORE = [
     { t: 'An old grave lies right where the tent should go, and nobody will sleep beside it.' },
     { t: 'Something has marked this spot as its territory, and the smell says so.' },
@@ -899,7 +899,7 @@ const CAMP_BAD_MORE = [
     { t: 'Somebody forgot the salt, and supper is a quiet, sad affair.' },
     { t: 'Loose rock above the camp: every gust sends pebbles rattling down.', terr: ['mountains', 'badlands', 'hills'] }
 ];
-const NIGHT_EVENTS_MORE = [
+const NIGHT_EVENTS_MORE = ruleTable([
     { t: 'A hedgehog wanders into camp and falls asleep in someone\'s boot.', terr: ['forest', 'plains', 'hills', 'road', 'moor'] },
     { t: 'A pack is found open in the morning with nothing missing. Something has been added: a smooth white pebble.' },
     { t: 'A bell rings three times somewhere in the dark. There is no village for miles.' },
@@ -907,7 +907,7 @@ const NIGHT_EVENTS_MORE = [
     { t: 'A moth the size of a hand lands on the watch\'s sleeve and stays until dawn.' },
     { t: 'Thunder rolls far off for an hour, though the sky stays clear.', w: ['clear'] },
     { t: 'Riders pass in the dark. They stop, look at the camp, and ride on without a word.', terr: ['road', 'plains', 'hills', 'moor'] },
-    { t: 'Something big sniffs round the edge of the camp. At dawn, a DC 12 Wisdom (Survival) check reads the tracks: a bear, and a curious one.', terr: ['forest', 'hills', 'mountains', 'tundra'] },
+    { t: 'Something big sniffs round the edge of the camp. At dawn, a {dc:12} {skill:wis:survival} check reads the tracks: a bear, and a curious one.', terr: ['forest', 'hills', 'mountains', 'tundra'] },
     { t: 'A child laughs, once, somewhere in the trees. Nothing else.', terr: ['forest', 'jungle', 'swamp'] },
     { t: 'Seals bark on the rocks all night.', terr: ['coast'] },
     { t: 'The sand hums in the wind, a low note that sets everyone\'s teeth on edge.', terr: ['desert', 'badlands'] },
@@ -917,7 +917,7 @@ const NIGHT_EVENTS_MORE = [
     { t: 'Green and silver lights ripple across the northern sky for an hour.', terr: ['tundra', 'mountains'], w: ['clear', 'cold'] },
     { t: 'An old wolf, white at the muzzle, lies down just outside the firelight and is gone before dawn.', terr: ['forest', 'hills', 'tundra', 'mountains', 'moor'] },
     { t: 'Something tugs gently at a bedroll. In the morning, every boot is tied to its neighbor.' }
-];
+]);
 
 // ── The sky: the moon and the daylight ───────────────────
 // art: the painted moon, img/calendar/moon-<art>.webp (moonArtHtml)
@@ -1067,15 +1067,15 @@ function weatherTags(w) {
 function weatherEffects(w) {
     const fx = [];
     const heavy = HEAVY_KINDS[w.kind];
-    if (heavy) fx.push({ src: 'ruling', text: `Heavy ${heavy}: the area is lightly obscured, so Wisdom (Perception) checks that rely on sight have disadvantage.` });
+    if (heavy) fx.push({ src: 'ruling', text: ruleText(`Heavy ${heavy}: the area is lightly obscured, so {skill:wis:perception} checks that rely on sight have disadvantage.`) });
     if (w.kind === 'fog') fx.push({ src: 'ruling', text: 'Thick fog: everything beyond 30 feet is heavily obscured, and a creature trying to see something there is effectively blinded.' });
     if (w.morningFog) fx.push({ src: 'ruling', text: 'Morning fog: the area is lightly obscured until about midday.' });
     if (w.slows) fx.push({ src: 'ruling', text: 'Hard going: the route counts as difficult terrain today, so the party covers half the distance.' });
     if (w.wind === 3) fx.push({ src: 'ruling', text: 'Gale-force wind: ranged weapon attacks have disadvantage, open flames blow out, and flying is a struggle.' });
     else if (w.wind === 2) fx.push({ src: 'ruling', text: 'Strong wind: unshielded flames gutter out, and arrows drift.' });
     if (w.band >= 6) fx.push({ src: 'SRD', text: 'Hot weather: each character needs two gallons of water today instead of one.' });
-    if (w.band === 7) fx.push({ src: 'ruling', text: 'Scorching heat: anyone in medium or heavy armor, or short of water, makes a Constitution save each hour or gains a level of exhaustion (DC at your call).' });
-    if (w.band === 0) fx.push({ src: 'ruling', text: 'Bitter cold: anyone without cold-weather gear makes a Constitution save each hour outdoors or gains a level of exhaustion (DC at your call).' });
+    if (w.band === 7) fx.push({ src: 'ruling', text: ruleText('Scorching heat: anyone in medium or heavy armor, or short of water, makes a {save:con} save each hour or gains a level of exhaustion (DC at your call).') });
+    if (w.band === 0) fx.push({ src: 'ruling', text: ruleText('Bitter cold: anyone without cold-weather gear makes a {save:con} save each hour outdoors or gains a level of exhaustion (DC at your call).') });
     return fx;
 }
 
@@ -1193,7 +1193,7 @@ function travelSky(opts, moonAge, weather, hours) {
     if (dark) {
         const when = `The last ${dark === 1 ? 'hour' : `${dark} hours`} on the road ${dark === 1 ? 'is' : 'are'} after sunset.`;
         effect = moonlit
-            ? `${when} The full moon gives dim light: the area is lightly obscured, so Wisdom (Perception) checks that rely on sight have disadvantage.`
+            ? ruleText(`${when} The full moon gives dim light: the area is lightly obscured, so {skill:wis:perception} checks that rely on sight have disadvantage.`)
             : `${when} Without a light source or darkvision, it is darkness: the area is heavily obscured.`;
     }
     return { phase, daylight, dark, moonlit, effect };
@@ -1300,7 +1300,7 @@ function travelDayText(d, opts) {
         `Travel: ${d.today} miles (${TRAVEL_PACES[d.dist.pace].label.toLowerCase()} pace, ${d.dist.hours} hours)` +
             (goal ? `. ${d.covered} of ${goal} miles${d.arrived ? ', arrived!' : ''}` : `. ${d.covered} miles so far`),
         ...d.dist.notes.map(n => `  - ${n}`),
-        ...d.dist.forced.map(f => `  - Hour ${f.hour}: Constitution save DC ${f.dc}, or one level of exhaustion.`),
+        ...d.dist.forced.map(f => ruleText(`  - Hour ${f.hour}: {save:con} save DC ${f.dc}, or one level of exhaustion.`)),
         ...(d.sky.effect ? [`  - ${d.sky.effect}`] : [])
     ];
     if (d.camp) {

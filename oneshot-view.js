@@ -102,7 +102,7 @@ function oneShotBodyHtml(o, opt = {}) {
                 p.want ? ['What they want', p.want] : null,
                 ['The job', o.job],
                 ['Why the party', o.why],
-                ['Pay', `${formatCoins(o.reward)} for the party, half up front if they haggle (DC ${OS_CLUE_DC[s.tier]} Charisma (Persuasion)).`],
+                ['Pay', ruleText(`${formatCoins(o.reward)} for the party, half up front if they haggle (DC ${OS_CLUE_DC[s.tier]} {skill:cha:persuasion}).`)],
                 ['Their secret', p.secret]
             ])}
         </section>

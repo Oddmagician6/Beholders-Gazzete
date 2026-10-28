@@ -311,7 +311,7 @@ function renderTravel(opts) {
                     ${goal ? `${d.covered} of ${goal} miles${d.arrived ? '' : `; about ${daysLeft} more day${daysLeft === 1 ? '' : 's'} at this pace`}.` : `${d.covered} miles since setting out.`}</p>
                 ${d.dist.notes.length || d.dist.forced.length || d.sky.effect ? `<ul class="dist-notes">
                     ${d.dist.notes.map(n => `<li>${esc(n)}</li>`).join('')}
-                    ${d.dist.forced.map(f => `<li>Forced march, hour ${f.hour}: each traveler makes a DC ${f.dc} Constitution save or gains one level of exhaustion.</li>`).join('')}
+                    ${d.dist.forced.map(f => ruleText(`<li>Forced march, hour ${f.hour}: each traveler makes a DC ${f.dc} {save:con} save or gains one level of exhaustion.</li>`)).join('')}
                     ${d.sky.effect ? `<li>${esc(d.sky.effect)}</li>` : ''}
                 </ul>` : ''}
                 ${d.arrived ? `<p class="day-arrived">🏁 The party arrives on day ${d.day}.</p>` : ''}
