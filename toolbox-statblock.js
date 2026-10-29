@@ -7,7 +7,8 @@
    Used by the Encounter tab (toolbox-encounter.js) and the Initiative tab
    (toolbox-table.js). Spell buttons open cards through spell-detail.js.
    On a Pathfinder page (ENC_PF2E) the blocks are Pathfinder's instead: pf2e-creature-blocks.js,
-   drawn in the Pathfinder layout by sbPf2eHtml and sbPf2eText (end of this file).
+   drawn in the Pathfinder layout by sbPf2eHtml and sbPf2eText (end of this file), with
+   spell cards from pf2e-spells-data.js.
    ============================================ */
 
 const SB_ABILITIES = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
@@ -35,7 +36,10 @@ function blocksReady() {
 // Loads the stat blocks and spell text once; after a failed load the next call tries again.
 function loadMonsterBlocks() {
     if (!sbLoading) {
-        sbLoading = Promise.all(sbPf2e() ? [blocksReady() ? null : loadScript('pf2e-creature-blocks.js')] : [
+        sbLoading = Promise.all(sbPf2e() ? [
+            blocksReady() ? null : loadScript('pf2e-creature-blocks.js'),
+            typeof PF2E_SPELLS !== 'undefined' ? null : loadScript('pf2e-spells-data.js')
+        ] : [
             blocksReady() ? null : loadScript('monster-statblocks.js'),
             typeof SPELLS_DATA !== 'undefined' ? null : loadScript('spells-data.js')
         ]).catch(err => { sbLoading = null; throw err; });
@@ -199,6 +203,22 @@ function sbPf2eStrike([ranged, name, bonus, traits, dmg]) {
     return { kind: ranged ? 'Ranged' : 'Melee', text: `${name.toLowerCase()} ${sbPf2eMap(bonus, traits)}${traits.length ? ` (${traits.join(', ')})` : ''}`, dmg };
 }
 
+// A rank's spell list ("fireball (×2), invisibility (at will, self only)"): each spell with a
+// card becomes a button, its notes left after it.
+function sbPf2eSpellList(list) {
+    const names = [];
+    let depth = 0, cur = '';
+    for (const ch of list) {
+        depth += ch === '(' ? 1 : ch === ')' ? -1 : 0;
+        if (ch === ',' && !depth) { names.push(cur.trim()); cur = ''; } else cur += ch;
+    }
+    names.push(cur.trim());
+    return names.map(n => {
+        const bare = spellBareName(n);
+        return spellByName(n) ? `<button type="button" class="sb-spell" data-spell="${esc(bare)}" aria-expanded="false">${esc(bare)}</button>${esc(n.slice(bare.length))}` : esc(n);
+    }).join(', ');
+}
+
 function sbPf2eSpells([name, dc, atk, note, ranks]) {
     return { name, head: `DC ${dc}${atk ? `, attack ${sbSigned(atk)}` : ''}${note ? `, ${note}` : ''}`, ranks: ranks.map(([r, list]) => [sbPf2eRank(r), list]) };
 }
@@ -241,7 +261,7 @@ function sbPf2eHtml(m) {
         <div class="sb-props">
             ${line('Speed', b.sp)}
             ${(b.st || []).map(sbPf2eStrike).map(s => `<p class="sb-feat"><strong>${s.kind}</strong>${sbPf2eCost('1')} ${esc(s.text)}, <strong>Damage</strong> ${esc(s.dmg)}</p>`).join('')}
-            ${(b.sc || []).map(sbPf2eSpells).map(s => `<p class="sb-feat"><strong>${esc(s.name)}</strong> ${esc(s.head)}; ${s.ranks.map(([r, l]) => `<strong>${esc(r)}</strong> ${esc(l)}`).join('; ')}</p>`).join('')}
+            ${(b.sc || []).map(sbPf2eSpells).map(s => `<div class="sb-feature"><p class="sb-feat"><strong>${esc(s.name)}</strong> ${esc(s.head)}; ${s.ranks.map(([r, l]) => `<strong>${esc(r)}</strong> ${sbPf2eSpellList(l)}`).join('; ')}</p><div class="sb-spell-detail" hidden></div></div>`).join('')}
             ${abilities(b.oa)}
         </div>`;
 }
