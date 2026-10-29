@@ -84,6 +84,22 @@
     .sb-box .sb-lvl { color: var(--text-bright); }
     .sb-box .sb-spell { border-bottom: 1px dotted var(--gold-dim); color: var(--gold-bright); font-style: italic; }
     .sb-box .sb-spell:hover { color: var(--text-bright); border-bottom-style: solid; }
+    .sb-box .sb-traits { display: inline-flex; flex-wrap: wrap; gap: 4px; margin-left: 6px; vertical-align: middle; font-style: normal; }
+    .sb-box .sb-traits span { font-family: var(--font-ui); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-bright); border: 1px solid var(--gold-dim); border-radius: 3px; padding: 1px 6px; }
+    .sb-box .sb-act { color: var(--gold-bright); font-size: 0.8em; letter-spacing: -0.08em; }
+    .sb-box .sb-gloss { display: block; font-size: 0.86rem; font-style: italic; color: var(--text-dim); }
+    .cmp-name { font-family: var(--font-head); font-size: 1.35rem; color: var(--gold-bright); margin: 0 0 4px; }
+    .cmp-traits.sb-traits { display: flex; margin: 0 0 12px; }
+    .cmp-text ul { margin: 0 0 0.8em; padding-left: 22px; }
+
+    /* The Pathfinder lists */
+    .cmp-intro { color: var(--text-mid); line-height: 1.6; margin: 0 0 14px; }
+    .cmp-intro a { color: var(--gold-bright); }
+    .cmp-jump-label { font-family: var(--font-ui); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-dim); margin: 0 0 6px; }
+    .cmp-jump { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 6px; }
+    .cmp-jump a { font-family: var(--font-ui); font-size: 0.82rem; color: var(--gold-bright); border: 1px solid var(--gold-dim); border-radius: 4px; padding: 3px 9px; text-decoration: none; }
+    .cmp-jump a:hover { border-color: var(--gold-bright); }
+    .cmp-count { font-family: var(--font-ui); font-size: 0.75rem; color: var(--text-dim); margin-left: 6px; }
     .sb-box .sb-book { display: inline-block; margin-top: 4px; font-family: var(--font-ui); font-size: 0.85rem; color: var(--gold-bright); }
     @media (max-width: 600px) {
       .cmp-card { padding: 16px 14px; }
@@ -163,6 +179,8 @@
           <li><a href="pathfinder-npc-generator">🎭 NPC Generator</a></li>
           <li><a href="pathfinder-encounter-builder">👹 Encounter Builder</a></li>
           <li><a href="pathfinder-initiative-tracker">⚔️ Initiative Tracker</a></li>
+          <li><a href="pf2e/monsters">🐉 Bestiary</a></li>
+          <li><a href="pf2e/spells">📖 Spells</a></li>
           <li><a href="pathfinder-license">⚖️ ORC License</a></li>
         </ul>
       </li>
