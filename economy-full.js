@@ -48,7 +48,7 @@ function renderTable(items) {
 
     tbody.innerHTML = items.map(item => `
         <tr>
-            <td class="item-name-cell">${escapeHTML(item.name)}</td>
+            <td class="item-name-cell">${escapeHTML(item.name)}${item.level !== undefined ? `<span class="item-level">Lv ${item.level}</span>` : ''}</td>
             <td class="item-category">${MARKET_CATEGORIES[item.category] || item.category}</td>
             <td class="price-cell">${formatCoins(item.basePrice)}</td>
             <td class="price-cell">${formatCoins(item.currentPrice)}</td>
@@ -122,6 +122,13 @@ function filterAndSort(items) {
         result = result.filter(item => item.category === category);
     }
 
+    // Pathfinder's page adds a level filter (its items carry an item level)
+    const level = document.getElementById('level-filter');
+    if (level && level.value !== 'all') {
+        const [lo, hi] = level.value.split('-').map(Number);
+        result = result.filter(item => item.level >= lo && item.level <= hi);
+    }
+
     switch (document.getElementById('sort-filter').value) {
         case 'name':        result.sort((a, b) => a.name.localeCompare(b.name)); break;
         case 'category':    result.sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name)); break;
@@ -174,6 +181,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('search-input').addEventListener('input', renderList);
     categorySelect.addEventListener('change', renderList);
+    const levelSelect = document.getElementById('level-filter');
+    if (levelSelect) levelSelect.addEventListener('change', renderList);
     document.getElementById('sort-filter').addEventListener('change', renderList);
 
     tick();

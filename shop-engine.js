@@ -378,12 +378,20 @@ function fillShopTypePicker(sel) {
 }
 
 // Quantity on hand: cheap things come in piles, expensive things one at a time.
+// The bands are in 5e gold; another system's price is read back into it (ruleCoins).
 function shopQty(item) {
-    if (item.category === 'magic-items' || item.category === 'mounts' || item.basePrice >= 200) return 1;
-    if (item.basePrice < 1) return randomInt(5, 30);
-    if (item.basePrice < 10) return randomInt(2, 10);
-    if (item.basePrice < 100) return randomInt(1, 5);
+    const gp = item.basePrice / ruleCoins(1);
+    if (item.category === 'magic-items' || item.category === 'mounts' || gp >= 200) return 1;
+    if (gp < 1) return randomInt(5, 30);
+    if (gp < 10) return randomInt(2, 10);
+    if (gp < 100) return randomInt(1, 5);
     return randomInt(1, 2);
+}
+
+// Whether a shop of this wealth stocks the item: by base price, or, where the wealth sets a level
+// (Pathfinder, shop-pf2e.js), by the item's tier (market-pf2e.js), common items only.
+function shopAffords(item, w) {
+    return w.maxLevel != null ? (item.tier || 0) <= w.maxLevel && item.rarity !== 'uncommon' : item.basePrice <= w.maxBase;
 }
 
 function shuffled(list) {
@@ -400,22 +408,33 @@ function rollShop(opts = {}) {
     const type = !opts.type || opts.type === 'random' ? shopMoreType(opts.seed, randomArray(SHOP_TYPE_FIRST)) : opts.type;
     const wealth = !opts.wealth || opts.wealth === 'random' ? randomArray(Object.keys(SHOP_WEALTH)) : opts.wealth;
     const def = SHOP_TYPES[type], w = SHOP_WEALTH[wealth];
+    // The keeper, the sign, and the greeting. 5e draws them after the stock (older links replay that way);
+    // another system draws them first, so a page without its item list (a Pathfinder town listing the
+    // shop) names the same shop and keeper as the shop page.
+    const front = () => {
+        const keeper = rollNPC({ professionType: 'merchant' });
+        keeper.profession = randomArray(def.keepers);
+        return { name: rollShopName(type, keeper.firstName || keeper.name), keeper, greeting: randomArray(def.greetings), quirk: randomArray(SHOP_QUIRKS) };
+    };
+    const early = ruleSystemId() === '5e' ? null : front();
 
     const byId = Object.fromEntries(MARKET_ITEMS.map(i => [i.id, i]));
+    // def.match (another system's extra stock rule) and MARKET_ALIAS are empty in 5e.
+    const exclude = def.exclude.map(marketId);
     const pool = [...new Set([
-        ...MARKET_ITEMS.filter(i => def.categories.includes(i.category)).map(i => i.id),
-        ...def.ids
-    ])].filter(id => byId[id] && !def.exclude.includes(id));
+        ...MARKET_ITEMS.filter(i => def.categories.includes(i.category) || (def.match && def.match(i))).map(i => i.id),
+        ...def.ids.map(marketId)
+    ])].filter(id => byId[id] && !exclude.includes(id));
 
     // Stock what the shop can afford; a humble shop with too little falls back to its cheapest goods.
     const want = Math.max(4, Math.round(randomInt(def.count[0], def.count[1]) * w.stock));
-    let affordable = pool.filter(id => byId[id].basePrice <= w.maxBase);
+    let affordable = pool.filter(id => shopAffords(byId[id], w));
     if (affordable.length < Math.min(want, 4)) {
         affordable = pool.slice().sort((a, b) => byId[a].basePrice - byId[b].basePrice).slice(0, Math.min(want, pool.length));
     }
     let picks = shuffled(affordable).slice(0, want);
     if (def.wildcards) {
-        const extras = shuffled(MARKET_ITEMS.filter(i => !picks.includes(i.id) && i.basePrice <= w.maxBase)).slice(0, def.wildcards);
+        const extras = shuffled(MARKET_ITEMS.filter(i => !picks.includes(i.id) && shopAffords(i, w))).slice(0, def.wildcards);
         picks = picks.concat(extras.map(i => i.id));
     }
 
@@ -423,19 +442,10 @@ function rollShop(opts = {}) {
         .map(id => ({ id, qty: shopQty(byId[id]) }))
         .sort((a, b) => MARKET_ITEMS.indexOf(byId[a.id]) - MARKET_ITEMS.indexOf(byId[b.id]));
 
-    const keeper = rollNPC({ professionType: 'merchant' });
-    keeper.profession = randomArray(def.keepers);
+    const { name, keeper, greeting, quirk } = early || front();
 
     // dressShop (below) draws last, so the keeper and stock above replay the same for older links.
-    return dressShop({
-        type, wealth,
-        name: rollShopName(type, keeper.firstName || keeper.name),
-        keeper,
-        greeting: randomArray(def.greetings),
-        quirk: randomArray(SHOP_QUIRKS),
-        stock,
-        haggle: null
-    }, pool.filter(id => byId[id].basePrice <= w.maxBase), byId);
+    return dressShop({ type, wealth, name, keeper, greeting, quirk, stock, haggle: null }, pool.filter(id => shopAffords(byId[id], w)), byId);
 }
 
 // Live prices for a shop's stock at time t (default now), with wealth markup, today's sale, and any haggle result.
@@ -460,7 +470,9 @@ function shopPrices(shop, t = Date.now()) {
 const abilityMod = score => Math.floor((score - 10) / 2);
 
 // One haggle per shop: d20 + bonus against 10 + the keeper's Wisdom modifier (+2 if prosperous).
+// Pathfinder's is a Diplomacy check with degrees of success (shop-pf2e.js).
 function rollHaggle(shop, bonus = 0) {
+    if (typeof rollHagglePf2e === 'function' && ruleSystemId() === 'pf2e') return rollHagglePf2e(shop, bonus);
     const d20 = randomInt(1, 20);
     const total = d20 + bonus;
     const dc = 10 + abilityMod(shop.keeper.stats.wis) + (shop.wealth === 'wealthy' ? 2 : 0);
@@ -499,7 +511,7 @@ function shopTextLines(shop, limit = Infinity) {
     const lines = [
         `${shop.name}`,
         `${def.label} · ${SHOP_WEALTH[shop.wealth].label}`,
-        `Keeper: ${k.name}, ${k.race.charAt(0).toUpperCase() + k.race.slice(1)} ${k.profession}, ${k.age}. ${k.trait}. Flaw: ${k.flaw}. WIS ${k.stats.wis}, CHA ${k.stats.cha}.`,
+        `Keeper: ${k.name}, ${cap1(ruleWord('race', k.race))} ${k.profession}, ${k.age}. ${k.trait}. Flaw: ${k.flaw}. WIS ${k.stats.wis}, CHA ${k.stats.cha}.`,
         `Looks: ${[k.build, shopKeeperHair(k), `${k.eyes} eyes`, k.feature].join(' · ')}`,
         `Voice: ${k.voice}`,
         `Secret: ${k.secret}`,
@@ -785,7 +797,7 @@ function dressShop(shop, pool, byId) {
     shop.buying = randomArray(d.buying);
     shop.job = fillShop(rand() < 0.8 ? randomArray(d.jobs) : randomArray(SHOP_GENERIC_JOBS));
     // Sale on one stocked item worth enough for 20% to show; sold out of one the shop could carry but doesn't have.
-    const onSale = shop.stock.filter(s => byId[s.id].basePrice >= 0.5);
+    const onSale = shop.stock.filter(s => byId[s.id].basePrice >= ruleCoins(0.5));
     shop.sale = onSale.length && rand() < 0.6 ? { id: randomArray(onSale).id, why: randomArray(SHOP_SALE_WHY) } : null;
     const missing = pool.filter(id => !shop.stock.some(s => s.id === id));
     shop.soldOut = missing.length && rand() < 0.5 ? { id: randomArray(missing), why: randomArray(SHOP_SOLDOUT_WHY) } : null;
@@ -798,9 +810,10 @@ function fillShop(s) {
 }
 
 // Service and buying prices follow the shop's wealth (services) or are paid flat (buying).
+// Both are written in 5e gold (ruleCoins turns them into another system's coin).
 function shopServiceText([what, gp, per], wealth) {
     if (!gp) return `${what}: ${per}`;
-    const raw = gp * SHOP_WEALTH[wealth].markup;
+    const raw = ruleCoins(gp) * SHOP_WEALTH[wealth].markup;
     // Rounded to the silver piece (copper for the cheapest), the way a keeper quotes a price.
     const price = formatCoins(raw >= 0.1 ? Math.round(raw * 10) / 10 : Math.max(0.01, Math.round(raw * 100) / 100));
     return `${what}: ${price}${per ? (/^plus/.test(per) ? `, ${per}` : ` per ${per}`) : ''}`;
@@ -808,7 +821,7 @@ function shopServiceText([what, gp, per], wealth) {
 
 function shopBuyingText([what, gp, unit, most]) {
     if (!gp) return `${cap1(what)}, ${unit}.`;
-    return `${cap1(what)} at ${formatCoins(gp)} per ${unit}${most > 1 ? `, up to ${most}` : ''}.`;
+    return `${cap1(what)} at ${formatCoins(ruleCoins(gp))} per ${unit}${most > 1 ? `, up to ${most}` : ''}.`;
 }
 
 // The place and its extras as [label, text] pairs, for the page, Copy Shop, and the kit. Older saves have none.
@@ -816,7 +829,7 @@ function shopDetailLines(shop) {
     if (!shop.building) return [];
     const byId = Object.fromEntries(MARKET_ITEMS.map(i => [i.id, i]));
     const lines = [['The place', `${cap1(shop.building)}. ${shop.inside}`], ['Hours', shop.hours], ['Security', cap1(shop.security) + '.']];
-    if (shop.helper) lines.push(['Helping out', `${shop.helper.name}, ${/^[aeiou]/i.test(shop.helper.race) ? 'an' : 'a'} ${shop.helper.race} ${shop.helper.role}, who ${shop.helper.note}.`]);
+    if (shop.helper) lines.push(['Helping out', `${shop.helper.name}, ${/^[aeiou]/i.test(ruleWord('race', shop.helper.race)) ? 'an' : 'a'} ${ruleWord('race', shop.helper.race)} ${shop.helper.role}, who ${shop.helper.note}.`]);
     if (shop.services && shop.services.length) lines.push(['Services', shop.services.map(s => shopServiceText(s, shop.wealth)).join(' · ')]);
     if (shop.buying) lines.push(['Buying', shopBuyingText(shop.buying)]);
     if (shop.sale && byId[shop.sale.id]) lines.push(['On sale', `${byId[shop.sale.id].name}, ${Math.round(SHOP_SALE_OFF * 100)}% off (${shop.sale.why}).`]);

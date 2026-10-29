@@ -4,7 +4,7 @@
    The URL (?type=&wealth=&seed=) rebuilds the shop via rng.js; prices stay live.
    ============================================ */
 
-const SHOP_KEY = 'gazette-shop';
+const SHOP_KEY = ruleKey('gazette-shop');
 
 let shop = null;
 let priceTimer = null;
@@ -58,7 +58,7 @@ function keeperHTML(k) {
             <span class="keeper-icon" aria-hidden="true">${npcFaceHtml(k)}</span>
             <div>
                 <div class="keeper-name">${esc(k.name)}</div>
-                <div class="keeper-sub">${esc(cap(k.race))} · ${esc(k.age)} · ${esc(k.profession)}</div>
+                <div class="keeper-sub">${esc(cap(ruleWord('race', k.race)))} · ${esc(k.age)} · ${esc(k.profession)}</div>
             </div>
         </div>
         <p class="keeper-greeting">"${esc(shop.greeting)}"</p>
@@ -91,12 +91,12 @@ function haggleHTML() {
     return `<div class="haggle">
         <h2 class="shop-h">🤝 Haggle</h2>
         <div class="haggle-row">
-            <label for="haggle-bonus">Your Persuasion bonus</label>
+            <label for="haggle-bonus">Your ${ruleText('{alt:Persuasion|Diplomacy}')} bonus</label>
             <input type="number" id="haggle-bonus" value="${h ? h.bonus : haggleBonus}" min="-5" max="20" step="1" ${h ? 'disabled' : ''}>
             <button type="button" class="btn" id="haggle-btn" ${h ? 'disabled' : ''}>🎲 Roll to Haggle</button>
         </div>
         <p class="haggle-result" id="haggle-result">${result}</p>
-        ${h ? '<p class="stock-note">One haggle per shop. Roll a new shop to try your luck again.</p>' : '<p class="stock-note">d20 + your bonus against the shopkeeper\'s Wisdom. One try per shop.</p>'}
+        ${h ? '<p class="stock-note">One haggle per shop. Roll a new shop to try your luck again.</p>' : `<p class="stock-note">${ruleText('{alt:d20 + your bonus against the shopkeeper\'s Wisdom.|d20 + your bonus against the shopkeeper\'s Will DC; 10 over is a critical success.}')} One try per shop.</p>`}
     </div>`;
 }
 
@@ -127,7 +127,7 @@ function render() {
                     <thead><tr><th>Item</th><th class="num">Qty</th><th class="num">Price</th><th class="num chg">24h</th></tr></thead>
                     <tbody>${rows}</tbody>
                 </table>
-                <p class="stock-note">Live from the <a href="economy">Market Exchange</a>${shop.wealth === 'wealthy' ? ', plus a prosperous-shop markup' : shop.wealth === 'poor' ? ', minus a humble-shop discount' : ''}. Next price bell in ${mins} min.</p>
+                <p class="stock-note">Live from the <a href="economy">Market Exchange</a>${shop.wealth === 'wealthy' ? ', plus a prosperous-shop markup' : shop.wealth === 'poor' ? ', minus a humble-shop discount' : ''}.${levelNote()} Next price bell in ${mins} min.</p>
                 ${haggleHTML()}
             </div>
         </div>
@@ -135,6 +135,12 @@ function render() {
     const btn = document.getElementById('haggle-btn');
     if (btn) btn.addEventListener('click', haggle);
     schedulePriceBell();
+}
+
+// Where wealth sets the item level (Pathfinder, shop-pf2e.js), the stock note says so.
+function levelNote() {
+    const lv = SHOP_WEALTH[shop.wealth].maxLevel;
+    return lv == null ? '' : ` Common items up to level ${lv}.`;
 }
 
 // Re-price when the market's 15-minute bell rings.
@@ -227,7 +233,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('roll-shop').addEventListener('click', () => roll());
     document.getElementById('copy-shop').addEventListener('click', copyShop);
     document.getElementById('copy-link').addEventListener('click', copyLink);
-    // The Handout Maker (F48) rebuilds this shop from its link as a price list.
+    // The Handout Maker (F48) rebuilds this shop from its link as a price list (no Pathfinder Handout Maker yet).
+    if (!ruleLinkOk('handouts')) document.getElementById('shop-handout').style.display = 'none';
     document.getElementById('shop-handout').addEventListener('click', () => {
         if (!shop || !shop.seed) { setStatus('This shop was rolled before shareable links. Roll a new one to make a handout.'); return; }
         location.href = 'handouts?' + paramsQuery({ t: 'prices', from: 'shop', ...shopParams() });

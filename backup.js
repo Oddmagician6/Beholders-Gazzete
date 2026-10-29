@@ -248,7 +248,7 @@ const BK_PF2E = { 'gazette_notebook': 'pathfinder-campaign-notebook', 'gazette-w
     'gazette-kept-names': 'pathfinder-tavern-name-generator', 'saved_npcs': 'pathfinder-npc-generator',
     'gazette-clocks': 'pathfinder-progress-clocks', 'gazette-tables': 'pathfinder-random-table-roller',
     'gazette-party': 'pathfinder-party-tracker', 'gazette-initiative': 'pathfinder-initiative-tracker',
-    'gazette_loot': 'pathfinder-loot-generator' };
+    'gazette_loot': 'pathfinder-loot-generator', 'gazette-shop': 'pathfinder-shop-generator' };
 BACKUP_KEYS.push(...BACKUP_KEYS.filter(k => Object.hasOwn(BK_PF2E, k.key)).map(k => ({
     ...k, key: k.key + '-pf2e', tool: '🗡️ Pathfinder Toolkit', href: BK_PF2E[k.key], pf2e: true
 })));

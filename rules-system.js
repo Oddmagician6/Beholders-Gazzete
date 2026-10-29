@@ -106,6 +106,11 @@ function ruleLinkOk(href) {
     return !!(tab ? moves[`${name}?tab=${tab}`] : moves[name]);
 }
 
+// A price the generators wrote in 5e gold, in this system's coin (Pathfinder's goods cost about a tenth).
+function ruleCoins(gp) {
+    return gp * (ruleSystem().coinScale || 1);
+}
+
 // The localStorage key (or database name) for this system's saves, so a Pathfinder party or
 // notebook never shows up in the D&D tools: 5e keeps the old key, others add "-<system>".
 function ruleKey(key) {

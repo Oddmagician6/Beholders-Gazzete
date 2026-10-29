@@ -184,6 +184,19 @@
     color: #888;
 }
 
+/* Pathfinder items carry an item level */
+.item-level {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 1px 6px;
+    border: 1px solid #555;
+    border-radius: 3px;
+    font-size: 0.72rem;
+    font-weight: normal;
+    color: var(--accent-gold);
+    white-space: nowrap;
+}
+
 .price-cell {
     font-family: 'Cinzel', serif;
     color: var(--accent-gold);

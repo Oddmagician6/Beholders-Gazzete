@@ -291,6 +291,11 @@ const MARKET_ITEMS = [
   { id:"vorpal-sword", name:"Vorpal Sword", category:"magic-items", basePrice:25000 },
 ];
 
+// Another system's list (market-pf2e.js) maps the ids above to its own, so the shops' stock lists
+// keep working: MARKET_ALIAS['rope-hempen-50-feet'] = 'rope'. Empty for 5e.
+const MARKET_ALIAS = {};
+const marketId = id => MARKET_ALIAS[id] || id;
+
 const MARKET_SLOT_MS = 15 * 60 * 1000;
 const MARKET_DAY_MS = 24 * 60 * 60 * 1000;
 const MARKET_SWING = 0.15; // prices stay within ±15% of base
