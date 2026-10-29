@@ -468,7 +468,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (yearEl) yearEl.textContent = new Date().getFullYear();
   renderSaved();
   setupSourcePickers();
-  // No Pathfinder splitter yet: the button stays on D&D pages only.
+  // A system with no splitter page hides the button.
   if (!ruleLinkOk('toolbox?tab=split')) document.getElementById('split-btn').hidden = true;
   applyUrl(false);
   // Back/Forward step through earlier rolls.

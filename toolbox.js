@@ -335,6 +335,7 @@ function renderTravel(opts) {
 // ── Split (F24) ───────────────────────────────────────────
 // URL param → field id.
 const SPLIT_FIELDS = { cp: 'sp-cp', sp: 'sp-sp', ep: 'sp-ep', gp: 'sp-gp', pp: 'sp-pp', other: 'sp-other', n: 'sp-n', names: 'sp-names' };
+if (!document.getElementById('sp-ep')) delete SPLIT_FIELDS.ep;   // Pathfinder has no electrum
 const SPLIT_MAX = 20;
 const SPLIT_COIN_MAX = 99999999;
 
@@ -349,7 +350,7 @@ function splitNames() {
 function splitOpts() {
     const num = id => Math.min(SPLIT_COIN_MAX, Math.max(0, Number(document.getElementById(id).value) || 0));
     const coins = {};
-    Object.keys(COIN_CP).forEach(k => { coins[k] = Math.floor(num('sp-' + k)); });
+    Object.keys(COIN_CP).forEach(k => { coins[k] = SPLIT_FIELDS[k] ? Math.floor(num(SPLIT_FIELDS[k])) : 0; });
     const names = splitNames();
     const sizeEl = document.getElementById('sp-n');
     const n = names.length || Math.min(SPLIT_MAX, Math.max(1, Math.floor(Number(sizeEl.value)) || 1));

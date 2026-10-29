@@ -35,13 +35,16 @@ function partySize(value) {
   return Math.min(SPLIT_MAX_WAYS, Math.max(1, Math.floor(Number(value)) || SPLIT_DEFAULT_WAYS));
 }
 
-// A DM Toolbox link that opens the splitter prefilled (loot page and Session Kit).
+// A DM Toolbox link that opens the splitter prefilled (loot page and Session Kit). A Pathfinder
+// page's tab-pages moves send it to the Pathfinder splitter's own page.
 function splitLink(coins, extraGp, ways) {
   const q = new URLSearchParams({ tab: 'split' });
   Object.keys(COIN_CP).forEach(k => { if (coins[k] > 0) q.set(k, Math.floor(coins[k])); });
   if (extraGp > 0) q.set('other', Math.round(extraGp * 100) / 100);
   if (ways && partySize(ways) !== SPLIT_DEFAULT_WAYS) q.set('n', partySize(ways));
-  return 'toolbox?' + q.toString();
+  const moved = typeof TAB_PAGES !== 'undefined' && TAB_PAGES && TAB_PAGES.moves && TAB_PAGES.moves['toolbox?tab=split'];
+  if (moved) q.delete('tab');
+  return (moved || 'toolbox') + '?' + q.toString();
 }
 
 // "Split 4 ways: 52 gp 3 sp each, 2 cp left over" for copied loot text (F29); '' when there's nothing.
