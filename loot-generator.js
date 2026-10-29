@@ -4,6 +4,9 @@
 
 let currentLoot = null;
 let currentTab  = 'individual';
+// The Pathfinder page loads loot-pf2e.js: the same tabs, rolled by level from GM Core's treasure.
+const LOOT_PF2E = typeof pf2eRollTreasure === 'function';
+const LOOT_KEY = ruleKey('gazette_loot');
 
 // Rolling logic lives in loot-engine.js (shared with the Session Kit).
 
@@ -64,7 +67,7 @@ function generateLoot(seed = newSeed(), push = true) {
   const luck = (luckSelect && document.getElementById(luckSelect) || { value: 'normal' }).value;
   const luckMult = luck === 'generous' ? 1.5 : luck === 'stingy' ? 0.5 : 1;
 
-  withSeed(seed, () => { switch (currentTab) {
+  withSeed(seed, () => { if (LOOT_PF2E) { ({ found = null, magic = [], magicNote = '' } = pf2eGenerateTab(currentTab, luckMult)); return; } switch (currentTab) {
 
     case 'individual': {
       const cr = document.getElementById('ind-cr').value;
@@ -122,6 +125,34 @@ function generateLoot(seed = newSeed(), push = true) {
 
   displayLoot();
   if (push !== null) setUrlParams(lootParams(), push);
+}
+
+// Pathfinder: the tab's fields are levels (ind-cr, hoard-cr, custom-cr hold a level there).
+function pf2eGenerateTab(tab, luckMult) {
+  const val = id => document.getElementById(id).value;
+  if (tab === 'individual') return { found: pf2eRollTreasure('individual', Number(val('ind-cr')), { luckMult, source: val('ind-source') }) };
+  if (tab === 'hoard') {
+    return { found: pf2eRollTreasure('hoard', Number(val('hoard-cr')), {
+      luckMult, source: val('hoard-source'), share: PF2E_SHARES[val('hoard-share')], items: val('hoard-magic') !== 'no', pcs: Number(val('hoard-pcs'))
+    }) };
+  }
+  if (tab === 'magic') {
+    const level = val('magic-level') === 'any' ? 'any' : Number(val('magic-level'));
+    const cnt = Math.min(20, Math.max(1, parseInt(val('magic-count')) || 1));
+    const magic = Array.from({ length: cnt }, () => pf2eRollItem(level, val('magic-type'), val('magic-rarity'))).filter(Boolean);
+    magic.forEach(m => { const f = magicFlavor(m); if (f) m.flavor = f; });
+    const sel = id => document.getElementById(id).selectedOptions[0].textContent.toLowerCase();
+    return { magic, magicNote: magic.length ? '' : `The vault holds no ${sel('magic-type')} of ${sel('magic-rarity')} rarity at ${level === 'any' ? 'any level' : 'level ' + level} or below. Try another combination.` };
+  }
+  // Custom: a small find for the level, keeping only the parts that are ticked.
+  const t = pf2eRollTreasure('hoard', Number(val('custom-cr')), { luckMult, share: 0.25, goods: document.getElementById('custom-goods').checked });
+  const on = id => document.getElementById(id).checked;
+  if (!on('custom-coins')) t.coins = { cp: 0, sp: 0, ep: 0, gp: 0, pp: 0 };
+  if (!on('custom-gems')) t.gems = [];
+  if (!on('custom-art')) t.art = [];
+  if (!on('custom-magic')) t.magic = [];
+  t.totalValue = totalGP(t.coins, t.gems, t.art, t.magic, t.goods);
+  return { found: t };
 }
 
 // ── DISPLAY ────────────────────────────────────────────────
@@ -218,9 +249,11 @@ function displayLoot() {
   }
   if (loot.magic.length) {
     document.getElementById('magic-grid').innerHTML = loot.magic.map(item => {
-      const rarityClass = item.rarity.replace(' ', '-');
-      const info = magicItemInfo(item.name);
-      const kind = item.type === 'wondrous' ? 'wondrous-item' : item.type;
+      const rarityClass = item.rarity === 'unique' ? 'legendary' : item.rarity.replace(' ', '-');
+      const info = item.pf ? pf2eItemInfo(item.pf) : magicItemInfo(item.name);
+      const kind = item.img || (item.type === 'wondrous' ? 'wondrous-item' : item.type);
+      const holds = item.spell && typeof PF2E_SPELLS !== 'undefined' && PF2E_SPELLS[item.spell];
+      const etched = item.on && PF2E_ITEMS[item.on] && PF2E_ITEMS[item.pf];
       return `<div class="magic-card">
         <div class="item-header">
           <span class="item-name">${item.name}</span>
@@ -228,11 +261,13 @@ function displayLoot() {
         </div>
         <img class="magic-art" src="img/item/${kind}.webp" alt="" width="72" height="72" loading="lazy" decoding="async">
         <div class="item-meta">
-          <span class="item-type">${item.type}</span>
-          ${item.attune ? '<span class="attune-badge">⚡ Attunement</span>' : ''}
+          <span class="item-type">${item.level !== undefined ? `Level ${item.level} · ` : ''}${item.type}</span>
+          ${item.attune ? '<span class="attune-badge">⚡ Attunement</span>' : item.invested ? '<span class="attune-badge">⚡ Invested</span>' : ''}
         </div>
+        ${etched ? `<p class="item-look">A ${esc(PF2E_ITEMS[item.pf].n.toLowerCase())} rune etched on a ${esc(PF2E_ITEMS[item.on].n.toLowerCase())}.</p>` : ''}
+        ${holds ? `<p class="item-look">Holds <a href="pf2e/spell/${item.spell}">${esc(holds.n)}</a>.</p>` : ''}
         ${item.flavor ? `<p class="item-look">${esc(item.flavor)}</p>` : ''}
-        <div class="item-value">${item.value > 0 ? '💰 ~' + item.value.toLocaleString() + ' gp' : '✨ Priceless'}</div>
+        <div class="item-value">${item.value > 0 ? '💰 ' + (item.pf ? formatCoins(item.value) : '~' + item.value.toLocaleString() + ' gp') : '✨ Priceless'}</div>
         ${info ? `<button type="button" class="item-toggle" aria-expanded="false" onclick="toggleItem(this)">Read item ▼</button>
         <div class="item-desc"><p class="item-srd-type">${info.meta}</p>${formatSrdText(info.text)}</div>` : ''}
       </div>`;
@@ -240,7 +275,7 @@ function displayLoot() {
   }
 
   // Cut-out cards for the SRD items (Feature & Item Cards page)
-  const srd = [...new Set(loot.magic.map(m => magicItemInfo(m.name)).filter(Boolean).map(i => magicItemSlug(i.srdName)))];
+  const srd = LOOT_PF2E ? [] : [...new Set(loot.magic.map(m => magicItemInfo(m.name)).filter(Boolean).map(i => magicItemSlug(i.srdName)))];
   const cardsBtn = document.getElementById('cards-btn');
   cardsBtn.hidden = !srd.length;
   cardsBtn.href = 'dnd-character-cards?items=' + srd.slice(0, 40).join(',');
@@ -322,8 +357,8 @@ function copyLoot() {
     txt += '📦 TRADE GOODS:\n' + goods.map(g => `  • ${g.name} (${formatCoins(g.value)})`).join('\n') + '\n\n';
   }
   if (magic.length) {
-    txt += '✨ MAGIC ITEMS:\n' + magic.map(m =>
-      `  • ${m.name} [${m.rarity}]${m.attune ? ' (Attunement Required)' : ''}${m.flavor ? '\n    ' + m.flavor : ''}`
+    txt += (LOOT_PF2E ? '✨ ITEMS:\n' : '✨ MAGIC ITEMS:\n') + magic.map(m =>
+      `  • ${m.name} [${m.level !== undefined ? `level ${m.level}, ` : ''}${m.rarity}]${m.attune ? ' (Attunement Required)' : m.invested ? ' (Invested)' : ''}${m.flavor ? '\n    ' + m.flavor : ''}`
     ).join('\n') + '\n\n';
   }
   if (trinkets.length) {
@@ -338,7 +373,7 @@ function copyLoot() {
 // Drop anything that isn't a saved hoard object, so a damaged save can't break the page.
 function readLoot() {
   try {
-    const saved = JSON.parse(localStorage.getItem('gazette_loot') || '[]');
+    const saved = JSON.parse(localStorage.getItem(LOOT_KEY) || '[]');
     return Array.isArray(saved) ? saved.filter(l => l && typeof l === 'object' && !Array.isArray(l)) : [];
   } catch(e) { return []; }
 }
@@ -349,7 +384,7 @@ function saveLoot() {
     const saved = readLoot();
     saved.unshift(currentLoot);
     if (saved.length > 20) saved.pop();
-    localStorage.setItem('gazette_loot', JSON.stringify(saved));
+    localStorage.setItem(LOOT_KEY, JSON.stringify(saved));
     renderSaved();
     flashBtn('save-btn', '✅ Saved!');
   } catch(e) { console.error(e); }
@@ -401,7 +436,7 @@ function showUnlinkedLoot() {
 
 function clearSaved() {
   if (confirm('Clear all saved treasure?')) {
-    localStorage.removeItem('gazette_loot');
+    localStorage.removeItem(LOOT_KEY);
     renderSaved();
   }
 }
@@ -433,6 +468,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (yearEl) yearEl.textContent = new Date().getFullYear();
   renderSaved();
   setupSourcePickers();
+  // No Pathfinder splitter yet: the button stays on D&D pages only.
+  if (!ruleLinkOk('toolbox?tab=split')) document.getElementById('split-btn').hidden = true;
   applyUrl(false);
   // Back/Forward step through earlier rolls.
   window.addEventListener('popstate', () => { if (!applyUrl(null)) showUnlinkedLoot(); });

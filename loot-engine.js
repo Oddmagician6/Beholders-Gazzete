@@ -523,7 +523,9 @@ function artGem(band, plural) {
 }
 
 function composeArt(value) {
-  const band = ART_TIER_BAND[value] ?? 0;
+  // Another system's art (loot-pf2e.js) has its own prices: the nearest band below.
+  const v = Number(value);
+  const band = ART_TIER_BAND[value] ?? (v < 250 ? 0 : v < 750 ? 1 : v < 2500 ? 2 : v < 7500 ? 3 : 4);
   if (rand() < 0.25) return lootPick(ART_PICTURES[band]) + ' of ' + lootPick(ART_SUBJECTS) + lootPick(ART_ARTISTS);
   const objects = ART_OBJECTS.filter(([, b]) => b <= band).map(([o]) => o);
   const decor = lootPick(ART_DECOR[band])
@@ -539,10 +541,11 @@ function composeArt(value) {
 // Looks for a magic item: potions and scrolls always, most other items, never artifacts.
 function magicFlavor(m) {
   if (m.rarity === 'artifact') return '';
-  if (m.type === 'potion') {
+  const kind = m.img || m.type; // a Pathfinder item's picture names its kind
+  if (kind === 'potion') {
     return lootCap(`${lootPick(POTION_TEXTURES)} ${lootPick(POTION_COLORS)} liquid ${lootPick(POTION_BOTTLES)}; ${lootPick(POTION_NOTES)}.`);
   }
-  if (m.type === 'scroll') {
+  if (kind === 'scroll') {
     const tie = lootPick(SCROLL_TIES);
     return `Written in ${lootPick(SCROLL_INKS)} on ${lootPick(SCROLL_PAPERS)}${tie ? ', ' + tie : ''}.`;
   }
@@ -583,7 +586,8 @@ function lootTrap(cr) {
 const LOCKABLE = /chest|box|case|cabinet|drawer|coffin|sarcophag|vault|strongroom|wardrobe|trunk|compartment|alms/;
 
 // Adds the find to a rolled treasure { coins, gems, art, magic } and totals it.
-// opts: source (id or 'random'), luckMult, goods (false = no trade goods).
+// opts: source (id or 'random'), luckMult, goods (false = no trade goods), and for another
+// system (loot-pf2e.js) lockDcs [low, high] and trap (a function that rolls one).
 function decorateTreasure(t, kind, cr, opts = {}) {
   const luckMult = opts.luckMult || 1;
   const ids = lootSourcesFor(kind).map(([id]) => id);
@@ -621,11 +625,11 @@ function decorateTreasure(t, kind, cr, opts = {}) {
   t.trap = null;
   if (LOCKABLE.test(t.holder)) {
     if (rand() < (hoard ? 0.7 : 0.25)) {
-      const [lo, hi] = LOOT_LOCK_DC[cr];
+      const [lo, hi] = opts.lockDcs || LOOT_LOCK_DC[cr];
       const dc = rand() < 0.5 ? lo : hi;
       t.lock = { dc, text: ruleText(`DC ${dc} {ability:dex:thievery} check{alt: with thieves' tools|} to pick, or DC ${Math.min(30, dc + 5)} {ability:str} to force. ${lootPick(LOOT_LOCK_KEYS)}`) };
     }
-    if (rand() < (hoard ? 0.35 : 0.08)) t.trap = lootTrap(cr);
+    if (rand() < (hoard ? 0.35 : 0.08)) t.trap = (opts.trap || lootTrap)(cr);
   }
 
   const hasCoins = Object.values(t.coins).some(v => v > 0);
