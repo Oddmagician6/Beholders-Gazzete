@@ -57,9 +57,10 @@ function portraitSrc(c) {
     return face || (c.cls ? `img/class/${c.cls}-sm.webp` : '');
 }
 
-// A homebrew spell (homebrew-magic.js) has no page of its own: its name and a 🧪.
+// A homebrew spell (homebrew-magic.js) has no page of its own: its name and a 🧪 (an SRD 5.2 addition, srd52.js: a 📗).
 function spellLink(name) {
     if (typeof hbmIsHomebrew === 'function' && hbmIsHomebrew(name)) return `${esc(name)} <span title="Homebrew, from your campaign notebook">🧪</span>`;
+    if (typeof srd52IsSpell === 'function' && srd52IsSpell(name)) return `${esc(name)} <span title="From the SRD 5.2 additions">📗</span>`;
     return `<a href="spell/${spellSlug(name)}" target="_blank" rel="noopener" title="Open ${esc(name)} in a new tab">${esc(name)}</a>`;
 }
 

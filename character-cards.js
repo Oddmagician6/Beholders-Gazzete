@@ -138,7 +138,7 @@ function ccCards() {
         }));
     }
     if (on('items')) cc.items.forEach(n => {
-        ccCached('item:' + n, () => itemCards(host, n, MAGIC_ITEM_TEXT[n], typeof hbmIsHomebrew === 'function' && hbmIsHomebrew(n) ? 'Homebrew item' : 'Magic item')).forEach(html => out.push({ set: 'items', html }));
+        ccCached('item:' + n, () => itemCards(host, n, MAGIC_ITEM_TEXT[n], typeof hbmIsHomebrew === 'function' && hbmIsHomebrew(n) ? 'Homebrew item' : typeof srd52IsItem === 'function' && srd52IsItem(n) ? 'SRD 5.2 item' : 'Magic item')).forEach(html => out.push({ set: 'items', html }));
     });
     return out;
 }
@@ -187,7 +187,7 @@ function renderItems() {
         const has = cc.items.includes(n);
         const r = gcRarity(MAGIC_ITEM_TEXT[n][0]);
         return `<li><button type="button" class="cc-item${has ? ' on' : ''}" data-item="${esc(n)}"${!has && full ? ' disabled' : ''} aria-pressed="${has}">
-            <span class="cc-plus" aria-hidden="true">${has ? '✓' : '＋'}</span><span class="cc-item-name">${esc(n)}${typeof hbmIsHomebrew === 'function' && hbmIsHomebrew(n) ? ' <span class="hb-tag">🧪 Homebrew</span>' : ''}</span><span class="cc-rarity" style="--r:${GC_RARITY_COLORS[r] || '#8a6a2a'}">${esc(r || 'varies')}</span></button></li>`;
+            <span class="cc-plus" aria-hidden="true">${has ? '✓' : '＋'}</span><span class="cc-item-name">${esc(n)}${typeof hbmIsHomebrew === 'function' && hbmIsHomebrew(n) ? ' <span class="hb-tag">🧪 Homebrew</span>' : typeof srd52IsItem === 'function' && srd52IsItem(n) ? ' ' + srd52Tag() : ''}</span><span class="cc-rarity" style="--r:${GC_RARITY_COLORS[r] || '#8a6a2a'}">${esc(r || 'varies')}</span></button></li>`;
     }).join('') || '<li class="cc-hint">No magic item matches.</li>';
     document.getElementById('cc-more').textContent = hits.length > 60 ? `Showing 60 of ${hits.length}; type to narrow it down.` : `${hits.length} item${hits.length === 1 ? '' : 's'}`;
     document.getElementById('cc-chosen').innerHTML = cc.items.length

@@ -524,7 +524,7 @@ function rollStatBlock(npc, force = null) {
     const usedSpells = new Set();
     const spellPool = (klass, lvl) => {
         const curated = (SB_SPELL_PICKS[klass] && SB_SPELL_PICKS[klass][lvl]) || [];
-        const all = typeof SPELLS_DATA !== 'undefined' ? SPELLS_DATA.filter(s => s.level === lvl && s.classes.includes(klass)).map(s => s.name) : [];
+        const all = typeof SPELLS_DATA !== 'undefined' ? SPELLS_DATA.filter(s => s.level === lvl && s.classes.includes(klass) && !s.hb && !s.v52).map(s => s.name) : [];
         const names = [...new Set([...curated, ...all])].filter(n => !usedSpells.has(n));
         const school = klass === 'Wizard' && SB_SCHOOLS[npc.profession];
         return names.map(n => {

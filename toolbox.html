@@ -1025,11 +1025,12 @@ Or with die ranges:
             </select>
           </label>
           <label>Type <select id="en-type"><option value="" selected>Any type</option></select></label>
+          <span id="en-v52"></span>
         </div>
         <ul class="en-results" id="en-results"></ul>
         <p class="en-results-note" id="en-results-note"></p>
       </div>
-      <p class="tool-note">Difficulty uses the XP Budget per Character table from the System Reference Document 5.2 (CC-BY 4.0): each character adds their level's Low, Moderate, and High numbers, and the monsters' XP is spent against them. The warnings under the meter are the Gazette's advice. Monsters and their CR, XP, AC, HP, and Dex come from the System Reference Document 5.1 (CC-BY 4.0). The 📖 Monster Manual rows are names and page numbers only, for monsters outside the free rules: click one and type its CR, AC, HP, and initiative bonus from your own copy, and it's saved to your notebook as homebrew.<br>Rolled encounters never use a monster above the party's level and stop at two creatures per character. Most rolls keep to one group of foes that belong together (goblins with their wolves, a cult with its imps), and the habitat picker keeps the leader to monsters that live there. Every fight gets a scene: where it happens, what the foes are doing, who notices whom, distance, light, the ground, a leader, tactics, morale, a price to parley, and sometimes a twist. Hazard DCs and damage follow the party's level (damage from the SRD 5.1 Damage Severity by Level table); the habitats, groups, and scenes are the Gazette's own. 🎲 New Scene redraws it without touching the monsters. The address bar holds the party and the monsters, so 🔗 Copy Link shares the fight. Send to Initiative rolls each monster's initiative with its Dex modifier.</p>
+      <p class="tool-note">Difficulty uses the XP Budget per Character table from the System Reference Document 5.2 (CC-BY 4.0): each character adds their level's Low, Moderate, and High numbers, and the monsters' XP is spent against them. The warnings under the meter are the Gazette's advice. Monsters and their CR, XP, AC, HP, and Dex come from the System Reference Document 5.1 (CC-BY 4.0). 📗 SRD 5.2 additions (a switch for the whole site, off at first) adds the 17 monsters the 2024 rules brought in to this list and the initiative tracker; rolled encounters never use them. The 📖 Monster Manual rows are names and page numbers only, for monsters outside the free rules: click one and type its CR, AC, HP, and initiative bonus from your own copy, and it's saved to your notebook as homebrew.<br>Rolled encounters never use a monster above the party's level and stop at two creatures per character. Most rolls keep to one group of foes that belong together (goblins with their wolves, a cult with its imps), and the habitat picker keeps the leader to monsters that live there. Every fight gets a scene: where it happens, what the foes are doing, who notices whom, distance, light, the ground, a leader, tactics, morale, a price to parley, and sometimes a twist. Hazard DCs and damage follow the party's level (damage from the SRD 5.1 Damage Severity by Level table); the habitats, groups, and scenes are the Gazette's own. 🎲 New Scene redraws it without touching the monsters. The address bar holds the party and the monsters, so 🔗 Copy Link shares the fight. Send to Initiative rolls each monster's initiative with its Dex modifier.</p>
     </section>
 
     <section class="tool-panel" id="tab-init" role="tabpanel" hidden>
@@ -1199,6 +1200,8 @@ Or with die ranges:
   <script src="notebook.js"></script>
   <script src="homebrew.js"></script>
   <script src="book-monsters.js"></script>
+  <script src="srd52-data.js"></script>
+  <script src="srd52.js"></script>
   <script src="map-pins.js"></script>
   <script src="family-tree.js"></script>
   <script src="party.js"></script>

@@ -833,7 +833,7 @@ function cbQuickBuild(opts = {}) {
     if (ch.abil) c.raceOpt.abil = prio.filter(a => a !== ch.abilNot).slice(0, ch.abil);
     if (ch.tool) c.raceOpt.tool = cbPick(ch.tool);
     if (ch.ancestry) c.raceOpt.ancestry = cbPick(Object.keys(CB_DRAGONS));
-    if (sch.cantrip) c.raceOpt.cantrip = cbPick(cbSpellsFor('Wizard', 0)).name;
+    if (sch.cantrip) c.raceOpt.cantrip = cbPick(cbSpellsFor('Wizard', 0).filter(cbSeedSafe)).name;
     const langN = (ch.lang || 0) + (sch.lang || 0);
     c.raceOpt.langs = cbShuffle(CB_LANGUAGES.filter(l => !(race.langs || []).includes(l))).slice(0, langN);
 
@@ -919,7 +919,7 @@ function cbQuickBuild(opts = {}) {
     const r = cbSpellRules(c);
     if (r) {
         const cls = k.name;
-        c.spells.cantrips = cbShuffle(cbSpellsFor(cls, 0)).slice(0, r.cantrips).map(s => s.name);
+        c.spells.cantrips = cbShuffle(cbSpellsFor(cls, 0).filter(cbSeedSafe)).slice(0, r.cantrips).map(s => s.name);
         if (c.cls === 'warlock' && !c.spells.cantrips.includes('Eldritch Blast')) c.spells.cantrips[0] = 'Eldritch Blast';
         // Learn spells level by level, as a player would: each new pick is of the best
         // spell level the character could cast then, or one below.
@@ -931,7 +931,7 @@ function cbQuickBuild(opts = {}) {
             while (list.length < now.list) {
                 const want = Math.max(1, now.maxLevel - (cbRand() < 0.35 ? 1 : 0));
                 let pool = [];
-                for (let sl = want; sl >= 1 && !pool.length; sl--) pool = cbClassSpells(c, sl).filter(s => !list.includes(s.name) && !always.includes(s.name.toLowerCase()));
+                for (let sl = want; sl >= 1 && !pool.length; sl--) pool = cbClassSpells(c, sl).filter(s => cbSeedSafe(s) && !list.includes(s.name) && !always.includes(s.name.toLowerCase()));
                 if (!pool.length) break;
                 list.push(cbPick(pool).name);
             }
@@ -939,7 +939,7 @@ function cbQuickBuild(opts = {}) {
         c.level = top;
         c.spells.list = list.slice(0, r.list);
         if (r.type === 'book') c.spells.prepared = cbShuffle(c.spells.list).slice(0, r.prepared);
-        r.arcanum.forEach(lv => { const p = cbClassSpells(c, lv); if (p.length) c.spells.arcanum[lv] = cbPick(p).name; });
+        r.arcanum.forEach(lv => { const p = cbClassSpells(c, lv).filter(cbSeedSafe); if (p.length) c.spells.arcanum[lv] = cbPick(p).name; });
         // Invocations that needed eldritch blast can now be picked.
         cbClassChoices(c).forEach(choice => {
             const have = cbChoiceValue(c, choice.key).filter(v => choice.options[v]);
@@ -956,6 +956,12 @@ function cbQuickBuild(opts = {}) {
     if (!c.name) c.name = `${race.name} ${k.name}`;
     c.alignment = cbPick(CB_ALIGNMENTS);
     return c;
+}
+
+// Quick build draws only SRD 5.1 spells, never homebrew or the SRD 5.2 additions (srd52.js), so it
+// builds the same character on every device.
+function cbSeedSafe(s) {
+    return !s.hb && !s.v52;
 }
 
 function cbSpellsFor(className, level) {

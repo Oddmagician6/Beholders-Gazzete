@@ -8,6 +8,8 @@
    Toolbox: ?tab=enc&m=<id>.<n> (replaces the Encounter tab's list) or
    ?tab=init&add=<id>.<n> (joins the saved fight; see applyInitAdds in toolbox-table.js).
    Each stat block also opens in the Monster Maker (monster-maker.html?from=<id>) to tweak.
+   With the SRD 5.2 additions on (srd52.js), their 17 monsters join the list, tagged 📗, with no
+   page of their own and no Monster Maker button.
    ============================================ */
 
 const PICKS_KEY = 'gazette-bestiary-picks';
@@ -66,9 +68,14 @@ function filters() {
         type: v('bst-type'), size: v('bst-size'), hab: v('bst-hab'), sort: v('bst-sort') };
 }
 
+// The SRD 5.1 monsters, plus the SRD 5.2 additions when they're on.
+function allMonsters() {
+    return typeof srd52Monsters === 'function' ? [...MONSTERS, ...srd52Monsters()] : MONSTERS;
+}
+
 function filtered(f) {
     const lo = f.min ? crValue(f.min) : -1, hi = f.max ? crValue(f.max) : 99;
-    return MONSTERS.filter(m => (!f.q || m.name.toLowerCase().includes(f.q) || m.type.includes(f.q))
+    return allMonsters().filter(m => (!f.q || m.name.toLowerCase().includes(f.q) || m.type.includes(f.q))
         && crValue(m.cr) >= Math.min(lo, hi) && crValue(m.cr) <= Math.max(lo, hi)
         && (!f.type || m.type === f.type) && (!f.size || m.size === f.size)
         && (!f.hab || habsOf(m).includes(f.hab)))
@@ -87,7 +94,7 @@ function rowHtml(m) {
         <div class="bst-head">
             <img class="bst-thumb" src="${typeArt(m, true)}" alt="" width="54" height="36" loading="lazy" decoding="async">
             <button type="button" class="bst-name" aria-expanded="${isOpen}" aria-controls="sb-${m.id}">
-                <span class="bst-cr">CR ${m.cr}</span> <span class="bst-title">${esc(m.name)}</span>
+                <span class="bst-cr">CR ${m.cr}</span> <span class="bst-title">${esc(m.name)}</span>${m.v52 ? ' ' + srd52Tag() : ''}
             </button>
             <span class="bst-meta">${BST_SIZES[m.size]} ${m.type} · AC ${m.ac} · HP ${m.hp} · ${m.xp.toLocaleString()} XP</span>
             <span class="bst-habs" title="${esc(habs.map(h => h.label).join(', ') || 'No usual habitat')}">${habs.map(h => h.icon).join('')}</span>
@@ -107,8 +114,8 @@ function blockHtml(m) {
         <div class="bst-acts">
             <button type="button" class="btn btn-gold" data-act="pick">➕ Add to Encounter List</button>
             <a class="btn" href="toolbox?${paramsQuery({ tab: 'init', add: `${m.id}.1` })}">🎲 Add to Initiative</a>
-            <a class="btn" href="monster-maker?${paramsQuery({ from: m.id })}">🐲 Tweak in the Monster Maker</a>
-            <a class="btn" href="monster/${m.id}">📄 Its Own Page</a>
+            ${m.v52 ? '' : `<a class="btn" href="monster-maker?${paramsQuery({ from: m.id })}">🐲 Tweak in the Monster Maker</a>
+            <a class="btn" href="monster/${m.id}">📄 Its Own Page</a>`}
             <button type="button" class="btn" data-act="copy">📋 Copy Stat Block</button>
             <button type="button" class="btn" data-act="link">🔗 Copy Link</button>
         </div>
@@ -120,8 +127,9 @@ function render() {
     const list = filtered(f);
     document.getElementById('bst-list').innerHTML = list.map(rowHtml).join('');
     document.getElementById('bst-empty').hidden = list.length > 0;
-    document.getElementById('bst-count').textContent = list.length === MONSTERS.length
-        ? `All ${MONSTERS.length} SRD monsters.` : `${list.length} of ${MONSTERS.length} monsters.`;
+    const all = allMonsters().length;
+    document.getElementById('bst-count').textContent = list.length === all
+        ? `All ${all} SRD monsters.` : `${list.length} of ${all} monsters.`;
     if (!blocksReady() && !blocksFailed && list.some(m => open.has(m.id))) loadBlocks();
 }
 
@@ -265,6 +273,16 @@ document.addEventListener('DOMContentLoaded', () => {
         bstFlash('🧹 The encounter list is empty.');
     });
     window.addEventListener('popstate', applyUrl);
+    // SRD 5.2 additions (srd52.js): the switch sits under the filters.
+    if (typeof srd52Toggle === 'function') {
+        document.getElementById('bst-v52').innerHTML = srd52Toggle();
+        srd52OnChange(() => {
+            open = new Set([...open].filter(id => Object.hasOwn(MONSTER_BY_ID, id)));
+            loadPicks();
+            renderPicks();
+            render();
+        });
+    }
     // Another tab of the Bestiary changed the encounter list.
     window.addEventListener('storage', e => {
         if (e.key === PICKS_KEY) { loadPicks(); renderPicks(); }

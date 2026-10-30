@@ -186,12 +186,17 @@ let autoBlock = null;   // the id whose block opened because its turn came up
 // (encounter-engine.js ENC_MONSTERS, with Perception as the bonus) and no homebrew.
 function monsterNamed(name) {
     const key = name.replace(/\s+\d+$/, '').toLowerCase();
-    return [...ENC_MONSTERS, ...(INIT_PF2E ? [] : hbRows)].find(m => m.name.toLowerCase() === key) || null;
+    return [...ENC_MONSTERS, ...(INIT_PF2E ? [] : [...hbRows, ...iaV52Rows()])].find(m => m.name.toLowerCase() === key) || null;
 }
 
 function fillMonsterNames() {
-    document.getElementById('ia-monsters').innerHTML = [...(INIT_PF2E ? [] : hbRows), ...ENC_MONSTERS, ...iaBookRows()].map(m => `<option value="${esc(m.name)}"></option>`).join('');
+    document.getElementById('ia-monsters').innerHTML = [...(INIT_PF2E ? [] : hbRows), ...ENC_MONSTERS, ...iaV52Rows(), ...iaBookRows()].map(m => `<option value="${esc(m.name)}"></option>`).join('');
     renderIaBook();
+}
+
+// The SRD 5.2 additions' monsters when they're on (srd52.js, 5e only).
+function iaV52Rows() {
+    return INIT_PF2E || typeof srd52Monsters === 'undefined' ? [] : srd52Monsters();
 }
 
 // The Monster Manual names not saved yet (book-monsters.js, 5e only). Typing one offers the
@@ -658,6 +663,7 @@ function setupInitiative() {
     partyChip(document.getElementById('init-party'), { label: '➕ Add the Party', title: 'Add every character not already in the fight, rolling d20 + their initiative bonus', act: addPartyToFight });
     fillMonsterNames();
     nbOnChange(fillMonsterNames);
+    if (typeof srd52OnChange === 'function') srd52OnChange(fillMonsterNames);
     const follow = document.getElementById('init-follow');
     if (!INIT_BLOCKS) follow.closest('label').style.display = 'none';
     if (INIT_PF2E) document.getElementById('ia-mod').max = 40;

@@ -358,8 +358,10 @@
         <select id="source-filter">
           <option value="">All Spells</option>
           <option value="srd">SRD 5.1 Only</option>
+          <option value="v52">SRD 5.2 Additions</option>
           <option value="hb">My Homebrew</option>
         </select>
+        <span id="v52-switch"></span>
       </div>
       <div style="align-self:flex-end;">
         <label>&nbsp;</label>
@@ -393,6 +395,7 @@
     <div class="spell-grid" id="spell-grid"></div>
     <div id="print-cards"></div>
     <p class="srd-note">Spell text is from the <a href="https://dnd.wizards.com/resources/systems-reference-document" target="_blank" rel="noopener">System Reference Document 5.1</a> by Wizards of the Coast LLC, licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>. The Beholder's Gazette is unofficial fan content and is not affiliated with Wizards of the Coast.</p>
+    <p class="srd-note">📗 Turn on SRD 5.2 additions under Source for the 20 spells the 2024 rules added (Hex, Chromatic Orb, Ice Knife, Summon Dragon, and more). It's one switch for the whole site, saved in this browser, and those spells then show in the Spell Planner and the character tools too.</p>
     <p class="srd-note">🧪 ✨ Add Homebrew Spell keeps your own spells, made up or typed in from your own books, in this browser's <a href="dnd-campaign-notebook">campaign notebook</a>. They show here, in the <a href="dnd-spell-planner">Spell Planner</a>, and in the character tools, tagged Homebrew, on this device only (the notebook's export and the <a href="privacy#backup">backup</a> carry them). The Gazette never publishes them. A shared list link leaves them out on another device.</p>
     <p class="srd-note">★ Keep a list per character: pick a list above, then tap ☆ on a spell to add it. Lists are saved in this browser only, so clearing site data or switching devices starts fresh (<a href="privacy#backup">💾 back up everything</a> to keep them). To move or share one, use 🔗 Copy Link: the link holds the list's name and spells, and whoever opens it can save a copy.</p>
 
@@ -440,6 +443,8 @@
   <script src="rng.js"></script>
   <script src="notebook.js"></script>
   <script src="homebrew-magic.js"></script>
+  <script src="srd52-data.js"></script>
+  <script src="srd52.js"></script>
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -618,7 +623,7 @@
               <dt>Duration</dt><dd>${esc(s.duration)}</dd>
             </dl>
             ${formatText(s.desc)}${s.higher ? `<p><strong>At Higher Levels.</strong> ${esc(s.higher)}</p>` : ''}
-            <div class="pclasses">${esc([...s.classes, s.hb ? ['Homebrew', s.book].filter(Boolean).join(', ') : 'SRD 5.1, CC BY 4.0'].join(' · '))}</div>
+            <div class="pclasses">${esc([...s.classes, s.hb ? ['Homebrew', s.book].filter(Boolean).join(', ') : s.v52 ? 'SRD 5.2.1, CC BY 4.0' : 'SRD 5.1, CC BY 4.0'].join(' · '))}</div>
           </div>`).join('') + '</div>';
       window.print();
     }
@@ -692,7 +697,7 @@
       text.split('\n').forEach(line => {
         if (line.trim().startsWith('|')) { rows.push(line.trim()); return; }
         flush();
-        if (line.trim()) out.push(`<p>${esc(line)}</p>`);
+        if (line.trim()) out.push(`<p>${esc(line).replace(/\*\*\*(.+?)\*\*\*/g,'<strong>$1</strong>')}</p>`);
       });
       flush();
       return out.join('');
@@ -732,14 +737,14 @@
           <div class="spell-pic" aria-hidden="true"><img src="img/school/${s.school.toLowerCase()}-sm.webp" alt="" width="480" height="320" loading="lazy" decoding="async" onerror="this.parentNode.remove()"></div>
           <div class="spell-header">
             <div class="spell-name">
-              ${s.hb ? `<span>${esc(s.name)}</span>` : `<a href="spell/${slugOf(s.name)}" title="The spell's own page">${s.name.replace(/\//g, '/<wbr>')}</a>`}
+              ${s.hb || s.v52 ? `<span>${esc(s.name)}</span>` : `<a href="spell/${slugOf(s.name)}" title="The spell's own page">${s.name.replace(/\//g, '/<wbr>')}</a>`}
               ${s.concentration ? '<span class="concentration-pip" title="Requires Concentration"></span>' : ''}
               ${s.ritual ? '<span style="font-size:0.6rem;color:var(--gold-mid);margin-left:4px;" title="Can be cast as a ritual">(R)</span>' : ''}
             </div>
             <div class="spell-level-badge">${levelLabel(s.level)}</div>
             <button type="button" class="spell-fav" data-name="${esc(s.name)}" aria-pressed="${fav}" title="${label}" aria-label="${label}" onclick="toggleFavorite(this)">${fav ? '★' : '☆'}</button>
           </div>
-          <div class="spell-school">${s.school}${s.hb ? ` <span class="hb-tag" title="Your own spell, saved in this browser's campaign notebook">🧪 Homebrew${s.book ? ' · ' + esc(s.book) : ''}</span>` : ''}</div>
+          <div class="spell-school">${s.school}${s.hb ? ` <span class="hb-tag" title="Your own spell, saved in this browser's campaign notebook">🧪 Homebrew${s.book ? ' · ' + esc(s.book) : ''}</span>` : ''}${s.v52 ? ' ' + srd52Tag() : ''}</div>
           <div class="spell-components">${esc(s.components)}</div>
           <div class="spell-desc">${formatText(s.desc)}${s.higher ? `<p class="higher"><strong>At Higher Levels.</strong> ${esc(s.higher)}</p>` : ''}</div>
           <button type="button" class="spell-toggle" aria-expanded="false" onclick="toggleSpell(this)">Read full spell ▼</button>
@@ -786,7 +791,8 @@
         if (conc   === 'no'  &&  s.concentration) return false;
         if (ritual === 'yes' && !s.ritual) return false;
         if (ritual === 'no'  &&  s.ritual) return false;
-        if (source === 'srd' && s.hb) return false;
+        if (source === 'srd' && (s.hb || s.v52)) return false;
+        if (source === 'v52' && !s.v52) return false;
         if (source === 'hb' && !s.hb) return false;
         if (favOnly && !view.has(s.name)) return false;
         return true;
@@ -818,6 +824,16 @@
       loadSpells();
       applyFilters();
     });
+    // SRD 5.2 additions (srd52.js): the switch sits under the Source filter.
+    document.getElementById('v52-switch').innerHTML = srd52Toggle();
+    srd52OnChange(on => {
+      const src = document.getElementById('source-filter');
+      if (!on && src.value === 'v52') src.value = '';
+      loadSpells();
+      applyFilters();
+    });
+    // Picking SRD 5.2 Additions as the source turns the switch on.
+    document.getElementById('source-filter').addEventListener('change', e => { if (e.target.value === 'v52' && !srd52On()) srd52Set(true); });
     document.getElementById('book-select').addEventListener('change', switchList);
     document.getElementById('book-name').addEventListener('input', renameList);
     document.getElementById('book-name').addEventListener('blur', () => renderBook());

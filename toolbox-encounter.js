@@ -72,6 +72,11 @@ function encHbRows() {
 }
 
 // The Monster Manual names not yet saved (book-monsters.js, 5e only), and the one whose form is open.
+// The SRD 5.2 additions' monsters when they're on (srd52.js, 5e only); never rolled.
+function encV52Rows() {
+    return ENC_PF2E || typeof srd52Monsters === 'undefined' ? [] : srd52Monsters();
+}
+
 function encBookRows() {
     return ENC_PF2E || typeof bookRows === 'undefined' ? [] : bookRows;
 }
@@ -104,6 +109,7 @@ function setupEncounterForm() {
     } else {
         document.getElementById('en-type').add(new Option('🐲 Homebrew', 'homebrew'), 1);
         if (typeof BOOK_MONSTERS !== 'undefined') document.getElementById('en-type').add(new Option('📖 Monster Manual (your book)', 'book'), 2);
+        if (typeof srd52Toggle === 'function') document.getElementById('en-type').add(new Option('📗 SRD 5.2 additions', 'v52'), 3);
     }
     const env = document.getElementById('en-env');
     ENC_HABITAT_KEYS.forEach(k => env.add(new Option(`${ENC_HABITATS[k].icon} ${ENC_HABITATS[k].label}`, k)));
@@ -145,8 +151,8 @@ function pickerMatches() {
     const type = document.getElementById('en-type').value;
     const maxCr = ENC_PF2E ? encBudget().level : Math.max(0.125, Math.floor(encBudget().avgLevel));
     // Book names have no CR until the DM types one, so a CR filter leaves them out.
-    return [...encHbRows(), ...ENC_MONSTERS, ...ENC_HAZARDS, ...encBookRows()].filter(m => (!q || m.name.toLowerCase().includes(q))
-        && (!type || (type === 'homebrew' ? m.hb : type === 'book' ? m.byob : m.type === type))
+    return [...encHbRows(), ...ENC_MONSTERS, ...encV52Rows(), ...ENC_HAZARDS, ...encBookRows()].filter(m => (!q || m.name.toLowerCase().includes(q))
+        && (!type || (type === 'homebrew' ? m.hb : type === 'book' ? m.byob : type === 'v52' ? m.v52 : m.type === type))
         && (!cr || (!m.byob && (cr === 'party' ? crValue(m.cr) <= maxCr : m.cr === cr))));
 }
 
@@ -160,8 +166,8 @@ function renderPicker() {
             <span class="en-plus" aria-hidden="true">✏️</span>
         </button>${encBookOpen === m.id ? bookFormHtml(m) : ''}</li>` : `
         <li><button type="button" class="en-pick" data-id="${m.id}" title="Add a ${esc(m.name)}">
-            <span class="en-name">${m.hb ? '🐲 ' : ''}${esc(m.name)}</span>
-            <span class="en-meta">${m.hb ? 'Homebrew · ' : ''}${encStats(m)} · ${esc(encKind(m))}</span>
+            <span class="en-name">${m.hb ? '🐲 ' : m.v52 ? '📗 ' : ''}${esc(m.name)}</span>
+            <span class="en-meta">${m.hb ? 'Homebrew · ' : m.v52 ? 'SRD 5.2 · ' : ''}${encStats(m)} · ${esc(encKind(m))}</span>
             <span class="en-plus" aria-hidden="true">➕</span>
         </button></li>`).join('');
     document.getElementById('en-results-note').textContent = !all.length ? (document.getElementById('en-type').value === 'homebrew'
@@ -424,6 +430,16 @@ function setupEncounter() {
         renderPicker();
         encChanged(null);
     });
+    // The SRD 5.2 additions switched on or off (srd52.js): its switch sits under the picker's filters.
+    if (!ENC_PF2E && typeof srd52Toggle === 'function') {
+        document.getElementById('en-v52').innerHTML = srd52Toggle();
+        document.getElementById('en-type').addEventListener('change', e => { if (e.target.value === 'v52' && !srd52On()) srd52Set(true); });
+        srd52OnChange(() => {
+            enc.list = enc.list.filter(e => !e.m.v52 || MONSTER_BY_ID[e.m.id]);
+            renderPicker();
+            encChanged(null);
+        });
+    }
     partyChip(document.getElementById('en-party-chip'), { label: 'Use the Party', title: "Set the groups above to the Party tab's characters", act: encUseParty });
     const party = document.getElementById('en-party');
     party.addEventListener('input', onPartyInput);

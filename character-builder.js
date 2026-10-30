@@ -101,9 +101,10 @@ function stepTodo(id) {
     return list.length ? `<ul class="cb-todo">${list.map(t => `<li>• ${esc(t.text)}</li>`).join('')}</ul>` : '';
 }
 
-// A homebrew spell (homebrew-magic.js) has no page of its own: its name and a 🧪.
+// A homebrew spell (homebrew-magic.js) has no page of its own: its name and a 🧪 (an SRD 5.2 addition, srd52.js: a 📗).
 function spellLink(name) {
     if (typeof hbmIsHomebrew === 'function' && hbmIsHomebrew(name)) return `${esc(name)} <span title="Homebrew, from your campaign notebook">🧪</span>`;
+    if (typeof srd52IsSpell === 'function' && srd52IsSpell(name)) return `${esc(name)} <span title="From the SRD 5.2 additions">📗</span>`;
     return `<a href="spell/${spellSlug(name)}" target="_blank" rel="noopener" title="Open ${esc(name)} in a new tab">${esc(name)}</a>`;
 }
 
@@ -408,7 +409,7 @@ function renderSpells() {
             const on = chosen.includes(s.name);
             const off = !s.classes.includes(k.name) && !(k.sub.expanded && Object.values(k.sub.expanded).flat().includes(s.name));
             const tags = [s.school, s.concentration ? 'conc.' : '', s.ritual ? 'ritual' : '', off ? 'other class' : ''].filter(Boolean).join(' · ');
-            return `<label class="cb-spell${on ? ' on' : ''}${!on && full ? ' cb-dim' : ''}" data-name="${esc(s.name.toLowerCase())}"><input type="checkbox" data-sk="${kind}" value="${esc(s.name)}"${on ? ' checked' : ''}${!on && full ? ' disabled' : ''}><span>${esc(s.name)}${s.hb ? ' <span class="hb-tag">🧪 Homebrew</span>' : `<a href="spell/${spellSlug(s.name)}" target="_blank" rel="noopener" aria-label="Open ${esc(s.name)} in a new tab">↗</a>`}<small>${esc(tags)}</small></span></label>`;
+            return `<label class="cb-spell${on ? ' on' : ''}${!on && full ? ' cb-dim' : ''}" data-name="${esc(s.name.toLowerCase())}"><input type="checkbox" data-sk="${kind}" value="${esc(s.name)}"${on ? ' checked' : ''}${!on && full ? ' disabled' : ''}><span>${esc(s.name)}${s.hb ? ' <span class="hb-tag">🧪 Homebrew</span>' : s.v52 ? ' ' + srd52Tag() : `<a href="spell/${spellSlug(s.name)}" target="_blank" rel="noopener" aria-label="Open ${esc(s.name)} in a new tab">↗</a>`}<small>${esc(tags)}</small></span></label>`;
         }).join('')}</div>`;
     };
     if (r.cantrips) h += `<h3>Cantrips ${countTag(c.spells.cantrips.length, r.cantrips)}</h3>` + listSpells(0, 'cantrips', c.spells.cantrips, r.cantrips, r.offCantrips > 0);

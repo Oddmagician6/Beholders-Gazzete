@@ -1022,5 +1022,13 @@ body:has(.nav-open) .dice-fab, body:has(.nav-open) .dice-pop { display: none; }
 .hbm-error { color: #e07070; min-height: 1em; margin: 0 0 8px; }
 .hbm-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
 .hb-tag { display: inline-block; font-family: var(--font-ui); font-size: 0.68rem; letter-spacing: 0.02em; color: #9fd8a8; border: 1px solid rgba(120,200,140,0.45); border-radius: 999px; padding: 1px 8px; margin-left: 4px; vertical-align: middle; white-space: nowrap; }
+/* SRD 5.2 additions (srd52.js): the row tag and the site-wide switch */
+.hb-tag.v52-tag { color: #9cc4ec; border-color: rgba(120,170,230,0.5); }
+.v52-switch { display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; font-family: var(--font-ui); font-size: 0.78rem; color: var(--text-dim); cursor: pointer; white-space: nowrap; }
+.v52-switch input { margin: 0; accent-color: var(--gold-mid); }
+label.v52-switch, .bst-controls label.v52-switch { display: inline-flex; width: auto; margin-bottom: 0; font-family: var(--font-ui); font-size: 0.78rem; letter-spacing: normal; color: var(--text-dim); }
+label.v52-switch input[data-srd52] { display: inline-block; width: auto; margin: 0; padding: 0; }
+#bst-v52 { align-self: end; padding-bottom: 8px; }
+#en-v52 { grid-column: 1 / -1; }
 @media (max-width: 600px) { .hbm-form { padding: 16px; } .hbm-grid { grid-template-columns: 1fr 1fr; } }
 @media print { .hbm-dialog { display: none !important; } }
