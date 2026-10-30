@@ -8,7 +8,8 @@
    (toolbox-table.js). Spell buttons open cards through spell-detail.js.
    On a Pathfinder page (ENC_PF2E) the blocks are Pathfinder's instead: pf2e-creature-blocks.js,
    drawn in the Pathfinder layout by sbPf2eHtml and sbPf2eText (end of this file), with
-   spell cards from pf2e-spells-data.js.
+   spell cards from pf2e-spells-data.js. Pathfinder hazards (pf2e-hazards-data.js) are drawn
+   by sbPf2eHazardHtml and sbPf2eHazardText.
    ============================================ */
 
 const SB_ABILITIES = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
@@ -285,5 +286,72 @@ function sbPf2eText(m) {
         ...(b.st || []).map(sbPf2eStrike).map(s => `${s.kind} [one action] ${s.text}, Damage ${s.dmg}`),
         ...(b.sc || []).map(sbPf2eSpells).map(s => `${s.name} ${s.head}; ${s.ranks.map(([r, l]) => `${r} ${l}`).join('; ')}`),
         ...(b.oa || []).map(ability)
+    ].filter(Boolean).join('\n');
+}
+
+// ── Pathfinder hazards (pf2e-hazards-data.js) ─────────────
+// A hazard's Strike: no multiple attack penalty unless the hazard has one.
+function sbPf2eHazardStrike([ranged, name, bonus, traits, dmg, note, map]) {
+    const kind = ranged ? 'Ranged' : 'Melee';
+    const atk = map ? sbPf2eMap(bonus, traits) : sbSigned(bonus);
+    const extra = [...traits, ...(note && !/^no multiple attack penalty$/i.test(note) ? [note] : [])];
+    return { kind, text: `${name.toLowerCase()} ${atk}${extra.length ? ` (${extra.join(', ')})` : ''}`, dmg };
+}
+
+// Its parts in the book's order: the abilities a Strike names (a poison) come after the Strikes.
+function sbPf2eHazardParts(h) {
+    const named = a => (h.sk || []).some(s => s[4].includes(a[0]));
+    const saves = (h.sv || []).map((v, i) => [['Fort', 'Ref', 'Will'][i], v]).filter(([, v]) => v != null);
+    return {
+        level: `${h.cx ? 'Complex hazard' : 'Hazard'} ${String(h.l).replace('-', '−')}`,
+        traits: [SB_PF2E_RARITY[h.ra], ...h.tr].filter(Boolean),
+        stealth: h.st != null ? `DC ${h.st}${h.sd ? ` ${h.sd}` : ''}` : h.sd || '',
+        defense: h.ac != null ? { ac: h.ac, saves } : null,
+        hp: [h.hd ? ['Hardness', h.hd] : null, h.hp ? ['HP', `${h.hp}${h.hpd ? ` (${h.hpd})` : ''}`] : null,
+            ['Immunities', h.im], ['Weaknesses', h.we], ['Resistances', h.re]].filter(x => x && x[1]),
+        before: (h.ab || []).filter(a => !named(a)),
+        after: (h.ab || []).filter(named),
+        strikes: (h.sk || []).map(sbPf2eHazardStrike)
+    };
+}
+
+function sbPf2eHazardHtml(h) {
+    const p = sbPf2eHazardParts(h);
+    const line = (k, v) => v ? `<p class="sb-feat"><strong>${k}</strong> ${sbPf2eInline(v).replace(/\n/g, '<br>')}</p>` : '';
+    return `
+        <p class="sb-type">${p.level} <span class="sb-traits">${p.traits.map(t => `<span>${esc(t)}</span>`).join('')}</span></p>
+        <div class="sb-props">
+            ${line('Stealth', p.stealth)}
+            ${line('Description', h.ds)}
+        </div>
+        <div class="sb-props">
+            ${line('Disable', h.dis)}
+            ${p.defense ? `<p><strong>AC</strong> ${p.defense.ac}${p.defense.saves.map(([k, v], i) => `${i ? ',' : ';'} <strong>${k}</strong> ${sbSigned(v)}`).join('')}</p>` : ''}
+            ${p.hp.length ? `<p>${p.hp.map(([k, v]) => `<strong>${k}</strong> ${esc(String(v))}`).join('; ')}</p>` : ''}
+            ${p.before.map(sbPf2eAbility).join('')}
+        </div>${h.ro || p.strikes.length || p.after.length || h.rs ? `
+        <div class="sb-props">
+            ${line('Routine', h.ro)}
+            ${p.strikes.map(s => `<p class="sb-feat"><strong>${s.kind}</strong>${sbPf2eCost('1')} ${esc(s.text)}, <strong>Damage</strong> ${esc(s.dmg)}</p>`).join('')}
+            ${p.after.map(sbPf2eAbility).join('')}
+            ${line('Reset', h.rs)}
+        </div>` : ''}`;
+}
+
+function sbPf2eHazardText(h) {
+    const p = sbPf2eHazardParts(h);
+    const flat = t => sbPf2ePlain(t).replace(/\n+/g, ' ');
+    const ability = ([name, cost, traits, text]) =>
+        `${name}${cost ? ` ${SB_PF2E_COST_WORDS[cost]}` : ''}${traits.length ? ` (${traits.join(', ')})` : ''} ${flat(text)}`.trim();
+    return [
+        `${h.n.toUpperCase()} (${p.level.toUpperCase()})`, p.traits.join(', '),
+        p.stealth && `Stealth ${flat(p.stealth)}`, h.ds && `Description ${flat(h.ds)}`, h.dis && `Disable ${flat(h.dis)}`,
+        p.defense && `AC ${p.defense.ac}${p.defense.saves.map(([k, v], i) => `${i ? ',' : ';'} ${k} ${sbSigned(v)}`).join('')}`,
+        p.hp.length && p.hp.map(([k, v]) => `${k} ${v}`).join('; '),
+        ...p.before.map(ability),
+        h.ro && `Routine ${flat(h.ro)}`,
+        ...p.strikes.map(s => `${s.kind} [one action] ${s.text}, Damage ${s.dmg}`),
+        ...p.after.map(ability),
+        h.rs && `Reset ${flat(h.rs)}`
     ].filter(Boolean).join('\n');
 }
