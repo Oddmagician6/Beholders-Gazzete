@@ -10,7 +10,9 @@
        vuln, resist, immune, condImm, senses: { blind, blindBeyond, dark, tremor, truesight },
        langs, tele, cr: 'auto' | an SRD CR, dpr/atk/dc: numbers that replace the estimate's
        own reading of the actions (null = read them),
-       tr, ac2, ba, re, le: features, legN (legendary actions a round) }
+       tr, ac2, ba, re, le: features, legN (legendary actions a round),
+       book: its page in the 2014 Monster Manual (0 = none; book-monsters.js) }
+   A book monster with no features of its own has a short block: the DM's numbers and the page.
    A feature is { name, text } or an attack { name, text, atk: { kind, abil, reach, range,
    target, dice, type, dice2, type2 } } whose line is written from the current scores.
    Feature text may hold tokens: {name} / {Name} ("the ogre" / "The ogre"), {atk:str} (+5),
@@ -157,7 +159,7 @@ const HB_EMPTY = {
     ab: [10, 10, 10, 10, 10, 10], saves: [false, false, false, false, false, false], skills: {},
     vuln: '', resist: '', immune: '', condImm: '', senses: { blind: 0, blindBeyond: false, dark: 0, tremor: 0, truesight: 0 },
     langs: '', tele: 0, cr: 'auto', dpr: null, atk: null, dc: null,
-    tr: [], ac2: [], ba: [], re: [], le: [], legN: 3
+    tr: [], ac2: [], ba: [], re: [], le: [], legN: 3, book: 0
 };
 
 function hbBlank() {
@@ -226,7 +228,8 @@ function hbClean(raw) {
         atk: hbOpt(raw.atk, -5, 30),
         dc: hbOpt(raw.dc, 0, 40),
         ...Object.fromEntries(HB_SECTIONS.map(([k]) => [k, hbCleanFeats(raw[k])])),
-        legN: hbInt(raw.legN, 1, 5, 3)
+        legN: hbInt(raw.legN, 1, 5, 3),
+        book: hbInt(raw.book, 0, 999, 0)
     };
 }
 
@@ -329,6 +332,10 @@ function hbBlock(mon, cr = hbCr(mon)) {
         pb
     };
     HB_SECTIONS.forEach(([k]) => { const list = hbFeatures(mon, k, pb); if (list.length) b[k] = list; });
+    if (mon.book && !HB_SECTIONS.some(([k]) => b[k])) {
+        b.book = `Monster Manual (2014), page ${mon.book}`;
+        b.init = hbMod(mon.ab[1]);
+    }
     if (b.le) {
         const n = hbShortName(mon);
         b.li = `${n.charAt(0).toUpperCase() + n.slice(1)} can take ${mon.legN} legendary action${mon.legN === 1 ? '' : 's'}, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. ${n.charAt(0).toUpperCase() + n.slice(1)} regains spent legendary actions at the start of its turn.`;

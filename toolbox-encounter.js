@@ -71,6 +71,12 @@ function encHbRows() {
     return ENC_PF2E ? [] : hbRows;
 }
 
+// The Monster Manual names not yet saved (book-monsters.js, 5e only), and the one whose form is open.
+function encBookRows() {
+    return ENC_PF2E || typeof bookRows === 'undefined' ? [] : bookRows;
+}
+let encBookOpen = null;
+
 // A row's numbers: CR or level, XP, AC, HP, and (Pathfinder) saves and Perception.
 function encStats(m, each = '') {
     const fmt = n => n.toLocaleString('en-US');
@@ -95,7 +101,10 @@ function setupEncounterForm() {
         ENC_DIFFS.forEach(k => diff.add(new Option(`${ENCOUNTER_LEVELS[k].icon} ${ENCOUNTER_LEVELS[k].label}`, k, k === 'moderate', k === 'moderate')));
         document.querySelector('#en-band option[value="none"]').text = 'Mixed: any creatures, no group';
         if (ENC_HAZARDS.length) document.getElementById('en-type').add(new Option('⚠️ Hazards', 'hazard'), 1);
-    } else document.getElementById('en-type').add(new Option('🐲 Homebrew', 'homebrew'), 1);
+    } else {
+        document.getElementById('en-type').add(new Option('🐲 Homebrew', 'homebrew'), 1);
+        if (typeof BOOK_MONSTERS !== 'undefined') document.getElementById('en-type').add(new Option('📖 Monster Manual (your book)', 'book'), 2);
+    }
     const env = document.getElementById('en-env');
     ENC_HABITAT_KEYS.forEach(k => env.add(new Option(`${ENC_HABITATS[k].icon} ${ENC_HABITATS[k].label}`, k)));
     const band = document.getElementById('en-band');
@@ -135,15 +144,21 @@ function pickerMatches() {
     const cr = document.getElementById('en-cr').value;
     const type = document.getElementById('en-type').value;
     const maxCr = ENC_PF2E ? encBudget().level : Math.max(0.125, Math.floor(encBudget().avgLevel));
-    return [...encHbRows(), ...ENC_MONSTERS, ...ENC_HAZARDS].filter(m => (!q || m.name.toLowerCase().includes(q))
-        && (!type || (type === 'homebrew' ? m.hb : m.type === type))
-        && (!cr || (cr === 'party' ? crValue(m.cr) <= maxCr : m.cr === cr)));
+    // Book names have no CR until the DM types one, so a CR filter leaves them out.
+    return [...encHbRows(), ...ENC_MONSTERS, ...ENC_HAZARDS, ...encBookRows()].filter(m => (!q || m.name.toLowerCase().includes(q))
+        && (!type || (type === 'homebrew' ? m.hb : type === 'book' ? m.byob : m.type === type))
+        && (!cr || (!m.byob && (cr === 'party' ? crValue(m.cr) <= maxCr : m.cr === cr))));
 }
 
 function renderPicker() {
     const all = pickerMatches();
     const shown = all.slice(0, ENC_PICKER_ROWS);
-    document.getElementById('en-results').innerHTML = shown.map(m => `
+    document.getElementById('en-results').innerHTML = shown.map(m => m.byob ? `
+        <li><button type="button" class="en-pick en-book" data-book="${m.id}" aria-expanded="${encBookOpen === m.id}" title="Type the ${esc(m.name)}'s numbers from your book">
+            <span class="en-name">📖 ${esc(m.name)}</span>
+            <span class="en-meta">${esc(bookLine(m))} · type its stats from your book</span>
+            <span class="en-plus" aria-hidden="true">✏️</span>
+        </button>${encBookOpen === m.id ? bookFormHtml(m) : ''}</li>` : `
         <li><button type="button" class="en-pick" data-id="${m.id}" title="Add a ${esc(m.name)}">
             <span class="en-name">${m.hb ? '🐲 ' : ''}${esc(m.name)}</span>
             <span class="en-meta">${m.hb ? 'Homebrew · ' : ''}${encStats(m)} · ${esc(encKind(m))}</span>
@@ -428,9 +443,34 @@ function setupEncounter() {
         encChanged(false);
     });
     ['en-search', 'en-cr', 'en-type'].forEach(id => document.getElementById(id).addEventListener('input', renderPicker));
-    document.getElementById('en-results').addEventListener('click', e => {
+    const results = document.getElementById('en-results');
+    results.addEventListener('click', e => {
+        if (e.target.closest('.bk-cancel')) { encBookOpen = null; renderPicker(); return; }
         const btn = e.target.closest('.en-pick');
-        if (btn) addMonster(MONSTER_BY_ID[btn.dataset.id]);
+        if (!btn) return;
+        if (btn.dataset.book) {
+            encBookOpen = encBookOpen === btn.dataset.book ? null : btn.dataset.book;
+            renderPicker();
+            const first = encBookOpen && results.querySelector('.bk-form select');
+            if (first) first.focus();
+        } else addMonster(MONSTER_BY_ID[btn.dataset.id]);
+    });
+    // Saving a book monster makes it homebrew; the notebook change redraws the picker without it.
+    results.addEventListener('submit', e => {
+        const form = e.target.closest('.bk-form');
+        if (!form) return;
+        e.preventDefault();
+        const row = encBookRows().find(r => r.id === form.dataset.book);
+        if (!row) return;
+        try {
+            const m = bookSave(row, form);
+            encBookOpen = null;
+            if (m) addMonster(m);
+            renderPicker();
+            flash('enc-status', `💾 Saved ${row.name} to your notebook as homebrew and added one.`);
+        } catch (err) {
+            flash('enc-status', `⚠️ ${err.message}`);
+        }
     });
     document.getElementById('en-list').addEventListener('click', onEncListClick);
     ['en-diff', 'en-roll-type', 'en-band'].forEach(id => document.getElementById(id).addEventListener('change', () => setUrlParams(encParams(), false)));

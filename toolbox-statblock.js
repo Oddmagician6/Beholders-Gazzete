@@ -97,6 +97,15 @@ function monsterBlockHtml(m) {
     if (!b) return '<p class="sb-note">No stat block for this monster.</p>';
     const spells = [...new Set((b.tr || []).flatMap(([, t]) => [...t.matchAll(/\[\[(.+?)\]\]/g)].map(x => x[1])))];
     const book = spells.length && `spellbook?${paramsQuery({ spells: spells.map(spellSlug).join('.'), list: `${m.name} spells`.slice(0, 40) })}`;
+    if (b.book) return `
+        <p class="sb-type">${esc(b.t)}</p>
+        <div class="sb-core">
+            <span><strong>Armor Class</strong> ${esc(b.ac)}</span>
+            <span><strong>Hit Points</strong> ${esc(b.hp)}</span>
+            <span><strong>Initiative</strong> ${b.init >= 0 ? '+' : ''}${b.init}</span>
+            <span><strong>Challenge</strong> ${esc(b.cr)}</span>
+        </div>
+        <p class="sb-note">📖 The full stat block is in the ${esc(b.book)}. These numbers are the ones you typed in.</p>`;
     return `
         <p class="sb-type">${esc(b.t)}</p>
         <div class="sb-core">
@@ -119,6 +128,8 @@ function monsterBlockText(m) {
     if (sbPf2e()) return sbPf2eText(m);
     const b = sbBlockOf(m);
     if (!b) return '';
+    if (b.book) return [m.name.toUpperCase(), b.t, `Armor Class ${b.ac} | Hit Points ${b.hp} | Initiative ${b.init >= 0 ? '+' : ''}${b.init}`,
+        `Challenge ${b.cr}`, `Full stat block: ${b.book}`].join('\n');
     const lines = [m.name.toUpperCase(), b.t,
         `Armor Class ${b.ac} | Hit Points ${b.hp} | Speed ${b.sp}`,
         b.ab.map((v, i) => `${SB_ABILITIES[i]} ${v} (${sbMod(v)})`).join(' | '),

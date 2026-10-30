@@ -190,7 +190,57 @@ function monsterNamed(name) {
 }
 
 function fillMonsterNames() {
-    document.getElementById('ia-monsters').innerHTML = [...(INIT_PF2E ? [] : hbRows), ...ENC_MONSTERS].map(m => `<option value="${esc(m.name)}"></option>`).join('');
+    document.getElementById('ia-monsters').innerHTML = [...(INIT_PF2E ? [] : hbRows), ...ENC_MONSTERS, ...iaBookRows()].map(m => `<option value="${esc(m.name)}"></option>`).join('');
+    renderIaBook();
+}
+
+// The Monster Manual names not saved yet (book-monsters.js, 5e only). Typing one offers the
+// form for its numbers; saved, it's homebrew and fills the fields like any other monster.
+function iaBookRows() {
+    return INIT_PF2E || typeof bookRows === 'undefined' ? [] : bookRows;
+}
+let iaBookForm = false;
+
+function iaBookRow() {
+    const key = document.getElementById('ia-name').value.trim().replace(/\s+/g, ' ').replace(/\s+\d+$/, '').toLowerCase();
+    return key ? iaBookRows().find(r => r.name.toLowerCase() === key) || null : null;
+}
+
+function renderIaBook() {
+    const box = document.getElementById('ia-book');
+    if (!box) return;
+    const row = iaBookRow();
+    if (!row) iaBookForm = false;
+    box.hidden = !row;
+    box.innerHTML = !row ? '' : iaBookForm ? bookFormHtml(row)
+        : `<p class="bk-head">📖 <b>${esc(row.name)}</b> isn't in the free rules (${esc(bookLine(row))}). <button type="button" class="btn bk-open">✏️ Type Its Stats</button> to save it from your own book, or fill in the fields above for this fight only.</p>`;
+}
+
+function onIaBookClick(e) {
+    if (!e.target.closest('.bk-open, .bk-cancel')) return;
+    iaBookForm = !!e.target.closest('.bk-open');
+    renderIaBook();
+    const first = iaBookForm && document.querySelector('#ia-book select');
+    if (first) first.focus();
+}
+
+function onIaBookSave(e) {
+    e.preventDefault();
+    const row = iaBookRow();
+    if (!row) return;
+    try {
+        const m = bookSave(row, e.target);
+        iaBookForm = false;
+        renderIaBook();
+        if (m) {
+            document.getElementById('ia-mod').value = m.dex;
+            document.getElementById('ia-hp').value = m.hp;
+            document.getElementById('ia-ac').value = m.ac;
+        }
+        flash('init-status', `💾 Saved ${row.name} to your notebook as homebrew. ➕ Add it when ready.`);
+    } catch (err) {
+        flash('init-status', `⚠️ ${err.message}`);
+    }
 }
 
 function followTurns() {
@@ -304,6 +354,7 @@ function addCombatants(e) {
     document.getElementById('ia-hp').value = '';
     document.getElementById('ia-ac').value = '';
     document.getElementById('ia-count').value = '1';
+    renderIaBook();
     document.getElementById('ia-name').focus();
 }
 
@@ -598,6 +649,12 @@ function setupInitiative() {
     loadFight();
     renderFight();
     document.getElementById('init-add').addEventListener('submit', addCombatants);
+    document.getElementById('ia-name').addEventListener('input', renderIaBook);
+    const iaBook = document.getElementById('ia-book');
+    if (iaBook) {
+        iaBook.addEventListener('click', onIaBookClick);
+        iaBook.addEventListener('submit', onIaBookSave);
+    }
     partyChip(document.getElementById('init-party'), { label: '➕ Add the Party', title: 'Add every character not already in the fight, rolling d20 + their initiative bonus', act: addPartyToFight });
     fillMonsterNames();
     nbOnChange(fillMonsterNames);

@@ -158,6 +158,17 @@
     .init-add input { display: block; width: 100%; box-sizing: border-box; margin-top: 4px; padding: 8px 9px; font-size: 0.88rem; }
     .init-add .btn { white-space: nowrap; }
     .init-hint { font-family: var(--font-ui); font-size: 0.75rem; color: var(--text-dim); margin: 8px 0 20px; }
+    /* Bring your own book (book-monsters.js): the Monster Manual names and their form. */
+    .bk-box { margin: 10px 0 0; }
+    .bk-form { border: 1px solid var(--gold-dim); border-left: 3px solid var(--gold-mid); border-radius: var(--radius-sm); background: rgba(0,0,0,0.18); padding: 10px 12px; margin: 4px 0 6px; }
+    .bk-head, .bk-note { font-family: var(--font-ui); font-size: 0.78rem; color: var(--text-mid); margin: 0 0 8px; }
+    .bk-head b { color: var(--text-bright); }
+    .bk-head .btn { padding: 4px 10px; font-size: 0.78rem; margin: 0 2px; }
+    .bk-note { color: var(--text-dim); font-size: 0.72rem; margin: 8px 0 0; }
+    .bk-fields { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)) auto auto; gap: 8px; align-items: end; }
+    .bk-fields label { font-family: var(--font-ui); font-size: 0.72rem; color: var(--text-dim); min-width: 0; }
+    .bk-fields input, .bk-fields select { display: block; width: 100%; box-sizing: border-box; margin-top: 4px; padding: 7px 8px; font-size: 0.88rem; }
+    .bk-fields .btn { white-space: nowrap; }
     .init-bar { margin-bottom: 10px; }
     .init-round { font-family: var(--font-head); color: var(--gold-bright); font-size: 1.05rem; min-width: 90px; text-align: center; }
     .init-list { list-style: none; margin: 0; padding: 0; }
@@ -524,6 +535,7 @@
       .init-add { grid-template-columns: repeat(3, 1fr); }
       .init-add .init-name { grid-column: 1 / -1; }
       .init-add .btn { grid-column: 1 / -1; }
+      .bk-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .init-row { grid-template-columns: 52px 1fr auto; padding: 10px 4px; }
       .init-hp { grid-column: 2 / -1; }
       .init-x { grid-row: 1; grid-column: 3; }
@@ -1007,7 +1019,7 @@ Or with die ranges:
         <ul class="en-results" id="en-results"></ul>
         <p class="en-results-note" id="en-results-note"></p>
       </div>
-      <p class="tool-note">Difficulty uses the XP Budget per Character table from the System Reference Document 5.2 (CC-BY 4.0): each character adds their level's Low, Moderate, and High numbers, and the monsters' XP is spent against them. The warnings under the meter are the Gazette's advice. Monsters and their CR, XP, AC, HP, and Dex come from the System Reference Document 5.1 (CC-BY 4.0).<br>Rolled encounters never use a monster above the party's level and stop at two creatures per character. Most rolls keep to one group of foes that belong together (goblins with their wolves, a cult with its imps), and the habitat picker keeps the leader to monsters that live there. Every fight gets a scene: where it happens, what the foes are doing, who notices whom, distance, light, the ground, a leader, tactics, morale, a price to parley, and sometimes a twist. Hazard DCs and damage follow the party's level (damage from the SRD 5.1 Damage Severity by Level table); the habitats, groups, and scenes are the Gazette's own. 🎲 New Scene redraws it without touching the monsters. The address bar holds the party and the monsters, so 🔗 Copy Link shares the fight. Send to Initiative rolls each monster's initiative with its Dex modifier.</p>
+      <p class="tool-note">Difficulty uses the XP Budget per Character table from the System Reference Document 5.2 (CC-BY 4.0): each character adds their level's Low, Moderate, and High numbers, and the monsters' XP is spent against them. The warnings under the meter are the Gazette's advice. Monsters and their CR, XP, AC, HP, and Dex come from the System Reference Document 5.1 (CC-BY 4.0). The 📖 Monster Manual rows are names and page numbers only, for monsters outside the free rules: click one and type its CR, AC, HP, and initiative bonus from your own copy, and it's saved to your notebook as homebrew.<br>Rolled encounters never use a monster above the party's level and stop at two creatures per character. Most rolls keep to one group of foes that belong together (goblins with their wolves, a cult with its imps), and the habitat picker keeps the leader to monsters that live there. Every fight gets a scene: where it happens, what the foes are doing, who notices whom, distance, light, the ground, a leader, tactics, morale, a price to parley, and sometimes a twist. Hazard DCs and damage follow the party's level (damage from the SRD 5.1 Damage Severity by Level table); the habitats, groups, and scenes are the Gazette's own. 🎲 New Scene redraws it without touching the monsters. The address bar holds the party and the monsters, so 🔗 Copy Link shares the fight. Send to Initiative rolls each monster's initiative with its Dex modifier.</p>
     </section>
 
     <section class="tool-panel" id="tab-init" role="tabpanel" hidden>
@@ -1025,7 +1037,8 @@ Or with die ranges:
           <label>How many <input type="number" id="ia-count" value="1" min="1" max="20" step="1"></label>
           <button type="submit" class="btn btn-gold">➕ Add</button>
         </form>
-        <p class="init-hint">Leave Initiative blank to roll d20 + bonus. Several of the same creature are numbered (Goblin 1, Goblin 2…) and roll separately. An SRD monster's name brings its stat block (click the name), and fills a blank HP and AC and a bonus left at 0.</p>
+        <div class="bk-box" id="ia-book" hidden></div>
+        <p class="init-hint">Leave Initiative blank to roll d20 + bonus. Several of the same creature are numbered (Goblin 1, Goblin 2…) and roll separately. An SRD monster's name brings its stat block (click the name), and fills a blank HP and AC and a bonus left at 0. A monster from the Monster Manual that isn't in the free rules (a beholder, a mind flayer) offers a short form: type its numbers from your own book once, and it's saved as homebrew.</p>
         <div class="tool-toolbar init-bar">
           <button type="button" class="btn" id="init-prev">◀ Back</button>
           <span class="init-round" id="init-round">Round 1</span>
@@ -1174,6 +1187,7 @@ Or with die ranges:
   <script src="rules-data.js"></script>
   <script src="notebook.js"></script>
   <script src="homebrew.js"></script>
+  <script src="book-monsters.js"></script>
   <script src="map-pins.js"></script>
   <script src="family-tree.js"></script>
   <script src="party.js"></script>
