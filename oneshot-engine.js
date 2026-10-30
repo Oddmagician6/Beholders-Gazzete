@@ -30,9 +30,9 @@
 const OS_PARTS = ['site', 'plot', 'hook', 'road', 'hoard'];
 
 const OS_LENGTHS = {
-    short: { label: 'Short (2-3 hours)', size: 'small', days: [1, 1], fights: 1, pay: 1 },
-    standard: { label: 'Standard (3-4 hours)', size: 'medium', days: [1, 2], fights: 1, pay: 1.5 },
-    long: { label: 'Two sessions', size: 'large', days: [2, 3], fights: 2, pay: 2.5 }
+    short: { label: 'Short (2-3 hours)', size: 'small', days: [1, 1], fights: 1, pay: 1, share: 0.125 },
+    standard: { label: 'Standard (3-4 hours)', size: 'medium', days: [1, 2], fights: 1, pay: 1.5, share: 0.25 },
+    long: { label: 'Two sessions', size: 'large', days: [2, 3], fights: 2, pay: 2.5, share: 0.5 }
 };
 
 const OS_TONES = {
@@ -541,6 +541,31 @@ const OS_PITCHES = [
 // A clue's DC by site tier.
 const OS_CLUE_DC = { '0-4': 12, '5-10': 14, '11-16': 16, '17+': 18 };
 
+// Pathfinder pages (ROADMAP L3 P4): the clue and haggle DCs are the party level's (site-engine's
+// siteLevelDc), the clues' 5e skills are Pathfinder's, the pay is a share of GM Core's party
+// currency by level, and the hoard a share of the level's treasure (loot-pf2e.js, OS_LENGTHS share).
+const OS_PF2E = typeof ENC_PF2E !== 'undefined' && ENC_PF2E;
+
+function osClueDc(site) {
+    return OS_PF2E ? siteLevelDc(site.level) : OS_CLUE_DC[site.tier];
+}
+
+// A clue's skill ('Animal Handling') in this system's words.
+function osSkill(name) {
+    return OS_PF2E ? ruleSystem().skill('', name.toLowerCase().replace(/ /g, '-')) : name;
+}
+
+// gp per character the pay starts from (then times the party, the length, and a draw).
+function osPayBase(level) {
+    return OS_PF2E ? PF2E_TREASURE[level].cur / 4 * 0.4 : QUEST_PAY[level];
+}
+
+// XP for each character: 5e splits the fights' XP; Pathfinder gives each character the fights'
+// XP as for a party of four.
+function osXpEach(o) {
+    return OS_PF2E ? Math.round(o.xp * 4 / o.party) : Math.floor(o.xp / o.party);
+}
+
 function osPick(arr) {
     return arr[Math.floor(rand() * arr.length)];
 }
@@ -616,7 +641,8 @@ function osVillain(site) {
     const list = f ? siteFightList(f) : [];
     const lead = list.length ? list.reduce((a, b) => (b.m.xp > a.m.xp ? b : a)).m : null;
     const L = site.boss && site.boss.leader;
-    const mind = lead ? (['beast', 'swarm', 'monstrosity', 'plant'].includes(lead.type) ? 'beast' : SITE_MINDS[lead.type] === 'mindless' ? 'mindless' : 'folk') : 'folk';
+    const type = lead && encSceneType(lead);
+    const mind = lead ? (['beast', 'swarm', 'monstrosity', 'plant'].includes(type) ? 'beast' : SITE_MINDS[type] === 'mindless' ? 'mindless' : 'folk') : 'folk';
     const name = L && L.name ? L.name : lead ? `the ${lead.name.toLowerCase()}` : siteHolder(site);
     return {
         name, mind, named: !!(L && L.name), role: L ? L.role : lead ? lead.name : '', mark: L ? L.mark : '',
@@ -735,19 +761,20 @@ function rollOneShot(seed, opts = {}, set = {}) {
     const goalRaw = given && given.goal ? given.goal : plot.goal;
     const goal = fill(goalRaw);
     const twist = fill(plot.twist);
-    const reward = questRound(QUEST_PAY[level] * party * Lg.pay * (0.75 + hook.pay * 0.5));
+    const reward = questRound(osPayBase(level) * party * Lg.pay * (0.75 + hook.pay * 0.5));
     const job = given && given.hook ? `${given.hook} ${fill('Every lead points to {site}, and to {villain}.')}`
         : fill(`{Patron} wants {villain} dealt with and {item} brought back from {site}, ${deadline}.`);
 
     // ── Act 2: the trail, the road, the fights ──
     const road = withSeed(seeds.road, () => {
-        const dc = OS_CLUE_DC[site.tier];
+        const dc = osClueDc(site);
         const clues = [];
         const used = new Set();
         osSlotFirst(siteShuffle(OS_CLUES), OS_CLUES, 'clue', slot).forEach(c => {
-            if (clues.length < 3 && !used.has(c[0])) { used.add(c[0]); clues.push({ skill: c[0], dc, text: fill(c[1]) }); }
+            const skill = osSkill(c[0]);
+            if (clues.length < 3 && !used.has(skill)) { used.add(skill); clues.push({ skill, dc, text: fill(c[1]) }); }
         });
-        if (given && given.rumor) clues[2] = { skill: 'Persuasion', dc, text: `${given.rumor} (a rumor in ${hook.town})` };
+        if (given && given.rumor) clues[2] = { skill: osSkill('Persuasion'), dc, text: `${given.rumor} (a rumor in ${hook.town})` };
         const season = osPick(OS_SEASONS);
         const n = osInt(Lg.days[0], Lg.days[1]);
         const days = [];
@@ -775,7 +802,10 @@ function rollOneShot(seed, opts = {}, set = {}) {
     });
 
     // ── Act 3: the hoard in the last room ──
-    const hoard = withSeed(seeds.hoard, () => rollTreasure('hoard', site.tier, 1, true, site.hoard.source));
+    const hoard = withSeed(seeds.hoard, () => OS_PF2E
+        // No trade goods: their lots are sized by 5e's hoard tiers, past a low level's whole treasure.
+        ? pf2eRollTreasure('hoard', level, { share: Lg.share, pcs: party, source: site.hoard.source, goods: false })
+        : rollTreasure('hoard', site.tier, 1, true, site.hoard.source));
 
     // ── The whole thing ──
     const T = OS_TONES[tone];
@@ -815,7 +845,7 @@ function osMonsters(o) {
 }
 
 function osFightText(f) {
-    return siteFightList(f).map(e => `${e.count} × ${e.m.name} (CR ${e.m.cr})`).join(', ');
+    return siteFightList(f).map(e => `${e.count} × ${e.m.name} (${crLabel(e.m.cr)})`).join(', ');
 }
 
 function osFightRating(o, f) {
@@ -825,8 +855,9 @@ function osFightRating(o, f) {
 }
 
 // The Toolbox Encounter tab with this fight loaded (it adds to the Initiative tracker from there).
+// Pathfinder pages open the Pathfinder Encounter Builder.
 function osFightLink(o, f, habitat) {
-    const p = new URLSearchParams({ tab: 'enc', party: `${o.party}x${o.level}` });
+    const p = new URLSearchParams(OS_PF2E ? { party: `${o.party}x${o.level}` } : { tab: 'enc', party: `${o.party}x${o.level}` });
     f.list.forEach(e => p.append('m', `${e.id}.${e.count}`));
     if (habitat) p.set('env', habitat);
     if (f.band) p.set('pack', f.band);
@@ -837,13 +868,14 @@ function osFightLink(o, f, habitat) {
         p.set('lead', L.name);
         if (o.guard) p.set('stand', o.villain.monster);
     }
-    return 'toolbox?' + p.toString();
+    return (OS_PF2E ? 'pathfinder-encounter-builder?' : 'toolbox?') + p.toString();
 }
 
-// The Worldbuilder's Sites tab, rolling this same site.
+// The Worldbuilder's Sites tab (Pathfinder: its Dungeon Generator), rolling this same site.
 function osSiteLink(o) {
-    const s = o.site;
-    return 'worldbuilder?' + new URLSearchParams({ tab: 'sites', seed: s.seed, kind: s.kind, size: s.size, level: s.level, party: s.party }).toString();
+    const s = o.site, p = { seed: s.seed, kind: s.kind, size: s.size, level: s.level, party: s.party };
+    if (OS_PF2E) return 'pathfinder-dungeon-generator?' + new URLSearchParams(p).toString();
+    return 'worldbuilder?' + new URLSearchParams({ tab: 'sites', ...p }).toString();
 }
 
 // Plain text for Copy (and the notebook's notes, cut to fit there).
@@ -879,7 +911,7 @@ function oneShotText(o) {
         `If they win: ${o.win}`,
         `If they fail: ${o.fail}`,
         ...o.threads.map(t => `Loose thread: ${t}`),
-        `XP for every fight: ${o.xp.toLocaleString('en-US')} (${Math.floor(o.xp / o.party).toLocaleString('en-US')} each).`
+        `XP for every fight: ${o.xp.toLocaleString('en-US')} (${osXpEach(o).toLocaleString('en-US')} each).`
     ];
     return out.join('\n');
 }

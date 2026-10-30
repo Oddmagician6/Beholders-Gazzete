@@ -136,7 +136,7 @@ function rollNew() {
 // A quest (linked to this page) and the site (the Worldbuilder's Sites tab), linked to each other.
 function saveToNotebook() {
     const o = os.data;
-    const href = 'dnd-one-shot-generator?' + paramsQuery(osParams());
+    const href = (OS_PF2E ? 'pathfinder-one-shot-generator?' : 'dnd-one-shot-generator?') + paramsQuery(osParams());
     const notes = [o.pitch, `Patron: ${o.patron.name}, ${o.patron.role}, at ${o.tavern.name} in ${o.town}.`,
         `The job: ${o.job}`, `Site: ${o.site.name}.`, ...o.threads.map(t => `Thread: ${t}`)].join('\n');
     // What's really going on is the DM's alone, as on the page: the 🔒 notes, never the players' ones.

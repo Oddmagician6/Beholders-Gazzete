@@ -47,7 +47,9 @@ RULE_SYSTEMS.pf2e = {
         [/\bhas disadvantage\b/g, 'takes a −2 penalty'], [/\broll with disadvantage\b/g, 'take a −2 penalty'],
         [/\bhave disadvantage on\b/g, 'take a −2 penalty to'], [/\bimposes disadvantage on\b/g, 'gives a −2 penalty to'],
         [/\buntil a long rest\b/g, "until their next night's rest"],
-        [/\bgains a level of exhaustion\b/g, 'is fatigued'], [/\bgain a level of exhaustion\b/g, 'are fatigued'], [/\bone level of exhaustion\b/g, 'fatigue'], [/\bremove curse\b/g, 'cleanse affliction']
+        [/\bgains a level of exhaustion\b/g, 'is fatigued'], [/\bgain a level of exhaustion\b/g, 'are fatigued'], [/\bone level of exhaustion\b/g, 'fatigue'], [/\bremove curse\b/g, 'cleanse affliction'],
+        [/\bnecrotic damage\b/g, 'void damage'], [/\blightning damage\b/g, 'electricity damage'], [/\bpsychic damage\b/g, 'mental damage'],
+        [/\bthunder damage\b/g, 'sonic damage'], [/\bradiant damage\b/g, 'spirit damage']
     ],
     // People keep their 5e keys (names and ages are rolled by them); this is what they're called.
     words: {

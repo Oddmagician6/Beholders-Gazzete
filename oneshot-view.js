@@ -21,7 +21,7 @@ function osRead(text) {
 }
 
 function osMonsterList(f) {
-    return siteFightList(f).map(e => `${e.count} × <a href="#os-sb-${esc(e.m.id)}">${esc(e.m.name)}</a> (CR ${esc(e.m.cr)})`).join(', ');
+    return siteFightList(f).map(e => `${e.count} × <a href="#os-sb-${esc(e.m.id)}">${esc(e.m.name)}</a> (${esc(crLabel(e.m.cr))})`).join(', ');
 }
 
 function osFightHTML(o, f, label) {
@@ -36,7 +36,7 @@ function osFightHTML(o, f, label) {
 function osHoardHTML(l) {
     const coins = Object.entries(l.coins).filter(([, v]) => v > 0).map(([t, v]) => `${v.toLocaleString('en-US')} ${t}`).join(' · ');
     const things = [...l.gems, ...l.art, ...(l.goods || [])].map(i => `<li><span>${esc(i.name)}</span><span class="os-dim">${formatCoins(i.value)}</span></li>`).join('');
-    const magic = l.magic.map(m => `<li><span>${esc(m.name)}${m.attune ? ' <span class="os-dim">(attunement)</span>' : ''}</span><span class="os-dim">${esc(m.rarity.replace('-', ' '))}</span></li>`).join('');
+    const magic = l.magic.map(m => `<li><span>${esc(m.name)}${m.attune || m.invested ? ` <span class="os-dim">(${m.invested ? 'invested' : 'attunement'})</span>` : ''}</span><span class="os-dim">${esc(m.rarity.replace('-', ' '))}</span></li>`).join('');
     const find = lootFindLines(l).filter(([k]) => k !== 'Found in');
     return `<div class="os-hoard">
         <h4>💎 The hoard <span class="os-dim">(${formatCoins(l.totalValue)} in all)</span></h4>
@@ -65,7 +65,7 @@ function osRoomHTML(o, i) {
 function osStatBlocks(o) {
     const list = osMonsters(o);
     return list.map(m => `<details class="os-sb" id="os-sb-${esc(m.id)}" open>
-        <summary>${esc(m.name)} <span class="os-dim">CR ${esc(m.cr)} · ${m.xp.toLocaleString('en-US')} XP</span></summary>
+        <summary>${esc(m.name)} <span class="os-dim">${esc(crLabel(m.cr))} · ${m.xp.toLocaleString('en-US')} XP</span></summary>
         <div class="sb-box">${monsterBlockHtml(m)}</div>
     </details>`).join('');
 }
@@ -97,12 +97,12 @@ function oneShotBodyHtml(o, opt = {}) {
             ${osRead(o.opener)}
             <p class="os-scene">${esc(tavernSceneText(o.tavern.scene))}</p>
             ${osDl([
-                ['Patron', `${p.name}, ${p.role} (${p.race ? osCap(p.race) : `${osCap(p.npc.race)}, ${p.npc.age}`}).`],
+                ['Patron', `${p.name}, ${p.role} (${p.race ? osCap(p.race) : `${osCap(ruleWord('race', p.npc.race))}, ${p.npc.age}`}).`],
                 p.npc ? ['Play them', `${p.npc.trait}. Voice: ${p.npc.voice}.`] : null,
                 p.want ? ['What they want', p.want] : null,
                 ['The job', o.job],
                 ['Why the party', o.why],
-                ['Pay', ruleText(`${formatCoins(o.reward)} for the party, half up front if they haggle (DC ${OS_CLUE_DC[s.tier]} {skill:cha:persuasion}).`)],
+                ['Pay', ruleText(`${formatCoins(o.reward)} for the party, half up front if they haggle (DC ${osClueDc(s)} {skill:cha:persuasion}).`)],
                 ['Their secret', p.secret]
             ])}
         </section>
@@ -137,7 +137,8 @@ function oneShotBodyHtml(o, opt = {}) {
                 ['If they win', o.win],
                 ['If they fail', o.fail],
                 ...o.threads.map(t => ['Loose thread', t]),
-                ['XP', `${o.xp.toLocaleString('en-US')} for every fight in the adventure (${Math.floor(o.xp / o.party).toLocaleString('en-US')} each), or level up at the end with milestones.`]
+                ['XP', OS_PF2E ? `${osXpEach(o).toLocaleString('en-US')} for each character, for every fight in the adventure (a level is 1,000), or level up at the end with milestones.`
+                    : `${o.xp.toLocaleString('en-US')} for every fight in the adventure (${osXpEach(o).toLocaleString('en-US')} each), or level up at the end with milestones.`]
             ])}
         </section>
         ${opt.appendix === false ? '' : `
