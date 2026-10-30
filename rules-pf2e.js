@@ -92,3 +92,17 @@ const PF2E_CONDITIONS = {
     'Undetected': { max: 0, text: "They don't know which square you're in: they have to guess, and even a right guess needs a DC 11 flat check." },
     'Wounded': { max: 3, text: "You've come back from dying. The next time you're dying, add this value. Treat Wounds that heals you, or full HP and 10 minutes' rest, ends it." }
 };
+
+// The rest of Player Core's and Player Core 2's conditions, for the Conditions page only (the tracker leaves them out).
+const PF2E_CONDITION_EXTRA = {
+    'Broken': { max: 0, text: "Objects only: at or below its Broken Threshold, an item can't do its job or give its bonuses. Broken armor still gives its item bonus to AC, with a −1 (light), −2 (medium), or −3 (heavy) status penalty to AC, and keeps its drawbacks." },
+    'Cursebound': { max: 4, text: "Oracles only: the price of leaning on your mystery. Your own oracular curse says what each value does to you. Only Refocusing clears it." },
+    'Friendly': { max: 0, text: "An attitude: they like you and will say yes to simple, safe Requests that don't cost them much. Hostile acts against them sour it." },
+    'Helpful': { max: 0, text: "An attitude: they want to help you and take on reasonable Requests that don't hurt their own goals or way of life. Hostile acts against them sour it." },
+    'Hostile': { max: 0, text: "An attitude: they want to harm you, though not always with a weapon, and refuse your Requests. Only magic can make a PC hostile." },
+    'Indifferent': { max: 0, text: "An attitude: they don't care about you either way. Every creature starts here unless told otherwise." },
+    'Observed': { max: 0, text: "In plain view, or found by another precise sense. Hide and Sneak can turn it into hidden or undetected; Seek with only imprecise senses finds you hidden, not observed." },
+    'Persistent Damage': { max: 0, text: 'Ongoing damage, such as burning: you take it again at the end of each of your turns, rerolling the dice, then roll a DC 15 flat check. A success ends it.' },
+    'Unfriendly': { max: 0, text: "An attitude: they dislike and distrust you, and refuse your Requests." },
+    'Unnoticed': { max: 0, text: "They have no idea you're there. You're undetected too; some abilities work only on a foe who hasn't noticed you." }
+};
