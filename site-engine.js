@@ -159,7 +159,7 @@ const SITE_KINDS = ruleTable({
         fates: ['the wizard vanished in the middle of an experiment', 'the apprentices turned on their master', 'a spell went wrong and the top floors still hum with it', 'the wizard died, and the tower did not notice', 'the thing in the cellar got out', 'the wizard\'s guild declared it forbidden, and nobody dared buy it', 'lightning struck it on the night of the great experiment, and the wizard went with the flash', 'the wizard sold their tower to pay a debt, and the buyer never moved in'],
         containers: ['in a chest that opens only to a polite request', "on the wizard's workbench, among the notes", 'in a cabinet of drawers, each one locked', 'in a vault behind a bookcase', 'inside a stuffed crocodile hanging from the ceiling', 'in a box of jars, each one labeled wrongly on purpose', 'in a trunk that is bigger inside than out'],
         doing: { folk: [['unaware', 'reading the wizard\'s notes aloud, and getting the words wrong'], ['ready', 'mid-spell over a glowing circle, and they look up as the door opens'], ['unaware', 'trying on the wizard\'s robes and hats']], beast: [['unaware', 'knocking glassware off the shelves one piece at a time'], ['ambush', 'hiding among the stuffed and mounted creatures on the walls']] },
-        ground: ['Bookshelves and tables give half cover; a shelf can be pushed over ({dc:13} {ability:str}) to make a 10-foot line of difficult terrain.', 'A spiral stair climbs the wall to a gallery 10 feet up.', 'Glassware covers every table; a creature knocked into one takes 1d4 slashing damage.', 'The floor is painted with a magic circle. Anyone standing in it has advantage on saving throws against spells.', 'A tall window looks out on a drop of 60 feet or more.', 'A great pendulum swings slowly through the middle of the room; it blocks line of sight every other round.'],
+        ground: ['Bookshelves and tables give half cover; a shelf can be pushed over ({dc:13} {ability:str}) to make a 10-foot line of difficult terrain.', 'A spiral stair climbs the wall to a gallery 10 feet up.', 'Glassware covers every table; a creature knocked into one takes 1d4 slashing damage.', 'The floor is painted with a magic circle. Anyone standing in it {alt:has advantage on saving throws|gets a +1 circumstance bonus to saves} against spells.', 'A tall window looks out on a drop of 60 feet or more.', 'A great pendulum swings slowly through the middle of the room; it blocks line of sight every other round.'],
         hazards: ['A shelf of unstable potions. Any area spell here smashes them: everyone within 10 feet makes a DC {dc} {save:con} saving throw or takes {dmg} acid damage; half damage on a success.', 'Wild magic hangs in the air. Whenever a spell of 1st level or higher is cast here, roll a d6: on a 1, the caster takes {dmg} force damage (DC {dc} {save:con} saving throw for half).']
     },
     temple: {
@@ -624,11 +624,11 @@ const SITE_DOING = {
     mindless: [['ready', 'standing in rows, waiting for an order that never came'], ['ambush', 'lying still among the debris until someone comes close'], ['ready', 'shuffling in circles, and they turn as one when the party enters'], ['unaware', 'going through the motions of a task they were made for'], ['ambush', 'hidden in alcoves along the walls'], ['unaware', 'scraping at a wall as if trying to get through it'], ['ready', 'facing the door, perfectly still, as if they knew'], ['unaware', 'carrying stones from one side of the room to the other, and back'], ['ambush', 'slumped in the darkest corner, not moving until something warm comes close'], ['unaware', 'standing round a cold table or altar, heads bowed']]
 };
 const SITE_MINDS = { humanoid: 'folk', giant: 'folk', fiend: 'folk', dragon: 'folk', fey: 'folk', celestial: 'folk', undead: 'mindless', construct: 'mindless', ooze: 'mindless', elemental: 'mindless' };
-const SITE_AWARE = {
-    ready: "They're ready: no one is surprised.",
-    unaware: "They haven't noticed the party. Sneak in with Stealth against their passive Perception, and anyone who isn't noticed gets the jump on them.",
-    ambush: "They're hidden. Roll their Stealth against each character's passive Perception: anyone who doesn't notice them is surprised in the first round."
-};
+const SITE_AWARE = ruleTable({
+    ready: "{alt:They're ready: no one is surprised.|They're ready: everyone rolls Perception for initiative.}",
+    unaware: "{alt:They haven't noticed the party. Sneak in with Stealth against their passive Perception, and anyone who isn't noticed gets the jump on them.|They haven't noticed the party. Characters who sneak in roll Stealth for initiative, and start the fight undetected by any foe whose Perception DC their roll beats.}",
+    ambush: "{alt:They're hidden. Roll their Stealth against each character's passive Perception: anyone who doesn't notice them is surprised in the first round.|They're hidden, and roll Stealth for initiative. A foe whose roll beats a character's Perception DC starts the fight undetected by that character.}"
+});
 
 // Room traps. trigger: what sets it off. effect: {dc} {dmg} filled by the site's level.
 // kinds: only in these kinds (absent = anywhere). disarm: how to stop it ({dc}).
@@ -640,7 +640,7 @@ const SITE_TRAPS = ruleTable([
     { name: 'Gas vent', trigger: 'A cracked seal on the floor releases a cloud of yellow gas when stepped on.', disarm: 'plug the vent with wax or mud (no check, once found)', effect: 'Everyone within 10 feet makes a DC {dc} {save:con} saving throw or takes {dmg} poison damage and is poisoned for 1 minute; half damage and not poisoned on a success.' },
     { name: 'Spear floor', trigger: 'A loose flagstone drops an inch, and spears jab up through holes in the floor.', disarm: "DC {dc} {ability:dex:thievery} check{alt: with thieves' tools|} to jam the mechanism", effect: 'DC {dc} {save:dex} saving throw or take {dmg} piercing damage; half damage on a success.' },
     { name: 'Falling net', trigger: 'A tripwire drops a weighted net from the ceiling.', disarm: "DC {dc} {ability:dex:thievery} check{alt: with thieves' tools|} to cut the wire", effect: 'Everyone in a 10-foot square makes a DC {dc} {save:dex} saving throw or is restrained. A {dc:10} {ability:str} check (or cutting the net: AC 10, 20 hit points) frees a creature. Anything in the room hears it fall.' },
-    { name: 'Alarm', trigger: 'A thin wire across the floor rings a bell somewhere deeper in.', disarm: "DC {dc} {ability:dex:thievery} check{alt: with thieves' tools|}, or step over it once it's found", effect: 'Every fight in the next two rooms is ready and waiting: no one there is surprised.' },
+    { name: 'Alarm', trigger: 'A thin wire across the floor rings a bell somewhere deeper in.', disarm: "DC {dc} {ability:dex:thievery} check{alt: with thieves' tools|}, or step over it once it's found", effect: 'Every fight in the next two rooms is ready and waiting{alt:: no one there is surprised|, and no one sneaks up on them}.' },
     { name: 'Rolling stone', trigger: 'A pressure plate releases a stone ball down a sloping passage into the room.', kinds: ['crypt', 'temple', 'mine', 'lair', 'keep', 'barrow'], disarm: 'wedge an iron spike under the plate (DC {dc} {ability:dex:thievery} check{alt: with thieves\' tools|})', effect: 'Everyone in its path makes a DC {dc} {save:dex} saving throw or takes {dmg} bludgeoning damage and is knocked prone.' },
     { name: 'Fire glyph', trigger: 'A glyph carved on the threshold bursts into flame when crossed.', kinds: ['crypt', 'tower', 'temple', 'keep', 'manor', 'barrow'], disarm: 'DC {dc} {skill:int:arcana} check to smudge it out safely, or dispel magic', effect: 'Everyone within 10 feet makes a DC {dc} {save:dex} saving throw or takes {dmg} fire damage; half damage on a success.' },
     { name: 'Lightning rune', trigger: 'A rune on the door handle discharges into whoever grabs it.', kinds: ['tower', 'temple', 'lighthouse', 'manor'], disarm: 'DC {dc} {skill:int:arcana} check, or open it with something that does not conduct', effect: 'DC {dc} {save:dex} saving throw or take {dmg} lightning damage; half damage on a success.' },
@@ -683,7 +683,7 @@ const SITE_TRAPS_MORE = ruleTable([
     { name: 'Offering bowl', trigger: "A bronze bowl stands before the altar. Taking anything from the room without leaving a coin in it calls down the god's anger.", kinds: ['temple', 'crypt'], disarm: 'leave a coin in the bowl (no check, once understood)', effect: 'The thief makes a DC {dc} {save:wis} saving throw or takes {dmg} radiant damage; half damage on a success.' },
     { name: 'Caltrop floor', trigger: 'The straw on the floor hides a scatter of caltrops.', kinds: ['fort', 'keep', 'lair'], disarm: 'sweep a path clear (no check, once found)', effect: 'Anyone who moves through at more than half speed makes a DC {dc} {save:dex} saving throw or takes {dmg} piercing damage and has their speed reduced by 10 feet until they regain a hit point.' },
     { name: 'Trapdoor floor', trigger: 'The middle of the passage is one big trapdoor, held by a bolt that gives under the weight of two people.', kinds: ['fort', 'keep', 'manor'], disarm: "DC {dc} {ability:dex:thievery} check{alt: with thieves' tools|} to pin the hinges", effect: 'Everyone on it makes a DC {dc} {save:dex} saving throw or falls 20 feet into a locked cell below, taking {dmg} bludgeoning damage.' },
-    { name: 'Bone rattle', trigger: 'Strings of old bones hang across the way and rattle at the lightest touch.', kinds: ['lair', 'barrow', 'seacave'], disarm: 'DC {dc} {skill:dex:stealth} check to hold them still and slip through', effect: 'Whatever lives here knows the party is coming: the fight in the last room is ready and waiting, and no one there is surprised.' },
+    { name: 'Bone rattle', trigger: 'Strings of old bones hang across the way and rattle at the lightest touch.', kinds: ['lair', 'barrow', 'seacave'], disarm: 'DC {dc} {skill:dex:stealth} check to hold them still and slip through', effect: 'Whatever lives here knows the party is coming: the fight in the last room is ready and waiting{alt:, and no one there is surprised|, and no one sneaks up on them}.' },
     { name: 'Deadfall', trigger: 'A heavy log hangs over the way in, held up by a cord across the floor.', kinds: ['lair', 'mine', 'fort'], disarm: "DC {dc} {ability:dex:thievery} check{alt: with thieves' tools|} to tie off the cord", effect: 'DC {dc} {save:dex} saving throw or take {dmg} bludgeoning damage and be knocked prone; half damage and not prone on a success.' },
     { name: 'Slick ledge', trigger: 'The ledge beside the channel is coated in slime, and narrows at a bend.', kinds: ['sewer', 'seacave'], disarm: 'rope everyone together (no check, once found)', effect: 'Each creature that crosses makes a DC {dc} {save:dex} saving throw or slips into the water, takes {dmg} bludgeoning damage on the rocks, and is carried 20 feet along.' },
     { name: 'Kelp snare', trigger: 'Kelp grows thick in a flooded stretch of floor and wraps the legs of anyone who wades in.', kinds: ['seacave', 'shipwreck'], disarm: 'cut a path through with blades (no check, once found)', effect: 'DC {dc} {save:str} saving throw or be restrained and pulled under, and start to drown. A DC {dc} {skill:str:athletics} check, or cutting the kelp (AC 10, 10 hit points), frees a creature.' },
@@ -722,6 +722,35 @@ const SITE_TRAP_DAMAGE = {
 };
 // Doors: [lock DC, find-a-secret-door DC] by tier.
 const SITE_DOOR_DCS = { '0-4': [12, 13], '5-10': [15, 15], '11-16': [18, 17], '17+': [22, 20] };
+// Pathfinder pages: DCs follow GM Core's DC by level (the encounter engine's table) at the party's
+// level, easier for a setback and harder for a deadly trap; the trap's own draw moves it a point.
+// Damage is the Gazette's: the encounter scenes' setback dice, half again for dangerous, doubled for deadly.
+const SITE_PF2E = typeof ENC_PF2E !== 'undefined' && ENC_PF2E;
+const SITE_PF2E_SEVERITY = { setback: [-2, 1], dangerous: [0, 1.5], deadly: [2, 2] };
+
+function siteLevelDc(level) {
+    return ENC_PF2E_LEVEL_DC[Math.min(20, Math.max(0, level))];
+}
+
+// A trap or hazard's DC: dc is the 5e draw (its place in the severity's range nudges the Pathfinder one).
+function siteTrapDc(level, sev, dc) {
+    if (!SITE_PF2E) return dc;
+    const lo = SITE_TRAP_SEVERITY.find(t => t[0] === sev)[2][0];
+    return siteLevelDc(level) + SITE_PF2E_SEVERITY[sev][0] + ((dc - lo) % 2);
+}
+
+function siteTrapDamage(tier, level, sev) {
+    if (!SITE_PF2E) return SITE_TRAP_DAMAGE[tier][sev];
+    const dice = 2 + 2 * Math.floor((Math.max(1, level) - 1) / 3);
+    return `${Math.round(dice * SITE_PF2E_SEVERITY[sev][1])}d6`;
+}
+
+// [lock DC, find-a-secret-door DC]: Pathfinder's are the party level's DC.
+function siteDoorDcs(s) {
+    if (!SITE_PF2E) return SITE_DOOR_DCS[s.tier];
+    const dc = siteLevelDc(s.level);
+    return [dc, dc];
+}
 // Who holds the place, mid-sentence ("held by ..."), for every group a kind can have.
 const SITE_HOLDERS = {
     undead: 'the walking dead', haunt: 'restless spirits', necromancer: 'a necromancer and their servants', vampire: "a vampire's brood",
@@ -858,23 +887,23 @@ function siteLayout(K, n) {
 }
 
 // ── Contents ──────────────────────────────────────────────
-function siteTrap(K, tier) {
+function siteTrap(K, tier, level) {
     const pool = SITE_TRAPS.filter(t => !t.kinds || t.kinds.includes(K));
     const t = sitePick(pool);
     const [sev, , dcs] = siteWeighted(SITE_TRAP_SEVERITY.map(s => [s, s[1]]));
-    const dc = dcs[0] + Math.floor(rand() * (dcs[1] - dcs[0] + 1));
-    const fill = s => s.replace(/\{dc\}/g, dc).replace(/\{dmg\}/g, SITE_TRAP_DAMAGE[tier][sev]);
+    const dc = siteTrapDc(level, sev, dcs[0] + Math.floor(rand() * (dcs[1] - dcs[0] + 1)));
+    const fill = s => s.replace(/\{dc\}/g, dc).replace(/\{dmg\}/g, siteTrapDamage(tier, level, sev));
     return { name: t.name, severity: sev, dc, trigger: t.trigger, disarm: fill(t.disarm), effect: fill(t.effect) };
 }
 
 // The third pass (R6): one of the newer traps in place of trap, by its share of the kind's
 // whole list, at the same severity and DC (always two draws).
-function siteTrapMore(trap, K, tier) {
+function siteTrapMore(trap, K, tier, level) {
     const old = SITE_TRAPS.filter(t => !t.kinds || t.kinds.includes(K));
     const more = SITE_TRAPS_MORE.filter(t => !t.kinds || t.kinds.includes(K));
     const t = sitePick(more);
     if (rand() >= more.length / (old.length + more.length)) return trap;
-    const fill = s => s.replace(/\{dc\}/g, trap.dc).replace(/\{dmg\}/g, SITE_TRAP_DAMAGE[tier][trap.severity]);
+    const fill = s => s.replace(/\{dc\}/g, trap.dc).replace(/\{dmg\}/g, siteTrapDamage(tier, level, trap.severity));
     return { name: t.name, severity: trap.severity, dc: trap.dc, trigger: t.trigger, disarm: fill(t.disarm), effect: fill(t.effect) };
 }
 
@@ -922,7 +951,7 @@ function siteFight(K, band, budget, diff, seed) {
 // What foes like these might be doing: by the mind of the strongest of them ([{ m, count }]).
 function siteDoingPool(K, list) {
     const lead = list.reduce((a, b) => (b.m.xp > a.m.xp ? b : a)).m;
-    const mind = SITE_MINDS[lead.type] || 'beast';
+    const mind = SITE_MINDS[encSceneType(lead)] || 'beast';
     return SITE_DOING[mind].concat((K.doing && K.doing[mind]) || []);
 }
 
@@ -947,7 +976,7 @@ function siteName() {
 // Someone else in a room: { kind, text }. A room with a fight only ever holds a prisoner.
 function siteEvent(fight, tier) {
     const kind = siteWeighted(SITE_EVENT_KINDS.filter(([k]) => !fight || k === 'prisoner'));
-    const gp = `${SITE_EVENT_GP[tier].toLocaleString('en-US')} gp`;
+    const gp = `${ruleCoins(SITE_EVENT_GP[tier]).toLocaleString('en-US')} gp`;
     let text;
     if (kind === 'prisoner') {
         const role = sitePick(SITE_EVENT_ROLES), held = sitePick(SITE_PRISON_HELD), knows = sitePick(SITE_PRISON_KNOWS), name = siteName();
@@ -1031,9 +1060,9 @@ function rollSite(seed, opts = {}) {
             if (left.length) [fight.seen, fight.doing] = part(`doing.${i}.again`, () => sitePick(left));
         }
         if (fight) doingUsed.add(fight.doing);
-        const drawnTrap = plan.trap ? part(`trap.${i}.${kind}.${level}`, () => siteTrap(kind, tier)) : null;
+        const drawnTrap = plan.trap ? part(`trap.${i}.${kind}.${level}`, () => siteTrap(kind, tier, level)) : null;
         // The third pass (R6) may swap the trap for a newer one, under its own seed.
-        const trap = drawnTrap && part(`trap.${i}.more.${kind}`, () => siteTrapMore(drawnTrap, kind, tier));
+        const trap = drawnTrap && part(`trap.${i}.more.${kind}`, () => siteTrapMore(drawnTrap, kind, tier, level));
         rooms.push({ n: i + 1, name: type.name, text: type.text, feature: features[i % features.length], sense: senses[i % senses.length], fight, trap });
     }
 
@@ -1073,8 +1102,8 @@ function rollSite(seed, opts = {}) {
         const features = siteShuffle(K.ground || []).slice(0, 2);
         if (!K.hazards || rand() >= 0.5) return { features, hazard: null };
         const [sev, , dcs] = siteWeighted(SITE_TRAP_SEVERITY.slice(0, 2).map(t => [t, t[1]]));
-        const dc = dcs[0] + Math.floor(rand() * (dcs[1] - dcs[0] + 1));
-        return { features, hazard: sitePick(K.hazards), dc, dmg: SITE_TRAP_DAMAGE[tier][sev] };
+        const dc = siteTrapDc(level, sev, dcs[0] + Math.floor(rand() * (dcs[1] - dcs[0] + 1)));
+        return { features, hazard: sitePick(K.hazards), dc, dmg: siteTrapDamage(tier, level, sev) };
     });
     // The third pass (R6) may swap the hazard for a newer one, under its own seed.
     const hazard = drawnGround.hazard && part('ground.more.' + kind, () => siteSwap(drawnGround.hazard, K.hazards, (SITE_HAZARDS_MORE[kind] || []).concat(SITE_HAZARDS_ANY)));
@@ -1137,7 +1166,7 @@ function siteStoryLines(s, ctx = {}) {
 }
 
 function siteMonsterText(f) {
-    return siteFightList(f).map(e => `${e.count} × ${e.m.name} (CR ${e.m.cr})`).join(', ');
+    return siteFightList(f).map(e => `${e.count} × ${e.m.name} (${crLabel(e.m.cr)})`).join(', ');
 }
 
 function siteFightRating(s, f) {
@@ -1150,7 +1179,7 @@ const SITE_DIRS = { '1,0': 'east', '-1,0': 'west', '0,1': 'south', '0,-1': 'nort
 
 function siteDoorText(s, kind) {
     const K = SITE_KINDS[s.kind];
-    const [lock, find] = SITE_DOOR_DCS[s.tier];
+    const [lock, find] = siteDoorDcs(s);
     return ruleText({
         open: 'an open archway',
         door: K.door,
@@ -1201,7 +1230,7 @@ function siteRoomLines(s, i) {
         lines.push(['Trap', ruleText(`${t.name} (${t.severity}). ${t.trigger} Spot it: DC ${t.dc} {skill:wis:perception}. Disarm: ${siteCap(t.disarm)}. ${t.effect}`)]);
     }
     if (i === s.rooms.length - 1) {
-        lines.push(['Hoard', `${siteCap(s.hoard.container)}. Roll it in the Loot generator (a hoard for CR ${s.tier}).`]);
+        lines.push(['Hoard', `${siteCap(s.hoard.container)}. Roll it in the Loot generator (${SITE_PF2E ? `a level ${s.level} hoard` : `a hoard for CR ${s.tier}`}).`]);
     }
     const exits = siteExits(s, i);
     if (i === 0) exits.unshift('out the way you came');

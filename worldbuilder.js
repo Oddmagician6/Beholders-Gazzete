@@ -45,6 +45,13 @@ const WORLD_ENGINES = {
     town: WORLD_ENGINE_ORDER, continent: WORLD_ENGINE_ORDER, notebook: WORLD_ENGINE_ORDER,
     maps: [], web: []
 };
+// Pathfinder pages: the creatures come in before the encounter engine, which then rolls them.
+if (ruleSystemId() === 'pf2e') {
+    new Set([WORLD_ENGINE_ORDER, ...Object.values(WORLD_ENGINES)]).forEach(list => {
+        const i = list.indexOf('monsters-data.js');
+        if (i >= 0) list.splice(i + 1, 0, 'pf2e-creatures-data.js');
+    });
+}
 // Tabs set up first: pantheon links the calendar, factions/town read the pantheon, history the factions, sites the history.
 const WORLD_NEEDS = { pantheon: ['calendar'], factions: ['pantheon'], town: ['pantheon'], history: ['factions'], sites: ['history'] };
 const worldScripts = {};   // src → Promise, settled once the script has run

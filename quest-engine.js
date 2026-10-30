@@ -794,7 +794,7 @@ function questEncounterLink(q) {
 }
 
 function questFoeText(foe) {
-    return foe.list.map(e => `${e.count} × ${e.m.name} (CR ${e.m.cr})`).join(", ");
+    return foe.list.map(e => `${e.count} × ${e.m.name} (${crLabel(e.m.cr)})`).join(", ");
 }
 
 // Plain text for Copy.

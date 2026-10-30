@@ -44,7 +44,10 @@ RULE_SYSTEMS.pf2e = {
         [/\bpassive Perception\b/g, 'Perception DC'],
         [/\bDashes\b/g, 'runs'], [/\bDash again\b/g, 'run again'],
         [/\bbloodied\b/g, 'badly hurt'],
-        [/\bhas disadvantage\b/g, 'takes a −2 penalty'], [/\broll with disadvantage\b/g, 'take a −2 penalty']
+        [/\bhas disadvantage\b/g, 'takes a −2 penalty'], [/\broll with disadvantage\b/g, 'take a −2 penalty'],
+        [/\bhave disadvantage on\b/g, 'take a −2 penalty to'], [/\bimposes disadvantage on\b/g, 'gives a −2 penalty to'],
+        [/\buntil a long rest\b/g, "until their next night's rest"],
+        [/\bgains a level of exhaustion\b/g, 'is fatigued'], [/\bgain a level of exhaustion\b/g, 'are fatigued'], [/\bone level of exhaustion\b/g, 'fatigue'], [/\bremove curse\b/g, 'cleanse affliction']
     ],
     // People keep their 5e keys (names and ages are rolled by them); this is what they're called.
     words: {

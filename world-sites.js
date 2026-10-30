@@ -108,8 +108,10 @@ function siteFightLink(s, f) {
     return 'toolbox?' + params.toString();
 }
 
+// Pathfinder's hoard tab takes the party's level and size in place of a CR band.
 function siteHoardLink(s) {
-    return 'loot-generator?' + new URLSearchParams({ tab: 'hoard', 'hoard-cr': s.hoard.tier, 'hoard-source': s.hoard.source, seed: s.hoard.seed }).toString();
+    const at = SITE_PF2E ? { 'hoard-cr': s.level, 'hoard-pcs': s.party } : { 'hoard-cr': s.hoard.tier };
+    return 'loot-generator?' + new URLSearchParams({ tab: 'hoard', ...at, 'hoard-source': s.hoard.source, seed: s.hoard.seed }).toString();
 }
 
 function siteHistoryLink(ai) {

@@ -177,9 +177,15 @@ function encounterNotesPf2e(all, budget) {
     return notes;
 }
 
+// A difficulty the other generators ask for in 5e words (sites, quests): on Pathfinder pages
+// their High is Severe. The rest share a name.
+function encDiffKey(diff) {
+    return ENC_PF2E && diff === 'high' ? 'severe' : diff;
+}
+
 // The budget of the difficulty below diff: a roll should spend more than that.
 function encFloor(budget, diff) {
-    const i = ENC_DIFFS.indexOf(diff);
+    const i = ENC_DIFFS.indexOf(encDiffKey(diff));
     return i > 0 ? budget[ENC_DIFFS[i - 1]] : 0;
 }
 
@@ -191,6 +197,7 @@ function pick(arr) {
 // a lead monster (now and then a lone boss) plus up to two kinds of weaker support,
 // no CR above the party's level, at most two creatures per character.
 function rollEncounter(budget, diff, type = '') {
+    diff = encDiffKey(diff);
     const target = budget[diff];
     const maxCr = encMaxCr(budget);
     const pool = ENC_MONSTERS.filter(m => m.xp > 0 && m.xp <= target && crValue(m.cr) <= maxCr && (!type || m.type === type));
@@ -201,6 +208,7 @@ function rollEncounter(budget, diff, type = '') {
 // Spend the budget from pool. leadPool (optional) narrows who can lead; without it the
 // draws are exactly the old rollEncounter's, so quest links keep their monsters.
 function fillEncounter(pool, budget, diff, leadPool = null) {
+    diff = encDiffKey(diff);
     const target = budget[diff];
     const cap = Math.max(2, budget.chars * 2);
     const floor = encFloor(budget, diff);
@@ -790,6 +798,7 @@ function encBandFits(band, list) {
 // band: '' = any group, 'none' = no group (any monster, like before), or a band key.
 // Returns { list, band } (band = the key, or null).
 function rollThemedEncounter(budget, diff, opts = {}) {
+    diff = encDiffKey(diff);
     const { type = "", habitat = "" } = opts;
     const band = opts.band || "";
     const target = budget[diff];
