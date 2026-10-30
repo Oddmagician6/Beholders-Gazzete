@@ -9,7 +9,7 @@
    On a Pathfinder page (ENC_PF2E) the blocks are Pathfinder's instead: pf2e-creature-blocks.js,
    drawn in the Pathfinder layout by sbPf2eHtml and sbPf2eText (end of this file), with
    spell cards from pf2e-spells-data.js. Pathfinder hazards (pf2e-hazards-data.js) are drawn
-   by sbPf2eHazardHtml and sbPf2eHazardText.
+   by sbPf2eHazardHtml and sbPf2eHazardText; monsterBlockHtml/Text draw one for an encounter's hazard (m.hz).
    ============================================ */
 
 const SB_ABILITIES = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
@@ -90,6 +90,7 @@ function sbBlockOf(m) {
 }
 
 function monsterBlockHtml(m) {
+    if (m.hz) return sbPf2eHazardHtml(m.hz);
     if (sbPf2e()) return sbPf2eHtml(m);
     if (!m.block && !blocksReady()) return '<p class="sb-note">Loading the stat block…</p>';
     const b = sbBlockOf(m);
@@ -114,6 +115,7 @@ function monsterBlockHtml(m) {
 }
 
 function monsterBlockText(m) {
+    if (m.hz) return sbPf2eHazardText(m.hz);
     if (sbPf2e()) return sbPf2eText(m);
     const b = sbBlockOf(m);
     if (!b) return '';

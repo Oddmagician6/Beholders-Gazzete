@@ -70,7 +70,17 @@ const ENCOUNTER_LEVELS = ENC_PF2E ? {
     over: { label: 'Beyond High', icon: '💀', text: 'More XP than the High budget. Expect deaths, or give the party a way to run, parley, or even the odds.' }
 };
 
-const MONSTER_BY_ID = Object.fromEntries(ENC_MONSTERS.map(m => [m.id, m]));
+/* Pathfinder hazards (pf2e-hazards-data.js, GM Core): picked by hand, never rolled. A simple hazard
+   is worth a fifth of a creature of its level, a complex one a whole creature; a complex hazard rolls
+   initiative on its Stealth modifier (`dex`: the DC − 10). Ids are 'hz-<hazard id>'. */
+const ENC_HAZARDS = ENC_PF2E && typeof PF2E_HAZARDS !== 'undefined' ? PF2E_HAZARDS.map(encPf2eHazard) : [];
+
+function encPf2eHazard(h) {
+    return { id: `hz-${h.id}`, name: h.n, level: h.l, cr: String(h.l), type: 'hazard', hz: h, ac: h.ac, hp: h.hp,
+        dex: h.st != null ? h.st - 10 : 0, get xp() { return encPf2eXp(h.l) / (h.cx ? 1 : 5); } };
+}
+
+const MONSTER_BY_ID = Object.fromEntries([...ENC_MONSTERS, ...ENC_HAZARDS].map(m => [m.id, m]));
 
 function crValue(cr) {
     const [a, b] = String(cr).split('/').map(Number);
@@ -144,20 +154,26 @@ function encounterNotes(list, budget) {
 }
 
 // The same kind of advice for Pathfinder, where levels matter more than numbers (the wording is the Gazette's).
-function encounterNotesPf2e(list, budget) {
+function encounterNotesPf2e(all, budget) {
     const notes = [];
+    const list = all.filter(e => !e.m.hz), hazards = all.filter(e => e.m.hz);
     const creatures = list.reduce((t, e) => t + e.count, 0);
-    if (!creatures || !budget.chars) return notes;
+    if (!all.length || !budget.chars) return notes;
+    const complex = hazards.filter(e => e.m.hz.cx);
+    if (complex.length) notes.push(`${complex.map(e => e.m.name).join(', ')} ${complex.length === 1 ? 'is a complex hazard: once triggered, it rolls initiative on Stealth and acts on its turn' : 'are complex hazards: once triggered, they roll initiative on Stealth and act on their turns'}.`);
+    const simple = hazards.filter(e => !e.m.hz.cx);
+    if (simple.length && !creatures && !complex.length) notes.push(`A simple hazard springs once and is done, so on ${simple.length === 1 ? 'its' : 'their'} own ${simple.length === 1 ? 'it makes' : 'they make'} a challenge, not a fight. Pair ${simple.length === 1 ? 'it' : 'them'} with creatures.`);
     const lv = budget.level;
     if (budget.avgLevel !== lv) notes.push(`The party's levels are mixed, so the budget uses party level ${lv}, the average rounded.`);
+    if (!creatures) return notes;
     if (creatures > budget.chars * 2) notes.push(`${creatures} creatures against ${budget.chars} character${budget.chars === 1 ? '' : 's'}: more than two each means a lot of turns to run. Pathfinder troops and swarms do the job of a crowd with one stat block.`);
     const boss = list.filter(e => e.m.level >= lv + 3);
     if (boss.length) notes.push(`${boss.map(e => e.m.name).join(', ')} ${boss.length === 1 ? 'is' : 'are'} 3 or more levels above the party: its attacks land critical hits often, and the party will miss it a lot. Fine for a solo boss; deadly with friends.`);
-    const past = list.filter(e => e.m.level > lv + 4);
+    const past = all.filter(e => e.m.level > lv + 4);
     if (past.length) notes.push(`${past.map(e => e.m.name).join(', ')} ${past.length === 1 ? 'is' : 'are'} more than 4 levels above the party, past the end of the XP table. Its XP here is the Gazette's guess.`);
     const fodder = list.filter(e => e.m.level <= lv - 4).reduce((t, e) => t + e.count, 0);
     if (fodder) notes.push(`${fodder} creature${fodder === 1 ? ' is' : 's are'} 4 or more levels below the party: barely a threat, and ${fodder === 1 ? 'it' : 'they'} add${fodder === 1 ? 's' : ''} little or no XP.`);
-    if (list.length > 3) notes.push(`${list.length} different stat blocks to run. Two or three is easier to manage at the table.`);
+    if (all.length > 3) notes.push(`${all.length} different stat blocks to run. Two or three is easier to manage at the table.`);
     return notes;
 }
 

@@ -12,7 +12,8 @@
    (env/band: the roll pickers; pack: the group a roll landed on; seed: the scene).
    On a Pathfinder page (ENC_PF2E in encounter-engine.js) the creatures are Pathfinder's, with five
    difficulties, Pathfinder's foe groups, Pathfinder stat blocks (pf2e-creature-blocks.js), and no homebrew;
-   Send to Initiative uses Perception.
+   Send to Initiative uses Perception. Its hazards (ENC_HAZARDS, type ⚠️ Hazards) are picked by hand, never
+   rolled, and stay out of the scene; only the complex ones go to Initiative, on Stealth.
    ============================================ */
 
 const ENC_MAX_GROUPS = 8;
@@ -60,6 +61,11 @@ function typeName(type) {
     return type.charAt(0).toUpperCase() + type.slice(1);
 }
 
+// A picker row's kind: the monster type, or a hazard's trap, haunt, or environmental.
+function encKind(m) {
+    return m.hz ? typeName(['haunt', 'environmental', 'trap'].find(t => m.hz.tr.includes(t)) || 'hazard') : typeName(m.type);
+}
+
 // The homebrew monsters in the picker (5e only).
 function encHbRows() {
     return ENC_PF2E ? [] : hbRows;
@@ -69,6 +75,8 @@ function encHbRows() {
 function encStats(m, each = '') {
     const fmt = n => n.toLocaleString('en-US');
     const sign = n => (n >= 0 ? '+' : '') + n;
+    if (m.hz) return [`${m.hz.cx ? 'Complex hazard' : 'Hazard'} ${m.cr}`, `${fmt(m.xp)} XP${each}`, m.hz.st != null && `Stealth DC ${m.hz.st}`,
+        m.ac != null && `AC ${m.ac}`, m.hp && `HP ${m.hp}`].filter(Boolean).join(' · ');
     const base = `${crLabel(m.cr)} · ${fmt(m.xp)} XP${each} · AC ${m.ac} · HP ${m.hp}`;
     return ENC_PF2E ? `${base} · Fort ${sign(m.fort)} Ref ${sign(m.ref)} Will ${sign(m.will)} · Perception ${sign(m.per)}` : base;
 }
@@ -86,6 +94,7 @@ function setupEncounterForm() {
         diff.innerHTML = '';
         ENC_DIFFS.forEach(k => diff.add(new Option(`${ENCOUNTER_LEVELS[k].icon} ${ENCOUNTER_LEVELS[k].label}`, k, k === 'moderate', k === 'moderate')));
         document.querySelector('#en-band option[value="none"]').text = 'Mixed: any creatures, no group';
+        if (ENC_HAZARDS.length) document.getElementById('en-type').add(new Option('⚠️ Hazards', 'hazard'), 1);
     } else document.getElementById('en-type').add(new Option('🐲 Homebrew', 'homebrew'), 1);
     const env = document.getElementById('en-env');
     ENC_HABITAT_KEYS.forEach(k => env.add(new Option(`${ENC_HABITATS[k].icon} ${ENC_HABITATS[k].label}`, k)));
@@ -126,7 +135,7 @@ function pickerMatches() {
     const cr = document.getElementById('en-cr').value;
     const type = document.getElementById('en-type').value;
     const maxCr = ENC_PF2E ? encBudget().level : Math.max(0.125, Math.floor(encBudget().avgLevel));
-    return [...encHbRows(), ...ENC_MONSTERS].filter(m => (!q || m.name.toLowerCase().includes(q))
+    return [...encHbRows(), ...ENC_MONSTERS, ...ENC_HAZARDS].filter(m => (!q || m.name.toLowerCase().includes(q))
         && (!type || (type === 'homebrew' ? m.hb : m.type === type))
         && (!cr || (cr === 'party' ? crValue(m.cr) <= maxCr : m.cr === cr)));
 }
@@ -137,12 +146,13 @@ function renderPicker() {
     document.getElementById('en-results').innerHTML = shown.map(m => `
         <li><button type="button" class="en-pick" data-id="${m.id}" title="Add a ${esc(m.name)}">
             <span class="en-name">${m.hb ? '🐲 ' : ''}${esc(m.name)}</span>
-            <span class="en-meta">${m.hb ? 'Homebrew · ' : ''}${encStats(m)} · ${esc(typeName(m.type))}</span>
+            <span class="en-meta">${m.hb ? 'Homebrew · ' : ''}${encStats(m)} · ${esc(encKind(m))}</span>
             <span class="en-plus" aria-hidden="true">➕</span>
         </button></li>`).join('');
     document.getElementById('en-results-note').textContent = !all.length ? (document.getElementById('en-type').value === 'homebrew'
             ? 'No homebrew yet. Make one in the Monster Maker and save it to the notebook.' : 'No monsters match. Try a shorter name or another filter.')
-        : all.length > shown.length ? `Showing ${shown.length} of ${all.length}. Search or filter to narrow it down.` : `${all.length} ${ENC_PF2E ? 'creature' : 'monster'}${all.length === 1 ? '' : 's'}.`;
+        : all.length > shown.length ? `Showing ${shown.length} of ${all.length}. Search or filter to narrow it down.`
+        : `${all.length} ${document.getElementById('en-type').value === 'hazard' ? 'hazard' : ENC_PF2E ? 'creature' : 'monster'}${all.length === 1 ? '' : 's'}.`;
 }
 
 function addMonster(m, count = 1) {
@@ -226,13 +236,15 @@ function toggleAllBlocks() {
 }
 
 // ── Scene ─────────────────────────────────────────────────
+// The scene is the creatures' alone: hazards are part of the place, not the cast.
 function encScene() {
-    if (!enc.list.length || !enc.seed) return null;
+    const foes = enc.list.filter(e => !e.m.hz);
+    if (!foes.length || !enc.seed) return null;
     // A boss who came in person (a campaign link's `stand`) joined after their scene was rolled.
-    const L = enc.lead, stand = L && L.stand && enc.list.find(e => e.m.id === L.stand);
-    const list = stand ? enc.list.map(e => (e === stand ? { ...e, count: e.count - 1 } : e)).filter(e => e.count > 0) : enc.list;
+    const L = enc.lead, stand = L && L.stand && foes.find(e => e.m.id === L.stand);
+    const list = stand ? foes.map(e => (e === stand ? { ...e, count: e.count - 1 } : e)).filter(e => e.count > 0) : foes;
     const lead = L ? { name: L.name, stand: stand ? stand.m : null } : null;
-    return rollEncounterScene(list.length ? list : enc.list, enc.seed, { habitat: document.getElementById('en-env').value, band: enc.band, level: encBudget().avgLevel, lead });
+    return rollEncounterScene(list.length ? list : foes, enc.seed, { habitat: document.getElementById('en-env').value, band: enc.band, level: encBudget().avgLevel, lead });
 }
 
 function renderScene() {
@@ -314,19 +326,23 @@ function encounterText() {
     return lines.join('\n');
 }
 
-// Each monster joins the tracker with its Dex modifier as the initiative bonus (Pathfinder: Perception).
+// Each monster joins the tracker with its Dex modifier as the initiative bonus (Pathfinder: Perception;
+// a complex hazard: Stealth). A simple hazard takes no turns, so it stays here.
 function sendToInitiative() {
-    if (!enc.list.length) return;
-    const want = enc.list.reduce((t, e) => t + e.count, 0);
-    const added = enc.list.flatMap(e => addToFight({ name: e.m.name, mod: e.m.dex, hp: e.m.hp, ac: e.m.ac, count: e.count, monster: e.m.id }));
+    const list = enc.list.filter(e => !e.m.hz || e.m.hz.cx);
+    const simple = enc.list.filter(e => e.m.hz && !e.m.hz.cx).reduce((t, e) => t + e.count, 0);
+    const left = simple ? ` ${simple === 1 ? 'The simple hazard takes' : 'Simple hazards take'} no turns, so ${simple === 1 ? 'it stays' : 'they stay'} off the tracker.` : '';
+    if (!list.length) { flash('enc-status', `⚠️ Nothing here takes turns.${left}`); return; }
+    const want = list.reduce((t, e) => t + e.count, 0);
+    const added = list.flatMap(e => addToFight({ name: e.m.name, mod: e.m.dex, hp: e.m.hp, ac: e.m.ac, count: e.count, monster: e.m.id }));
     document.querySelector('.tool-tab[data-tab="init"]').click();
     if (!added.length) { flash('init-status', `⚠️ The tracker holds ${INIT_MAX} combatants. Clear some first.`); return; }
     sortFight();
     saveFight();
     renderFight();
     flash('init-status', added.length < want
-        ? ruleText(`⚔️ Added ${added.length} of ${want} {alt:monsters|creatures}; the tracker holds ${INIT_MAX}.`)
-        : ruleText(`⚔️ Added ${added.length} {alt:monster|creature}${added.length === 1 ? '' : 's'} from the encounter. Add the party, then Start Combat.`));
+        ? ruleText(`⚔️ Added ${added.length} of ${want} {alt:monsters|creatures and hazards}; the tracker holds ${INIT_MAX}.${left}`)
+        : ruleText(`⚔️ Added ${added.length} {alt:monster|foe}${added.length === 1 ? '' : 's'} from the encounter. Add the party, then Start Combat.${left}`));
 }
 
 function clearEncounter() {
