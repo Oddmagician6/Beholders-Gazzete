@@ -187,6 +187,18 @@
     .init-cond-menu { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; max-width: 420px; }
     .init-cond-menu button { font-size: 0.72rem; padding: 4px 8px; }
     .init-cond-menu button.on { background: var(--crimson); color: var(--text-bright); border-color: var(--crimson); }
+    .init-pd { background: var(--bg-deep); color: var(--text-bright); border: 1px solid var(--crimson); }
+    .init-pd-add summary { font-family: var(--font-ui); font-size: 0.72rem; color: var(--text-dim); cursor: pointer; list-style: none; padding: 2px 6px; border: 1px dashed var(--crimson); border-radius: 10px; }
+    .init-pd-add summary::-webkit-details-marker { display: none; }
+    .init-pd-add summary:hover { color: var(--gold-bright); }
+    .init-pd-form { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+    .init-pd-form input, .init-pd-form select, .init-pd-form button { font-family: var(--font-ui); font-size: 0.75rem; padding: 4px 8px; background: var(--bg-deep); color: var(--text-bright); border: 1px solid var(--gold-dim); border-radius: var(--radius-sm); }
+    .init-pd-form { flex-wrap: nowrap; }
+    .init-pd-form input { width: 6em; }
+    .init-pd-form select { width: auto; }
+    .init-pd-form input, .init-pd-form select { margin: 0; }
+    .init-pd-form button { cursor: pointer; color: var(--text-mid); }
+    .init-pd-form button:hover { color: var(--gold-bright); border-color: var(--gold-mid); }
     .init-hp { display: flex; align-items: center; gap: 6px; font-family: var(--font-ui); font-size: 0.85rem; color: var(--text-mid); }
     .init-hp .hp-now { font-family: var(--font-head); font-size: 1.15rem; color: var(--text-bright); }
     .init-hp .hp-low { color: #e57368; }

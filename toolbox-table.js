@@ -19,7 +19,8 @@
    Pathfinder pages (INIT_PF2E, ROADMAP L3 P4): Pathfinder's conditions (rules-pf2e.js), the valued
    ones saved with their value ("Frightened 2") and stepped with − and +; frightened drops by 1 at the
    end of its owner's turn; a character dropped to 0 HP becomes dying (1 + wounded) and unconscious,
-   and healing clears dying and adds wounded; creatures come from ENC_MONSTERS, with no stat blocks.
+   and healing clears dying and adds wounded (damage while dying adds 1); persistent damage (pd) is
+   rolled at the end of its owner's turn, then a DC 15 flat check; creatures come from ENC_MONSTERS.
    Loads after toolbox.js (uses its esc() and flash()).
    ============================================ */
 
@@ -58,6 +59,17 @@ function setCond(c, k, v) {
     if (v > 0) c.conds.push(condMax(k) ? `${k} ${Math.min(v, condMax(k))}` : k);
     c.conds.sort();
 }
+
+// Pathfinder persistent damage: { dice: '2d6', type: 'fire' }, one per type (a new one of a type
+// replaces the old). It's taken at the end of its owner's turn, then a DC 15 flat check ends it.
+const PD_TYPES = ['bleed', 'fire', 'acid', 'cold', 'electricity', 'sonic', 'poison', 'mental', 'spirit', 'vitality', 'void', 'force', 'bludgeoning', 'piercing', 'slashing'];
+const PD_ICON = { bleed: '🩸', fire: '🔥', acid: '🧪', cold: '❄️', electricity: '⚡', poison: '☠️', mental: '🌀' };
+const PD_MAX = 6;
+function pdOk(p) {
+    if (!p || typeof p.dice !== 'string' || !PD_TYPES.includes(p.type) || !/^[0-9d+ -]{1,12}$/i.test(p.dice)) return false;
+    try { parseDice(p.dice); return true; } catch (e) { return false; }
+}
+const pdLabel = p => `${PD_ICON[p.type] || '💥'} ${p.dice} ${p.type}`;
 
 // Two clicks: the first arms the button for a few seconds.
 function armedClick(btn, label, action) {
@@ -166,6 +178,7 @@ function setupDice() {
 // ── Initiative ────────────────────────────────────────────
 let fight = { round: 1, turn: null, nextId: 1, list: [] };
 let openConds = null;   // id whose condition menu is open, kept across re-renders
+let openPd = null;      // the same for the Pathfinder persistent damage box
 let openBlocks = new Set();   // ids whose stat block is open (this page only)
 let autoBlock = null;   // the id whose block opened because its turn came up
 
@@ -198,6 +211,7 @@ function loadFight() {
                 monster: typeof c.monster === 'string' && Object.hasOwn(MONSTER_BY_ID, c.monster) ? c.monster : null,
                 pc: c.pc === true, pp: num(c.pp), shown: c.shown === true,
                 conds: Array.isArray(c.conds) ? c.conds.filter(condOk) : [],
+                pd: INIT_PF2E && Array.isArray(c.pd) ? c.pd.filter(pdOk).map(p => ({ dice: p.dice.replace(/\s+/g, ''), type: p.type })).slice(0, PD_MAX) : [],
                 party: typeof c.party === 'string' && /^[a-z0-9]{1,16}$/.test(c.party) ? c.party : null,
                 temp: Math.max(0, num(c.temp) ?? 0), exh: Math.min(6, Math.max(0, num(c.exh) ?? 0)),
                 conc: typeof c.conc === 'string' ? c.conc.slice(0, 40) : '',
@@ -256,7 +270,7 @@ function addToFight({ name, mod = 0, fixed = null, hp = null, ac = null, count =
         const c = {
             id: fight.nextId++, name: count > 1 || taken.length ? `${base} ${++n}` : name.length > 36 ? base : name,
             init: fixed !== null && count === 1 ? fixed : rollInit(mod), mod,
-            hp: hp !== null ? Math.max(0, hp) : null, max: hp !== null ? Math.max(0, hp) : null, ac, monster, pc, pp, shown: false, conds: [],
+            hp: hp !== null ? Math.max(0, hp) : null, max: hp !== null ? Math.max(0, hp) : null, ac, monster, pc, pp, shown: false, conds: [], pd: [],
             party: null, temp: 0, exh: 0, conc: '', ds: [0, 0]
         };
         fight.list.push(c);
@@ -321,10 +335,12 @@ function nextTurn() {
     if (note) flash('init-status', note);
 }
 
-// Pathfinder, as a turn passes: frightened drops by 1 at the end of its owner's turn, and a dying
-// character starts theirs with a recovery check. Returns what to say ('' for nothing).
+// Pathfinder, as a turn passes: persistent damage hits its owner at the end of their turn (then a
+// DC 15 flat check may end it), frightened drops by 1, and a dying character starts theirs with a
+// recovery check. Returns what to say ('' for nothing).
 function pf2eTurnNote(ended, now) {
     const notes = [];
+    if (ended && ended.pd.length) notes.push(pf2ePersistent(ended));
     const fear = ended ? condOf(ended, 'Frightened') : 0;
     if (fear) {
         setCond(ended, 'Frightened', fear - 1);
@@ -335,6 +351,30 @@ function pf2eTurnNote(ended, now) {
     return notes.join(' ');
 }
 
+// Rolls c's persistent damage, takes it off their HP (temporary HP first), and rolls each one's
+// flat check. Returns what to say.
+function pf2ePersistent(c) {
+    const parts = [];
+    const icon = PD_ICON[c.pd[0].type] || '💥';
+    let total = 0;
+    c.pd = c.pd.filter(p => {
+        const dmg = Math.max(0, rollDice(p.dice).total);
+        const flat = rollDie(20);
+        total += dmg;
+        parts.push(`${dmg} ${p.type} (flat check ${flat}: ${flat >= 15 ? 'it ends' : 'it goes on'})`);
+        return flat < 15;
+    });
+    let ko = '';
+    if (c.hp !== null && total) {
+        const soak = Math.min(c.temp, total);
+        const wasUp = c.hp > 0;
+        c.temp -= soak;
+        c.hp = Math.max(0, c.hp - (total - soak));
+        ko = (wasUp && c.hp === 0 ? ` ${c.name} falls.` : '') + pf2eKnockout(c, wasUp, true);
+    }
+    return `${icon} ${c.name} takes persistent damage: ${parts.join(', ')}.${ko}`;
+}
+
 // Pathfinder: dying has reached 4, less the doomed value.
 function pf2eDead(c) {
     const d = condOf(c, 'Dying');
@@ -342,9 +382,14 @@ function pf2eDead(c) {
 }
 
 // Pathfinder: a character dropped to 0 HP is dying (1 plus their wounded value) and unconscious;
-// healed from 0, they lose dying, wake, and gain wounded 1 (or 1 more). Returns what to say.
-function pf2eKnockout(c, wasUp) {
+// damaged while dying, their dying goes up 1; healed from 0, they lose dying, wake, and gain
+// wounded 1 (or 1 more). Returns what to say.
+function pf2eKnockout(c, wasUp, hurt = false) {
     if (!INIT_PF2E || !c.pc) return '';
+    if (!wasUp && hurt && condOf(c, 'Dying') && !pf2eDead(c)) {
+        setCond(c, 'Dying', condOf(c, 'Dying') + 1);
+        return pf2eDead(c) ? ` ${c.name} dies.` : ` Hurt while dying: dying ${condOf(c, 'Dying')}.`;
+    }
     if (wasUp && c.hp === 0) {
         setCond(c, 'Dying', 1 + condOf(c, 'Wounded'));
         setCond(c, 'Unconscious', 1);
@@ -405,10 +450,10 @@ function changeHp(id, sign) {
     const wasUp = c.hp > 0;
     c.temp -= soak;
     c.hp = sign < 0 ? Math.max(0, c.hp - (amt - soak)) : Math.min(c.max ?? Infinity, c.hp + amt);
-    const ko = pf2eKnockout(c, wasUp);
+    const ko = pf2eKnockout(c, wasUp, sign < 0);
     saveFight();
     renderFight();
-    flash('init-status', (sign < 0 ? `🩸 ${c.name} takes ${amt}${soak ? ` (${soak} off temporary HP)` : ''}${c.hp === 0 ? ' and falls' : ''}.` : `💚 ${c.name} heals ${amt}.`)
+    flash('init-status', (sign < 0 ? `🩸 ${c.name} takes ${amt}${soak ? ` (${soak} off temporary HP)` : ''}${wasUp && c.hp === 0 ? ' and falls' : ''}.` : `💚 ${c.name} heals ${amt}.`)
         + ko + (c.party ? ' Their Play Sheet decides from its next change.' : ''));
     const again = document.querySelector(`.hp-amt[data-id="${id}"]`);
     if (again) again.focus();
@@ -441,6 +486,44 @@ function deathSaveText(c) {
     return c.party ? `🩸 death saves ${c.ds[0]}✓ ${c.ds[1]}✗` : '🩸 death saves';
 }
 
+// Pathfinder: c's persistent damage chips and the box that adds one.
+function pdHtml(c) {
+    return c.pd.map((p, i) => `<button type="button" class="init-cond init-pd" data-act="pd-x" data-id="${c.id}" data-i="${i}" title="Remove the persistent ${p.type} damage">${esc(pdLabel(p))} ✕</button>`).join('')
+        + (c.pd.length < PD_MAX ? `<details class="init-pd-add" data-id="${c.id}"${openPd === c.id ? ' open' : ''}>
+            <summary title="Taken again at the end of each of its turns, then a DC 15 flat check ends it">+ persistent damage</summary>
+            <div class="init-pd-form">
+                <input type="text" class="pd-dice" data-id="${c.id}" maxlength="12" placeholder="1d6" value="1d6" aria-label="Persistent damage dice for ${esc(c.name)}">
+                <select class="pd-type" data-id="${c.id}" aria-label="Damage type">${PD_TYPES.map(t => `<option>${t}</option>`).join('')}</select>
+                <button type="button" data-act="pd-add" data-id="${c.id}">Add</button>
+            </div>
+        </details>` : '');
+}
+
+// Adds the persistent damage typed in c's box; one of the same type is replaced.
+function addPersistent(id) {
+    const c = fight.list.find(x => x.id === id);
+    const box = document.querySelector(`.pd-dice[data-id="${id}"]`);
+    const sel = document.querySelector(`.pd-type[data-id="${id}"]`);
+    if (!c || !box || !sel) return;
+    const p = { dice: box.value.replace(/\s+/g, '').toLowerCase(), type: sel.value };
+    if (!pdOk(p)) { flash('init-status', 'Type the damage as dice or a number, such as 1d6, 2d4+1, or 5.'); box.focus(); return; }
+    const had = c.pd.find(x => x.type === p.type);
+    c.pd = [...c.pd.filter(x => x.type !== p.type), p].slice(0, PD_MAX);
+    openPd = null;
+    saveFight();
+    renderFight();
+    flash('init-status', `${PD_ICON[p.type] || '💥'} ${c.name} has persistent ${p.dice} ${p.type} damage${had ? ` (in place of ${had.dice}: keep the higher one)` : ''}. The tracker rolls it at the end of their turn.`);
+}
+
+function removePersistent(id, i) {
+    const c = fight.list.find(x => x.id === id);
+    if (!c || !c.pd[i]) return;
+    const [p] = c.pd.splice(i, 1);
+    saveFight();
+    renderFight();
+    flash('init-status', `${c.name}'s persistent ${p.type} damage ends.`);
+}
+
 function renderFight(scroll = false) {
     const list = document.getElementById('init-list');
     document.getElementById('init-empty').hidden = fight.list.length > 0;
@@ -470,6 +553,7 @@ function renderFight(scroll = false) {
                         <summary>+ condition</summary>
                         <div class="init-cond-menu">${SRD_CONDITIONS.map(k => `<button type="button" data-id="${c.id}" data-cond="${k}" title="${esc(condTip(k))}" class="${condOf(c, k) ? 'on' : ''}" aria-pressed="${condOf(c, k) > 0}">${k}</button>`).join('')}</div>
                     </details>
+                    ${INIT_PF2E ? pdHtml(c) : ''}
                 </div>
             </div>
             <div class="init-hp">
@@ -506,6 +590,8 @@ function onFightClick(e) {
     else if (b.dataset.act === 'heal') changeHp(id, 1);
     else if (b.dataset.act === 'remove') removeCombatant(id);
     else if (b.dataset.act === 'reveal') toggleShown(id);
+    else if (b.dataset.act === 'pd-add') addPersistent(id);
+    else if (b.dataset.act === 'pd-x') removePersistent(id, Number(b.dataset.i));
 }
 
 function setupInitiative() {
@@ -530,6 +616,11 @@ function setupInitiative() {
     list.addEventListener('click', onFightClick);
     list.addEventListener('toggle', e => {
         const d = e.target;
+        if (d.matches && d.matches('.init-pd-add')) {
+            if (d.open) openPd = Number(d.dataset.id);
+            else if (openPd === Number(d.dataset.id)) openPd = null;
+            return;
+        }
         if (!d.matches || !d.matches('.init-cond-add')) return;
         if (d.open) openConds = Number(d.dataset.id);
         else if (openConds === Number(d.dataset.id)) openConds = null;
@@ -546,6 +637,7 @@ function setupInitiative() {
     });
     list.addEventListener('keydown', e => {
         if (e.key === 'Enter' && e.target.matches('.hp-amt')) { e.preventDefault(); changeHp(Number(e.target.dataset.id), -1); }
+        if (e.key === 'Enter' && e.target.matches('.pd-dice')) { e.preventDefault(); addPersistent(Number(e.target.dataset.id)); }
     });
     document.getElementById('init-reroll').addEventListener('click', () => {
         if (!fight.list.length) return;

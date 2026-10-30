@@ -1,7 +1,7 @@
 /* ============================================
    INITIATIVE: THE PLAYERS' VIEW (F47)
    What the players may see of the Initiative tab's fight (localStorage 'gazette-initiative'):
-   the order, whose turn it is, the round, conditions, and health as a word (Healthy /
+   the order, whose turn it is, the round, conditions (and Pathfinder's persistent damage), and health as a word (Healthy /
    Bloodied / Down), never HP, AC, or bonuses. A creature that isn't a player character
    shows as "Unknown creature A" until the DM reveals it (shown: true on the combatant).
    The Toolbox posts each change on the INIT_VIEW_CHANNEL BroadcastChannel; the player
@@ -47,7 +47,8 @@ function initPlayerView(fight) {
             hidden: !c.pc && c.shown !== true,
             pc: c.pc === true,
             health: initHealth(c),
-            conds: Array.isArray(c.conds) ? c.conds.filter(x => typeof x === 'string').map(x => x.slice(0, 20)).slice(0, 15) : [],
+            conds: [...(Array.isArray(c.conds) ? c.conds.filter(x => typeof x === 'string') : []),
+                ...(Array.isArray(c.pd) ? c.pd.filter(p => p && typeof p.type === 'string').map(p => `Persistent ${p.type}`) : [])].map(x => x.slice(0, 24)).slice(0, 15),
             now: c.id === turn
         }))
     };
@@ -67,7 +68,7 @@ function initCleanView(v) {
         list: v.list.slice(0, 40).filter(c => c && typeof c.name === 'string').map(c => ({
             key: Number(c.key) || 0, name: c.name.slice(0, 40), hidden: c.hidden === true, pc: c.pc === true,
             health: ['healthy', 'bloodied', 'down'].includes(c.health) ? c.health : null,
-            conds: Array.isArray(c.conds) ? c.conds.filter(x => typeof x === 'string').map(x => x.slice(0, 20)).slice(0, 15) : [],
+            conds: Array.isArray(c.conds) ? c.conds.filter(x => typeof x === 'string').map(x => x.slice(0, 24)).slice(0, 15) : [],
             now: c.now === true
         }))
     };
