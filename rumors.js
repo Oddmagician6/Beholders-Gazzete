@@ -1,5 +1,7 @@
 /* ============================================
    TAVERN RUMOR GENERATOR
+   With 🐉 Forgotten Realms picked (realms.js), rumors come from the Realms' own
+   (REALMS_RUMORS), dealt from a deck that lasts until a refresh: ?realms=<index>.
    ============================================ */
 
 let allRumors = { rumors: [] };
@@ -7,6 +9,8 @@ let currentCategory = 'all';
 let recentRumors = [];
 let baseCount = 0;   // rumors from rumors.json; reader-added ones come after and can't be shared
 let currentIdx = -1;
+let realmsIdx = -1;     // the Realms rumor on screen (an index into REALMS_RUMORS), or -1
+const realmsDecks = {}; // category -> REALMS_RUMORS indexes left to deal
 
 // Rumor text can come from the reader (Contribute form), so never inject it raw.
 function escapeHTML(text) {
@@ -40,10 +44,13 @@ function generateRumor() {
         return;
     }
 
+    if (realmsOn('rumor-world')) { generateRealmsRumor(); return; }
+
     // Deal from the category's deck (rumor-deck.js): no repeats until it runs out
     const deal = dealRumor(allRumors.rumors, baseCount, currentCategory, currentIdx);
     if (deal.idx < 0) return;
     currentIdx = deal.idx;
+    realmsIdx = -1;
     const rumor = allRumors.rumors[currentIdx];
     updateDeckCount(deal.reshuffled);
 
@@ -58,8 +65,41 @@ function generateRumor() {
     animateDisplay();
 }
 
+// ── The Forgotten Realms deck (realms.js) ───────────────
+function realmsPool(category) {
+    return REALMS_RUMORS.map((r, i) => i).filter(i => category === 'all' || REALMS_RUMORS[i].category === category);
+}
+
+function generateRealmsRumor() {
+    const pool = realmsPool(currentCategory);
+    if (!pool.length) return;
+    let left = realmsDecks[currentCategory] || [];
+    const reshuffled = currentCategory in realmsDecks && !left.length;
+    if (!left.length) {
+        left = shuffleRumorIndexes(pool);
+        if (left.length > 1 && left[left.length - 1] === realmsIdx) left.unshift(left.pop());
+    }
+    realmsIdx = left.pop();
+    realmsDecks[currentCategory] = left;
+    const rumor = REALMS_RUMORS[realmsIdx];
+    updateDeckCount(reshuffled);
+    displayRumor(rumor);
+    syncUrl(true);
+    addToRecent(rumor);
+    animateDisplay();
+}
+
 // ── Deck counter: "N of M left in the deck" ─────────────
 function updateDeckCount(reshuffled) {
+    if (realmsOn('rumor-world')) {
+        const total = realmsPool(currentCategory).length;
+        const left = currentCategory in realmsDecks ? realmsDecks[currentCategory].length : total;
+        document.getElementById('deck-left').textContent = reshuffled
+            ? `The Realms deck ran dry, so the bard reshuffled. ${left} of ${total} left.`
+            : left ? `${left} of ${total} Realms rumors left in this deck.` : `All ${total} told. The next draw reshuffles the deck.`;
+        document.getElementById('deck-count').hidden = !total;
+        return;
+    }
     const { left, total } = rumorDeckCount(allRumors.rumors, baseCount, currentCategory);
     if (!total) return;
     document.getElementById('deck-left').textContent = reshuffled
@@ -69,12 +109,18 @@ function updateDeckCount(reshuffled) {
 }
 
 function reshuffleDeck() {
-    reshuffleRumorDeck(baseCount, currentCategory);
+    if (realmsOn('rumor-world')) delete realmsDecks[currentCategory];
+    else reshuffleRumorDeck(baseCount, currentCategory);
     updateDeckCount();
 }
 
 // ── Shareable link: ?rumor=<index in rumors.json> ─────────
 function syncUrl(push) {
+    if (realmsIdx >= 0) {
+        setUrlParams({ realms: realmsIdx }, push);
+        document.getElementById('rumor-link').hidden = false;
+        return;
+    }
     const shareable = currentIdx >= 0 && currentIdx < baseCount;
     // A reader-added rumor can't go in a link, so its history entry carries it instead.
     setUrlParams(shareable ? { rumor: currentIdx } : {}, push, shareable ? null : { reader: currentIdx });
@@ -84,6 +130,18 @@ function syncUrl(push) {
 // Show the rumor named in the address bar (or, on Back/Forward, a reader-added one kept
 // in the history entry). Returns false when there isn't one.
 function applyUrl() {
+    // A Forgotten Realms rumor: ?realms=<index into REALMS_RUMORS>.
+    const rv = urlParams().get('realms');
+    if (/^\d+$/.test(rv || '') && typeof REALMS_RUMORS !== 'undefined' && REALMS_RUMORS[Number(rv)] && realmsAllowed()) {
+        realmsIdx = Number(rv);
+        currentIdx = -1;
+        document.getElementById('rumor-world').value = 'realms';
+        displayRumor(REALMS_RUMORS[realmsIdx]);
+        document.getElementById('rumor-link').hidden = false;
+        animateDisplay();
+        return true;
+    }
+    realmsIdx = -1;
     const v = urlParams().get('rumor');
     let idx = /^\d+$/.test(v || '') ? Number(v) : -1;
     const shareable = idx >= 0 && idx < baseCount;
@@ -334,6 +392,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadRumors();
     loadRecent();
     setupCategoryButtons();
+    realmsPicker('rumor-world', 'rumors');
+    document.getElementById('rumor-world').addEventListener('change', () => updateDeckCount());
     document.getElementById('rumor-link').addEventListener('click', copyLink);
     document.getElementById('next-btn').addEventListener('click', revealFollowup);
     document.getElementById('deck-shuffle').addEventListener('click', reshuffleDeck);

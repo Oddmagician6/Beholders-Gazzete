@@ -10,13 +10,13 @@
    rule follows the realm's kinds of government, and it knows its climate and exports.
    A town ruled by a noble has a 🌳 button for the ruling family (the Families tab, F55).
    Nothing is stored: the URL holds the town.
-   URL: ?tab=town&seed=&size=&setting=&wealth=&gods=&gsize=&gshape=&gnaming=
+   URL: ?tab=town&seed=&size=&setting=&wealth=&world=&gods=&gsize=&gshape=&gnaming=&gworld=
         &cont=&csize=&cland=&cnat=&ctown=<town number on the map>
    ============================================ */
 
-const TOWN_FIELDS = { size: 'town-size', setting: 'town-setting', wealth: 'town-wealth' };
+const TOWN_FIELDS = { size: 'town-size', setting: 'town-setting', wealth: 'town-wealth', world: 'town-world' };
 // The linked pantheon's URL keys → its option names (the same keys the Calendar uses).
-const TOWN_GOD_KEYS = { gsize: 'size', gshape: 'shape', gnaming: 'naming' };
+const TOWN_GOD_KEYS = { gsize: 'size', gshape: 'shape', gnaming: 'naming', gworld: 'world' };
 // The linked continent's URL keys → its option names (the Continent tab's own keys).
 const TOWN_CONT_KEYS = { csize: 'size', cland: 'land', cnat: 'nations' };
 
@@ -25,7 +25,7 @@ let townRumorList = [];
 
 function townOpts() {
     const v = id => document.getElementById(id).value;
-    return { size: v('town-size'), setting: v('town-setting'), wealth: v('town-wealth') };
+    return { size: v('town-size'), setting: v('town-setting'), wealth: v('town-wealth'), world: realmsOn('town-world') ? 'realms' : '' };
 }
 
 function townCtx() {
@@ -41,7 +41,7 @@ function townParams() {
     params.seed = townState.seed;
     const g = townState.gods;
     params.gods = g ? g.seed : null;
-    Object.entries(TOWN_GOD_KEYS).forEach(([key, opt]) => { params[key] = g && g[opt] !== 'random' ? g[opt] : null; });
+    Object.entries(TOWN_GOD_KEYS).forEach(([key, opt]) => { params[key] = g && g[opt] && g[opt] !== 'random' ? g[opt] : null; });
     const cs = townState.realm ? townState.cont : null;
     params.cont = cs ? cs.seed : null;
     Object.entries(TOWN_CONT_KEYS).forEach(([key, opt]) => { params[key] = cs && cs[opt] !== 'random' ? cs[opt] : null; });
@@ -107,13 +107,14 @@ function townGodParams(params) {
     const g = townState.gods;
     if (!g) return params;
     params.set('gods', g.seed);
-    Object.entries(TOWN_GOD_KEYS).forEach(([key, opt]) => { if (g[opt] !== 'random') params.set(key, g[opt]); });
+    Object.entries(TOWN_GOD_KEYS).forEach(([key, opt]) => { if (g[opt] && g[opt] !== 'random') params.set(key, g[opt]); });
     return params;
 }
 
 function townFactionLink(t, i) {
     const z = TOWN_SIZES[t.size];
     const params = new URLSearchParams({ tab: 'factions', seed: t.factionSeed, count: z.factions, scale: z.facScale });
+    if (t.realms) params.set('world', 'realms');
     if (i) params.set('faction', i + 1);
     return 'worldbuilder?' + townGodParams(params).toString();
 }
@@ -121,13 +122,14 @@ function townFactionLink(t, i) {
 function townPantheonLink(god) {
     const g = townState.gods;
     const params = new URLSearchParams({ tab: 'pantheon', seed: g.seed });
-    ['size', 'shape', 'naming'].forEach(k => { if (g[k] !== 'random') params.set(k, g[k]); });
+    ['size', 'shape', 'naming', 'world'].forEach(k => { if (g[k] && g[k] !== 'random') params.set(k, g[k]); });
     if (god && god.index) params.set('god', god.index + 1);
     return 'worldbuilder?' + params.toString();
 }
 
 function townTavernLink(tv, k, rumorIdx) {
     const params = new URLSearchParams({ tab: 'tavern', q: tv.quality, seed: tv.seed });
+    if (tv.realms) params.set('world', 'realms');
     // Each tavern overhears one of the town's rumors.
     if (rumorIdx.length) params.set('rumor', rumorIdx[k % rumorIdx.length]);
     return 'toolbox?' + params.toString();
@@ -138,7 +140,7 @@ function townShopLink(sh) {
 }
 
 function townQuestLink(t) {
-    return 'toolbox?' + new URLSearchParams({ tab: 'quest', seed: t.questSeed }).toString();
+    return 'toolbox?' + new URLSearchParams({ tab: 'quest', seed: t.questSeed, ...(t.realms ? { world: 'realms' } : {}) }).toString();
 }
 
 // ── Render ────────────────────────────────────────────────
@@ -161,6 +163,13 @@ function townGodsHTML(t, ctx) {
             <button type="button" class="btn" id="town-unlink">✕ Use made-up gods instead</button>
             ${god.linked ? `<a class="btn" href="${esc(townPantheonLink(god))}">⛪ Read about ${esc(god.name)}</a>` : ''}
         </div>`;
+    }
+    if (t.realms) {
+        return `<div class="wb-today">
+        <p>⛪ The ${t.size === 'hamlet' ? 'shrine' : 'temple'} here belongs to ${esc(townDeity(t, ctx).name)}, one of the gods of the Forgotten Realms.</p>
+        <p class="wb-small">Use the Pantheon tab's gods instead, and the temple${facs ? ' and every god-fearing faction in town' : ''} follows one of them.</p>
+        <button type="button" class="btn" id="town-link-gods">⛪ Use the Pantheon tab's gods</button>
+    </div>`;
     }
     return `<div class="wb-today">
         <p>⛪ The temple here names its god by title for now.</p>
@@ -220,7 +229,7 @@ function renderTown() {
     const people = [t.leader, t.captain, t.priest].filter(Boolean);
     document.getElementById('town-card').innerHTML = `
         <header class="wb-head">
-            <p class="wb-kicker">${z.icon} ${esc(z.label)} · ${s.icon} ${esc(s.label)} · ${wl.icon} ${esc(wl.label)}</p>
+            <p class="wb-kicker">${z.icon} ${esc(z.label)} · ${s.icon} ${esc(s.label)} · ${wl.icon} ${esc(wl.label)}${t.realms ? ' · 🐉 Forgotten Realms' : ''}</p>
             <h3 class="wb-name">${esc(t.name)}</h3>
             <p class="wb-sub">${esc(townSummary(t))}</p>
         </header>
@@ -298,6 +307,7 @@ function setupTown() {
     Object.entries(TOWN_SETTINGS).forEach(([key, s]) => setting.add(new Option(`${s.icon} ${s.label}`, key)));
     const wealth = document.getElementById('town-wealth');
     Object.entries(TOWN_WEALTH).forEach(([key, w]) => wealth.add(new Option(`${w.icon} ${w.label}`, key)));
+    realmsPicker('town-world', 'town');
 
     // Same seed: a new option keeps everything it doesn't touch.
     Object.values(TOWN_FIELDS).forEach(id => document.getElementById(id).addEventListener('change', () => {

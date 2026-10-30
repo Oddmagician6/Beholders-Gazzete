@@ -11,6 +11,9 @@
    only the reward and the foe, and a new job keeps the same giver.
    Task tokens: {place}, {item}, {person}, {mark}, {first} (the giver's first name),
    plus npc-data's {kin}, {townsfolk}, {thing} through fillTemplate().
+   opts.world 'realms' (realms.js, ROADMAP L4 D2): the job is near a Forgotten Realms city, the
+   giver has a Realms name, and one of the Realms' factions takes an interest (q.realms), all
+   from draws of their own.
    ============================================ */
 
 // gp per character for a side quest, by party level (house rule; index = level).
@@ -722,12 +725,23 @@ function questTitle(j, ctx) {
 }
 
 // opts: { level 1–20, size 1–8, job: key or 'random' }.
+// How a Forgotten Realms faction (realms.js) takes an interest in a quest. {f}: the faction.
+const QUEST_REALMS_INTEREST = [
+    "Word is that {f} quietly put up part of the reward.",
+    "Someone from {f} has warned the party off, with a knife laid on the table.",
+    "Agents of {f} are watching to see who takes it, and how well.",
+    "An envoy of {f} will offer to buy whatever is at the end of it.",
+    "People from {f} took the same job last month and never came back.",
+    "A contact in {f} will pay a little extra for a full report afterward, names included."
+];
+
 function rollQuest(seed, opts = {}) {
     const part = (label, fn) => withSeed(deriveSeed(seed, label), fn);
     const level = Math.min(20, Math.max(1, Math.floor(opts.level) || 1));
     const size = Math.min(8, Math.max(1, Math.floor(opts.size) || 4));
+    const realms = opts.world === "realms" && typeof REALMS_CITIES !== "undefined";
 
-    const giver = part("giver", () => ({ ...rollNPC(), why: randomArray(QUEST_WHY) }));
+    const giver = part("giver", () => ({ ...rollNPC(realms ? { realms: true } : {}), why: randomArray(QUEST_WHY) }));
     const first = giver.firstName || giver.name.split(" ")[0];
     giver.why = part("why", () => questFill(giver.why, { first }));
     // Always drawn, so a picked job doesn't shift any other part.
@@ -777,7 +791,12 @@ function rollQuest(seed, opts = {}) {
     reward.terms = more.terms;
     if (reward.inKind) reward.inKind = more.inKind;
 
-    return { seed, level, size, job, title, giver, place: place.name, task, lead, feature, obstacle: obstacle && more.obstacle, twist, stakes, deadline, reward, foe };
+    const q = { seed, level, size, job, title, giver, place: place.name, task, lead, feature, obstacle: obstacle && more.obstacle, twist, stakes, deadline, reward, foe };
+    if (realms) q.realms = part("realms", () => ({
+        city: randomArray(REALMS_CITIES).n,
+        interest: randomArray(QUEST_REALMS_INTEREST).replace("{f}", randomArray(REALMS_FACTIONS).n)
+    }));
+    return q;
 }
 
 // The reward's fine print in one line: terms, then goods, then the bonus.
@@ -810,7 +829,8 @@ function questText(q) {
         `Why you: ${g.why}`,
         `Secret: ${g.secret}`,
         "",
-        `Where: ${questCap(q.place)}`,
+        `Where: ${questCap(q.place)}${q.realms ? `, near ${q.realms.city}` : ""}`,
+        q.realms ? `Who else cares: ${q.realms.interest}` : null,
         `What's there: ${q.feature}`,
         `Where to start: ${q.lead}`,
         q.obstacle ? `In the way: ${q.obstacle}` : null,

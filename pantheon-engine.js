@@ -11,6 +11,10 @@
    Holy days are written for any calendar ("the first full moon of autumn") and
    land on a date with panHolyDate(god, cal) once a calendar-engine.js calendar is given.
    Needs rng.js. Domains are the cleric domain names; the tables are the Gazette's own.
+   opts.world 'realms' (realms.js, ROADMAP L4 D2): each god becomes a Forgotten Realms god of
+   the same theme, by name, title, alignment, portfolio, and symbol, from a draw of its own.
+   Everything else (holy days, temples, feuds) still comes from these tables, and the
+   Realms gods show no domain line (a domain would be a rule).
    ============================================ */
 
 const PAN_SEASONS = ['spring', 'summer', 'autumn', 'winter'];
@@ -859,6 +863,18 @@ function panRollGod(i, prev) {
     return god;
 }
 
+// The Forgotten Realms (realms.js): each god becomes an unused Realms god of its theme.
+function panRealmsGods(gods) {
+    const used = new Set();
+    gods.forEach(g => {
+        const fits = REALMS_GODS.filter(r => r.theme === g.domain && !used.has(r.n));
+        const r = panPick(fits.length ? fits : REALMS_GODS.filter(x => !used.has(x.n)));
+        used.add(r.n);
+        Object.assign(g, { name: r.n, epithet: r.t, form: r.form, alignment: r.a, portfolio: r.p.slice(),
+            symbolObj: r.s, symbolMod: '', symbolColor: '', titled: true, domain2: null, realms: true });
+    });
+}
+
 // Names are rolled apart from the gods, so a new naming style renames them and nothing else.
 function panNameGods(gods, style) {
     const used = new Set();
@@ -1034,9 +1050,11 @@ function rollPantheon(seed, opts = {}) {
     const gods = [];
     for (let i = 0; i < count; i++) gods.push(part('god.' + i, () => panRollGod(i, gods)));
     part('names.' + naming + '.' + count, () => panNameGods(gods, naming));
+    const realms = opts.world === 'realms' && typeof REALMS_GODS !== 'undefined';
+    if (realms) part('realms.' + count, () => panRealmsGods(gods));
     gods.forEach(g => { if (!g.holyName) g.holyName = `${g.name}'s Day`; });
 
-    const p = { seed, size, shape, naming, gods };
+    const p = { seed, size, shape, naming, gods, realms };
     const st = part(`shape.${shape}.${count}`, () => panShape(shape, gods));
     p.leader = st.leader;
     p.camps = st.camps;
@@ -1052,6 +1070,7 @@ function rollPantheon(seed, opts = {}) {
     });
     // In many peoples' gods there is no shared heaven.
     if (shape === 'many') p.home = 'each god\'s own country: a mountain, a river, a hall under a hill, wherever their people first prayed';
+    if (realms) p.name = part('realms.name', () => panPick(['the gods of Faerûn', 'the Faerûnian pantheon', 'the gods of the Realms', 'the powers of Toril']));
     panSecondPass(p, part);
     panThirdPass(p, part);
     return p;
@@ -1210,7 +1229,7 @@ function panGodLines(p, i, cal) {
     const friends = p.bonds.filter(b => b.a === i || b.b === i).map(b => p.gods[b.a === i ? b.b : b.a].name);
     const lines = [
         ['Rules over', `${formWord} of ${panList(g.portfolio)}`],
-        ['Domain', panDomainText(g)],
+        g.realms ? null : ['Domain', panDomainText(g)],
         ruleHasAlignment() ? ['Alignment', PAN_ALIGN_LABELS[g.alignment]] : ['Sanctification', panAlignShort(g.alignment) || 'None'],
         ['Place', g.role + (g.rel ? `. ${g.rel}` : '') + '.'],
         ['Holy symbol', panCap(panSymbolText(g))],
@@ -1227,7 +1246,7 @@ function panGodLines(p, i, cal) {
     if (feuds.length || friends.length) {
         lines.splice(4, 0, ['Friends and foes', [friends.length ? `Close to ${panList(friends)}` : '', feuds.length ? `at odds with ${panList(feuds)}` : ''].filter(Boolean).join('; ').replace(/^at/, 'At') + '.']);
     }
-    return lines;
+    return lines.filter(Boolean);
 }
 
 function panSummary(p) {

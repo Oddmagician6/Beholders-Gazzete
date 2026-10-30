@@ -748,6 +748,11 @@
           <select id="tv-quality">
             <option value="random" selected>🎲 Any quality</option>
           </select>
+          <label class="sr-only" for="tv-world">World</label>
+          <select id="tv-world">
+            <option value="" selected>🗺️ The Gazette's own</option>
+            <option value="realms">🐉 Forgotten Realms</option>
+          </select>
           <button type="button" class="btn btn-gold" id="tv-roll">🍺 Roll a Tavern</button>
           <button type="button" class="btn" id="tv-rumor">👂 Another Rumor</button>
         </div>
@@ -759,7 +764,7 @@
         </div>
         <p class="tool-status" id="tavern-status" role="status" aria-live="polite"></p>
       </div>
-      <p class="tool-note">Quality follows the lifestyle levels of the System Reference Document 5.1 (CC-BY 4.0), and so do the prices of ale, wine, bread, cheese, meat, banquets, a day's meals, a night's stay, and stabling. House dishes, drinks, and baths are the Gazette's, priced to match.<br>Rumors come from the same deck as <a href="rumors">the Tavern</a>, so you won't hear one twice until the deck runs out. The address bar holds the tavern and its rumor, so 🔗 Copy Link shares both. A new quality keeps the same owner, staff, regulars, and sign; the kind of place, the menu, the rooms, and the stakes follow the quality.</p>
+      <p class="tool-note">Quality follows the lifestyle levels of the System Reference Document 5.1 (CC-BY 4.0), and so do the prices of ale, wine, bread, cheese, meat, banquets, a day's meals, a night's stay, and stabling. House dishes, drinks, and baths are the Gazette's, priced to match.<br>Rumors come from the same deck as <a href="rumors">the Tavern</a>, so you won't hear one twice until the deck runs out. The address bar holds the tavern and its rumor, so 🔗 Copy Link shares both. A new quality keeps the same owner, staff, regulars, and sign; the kind of place, the menu, the rooms, and the stakes follow the quality.<span class="realms-note"><br>🐉 The World picker's Forgotten Realms names are used under the <a href="https://company.wizards.com/en/legal/fancontentpolicy" target="_blank" rel="noopener">Fan Content Policy</a>; every description is the Gazette's own, and no rules come with them.</span></p>
     </section>
 
     <section class="tool-panel" id="tab-quest" role="tabpanel" hidden>
@@ -775,6 +780,11 @@
           <select id="qs-job">
             <option value="random" selected>🎲 Any job</option>
           </select>
+          <label class="sr-only" for="qs-world">World</label>
+          <select id="qs-world">
+            <option value="" selected>🗺️ The Gazette's own</option>
+            <option value="realms">🐉 Forgotten Realms</option>
+          </select>
           <button type="button" class="btn btn-gold" id="qs-roll">📜 Roll a Quest</button>
         </div>
         <div id="qs-party-chip"></div>
@@ -788,7 +798,7 @@
         </div>
         <p class="tool-status" id="quest-status" role="status" aria-live="polite"></p>
       </div>
-      <p class="tool-note">The quest tables are the Gazette's own. Rewards are a house rule that grows with the party's level and size (the SRD has no table for them). The foe comes from the SRD 5.1 monsters, chosen to suit the place and rated like the Encounter tab, and 👹 Open in Encounter takes it there to adjust or send to initiative.<br>📓 Save to Notebook files it in the <a href="dnd-campaign-notebook">campaign notebook</a> as an open quest, where you mark it done or failed and link it to your session log.<br>The address bar holds the quest, so 🔗 Copy Link shares it. A new level or party size keeps the same quest and rescales the reward and the foe; a new job keeps the same quest giver.</p>
+      <p class="tool-note">The quest tables are the Gazette's own. Rewards are a house rule that grows with the party's level and size (the SRD has no table for them). The foe comes from the SRD 5.1 monsters, chosen to suit the place and rated like the Encounter tab, and 👹 Open in Encounter takes it there to adjust or send to initiative.<br>📓 Save to Notebook files it in the <a href="dnd-campaign-notebook">campaign notebook</a> as an open quest, where you mark it done or failed and link it to your session log.<br>The address bar holds the quest, so 🔗 Copy Link shares it. A new level or party size keeps the same quest and rescales the reward and the foe; a new job keeps the same quest giver.<span class="realms-note"><br>🐉 The World picker's Forgotten Realms names are used under the <a href="https://company.wizards.com/en/legal/fancontentpolicy" target="_blank" rel="noopener">Fan Content Policy</a>; every description is the Gazette's own, and no rules come with them.</span></p>
     </section>
 
     <section class="tool-panel" id="tab-travel" role="tabpanel" hidden>
@@ -1182,6 +1192,7 @@ Or with die ranges:
   <script src="tab-pages.js"></script>
   <script src="coins.js"></script>
   <script src="npc-data.js"></script>
+  <script src="realms.js"></script>
   <script src="names-data.js"></script>
   <script src="rumor-deck.js"></script>
   <script src="tavern-engine.js"></script>

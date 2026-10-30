@@ -633,6 +633,7 @@
         .lock-btn.corner { position: absolute; top: 6px; right: 6px; }
         .personality-item, .appearance-item, .secret-box, .quest-box, .impression-box { position: relative; }
         .npc-alignment { font-family: var(--font-ui); font-size: 0.85rem; color: var(--gold-bright); margin-top: 8px; letter-spacing: 0.04em; }
+        .npc-realms { font-family: var(--font-ui); font-size: 0.85rem; color: var(--text-dim); margin-top: 6px; }
         .impression-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .impression-label { display: block; font-family: var(--font-ui); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gold-mid); margin: 0 24px 6px 0; }
         @media (max-width: 600px) { .impression-grid { grid-template-columns: 1fr; } }
@@ -1028,6 +1029,13 @@
                         </select>
                     </div>
                     <div class="control-group">
+                        <label for="npc-world">🗺️ World</label>
+                        <select id="npc-world">
+                            <option value="" selected>🗺️ The Gazette's own</option>
+                            <option value="realms">🐉 Forgotten Realms</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
                         <label for="npc-class">⚔️ Class</label>
                         <select id="npc-class">
                             <option value="random">🎲 Random (fits the job)</option>
@@ -1136,6 +1144,7 @@
                         </div>
                         <div class="npc-profession"><span id="npc-profession-display">Profession</span> <button type="button" class="lock-btn" data-lock="job" aria-pressed="false" title="Lock profession" aria-label="Lock profession">🔓</button></div>
                         <div class="npc-alignment"><span id="npc-alignment-display">-</span> <button type="button" class="lock-btn" data-lock="alignment" aria-pressed="false" title="Lock alignment" aria-label="Lock alignment">🔓</button></div>
+                        <div class="npc-realms" id="npc-realms" hidden></div>
                     </div>
                 </div>
 
@@ -1368,6 +1377,7 @@
     <script src="rules-system.js"></script>
     <script src="rng.js"></script>
     <script src="npc-data.js"></script>
+    <script src="realms.js"></script>
     <script src="spells-data.js"></script>
     <script src="npc-statblock.js"></script>
     <script src="spell-detail.js"></script>

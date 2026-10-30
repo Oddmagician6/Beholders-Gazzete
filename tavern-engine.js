@@ -11,6 +11,8 @@
    The rumor is not rolled here: the Toolbox deals it from the rumor deck (rumor-deck.js).
    Each part rolls from deriveSeed(seed, part), so a new quality changes only the
    kind, menu, rooms, and stakes, never the owner, the sign, the staff, or the regulars.
+   opts.world 'realms' (realms.js, ROADMAP L4 D2): the tavern stands in a Forgotten Realms city
+   and its people get Realms names, from draws of their own (the rest stays the same).
    ============================================ */
 
 // SRD 5.1: meals and an inn stay, per day, for each lifestyle.
@@ -594,8 +596,10 @@ function tavernSecondPass(tv) {
 // opts: { quality: tier key or 'random' }. Returns the tavern without a rumor.
 function rollTavern(seed, opts = {}) {
     const part = (label, fn) => withSeed(deriveSeed(seed, label), fn);
+    const realms = opts.world === 'realms' && typeof REALMS_CITIES !== 'undefined';
+    const npcOpts = realms ? { realms: true } : {};
 
-    const owner = part('owner', () => ({ ...rollNPC(), role: randomArray(TAVERN_OWNER_ROLES) }));
+    const owner = part('owner', () => ({ ...rollNPC(npcOpts), role: randomArray(TAVERN_OWNER_ROLES) }));
     const ownerFirst = owner.firstName || owner.name.split(' ')[0];
     const name = part('name', () => rollShopName('tavern', ownerFirst));
 
@@ -618,7 +622,7 @@ function rollTavern(seed, opts = {}) {
     const regulars = part('regulars', () => {
         const count = randomInt(2, 3);
         const habits = pickSome(TAVERN_HABITS, count);
-        const list = habits.map(habit => ({ ...rollNPC(), habit }));
+        const list = habits.map(habit => ({ ...rollNPC(npcOpts), habit }));
         const firsts = list.map(r => r.firstName || r.name.split(' ')[0]);
         const ties = pickSome(TAVERN_TIES, count);
         list.forEach((r, i) => {
@@ -635,7 +639,7 @@ function rollTavern(seed, opts = {}) {
     const staff = part('staff', () => {
         const count = randomInt(1, 2);
         return Array.from({ length: count }, () => {
-            const n = rollNPC();
+            const n = rollNPC(npcOpts);
             const role = randomArray(TAVERN_STAFF_ROLES);
             const note = randomArray(TAVERN_STAFF_NOTES);
             const regular = regulars[Math.floor(rand() * regulars.length)];
@@ -707,12 +711,23 @@ function rollTavern(seed, opts = {}) {
     const trouble = part('trouble', () => { const x = randomArray(TAVERN_TROUBLE); return rand() < 0.65 ? x : null; });
 
     const tv = { seed, name, tier, kind, owner, staff, regulars, menu, rooms, quirk, scene, sign, history, rule, game, tonight, trouble };
+    if (realms) tv.realms = part('realms', () => ({ city: randomArray(REALMS_CITIES).n }));
     part('more', () => tavernSecondPass(tv));
     return tv;
 }
 
 function tavernNpcLine(n) {
     return `${n.name} (${n.race.charAt(0).toUpperCase() + n.race.slice(1)}, ${n.age})`;
+}
+
+// "on the docks", or "on the docks in Waterdeep" for a Forgotten Realms tavern.
+function tavernWhere(tv) {
+    return tv.kind.where + (tv.realms ? ` in ${tv.realms.city}` : '');
+}
+
+// A Realms regular's quiet faction, as a sentence (or '').
+function tavernTieText(n) {
+    return n.realms && n.realms.tie ? ` Quietly one of ${n.realms.tie}.` : '';
 }
 
 // "Low beams …, lit by a single smoky lantern. You hear …, and it smells of …. Busy tonight."
@@ -725,15 +740,15 @@ function tavernText(tv, rumor) {
     const t = TAVERN_TIERS[tv.tier];
     const price = i => `${i.name}: ${formatCoins(i.gp)}${i.special ? ' (house special)' : ''}${i.known ? ' (what it\'s known for)' : ''}`;
     const lines = [
-        `${tv.name} (${t.label.toLowerCase()} ${tv.kind.label}, ${tv.kind.where})`,
+        `${tv.name} (${t.label.toLowerCase()} ${tv.kind.label}, ${tavernWhere(tv)})`,
         tavernSceneText(tv.scene),
         `The sign: ${tv.sign}. ${tv.history}`,
         '',
-        `${tv.owner.role}: ${tavernNpcLine(tv.owner)}. ${tv.owner.trait}. Voice: ${tv.owner.voice}. "${tv.owner.dialogue}" Secret: ${tv.owner.secret}`,
+        `${tv.owner.role}: ${tavernNpcLine(tv.owner)}. ${tv.owner.trait}. Voice: ${tv.owner.voice}. "${tv.owner.dialogue}" Secret: ${tv.owner.secret}${tv.owner.realms ? ' ' + realmsNpcLine(tv.owner) : ''}`,
         'Staff:',
         ...tv.staff.map(s => `  ${s.role}: ${tavernNpcLine(s)}, ${s.note}.`),
         'Regulars:',
-        ...tv.regulars.map((r, i) => `  ${tavernNpcLine(r)}, ${r.profession.toLowerCase()}, ${r.habit}. ${r.trait}.${r.tie ? ` ${tavernCap(r.tie)}.` : ''}${i === 0 && r.questHook ? ` Has work: ${r.questHook}${/[.!?]$/.test(r.questHook) ? '' : '.'}` : ''}`),
+        ...tv.regulars.map((r, i) => `  ${tavernNpcLine(r)}, ${r.profession.toLowerCase()}, ${r.habit}. ${r.trait}.${r.tie ? ` ${tavernCap(r.tie)}.` : ''}${tavernTieText(r)}${i === 0 && r.questHook ? ` Has work: ${r.questHook}${/[.!?]$/.test(r.questHook) ? '' : '.'}` : ''}`),
         '',
         'Food:', ...tv.menu.food.map(i => '  ' + price(i)),
         'Drink:', ...tv.menu.drink.map(i => '  ' + price(i)),

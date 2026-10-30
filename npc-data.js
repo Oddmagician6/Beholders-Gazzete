@@ -790,6 +790,11 @@ function rollNames(count = 10, opts = {}) {
         const race = randomArray(races);
         const gender = randomArray(genders);
         const n = buildName(race, gender);
+        // Forgotten Realms (realms.js): humans take Realms-style names.
+        if (opts.realms && race === 'human' && typeof REALMS_NAMES !== 'undefined') {
+            n.first = randomArray(REALMS_NAMES[gender]);
+            n.name = `${n.first} ${n.nickname ? `"${n.nickname}" ` : ''}${randomArray(REALMS_NAMES.surname)}`;
+        }
         if (seen.has(n.name) || seen.has(n.first)) continue;
         seen.add(n.name);
         seen.add(n.first);
@@ -922,7 +927,7 @@ const NPC_PARTS = ['identity', 'age', 'job', 'stats', 'alignment', 'trait', 'ide
 // with (opts.partCategory), so locking it holds when the job rerolls.
 const NPC_JOB_PARTS = ['alignment', 'clothing', 'dialogue', 'doing', 'pockets'];
 
-// opts: { race, professionType, age, gender }, each a value or 'random',
+// opts: { race, professionType, age, gender }, each a value or 'random', realms: true for the Forgotten Realms,
 // plus partCategory: { part: category } for kept NPC_JOB_PARTS.
 // seeds (optional): { part: seed }. Each part with a seed rolls from its own stream,
 // so keeping a part's seed keeps that part when the rest rerolls. Without seeds,
@@ -1063,7 +1068,7 @@ function rollNPC(opts = {}, seeds = null) {
     const hairLook = isDragonborn ? hair
         : `${hair === 'Bald' || hair === 'Shaved' ? hair : `${hair} hair`}${beard ? `, ${beard}` : ''}`;
 
-    return {
+    const npc = {
         name,
         firstName,
         surname,
@@ -1104,6 +1109,11 @@ function rollNPC(opts = {}, seeds = null) {
         portraitIcon: NPC_PORTRAITS[race] || '👤',
         generatedAt: new Date().toISOString()
     };
+    // The Forgotten Realms (realms.js) rename and place the NPC last, on a seed of their own.
+    if (opts.realms && typeof realmsTouchNpc === 'function') {
+        realmsTouchNpc(npc, seeds && seeds.identity ? seeds.identity : [name, race, gender, age, profession].join('|'));
+    }
+    return npc;
 }
 
 // ── Town Square links: ?seed=&race=…&lock=<part>.<seed>[.<values>] ──
@@ -1129,12 +1139,13 @@ function npcGiven(v, max = 60) {
     return typeof v === 'string' && /^[\p{L}\p{M}][\p{L}\p{M} '.,-]*$/u.test(v.trim()) ? v.trim().replace(/\s+/g, ' ').slice(0, max) : '';
 }
 
-// fields: the pickers { race, profession, age, gender } (a value or 'random'), and maybe a given
+// fields: the pickers { race, profession, age, gender } (a value or 'random'), world ('realms' for
+// the Forgotten Realms), and maybe a given
 // name and role ({ name, role }, cleaned by npcGiven) that replace the rolled ones.
 // pinned: { part: { seed, extra } } for kept parts; the rest roll from the base seed.
 // Returns the NPC (no stat block) with its seed and part seeds.
 function rollNpcPinned(fields, seed, pinned = {}) {
-    const rollOpts = { race: fields.race, professionType: fields.profession, age: fields.age, gender: fields.gender };
+    const rollOpts = { race: fields.race, professionType: fields.profession, age: fields.age, gender: fields.gender, realms: fields.world === 'realms' };
     if (pinned.identity) [rollOpts.race, rollOpts.gender] = pinned.identity.extra;
     if (pinned.age) [rollOpts.age] = pinned.age.extra;
     if (pinned.job) [rollOpts.professionType] = pinned.job.extra;
@@ -1144,5 +1155,8 @@ function rollNpcPinned(fields, seed, pinned = {}) {
     const name = npcGiven(fields.name), role = npcGiven(fields.role, 80);
     if (name) Object.assign(npc, { name, firstName: name.split(' ')[0], surname: '', nickname: '', given: { ...npc.given, name } });
     if (role) Object.assign(npc, { profession: role, given: { ...npc.given, role } });
+    // A Realms NPC given a god in the link (?faith=, a Pantheon tab priest) prays to that one.
+    const faith = npc.realms && typeof realmsGod === 'function' && realmsGod(fields.faith) ? fields.faith : '';
+    if (faith) Object.assign(npc, { realms: { ...npc.realms, faith }, given: { ...npc.given, faith } });
     return npc;
 }

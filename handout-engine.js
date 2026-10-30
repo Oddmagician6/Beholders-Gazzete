@@ -161,7 +161,7 @@ function handoutSource(src) {
             const fields = {
                 race: hoPick(p.get('race'), NPC_RACES), profession: hoPick(p.get('profession'), Object.keys(npcData.professions)),
                 age: hoPick(p.get('age'), NPC_AGE_BUCKETS), gender: hoPick(p.get('gender'), NPC_GENDERS),
-                name: p.get('name'), role: p.get('role')
+                name: p.get('name'), role: p.get('role'), world: p.get('world'), faith: p.get('faith')
             };
             const pinned = Object.fromEntries(p.getAll('lock').map(t => parseNpcLock(t)).filter(Boolean));
             const npc = rollNpcPinned(fields, src.seed, pinned);
@@ -171,7 +171,7 @@ function handoutSource(src) {
             const job = p.get('job');
             const quest = rollQuest(src.seed, {
                 level: Number(p.get('lvl')) || 3, size: Number(p.get('n')) || 4,
-                job: Object.hasOwn(QUEST_JOBS, job) ? job : 'random'
+                job: Object.hasOwn(QUEST_JOBS, job) ? job : 'random', world: p.get('world')
             });
             return { ...src, quest, title: quest.title };
         }

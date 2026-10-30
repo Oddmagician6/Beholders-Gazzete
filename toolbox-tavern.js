@@ -5,7 +5,8 @@
    The URL holds the seed and the rumor's index in rumors.json, so a link shows the
    same tavern and the same rumor without dealing from anyone's deck.
    A link may also give the tavern its name (&name=, an article's tavern, F69); a new roll drops it.
-   URL: ?tab=tavern&seed=&q=<quality>&rumor=<index>&name=
+   With 🐉 Forgotten Realms picked (realms.js), the tavern stands in a Realms city (world=realms).
+   URL: ?tab=tavern&seed=&q=<quality>&world=&rumor=<index>&name=
    ============================================ */
 
 const TAVERN_RUMOR_CATS = {
@@ -20,7 +21,7 @@ const capWord = s => s.charAt(0).toUpperCase() + s.slice(1);
 
 // The tavern for this seed and quality, under its given name if it has one.
 function tavernRoll(seed, quality) {
-    const tv = rollTavern(seed, { quality });
+    const tv = rollTavern(seed, { quality, world: realmsOn('tv-world') ? 'realms' : '' });
     return tavern.name ? { ...tv, name: tavern.name } : tv;
 }
 
@@ -43,6 +44,7 @@ function tavParams() {
     const q = document.getElementById('tv-quality');
     return urlFor('tavern', {
         q: fieldValue(q) === defaultValue(q) ? null : q.value,
+        world: realmsOn('tv-world') ? 'realms' : null,
         seed: tavern.seed,
         rumor: tavern.rumorIdx !== null ? String(tavern.rumorIdx) : null,
         name: tavern.name || null
@@ -62,6 +64,8 @@ function rollTavernFor(seed = newSeed(), push = true) {
 function applyTavUrl(p) {
     const q = document.getElementById('tv-quality');
     if (!setFieldValue(q, p.get('q'))) q.value = defaultValue(q);
+    const world = document.getElementById('tv-world');
+    if (!setFieldValue(world, p.get('world'))) world.value = defaultValue(world);
     const seed = parseSeed(p.get('seed'));
     if (!seed) return false;
     tavern.seed = seed;
@@ -112,7 +116,7 @@ function renderTavern() {
         <div class="tv-art" aria-hidden="true"><img src="${art}.webp" srcset="${art}-sm.webp 480w, ${art}.webp 960w" sizes="(max-width: 1000px) 100vw, 960px" alt="" width="960" height="640" decoding="async"></div>
         <header class="tv-head">
             <h3 class="tv-name">${esc(tv.name)}</h3>
-            <div class="tv-tier">${t.icon} ${esc(t.label)} ${esc(tv.kind.label)} · ${esc(tv.kind.where)}</div>
+            <div class="tv-tier">${t.icon} ${esc(t.label)} ${esc(tv.kind.label)} · ${esc(tavernWhere(tv))}</div>
             <p class="tv-scene">${esc(tavernSceneText(tv.scene))}</p>
             <p class="tv-small tv-history"><b>The sign:</b> ${esc(tv.sign)}. ${esc(tv.history)}</p>
         </header>
@@ -129,6 +133,7 @@ function renderTavern() {
                 <p>${esc(o.trait)}. ${esc(o.voice)}.</p>
                 <p class="tv-quote">"${esc(o.dialogue)}"</p>
                 <p class="tv-secret"><b>Secret:</b> ${esc(o.secret)}</p>
+                ${o.realms ? `<p class="tv-small">🐉 ${esc(realmsNpcLine(o))}</p>` : ''}
                 <ul class="tv-regulars tv-staff">${tv.staff.map(s => `
                     <li>
                         <div class="tv-npc-name">${npcFaceHtml(s)} ${esc(s.name)}</div>
@@ -143,7 +148,7 @@ function renderTavern() {
                     <li>
                         <div class="tv-npc-name">${npcFaceHtml(r)} ${esc(r.name)}</div>
                         <div class="tv-npc-sub">${npcSub(r, r.profession)}</div>
-                        <p>Found ${esc(r.habit)}. ${esc(r.trait)}.${r.tie ? ` ${esc(capWord(r.tie))}.` : ''}</p>
+                        <p>Found ${esc(r.habit)}. ${esc(r.trait)}.${r.tie ? ` ${esc(capWord(r.tie))}.` : ''}${esc(tavernTieText(r))}</p>
                         ${i === 0 ? `<p class="tv-hook"><b>Has work:</b> ${esc(r.questHook)}</p>` : ''}
                     </li>`).join('')}
                 </ul>
@@ -186,13 +191,14 @@ function printTavern() {
 function setupTavern() {
     const sel = document.getElementById('tv-quality');
     Object.entries(TAVERN_TIERS).forEach(([key, t]) => sel.add(new Option(`${t.icon} ${t.label}`, key)));
-    sel.addEventListener('change', () => {
-        // Same tavern and rumor, new quality: only the menu and rooms change.
+    realmsPicker('tv-world', 'tavern');
+    // Same tavern and rumor, new quality (only the menu and rooms change) or world (names and city).
+    [sel, document.getElementById('tv-world')].forEach(el => el.addEventListener('change', () => {
         if (!tavern.seed) return;
         tavern.data = tavernRoll(tavern.seed, sel.value);
         renderTavern();
         setUrlParams(tavParams(), false);
-    });
+    }));
     document.getElementById('tv-roll').addEventListener('click', () => rollTavernFor());
     document.getElementById('tv-rumor').addEventListener('click', () => {
         dealTavernRumor();

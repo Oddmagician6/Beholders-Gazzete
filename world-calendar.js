@@ -5,13 +5,13 @@
    with moon phases and festival days. Nothing is stored: the URL holds the calendar.
    A pantheon from the Pantheon tab can be linked (gods=<its seed> plus its options),
    and then every god's holy day is listed and marked in the month view.
-   URL: ?seed=&style=&months=&week=&moons=&climate=&view=<month number>&gods=&gsize=&gshape=&gnaming=
+   URL: ?seed=&style=&months=&week=&moons=&climate=&view=<month number>&gods=&gsize=&gshape=&gnaming=&gworld=
    ============================================ */
 
 const CAL_FIELDS = { style: 'cal-style', months: 'cal-months', week: 'cal-week', moons: 'cal-moons', climate: 'cal-climate' };
 
 // The linked pantheon's URL keys → its option names.
-const CAL_GOD_KEYS = { gsize: 'size', gshape: 'shape', gnaming: 'naming' };
+const CAL_GOD_KEYS = { gsize: 'size', gshape: 'shape', gnaming: 'naming', gworld: 'world' };
 
 let calState = { seed: null, data: null, view: 0, gods: null, pantheon: null };
 
@@ -51,7 +51,7 @@ function calParams() {
     params.view = c && calState.view !== c.today.month ? calState.view + 1 : null;
     const g = calState.gods;
     params.gods = g ? g.seed : null;
-    Object.entries(CAL_GOD_KEYS).forEach(([key, opt]) => { params[key] = g && g[opt] !== 'random' ? g[opt] : null; });
+    Object.entries(CAL_GOD_KEYS).forEach(([key, opt]) => { params[key] = g && g[opt] && g[opt] !== 'random' ? g[opt] : null; });
     return worldUrlFor('calendar', params);
 }
 
@@ -110,7 +110,7 @@ function calHolyText(c) {
 function calPantheonLink() {
     const g = calState.gods;
     const params = new URLSearchParams({ tab: 'pantheon', seed: g.seed });
-    ['size', 'shape', 'naming'].forEach(k => { if (g[k] !== 'random') params.set(k, g[k]); });
+    ['size', 'shape', 'naming', 'world'].forEach(k => { if (g[k] && g[k] !== 'random') params.set(k, g[k]); });
     return 'worldbuilder?' + params.toString();
 }
 

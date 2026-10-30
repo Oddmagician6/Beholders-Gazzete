@@ -172,6 +172,8 @@
 
         /* Rumor deck (F20): "N of M left" under the draw button */
         .deck-count { margin: 12px 0 0; color: #888; font-size: 0.85rem; }
+        .world-pick { text-align: center; margin: 18px 0 0; font-family: 'Cinzel', serif; font-size: 0.85rem; }
+        .world-pick select { margin-left: 6px; padding: 6px 10px; background: #252529; color: var(--text-color); border: 1px solid #444; border-radius: 6px; font: inherit; }
         .deck-count[hidden] { display: none; }
         .deck-shuffle {
             background: none; border: none; padding: 2px 4px; margin-left: 6px;
@@ -624,6 +626,7 @@
                     <button class="category-btn" data-category="monsters">🐉 Monsters</button>
                     <button class="category-btn" data-category="magic">✨ Magic & Weird</button>
                 </div>
+                <p class="world-pick"><label>🗺️ World <select id="rumor-world"><option value="" selected>The Gazette's own</option><option value="realms">🐉 Forgotten Realms</option></select></label></p>
             </div>
 
             <!-- Generator Box -->
@@ -732,6 +735,7 @@
 
     <script src="rules-system.js"></script>
     <script src="rng.js"></script>
+    <script src="realms.js"></script>
     <script src="town-crier.js"></script>
     <script src="rumor-deck.js"></script>
     <script src="rumors.js"></script>

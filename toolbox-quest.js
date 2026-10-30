@@ -4,12 +4,13 @@
    and what's there, a first lead, what's in the way, a twist, what's at stake, a deadline,
    a reward scaled to the party, and sometimes a foe that opens in the Encounter tab. Nothing is stored: the URL holds the quest.
    📓 Save to Notebook (F50) files its link in the campaign notebook (notebook.js) as an open quest.
-   URL: ?tab=quest&seed=&lvl=&n=&job=
+   With 🐉 Forgotten Realms picked (realms.js), the job is near a Realms city (world=realms).
+   URL: ?tab=quest&seed=&lvl=&n=&job=&world=
    A new quest (no seed in the URL) starts at the Party tab's level and size (party.js); a shared
    one keeps its own (a missing lvl or n means level 3, party of 4).
    ============================================ */
 
-const QUEST_FIELDS = { lvl: 'qs-level', n: 'qs-size', job: 'qs-job' };
+const QUEST_FIELDS = { lvl: 'qs-level', n: 'qs-size', job: 'qs-job', world: 'qs-world' };
 
 let quest = { seed: null, data: null };
 
@@ -17,7 +18,8 @@ function questOpts() {
     return {
         level: Number(document.getElementById('qs-level').value),
         size: Number(document.getElementById('qs-size').value),
-        job: document.getElementById('qs-job').value
+        job: document.getElementById('qs-job').value,
+        world: realmsOn('qs-world') ? 'realms' : ''
     };
 }
 
@@ -89,10 +91,11 @@ function renderQuest() {
             </section>
             <section class="tv-block">
                 <h4>📍 The job</h4>
-                <p><b class="qs-b">Where:</b> ${esc(capWord(q.place))}</p>
+                <p><b class="qs-b">Where:</b> ${esc(capWord(q.place))}${q.realms ? `, near ${esc(q.realms.city)}` : ''}</p>
                 <p><b class="qs-b">What's there:</b> ${esc(q.feature)}</p>
                 <p><b class="qs-b">Where to start:</b> ${esc(q.lead)}</p>
                 <p><b class="qs-b">Deadline:</b> ${esc(q.deadline)}</p>
+                ${q.realms ? `<p><b class="qs-b">🐉 Who else cares:</b> ${esc(q.realms.interest)}</p>` : ''}
                 <h4 class="tv-h-gap">💰 Reward</h4>
                 <p class="qs-reward">${esc(formatCoins(q.reward.gp))} <span class="tv-npc-sub">for the party</span></p>
                 <p>${esc(questRewardText(q.reward))}</p>
@@ -148,6 +151,7 @@ function setupQuest() {
     for (let n = 1; n <= 8; n++) size.add(new Option(`Party of ${n}`, n, n === 4, n === 4));
     const job = document.getElementById('qs-job');
     Object.entries(QUEST_JOBS).forEach(([key, j]) => job.add(new Option(`${j.icon} ${j.label}`, key)));
+    realmsPicker('qs-world', 'quest');
     questUseParty();
     partyChip(document.getElementById('qs-party-chip'), {
         label: 'Use the Party', title: "Set the level and party size to the Party tab's",

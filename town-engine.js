@@ -20,6 +20,9 @@
    Needs rng.js, coins.js, npc-data.js, names-data.js, pantheon-engine.js,
    faction-engine.js, tavern-engine.js, market-data.js, shop-engine.js, quest-engine.js
    (with monsters-data.js and encounter-engine.js). The tables are the Gazette's own.
+   opts.world 'realms' (realms.js, ROADMAP L4 D2): the town stands somewhere in the Forgotten
+   Realms (t.realmsPlace), its people get Realms names, its temple keeps a Realms god, and its
+   factions, taverns, and quest roll the Realms way too. Those draws have seeds of their own.
    ============================================ */
 
 // pop: [low, high]; districts, taverns, shops: [low, high] of the ones described;
@@ -495,8 +498,8 @@ function townName(setting) {
 }
 
 // The roll's people are rolled the NPC page's way (see facNpc in faction-engine.js).
-function townNpc(seed, cat, age) {
-    return facNpc(seed, cat, age);
+function townNpc(seed, cat, age, realms = false) {
+    return facNpc(seed, cat, age, realms);
 }
 
 // ── The roll ─────────────────────────────────────────────
@@ -515,6 +518,12 @@ function rollTown(seed, opts = {}) {
     const wealth = TOWN_WEALTH[opts.wealth] ? opts.wealth : rolled.wealth;
     const z = TOWN_SIZES[size], s = TOWN_SETTINGS[setting], wl = TOWN_WEALTH[wealth];
     const t = { seed, size, setting, wealth };
+    const realms = opts.world === 'realms' && typeof REALMS_CITIES !== 'undefined';
+    if (realms) {
+        t.realms = true;
+        // Where in the Realms: near one of its cities, a few days off.
+        t.realmsPlace = part('realms.place', () => ({ city: townPick(REALMS_CITIES).n, days: townPick([1, 2, 2, 3, 4, 5, 7]), dir: townPick(['north', 'south', 'east', 'west', 'northeast', 'northwest', 'southeast', 'southwest']) }));
+    }
 
     t.name = part('name.' + setting, () => townName(setting));
     t.population = part('pop.' + size, () => {
@@ -545,7 +554,7 @@ function rollTown(seed, opts = {}) {
     const gov = TOWN_GOVS.find(g => g.key === t.gov);
     // Nobody runs a town at seventeen: a leader is at least an adult.
     const leaderAge = gov.age || part('leader.age', () => townPick(['adult', 'middle', 'middle', 'old']));
-    t.leader = townNpc(sub('leader.' + gov.cat), gov.cat, leaderAge);
+    t.leader = townNpc(sub('leader.' + gov.cat), gov.cat, leaderAge, realms);
     t.leader.title = genderedTitle(gov.title, t.leader.npc.gender);
     t.leader.style = part('leader.style', () => townPick(TOWN_LEADER_STYLES));
     t.strings = part('strings', () => townPick(TOWN_STRINGS));
@@ -556,7 +565,7 @@ function rollTown(seed, opts = {}) {
         return { name: townPick(w.names), count, kind: townPick(TOWN_WATCH_KINDS), party: townPick(TOWN_WATCH_PARTY),
             bribe: [1, 2, 5, 10, 25][Math.floor(rand() * 5)] * (wealth === 'prosperous' ? 2 : 1) };
     });
-    t.captain = size === 'hamlet' ? null : townNpc(sub('captain'), 'guard', 'middle');
+    t.captain = size === 'hamlet' ? null : townNpc(sub('captain'), 'guard', 'middle', realms);
 
     // The temple: its god (facDeity's way), its look, its priest.
     t.temple = part('temple', () => ({
@@ -564,7 +573,7 @@ function rollTown(seed, opts = {}) {
         look: townPick(size === 'hamlet' ? TOWN_SHRINE_LOOKS : TOWN_TEMPLE_LOOKS),
         offers: townPick(TOWN_TEMPLE_OFFERS)
     }));
-    t.priest = townNpc(sub('priest'), 'religious');
+    t.priest = townNpc(sub('priest'), 'religious', null, realms);
 
     // Districts: the hamlet is its own; otherwise a deck that fits the size and setting.
     t.districts = part(`districts.${size}.${setting}`, () => {
@@ -595,7 +604,7 @@ function rollTown(seed, opts = {}) {
     const moreShare = TOWN_ROLES_MORE.length / (TOWN_ROLES.length + TOWN_ROLES_MORE.length);
     const roles = part('people', () => townShuffle(TOWN_ROLES)).slice(0, z.people).map((r, k) => more.swaps[k] < moreShare ? more.roles[k] : r);
     t.people = roles.map(([role, cat, age], k) => {
-        const p = townNpc(sub('person.' + k), cat, age);
+        const p = townNpc(sub('person.' + k), cat, age, realms);
         return { ...p, role, want: decks.wants[k], tie: decks.ties[k], ...part('person.' + k + '.more', () => ({ with: rand(), fac: rand(), facPick: rand() })) };
     });
     t.people.forEach((p, k) => {
@@ -609,6 +618,7 @@ function rollTown(seed, opts = {}) {
         const tier = townWeighted(TAVERN_TIER_KEYS.map((key, i) => [key, wl.tavern[i]]));
         return { seed: sub('tavern.' + k), quality: tier, district: Math.floor(rand() * nd) };
     }));
+    if (realms) t.taverns.forEach(tv => { tv.realms = true; });
     t.shops = part(`shops.${size}.${setting}.${wealth}`, () => {
         const types = SHOP_TYPE_FIRST.filter(k => k !== 'docks' || ['river', 'coast', 'marsh'].includes(setting));
         const n = townRange(z.shops);
@@ -658,16 +668,16 @@ function rollTown(seed, opts = {}) {
 // The town's factions (a rollFactions() result) or null for a hamlet.
 function townFactions(t) {
     const z = TOWN_SIZES[t.size];
-    return t.factionSeed ? rollFactions(t.factionSeed, { count: z.factions, scale: z.facScale }) : null;
+    return t.factionSeed ? rollFactions(t.factionSeed, { count: z.factions, scale: z.facScale, world: t.realms ? 'realms' : '' }) : null;
 }
 
 // The town's quest, at the Toolbox's defaults (the giver, job, place, and task don't depend on the party).
 function townQuest(t) {
-    return rollQuest(t.questSeed, { level: 1, size: 4 });
+    return rollQuest(t.questSeed, { level: 1, size: 4, world: t.realms ? 'realms' : '' });
 }
 
 function townTavern(tv) {
-    return rollTavern(tv.seed, { quality: tv.quality });
+    return rollTavern(tv.seed, { quality: tv.quality, world: tv.realms ? 'realms' : '' });
 }
 
 function townShop(sh) {
@@ -691,7 +701,7 @@ function townRumorIndexes(t, rumors) {
 // ── Text ─────────────────────────────────────────────────
 // ctx: { factions: townFactions(t) or null, pantheon: a rollPantheon() result or null }.
 function townDeity(t, ctx) {
-    return facDeity({ deity: t.temple.deity }, ctx && ctx.pantheon);
+    return facDeity({ deity: t.temple.deity, realmsWorld: t.realms }, ctx && ctx.pantheon);
 }
 
 function townFactionName(t, ctx, draw) {
@@ -743,6 +753,13 @@ function townRealmText(r) {
         + `${CONT_CLIMATES[r.c.map.climate[r.t.cell]].label} climate. The realm exports ${nat.exports.join(' and ')}.`;
 }
 
+// Where a Forgotten Realms town stands: "In the Sword Coast, two days' ride northeast of Waterdeep (…)."
+function townRealmsText(t) {
+    const r = t.realmsPlace, city = REALMS_CITIES.find(c => c.n === r.city);
+    const days = r.days === 1 ? "a day's ride" : `${['', '', 'two', 'three', 'four', 'five', 'six', 'seven'][r.days]} days' ride`;
+    return `${facCap(city.r)}, ${days} ${r.dir} of ${city.n}, ${city.about}.`;
+}
+
 // The town at a glance, as [label, text] pairs.
 function townLines(t, ctx) {
     const god = townDeity(t, ctx);
@@ -750,6 +767,7 @@ function townLines(t, ctx) {
     const lines = [
         ['Size', `${TOWN_SIZES[t.size].label}, about ${t.population.toLocaleString('en-US')} folk.`],
         ['Where', facCap(TOWN_SETTINGS[t.setting].where) + '.'],
+        ...(t.realmsPlace ? [['In the Realms', townRealmsText(t)]] : []),
         ['Known for', facCap(t.known) + '.'],
         ['Folk', townFolkText(t)],
         ['Times', TOWN_WEALTH[t.wealth].about],

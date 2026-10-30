@@ -12,6 +12,9 @@
    Temples, orders, some cults, and some houses follow a god. With a linked pantheon
    (pantheon-engine.js, rollPantheon) that god is one of its gods; without one it's a
    god known by a title. Needs rng.js, coins.js, npc-data.js, pantheon-engine.js.
+   opts.world 'realms' (realms.js, ROADMAP L4 D2): the people get Realms names, some factions
+   become the Realms' own (the Harpers, the Zhentarim…) by kind, and an unlinked god is a
+   Realms god. Those draws have seeds of their own, so the rest of the roll stays the same.
    The tables are the Gazette's own.
    ============================================ */
 
@@ -916,24 +919,25 @@ function facPairKey(a, b) {
 }
 
 // The NPC page's way of rolling an NPC from one seed, so a link opens the same person.
-function facNpc(seed, cat, age) {
-    const opts = { professionType: cat, age: age || 'random' };
+function facNpc(seed, cat, age, realms = false) {
+    const opts = { professionType: cat, age: age || 'random', realms };
     const seeds = Object.fromEntries(NPC_PARTS.map(part => [part, deriveSeed(seed, part)]));
-    return { seed, cat, age: age || null, npc: rollNPC(opts, seeds) };
+    return { seed, cat, age: age || null, npc: rollNPC(opts, seeds), ...(realms ? { realms: true } : {}) };
 }
 
 // ── One faction ──────────────────────────────────────────
 // prev: the factions rolled before this one (for names and crafts that mustn't repeat).
-function facRollFaction(seed, i, type, prev) {
+function facRollFaction(seed, i, type, prev, realms = false) {
     const t = FAC_TYPES[type];
     const f = { i, type };
+    if (realms) f.realmsWorld = true;
     const sub = label => deriveSeed(seed, `faction.${i}.${type}.${label}`);
 
-    f.leader = facNpc(sub('leader'), t.leader.cat);
+    f.leader = facNpc(sub('leader'), t.leader.cat, null, realms);
     f.leader.title = genderedTitle(t.leader.title, f.leader.npc.gender);
     f.leader.style = facPick(FAC_LEADER_STYLES);
     const lts = facShuffle(t.lieutenants).slice(0, 2 + (rand() < 0.5 ? 1 : 0));
-    f.lieutenants = lts.map(([role, cat, age], k) => ({ ...facNpc(sub('lt.' + k), cat, age), role, motive: facPick(FAC_MOTIVES) }));
+    f.lieutenants = lts.map(([role, cat, age], k) => ({ ...facNpc(sub('lt.' + k), cat, age, realms), role, motive: facPick(FAC_MOTIVES) }));
 
     // The god a temple, order, cult, or house follows: domains it prefers, and a draw to pick one.
     const wantsGod = { temple: 1, order: 1, cult: 0.6, house: 0.3 }[type] || 0;
@@ -1047,8 +1051,10 @@ function rollFactions(seed, opts = {}) {
         order[0] = focus;
     }
 
+    const realms = opts.world === 'realms' && typeof REALMS_FACTIONS !== 'undefined';
     const factions = [];
-    for (let i = 0; i < n; i++) factions.push(part(`faction.${i}.${order[i]}`, () => facRollFaction(seed, i, order[i], factions)));
+    for (let i = 0; i < n; i++) factions.push(part(`faction.${i}.${order[i]}`, () => facRollFaction(seed, i, order[i], factions, realms)));
+    if (realms) part('realms.' + order.slice(0, n).join('.'), () => facRealmsFactions(factions));
     const s = FAC_SCALES[scale];
     factions.forEach(f => {
         const t = FAC_TYPES[f.type];
@@ -1056,12 +1062,34 @@ function rollFactions(seed, opts = {}) {
         f.members = Math.max(3, members >= 100 ? Math.round(members / 10) * 10 : Math.round(members));
         f.treasury = Math.max(10, Math.round((t.treasury[0] + f.treasuryRoll * (t.treasury[1] - t.treasury[0])) * s.treasury / 10) * 10);
     });
-    const w = { seed, count, focus: focus || 'random', scale, factions };
+    const w = { seed, count, focus: focus || 'random', scale, factions, realms };
     Object.assign(w, part(`ties.${n}.` + order.slice(0, n).join('.'), () => facTies(factions)));
     facSecondPass(w, part, `ties.more.${n}.` + order.slice(0, n).join('.'));
     facThirdPass(w, part, `ties.r7.${n}.` + order.slice(0, n).join('.'));
     return w;
 }
+
+// The Forgotten Realms (realms.js): most factions with a Realms counterpart of their kind
+// become it (name, what they are, goal, symbol), and at least one does when any can.
+// They follow no rolled god: a random one would put the Realms' own factions at odds with their lore.
+function facRealmsFactions(factions) {
+    const used = new Set();
+    const swap = (f, r) => {
+        used.add(r.n);
+        Object.assign(f, { nameRaw: r.n, goal: facCap(r.goal) + '.', symbol: r.s, realms: { about: r.about }, deity: null });
+    };
+    const options = f => REALMS_FACTIONS.filter(r => r.type === f.type && !used.has(r.n));
+    factions.forEach(f => {
+        const fits = options(f), roll = rand(), pick = facPick(fits.length ? fits : REALMS_FACTIONS);
+        if (fits.length && roll < 0.6) swap(f, pick);
+    });
+    if (!factions.some(f => f.realms)) {
+        const f = factions.find(x => options(x).length);
+        if (f) swap(f, facPick(options(f)));
+    }
+}
+
+let facRealmsGods = null;
 
 // One of the newer lines in place of cur, by its share of the whole list (always two draws).
 function facSwap(cur, old, more) {
@@ -1138,11 +1166,14 @@ function facDeity(f, pantheon) {
     const d = f.deity;
     if (!d) return null;
     if (d.outer) return { name: d.outer, full: d.outer, outer: true };
+    // In the Forgotten Realms with no pantheon linked, the god is one of the Realms' own.
+    const realms = !(pantheon && pantheon.gods.length) && f.realmsWorld && typeof realmsPantheon === 'function';
+    if (realms) pantheon = facRealmsGods || (facRealmsGods = realmsPantheon());
     if (pantheon && pantheon.gods.length) {
         const fits = pantheon.gods.filter(g => d.domains.includes(g.domain) || (g.domain2 && d.domains.includes(g.domain2)));
         const pool = fits.length ? fits : pantheon.gods;
         const god = pool[Math.floor(d.pick * pool.length)];
-        return { name: god.name, full: `${god.name}, ${god.epithet}`, linked: true, god, index: pantheon.gods.indexOf(god) };
+        return { name: god.name, full: `${god.name}, ${god.epithet}`, linked: !realms, god, index: pantheon.gods.indexOf(god) };
     }
     const domain = d.domains[Math.floor(d.pick * d.domains.length)];
     const titles = PAN_TITLES[domain];
@@ -1208,6 +1239,7 @@ function facFill(text, w, i, ctx) {
 }
 
 function facSymbolText(f, ctx) {
+    if (f.realms) return f.symbol;
     if (f.symbol) return `${f.symbol}, ${f.colors[0]} on ${f.colors[1]}`;
     // A temple shows its god's holy symbol when there is one.
     const god = facDeity(f, ctx && ctx.pantheon);
@@ -1231,7 +1263,7 @@ function facLines(w, i, ctx) {
     const allies = facAlliesOf(w, i).map(k => facName(w, k, ctx));
     const list = items => items.length < 2 ? items.join('') : items.slice(0, -1).join(', ') + (items.length > 2 ? ',' : '') + ' and ' + items[items.length - 1];
     const lines = [
-        ['What they are', `${t.label}. ${t.about}`],
+        ['What they are', f.realms ? `${facCap(f.realms.about)}. In the Forgotten Realms.` : `${t.label}. ${t.about}`],
         ['Influence', `${FAC_INFLUENCE[f.influence]} in ${FAC_SCALES[w.scale].place}.`],
         ['Goal', fill(f.goal)],
         ['Method', fill(f.method)],

@@ -6,18 +6,18 @@
    gods" links a pantheon, and then temples, orders, and some cults and houses follow
    one of its gods. Nothing is stored: the URL holds the factions. Each leader's 🌳 button rolls
    their family on the Families tab (F55).
-   URL: ?tab=factions&seed=&count=&focus=&scale=&faction=<number>&gods=&gsize=&gshape=&gnaming=
+   URL: ?tab=factions&seed=&count=&focus=&scale=&world=&faction=<number>&gods=&gsize=&gshape=&gnaming=&gworld=
    ============================================ */
 
-const FAC_FIELDS = { count: 'fac-count', focus: 'fac-focus', scale: 'fac-scale' };
+const FAC_FIELDS = { count: 'fac-count', focus: 'fac-focus', scale: 'fac-scale', world: 'fac-world' };
 // The linked pantheon's URL keys → its option names (the same keys the Calendar uses).
-const FAC_GOD_KEYS = { gsize: 'size', gshape: 'shape', gnaming: 'naming' };
+const FAC_GOD_KEYS = { gsize: 'size', gshape: 'shape', gnaming: 'naming', gworld: 'world' };
 
 let facState = { seed: null, data: null, view: 0, gods: null, pantheon: null };
 
 function facOpts() {
     const v = id => document.getElementById(id).value;
-    return { count: v('fac-count'), focus: v('fac-focus'), scale: v('fac-scale') };
+    return { count: v('fac-count'), focus: v('fac-focus'), scale: v('fac-scale'), world: realmsOn('fac-world') ? 'realms' : '' };
 }
 
 function facCtx() {
@@ -34,7 +34,7 @@ function facParams() {
     params.faction = facState.data && facState.view ? facState.view + 1 : null;
     const g = facState.gods;
     params.gods = g ? g.seed : null;
-    Object.entries(FAC_GOD_KEYS).forEach(([key, opt]) => { params[key] = g && g[opt] !== 'random' ? g[opt] : null; });
+    Object.entries(FAC_GOD_KEYS).forEach(([key, opt]) => { params[key] = g && g[opt] && g[opt] !== 'random' ? g[opt] : null; });
     return worldUrlFor('factions', params);
 }
 
@@ -90,6 +90,7 @@ function facLinkPantheon(on) {
 function facNpcLink(p) {
     const params = new URLSearchParams({ seed: p.seed, profession: p.cat });
     if (p.age) params.set('age', p.age);
+    if (p.realms) params.set('world', 'realms');
     return 'npc-generator?' + params.toString();
 }
 
@@ -101,7 +102,7 @@ function facNpcIcon(p) {
 function facPantheonLink(god) {
     const g = facState.gods;
     const params = new URLSearchParams({ tab: 'pantheon', seed: g.seed });
-    ['size', 'shape', 'naming'].forEach(k => { if (g[k] !== 'random') params.set(k, g[k]); });
+    ['size', 'shape', 'naming', 'world'].forEach(k => { if (g[k] && g[k] !== 'random') params.set(k, g[k]); });
     if (god && god.index) params.set('god', god.index + 1);
     return 'worldbuilder?' + params.toString();
 }
@@ -202,7 +203,7 @@ function renderFactions() {
     const s = FAC_SCALES[w.scale];
     document.getElementById('fac-card').innerHTML = `
         <header class="wb-head">
-            <p class="wb-kicker">${s.icon} ${esc(s.label)} · ${w.factions.length} factions</p>
+            <p class="wb-kicker">${s.icon} ${esc(s.label)} · ${w.factions.length} factions${w.realms ? ' · 🐉 Forgotten Realms' : ''}</p>
             <h3 class="wb-name">Who Runs the ${esc(facCap(s.place.replace(/^the /, '')))}</h3>
             <p class="wb-sub">${esc(facSummary(w, ctx))}</p>
         </header>
@@ -245,6 +246,7 @@ function setupFactions() {
     Object.entries(FAC_TYPES).forEach(([key, t]) => focus.add(new Option(`${t.icon} ${t.label}`, key)));
     const scale = document.getElementById('fac-scale');
     Object.entries(FAC_SCALES).forEach(([key, s]) => scale.add(new Option(`${s.icon} ${s.label}`, key)));
+    realmsPicker('fac-world', 'factions');
 
     // Same seed: a new option keeps everything it doesn't touch.
     Object.values(FAC_FIELDS).forEach(id => document.getElementById(id).addEventListener('change', () => {

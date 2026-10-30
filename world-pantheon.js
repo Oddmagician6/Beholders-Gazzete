@@ -5,16 +5,17 @@
    feuds and friendships between them. "Put the holy days on the calendar" links
    this pantheon to the Calendar tab, which then marks every holy day; while the
    two are linked, this tab gives each holy day its date. Nothing is stored.
-   URL: ?tab=pantheon&seed=&size=&shape=&naming=&god=<god number>
+   With 🐉 Forgotten Realms picked (realms.js), the gods are the Realms' own.
+   URL: ?tab=pantheon&seed=&size=&shape=&naming=&world=&god=<god number>
    ============================================ */
 
-const PAN_FIELDS = { size: 'pan-size', shape: 'pan-shape', naming: 'pan-naming' };
+const PAN_FIELDS = { size: 'pan-size', shape: 'pan-shape', naming: 'pan-naming', world: 'pan-world' };
 
 let panState = { seed: null, data: null, god: 0 };
 
 function panOpts() {
     const v = id => document.getElementById(id).value;
-    return { size: v('pan-size'), shape: v('pan-shape'), naming: v('pan-naming') };
+    return { size: v('pan-size'), shape: v('pan-shape'), naming: v('pan-naming'), world: realmsOn('pan-world') ? 'realms' : '' };
 }
 
 function panParams() {
@@ -34,7 +35,8 @@ function panLinkedCalendar() {
     const g = calLinkedPantheon();
     if (!g || !calState.data) return null;
     const o = panOpts();
-    return g.seed === panState.seed && g.size === o.size && g.shape === o.shape && g.naming === o.naming ? calState.data : null;
+    return g.seed === panState.seed && g.size === o.size && g.shape === o.shape && g.naming === o.naming
+        && (g.world === 'realms') === (o.world === 'realms') ? calState.data : null;
 }
 
 // push: true = new history entry, false = replace, null = leave the URL alone.
@@ -67,6 +69,7 @@ function applyPanUrl(p) {
 // ── Render ────────────────────────────────────────────────
 function panPriestLink(p, i) {
     const params = new URLSearchParams({ seed: deriveSeed(p.seed, 'priest.' + i), profession: 'religious' });
+    if (p.realms) { params.set('world', 'realms'); params.set('faith', p.gods[i].name); }
     return 'npc-generator?' + params.toString();
 }
 
@@ -129,7 +132,7 @@ function renderPantheon() {
     const cal = panLinkedCalendar();
     document.getElementById('pan-card').innerHTML = `
         <header class="wb-head">
-            <p class="wb-kicker">${sh.icon} ${esc(sh.label)} · ${p.gods.length} gods · ${nm.icon} ${esc(nm.label.toLowerCase())} names</p>
+            <p class="wb-kicker">${sh.icon} ${esc(sh.label)} · ${p.gods.length} gods · ${p.realms ? '🐉 Forgotten Realms' : `${nm.icon} ${esc(nm.label.toLowerCase())} names`}</p>
             <h3 class="wb-name">${esc(panCap(p.name))}</h3>
             <p class="wb-sub">${esc(panSummary(p))}</p>
             <p class="wb-note">${esc(sh.about)}</p>
@@ -184,6 +187,7 @@ function setupPantheon() {
     Object.entries(PAN_SHAPES).forEach(([key, s]) => shape.add(new Option(`${s.icon} ${s.label}`, key)));
     const naming = document.getElementById('pan-naming');
     Object.entries(PAN_NAMING).forEach(([key, s]) => naming.add(new Option(`${s.icon} ${s.label}`, key)));
+    realmsPicker('pan-world', 'pantheon');
 
     // Same seed: a new option keeps everything it doesn't touch.
     Object.values(PAN_FIELDS).forEach(id => document.getElementById(id).addEventListener('change', () => {

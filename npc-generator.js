@@ -10,7 +10,7 @@
 let currentNPC = null;
 
 // URL param -> picker. The pickers plus a seed (rng.js) rebuild the same NPC.
-const NPC_FIELDS = { race: 'npc-race', profession: 'npc-profession', age: 'npc-age', gender: 'npc-gender', cls: 'npc-class', level: 'npc-level' };
+const NPC_FIELDS = { race: 'npc-race', profession: 'npc-profession', age: 'npc-age', gender: 'npc-gender', cls: 'npc-class', level: 'npc-level', world: 'npc-world' };
 
 // The grimoire's saves; a Pathfinder page keeps its own (ruleKey).
 const SAVED_KEY = ruleKey('saved_npcs');
@@ -93,6 +93,10 @@ function displayNPC(includeStats, includeSecrets, includeQuest) {
     // Alignment, first impression, and pockets came later; older saves don't have them.
     document.getElementById('npc-alignment-display').parentElement.hidden = !npcAlign(currentNPC);
     document.getElementById('npc-alignment-display').textContent = npcAlign(currentNPC);
+    // A Forgotten Realms NPC (realms.js): home city, god, and any faction.
+    const realms = typeof realmsNpcLine === 'function' ? realmsNpcLine(currentNPC) : '';
+    document.getElementById('npc-realms').hidden = !realms;
+    document.getElementById('npc-realms').textContent = realms ? '🐉 ' + realms : '';
     document.getElementById('impression-section').hidden = !currentNPC.doing;
     document.getElementById('npc-doing').textContent = currentNPC.doing || '';
     document.getElementById('npc-pockets').textContent = pocketsText(currentNPC);
@@ -274,7 +278,7 @@ function applyUrl(push) {
     const pinned = Object.fromEntries(p.getAll('lock').map(parseLock).filter(Boolean));
     locks.clear();
     Object.keys(pinned).forEach(part => locks.add(part));
-    generateNPC(seed, push, pinned, { name: p.get('name'), role: p.get('role') });
+    generateNPC(seed, push, pinned, { name: p.get('name'), role: p.get('role'), faith: p.get('faith') });
     return true;
 }
 
@@ -314,7 +318,8 @@ function copyNPC() {
 
     const text = `
 ${currentNPC.name} (${npcRace(currentNPC).toLowerCase()}, ${npcJob(currentNPC)})
-Age: ${currentNPC.age} | Gender: ${currentNPC.gender}${npcAlign(currentNPC) ? ` | ${npcAlign(currentNPC)}` : ''}
+Age: ${currentNPC.age} | Gender: ${currentNPC.gender}${npcAlign(currentNPC) ? ` | ${npcAlign(currentNPC)}` : ''}${currentNPC.realms ? `
+${realmsNpcLine(currentNPC)}` : ''}
 ${currentNPC.doing ? `
 WHEN YOU MEET THEM: ${currentNPC.doing}
 POCKETS: ${pocketsText(currentNPC)}
@@ -522,7 +527,8 @@ let rolledNames = [];
 function rollNameList() {
     rolledNames = rollNames(10, {
         race: document.getElementById('npc-race').value,
-        gender: document.getElementById('npc-gender').value
+        gender: document.getElementById('npc-gender').value,
+        realms: realmsOn('npc-world')
     });
     document.getElementById('name-list').innerHTML = rolledNames.map((n, i) => `
         <li><button type="button" class="name-chip" data-i="${i}" title="Copy ${esc(n.name)}">
@@ -584,6 +590,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!ruleHasStatBlocks()) {
         ['npc-class', 'npc-level', 'include-stats'].forEach(id => { document.getElementById(id).closest('.control-group, .toggle').hidden = true; });
     }
+    realmsPicker('npc-world', 'npc');
     renderSavedNPCs();
     document.querySelectorAll('.lock-btn').forEach(btn => btn.addEventListener('click', () => toggleLock(btn.dataset.lock)));
     document.getElementById('unlock-all').addEventListener('click', () => { locks.clear(); renderLocks(); });
