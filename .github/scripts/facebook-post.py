@@ -3,7 +3,10 @@
 Run by .github/workflows/facebook.yml after a push to main. Finds the articles
 added since the previous commit (or the ids given with --ids), drops the
 Across the Multiverse ones ("real": true), and schedules each as a link post,
-spaced a few hours apart during the day so an edition doesn't land at once.
+spaced a few hours apart during the day so an edition doesn't land at once. At most
+MAX_PER_DAY go out a day (the featured story, then the editor's "facebook": true picks);
+the rest stay on the site. The post
+text is the article's `social` caption, or its excerpt when it has none.
 Posts already scheduled on the Page count: the new ones fit in between them, and an article already scheduled (a re-run) is skipped.
 
 Env: FB_PAGE_ID and FB_PAGE_TOKEN (a Meta User Access Token with pages_show_list,
@@ -31,6 +34,7 @@ MIN_GAP = dt.timedelta(minutes=45)
 MAX_GAP = dt.timedelta(hours=3)
 DAY_START, DAY_END = 7, 22               # local hours posts may go out
 MAX_AGE_DAYS = 3                         # older articles are re-adds, not news
+MAX_PER_DAY = 4                          # posts a day, counting ones already scheduled
 
 
 def load(text):
@@ -63,8 +67,12 @@ def pick(articles, today):
             print(f"skip {a['id']}: dated {a['date']}")
             continue
         keep.append(a)
-    # The featured story leads; the rest keep their order in articles.json.
-    return sorted(keep, key=lambda a: not a.get("featured"))
+    # The featured story leads, then the editor's picks ("facebook": true); the rest keep their order.
+    return sorted(keep, key=lambda a: (not a.get("featured"), not a.get("facebook")))
+
+
+def message(a):
+    return (a.get("social") or a["excerpt"]).strip()
 
 
 def day_open(t):
@@ -193,21 +201,41 @@ def main():
         queued = None
 
     # Fit between what's already scheduled (an earlier push today), and skip what a run that stopped
-    # partway already scheduled (the post's message is the excerpt).
+    # partway already scheduled (the post's message is the caption, or the excerpt before captions).
     taken = []
     if queued:
         taken = [t for t, _ in queued]
         if not args.dry_run:
             have = {m.strip() for _, m in queued}
-            for a in [a for a in articles if a["excerpt"].strip() in have]:
+            done = [a for a in articles if message(a) in have or a["excerpt"].strip() in have]
+            for a in done:
                 print(f"skip {a['id']}: already scheduled")
-            articles = [a for a in articles if a["excerpt"].strip() not in have]
+            articles = [a for a in articles if a not in done]
             if not articles:
                 print("Every article is already scheduled.")
                 return
         print(f"fitting around the {len(queued)} post(s) already scheduled, the last at {max(taken):%a %I:%M %p %Z}")
 
-    for a, when in zip(articles, slots(len(articles), now, taken)):
+    # The daily cap, counting what's already queued for the day the posts land on. An edition
+    # pushed too late for its posts to fit today goes out tomorrow, so it doesn't eat into
+    # tomorrow's cap. Ids named by hand (--ids) are posted as asked.
+    start = now
+    if not args.ids:
+        first = day_open(now + FIRST_DELAY)
+        last_call = first.replace(hour=DAY_END, minute=0, second=0, microsecond=0) - dt.timedelta(minutes=30)
+        if first + (min(len(articles), MAX_PER_DAY) - 1) * MIN_GAP > last_call:
+            first = (first + dt.timedelta(days=1)).replace(hour=DAY_START, minute=0, second=0, microsecond=0)
+            start = first - FIRST_DELAY
+        day = first.date()
+        room = max(0, MAX_PER_DAY - sum(1 for t in taken if t > now and t.date() == day))
+        for a in articles[room:]:
+            print(f"skip {a['id']}: over the {MAX_PER_DAY}-a-day cap (stays on the site)")
+        articles = articles[:room]
+        if not articles:
+            print(f"{day:%a %b %d} already has {MAX_PER_DAY} posts scheduled.")
+            return
+
+    for a, when in zip(articles, slots(len(articles), start, taken)):
         url = f"{SITE}/a/{a['id']}"
         print(f"{when:%a %b %d %I:%M %p %Z}  {url}")
         if args.dry_run:
@@ -216,7 +244,7 @@ def main():
             raise SystemExit(f"{url} never came up; is GitHub Pages deploying?")
         graph("", {"id": url, "scrape": "true", "access_token": token})
         r = graph(f"{page}/feed", {
-            "message": a["excerpt"],
+            "message": message(a),
             "link": url,
             "published": "false",
             "scheduled_publish_time": int(when.timestamp()),
