@@ -100,6 +100,26 @@ function haggleHTML() {
     </div>`;
 }
 
+// An Arcane Emporium's shelf of the DM's homebrew items (homebrew-magic.js, L4 D3): up to three the shop can
+// afford, the same ones for the same seed, drawn apart from the stock so the shop itself rolls the same everywhere.
+function homebrewHTML() {
+    if (typeof hbmShelf !== 'function' || shop.type !== 'arcane' || !shop.seed) return '';
+    const w = SHOP_WEALTH[shop.wealth];
+    const items = hbmShelf(shop.seed, 3, w.maxBase ?? Infinity);
+    if (!items.length) return '';
+    const rows = items.map(it => `<tr>
+            <td class="item">${esc(it.name)} <span class="hb-tag">🧪 Homebrew</span><br><small class="muted">${esc(hbmItemLine(it))}</small></td>
+            <td class="num">1</td>
+            <td class="num price">${formatCoins(Math.round(hbmPrice(it) * w.markup * 100) / 100)}</td>
+        </tr>`).join('');
+    return `<h2 class="shop-h">Under the Counter</h2>
+        <table class="stock">
+            <thead><tr><th>Item</th><th class="num">Qty</th><th class="num">Price</th></tr></thead>
+            <tbody>${rows}</tbody>
+        </table>
+        <p class="stock-note">🧪 Your homebrew items, from the <a href="dnd-campaign-notebook">campaign notebook</a> on this device. Priced as you set them, or by rarity.</p>`;
+}
+
 function render() {
     const card = document.getElementById('shop-card');
     if (!shop) { card.innerHTML = '<p class="muted">The shutters creak open…</p>'; return; }
@@ -128,6 +148,7 @@ function render() {
                     <tbody>${rows}</tbody>
                 </table>
                 <p class="stock-note">Live from the <a href="economy">Market Exchange</a>${shop.wealth === 'wealthy' ? ', plus a prosperous-shop markup' : shop.wealth === 'poor' ? ', minus a humble-shop discount' : ''}.${levelNote()} Next price bell in ${mins} min.</p>
+                ${homebrewHTML()}
                 ${haggleHTML()}
             </div>
         </div>
@@ -249,6 +270,8 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         roll(false);
     }
+
+    if (typeof hbmOnChange === 'function') hbmOnChange(() => { if (shop) render(); });
 
     // Back/Forward step through earlier shops (haggles aren't replayed).
     window.addEventListener('popstate', () => {

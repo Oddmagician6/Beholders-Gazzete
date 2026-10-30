@@ -353,6 +353,14 @@
           <option value="yes" id="fav-filter-list">My List Only</option>
         </select>
       </div>
+      <div style="flex:1;min-width:130px;">
+        <label for="source-filter">🧪 Source</label>
+        <select id="source-filter">
+          <option value="">All Spells</option>
+          <option value="srd">SRD 5.1 Only</option>
+          <option value="hb">My Homebrew</option>
+        </select>
+      </div>
       <div style="align-self:flex-end;">
         <label>&nbsp;</label>
         <button class="btn btn-gold" onclick="resetFilters()">✕ Reset</button>
@@ -369,6 +377,7 @@
       <button type="button" class="btn danger" id="book-delete">🗑 Delete</button>
       <button type="button" class="btn btn-gold" id="book-print">🖨️ Print Cards</button>
       <button type="button" class="btn" id="book-link">🔗 Copy Link</button>
+      <button type="button" class="btn" id="hb-new" title="A spell from your own book or your own invention, saved on this device">✨ Add Homebrew Spell</button>
       <p class="book-status" id="book-status" role="status"></p>
     </div>
 
@@ -384,6 +393,7 @@
     <div class="spell-grid" id="spell-grid"></div>
     <div id="print-cards"></div>
     <p class="srd-note">Spell text is from the <a href="https://dnd.wizards.com/resources/systems-reference-document" target="_blank" rel="noopener">System Reference Document 5.1</a> by Wizards of the Coast LLC, licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>. The Beholder's Gazette is unofficial fan content and is not affiliated with Wizards of the Coast.</p>
+    <p class="srd-note">🧪 ✨ Add Homebrew Spell keeps your own spells, made up or typed in from your own books, in this browser's <a href="dnd-campaign-notebook">campaign notebook</a>. They show here, in the <a href="dnd-spell-planner">Spell Planner</a>, and in the character tools, tagged Homebrew, on this device only (the notebook's export and the <a href="privacy#backup">backup</a> carry them). The Gazette never publishes them. A shared list link leaves them out on another device.</p>
     <p class="srd-note">★ Keep a list per character: pick a list above, then tap ☆ on a spell to add it. Lists are saved in this browser only, so clearing site data or switching devices starts fresh (<a href="privacy#backup">💾 back up everything</a> to keep them). To move or share one, use 🔗 Copy Link: the link holds the list's name and spells, and whoever opens it can save a copy.</p>
 
     <section class="tool-guide" aria-labelledby="guide-h">
@@ -426,11 +436,16 @@
   </footer>
 
   <script src="spells-data.js"></script>
+  <script src="rules-system.js"></script>
+  <script src="rng.js"></script>
+  <script src="notebook.js"></script>
+  <script src="homebrew-magic.js"></script>
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
     /* SRD 5.1 spells loaded from spells-data.js */
-    const SPELLS = SPELLS_DATA.slice().sort((a,b) => a.name.localeCompare(b.name));
+    // Homebrew spells (homebrew-magic.js) join SPELLS_DATA from the notebook; rebuilt when it changes.
+    let SPELLS = [];
 
     let filtered = [...SPELLS];
 
@@ -441,8 +456,13 @@
     const OLD_FAV_KEY = 'gazette-spell-favorites';
     const MAX_LISTS = 30;
     const slugOf = name => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    const BY_NAME = new Map(SPELLS.map(s => [s.name, s]));
-    const BY_SLUG = new Map(SPELLS.map(s => [slugOf(s.name), s]));
+    let BY_NAME = new Map(), BY_SLUG = new Map();
+    function loadSpells() {
+      SPELLS = SPELLS_DATA.slice().sort((a,b) => a.name.localeCompare(b.name));
+      BY_NAME = new Map(SPELLS.map(s => [s.name, s]));
+      BY_SLUG = new Map(SPELLS.map(s => [slugOf(s.name), s]));
+    }
+    loadSpells();
 
     let book = { active: '', lists: [] };
     let shared = null;   // { name, spells } opened from a link, not saved until asked
@@ -598,7 +618,7 @@
               <dt>Duration</dt><dd>${esc(s.duration)}</dd>
             </dl>
             ${formatText(s.desc)}${s.higher ? `<p><strong>At Higher Levels.</strong> ${esc(s.higher)}</p>` : ''}
-            <div class="pclasses">${esc(s.classes.join(' · '))} · SRD 5.1, CC BY 4.0</div>
+            <div class="pclasses">${esc([...s.classes, s.hb ? ['Homebrew', s.book].filter(Boolean).join(', ') : 'SRD 5.1, CC BY 4.0'].join(' · '))}</div>
           </div>`).join('') + '</div>';
       window.print();
     }
@@ -708,39 +728,40 @@
         const fav = inList.has(s.name);
         const label = esc(favLabel(s.name, fav));
         return `
-        <div class="spell-card${fav ? ' is-fav' : ''}" data-school="${s.school}">
+        <div class="spell-card${fav ? ' is-fav' : ''}${s.hb ? ' is-hb' : ''}" data-school="${s.school}">
           <div class="spell-pic" aria-hidden="true"><img src="img/school/${s.school.toLowerCase()}-sm.webp" alt="" width="480" height="320" loading="lazy" decoding="async" onerror="this.parentNode.remove()"></div>
           <div class="spell-header">
             <div class="spell-name">
-              <a href="spell/${slugOf(s.name)}" title="The spell's own page">${s.name.replace(/\//g, '/<wbr>')}</a>
+              ${s.hb ? `<span>${esc(s.name)}</span>` : `<a href="spell/${slugOf(s.name)}" title="The spell's own page">${s.name.replace(/\//g, '/<wbr>')}</a>`}
               ${s.concentration ? '<span class="concentration-pip" title="Requires Concentration"></span>' : ''}
               ${s.ritual ? '<span style="font-size:0.6rem;color:var(--gold-mid);margin-left:4px;" title="Can be cast as a ritual">(R)</span>' : ''}
             </div>
             <div class="spell-level-badge">${levelLabel(s.level)}</div>
             <button type="button" class="spell-fav" data-name="${esc(s.name)}" aria-pressed="${fav}" title="${label}" aria-label="${label}" onclick="toggleFavorite(this)">${fav ? '★' : '☆'}</button>
           </div>
-          <div class="spell-school">${s.school}</div>
+          <div class="spell-school">${s.school}${s.hb ? ` <span class="hb-tag" title="Your own spell, saved in this browser's campaign notebook">🧪 Homebrew${s.book ? ' · ' + esc(s.book) : ''}</span>` : ''}</div>
           <div class="spell-components">${esc(s.components)}</div>
           <div class="spell-desc">${formatText(s.desc)}${s.higher ? `<p class="higher"><strong>At Higher Levels.</strong> ${esc(s.higher)}</p>` : ''}</div>
           <button type="button" class="spell-toggle" aria-expanded="false" onclick="toggleSpell(this)">Read full spell ▼</button>
           <div class="spell-stats">
             <div class="spell-stat">
               <div class="spell-stat-label">Casting Time</div>
-              <div class="spell-stat-value">${s.cast}</div>
+              <div class="spell-stat-value">${esc(s.cast)}</div>
             </div>
             <div class="spell-stat">
               <div class="spell-stat-label">Range</div>
-              <div class="spell-stat-value">${s.range}</div>
+              <div class="spell-stat-value">${esc(s.range)}</div>
             </div>
             <div class="spell-stat">
               <div class="spell-stat-label">Duration</div>
-              <div class="spell-stat-value">${s.duration}</div>
+              <div class="spell-stat-value">${esc(s.duration)}</div>
             </div>
             <div class="spell-stat" style="grid-column:1/-1;">
               <div class="spell-stat-label">Classes</div>
-              <div class="spell-stat-value" style="font-size:0.72rem;">${s.classes.join(' · ')}</div>
+              <div class="spell-stat-value" style="font-size:0.72rem;">${s.classes.join(' · ') || '—'}</div>
             </div>
           </div>
+          ${s.hb ? `<button type="button" class="spell-toggle hb-edit" data-id="${esc(s.hbId)}">✏️ Edit homebrew spell</button>` : ''}
         </div>`;
       }).join('');
     }
@@ -752,6 +773,7 @@
       const cls    = document.getElementById('class-filter').value;
       const conc   = document.getElementById('conc-filter').value;
       const ritual = document.getElementById('ritual-filter').value;
+      const source = document.getElementById('source-filter').value;
       const favOnly = document.getElementById('fav-filter').value === 'yes';
       const view = new Set(viewList().spells);
 
@@ -764,6 +786,8 @@
         if (conc   === 'no'  &&  s.concentration) return false;
         if (ritual === 'yes' && !s.ritual) return false;
         if (ritual === 'no'  &&  s.ritual) return false;
+        if (source === 'srd' && s.hb) return false;
+        if (source === 'hb' && !s.hb) return false;
         if (favOnly && !view.has(s.name)) return false;
         return true;
       });
@@ -772,14 +796,28 @@
     }
 
     function resetFilters() {
-      ['spell-search','level-filter','school-filter','class-filter','conc-filter','ritual-filter','fav-filter']
+      ['spell-search','level-filter','school-filter','class-filter','conc-filter','ritual-filter','source-filter','fav-filter']
         .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
       applyFilters();
     }
 
     document.getElementById('spell-search').addEventListener('input', applyFilters);
-    ['level-filter','school-filter','class-filter','conc-filter','ritual-filter','fav-filter']
+    ['level-filter','school-filter','class-filter','conc-filter','ritual-filter','source-filter','fav-filter']
       .forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('change', applyFilters); });
+    // Homebrew spells: ✨ adds one, ✏️ on its card edits it; the list redraws when the notebook changes (here or in another tab).
+    document.getElementById('hb-new').addEventListener('click', () => hbmOpenForm('spell', null, e => {
+      document.getElementById('source-filter').value = 'hb';
+      applyFilters();
+      bookStatus(`✨ ${e.title} is in the Spellbook, and in the Spell Planner and character tools on this device.`);
+    }));
+    document.getElementById('spell-grid').addEventListener('click', ev => {
+      const b = ev.target.closest('.hb-edit');
+      if (b) hbmOpenForm('spell', b.dataset.id);
+    });
+    hbmOnChange(() => {
+      loadSpells();
+      applyFilters();
+    });
     document.getElementById('book-select').addEventListener('change', switchList);
     document.getElementById('book-name').addEventListener('input', renameList);
     document.getElementById('book-name').addEventListener('blur', () => renderBook());

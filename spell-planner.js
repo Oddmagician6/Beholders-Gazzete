@@ -263,7 +263,7 @@ function renderToday() {
             if (!at.length) continue;
             const slotsHere = r.pact ? (lv === r.pact[1] ? `${r.pact[0]} pact slot${r.pact[0] > 1 ? 's' : ''}` : '') : lv && r.slots[lv - 1] ? `${r.slots[lv - 1]} slot${r.slots[lv - 1] > 1 ? 's' : ''}` : '';
             h += `<h3 class="sp-lvh">${SP_LEVELS[lv]}${slotsHere ? ` <span class="sp-dim">· ${slotsHere}</span>` : ''}</h3><ul class="sp-spells">${at.map(({ s, tag }) => `<li>
-                ${spStar(s.name)}<div><a href="spell/${spellSlug(s.name)}">${esc(s.name)}</a>${tag === 'always prepared' || tag === 'Mystic Arcanum' ? ` <span class="sp-tag">${esc(tag)}</span>` : ''} <span class="sp-meta">${esc(spMeta(s))}</span>
+                ${spStar(s.name)}<div>${s.hb ? `${esc(s.name)} <span class="hb-tag">🧪 Homebrew</span>` : `<a href="spell/${spellSlug(s.name)}">${esc(s.name)}</a>`}${tag === 'always prepared' || tag === 'Mystic Arcanum' ? ` <span class="sp-tag">${esc(tag)}</span>` : ''} <span class="sp-meta">${esc(spMeta(s))}</span>
                 <span class="sp-sum">${esc(spellSummary(s))}</span></div></li>`).join('')}</ul>`;
         }
     }
@@ -299,7 +299,7 @@ function renderEditor() {
         h += `<h3 class="sp-lvh">${SP_LEVELS[lv]}</h3><div class="sp-picks">${at.map(s => {
             const on = chosen.includes(s.name);
             return `<div class="sp-pick${on ? ' on' : ''}${!on && full ? ' sp-off' : ''}">
-                <label><input type="checkbox" data-pick="${esc(s.name)}"${on ? ' checked' : ''}${!on && full ? ' disabled' : ''}> <b>${esc(s.name)}</b> <span class="sp-meta">${esc(spMeta(s))}</span></label>
+                <label><input type="checkbox" data-pick="${esc(s.name)}"${on ? ' checked' : ''}${!on && full ? ' disabled' : ''}> <b>${esc(s.name)}</b>${s.hb ? ' <span class="hb-tag">🧪 Homebrew</span>' : ''} <span class="sp-meta">${esc(spMeta(s))}</span></label>
                 ${spStar(s.name)}<p class="sp-sum">${esc(spellSummary(s))}</p></div>`;
         }).join('')}</div>`;
     }

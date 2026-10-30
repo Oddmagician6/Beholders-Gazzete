@@ -34,7 +34,8 @@ function nbMatches(e, kind, status, q) {
     if (status !== 'all' && (e.kind !== 'quest' || e.status !== status)) return false;
     if (!q) return true;
     const fam = e.fam ? [...e.fam.people.flatMap(p => [p.name, p.title, p.note]), ...e.fam.scandals.map(s => famScandalText(e.fam, s))] : [];
-    return [e.title, e.sub, e.notes, e.dm, ...Object.values(e.edits || {}), e.giver, e.reward, e.recap, e.npcs, e.loot, e.threads, ...(e.pins || []).flatMap(p => [p.name, p.note]), ...fam]
+    const brew = e.spell ? [e.spell.desc, e.spell.higher] : e.item ? [e.item.desc] : [];
+    return [e.title, e.sub, e.notes, e.dm, ...Object.values(e.edits || {}), e.giver, e.reward, e.recap, e.npcs, e.loot, e.threads, ...(e.pins || []).flatMap(p => [p.name, p.note]), ...fam, ...brew]
         .filter(Boolean).join(' ').toLowerCase().includes(q);
 }
 
@@ -123,6 +124,11 @@ function nbFormHTML(e) {
     return '';
 }
 
+// A homebrew spell or item (homebrew-magic.js) that this page can edit.
+function nbBrewKind(e) {
+    return (e.kind === 'spell' || e.kind === 'item') && typeof HBM_ON !== 'undefined' && HBM_ON && !!e[e.kind];
+}
+
 function nbEntryHTML(nb, e) {
     const others = nb.entries.filter(o => o.id !== e.id && !e.links.includes(o.id));
     const removing = nbView.removing === e.id;
@@ -147,6 +153,7 @@ function nbEntryHTML(nb, e) {
                 </select></label>` : ''}
                 <span class="nb-row-actions">
                     ${nbOpenHref(e) ? `<a class="btn" href="${esc(nbOpenHref(e))}">${e.kind === 'monster' ? '🐲 Edit in the Monster Maker' : 'Open →'}</a>` : ''}
+                    ${nbBrewKind(e) ? `<button type="button" class="btn nb-brew-edit" data-id="${esc(e.id)}" data-kind="${esc(e.kind)}">✏️ Edit ${e.kind === 'spell' ? 'Spell' : 'Item'}</button>` : ''}
                     <button type="button" class="btn nb-remove" data-id="${esc(e.id)}">${removing ? '⚠️ Click again to remove' : '🗑️ Remove'}</button>
                 </span>
             </div>
@@ -591,6 +598,12 @@ function nbEntryFacts(nb, e) {
     if (e.npcs) out.push(f('NPCs met', e.npcs));
     if (e.loot) out.push(f('Loot', e.loot));
     if (e.threads) out.push(f('Open threads', nbLines(e.threads).join('; ')));
+    if (e.spell) {
+        out.push(f('Casting time', e.spell.cast), f('Range', e.spell.range), f('Components', e.spell.components), f('Duration', e.spell.duration));
+        if (e.spell.desc) out.push(f('Effect', e.spell.desc));
+        if (e.spell.higher) out.push(f('At higher levels', e.spell.higher));
+    }
+    if (e.item && e.item.desc) out.push(f('What it does', e.item.desc));
     if (e.notes) out.push(f('Notes', e.notes));
     if (e.dm) out.push(f('DM only', e.dm));
     (e.pins || []).forEach((p, n) => {
@@ -665,7 +678,8 @@ function nbImport(file) {
 
 function setupNotebook() {
     const kind = document.getElementById('nb-kind');
-    Object.entries(NB_KINDS).forEach(([key, k]) => kind.add(new Option(`${k.icon} ${k.label}`, key)));
+    const brew = typeof HBM_ON !== 'undefined' && HBM_ON;
+    Object.entries(NB_KINDS).forEach(([key, k]) => { if (brew || (key !== 'spell' && key !== 'item')) kind.add(new Option(`${k.icon} ${k.label}`, key)); });
     kind.addEventListener('change', () => renderNotebook());
     const status = document.getElementById('nb-qstatus');
     Object.entries(NB_QUEST_STATUS).forEach(([key, s]) => status.add(new Option(`${s.icon} ${s.label}`, key)));
@@ -682,6 +696,18 @@ function setupNotebook() {
 
     document.getElementById('nb-new-session').addEventListener('click', nbNewSession);
     document.getElementById('nb-new-quest').addEventListener('click', nbNewQuest);
+    // Homebrew spells and items (L4 D3): 5e only.
+    ['spell', 'item'].forEach(k => {
+        const btn = document.getElementById('nb-new-' + k);
+        if (!btn) return;
+        btn.hidden = !brew;
+        btn.addEventListener('click', () => hbmOpenForm(k, null, entry => {
+            nbView.open.add(entry.id);
+            renderNotebook();
+            document.getElementById('nb-e-' + entry.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            flash('nb-status', k === 'spell' ? '✨ Spell saved. It shows up in the Spellbook and the character tools now.' : '💍 Item saved. It shows up on the character sheet and in the Loot Generator now.');
+        }));
+    });
     document.getElementById('nb-last-btn').addEventListener('click', nbShowLast);
     document.getElementById('nb-last-close').addEventListener('click', () => { nbView.last = false; renderLast(nbLoad()); });
     document.getElementById('nb-last-copy').addEventListener('click', () => {
@@ -707,6 +733,8 @@ function setupNotebook() {
         if (jump) { nbJump(jump.dataset.to); return; }
         const unlink = e.target.closest('.nb-unlink');
         if (unlink) { nbEdit(nb => nbUnlink(nb, unlink.dataset.id, unlink.dataset.to)); return; }
+        const brewEdit = e.target.closest('.nb-brew-edit');
+        if (brewEdit) { hbmOpenForm(brewEdit.dataset.kind, brewEdit.dataset.id, () => flash('nb-status', '💾 Saved.')); return; }
         const remove = e.target.closest('.nb-remove');
         if (remove) {
             const id = remove.dataset.id;

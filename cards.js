@@ -39,7 +39,7 @@ function spellCardHtml(s, tag = '') {
         ${mat ? `<p class="gc-mat">M: ${gcEsc(mat)}</p>` : ''}
         <p class="gc-text">${gcEsc(spellSummary(s))}</p>
         ${s.higher ? '<p class="gc-up">⬆ Stronger from a higher slot</p>' : ''}
-        <p class="gc-foot"><span>${gcEsc(tag)}</span><span>${GC_SITE}/spell/${slug}</span></p>
+        <p class="gc-foot"><span>${gcEsc(tag)}</span><span>${s.hb ? gcEsc(['Homebrew', s.book].filter(Boolean).join(' · ')) : `${GC_SITE}/spell/${slug}`}</span></p>
     </div>`;
 }
 

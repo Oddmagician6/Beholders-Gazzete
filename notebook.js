@@ -33,6 +33,9 @@
    point at NPC entries (`to`), kept to entries that exist like pins.
    An article's "Use This in My Campaign" box (F69) saves a quest whose link is the article (a/<id>),
    with the hook, NPC, place, and rumor in its notes and the NPC's secret in its DM notes.
+   Homebrew spells and magic items (L4 D3) are kinds 'spell' and 'item', typed in by the DM, so no
+   link, with the whole spell in `spell` or item in `item` (homebrew-magic.js: hbmCleanSpell, hbmCleanItem;
+   a page without it passes them through untouched).
    The page side lives in world-notebook.js. Needs rng.js (paramsQuery) on the page.
    ============================================ */
 
@@ -51,7 +54,9 @@ const NB_KINDS = {
     quest: { icon: '❗', label: 'Quest', hand: true },
     monster: { icon: '🐲', label: 'Monster', hand: true },
     map: { icon: '🖼️', label: 'Map', hand: true },
-    family: { icon: '🌳', label: 'Family', hand: true }
+    family: { icon: '🌳', label: 'Family', hand: true },
+    spell: { icon: '✨', label: 'Spell', hand: true },
+    item: { icon: '💍', label: 'Item', hand: true }
 };
 // Kinds whose entry can hold pins on its map (F53, F54).
 const NB_PIN_KINDS = { continent: true, map: true };
@@ -99,6 +104,13 @@ const NB_FIELDS = {
     // The same for a family without family-tree.js.
     family: {
         fam: v => (typeof famClean === 'function' ? famClean(v) : v)
+    },
+    // Homebrew spells and items (homebrew-magic.js), the same way.
+    spell: {
+        spell: v => (typeof hbmCleanSpell === 'function' ? hbmCleanSpell(v) : v)
+    },
+    item: {
+        item: v => (typeof hbmCleanItem === 'function' ? hbmCleanItem(v) : v)
     }
 };
 
@@ -176,6 +188,8 @@ function nbClean(raw) {
             && nbText(e.title, NB_LIMITS.title)
             && (e.kind !== 'monster' || (typeof hbClean === 'function' ? !!hbClean(e.mon) : !!e.mon))
             && (e.kind !== 'family' || (typeof famClean === 'function' ? !!famClean(e.fam) : !!e.fam))
+            && (e.kind !== 'spell' || (typeof hbmCleanSpell === 'function' ? !!hbmCleanSpell(e.spell) : !!e.spell))
+            && (e.kind !== 'item' || (typeof hbmCleanItem === 'function' ? !!hbmCleanItem(e.item) : !!e.item))
             && nb.entries.length < NB_LIMITS.entries;
         if (!ok) { dropped++; return; }
         ids.add(e.id);

@@ -55,6 +55,25 @@ function copyLink() {
   copyPageLink(ok => flashBtn('link-btn', ok ? '✅ Link copied!' : '⚠️ Copy blocked'));
 }
 
+// ── HOMEBREW ITEMS (L4 D3) ─────────────────────────────────
+// The 🧪 box shows once the notebook holds a homebrew item; ticking it is remembered in this browser.
+const LOOT_HB_KEY = 'gazette_loot_homebrew';
+
+function lootHomebrewOn() {
+  const box = document.getElementById('hb-loot');
+  return !!box && box.checked && typeof hbmItems !== 'undefined' && hbmItems.length > 0;
+}
+
+function setupLootHomebrew() {
+  const row = document.getElementById('hb-loot-row'), box = document.getElementById('hb-loot');
+  if (!row || typeof hbmOnChange !== 'function') return;
+  const show = () => { row.hidden = LOOT_PF2E || !hbmItems.length; };
+  try { box.checked = localStorage.getItem(LOOT_HB_KEY) === '1'; } catch (e) {}
+  box.addEventListener('change', () => { try { localStorage.setItem(LOOT_HB_KEY, box.checked ? '1' : '0'); } catch (e) {} });
+  show();
+  hbmOnChange(show);
+}
+
 // ── MAIN GENERATE ──────────────────────────────────────────
 // seed: replay a roll. push: true = new history entry, false = replace, null = leave the URL alone.
 function generateLoot(seed = newSeed(), push = true) {
@@ -113,6 +132,14 @@ function generateLoot(seed = newSeed(), push = true) {
   } });
 
   if (found) ({ coins, gems, art, magic } = found);
+  // Homebrew items (homebrew-magic.js, opt-in): swapped in from a stream of their own, so the rest of the roll stays the same.
+  if (!LOOT_PF2E && lootHomebrewOn()) {
+    const mixed = hbmLootSwap(magic, seed, currentTab === 'magic' ? document.getElementById('magic-type').value : 'any');
+    if (mixed !== magic && mixed.some(m => m.hb)) {
+      magic = mixed;
+      if (found) { found.magic = magic; found.totalValue = totalGP(coins, gems, art, magic, found.goods || []); }
+    }
+  }
   currentLoot = {
     ...(found || {}),
     coins, gems, art, magic, magicNote,
@@ -256,7 +283,7 @@ function displayLoot() {
       const etched = item.on && PF2E_ITEMS[item.on] && PF2E_ITEMS[item.pf];
       return `<div class="magic-card">
         <div class="item-header">
-          <span class="item-name">${item.name}</span>
+          <span class="item-name">${esc(item.name)}${item.hb ? ' <span class="hb-tag">🧪 Homebrew</span>' : ''}</span>
           <span class="item-rarity rarity-${rarityClass}">${item.rarity}</span>
         </div>
         <img class="magic-art" src="img/item/${kind}.webp" alt="" width="72" height="72" loading="lazy" decoding="async">
@@ -269,7 +296,7 @@ function displayLoot() {
         ${item.flavor ? `<p class="item-look">${esc(item.flavor)}</p>` : ''}
         <div class="item-value">${item.value > 0 ? '💰 ' + (item.pf ? formatCoins(item.value) : '~' + item.value.toLocaleString() + ' gp') : '✨ Priceless'}</div>
         ${info ? `<button type="button" class="item-toggle" aria-expanded="false" onclick="toggleItem(this)">Read item ▼</button>
-        <div class="item-desc"><p class="item-srd-type">${info.meta}</p>${formatSrdText(info.text)}</div>` : ''}
+        <div class="item-desc"><p class="item-srd-type">${esc(info.meta)}</p>${formatSrdText(info.text)}</div>` : ''}
       </div>`;
     }).join('');
   }
@@ -468,6 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (yearEl) yearEl.textContent = new Date().getFullYear();
   renderSaved();
   setupSourcePickers();
+  setupLootHomebrew();
   // A system with no splitter page hides the button.
   if (!ruleLinkOk('toolbox?tab=split')) document.getElementById('split-btn').hidden = true;
   applyUrl(false);

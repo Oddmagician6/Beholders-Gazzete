@@ -57,7 +57,9 @@ function portraitSrc(c) {
     return face || (c.cls ? `img/class/${c.cls}-sm.webp` : '');
 }
 
+// A homebrew spell (homebrew-magic.js) has no page of its own: its name and a 🧪.
 function spellLink(name) {
+    if (typeof hbmIsHomebrew === 'function' && hbmIsHomebrew(name)) return `${esc(name)} <span title="Homebrew, from your campaign notebook">🧪</span>`;
     return `<a href="spell/${spellSlug(name)}" target="_blank" rel="noopener" title="Open ${esc(name)} in a new tab">${esc(name)}</a>`;
 }
 
@@ -358,7 +360,7 @@ function inventoryPanel(c, d) {
           <label class="cs-field cs-narrow">How many<input type="number" id="cs-add-qty" min="1" max="9999" inputmode="numeric" value="${esc(addForm.qty)}"></label>
           <label class="cs-field cs-narrow">lb each<input type="number" id="cs-add-lb" min="0" max="9999" step="0.25" placeholder="usual" value="${esc(addForm.lb)}"></label>
           <button type="button" class="cs-btn" data-act="add">➕ Add</button></div>
-        <div class="cs-add"><label class="cs-field">Add an SRD magic item<input type="text" id="cs-add-mi" list="cs-mi-list" maxlength="80" autocomplete="off" placeholder="Bag of Holding, Cloak of Protection…" value="${esc(addForm.mi)}"></label>
+        <div class="cs-add"><label class="cs-field">Add a magic item${typeof hbmItems !== 'undefined' && hbmItems.length ? ' (SRD or your homebrew)' : ''}<input type="text" id="cs-add-mi" list="cs-mi-list" maxlength="80" autocomplete="off" placeholder="Bag of Holding, Cloak of Protection…" value="${esc(addForm.mi)}"></label>
           <button type="button" class="cs-btn" data-act="add-mi">✨ Add</button></div>
         </div></div>
     </section>`;
@@ -588,7 +590,7 @@ function onClick(e) {
         let item;
         if (act === 'add-mi') {
             const name = cbMagicName(addForm.mi);
-            if (!name) { flash('Pick an SRD magic item from the list.', true); document.getElementById('cs-add-mi').focus(); return; }
+            if (!name) { flash(typeof hbmItems !== 'undefined' && hbmItems.length ? 'Pick a magic item from the list: SRD, or your homebrew from the campaign notebook.' : 'Pick an SRD magic item from the list. Your own go in the campaign notebook (💍 Add an Item).', true); document.getElementById('cs-add-mi').focus(); return; }
             item = { name, qty: 1, mi: true };
             addForm.mi = '';
         } else {

@@ -271,6 +271,13 @@ function nbSheet(e) {
     } else if (e.sub) {
         own.push(nbLine('', 'In short', e.sub, !!NB_SUB_DM[e.kind]));
     }
+    // A homebrew spell or item (L4 D3) as a handout: its text goes to the players.
+    if (e.kind === 'spell' && e.spell) {
+        own.push(...nbLinesOf('', [['Casting time', e.spell.cast], ['Range', e.spell.range], ['Components', e.spell.components],
+            ['Duration', e.spell.duration], ['Effect', e.spell.desc], ['At higher levels', e.spell.higher]]));
+    } else if (e.kind === 'item' && e.item && e.item.desc) {
+        own.push(nbLine('', 'What it does', e.item.desc));
+    }
     if (e.notes) own.push(nbLine('', 'Notes', e.notes));
     const rolled = nbRolledSheet(e);
     const parts = rolled || [];
