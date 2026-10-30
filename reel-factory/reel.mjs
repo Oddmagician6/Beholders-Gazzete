@@ -2,7 +2,7 @@
 import { readFile, writeFile, mkdir, access, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { BRAND_LINES, createGazetteReportScript } from './templates/gazette-report.mjs';
+import { BRAND_LINES, createGazetteReportScript, normalizeNarrationText } from './templates/gazette-report.mjs';
 import { scoreReel } from './scoring.mjs';
 import { generateNarration as generateSapiNarration, AUDIO_PAUSE_SECONDS } from './providers/sapi.mjs';
 import { generateNarration as generateKokoroNarration } from './providers/kokoro.mjs';
@@ -72,7 +72,16 @@ async function getScript(scriptPath, article, refresh, maxDurationSeconds) {
   if (!refresh) {
     try {
       const current = JSON.parse(await readFile(scriptPath, 'utf8'));
-      if (current.articleId === article.id && Array.isArray(current.segments) && current.segments.length) return current;
+      if (current.articleId === article.id && Array.isArray(current.segments) && current.segments.length) {
+        let changed = false;
+        for (const segment of current.segments) {
+          if (typeof segment.text !== 'string') continue;
+          const normalized = normalizeNarrationText(segment.text);
+          if (normalized !== segment.text) { segment.text = normalized; changed = true; }
+        }
+        if (changed) await writeFile(scriptPath, `${JSON.stringify(current, null, 2)}\n`, 'utf8');
+        return current;
+      }
     } catch (error) {
       if (error.code !== 'ENOENT') throw new Error(`Existing script.json is invalid: ${error.message}. Use --refresh-script to replace it.`);
     }

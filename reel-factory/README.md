@@ -65,6 +65,7 @@ The command skips articles marked `real` unless `--include-real` is supplied. Ar
 The output is written to `.reel-output/drafts/<article-id>/`:
 
 - `script.json` — editable, structured narration with a headline hook, article setup, source-selected punchline when available, voice-ready segments, word count, and duration estimate. Each spoken segment records its source field. Newly generated scripts cycle through four Gazette signoffs in render order. Existing edits are reused on later runs; pass `--refresh-script` to rebuild from the published article and assign the next signoff.
+- Narration scripts and signoffs must not contain em dashes. The script composer replaces em dashes from article text with spoken-friendly punctuation, and cached scripts are normalized on rerender.
 - `hook.wav`, `report.wav`, `brand.wav`, `narration.wav` — local narration and segment audio.
 - `captions.srt` and `captions.ass` — timed subtitle files.
 - `render.mp4` — 1080 × 1920 H.264/AAC draft at 30 fps, with 48 kHz audio, a blurred artwork background, centered subtle zoom, a square framed illustration, a gold masthead, and burned-in captions placed higher in the frame for Reels controls.

@@ -1,13 +1,17 @@
 export const BRAND_LINES = [
   "The Beholder's Gazette. All the news that's fit to print, or burn.",
-  "Keep one eye on the news—and another on the exits. The Beholder's Gazette.",
+  "Keep one eye on the news, and another on the exits. The Beholder's Gazette.",
   "That's the story. The witnesses are being reassembled. The Beholder's Gazette.",
   "Until next time, keep your spell slots close and your alibis closer. The Beholder's Gazette.",
 ];
 const TEMPLATE_VERSION = 3;
 
+export function normalizeNarrationText(text) {
+  return String(text || '').replace(/—/g, ', ').replace(/\s+,/g, ',').replace(/,\s*,/g, ',').replace(/\s+/g, ' ').trim();
+}
+
 function htmlText(html) {
-  return String(html || '')
+  return normalizeNarrationText(String(html || '')
     .replace(/<\s*(br|\/(?:p|div|li|h[1-6]))\b[^>]*>/gi, ' ')
     .replace(/<[^>]*>/g, ' ')
     .replace(/&nbsp;|&#160;/gi, ' ')
@@ -17,7 +21,7 @@ function htmlText(html) {
     .replace(/&rdquo;|&ldquo;/gi, '”')
     .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
     .replace(/&#x([\da-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
-    .replace(/\s+/g, ' ').replace(/ ([,.;:!?])/g, '$1').trim();
+    .replace(/ ([,.;:!?])/g, '$1'));
 }
 
 function words(text) { return text.trim().split(/\s+/).filter(Boolean); }
@@ -94,7 +98,8 @@ export function createGazetteReportScript(article, maxDurationSeconds = 35, bran
   if (punchline?.source === 'article-body' && /\bnot amused\b|\bnot pleased\b/i.test(reportSentences.at(-1) || '')) {
     reportSentences = reportSentences.slice(0, -1);
   }
-  const brandWords = words(brandLine).length;
+  const spokenBrandLine = normalizeNarrationText(brandLine);
+  const brandWords = words(spokenBrandLine).length;
   const hookWords = words(title).length;
   const punchlineWords = punchline ? words(punchline.text).length : 0;
   const maxVoiceWords = Math.max(40, Math.floor((maxDurationSeconds - 2) * 140 / 60));
@@ -106,7 +111,7 @@ export function createGazetteReportScript(article, maxDurationSeconds = 35, bran
   ];
   if (report) segments.push({ id: 'report', role: 'setup', source: 'excerpt', text: report });
   if (punchline) segments.push({ id: 'punchline', role: 'punchline', source: punchline.source, text: punchline.text });
-  segments.push({ id: 'brand', role: 'branding', source: 'brandline', text: brandLine });
+  segments.push({ id: 'brand', role: 'branding', source: 'brandline', text: spokenBrandLine });
 
   const wordCount = segments.reduce((sum, segment) => sum + words(segment.text).length, 0);
   return {
