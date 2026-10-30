@@ -4,7 +4,7 @@ Run by .github/workflows/facebook.yml after a push to main. Finds the articles
 added since the previous commit (or the ids given with --ids), drops the
 Across the Multiverse ones ("real": true), and schedules each as a link post,
 spaced a few hours apart during the day so an edition doesn't land at once. At most
-MAX_PER_DAY go out a day (the featured story, then the editor's "facebook": true picks);
+MAX_PER_DAY go out a day (the editor's "facebook": true picks first);
 the rest stay on the site. The post
 text is the article's `social` caption, or its excerpt when it has none.
 Posts already scheduled on the Page count: the new ones fit in between them, and an article already scheduled (a re-run) is skipped.
@@ -67,8 +67,8 @@ def pick(articles, today):
             print(f"skip {a['id']}: dated {a['date']}")
             continue
         keep.append(a)
-    # The featured story leads, then the editor's picks ("facebook": true); the rest keep their order.
-    return sorted(keep, key=lambda a: (not a.get("featured"), not a.get("facebook")))
+    # The editor's picks ("facebook": true) lead, and a featured story with them; the rest keep their order.
+    return sorted(keep, key=lambda a: not (a.get("featured") or a.get("facebook")))
 
 
 def message(a):
