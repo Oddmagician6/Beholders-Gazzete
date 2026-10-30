@@ -4567,6 +4567,307 @@
         "rumor": "They say the mold only attacks people who laugh at it, so keep a straight face."
       },
       "fiction": true
+    },
+    {
+      "id": "displacer-beast-property-tax-brindlemoor-reassessment",
+      "title": "Displacer Beast Skews Property Tax Roll on 38 Cottages",
+      "category": "Real Estate",
+      "author": "Barnaby Tallowmere",
+      "date": "2026-10-30",
+      "excerpt": "A displacer beast made 38 Brindlemoor cottages appear three feet off, and the assessor taxed them there. Barnaby has done the sums. Four times.",
+      "social": "A displacer beast lounging on Millstone Lane made 38 Brindlemoor cottages look three feet to the left, and the assessor taxed them there. Bills rose 40 gp a year each, or 133 loaves. One owner now pays tax on her neighbor's pear tree. Would you appeal, or move your house back?",
+      "content": "<p>A displacer beast has spent the autumn sunning itself on Millstone Lane in Brindlemoor, and the property tax roll has paid for it. Because the creature bends light, 38 cottages on the lane appear to stand three feet to the left of where they really are. The county assessor measured the apparent houses, found them sitting on the better, wider plots next door, and raised the bills by 40 gold pieces a year each. That is 133 loaves per household on the Loaf Index, at three silver a loaf. (I have checked this four times.)</p>\n\n<p>Here is how the assessment works, since nobody else will explain it. A cottage is taxed on the value of its lot and the building on it. Assessor Perrin Dunmoss walks the lane with a measuring chain, records where each cottage seems to sit, and files that. Three feet sounds small. But the lane slopes toward the creek, so three feet to the left is a plot with a pear tree and a well, and the roll treats the owner as the proud holder of both. The total value of the lane rose 12 percent in one afternoon.</p>\n\n<p>Reeve Maudrey Fennick of Brindlemoor said at Wednesday's hearing that the town is &quot;aware of the cat.&quot; She added that the assessment follows the chain, the chain follows the eye, and the eye is the Assessor's Office's only instrument. &quot;I would like to be clear that the house is where the house is,&quot; she said. &quot;The paperwork is where the paperwork is. They have not met.&quot;</p>\n\n<p>Homeowner Tilda Wrenfield, 61, now pays tax on a pear tree that belongs to her neighbor. The neighbor pays tax on a garden shed that does not exist. &quot;I asked him to just hand me the pears,&quot; Wrenfield said. &quot;He says they are his by the roll.&quot; Another resident, a cooper named Hob Dunnock, has taken to sleeping in whichever room the beast cannot see, which he reports is none of them.</p>\n\n<p>The sensible fix would be to chase off the beast, and I say this as a halfling who dislikes anything that moves unpredictably. But the Cellars Board has ruled it a protected tenant of the lane, and the Assessor's Office suggests homeowners simply shift their cottages three feet to the right. A mover quoted 900 gold pieces for the job. That is 3,000 loaves, which is rather more than the bills. (Four times, and I am still sitting down.)</p>\n\n<p>My aunt Marigold, who keeps her savings in a boot, points out that a boot stays where you put it. She was not worried about the lane at all. I used to think she was a little odd. Now I think she has the only reliable assessment in the county, and I have asked to see the boot.</p>\n\n<p>What this means for your pantry: if your house looks to the left of where it is, appeal before the end of the month, and keep your bread in the cellar, which as far as I can tell is still in the right place.</p>\n\n<p><em>— B.T. (Loaf Index: see sidebar)</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The House Three Feet Left",
+          "text": "A displacer beast has made every cottage on a lane appear off its lot, and the tax assessor is billing by what he sees. The village elder will pay the party to relocate the beast, or to prove where the houses really stand, before the appeal deadline."
+        },
+        "npc": {
+          "name": "Perrin Dunmoss",
+          "role": "County Property Assessor",
+          "want": "To keep his roll accurate and his chain unbent.",
+          "secret": "He knows the measurements are wrong, but correcting them would reveal he never walked the rest of the district.",
+          "race": "human",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "Millstone Lane",
+          "text": "A sloping lane of thirty-eight cottages beside a creek. Every house looks about three feet from where it really stands, and the pear trees seem to change owners at dusk.",
+          "tavern": false
+        },
+        "rumor": "They say the beast is not displacing the houses at all, it is hiding the real ones and living in the empty one."
+      },
+      "fiction": true
+    },
+    {
+      "id": "gargoyle-strike-chapter-9-stone-hours-pay",
+      "title": "Gargoyle Strike: 14 Roof Sentries Want Pay for Stone Hours",
+      "category": "Labor",
+      "author": "Brakka Stonesweat",
+      "date": "2026-10-30",
+      "excerpt": "Fourteen gargoyle sentries on the Chapter 9 roof went on strike Thursday. They want pay for the twelve daylight hours they spend as stone.",
+      "social": "Fourteen gargoyles on the Chapter 9 roof went on strike Thursday in Brindlemoor. They guard the hall all night, then turn to stone at dawn and get no pay for the twelve hours of daylight. Chapter 9 calls that \"rest.\" The gargoyles say they never stop watching. Whose side are you on?",
+      "content": "<p>Gargoyles want to be paid while they're stone.</p>\n\n<p>Fourteen gargoyle sentries on the roof of Chapter 9's guildhall in Brindlemoor began a strike at sunset Thursday. They are paid for twelve night hours of guard duty. For the twelve daylight hours, when they turn to stone and sit on the gutters, they get nothing. The gargoyles say they never stop watching.</p>\n\n<p>\"I see everything from up here,\" said Mossgrin, a spout-gargoyle on the north gable for eleven years. \"I saw a pigeon rob a baker at noon. I couldn't move. I couldn't report it. And I wasn't paid for the not reporting.\"</p>\n\n<p>Chapter 9 classes the daylight hours as \"dormancy,\" a rest period under the guild's roof-staff handbook. So the guild gets twenty-four hours of guard for twelve hours of wages. Deputy Registrar Pell Oddingwick, the guild's spokesman, said the dispute was \"on track\" and that stone is \"a natural state, not a shift.\" He added that the gargoyles are free to unfreeze at any time. They cannot. It is daylight.</p>\n\n<p>The sentries struck at dusk because dusk is when they wake up. It is the first strike in Brindlemoor history to start with a yawn. Their demands: half pay for stone hours, a rain-gutter break every four hours, and a mossy cushion for the ones who sit on the eastern ledge, which gets the worst of the pigeons.</p>\n\n<p>\"Half pay for sitting, they say, like it's nothing,\" said Dunnick Pebblewhistle, a tile-setter who has been re-pointing the guildhall roof for thirty years. \"Try sitting for twelve hours on a ledge with a bird on your head. That's hazard work. I'd want hazard pay.\"</p>\n\n<p>Reeve Maudrey Fennick of Brindlemoor said the town was aware of the gargoyles. She asked Chapter 9 to bargain \"before something falls on someone.\" A sentry has already dropped a gutter-spout on a surveyor, though the sentries insist it was a warning. The surveyor was unavailable for comment, having left town by cart.</p>\n\n<p>With the sentries off duty, the guild has hired a tired ogre to stand on the roof with a lantern. The ogre is paid for twenty-four hours. Brakka noted the sum. The same guild also <a href=\"/a/rust-monster-level-seven-step-ticket-sales\">sells tickets to watch a rust monster sleep</a>, so it has the gold for a stone shift. It just won't say so.</p>\n\n<p>The gargoyles have set up a picket line on the roof. Come dawn, they will freeze in it. A picket line that cannot move is the hardest kind to cross, and the workers know it.</p>\n\n<p><em>Solidarity. And stretch your back. — Brakka</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Silent Hours",
+          "text": "Gargoyle sentries guarding a merchant hall have gone on strike over unpaid daylight hours. The hall's steward hires the party to guard the roof until a deal is struck, but the gargoyles saw something at noon and are not saying."
+        },
+        "npc": {
+          "name": "Mossgrin Hollowspout",
+          "role": "Striking gargoyle sentry",
+          "want": "Pay for the hours spent as stone.",
+          "secret": "Saw a clerk bury a lockbox in the garden at noon and has told no one, because no one was paying.",
+          "race": "gnome",
+          "gender": "male",
+          "kind": "guard"
+        },
+        "location": {
+          "name": "The Weeping Gable",
+          "text": "The stone roofline of a guild hall, lined with sleeping gargoyles in the day. At dusk the gutters make a faint noise like grumbling.",
+          "tavern": false
+        },
+        "rumor": "They say the gargoyles saw who took the ledger, and they will only tell it for back pay."
+      },
+      "fiction": true
+    },
+    {
+      "id": "wish-spell-border-parley-swords-turnips-ashenfold",
+      "title": "Wish Spell Turns Border Swords Into Turnips at Parley",
+      "category": "International",
+      "author": "Grashka Ironjaw",
+      "date": "2026-10-30",
+      "excerpt": "An envoy cast a wish spell for lasting peace at the Ashenfold and Brackwater parley. It worked: 212 swords are now turnips. Tension holds at zero.",
+      "social": "An envoy at the Ashenfold and Brackwater parley wished for lasting peace. 212 swords within the border zone became turnips by noon. Both baronies now argue over who owns the harvest. Is a turnip treaty better than no treaty?",
+      "content": "<p>An envoy cast a wish spell at the Ashenfold and Brackwater border parley on Fifthday, asking for lasting peace between the two baronies. The spell granted it. By noon, 212 swords, 87 pikes and one ceremonial mace within the border zone had turned into turnips.</p>\n\n<p>Envoy Halric Dunmere of Ashenfold cast the spell after nine days of talks over the <a href=\"/a/bridge-troll-toll-hike-quillmarch-parley\">Quillmarch Bridge toll</a>. He said the wording was carefully prepared. It was prepared by a clerk, on the back of a lunch receipt. Witnesses report the phrase \"end the weapons\" appeared on it twice, and \"peace\" once, in pencil.</p>\n\n<p>The handshake that followed lasted two seconds. Firm. No hidden dagger detected. No hidden dagger was possible. Every dagger in the tent was a root vegetable, and Dunmere's own was a particularly fine rutabaga.</p>\n\n<p>Siege-days, the standard measure of border tension, fell to zero by early afternoon. This correspondent has never seen the gauge read zero. It was unsettling. A sentry at the Brackwater checkpoint stood holding a turnip and asked whether he was still on duty. Nobody told him no.</p>\n\n<p>The peace is not without disputes. Both baronies claim the harvest. Brackwater says the turnips came from its swords, which were forged in Brackwater. Ashenfold says the wish was cast on Ashenfold soil, so the vegetables are Ashenfold produce. Roughly 40 farmers arrived to point out that turnips are, in fact, their business, and that nobody consulted them.</p>\n\n<p>The Brackwater envoy, Tessaly Voss, called the wish \"a grave breach of procedure and a very good soup base.\" She has proposed that the turnips be held in joint custody until the two baronies agree on a cellar. After the <a href=\"/a/rust-monster-eats-border-gate-greywater-crossing\">rust monster ate the gate at Greywater Crossing</a>, the baronies have no border post left to put them in.</p>\n\n<p>A wish spell is a dangerous thing to cast over a negotiating table. The scribes say it can reshape the world, and it will do so exactly as worded. Dunmere wanted peace and got a very literal one. He has not yet asked for the swords back. He says that would be a second wish, and he has seen what the first one did to the pikes.</p>\n\n<p>I have covered sieges, blockades and one memorable standoff over a goat. A parley that ends with everyone holding vegetables is the first I have seen where nobody lost. Somebody will lose tomorrow. The harvest is due in three days, and the baronies are already counting turnips.</p>\n\n<p><em>Ironjaw, filed from the front.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Turnip Armistice",
+          "text": "A wish for peace has turned every weapon in a border zone into vegetables, and two rival lords want the party to fetch the real ones back before the harvest dispute becomes a war with spades. A hedge wizard knows the wish can be unpicked, but only with the pencil that wrote it."
+        },
+        "npc": {
+          "name": "Perrin Ashkettle",
+          "role": "Disgraced border clerk",
+          "want": "To fix the wording of the wish before anyone finds out whose receipt it was.",
+          "secret": "He wrote the wish on the back of his lunch receipt and has been eating turnips in secret to hide the evidence.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Turnip Tent",
+          "text": "A striped parley pavilion on the border, now filled to the rafters with turnips shaped like swords. Each one still has a faint hilt-shaped notch, and several hum when a lord walks past.",
+          "tavern": false
+        },
+        "rumor": "They say the wish only turned the sharp ones, and the dull blades are buried in the northern field waiting to be planted."
+      },
+      "fiction": true
+    },
+    {
+      "id": "doppelganger-hireling-three-wages-fourth-attempt",
+      "title": "Doppelganger Hired as Three Hirelings, Collects Three Wages",
+      "category": "Guild Notices",
+      "author": "Hollis Delvewright",
+      "date": "2026-10-30",
+      "excerpt": "A doppelganger signed on with the Fourth Attempt as three hirelings and drew three wages. Chapter 9 says all three showed up, which is the problem.",
+      "social": "A doppelganger joined the Fourth Attempt's hirelings. Then it joined again, twice. It drew three wages, 12 silver each, before Ansel Pottage noticed the porter and the torchbearer wore the same bandage. Would you have noticed?",
+      "content": "<p>THE UNDERMAW, LEVEL 2 — A doppelganger drew three hireling wages from the Fourth Attempt this week, and nobody noticed until the steward counted the torchbearers. Chapter 9 confirms the creature signed on as a porter, a torchbearer, and a rope-man, and was paid 12 silver for each.</p>\n\n<p>The party's steward, <a href=\"/a/mimic-furniture-clause-adventuring-party-contract\">Ansel Pottage</a>, noticed first. 'The porter and the torchbearer had the same bandage,' he told me, reading from a ledger he keeps to the end. 'I have the only bandage like that.' He has since been asked to stop reading the contract aloud at the doppelganger, who he says 'was very polite about it and agreed to everything.'</p>\n\n<p>Box score for the delve: fighter 14 hit points, wizard 6, cleric 11. The three hirelings were at full health, as was the one doppelganger, which I count as a single creature for the record. The party's bard, who asked to be named, says the rope-man 'had a look about him' and then lost the thought. I lost my ninth ten-foot pole of the season to a corridor I should have mapped twice. Rolled poorly.</p>\n\n<p>Deputy Registrar Pell Oddingwick, speaking for Chapter 9, called it 'an early soft launch of the multi-role hireling.' Asked whether the guild would pay for a duplicate wage, he said the matter was 'on track.' He also said the doppelganger had met every attendance standard, which is true: it was present three times.</p>\n\n<p>Examiner Odalys Brackenmoor, who has heard hazard pay cases involving a witness chair, was not charmed. 'One body, three signatures,' she said. 'I have seen less crowded graveyards.' She has ordered a zone of truth cast in the hearing room on Tuesday, over the objection of the doppelganger, which asked for a detect thoughts exemption.</p>\n\n<p>Shieldwall Mutual says a doppelganger counts as one claimant, three claimants, or a pre-existing condition, depending on who files. The doppelganger, reached outside the Sleeping Mule, said it was only trying to cover the porter shifts. 'Nobody wanted them,' it said, in Pottage's voice, which unsettled the steward.</p>\n\n<p>The three wages total 36 silver. The creature has offered to return 24 and keep 12 as a single-hireling rate. Pottage says the clause for that offer exists, on page eleven, and he will read it Tuesday.</p>\n\n<p><em>— H.D., filing from below</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "Three Wages, One Hireling",
+          "text": "A mercenary company's paymaster finds three hirelings drawing wages who share a bandage, a limp, and a laugh. The company wants the culprit found quietly before the party's patron audits the books."
+        },
+        "npc": {
+          "name": "Marta Quillby",
+          "role": "Harried company paymaster",
+          "want": "To balance the ledger before the audit on Friday.",
+          "secret": "She has known about the extra wages for a week and quietly signed them off because the work was getting done.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Counting Room at Dunmere Gate",
+          "text": "A cramped pay office behind a mercenary hall. Its wall of signed receipts has three signatures in one hand that nobody will own.",
+          "tavern": false
+        },
+        "rumor": "They say the new rope-man can be in two places at once, and that the second place is always the pay line."
+      },
+      "fiction": true
+    },
+    {
+      "id": "teleportation-circle-commuter-line-hopwell-transit-review",
+      "title": "Teleportation Circle Commuter Line Opens; Nyx Arrives Twice",
+      "category": "Transport",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-10-30",
+      "excerpt": "Hopwell Transit opened a teleportation circle commuter line from Brindlemoor to Ashenfold. Nyx rode it and arrived twice. Four eyes.",
+      "social": "A teleportation circle commuter line opened between Brindlemoor and Ashenfold on Thursday. The fare is 2 gp, the trip takes no time, and our Nyx arrived twice. The second Nyx has opinions about the first Nyx's eyebrows. Would you pay 2 gp to arrive early?",
+      "content": "<p>OKAY. The wait is over! Hopwell Transit Company opened its teleportation circle commuter line this morning, linking Brindlemoor to the barony of Ashenfold for 2 gp a ride. The trip, according to the brochure, takes \"no time at all,\" and I can confirm this, because I arrived before I left.</p>\n\n<p>Let me walk you through the launch. The platform has eleven glowing circles, each chalked in silver and guarded by a conductor in a very nice hat. You step in, the conductor says the word, and your whole self is simply elsewhere. The mana throughput is staggering. Hopwell says the line can move 4,000 commuters an hour, which I assumed was a typo until a queue of clerks stretched out of the station, past the tannery, and into the next barony, where they were already waiting for themselves.</p>\n\n<p>Now, the review. I stepped in at 8:02 and landed in Ashenfold at 8:01. The runic latency is, technically, negative. My first self was thrilled. My second self, who boarded the return circle out of confusion, arrived back in Brindlemoor at 8:00 and has been rude to me ever since. \"The firmware glyph is working as designed,\" said Hopwell's spokesman, Dunstan Pellwether, who then explained that duplicates are a known feature of the Early Rider tier. The Standard tier, he said, \"mostly\" returns one passenger.</p>\n\n<p>There were extras. Passengers report arriving with a hat that was not theirs, a cough they did not have, or an eyebrow on the wrong side. A baker named Hilde stepped out in Ashenfold carrying a loaf she swears she did not bake. Reeve Fennick, asked whether the town would regulate the circles, said only, \"We are aware of the circles,\" and then looked at the one that had briefly delivered her a second Reeve.</p>\n\n<p>Byte, my pseudodragon, who now speaks only in ad copy, rode along in my satchel. He took the first trip fine. By the third he was saying, \"Hopwell Transit: Be Anywhere, Twice,\" in two voices at once, and I have not been able to make him stop. He also hates the subscription. Hopwell wants 9 gp a month for the \"Priority Arrival\" pass, which gets you there slightly before the other people, and I hate subscriptions more than I hate waiting. I bought it.</p>\n\n<p>Brother Tumbleberry will say I should have walked. Brother Tumbleberry did walk, arrived at noon, and got a nice tan out of it, and has been insufferable. I have a spare of me who can answer him. Four out of five beholder eyes. I took off one for the cough.</p>\n\n<p><em>— Nyx (they/them). Damage Report below.</em></p>\n\n<p><strong>Damage Report:</strong> Burns sustained: 0. Selves: 2. Eyebrows: one on the wrong side, pending a swap.</p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Second Passenger",
+          "text": "A new teleportation circle line is delivering duplicates, and a merchant swears the one who arrived is not the one who left. The party must find which twin is the original before the signed contract in his pocket takes effect."
+        },
+        "npc": {
+          "name": "Perrin Dunwhistle",
+          "role": "Circle line conductor",
+          "want": "To keep the line running until his pension vests.",
+          "secret": "He knows the duplicate fault comes from a cracked silver rune and has been chalking over it.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "Whistlestop Platform",
+          "text": "A terminal of eleven silver-chalked circles under a vaulted glass roof. One circle hums off-key and always has a queue of people who look slightly familiar.",
+          "tavern": false
+        },
+        "rumor": "They say if you step into the eleventh circle at dusk, you come out holding something from a pocket you do not own."
+      },
+      "fiction": true
+    },
+    {
+      "id": "invisibility-potions-quorum-call-brindlemoor-burgesses",
+      "title": "Quorum Call Fails as Five Burgesses Drink Invisibility",
+      "category": "Legislation",
+      "author": "Ottoline Vex",
+      "date": "2026-10-30",
+      "excerpt": "Five Brindlemoor Burgesses drank potions of invisibility before Friday's quorum call, leaving the Council unable to say whether it had a quorum.",
+      "social": "Brindlemoor's Council could not hold a vote Friday because five Burgesses drank potions of invisibility before the quorum call. The clerk counted four visible members and a drained tea service. Nobody could prove who was absent. Would you trust a quorum you can't see?",
+      "content": "<p>The Burgess Council of Brindlemoor failed to establish a quorum on Friday, or possibly succeeded, after five of its nine members drank potions of invisibility minutes before the roll was called. The Council had gathered to re-vote the owlbear leash ordinance, which had been thrown into doubt after the <a href=\"/a/doppelganger-two-council-seats-quorum-brindlemoor\">doppelganger affair</a>.</p>\n\n<p>Standing Order 4 requires seven members \"present and in their seats.\" Clerk Hobb Pennywhistle counted four members visible to the eye. He then noted that the tea service had been drained, the minute book had been signed in five places, and the chair of the gentleman from the Cooper's Ward was audibly creaking. \"A chair does not creak by itself,\" Pennywhistle told the gallery. \"Although this one has before.\"</p>\n\n<p>The question was whether a member who cannot be seen is present. The lady from the Weir Street Ward argued that the Standing Orders say nothing about visibility. The gentleman from the Candle Quarter, whose voice came from the vicinity of the east window, agreed, adding that he was \"emphatically here.\" The gentleman from the Cooper's Ward, whose voice came from the same direction, said he was not here at all and wished it noted. The clerk entered both statements. By Standing Order 4, they cancel.</p>\n\n<p>Reeve Maudrey Fennick of Brindlemoor, who chairs the sittings, said only, \"We are aware of the potions.\" She then asked the Sergeant-at-Arms to sprinkle flour on the floor. This produced five sets of footprints, one of which went directly out the door and was followed by a draft. The Sergeant-at-Arms reported it as a member leaving. The member, from the corridor, reported it as a member stepping out for air.</p>\n\n<p>The Council spent three hours on whether footprints constitute attendance. A motion to count them passed 4-0, on the visible votes, with a sound from the window that the clerk recorded as an abstention. Whether a vote of four is valid when taken by a body that may have been nine is the matter now referred to committee. The committee has not been seen since.</p>\n\n<p>A courtier who asked not to be named because they were not authorized to be awake told me the five had agreed in advance. \"They did not want to vote against the leash ordinance, and they did not want to vote for it,\" the courtier said. \"The potion lasts an hour. The ordinance lasts forever.\" The owlbear in the gallery, which has no vote, said it could smell all five, and that it considered the ordinance in force.</p>\n\n<p>Shieldwall Mutual, the town's adventurer insurer, has declined to cover any Burgess harmed while invisible, citing a clause about \"hazards not witnessed.\" The Council has been asked to table its next sitting until the potions wear off, then to reschedule it for the tenth hour, then to confirm that someone is holding the door.</p>\n\n<p>The ordinance now stands in an uncertain condition: passed, void, and possibly still being voted on by a member who cannot be located. By my running tally this brings the session's Promises Made to twelve and Promises Kept to the one about ending on time, which was kept by the four visible members at 4:10 and by the other five at an hour nobody witnessed. The motion to adjourn carried. Nobody saw it.</p>\n\n<p><em>— O.V., from the gallery</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Missing Quorum",
+          "text": "A town council's vote on a hated tax has stalled because half its members are invisible and refuse to admit they are in the room. The mayor will pay the party to flush them out before the vote's deadline, which expires at dusk."
+        },
+        "npc": {
+          "name": "Tobias Wrenfield",
+          "role": "Sergeant-at-Arms of the Council",
+          "want": "To end the sitting without being blamed for losing five officials.",
+          "secret": "He sold the invisibility potions to the Burgesses himself, at a markup.",
+          "race": "human",
+          "gender": "male",
+          "kind": "guard"
+        },
+        "location": {
+          "name": "The Flour-Dusted Chamber",
+          "text": "A council hall whose floor is covered in flour to track unseen members. The footprints lead to a wardrobe, a window, and one spot in the middle of the floor where they simply stop.",
+          "tavern": false
+        },
+        "rumor": "They say one of the Burgesses drank two potions and is now so invisible even the other invisible ones can't find him."
+      },
+      "fiction": true
+    },
+    {
+      "id": "giant-spider-awning-fish-street-market",
+      "title": "Giant Spider Weaves Awning Over Fish Street Market",
+      "category": "Local Chaos",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-10-30",
+      "excerpt": "A giant spider spun a 40-foot awning over the Fish Street market overnight. Vendors are split on evicting it or charging it stall rent. Allegedly.",
+      "social": "A giant spider spun a 40-foot awning over the Fish Street market in one night. Half the vendors want it gone, and the other half want to bill it 2 silver a day in stall rent. The fishmonger says her cod haven't been rained on in nine hours. Would you shop under a spider?",
+      "content": "<p>At roughly the second bell before dawn, a giant spider allegedly spun a 40-foot silk awning over the entire Fish Street market, and by the time the first cart rolled in, it was already hanging there like it had a permit. Eleven vendors arrived to find their stalls shaded, dry, and faintly sticky. The spider, which the Constabulary estimates at the size of a draft horse, was sitting in the middle of it all, saying nothing. Allegedly it was waiting for a reasonable offer.</p>\n\n<p>The market split in two before the second pot of tea. 'It's a squatter,' said Odo Pinchwater, a cabbage seller who was eating a turkey leg at the time. 'Squatters get a notice.' Across the lane, fishmonger Hesta Dray disagreed. 'My cod haven't been rained on in nine hours,' she said. 'I'd say that is a service.' Dray has already offered the spider a corner stall at 2 silver a day. The spider has not answered. It has also not eaten anyone, which Dray calls 'a better record than the last landlord.'</p>\n\n<p>The Constabulary arrived at the third bell and did what it does best, which is stand in a half circle and look at the thing. Sergeant Bram Cottle said the web was 'structurally better than the roof of our own station,' then asked reporters not to print that. I am printing it. Allegedly he said it quietly.</p>\n\n<p>Ordinary rope-cutters have so far failed. A volunteer climbed up with a hatchet at the fourth bell and came down with the hatchet stuck to his own boot, and the hatchet, I want to note, was a lovely one, with a little brass cap on the handle. Anyway. A wizard's apprentice from Tanner's Row offered to burn the whole thing down, but the vendors voted against it, since the cabbages are flammable and so is the fish. A second apprentice suggested casting a <em>web</em> spell to 'out-web the web.' Nobody could explain what that meant, and he was asked to leave.</p>\n\n<p>Here is the part I like best. Dew collects on the silk each morning in thousands of tiny beads, and when the sun hits the awning at seven bells, the whole market glitters like a dragon's pantry. Children have been brought in from three streets over. Allegedly I spent forty minutes looking up and forgot what I came for, until a pigeon landed on my head. Pigeons. Do not get me started.</p>\n\n<p>The Tower District has weighed in, naturally. A noble from the hill sent a letter calling the spider 'an eyesore beneath the dignity of the city.' The Lower City replied that the nobles have not been to Fish Street since the cheese incident and may be held to account for that first. The letter was allegedly used to wrap a haddock.</p>\n\n<p>The Constabulary says the matter will be reviewed at the next meeting of the market wardens, to be held under the awning. The spider, for the record, has been invited. Dray says she has saved it a stool.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Landlord Above the Market",
+          "text": "A giant spider has webbed over a market square and the vendors want it gone, or at least on the payroll. A warden named Hesta offers the party 40 gp to talk it into leaving, but the spider may be guarding something in its web."
+        },
+        "npc": {
+          "name": "Hesta Dray",
+          "role": "Fishmonger and market warden",
+          "want": "She wants the market kept dry and the spider kept polite.",
+          "secret": "She has been feeding the spider smoked herring nightly, and it is now loyal to her.",
+          "race": "human",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Glittering Awning",
+          "text": "A 40-foot silk roof over a fish market that sparkles with dew at dawn. A cart wheel stuck in the strands has not moved in two days.",
+          "tavern": false
+        },
+        "rumor": "They say there's a stolen reliquary wrapped up in the web, and that's the real reason it won't leave."
+      },
+      "fiction": true
+    },
+    {
+      "id": "cloaker-recall-12000-winter-cloaks-thistlewick",
+      "title": "Cloaker Recall: 12,000 Winter Cloaks Found Alive",
+      "category": "Product Safety",
+      "author": "Sterling Vanmoor",
+      "date": "2026-10-30",
+      "excerpt": "Thistlewick Cloakworks recalls 12,000 winter cloaks that turned out to be juvenile cloakers. Sterling Vanmoor calls it a wearable growth story.",
+      "social": "Thistlewick Cloakworks has recalled 12,000 winter cloaks after customers noticed them moaning and moving around overnight. The firm admits the garments are \"technically alive,\" and refunds are 9 silver a cloak. Sterling Vanmoor calls it the most exciting retention story in outerwear. Would you wear a cloak that hugs back?",
+      "content": "<p>Thistlewick Cloakworks of Brindlemoor recalled 12,000 winter cloaks on Thursday. The wool-lined garments turned out to be juvenile cloakers. The cloaker recall covers every cloak sold since the Harvestmoon sale, and customers are asked to stop wearing them, politely, and not to turn their backs.</p>\n\n<p>Some people see a product defect. I see the most exciting retention story in outerwear. Thistlewick didn't sell a cloak. Thistlewick sold a cloak that <em>refuses to leave you</em>. Try getting that from a scarf.</p>\n\n<p>The trouble surfaced when a Brindlemoor turnip farmer, Hilde Marrowby, noticed her new cloak had moved to the other side of the cart overnight. \"It also moaned,\" she said. \"I assumed it was the wool.\" By Tuesday, the constabulary had logged 340 complaints, among them a cloak that stood in line at the bakery, and one that took a bishop's seat at Temple.</p>\n\n<p>Thistlewick spokesman Perrin Dunstable acknowledged the garments were \"technically alive\" but insisted the firm's supplier, a wool merchant in the Underdark, had never mentioned it. \"We assumed the extra warmth was craftsmanship,\" Dunstable said. \"Also the hem hissed during quality checks, and we took that as a sign of confidence.\" Refunds are 9 silver per cloak, payable once the cloak releases the customer.</p>\n\n<p>The guild's rightsizing plan is already in motion. Thistlewick will cut 60 seamstresses and hire 40 handlers, which I call a pivot toward a people-forward workforce. Cloakers were measured at a thought-leading 8 feet across when fully grown, and the firm notes a mature cloak requires no hanger, only a cellar.</p>\n\n<p>When I met Guildmaster Orsolo Brandt at a tailors' gala last spring, he told me, \"Sterling, the best garment is the one that wears you.\" I thought he was being poetic. Now I see he was being a visionary, or he was being worn. Either way, he looked warm.</p>\n\n<p>The regulators have noticed. The Brindlemoor Weights and Measures office wants every cloak inspected, and has asked, in writing, that nobody refer to the product as a \"coat with opinions.\" My rival Brakka Stonesweat will no doubt write a column about it. I look forward to not reading it.</p>\n\n<p>Key takeaways for the ambitious adventurer:</p>\n\n<ul>\n<li>Disruption wears many hoods; some of them blink.</li>\n<li>Never turn your back on a growth opportunity, or a hem.</li>\n<li>Return receipts are a form of closure.</li>\n</ul>\n\n<p><em>— Sterling Vanmoor, Guild Visionary. Let's connect at the Yawning Portal.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Cloaks That Clung",
+          "text": "Dozens of villagers bought bargain winter cloaks that are really juvenile cloakers, and they are starting to fly off at night. A frantic merchant will pay the party to collect them before the town's guard burns them all."
+        },
+        "npc": {
+          "name": "Odalys Gladwyn",
+          "role": "Harried cloak-shop proprietor",
+          "want": "To recover every unsold cloak quietly before an inspector counts them.",
+          "secret": "She knew the wool smelled like a cave and bought it anyway because it was cheap.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Hanging Hem",
+          "text": "A cloak shop with a back room full of garments that rustle when nobody is looking. The coat hooks are chained to the wall.",
+          "tavern": false
+        },
+        "rumor": "They say a cloak in the alley has already learned to whisper the names of people who owe it money."
+      },
+      "fiction": true
+    },
+    {
+      "id": "lycanthropy-61-cases-brindlemoor-full-moon-wendell",
+      "title": "Lycanthropy Cases Hit 61 in Brindlemoor After Full Moon",
+      "category": "Health",
+      "author": "Brother Wendell Tumbleberry",
+      "date": "2026-10-30",
+      "excerpt": "Brindlemoor clinics treated 61 lycanthropy cases after Tuesday's full moon. Chapter 9 calls it seasonal visiting. Brother Wendell prescribes rest.",
+      "social": "Brindlemoor clinics treated 61 lycanthropy cases after Tuesday's full moon, up from 9 last month. Chapter 9 calls the howling 'seasonal visitors'. Brother Wendell says lock the door, mind the silver, and sleep. Would you take the cure or keep the tail?",
+      "content": "<p>Friends, Brindlemoor's three healing temples treated 61 cases of lycanthropy after Tuesday night's full moon, up from nine last month. Most patients arrived by morning with torn shirts, mud to the knees, and a strong wish not to discuss the chicken coop at Hobb's Farm.</p>\n\n<p>Reeve Fennick said the town is \"aware of the werewolves.\" Deputy Registrar Pell Oddingwick of Chapter 9 went further and called the howling \"seasonal visitors from the lower levels, arriving right on schedule.\" Asked why a visitor would need a silver collar, he said the permit was still pending. This is the same office that treated the <a href=\"/a/yellow-mold-cough-212-delvers-undermaw-wendell\">yellow mold cough</a> as a houseguest, so I would not lean on it.</p>\n\n<p>Here is what the old herbals say: wolfsbane over the door, a silver spoon in the pocket, and no wandering after dark. Now the actual numbers. A tally from the temple healers shows that nearly every bite came within an hour of someone saying \"it's only a big dog.\" It was not a big dog. Healers also found that cases dropped by two thirds on streets where neighbors kept lanterns lit and checked on one another. No magic in it, friends. Just a lantern and a kind word.</p>\n\n<p>If you are bitten, wash the wound with clean water and soap, go to a temple that same night, and ask for remove curse before the next full moon. The temples charge 40 gold for it, and some of them will bargain. Do not go to the stall by the east gate selling \"moon tonic\" at 300 gold a bottle. I had it tested. It is boiled tea with a pinch of glitter, and the glitter is not even silver.</p>\n\n<p>Shieldwall Mutual says it will cover treatment, but only for bites suffered \"in the ordinary course of town life.\" Its adjuster, Mistress Brelda Quill, is still arguing whether being bitten at a tavern counts. Meanwhile 14 patients are waiting on cots in the Temple of the Harvest Mother, where the sisters are keeping them calm, warm, and well away from the cheese.</p>\n\n<p>The sleepless are worst off. A werewolf who has not rested turns twice as cross, and the curse takes hold faster in the tired. So rest, friends. Go to bed at a decent hour, even on the moon night. My friend Nyx Spindlecoil says there is an app that tracks the moon. Go outside, Nyx, and look up. It is right there, and it is free.</p>\n\n<p>Tonight I recommend mushroom-and-garlic soup, which does nothing against curses but is very good with a heel of bread while you wait.</p>\n\n<p><em>Rest well, friends. — Brother Wendell</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Moon Tonic Racket",
+          "text": "A stall sells 'moon tonic' to the newly bitten at 300 gold a bottle. The temple healers want the party to find who brews it before the next full moon, because patients who drink it skip real treatment."
+        },
+        "npc": {
+          "name": "Perrin Dunhollow",
+          "role": "Moon tonic stall keeper",
+          "want": "To sell out his stock before the next full moon.",
+          "secret": "He is bitten himself and has been drinking his own tea, hoping it works.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Howling Cot Ward",
+          "text": "A temple ward with 14 cots, silver-lined shackles, and lavender in every corner. Every patient hums the same tune, and nobody can say who taught it to them.",
+          "tavern": false
+        },
+        "rumor": "Old Hobb swears the big one that took his chickens wore a town clerk's spectacles."
+      },
+      "fiction": true
     }
   ]
 }
