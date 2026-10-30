@@ -79,6 +79,9 @@
     .bb-item { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 5px 3px; font-family: var(--font-ui); font-size: 0.66rem; line-height: 1.2; color: var(--text-mid); background: #2b2519; border: 1px solid var(--gold-dim); border-radius: var(--radius-sm); cursor: pointer; }
     .bb-group { grid-column: 1 / -1; font-family: var(--font-ui); font-size: 0.74rem; font-weight: 700; color: var(--gold-mid); margin: 6px 0 0; }
     .bb-group:first-child { margin-top: 0; }
+    .bb-group[hidden], .bb-item[hidden], .bb-none[hidden] { display: none; }
+    .bb-none { grid-column: 1 / -1; }
+    .bb-find { width: 100%; box-sizing: border-box; margin: 0 0 8px; padding: 6px 8px; font: inherit; font-size: 0.85rem; color: var(--text-bright); background: var(--bg-dark); border: 1px solid var(--gold-dim); border-radius: var(--radius-sm); }
     .bb-item img { width: 40px; height: 40px; object-fit: contain; }
     .bb-item-s { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; font: 700 26px Georgia, serif; color: var(--gold-bright); }
     .bb-side select, .bb-side input[type="text"] { width: 100%; box-sizing: border-box; margin: 0; font-size: 0.9rem; padding: 6px 8px; }
@@ -323,6 +326,7 @@
         </div>
         <div class="bb-opt" data-for="prop" hidden>
           <h3>🪑 Furniture</h3>
+          <input type="search" class="bb-find" id="bb-prop-find" placeholder="🔍 Find furniture" aria-label="Find furniture" autocomplete="off">
           <div class="bb-items" id="bb-props"></div>
           <p class="bb-hint"><kbd>R</kbd> turns it 90° before you put it down (<kbd>Shift</kbd>+<kbd>R</kbd> the other way, <kbd>Alt</kbd>+<kbd>R</kbd> 15°). It snaps to the grid; hold <kbd>Alt</kbd> to put it anywhere. Resize it with 👆 Select.</p>
         </div>

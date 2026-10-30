@@ -90,22 +90,36 @@ const WM_ICON_GROUPS = [];
     })]);
     const caps = ['kingdom', 'empire', 'republic', 'theocracy', 'magocracy', 'league', 'clans'];
     group('🏰 Settlements', caps.map(c => ['capital-' + c, { label: `Capital (${c})`, file: 'place/capital-' + c, w: 46, ar: 0.95 }]).concat(
-        [['metropolis', 44], ['city', 40], ['port-city', 40], ['town', 34], ['port-town', 34], ['village', 28], ['hamlet', 24]]
+        [['metropolis', 44], ['city', 40], ['port-city', 40], ['town', 34], ['port-town', 34], ['village', 28], ['hamlet', 24],
+            ['walled-city', 40], ['desert-city', 40], ['elven-city', 40], ['dwarven-hold', 36], ['harbor', 36], ['oasis-town', 34],
+            ['gnome-town', 32], ['halfling-shire', 32], ['fishing-village', 30], ['plague-village', 30], ['trading-post', 28],
+            ['crossroads-inn', 26], ['logging-camp', 28], ['nomad-camp', 28], ['orc-warcamp', 32]]
             .map(([k, w]) => [k, { label: nice(k), file: 'place/' + k, w, ar: 0.95 }])));
     group('🗝️ Places', ['ruined-keep', 'wizard-tower', 'dragon-lair', 'lost-mine', 'sunken-temple', 'bandit-fort', 'barrow', 'cursed-wood',
-        'witch-hut', 'standing-stones', 'monastery', 'oracle', 'lighthouse', 'battlefield', 'portal', 'giant-bones', 'shipwreck', 'floating-isle']
-        .map(k => [k, { label: nice(k), file: 'place/' + k, w: 34, ar: 0.95 }]));
+        'witch-hut', 'standing-stones', 'monastery', 'oracle', 'lighthouse', 'battlefield', 'portal', 'giant-bones', 'shipwreck', 'floating-isle',
+        'abbey-ruins', 'tower-ruins', 'haunted-manor', 'lich-tower', 'hag-s-hut', 'beholder-lair', 'spider-caves', 'cave-entrance', 'graveyard',
+        'shrine', 'cathedral', 'academy', 'observatory', 'colosseum', 'sky-castle', 'ice-palace', 'pyramid', 'ziggurat', 'volcano-forge',
+        'mine', 'gold-mine', 'quarry', 'crashed-airship', 'frozen-ship']
+        .map(k => [k, { label: nice(k).replace(/ s /, "'s "), file: 'place/' + k, w: 34, ar: 0.95 }]));
+    group('🌋 Landmarks', ['great-tree', 'treant-grove', 'fey-ring', 'hydra-swamp', 'kraken-reef', 'whirlpool', 'waterfall', 'geyser', 'crater',
+        'giant-s-causeway', 'bridge', 'aqueduct', 'dam', 'great-wall']
+        .map(k => [k, { label: nice(k).replace(/ s /, "'s "), file: 'place/' + k, w: 34, ar: 0.95 }]));
+    group('🎄 Winter festival', [['winter-market-town', 40], ['frost-giant-hall', 40], ['toymaker-s-workshop', 32], ['snow-lodge', 30],
+        ['star-tree', 30], ['reindeer-herd', 30]]
+        .map(([k, w]) => [k, { label: nice(k).replace(/ s /, "'s "), file: 'place/' + k, w, ar: 0.95 }]));
     group('⛰️ Terrain', [['mountains', 9, 46], ['snowy-mountains', 9, 46], ['volcanoes', 6, 46], ['hills', 9, 34], ['mesas', 9, 34],
         ['trees', 9, 26], ['pines', 9, 26], ['snowy-pines', 9, 26], ['jungle', 9, 28], ['marsh', 9, 28], ['moor', 9, 26],
-        ['grass', 9, 22], ['dunes', 9, 36], ['oases', 6, 30], ['tundra', 9, 28]]
+        ['grass', 9, 22], ['dunes', 9, 36], ['oases', 6, 30], ['tundra', 9, 28], ['frosted-firs', 13, 26], ['snow-hills', 15, 34]]
         .map(([k, n, w]) => ['tr-' + k, { label: nice(k), file: 'terrain/' + k, w, ar: 0.87, n, terrain: true }]));
     group('🐉 Sea and sky', [['ship', 70, 0.652], ['galley', 70, 0.629], ['whale', 70, 0.621], ['kraken', 80, 0.605],
-        ['sea-serpent', 90, 0.559], ['dragon', 110, 0.473], ['wind-face', 80, 0.566]]
+        ['sea-serpent', 90, 0.559], ['dragon', 110, 0.473], ['wind-face', 80, 0.566], ['flying-sleigh', 100, 0.555]]
         .map(([k, w, ar]) => ['or-' + k, { label: nice(k), file: 'ornament/' + k, w, ar }]));
-    group('🧭 Decor', [['compass', 'Compass rose', 110, 1.03], ['banner', 'Title scroll', 320, 0.2525], ['border-corner', 'Corner flourish', 70, 0.945]]
+    group('🧭 Decor', [['compass', 'Compass rose', 110, 1.03], ['banner', 'Title scroll', 320, 0.2525], ['border-corner', 'Corner flourish', 70, 0.945],
+        ['snowflake-rose', 'Snowflake compass', 110, 1.003], ['winter-star', 'Winter star', 110, 1.022], ['holly-corner', 'Holly corner', 70, 1.026]]
         .map(([k, label, w, ar]) => ['or-' + k, { label, file: 'ornament/' + k, w, ar }]));
     group('🛡️ Coats of arms', ['crowned-lion', 'eagle', 'wolf-head', 'bear', 'stag', 'horse', 'serpent', 'oak', 'rose', 'sun', 'crescent-moon',
-        'three-stars', 'tower', 'sword', 'hammer', 'gauntlet', 'key', 'lantern', 'bell', 'ship']
+        'three-stars', 'tower', 'sword', 'hammer', 'gauntlet', 'key', 'lantern', 'bell', 'ship',
+        'snowflake', 'holly-leaf', 'mistletoe', 'pine-cone', 'candle']
         .map(k => ['ar-' + k, { label: nice(k), file: 'heraldry/' + k, w: 40, ar: 1.2, arms: true }]));
 })();
 

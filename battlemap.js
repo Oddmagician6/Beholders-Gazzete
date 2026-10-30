@@ -896,14 +896,19 @@ function bbToolButtons() {
 
 function bbPickers() {
     bbToolButtons();
-    $('bb-floors').innerHTML = BM_FLOORS.map((f, k) =>
-        `<button type="button" class="bb-swatch" data-floor="${k + 1}" aria-pressed="${k + 1 === BB.floor}" title="${esc(BM_FLOOR_NAMES[f])}"><span style="background-image:url('${SITE_ART_DIR}floor/${f}.webp')"></span>${esc(BM_FLOOR_NAMES[f])}</button>`).join('');
+    const swatch = f => {
+        const k = BM_FLOORS.indexOf(f);
+        return `<button type="button" class="bb-swatch" data-floor="${k + 1}" aria-pressed="${k + 1 === BB.floor}" title="${esc(BM_FLOOR_NAMES[f])}"><span style="background-image:url('${SITE_ART_DIR}floor/${f}.webp')"></span>${esc(BM_FLOOR_NAMES[f])}</button>`;
+    };
+    $('bb-floors').innerHTML = BM_FLOOR_GROUPS.map(([group, floors]) =>
+        `<h4 class="bb-group">${esc(group)}</h4>` + floors.map(swatch).join('')).join('');
     const item = (k, it, attr) => `<button type="button" class="bb-item" data-${attr}="${k}" aria-pressed="false" title="${esc(it.label)}">${it.file
         ? `<img src="${SITE_ART_DIR}${it.file}.webp" alt="" loading="lazy" width="40" height="40">` : '<b class="bb-item-s">S</b>'}<span>${esc(it.label)}</span></button>`;
     const doors = Object.entries(BM_ITEMS).filter(([, it]) => it.door);
     $('bb-doors').innerHTML = doors.map(([k, it]) => item(k, it, 'door')).join('');
     $('bb-props').innerHTML = BM_PROP_GROUPS.map(([group, items]) =>
-        `<h4 class="bb-group">${esc(group)}</h4>` + items.map(([k]) => item(k, BM_ITEMS[k], 'item')).join('')).join('');
+        `<h4 class="bb-group">${esc(group)}</h4>` + items.map(([k]) => item(k, BM_ITEMS[k], 'item')).join('')).join('')
+        + '<p class="bb-hint bb-none" hidden>No furniture by that name.</p>';
     $('bb-rule').innerHTML = Object.entries(BB_RULES).map(([k, v]) => `<option value="${k}">${esc(v)}</option>`).join('');
     $('bb-style').innerHTML = Object.entries(BM_STYLES).map(([k, v]) => `<option value="${k}">${esc(v)}</option>`).join('');
     bbPressed();
@@ -950,6 +955,20 @@ function bbSetup() {
     $('bb-inspect').addEventListener('input', bbInspectInput);
     $('bb-inspect').addEventListener('focusin', () => { BB.inspectMarked = false; });
     $('bb-brush').addEventListener('change', e => { BB.brush = +e.target.value; });
+    // Find furniture: hide what doesn't match, and the headings left with nothing under them.
+    $('bb-prop-find').addEventListener('input', e => {
+        const q = e.target.value.trim().toLowerCase();
+        let any = false, head = null, shown = false;
+        const close = () => { if (head) head.hidden = !shown; };
+        [...$('bb-props').children].forEach(el => {
+            if (el.classList.contains('bb-group')) { close(); head = el; shown = false; return; }
+            if (!el.dataset.item) return;
+            el.hidden = !!q && !(el.title.toLowerCase().includes(q) || el.dataset.item.includes(q));
+            if (!el.hidden) shown = any = true;
+        });
+        close();
+        $('bb-props').querySelector('.bb-none').hidden = any;
+    });
     $('bb-erase-size').addEventListener('change', e => { BB.eraseSize = +e.target.value; });
     $('bb-erase-what').addEventListener('change', e => { BB.erase = e.target.value; });
     $('bb-label-text').addEventListener('input', e => { BB.label = e.target.value.replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, BM_LIMITS.label); });

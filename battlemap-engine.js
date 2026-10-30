@@ -29,15 +29,43 @@ const BM_STYLES = { art: '🎨 Illustrated', classic: '✒️ Classic ink' };
 // Floor numbers in fl are these plus one (img/map/floor).
 // New floors go on the end: saved maps keep their numbers.
 const BM_FLOORS = ['flagstones', 'planks', 'dirt', 'cave', 'mossy-cave', 'marble', 'temple-tiles', 'bone', 'water',
-    'carpet', 'grass', 'sand', 'ice', 'lava'];
+    'carpet', 'grass', 'sand', 'ice', 'lava',
+    'ash', 'autumn-leaves', 'black-ice', 'blood-stained-flagstones', 'bone-floor', 'brick', 'checkered-marble', 'clay-roof',
+    'cobblestones', 'copper-roof', 'crystal-cave', 'deep-sea', 'dock-planks', 'festive-carpet', 'fine-paving', 'forest-floor',
+    'fresh-snowfall', 'ghostly-mist', 'graveyard-soil', 'gravel', 'meadow', 'mosaic', 'mud-road', 'packed-snow-path', 'parquet',
+    'rotten-boards', 'rough-stone', 'sewer-water', 'shallow-water', 'shingle-roof', 'slate-roof', 'snow', 'snowy-cobbles',
+    'snowy-roof', 'straw-floor', 'swamp', 'thatch-roof', 'tilled-soil'];
 const BM_FLOOR_NAMES = {
     flagstones: 'Flagstones', planks: 'Planks', dirt: 'Dirt', cave: 'Cave rock', 'mossy-cave': 'Mossy cave',
     marble: 'Marble', 'temple-tiles': 'Temple tiles', bone: 'Bones', water: 'Water',
-    carpet: 'Carpet', grass: 'Overgrown', sand: 'Sand', ice: 'Ice', lava: 'Lava'
+    carpet: 'Carpet', grass: 'Overgrown', sand: 'Sand', ice: 'Ice', lava: 'Lava',
+    ash: 'Ash', 'autumn-leaves': 'Autumn leaves', 'black-ice': 'Black ice', 'blood-stained-flagstones': 'Bloodied flagstones',
+    'bone-floor': 'Skulls and bones', brick: 'Brick', 'checkered-marble': 'Checkered marble', 'clay-roof': 'Clay roof',
+    cobblestones: 'Cobblestones', 'copper-roof': 'Copper roof', 'crystal-cave': 'Crystal cave', 'deep-sea': 'Deep water',
+    'dock-planks': 'Dock planks', 'festive-carpet': 'Festive carpet', 'fine-paving': 'Fine paving', 'forest-floor': 'Forest floor',
+    'fresh-snowfall': 'Fresh snow', 'ghostly-mist': 'Ghostly mist', 'graveyard-soil': 'Graveyard soil', gravel: 'Gravel',
+    meadow: 'Meadow', mosaic: 'Mosaic', 'mud-road': 'Mud road', 'packed-snow-path': 'Snowy path', parquet: 'Parquet',
+    'rotten-boards': 'Rotten boards', 'rough-stone': 'Rough stone', 'sewer-water': 'Sewer water', 'shallow-water': 'Shallow water',
+    'shingle-roof': 'Shingle roof', 'slate-roof': 'Slate roof', snow: 'Snow', 'snowy-cobbles': 'Snowy cobbles',
+    'snowy-roof': 'Snowy roof', 'straw-floor': 'Straw', swamp: 'Swamp', 'thatch-roof': 'Thatch roof', 'tilled-soil': 'Tilled soil'
 };
+// How the Floor tool lays out the swatches (every floor in exactly one group).
+const BM_FLOOR_GROUPS = [
+    ['🏰 Indoors', ['flagstones', 'planks', 'marble', 'temple-tiles', 'carpet', 'checkered-marble', 'parquet', 'mosaic', 'brick',
+        'fine-paving', 'festive-carpet', 'straw-floor', 'rotten-boards', 'dock-planks']],
+    ['🕳️ Dungeon and cave', ['dirt', 'cave', 'mossy-cave', 'rough-stone', 'crystal-cave', 'bone', 'bone-floor', 'blood-stained-flagstones',
+        'ghostly-mist', 'lava', 'ash']],
+    ['🛤️ Streets and roofs', ['cobblestones', 'gravel', 'mud-road', 'snowy-cobbles', 'thatch-roof', 'shingle-roof', 'slate-roof',
+        'clay-roof', 'copper-roof', 'snowy-roof']],
+    ['🌿 Outdoors', ['grass', 'meadow', 'forest-floor', 'tilled-soil', 'sand', 'swamp', 'autumn-leaves', 'graveyard-soil']],
+    ['🌊 Water', ['water', 'shallow-water', 'deep-sea', 'sewer-water']],
+    ['❄️ Winter', ['ice', 'black-ice', 'snow', 'fresh-snowfall', 'packed-snow-path']]
+];
 // Everything that stands on the map. Doors and stairs (img/map/door): edge doors sit on a grid
 // line between two squares, and their pictures run past the square (pw, ph) as the Sites
 // tab draws them. Furniture (img/map/prop): w × h is its size in squares when placed.
+// ink: which classic-ink door a newer door draws as (wood, iron, barred, portcullis, window, open,
+// stairs, trap); the first ones draw as their own key.
 const BM_ITEMS = {
     wood: { label: 'Wooden door', file: 'door/wooden-door', door: true, edge: true, pw: 1.2, ph: 1.2 },
     iron: { label: 'Iron door (locked)', file: 'door/iron-door', door: true, edge: true, pw: 1.2, ph: 1.2 },
@@ -49,6 +77,21 @@ const BM_ITEMS = {
     spiral: { label: 'Spiral stairs', file: 'door/spiral-stairs', door: true },
     trapdoor: { label: 'Trapdoor', file: 'door/trapdoor', door: true }
 };
+// The newer doors are drawn side-on with a stub of wall at each end, so their pictures run about
+// a square past the door: [key, label, ink, pw, ph]. Edge doors unless ink is stairs or trap.
+[['double-door', 'Double door', 'wood', 2.2], ['shop-door', 'Shop door', 'wood'], ['boarded-door', 'Boarded-up door', 'barred'],
+    ['broken-door', 'Broken door', 'open'], ['crypt-door', 'Crypt door', 'iron'], ['coffin-door', 'Coffin door', 'wood'],
+    ['rusted-cell-door', 'Rusted cell door', 'barred'], ['wreath-door', 'Wreath door', 'wood'], ['town-gate', 'Town gate', 'wood', 3, 1.2],
+    ['drawbridge', 'Drawbridge', 'wood', 2.4, 1.2], ['iron-gate', 'Iron gate', 'portcullis'], ['fence-gate', 'Fence gate', 'open'],
+    ['ice-gate', 'Ice gate', 'portcullis'], ['open-doorway', 'Open doorway', 'open'], ['curtain-doorway', 'Curtain doorway', 'open'],
+    ['bead-curtain', 'Bead curtain', 'open'], ['cobwebbed-doorway', 'Cobwebbed doorway', 'open'], ['garland-arch', 'Garland arch', 'open'],
+    ['hole-in-the-wall', 'Hole in the wall', 'open'], ['window', 'Window', 'window'], ['shuttered-window', 'Shuttered window', 'window'],
+    ['stained-glass-window', 'Stained glass window', 'window'], ['frosted-window', 'Frosted window', 'window'], ['arrow-slit', 'Arrow slit', 'window'],
+    ['cellar-doors', 'Cellar doors', 'trap', 1.2, 1.2], ['ladder-up', 'Ladder up', 'stairs', 1.2, 1.2], ['rope-ladder', 'Rope ladder', 'trap', 1.2, 1.2]]
+    .forEach(([k, label, ink, pw = 2, ph = 1]) => {
+        const edge = ink !== 'stairs' && ink !== 'trap';
+        BM_ITEMS[k] = Object.assign({ label, file: 'door/' + k, door: true, ink, pw, ph }, edge ? { edge } : {});
+    });
 // Furniture in the builder's groups: [key, label, w, h] (1 × 1 when left out).
 const BM_PROP_GROUPS = [
     ['🍺 Tavern and home', [['chair', 'Chair'], ['stool', 'Stool'], ['bench', 'Bench', 2, 1], ['table', 'Table', 2, 1],
@@ -56,25 +99,113 @@ const BM_PROP_GROUPS = [
         ['kitchen-counter', 'Kitchen counter', 2, 1], ['wardrobe', 'Wardrobe', 2, 1], ['bed', 'Bed', 1, 2], ['bathtub', 'Bathtub', 2, 1],
         ['candelabra', 'Candelabra'], ['piano', 'Harpsichord', 2, 2], ['rug', 'Rug', 2, 3], ['mirror', 'Mirror'], ['tapestry', 'Tapestry', 2, 1],
         ['chest', 'Chest'], ['throne', 'Throne']]],
+    ['🍻 Inn and tavern', [['long-table', 'Long table', 3, 1], ['card-table', 'Card table', 2, 2], ['broken-table', 'Broken table'],
+        ['ale-casks', 'Ale casks', 2, 1], ['keg-rack', 'Keg rack', 2, 2], ['mug-rack', 'Mug rack', 2, 1], ['spit-roast', 'Spit roast', 2, 1],
+        ['dish-tub', 'Dish tub'], ['coat-rack', 'Coat rack'], ['dartboard-corner', 'Dartboard corner'], ['bard-s-corner', "Bard's corner"],
+        ['stage', 'Stage', 3, 2], ['wanted-board', 'Wanted board', 2, 1], ['spilled-ale', 'Spilled ale']]],
+    ['🏠 Homes', [['double-bed', 'Double bed', 2, 2], ['bunk-bed', 'Bunk bed', 1, 2], ['cradle', 'Cradle'], ['armchair', 'Armchair'],
+        ['sofa', 'Sofa', 2, 1], ['dining-table', 'Dining table', 3, 2], ['dresser', 'Dresser', 2, 1], ['washstand', 'Washstand'],
+        ['washtub', 'Washtub'], ['cooking-hearth', 'Cooking hearth', 2, 1], ['bread-oven', 'Bread oven', 2, 2], ['dough-table', 'Dough table', 2, 1],
+        ['pantry-shelf', 'Pantry shelf', 2, 1], ['firewood-pile', 'Firewood pile', 2, 1], ['grandfather-clock', 'Grandfather clock'],
+        ['hanging-plants', 'Hanging plants'], ['lantern', 'Lantern'], ['laundry-line', 'Laundry line', 3, 1], ['toy-box', 'Toy box'],
+        ['cat-bed', 'Cat bed'], ['dog', 'Dog'], ['strongbox', 'Strongbox']]],
+    ['🧵 Shops and crafts', [['shop-counter', 'Shop counter', 3, 1], ['display-shelves', 'Display shelves', 2, 1],
+        ['apothecary-shelf', 'Apothecary shelf', 2, 1], ['herb-drying-rack', 'Herb drying rack', 2, 1], ['money-changer-s-table', "Money changer's table", 2, 1],
+        ['jeweler-s-bench', "Jeweler's bench", 2, 1], ['cobbler-s-bench', "Cobbler's bench", 2, 1], ['tailor-s-table', "Tailor's table", 2, 1],
+        ['mannequin', 'Mannequin'], ['loom', 'Loom', 2, 1], ['spinning-wheel', 'Spinning wheel'], ['potter-s-wheel', "Potter's wheel"],
+        ['tanning-rack', 'Tanning rack', 1, 2], ['workbench', 'Workbench', 2, 1], ['armor-stand', 'Armor stand'],
+        ['weapon-display', 'Weapon display', 2, 1]]],
     ['📦 Stores and smithy', [['barrels', 'Barrels'], ['crates', 'Crates'], ['sacks', 'Sacks'], ['hay', 'Hay'], ['forge', 'Forge', 2, 2],
         ['anvil', 'Anvil'], ['weapon-rack', 'Weapon rack', 2, 1], ['mine-cart', 'Mine cart', 1, 2]]],
+    ['👑 Manor and castle', [['royal-throne', 'Royal throne', 2, 2], ['banquet-table', 'Banquet table', 3, 2], ['canopy-bed', 'Canopy bed', 2, 2],
+        ['grand-fireplace', 'Grand fireplace', 2, 1], ['grand-rug', 'Grand rug', 3, 4], ['bear-rug', 'Bear rug', 2, 2], ['writing-desk', 'Writing desk', 2, 1],
+        ['chessboard', 'Chessboard'], ['harp', 'Harp'], ['display-case', 'Display case', 2, 1], ['painting', 'Painting'],
+        ['mounted-trophy', 'Mounted trophy'], ['weapon-trophy', 'Weapon trophy'], ['suit-of-armor', 'Suit of armor'], ['potted-tree', 'Potted tree'],
+        ['topiary', 'Topiary'], ['garden-hedge', 'Garden hedge'], ['rose-bed', 'Rose bed', 2, 2], ['garden-statue', 'Garden statue'],
+        ['gazebo', 'Gazebo', 3, 3]]],
+    ['🏪 Market street', [['market-stall', 'Market stall', 2, 2], ['market-umbrella', 'Market umbrella', 2, 2], ['fruit-stall', 'Fruit stall', 2, 1],
+        ['fish-stall', 'Fish stall', 2, 1], ['cloth-stall', 'Cloth stall', 2, 1], ['pottery-stall', 'Pottery stall', 2, 1], ['butcher-block', 'Butcher block', 2, 1],
+        ['flower-cart', 'Flower cart', 2, 1], ['market-scales', 'Market scales'], ['chicken-coop', 'Chicken coop', 2, 1], ['barrel-stack', 'Barrel stack', 2, 2],
+        ['crate-stack', 'Crate stack', 2, 2], ['handcart', 'Handcart', 1, 2], ['hay-wagon', 'Hay wagon', 2, 3], ['merchant-wagon', 'Merchant wagon', 2, 3],
+        ['hitching-post', 'Hitching post', 2, 1], ['water-trough', 'Water trough', 2, 1], ['rain-barrel', 'Rain barrel'], ['public-well', 'Public well', 2, 2],
+        ['town-fountain', 'Town fountain', 3, 3], ['street-lamp', 'Street lamp'], ['signpost', 'Signpost'], ['notice-board', 'Notice board', 2, 1],
+        ['speaker-s-platform', "Speaker's platform", 3, 2], ['pillory', 'Pillory', 2, 1], ['gallows-tree', 'Gallows tree', 2, 2],
+        ['beggar-s-mat', "Beggar's mat"], ['street-litter', 'Street litter'], ['puddle', 'Puddle', 2, 1], ['pigeons', 'Pigeons'], ['stray-cats', 'Stray cats']]],
     ['💀 Dungeon and lair', [['bone-pile', 'Bone pile'], ['skeleton', 'Skeleton'], ['dead-adventurer', 'Dead adventurer', 2, 1],
         ['carcass', 'Carcass', 2, 1], ['slime', 'Slime'], ['blood-pool', 'Blood pool'], ['cage', 'Cage'], ['shackles', 'Shackles'],
         ['prison-cell', 'Prison cell', 2, 2], ['torture-rack', 'Torture rack', 1, 2], ['stocks', 'Stocks'], ['gallows', 'Gallows', 2, 2],
         ['pit-trap', 'Pit trap'], ['spike-trap', 'Spike trap'], ['lever', 'Lever'], ['rubble', 'Rubble'], ['broken-pillar', 'Broken pillar', 2, 1],
         ['ladder', 'Ladder', 2, 1], ['spider-web', 'Spider web'], ['stalagmites', 'Stalagmites'], ['crystal', 'Crystals'],
-        ['mushrooms', 'Mushrooms'], ['egg-nest', 'Egg nest', 2, 2], ['coin-pile', 'Coin pile'], ['treasure-hoard', 'Treasure hoard']]],
+        ['mushrooms', 'Mushrooms'], ['egg-nest', 'Egg nest', 2, 2], ['coin-pile', 'Coin pile'], ['treasure-hoard', 'Treasure hoard'],
+        ['mimic-chest', 'Mimic chest'], ['gelatinous-cube', 'Gelatinous cube', 2, 2], ['chained-prisoner', 'Chained prisoner'],
+        ['iron-maiden', 'Iron maiden'], ['bones-and-gear', 'Bones and gear', 2, 1], ['pressure-plate', 'Pressure plate'], ['dart-trap-wall', 'Dart trap wall'],
+        ['rolling-boulder', 'Rolling boulder', 2, 2], ['collapsed-ceiling', 'Collapsed ceiling', 2, 2], ['chasm', 'Chasm', 2, 3],
+        ['acid-pool', 'Acid pool', 2, 2], ['lava-crack', 'Lava crack', 2, 1], ['glowing-runes', 'Glowing runes'], ['ritual-altar', 'Ritual altar', 2, 2],
+        ['obelisk', 'Obelisk']]],
+    ['🐀 Thieves and sewers', [['fence-s-stash', "Fence's stash", 2, 1], ['sewer-grate', 'Sewer grate'], ['sewer-outflow', 'Sewer outflow', 2, 1],
+        ['rat-swarm', 'Rat swarm']]],
+    ['🛡️ Guards and war', [['guard-post', 'Guard post', 2, 2], ['cell-bars', 'Cell bars', 2, 2], ['bunk-room-beds', 'Bunk room', 4, 4],
+        ['war-table', 'War table', 2, 2], ['army-tent', 'Army tent', 2, 2], ['spear-rack', 'Spear rack', 2, 1], ['arrow-barrel', 'Arrow barrel'],
+        ['archery-target', 'Archery target'], ['training-dummy', 'Training dummy'], ['ballista', 'Ballista', 2, 2], ['catapult', 'Catapult', 2, 2],
+        ['battering-ram', 'Battering ram', 1, 2], ['barricade', 'Barricade', 2, 1], ['sandbags', 'Sandbags', 2, 1], ['spiked-stakes', 'Spiked stakes', 2, 1],
+        ['caltrops', 'Caltrops']]],
     ['🔮 Wizard', [['alchemy-table', 'Alchemy table', 2, 1], ['bookshelf', 'Bookshelf', 2, 1], ['desk', 'Desk', 2, 1], ['cauldron', 'Cauldron'],
         ['magic-circle', 'Magic circle', 3, 3], ['telescope', 'Telescope'], ['globe', 'Globe'], ['scroll-pile', 'Scroll pile'],
-        ['specimen-shelf', 'Specimen shelf', 2, 1]]],
+        ['specimen-shelf', 'Specimen shelf', 2, 1], ['summoning-circle', 'Summoning circle', 3, 3], ['teleport-pad', 'Teleport pad', 2, 2],
+        ['arcane-orrery', 'Arcane orrery', 2, 2], ['crystal-ball', 'Crystal ball'], ['potion-shelf', 'Potion shelf', 2, 1], ['wand-display', 'Wand display'],
+        ['familiar-perch', 'Familiar perch']]],
     ['🕯️ Temple', [['altar', 'Altar', 2, 1], ['idol', 'Idol'], ['statue', 'Statue'], ['pillar', 'Pillar'], ['brazier', 'Brazier'],
-        ['fountain', 'Fountain', 2, 2], ['pews', 'Pew', 2, 1], ['font', 'Font'], ['candles', 'Candles'], ['gong', 'Gong']]],
+        ['fountain', 'Fountain', 2, 2], ['pews', 'Pew', 2, 1], ['font', 'Font'], ['candles', 'Candles'], ['gong', 'Gong'],
+        ['shrine', 'Shrine'], ['lectern', 'Lectern'], ['offering-bowl', 'Offering bowl'], ['incense-burner', 'Incense burner'],
+        ['prayer-mats', 'Prayer mats', 2, 1], ['church-bell', 'Church bell', 2, 1], ['stained-glass-light', 'Stained glass light', 2, 2],
+        ['celtic-cross', 'Stone cross']]],
     ['⚰️ Crypt and barrow', [['coffin', 'Coffin', 1, 2], ['sarcophagus', 'Sarcophagus', 1, 2], ['urns', 'Urns'], ['headstone', 'Headstone'],
-        ['open-grave', 'Open grave', 2, 1], ['burial-niche', 'Burial niche', 2, 1]]],
+        ['open-grave', 'Open grave', 2, 1], ['burial-niche', 'Burial niche', 2, 1], ['grave-row', 'Row of graves', 3, 1], ['mausoleum', 'Mausoleum', 3, 2],
+        ['iron-fence', 'Iron fence', 3, 1], ['dead-tree', 'Dead tree', 2, 2]]],
     ['⚓ Ship and water', [['ship-wheel', "Ship's wheel"], ['rowboat', 'Rowboat', 2, 1], ['cannon', 'Cannon', 2, 1], ['anchor', 'Anchor'],
-        ['nets', 'Nets'], ['mast', 'Broken mast', 3, 1]]],
+        ['nets', 'Nets'], ['mast', 'Broken mast', 3, 1], ['sailing-ship-deck', 'Ship deck', 5, 10], ['fishing-boat', 'Fishing boat', 2, 4],
+        ['dock-pilings', 'Dock pilings'], ['mooring-post', 'Mooring post'], ['cargo-crane', 'Cargo crane', 2, 2], ['rope-coils', 'Rope coils'],
+        ['fish-barrels', 'Fish barrels'], ['lobster-pots', 'Lobster pots'], ['drying-fish-rack', 'Drying fish rack', 2, 1], ['buoy', 'Buoy'],
+        ['seaweed', 'Seaweed', 2, 1], ['rock-outcrop', 'Rock outcrop', 2, 2]]],
+    ['🐄 Farm and stable', [['horse-stall', 'Horse stall', 2, 2], ['horse', 'Horse', 1, 2], ['cow', 'Cow', 1, 2], ['pig', 'Pig'], ['sheep', 'Sheep'],
+        ['goat', 'Goat'], ['pig-pen', 'Pig pen', 2, 2], ['feed-trough', 'Feed trough', 2, 1], ['hay-bales', 'Hay bales'], ['haystack', 'Haystack', 2, 2],
+        ['grain-sacks', 'Grain sacks', 2, 1], ['butter-churn', 'Butter churn'], ['millstone', 'Millstone', 2, 2], ['plough', 'Plough'],
+        ['ox-cart', 'Ox cart', 1, 3], ['beehives', 'Beehives', 2, 1], ['scarecrow', 'Scarecrow'], ['vegetable-patch', 'Vegetable patch', 2, 2],
+        ['wheat-field', 'Wheat field', 3, 3], ['apple-tree', 'Apple tree', 2, 2], ['duck-pond', 'Duck pond', 3, 3], ['garden-bench', 'Garden bench', 2, 1]]],
     ['🌲 Outdoors and camp', [['tree', 'Tree', 2, 2], ['bush', 'Bush'], ['boulder', 'Boulder'], ['fallen-log', 'Fallen log', 2, 1],
-        ['tent', 'Tent', 2, 2], ['campfire', 'Campfire'], ['bedrolls', 'Bedrolls'], ['well', 'Well']]]
+        ['tent', 'Tent', 2, 2], ['campfire', 'Campfire'], ['bedrolls', 'Bedrolls'], ['well', 'Well'],
+        ['oak-tree', 'Oak tree', 3, 3], ['willow-tree', 'Willow tree', 3, 3], ['pine-tree', 'Pine tree', 2, 2], ['birch-tree', 'Birch tree', 2, 2],
+        ['autumn-tree', 'Autumn tree', 2, 2], ['palm-tree', 'Palm tree', 2, 2], ['tree-stump', 'Tree stump'], ['ferns', 'Ferns'], ['flowers', 'Flowers'],
+        ['tall-grass', 'Tall grass'], ['reeds', 'Reeds'], ['lily-pads', 'Lily pads'], ['rock-cluster', 'Rock cluster', 2, 2],
+        ['standing-stone', 'Standing stone'], ['fairy-ring', 'Fairy ring', 3, 3], ['cave-mouth', 'Cave mouth', 2, 2], ['animal-den', 'Animal den', 2, 2],
+        ['cliff-edge', 'Cliff edge', 3, 1], ['snowdrift', 'Snowdrift', 2, 1], ['lean-to', 'Lean-to', 2, 2], ['hunter-s-blind', "Hunter's blind", 2, 2],
+        ['cooking-spit', 'Cooking spit'], ['bandit-loot', 'Bandit loot', 2, 1]]],
+    ['🧱 Walls, fences, and bridges', [['stone-wall', 'Stone wall', 3, 1], ['palisade', 'Palisade', 3, 1], ['picket-fence', 'Picket fence', 3, 1],
+        ['split-rail-fence', 'Split-rail fence', 3, 1], ['hedgerow', 'Hedgerow', 3, 1], ['wooden-bridge', 'Wooden bridge', 2, 4],
+        ['stone-bridge', 'Stone bridge', 2, 3], ['rope-bridge', 'Rope bridge', 2, 5], ['stepping-stones', 'Stepping stones', 1, 3]]],
+    ['🎄 Winter festival', [['yule-tree', 'Yule tree', 2, 2], ['wrapped-gifts', 'Wrapped gifts'], ['gift-sack', 'Gift sack'],
+        ['festive-hearth', 'Festive hearth', 2, 1], ['yule-log', 'Yule log'], ['feast-table', 'Feast table', 3, 1], ['cookie-tray', 'Cookie tray'],
+        ['mulled-wine-pot', 'Mulled wine pot'], ['candy-cane-bundle', 'Candy canes'], ['gingerbread-house', 'Gingerbread house'],
+        ['wreath', 'Wreath'], ['garland', 'Garland', 2, 1], ['mistletoe-bundle', 'Mistletoe'], ['holly-bush', 'Holly bush'],
+        ['star-lanterns', 'Star lanterns'], ['carolers-lamppost', "Carolers' lamppost"], ['bell-tower-bells', 'Bells', 2, 1],
+        ['toy-workbench', 'Toy workbench', 2, 1], ['toy-soldiers', 'Toy soldiers'], ['rocking-horse', 'Rocking horse'],
+        ['market-chalet', 'Market chalet', 2, 2], ['sleigh', 'Sleigh', 1, 2], ['reindeer', 'Reindeer', 1, 2], ['snow-covered-cart', 'Snowy cart', 1, 2],
+        ['snowman', 'Snowman'], ['snow-fort', 'Snow fort', 2, 1], ['snow-covered-pine', 'Snowy pine', 2, 2], ['frozen-pond', 'Frozen pond', 3, 3],
+        ['ice-sculpture', 'Ice sculpture']]],
+    ['🎃 Haunted', [['jack-o-lantern', "Jack-o'-lantern"], ['pumpkin-pile', 'Pumpkin pile', 2, 1], ['pumpkin-patch', 'Pumpkin patch', 2, 2],
+        ['corn-stalk-bundle', 'Corn stalks'], ['hay-bale-spread', 'Hay bale display', 2, 1], ['ragged-scarecrow', 'Ragged scarecrow'],
+        ['candy-bowl', 'Candy bowl'], ['witch-s-cauldron', "Witch's cauldron"], ['witch-s-hat', "Witch's hat"], ['broomstick', 'Broomstick'],
+        ['black-cat', 'Black cat'], ['crow-murder', 'Crows'], ['bat-swarm', 'Bat swarm'], ['ghost', 'Ghost'], ['will-o-wisp', "Will-o'-wisp"],
+        ['fog-bank', 'Fog bank', 2, 2], ['zombie-hands', 'Zombie hands'], ['severed-hand', 'Severed hand'], ['blood-trail', 'Blood trail', 2, 1],
+        ['green-ooze-puddle', 'Ooze puddle', 2, 1], ['cobweb-corner', 'Cobweb corner'], ['giant-spider-web', 'Giant spider web', 2, 2],
+        ['spider-egg-sacs', 'Spider egg sacs'], ['skull-candles', 'Skull candles'], ['skull-pyramid', 'Skull pile'],
+        ['black-candle-circle', 'Black candle circle', 2, 2], ['bloody-altar', 'Bloody altar', 2, 1], ['ouija-table', 'Spirit board table'],
+        ['haunted-mirror', 'Haunted mirror'], ['creepy-doll', 'Creepy doll'], ['rocking-chair', 'Rocking chair'],
+        ['dusty-sheet-furniture', 'Sheeted furniture', 2, 1], ['hanging-cage', 'Hanging cage'], ['guillotine', 'Guillotine', 1, 2],
+        ['executioner-s-block', "Executioner's block"], ['mad-doctor-s-table', "Mad doctor's table", 1, 2], ['specimen-jars', 'Specimen jars', 2, 1],
+        ['tesla-coil', 'Lightning coil'], ['closed-coffin', 'Closed coffin', 1, 2], ['open-coffin', 'Open coffin', 1, 2],
+        ['vampire-sarcophagus', 'Vampire sarcophagus', 1, 2], ['clawed-up-grave', 'Clawed-up grave', 1, 2], ['leaning-headstones', 'Leaning headstones', 2, 1],
+        ['gravedigger-s-barrow', "Gravedigger's barrow", 1, 2], ['twisted-dead-oak', 'Twisted dead oak', 2, 2]]]
 ];
 BM_PROP_GROUPS.forEach(([, items]) => items.forEach(([k, label, w = 1, h = 1]) => { BM_ITEMS[k] = { label, file: 'prop/' + k, w, h }; }));
 
@@ -111,13 +242,17 @@ function bmCopy(m) {
 }
 
 // ── The saved and shared form ─────────────────────────────
-// A run of numbers as letters with counts: [0, 0, 0, 2] → "a3c" (a = 0, b = 1, …).
+// A run of numbers as letters with counts: [0, 0, 0, 2] → "a3c" (a = 0, b = 1, …, z = 25, then
+// A = 26 … Z = 51, then _a = 52, _b = 53, …: the floors outgrew a–z, and old saves stay readable).
+const bmRleCh = v => v < 26 ? String.fromCharCode(97 + v) : v < 52 ? String.fromCharCode(39 + v) : '_' + String.fromCharCode(45 + v);
+const bmRleV = c => c[0] === '_' ? c.charCodeAt(1) - 45 : c >= 'a' ? c.charCodeAt(0) - 97 : c.charCodeAt(0) - 39;
+
 function bmRle(arr) {
     let out = '';
     for (let i = 0; i < arr.length;) {
         let j = i;
         while (j < arr.length && arr[j] === arr[i]) j++;
-        out += String.fromCharCode(97 + arr[i]) + (j - i > 1 ? j - i : '');
+        out += bmRleCh(arr[i]) + (j - i > 1 ? j - i : '');
         i = j;
     }
     return out;
@@ -127,10 +262,10 @@ function bmRle(arr) {
 function bmUnRle(s, n, max) {
     if (typeof s !== 'string' || s.length > n * 8 + 8) return null;
     const out = [];
-    const re = /([a-z])(\d*)/gy;
+    const re = /(_[a-z]|[a-zA-Z])(\d*)/gy;
     let m;
     while ((m = re.exec(s))) {
-        const v = m[1].charCodeAt(0) - 97, c = m[2] ? parseInt(m[2], 10) : 1;
+        const v = bmRleV(m[1]), c = m[2] ? parseInt(m[2], 10) : 1;
         if (v > max || c < 1 || out.length + c > n) return null;
         for (let k = 0; k < c; k++) out.push(v);
         if (re.lastIndex === s.length) break;
@@ -375,15 +510,21 @@ function bmObjSvg(o, art, secret = true) {
     const at = `translate(${bmF1(o.x * S)} ${bmF1(o.y * S)})`;
     if (o.k === 'secret') return secret ? `<text class="bm-s" x="${bmF1(o.x * S)}" y="${bmF1(o.y * S)}" style="font-size:${bmF1(13 * Math.min(o.w, o.h))}px">S</text>` : '';
     let body;
+    const look = it.ink || o.k;
     if (art || !it.door) {
         body = siteArtImg(it.file, 0, 0, w * (it.pw || 1), h * (it.ph || 1));
-    } else if (['wood', 'iron', 'barred', 'seal'].includes(o.k)) {
+    } else if (['wood', 'iron', 'barred', 'seal'].includes(look)) {
         body = `<rect class="bm-door" x="${bmF1(-w * 0.6)}" y="${bmF1(-h * 0.3)}" width="${bmF1(w * 1.2)}" height="${bmF1(h * 0.6)}"/>`
-            + (o.k === 'iron' || o.k === 'seal' ? `<circle class="bm-lock" cx="0" cy="0" r="${bmF1(Math.min(w, h) * 0.18)}"/>` : '')
-            + (o.k === 'barred' ? `<rect class="bm-lock" x="${bmF1(-w * 0.55)}" y="${bmF1(-h * 0.07)}" width="${bmF1(w * 1.1)}" height="${bmF1(h * 0.14)}"/>` : '');
-    } else if (o.k === 'portcullis') {
+            + (look === 'iron' || look === 'seal' ? `<circle class="bm-lock" cx="0" cy="0" r="${bmF1(Math.min(w, h) * 0.18)}"/>` : '')
+            + (look === 'barred' ? `<rect class="bm-lock" x="${bmF1(-w * 0.55)}" y="${bmF1(-h * 0.07)}" width="${bmF1(w * 1.1)}" height="${bmF1(h * 0.14)}"/>` : '');
+    } else if (look === 'window') {
+        body = `<rect class="bm-door" x="${bmF1(-w * 0.5)}" y="${bmF1(-h * 0.12)}" width="${bmF1(w)}" height="${bmF1(h * 0.24)}"/>`;
+    } else if (look === 'open') {
+        // A gap in the wall: just its two jambs.
+        body = [-0.5, 0.5].map(s => `<line class="bm-port" x1="${bmF1(s * w)}" y1="${bmF1(-h * 0.25)}" x2="${bmF1(s * w)}" y2="${bmF1(h * 0.25)}"/>`).join('');
+    } else if (look === 'portcullis') {
         body = `<line class="bm-port" x1="${bmF1(-w * 0.7)}" y1="0" x2="${bmF1(w * 0.7)}" y2="0"/>`;
-    } else if (o.k === 'stairs') {
+    } else if (look === 'stairs') {
         body = '';
         for (let k = 0; k < 5; k++) {
             const y = -h * 0.4 + k * h * 0.2;
