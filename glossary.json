@@ -1,5 +1,5 @@
 {
-    "generated":  "2026-10-30",
+    "generated":  "2026-10-31",
     "writers":  [
                     {
                         "id":  "ottoline-vex",
@@ -30,8 +30,13 @@
                                            "name":  "Grashka Ironjaw"
                                        }
                                    ],
-                        "article_count":  22,
+                        "article_count":  23,
                         "articles":  [
+                                         {
+                                             "id":  "ghost-filibuster-day-eleven-brindlemoor-council",
+                                             "title":  "Ghost Filibuster Reaches Day 11 in Brindlemoor Council",
+                                             "date":  "2026-10-31"
+                                         },
                                          {
                                              "id":  "invisibility-potions-quorum-call-brindlemoor-burgesses",
                                              "title":  "Quorum Call Fails as Five Burgesses Drink Invisibility",
@@ -50,11 +55,6 @@
                                          {
                                              "id":  "golf-course-tree-removal-430-trees-donwald",
                                              "title":  "Judge Halts Golf Course Tree Removal; Dryads Cheer",
-                                             "date":  "2026-10-27"
-                                         },
-                                         {
-                                             "id":  "owlbear-leash-ordinance-brindlemoor-council-vote",
-                                             "title":  "Owlbear Leash Ordinance Passes 5-4 in Brindlemoor",
                                              "date":  "2026-10-27"
                                          }
                                      ]
@@ -85,8 +85,13 @@
                                            "name":  "Sterling Vanmoor"
                                        }
                                    ],
-                        "article_count":  22,
+                        "article_count":  23,
                         "articles":  [
+                                         {
+                                             "id":  "plant-growth-spell-pumpkin-glut-brindlemoor",
+                                             "title":  "Plant Growth Spell Floods Brindlemoor With 90,000 Pumpkins",
+                                             "date":  "2026-10-31"
+                                         },
                                          {
                                              "id":  "displacer-beast-property-tax-brindlemoor-reassessment",
                                              "title":  "Displacer Beast Skews Property Tax Roll on 38 Cottages",
@@ -105,11 +110,6 @@
                                          {
                                              "id":  "bag-of-holding-flour-hoard-bread-price",
                                              "title":  "Bag of Holding Hides 40,000 Flour Sacks; Bread Doubles",
-                                             "date":  "2026-10-27"
-                                         },
-                                         {
-                                             "id":  "reserve-meeting-opens-stocks-rise-hold-priced",
-                                             "title":  "Stocks Rise as Reserve Meeting Opens, Hold Priced at 90%",
                                              "date":  "2026-10-27"
                                          }
                                      ]
@@ -144,8 +144,13 @@
                                            "name":  "Barnaby Tallowmere"
                                        }
                                    ],
-                        "article_count":  22,
+                        "article_count":  23,
                         "articles":  [
+                                         {
+                                             "id":  "lich-merger-400-skeleton-layoffs-desks",
+                                             "title":  "Lich Merger Rightsizes 400 Skeletons, Who Keep Coming In",
+                                             "date":  "2026-10-31"
+                                         },
                                          {
                                              "id":  "cloaker-recall-12000-winter-cloaks-thistlewick",
                                              "title":  "Cloaker Recall: 12,000 Winter Cloaks Found Alive",
@@ -164,11 +169,6 @@
                                          {
                                              "id":  "gelatinous-cube-dishwasher-layoff-40-tankard-crumb",
                                              "title":  "Gelatinous Cube Replaces 40 Dishwashers at Tavern Chain",
-                                             "date":  "2026-10-27"
-                                         },
-                                         {
-                                             "id":  "volvoth-job-cuts-2500-record-low-shares",
-                                             "title":  "Volvoth Job Cuts: 2,500 More as Shares Hit Record Low",
                                              "date":  "2026-10-27"
                                          }
                                      ]
@@ -199,8 +199,13 @@
                                            "name":  "Sterling Vanmoor"
                                        }
                                    ],
-                        "article_count":  22,
+                        "article_count":  23,
                         "articles":  [
+                                         {
+                                             "id":  "ghost-lamplighters-strike-hallows-eve-brindlemoor",
+                                             "title":  "Ghost Lamplighters Strike on Hallow\u0027s Eve Over Haunt Pay",
+                                             "date":  "2026-10-31"
+                                         },
                                          {
                                              "id":  "gargoyle-strike-chapter-9-stone-hours-pay",
                                              "title":  "Gargoyle Strike: 14 Roof Sentries Want Pay for Stone Hours",
@@ -219,11 +224,6 @@
                                          {
                                              "id":  "kobold-trap-resetters-union-vote-scrip",
                                              "title":  "Kobolds Vote 31-2 to Unionize Over Scrip Pay at Chapter 9",
-                                             "date":  "2026-10-27"
-                                         },
-                                         {
-                                             "id":  "nurses-strike-looms-final-offer-rejected-brigand",
-                                             "title":  "Nurses Reject \u0027Final\u0027 Offer; Strike Looms at Brigand Infirmary",
                                              "date":  "2026-10-27"
                                          }
                                      ]
@@ -253,8 +253,13 @@
                                            "name":  "Brother Wendell Tumbleberry"
                                        }
                                    ],
-                        "article_count":  22,
+                        "article_count":  23,
                         "articles":  [
+                                         {
+                                             "id":  "flameskull-smart-pumpkin-glowmoth-review",
+                                             "title":  "Flameskull Smart Pumpkin Hands Out Candy, Rates Your Credit",
+                                             "date":  "2026-10-31"
+                                         },
                                          {
                                              "id":  "teleportation-circle-commuter-line-hopwell-transit-review",
                                              "title":  "Teleportation Circle Commuter Line Opens; Nyx Arrives Twice",
@@ -273,11 +278,6 @@
                                          {
                                              "id":  "crystal-ball-subscription-lumenwick-seer-review",
                                              "title":  "Crystal Ball Launches at 40 gp, Future Costs Extra",
-                                             "date":  "2026-10-27"
-                                         },
-                                         {
-                                             "id":  "laptop-1999-gp-24-hour-battery-discord",
-                                             "title":  "Discord Apple\u0027s New Laptop: 1,999 GP, 24-Hour Battery",
                                              "date":  "2026-10-27"
                                          }
                                      ]
@@ -307,8 +307,13 @@
                                            "name":  "Ottoline Vex"
                                        }
                                    ],
-                        "article_count":  22,
+                        "article_count":  23,
                         "articles":  [
+                                         {
+                                             "id":  "wish-spell-turnips-tariff-brackwater-ashenfold",
+                                             "title":  "Brackwater Slaps Tariff on 212 Wish Spell Turnips",
+                                             "date":  "2026-10-31"
+                                         },
                                          {
                                              "id":  "wish-spell-border-parley-swords-turnips-ashenfold",
                                              "title":  "Wish Spell Turns Border Swords Into Turnips at Parley",
@@ -327,11 +332,6 @@
                                          {
                                              "id":  "ghost-ship-varnholt-harbor-visa-pellam-parley",
                                              "title":  "Ghost Ship Docks in Varnholt; Customs Demands a Visa",
-                                             "date":  "2026-10-27"
-                                         },
-                                         {
-                                             "id":  "halruaa-election-turnout-45-years-nettleyahu",
-                                             "title":  "Halruaa Election Turnout Fastest in 45 Years",
                                              "date":  "2026-10-27"
                                          }
                                      ]
@@ -363,8 +363,13 @@
                                            "name":  "Nyx Spindlecoil"
                                        }
                                    ],
-                        "article_count":  22,
+                        "article_count":  23,
                         "articles":  [
+                                         {
+                                             "id":  "mimic-candy-bowl-38-trick-or-treaters",
+                                             "title":  "Mimic Posing as Candy Bowl Sticks 38 Trick-or-Treaters",
+                                             "date":  "2026-10-31"
+                                         },
                                          {
                                              "id":  "lycanthropy-61-cases-brindlemoor-full-moon-wendell",
                                              "title":  "Lycanthropy Cases Hit 61 in Brindlemoor After Full Moon",
@@ -383,11 +388,6 @@
                                          {
                                              "id":  "outbreak-red-spot-fever-4588-cases-wendell",
                                              "title":  "Outbreak Doubles Last Year\u0027s Total: 4,588 Red-Spot Cases",
-                                             "date":  "2026-10-27"
-                                         },
-                                         {
-                                             "id":  "potion-of-healing-label-rule-marrowfield-guild",
-                                             "title":  "Potion of Healing Labels Must List Side Effects, Guild Rules",
                                              "date":  "2026-10-27"
                                          }
                                      ]
@@ -423,8 +423,13 @@
                                            "name":  "Hollis Delvewright"
                                        }
                                    ],
-                        "article_count":  22,
+                        "article_count":  23,
                         "articles":  [
+                                         {
+                                             "id":  "gelatinous-cube-halloween-candy-fish-street",
+                                             "title":  "Gelatinous Cube Absorbs 180 Pounds of Halloween Candy",
+                                             "date":  "2026-10-31"
+                                         },
                                          {
                                              "id":  "giant-spider-awning-fish-street-market",
                                              "title":  "Giant Spider Weaves Awning Over Fish Street Market",
@@ -443,11 +448,6 @@
                                          {
                                              "id":  "baseball-tickets-brewmasters-fans-flee-south",
                                              "title":  "Baseball Tickets Top 2,000 gp at Home; Fans Flee South",
-                                             "date":  "2026-10-27"
-                                         },
-                                         {
-                                             "id":  "swarm-of-ravens-steals-212-constable-buttons",
-                                             "title":  "Swarm of Ravens Strips 212 Buttons Off Constabulary",
                                              "date":  "2026-10-27"
                                          }
                                      ]
@@ -481,8 +481,13 @@
                                            "name":  "Skritch Mudwhistle"
                                        }
                                    ],
-                        "article_count":  19,
+                        "article_count":  20,
                         "articles":  [
+                                         {
+                                             "id":  "displacer-beast-undermaw-level-four-map-error",
+                                             "title":  "Displacer Beast Found Three Feet Off Chapter 9 Map",
+                                             "date":  "2026-10-31"
+                                         },
                                          {
                                              "id":  "doppelganger-hireling-three-wages-fourth-attempt",
                                              "title":  "Doppelganger Hired as Three Hirelings, Collects Three Wages",
@@ -501,11 +506,6 @@
                                          {
                                              "id":  "cloaker-coat-check-chapter-9-guild-hall",
                                              "title":  "Cloaker Checked as Cloak at Chapter 9 Guild Hall",
-                                             "date":  "2026-10-27"
-                                         },
-                                         {
-                                             "id":  "ogre-hireling-door-holding-hazard-pay",
-                                             "title":  "Ogre Hired to Hold Door Demands Hazard Pay",
                                              "date":  "2026-10-27"
                                          }
                                      ]
@@ -632,8 +632,18 @@
                       "short":  "the Guild",
                       "type":  "institution",
                       "blurb":  "A guild of heritage keepers who sue to protect old buildings and groves in the capital.",
-                      "appearances":  69,
+                      "appearances":  71,
                       "articles":  [
+                                       {
+                                           "id":  "lich-merger-400-skeleton-layoffs-desks",
+                                           "title":  "Lich Merger Rightsizes 400 Skeletons, Who Keep Coming In",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "mimic-candy-bowl-38-trick-or-treaters",
+                                           "title":  "Mimic Posing as Candy Bowl Sticks 38 Trick-or-Treaters",
+                                           "date":  "2026-10-31"
+                                       },
                                        {
                                            "id":  "cloaker-recall-12000-winter-cloaks-thistlewick",
                                            "title":  "Cloaker Recall: 12,000 Winter Cloaks Found Alive",
@@ -648,16 +658,6 @@
                                            "id":  "owlbear-crosswalk-crossing-guards-hazard-pay-brindlemoor",
                                            "title":  "Owlbear Crosswalk: Crossing Guards Demand Hazard Pay",
                                            "date":  "2026-10-29"
-                                       },
-                                       {
-                                           "id":  "smart-door-mimic-recall-doorwell-review",
-                                           "title":  "Smart Door Is a Mimic: 9,000 Sold, Recall Pending",
-                                           "date":  "2026-10-29"
-                                       },
-                                       {
-                                           "id":  "bag-of-holding-recall-3000-pettibone-vail",
-                                           "title":  "Bag of Holding Recall: 3,000 Packs Share One Pocket",
-                                           "date":  "2026-10-28"
                                        }
                                    ]
                   },
@@ -700,12 +700,114 @@
                       "short":  "Brindlemoor",
                       "type":  "place",
                       "blurb":  "A frontier market town built on top of the entrance to the Undermaw. Its economy runs on adventurers, and so does its hospital.",
-                      "appearances":  30,
+                      "appearances":  35,
                       "articles":  [
                                        {
-                                           "id":  "cloaker-recall-12000-winter-cloaks-thistlewick",
-                                           "title":  "Cloaker Recall: 12,000 Winter Cloaks Found Alive",
+                                           "id":  "ghost-filibuster-day-eleven-brindlemoor-council",
+                                           "title":  "Ghost Filibuster Reaches Day 11 in Brindlemoor Council",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "ghost-lamplighters-strike-hallows-eve-brindlemoor",
+                                           "title":  "Ghost Lamplighters Strike on Hallow\u0027s Eve Over Haunt Pay",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "lich-merger-400-skeleton-layoffs-desks",
+                                           "title":  "Lich Merger Rightsizes 400 Skeletons, Who Keep Coming In",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "mimic-candy-bowl-38-trick-or-treaters",
+                                           "title":  "Mimic Posing as Candy Bowl Sticks 38 Trick-or-Treaters",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "plant-growth-spell-pumpkin-glut-brindlemoor",
+                                           "title":  "Plant Growth Spell Floods Brindlemoor With 90,000 Pumpkins",
+                                           "date":  "2026-10-31"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Brindlemoor Adventurers\u0027 Guild, Chapter 9",
+                      "short":  "Chapter 9",
+                      "type":  "organization",
+                      "blurb":  "The guild chapter that licenses parties to enter the Undermaw, sells the maps, and insists the maps are accurate.",
+                      "appearances":  29,
+                      "articles":  [
+                                       {
+                                           "id":  "displacer-beast-undermaw-level-four-map-error",
+                                           "title":  "Displacer Beast Found Three Feet Off Chapter 9 Map",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "lich-merger-400-skeleton-layoffs-desks",
+                                           "title":  "Lich Merger Rightsizes 400 Skeletons, Who Keep Coming In",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "mimic-candy-bowl-38-trick-or-treaters",
+                                           "title":  "Mimic Posing as Candy Bowl Sticks 38 Trick-or-Treaters",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "doppelganger-hireling-three-wages-fourth-attempt",
+                                           "title":  "Doppelganger Hired as Three Hirelings, Collects Three Wages",
                                            "date":  "2026-10-30"
+                                       },
+                                       {
+                                           "id":  "gargoyle-strike-chapter-9-stone-hours-pay",
+                                           "title":  "Gargoyle Strike: 14 Roof Sentries Want Pay for Stone Hours",
+                                           "date":  "2026-10-30"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Deputy Registrar Pell Oddingwick",
+                      "short":  "Oddingwick",
+                      "type":  "person",
+                      "blurb":  "Chapter 9\u0027s spokesman on permits, openings and corrections. He has announced the opening of Level Seven more times than he has seen it.",
+                      "appearances":  25,
+                      "articles":  [
+                                       {
+                                           "id":  "displacer-beast-undermaw-level-four-map-error",
+                                           "title":  "Displacer Beast Found Three Feet Off Chapter 9 Map",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "doppelganger-hireling-three-wages-fourth-attempt",
+                                           "title":  "Doppelganger Hired as Three Hirelings, Collects Three Wages",
+                                           "date":  "2026-10-30"
+                                       },
+                                       {
+                                           "id":  "gargoyle-strike-chapter-9-stone-hours-pay",
+                                           "title":  "Gargoyle Strike: 14 Roof Sentries Want Pay for Stone Hours",
+                                           "date":  "2026-10-30"
+                                       },
+                                       {
+                                           "id":  "lycanthropy-61-cases-brindlemoor-full-moon-wendell",
+                                           "title":  "Lycanthropy Cases Hit 61 in Brindlemoor After Full Moon",
+                                           "date":  "2026-10-30"
+                                       },
+                                       {
+                                           "id":  "owlbear-crosswalk-crossing-guards-hazard-pay-brindlemoor",
+                                           "title":  "Owlbear Crosswalk: Crossing Guards Demand Hazard Pay",
+                                           "date":  "2026-10-29"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Reeve Maudrey Fennick of Brindlemoor",
+                      "short":  "Reeve Fennick",
+                      "type":  "person",
+                      "blurb":  "Brindlemoor\u0027s chief magistrate. Signs every dungeon permit, every bounty, and every apology to the farmers downwind.",
+                      "appearances":  23,
+                      "articles":  [
+                                       {
+                                           "id":  "ghost-lamplighters-strike-hallows-eve-brindlemoor",
+                                           "title":  "Ghost Lamplighters Strike on Hallow\u0027s Eve Over Haunt Pay",
+                                           "date":  "2026-10-31"
                                        },
                                        {
                                            "id":  "displacer-beast-property-tax-brindlemoor-reassessment",
@@ -726,74 +828,6 @@
                                            "id":  "lycanthropy-61-cases-brindlemoor-full-moon-wendell",
                                            "title":  "Lycanthropy Cases Hit 61 in Brindlemoor After Full Moon",
                                            "date":  "2026-10-30"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Brindlemoor Adventurers\u0027 Guild, Chapter 9",
-                      "short":  "Chapter 9",
-                      "type":  "organization",
-                      "blurb":  "The guild chapter that licenses parties to enter the Undermaw, sells the maps, and insists the maps are accurate.",
-                      "appearances":  26,
-                      "articles":  [
-                                       {
-                                           "id":  "doppelganger-hireling-three-wages-fourth-attempt",
-                                           "title":  "Doppelganger Hired as Three Hirelings, Collects Three Wages",
-                                           "date":  "2026-10-30"
-                                       },
-                                       {
-                                           "id":  "gargoyle-strike-chapter-9-stone-hours-pay",
-                                           "title":  "Gargoyle Strike: 14 Roof Sentries Want Pay for Stone Hours",
-                                           "date":  "2026-10-30"
-                                       },
-                                       {
-                                           "id":  "lycanthropy-61-cases-brindlemoor-full-moon-wendell",
-                                           "title":  "Lycanthropy Cases Hit 61 in Brindlemoor After Full Moon",
-                                           "date":  "2026-10-30"
-                                       },
-                                       {
-                                           "id":  "owlbear-crosswalk-crossing-guards-hazard-pay-brindlemoor",
-                                           "title":  "Owlbear Crosswalk: Crossing Guards Demand Hazard Pay",
-                                           "date":  "2026-10-29"
-                                       },
-                                       {
-                                           "id":  "stirge-swarm-temple-blood-drive-brindlemoor",
-                                           "title":  "Stirge Swarm Joins Temple Blood Drive, Donors Drained",
-                                           "date":  "2026-10-29"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Deputy Registrar Pell Oddingwick",
-                      "short":  "Oddingwick",
-                      "type":  "person",
-                      "blurb":  "Chapter 9\u0027s spokesman on permits, openings and corrections. He has announced the opening of Level Seven more times than he has seen it.",
-                      "appearances":  24,
-                      "articles":  [
-                                       {
-                                           "id":  "doppelganger-hireling-three-wages-fourth-attempt",
-                                           "title":  "Doppelganger Hired as Three Hirelings, Collects Three Wages",
-                                           "date":  "2026-10-30"
-                                       },
-                                       {
-                                           "id":  "gargoyle-strike-chapter-9-stone-hours-pay",
-                                           "title":  "Gargoyle Strike: 14 Roof Sentries Want Pay for Stone Hours",
-                                           "date":  "2026-10-30"
-                                       },
-                                       {
-                                           "id":  "lycanthropy-61-cases-brindlemoor-full-moon-wendell",
-                                           "title":  "Lycanthropy Cases Hit 61 in Brindlemoor After Full Moon",
-                                           "date":  "2026-10-30"
-                                       },
-                                       {
-                                           "id":  "owlbear-crosswalk-crossing-guards-hazard-pay-brindlemoor",
-                                           "title":  "Owlbear Crosswalk: Crossing Guards Demand Hazard Pay",
-                                           "date":  "2026-10-29"
-                                       },
-                                       {
-                                           "id":  "stirge-swarm-temple-blood-drive-brindlemoor",
-                                           "title":  "Stirge Swarm Joins Temple Blood Drive, Donors Drained",
-                                           "date":  "2026-10-29"
                                        }
                                    ]
                   },
@@ -832,46 +866,17 @@
                                    ]
                   },
                   {
-                      "name":  "Reeve Maudrey Fennick of Brindlemoor",
-                      "short":  "Reeve Fennick",
-                      "type":  "person",
-                      "blurb":  "Brindlemoor\u0027s chief magistrate. Signs every dungeon permit, every bounty, and every apology to the farmers downwind.",
-                      "appearances":  22,
-                      "articles":  [
-                                       {
-                                           "id":  "displacer-beast-property-tax-brindlemoor-reassessment",
-                                           "title":  "Displacer Beast Skews Property Tax Roll on 38 Cottages",
-                                           "date":  "2026-10-30"
-                                       },
-                                       {
-                                           "id":  "gargoyle-strike-chapter-9-stone-hours-pay",
-                                           "title":  "Gargoyle Strike: 14 Roof Sentries Want Pay for Stone Hours",
-                                           "date":  "2026-10-30"
-                                       },
-                                       {
-                                           "id":  "invisibility-potions-quorum-call-brindlemoor-burgesses",
-                                           "title":  "Quorum Call Fails as Five Burgesses Drink Invisibility",
-                                           "date":  "2026-10-30"
-                                       },
-                                       {
-                                           "id":  "lycanthropy-61-cases-brindlemoor-full-moon-wendell",
-                                           "title":  "Lycanthropy Cases Hit 61 in Brindlemoor After Full Moon",
-                                           "date":  "2026-10-30"
-                                       },
-                                       {
-                                           "id":  "teleportation-circle-commuter-line-hopwell-transit-review",
-                                           "title":  "Teleportation Circle Commuter Line Opens; Nyx Arrives Twice",
-                                           "date":  "2026-10-30"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "the Senate Chamber",
                       "short":  "the Chamber",
                       "type":  "institution",
                       "blurb":  "Upper house of Waterdeep, where Councilors debate, filibuster, and occasionally stop time.",
-                      "appearances":  21,
+                      "appearances":  22,
                       "articles":  [
+                                       {
+                                           "id":  "ghost-filibuster-day-eleven-brindlemoor-council",
+                                           "title":  "Ghost Filibuster Reaches Day 11 in Brindlemoor Council",
+                                           "date":  "2026-10-31"
+                                       },
                                        {
                                            "id":  "doppelganger-two-council-seats-quorum-brindlemoor",
                                            "title":  "Doppelganger Held Two Council Seats; Quorum Void",
@@ -891,11 +896,6 @@
                                            "id":  "senate-race-lawsuit-frostmarch-sullow-inquisitors",
                                            "title":  "Senate Race Lawsuit Targets Frostmarch\u0027s Second Sullow",
                                            "date":  "2026-10-24"
-                                       },
-                                       {
-                                           "id":  "diesel-tanker-damara-waterdeep-czar-vlad-donwald",
-                                           "title":  "Damara Ships 40,000 Tons of Diesel to Waterdeep",
-                                           "date":  "2026-10-23"
                                        }
                                    ]
                   },
@@ -904,8 +904,13 @@
                       "short":  "the Fourth Attempt",
                       "type":  "organization",
                       "blurb":  "An adventuring party named in honor of the first three. Licensed by Chapter 9, popular with bards, unpopular with insurers.",
-                      "appearances":  19,
+                      "appearances":  20,
                       "articles":  [
+                                       {
+                                           "id":  "displacer-beast-undermaw-level-four-map-error",
+                                           "title":  "Displacer Beast Found Three Feet Off Chapter 9 Map",
+                                           "date":  "2026-10-31"
+                                       },
                                        {
                                            "id":  "doppelganger-hireling-three-wages-fourth-attempt",
                                            "title":  "Doppelganger Hired as Three Hirelings, Collects Three Wages",
@@ -925,11 +930,6 @@
                                            "id":  "pit-trap-hazard-pay-undermaw-porters-strike",
                                            "title":  "Pit Trap Pay Strike: Undermaw Porters Walk Off the Job",
                                            "date":  "2026-10-28"
-                                       },
-                                       {
-                                           "id":  "cloaker-coat-check-chapter-9-guild-hall",
-                                           "title":  "Cloaker Checked as Cloak at Chapter 9 Guild Hall",
-                                           "date":  "2026-10-27"
                                        }
                                    ]
                   },
@@ -938,8 +938,13 @@
                       "short":  "the Keep",
                       "type":  "place",
                       "blurb":  "The official white seat of the High Council. The High Lord visits it between stays at the Golden Tower.",
-                      "appearances":  18,
+                      "appearances":  19,
                       "articles":  [
+                                       {
+                                           "id":  "lich-merger-400-skeleton-layoffs-desks",
+                                           "title":  "Lich Merger Rightsizes 400 Skeletons, Who Keep Coming In",
+                                           "date":  "2026-10-31"
+                                       },
                                        {
                                            "id":  "golf-course-tree-removal-430-trees-donwald",
                                            "title":  "Judge Halts Golf Course Tree Removal; Dryads Cheer",
@@ -959,11 +964,40 @@
                                            "id":  "briefing-room-press-eviction-donwald-pool",
                                            "title":  "Donwald Floats Evicting Press From Briefing Room",
                                            "date":  "2026-10-25"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Undermaw",
+                      "short":  "the Undermaw",
+                      "type":  "place",
+                      "blurb":  "The dungeon under Brindlemoor. Its levels are numbered, its bottom has never been found, and the Guild calls it mostly cleared.",
+                      "appearances":  17,
+                      "articles":  [
+                                       {
+                                           "id":  "displacer-beast-undermaw-level-four-map-error",
+                                           "title":  "Displacer Beast Found Three Feet Off Chapter 9 Map",
+                                           "date":  "2026-10-31"
                                        },
                                        {
-                                           "id":  "fish-oil-memory-trial-365-elders-wendell",
-                                           "title":  "Fish Oil Pills Fail 2-Year Memory Trial; Sages Shrug",
-                                           "date":  "2026-10-23"
+                                           "id":  "gelatinous-cube-halloween-candy-fish-street",
+                                           "title":  "Gelatinous Cube Absorbs 180 Pounds of Halloween Candy",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "ghost-lamplighters-strike-hallows-eve-brindlemoor",
+                                           "title":  "Ghost Lamplighters Strike on Hallow\u0027s Eve Over Haunt Pay",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "mimic-candy-bowl-38-trick-or-treaters",
+                                           "title":  "Mimic Posing as Candy Bowl Sticks 38 Trick-or-Treaters",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "dragon-sues-bard-harassment-50-gp-damages",
+                                           "title":  "Dragon Sues Bard for Harassment; Court Awards 50 gp",
+                                           "date":  "2026-10-29"
                                        }
                                    ]
                   },
@@ -1240,21 +1274,26 @@
                                    ]
                   },
                   {
-                      "name":  "the Undermaw",
-                      "short":  "the Undermaw",
+                      "name":  "The Sleeping Mule Tavern",
+                      "short":  "the Sleeping Mule",
                       "type":  "place",
-                      "blurb":  "The dungeon under Brindlemoor. Its levels are numbered, its bottom has never been found, and the Guild calls it mostly cleared.",
+                      "blurb":  "A Tanner\u0027s Row tavern in Brindlemoor with a deep cellar, a loyal clientele of adventurers, and until recently a very clean walk-in cooler.",
                       "appearances":  13,
                       "articles":  [
                                        {
-                                           "id":  "dragon-sues-bard-harassment-50-gp-damages",
-                                           "title":  "Dragon Sues Bard for Harassment; Court Awards 50 gp",
-                                           "date":  "2026-10-29"
+                                           "id":  "displacer-beast-undermaw-level-four-map-error",
+                                           "title":  "Displacer Beast Found Three Feet Off Chapter 9 Map",
+                                           "date":  "2026-10-31"
                                        },
                                        {
-                                           "id":  "owlbear-crosswalk-crossing-guards-hazard-pay-brindlemoor",
-                                           "title":  "Owlbear Crosswalk: Crossing Guards Demand Hazard Pay",
-                                           "date":  "2026-10-29"
+                                           "id":  "ghost-lamplighters-strike-hallows-eve-brindlemoor",
+                                           "title":  "Ghost Lamplighters Strike on Hallow\u0027s Eve Over Haunt Pay",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "doppelganger-hireling-three-wages-fourth-attempt",
+                                           "title":  "Doppelganger Hired as Three Hirelings, Collects Three Wages",
+                                           "date":  "2026-10-30"
                                        },
                                        {
                                            "id":  "stirge-swarm-temple-blood-drive-brindlemoor",
@@ -1262,14 +1301,43 @@
                                            "date":  "2026-10-29"
                                        },
                                        {
-                                           "id":  "yellow-mold-cough-212-delvers-undermaw-wendell",
-                                           "title":  "Yellow Mold Cough Hits 212 Delvers on Undermaw Level Five",
+                                           "id":  "bag-of-holding-recall-3000-pettibone-vail",
+                                           "title":  "Bag of Holding Recall: 3,000 Packs Share One Pocket",
+                                           "date":  "2026-10-28"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Keeper Bess Harrowgate",
+                      "short":  "Harrowgate",
+                      "type":  "person",
+                      "blurb":  "Keeper of the Sleeping Mule tavern. Extends credit to adventurers and, it turns out, to cubes.",
+                      "appearances":  11,
+                      "articles":  [
+                                       {
+                                           "id":  "displacer-beast-undermaw-level-four-map-error",
+                                           "title":  "Displacer Beast Found Three Feet Off Chapter 9 Map",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "stirge-swarm-temple-blood-drive-brindlemoor",
+                                           "title":  "Stirge Swarm Joins Temple Blood Drive, Donors Drained",
                                            "date":  "2026-10-29"
                                        },
                                        {
-                                           "id":  "owlbear-cubs-undermaw-chapter-9-visitors",
-                                           "title":  "3 Owlbear Cubs Found in Undermaw; Chapter 9 Says \u0027Visitors\u0027",
+                                           "id":  "bag-of-holding-recall-3000-pettibone-vail",
+                                           "title":  "Bag of Holding Recall: 3,000 Packs Share One Pocket",
                                            "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "young-red-dragon-hoard-permit-approved",
+                                           "title":  "Young Red Dragon Hoard Permit Approved, With Cheese Conditions",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "bag-of-holding-flour-hoard-bread-price",
+                                           "title":  "Bag of Holding Hides 40,000 Flour Sacks; Bread Doubles",
+                                           "date":  "2026-10-27"
                                        }
                                    ]
                   },
@@ -1372,74 +1440,6 @@
                                            "id":  "press-ban-ivory-keep-judge-blocks-donwald",
                                            "title":  "Judge Blocks Press Ban at the Ivory Keep, Orders Scribes Back",
                                            "date":  "2026-10-15"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "The Sleeping Mule Tavern",
-                      "short":  "the Sleeping Mule",
-                      "type":  "place",
-                      "blurb":  "A Tanner\u0027s Row tavern in Brindlemoor with a deep cellar, a loyal clientele of adventurers, and until recently a very clean walk-in cooler.",
-                      "appearances":  11,
-                      "articles":  [
-                                       {
-                                           "id":  "doppelganger-hireling-three-wages-fourth-attempt",
-                                           "title":  "Doppelganger Hired as Three Hirelings, Collects Three Wages",
-                                           "date":  "2026-10-30"
-                                       },
-                                       {
-                                           "id":  "stirge-swarm-temple-blood-drive-brindlemoor",
-                                           "title":  "Stirge Swarm Joins Temple Blood Drive, Donors Drained",
-                                           "date":  "2026-10-29"
-                                       },
-                                       {
-                                           "id":  "bag-of-holding-recall-3000-pettibone-vail",
-                                           "title":  "Bag of Holding Recall: 3,000 Packs Share One Pocket",
-                                           "date":  "2026-10-28"
-                                       },
-                                       {
-                                           "id":  "young-red-dragon-hoard-permit-approved",
-                                           "title":  "Young Red Dragon Hoard Permit Approved, With Cheese Conditions",
-                                           "date":  "2026-10-28"
-                                       },
-                                       {
-                                           "id":  "bag-of-holding-flour-hoard-bread-price",
-                                           "title":  "Bag of Holding Hides 40,000 Flour Sacks; Bread Doubles",
-                                           "date":  "2026-10-27"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Keeper Bess Harrowgate",
-                      "short":  "Harrowgate",
-                      "type":  "person",
-                      "blurb":  "Keeper of the Sleeping Mule tavern. Extends credit to adventurers and, it turns out, to cubes.",
-                      "appearances":  10,
-                      "articles":  [
-                                       {
-                                           "id":  "stirge-swarm-temple-blood-drive-brindlemoor",
-                                           "title":  "Stirge Swarm Joins Temple Blood Drive, Donors Drained",
-                                           "date":  "2026-10-29"
-                                       },
-                                       {
-                                           "id":  "bag-of-holding-recall-3000-pettibone-vail",
-                                           "title":  "Bag of Holding Recall: 3,000 Packs Share One Pocket",
-                                           "date":  "2026-10-28"
-                                       },
-                                       {
-                                           "id":  "young-red-dragon-hoard-permit-approved",
-                                           "title":  "Young Red Dragon Hoard Permit Approved, With Cheese Conditions",
-                                           "date":  "2026-10-28"
-                                       },
-                                       {
-                                           "id":  "bag-of-holding-flour-hoard-bread-price",
-                                           "title":  "Bag of Holding Hides 40,000 Flour Sacks; Bread Doubles",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "will-o-wisp-streetlamps-brindlemoor-bog",
-                                           "title":  "Will-o\u0027-Wisp Streetlamps Lead Brindlemoor Patrons Into Bog",
-                                           "date":  "2026-10-26"
                                        }
                                    ]
                   },
@@ -1614,6 +1614,40 @@
                                    ]
                   },
                   {
+                      "name":  "the Apprentice Scholars\u0027 Lodge",
+                      "short":  "the Lodge",
+                      "type":  "institution",
+                      "blurb":  "The union lodge of Harrowmoor\u0027s apprentice scholars, over 4,000 strong and affiliated with the United Axlewrights.",
+                      "appearances":  9,
+                      "articles":  [
+                                       {
+                                           "id":  "ghost-lamplighters-strike-hallows-eve-brindlemoor",
+                                           "title":  "Ghost Lamplighters Strike on Hallow\u0027s Eve Over Haunt Pay",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "gelatinous-cube-dishwasher-layoff-40-tankard-crumb",
+                                           "title":  "Gelatinous Cube Replaces 40 Dishwashers at Tavern Chain",
+                                           "date":  "2026-10-27"
+                                       },
+                                       {
+                                           "id":  "nurses-strike-looms-final-offer-rejected-brigand",
+                                           "title":  "Nurses Reject \u0027Final\u0027 Offer; Strike Looms at Brigand Infirmary",
+                                           "date":  "2026-10-27"
+                                       },
+                                       {
+                                           "id":  "strike-vote-92-percent-mastiff-institute-artificers",
+                                           "title":  "Strike Vote Passes 92.5% at Mastiffchusetts Institute",
+                                           "date":  "2026-10-25"
+                                       },
+                                       {
+                                           "id":  "state-workers-strike-golden-coast-lodge-1000",
+                                           "title":  "State Workers Strike: Golden Coast Clerks Walk Out One Day",
+                                           "date":  "2026-10-24"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Ministry of Humours \u0026 Healing",
                       "short":  "the Ministry",
                       "type":  "agency",
@@ -1750,6 +1784,40 @@
                                    ]
                   },
                   {
+                      "name":  "Inspector Corwin Tallowby",
+                      "short":  "Tallowby",
+                      "type":  "person",
+                      "blurb":  "Brindlemoor Public Cellars Board inspector. Has cited a tavern for every sort of cellar trouble and has opinions about cheese.",
+                      "appearances":  8,
+                      "articles":  [
+                                       {
+                                           "id":  "lich-merger-400-skeleton-layoffs-desks",
+                                           "title":  "Lich Merger Rightsizes 400 Skeletons, Who Keep Coming In",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "doppelganger-two-council-seats-quorum-brindlemoor",
+                                           "title":  "Doppelganger Held Two Council Seats; Quorum Void",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "young-red-dragon-hoard-permit-approved",
+                                           "title":  "Young Red Dragon Hoard Permit Approved, With Cheese Conditions",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "bag-of-holding-flour-hoard-bread-price",
+                                           "title":  "Bag of Holding Hides 40,000 Flour Sacks; Bread Doubles",
+                                           "date":  "2026-10-27"
+                                       },
+                                       {
+                                           "id":  "owlbear-nests-chapter-9-map-room",
+                                           "title":  "Owlbear Nests in Chapter 9 Map Room, Eats Level Four",
+                                           "date":  "2026-10-25"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "OpenEye (makers of ChattyGolem)",
                       "short":  "OpenEye",
                       "type":  "company",
@@ -1784,40 +1852,6 @@
                                    ]
                   },
                   {
-                      "name":  "the Apprentice Scholars\u0027 Lodge",
-                      "short":  "the Lodge",
-                      "type":  "institution",
-                      "blurb":  "The union lodge of Harrowmoor\u0027s apprentice scholars, over 4,000 strong and affiliated with the United Axlewrights.",
-                      "appearances":  8,
-                      "articles":  [
-                                       {
-                                           "id":  "gelatinous-cube-dishwasher-layoff-40-tankard-crumb",
-                                           "title":  "Gelatinous Cube Replaces 40 Dishwashers at Tavern Chain",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "nurses-strike-looms-final-offer-rejected-brigand",
-                                           "title":  "Nurses Reject \u0027Final\u0027 Offer; Strike Looms at Brigand Infirmary",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "strike-vote-92-percent-mastiff-institute-artificers",
-                                           "title":  "Strike Vote Passes 92.5% at Mastiffchusetts Institute",
-                                           "date":  "2026-10-25"
-                                       },
-                                       {
-                                           "id":  "state-workers-strike-golden-coast-lodge-1000",
-                                           "title":  "State Workers Strike: Golden Coast Clerks Walk Out One Day",
-                                           "date":  "2026-10-24"
-                                       },
-                                       {
-                                           "id":  "city-workers-strike-vote-portmantle-93-percent",
-                                           "title":  "Portmantle City Workers Vote 93% to Strike",
-                                           "date":  "2026-10-22"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Cormyr",
                       "short":  "Cormyr",
                       "type":  "country",
@@ -1848,40 +1882,6 @@
                                            "id":  "international-trade-tariffs",
                                            "title":  "New Tariffs Imposed on Kara-Tur Imports",
                                            "date":  "2026-04-22"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Inspector Corwin Tallowby",
-                      "short":  "Tallowby",
-                      "type":  "person",
-                      "blurb":  "Brindlemoor Public Cellars Board inspector. Has cited a tavern for every sort of cellar trouble and has opinions about cheese.",
-                      "appearances":  7,
-                      "articles":  [
-                                       {
-                                           "id":  "doppelganger-two-council-seats-quorum-brindlemoor",
-                                           "title":  "Doppelganger Held Two Council Seats; Quorum Void",
-                                           "date":  "2026-10-28"
-                                       },
-                                       {
-                                           "id":  "young-red-dragon-hoard-permit-approved",
-                                           "title":  "Young Red Dragon Hoard Permit Approved, With Cheese Conditions",
-                                           "date":  "2026-10-28"
-                                       },
-                                       {
-                                           "id":  "bag-of-holding-flour-hoard-bread-price",
-                                           "title":  "Bag of Holding Hides 40,000 Flour Sacks; Bread Doubles",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "owlbear-nests-chapter-9-map-room",
-                                           "title":  "Owlbear Nests in Chapter 9 Map Room, Eats Level Four",
-                                           "date":  "2026-10-25"
-                                       },
-                                       {
-                                           "id":  "young-red-dragon-hoard-cheese-survey",
-                                           "title":  "Young Red Dragon Hoard Survey Finds Cheese Ripened in Hours",
-                                           "date":  "2026-10-22"
                                        }
                                    ]
                   },
@@ -2498,6 +2498,40 @@
                                    ]
                   },
                   {
+                      "name":  "Examiner Odalys Brackenmoor",
+                      "short":  "Brackenmoor",
+                      "type":  "person",
+                      "blurb":  "Chapter 9\u0027s hearing examiner. Rules on grievances, permits and, lately, whether a chair is a monster.",
+                      "appearances":  5,
+                      "articles":  [
+                                       {
+                                           "id":  "displacer-beast-undermaw-level-four-map-error",
+                                           "title":  "Displacer Beast Found Three Feet Off Chapter 9 Map",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "doppelganger-hireling-three-wages-fourth-attempt",
+                                           "title":  "Doppelganger Hired as Three Hirelings, Collects Three Wages",
+                                           "date":  "2026-10-30"
+                                       },
+                                       {
+                                           "id":  "ogre-hireling-door-holding-hazard-pay",
+                                           "title":  "Ogre Hired to Hold Door Demands Hazard Pay",
+                                           "date":  "2026-10-27"
+                                       },
+                                       {
+                                           "id":  "mimic-lobby-bench-reeve-ruling-warning-sign",
+                                           "title":  "Reeve Rules Mimic Lobby Bench a Monster, Orders Sign",
+                                           "date":  "2026-10-19"
+                                       },
+                                       {
+                                           "id":  "mimic-hearing-chapter-9-hazard-pay-ruling",
+                                           "title":  "Mimic Hearing Ends When Witness Chair Eats Exhibit A",
+                                           "date":  "2026-10-17"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Flavio Bolsonare the Younger",
                       "short":  "the Younger",
                       "type":  "person",
@@ -2935,6 +2969,35 @@
                                    ]
                   },
                   {
+                      "name":  "Ashenfold",
+                      "short":  "Ashenfold",
+                      "type":  "place",
+                      "blurb":  "A barony on the near side of the Quillmarch Bridge, forever in talks with its neighbor Brackwater.",
+                      "appearances":  4,
+                      "articles":  [
+                                       {
+                                           "id":  "wish-spell-turnips-tariff-brackwater-ashenfold",
+                                           "title":  "Brackwater Slaps Tariff on 212 Wish Spell Turnips",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "teleportation-circle-commuter-line-hopwell-transit-review",
+                                           "title":  "Teleportation Circle Commuter Line Opens; Nyx Arrives Twice",
+                                           "date":  "2026-10-30"
+                                       },
+                                       {
+                                           "id":  "wish-spell-border-parley-swords-turnips-ashenfold",
+                                           "title":  "Wish Spell Turns Border Swords Into Turnips at Parley",
+                                           "date":  "2026-10-30"
+                                       },
+                                       {
+                                           "id":  "bridge-troll-toll-hike-quillmarch-parley",
+                                           "title":  "Bridge Troll Raises Toll to 3 Copper, Baronies Parley",
+                                           "date":  "2026-10-28"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Brigand \u0026 Women\u0027s Infirmary",
                       "short":  "the Infirmary",
                       "type":  "institution",
@@ -3018,35 +3081,6 @@
                                            "id":  "central-bank-chief-snowhold-conclave-laguard",
                                            "title":  "Central Bank Chief Eyed for Snowhold Conclave Chair",
                                            "date":  "2026-10-15"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Examiner Odalys Brackenmoor",
-                      "short":  "Brackenmoor",
-                      "type":  "person",
-                      "blurb":  "Chapter 9\u0027s hearing examiner. Rules on grievances, permits and, lately, whether a chair is a monster.",
-                      "appearances":  4,
-                      "articles":  [
-                                       {
-                                           "id":  "doppelganger-hireling-three-wages-fourth-attempt",
-                                           "title":  "Doppelganger Hired as Three Hirelings, Collects Three Wages",
-                                           "date":  "2026-10-30"
-                                       },
-                                       {
-                                           "id":  "ogre-hireling-door-holding-hazard-pay",
-                                           "title":  "Ogre Hired to Hold Door Demands Hazard Pay",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "mimic-lobby-bench-reeve-ruling-warning-sign",
-                                           "title":  "Reeve Rules Mimic Lobby Bench a Monster, Orders Sign",
-                                           "date":  "2026-10-19"
-                                       },
-                                       {
-                                           "id":  "mimic-hearing-chapter-9-hazard-pay-ruling",
-                                           "title":  "Mimic Hearing Ends When Witness Chair Eats Exhibit A",
-                                           "date":  "2026-10-17"
                                        }
                                    ]
                   },
@@ -3341,16 +3375,16 @@
                                    ]
                   },
                   {
-                      "name":  "Ashenfold",
-                      "short":  "Ashenfold",
+                      "name":  "Brackwater",
+                      "short":  "Brackwater",
                       "type":  "place",
-                      "blurb":  "A barony on the near side of the Quillmarch Bridge, forever in talks with its neighbor Brackwater.",
+                      "blurb":  "A barony across the Quillmarch Bridge from Ashenfold. The two have been negotiating a lasting peace for longer than anyone remembers.",
                       "appearances":  3,
                       "articles":  [
                                        {
-                                           "id":  "teleportation-circle-commuter-line-hopwell-transit-review",
-                                           "title":  "Teleportation Circle Commuter Line Opens; Nyx Arrives Twice",
-                                           "date":  "2026-10-30"
+                                           "id":  "wish-spell-turnips-tariff-brackwater-ashenfold",
+                                           "title":  "Brackwater Slaps Tariff on 212 Wish Spell Turnips",
+                                           "date":  "2026-10-31"
                                        },
                                        {
                                            "id":  "wish-spell-border-parley-swords-turnips-ashenfold",
@@ -3601,6 +3635,30 @@
                                            "id":  "court-vacancy-blue-donkeys-schemer-midterms",
                                            "title":  "Blue Donkeys Vow to Stall High Courts Vacancy Past Midterms",
                                            "date":  "2026-10-12"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Guildmaster Tobrin Ashgrove",
+                      "short":  "Ashgrove",
+                      "type":  "person",
+                      "blurb":  "A famed guildmaster of the merchant circuit, known for gala speeches and hot-air balloons.",
+                      "appearances":  3,
+                      "articles":  [
+                                       {
+                                           "id":  "lich-merger-400-skeleton-layoffs-desks",
+                                           "title":  "Lich Merger Rightsizes 400 Skeletons, Who Keep Coming In",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "owlbear-courier-startup-hootline-ipo-jumps-60",
+                                           "title":  "Owlbear Courier Startup Hootline Jumps 60% in Debut",
+                                           "date":  "2026-10-29"
+                                       },
+                                       {
+                                           "id":  "bag-of-holding-recall-3000-pettibone-vail",
+                                           "title":  "Bag of Holding Recall: 3,000 Packs Share One Pocket",
+                                           "date":  "2026-10-28"
                                        }
                                    ]
                   },
@@ -3889,6 +3947,30 @@
                                            "id":  "phantom-carriage-surge-pricing",
                                            "title":  "Phantom Carriage Surge Pricing During Raid Events",
                                            "date":  "2026-04-19"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Quillmarch Bridge",
+                      "short":  "Quillmarch Bridge",
+                      "type":  "place",
+                      "blurb":  "The only river crossing for forty miles between the baronies of Ashenfold and Brackwater.",
+                      "appearances":  3,
+                      "articles":  [
+                                       {
+                                           "id":  "wish-spell-turnips-tariff-brackwater-ashenfold",
+                                           "title":  "Brackwater Slaps Tariff on 212 Wish Spell Turnips",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "wish-spell-border-parley-swords-turnips-ashenfold",
+                                           "title":  "Wish Spell Turns Border Swords Into Turnips at Parley",
+                                           "date":  "2026-10-30"
+                                       },
+                                       {
+                                           "id":  "bridge-troll-toll-hike-quillmarch-parley",
+                                           "title":  "Bridge Troll Raises Toll to 3 Copper, Baronies Parley",
+                                           "date":  "2026-10-28"
                                        }
                                    ]
                   },
@@ -4305,25 +4387,6 @@
                                    ]
                   },
                   {
-                      "name":  "Brackwater",
-                      "short":  "Brackwater",
-                      "type":  "place",
-                      "blurb":  "A barony across the Quillmarch Bridge from Ashenfold. The two have been negotiating a lasting peace for longer than anyone remembers.",
-                      "appearances":  2,
-                      "articles":  [
-                                       {
-                                           "id":  "wish-spell-border-parley-swords-turnips-ashenfold",
-                                           "title":  "Wish Spell Turns Border Swords Into Turnips at Parley",
-                                           "date":  "2026-10-30"
-                                       },
-                                       {
-                                           "id":  "bridge-troll-toll-hike-quillmarch-parley",
-                                           "title":  "Bridge Troll Raises Toll to 3 Copper, Baronies Parley",
-                                           "date":  "2026-10-28"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Burnt Crude",
                       "short":  "Burnt Crude",
                       "type":  "product",
@@ -4552,6 +4615,25 @@
                                    ]
                   },
                   {
+                      "name":  "Envoy Halric Dunmere",
+                      "short":  "Dunmere",
+                      "type":  "person",
+                      "blurb":  "Ashenfold\u0027s envoy at the border parleys. Careful with words in theory, and careless with them in practice.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "wish-spell-turnips-tariff-brackwater-ashenfold",
+                                           "title":  "Brackwater Slaps Tariff on 212 Wish Spell Turnips",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "wish-spell-border-parley-swords-turnips-ashenfold",
+                                           "title":  "Wish Spell Turns Border Swords Into Turnips at Parley",
+                                           "date":  "2026-10-30"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Eyekea",
                       "short":  "Eyekea",
                       "type":  "company",
@@ -4628,6 +4710,25 @@
                                    ]
                   },
                   {
+                      "name":  "Gorvash Pennyfist",
+                      "short":  "Gorvash",
+                      "type":  "person",
+                      "blurb":  "A bridge troll who has collected tolls on Quillmarch Bridge for nine winters.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "wish-spell-turnips-tariff-brackwater-ashenfold",
+                                           "title":  "Brackwater Slaps Tariff on 212 Wish Spell Turnips",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "bridge-troll-toll-hike-quillmarch-parley",
+                                           "title":  "Bridge Troll Raises Toll to 3 Copper, Baronies Parley",
+                                           "date":  "2026-10-28"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Grand General Brigand Healing Guild",
                       "short":  "the Brigand Guild",
                       "type":  "company",
@@ -4662,25 +4763,6 @@
                                            "id":  "senate-filibuster-time-stop",
                                            "title":  "Grand Vizier Mitch Casts Time Stop Spell Again",
                                            "date":  "2026-04-16"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Guildmaster Tobrin Ashgrove",
-                      "short":  "Ashgrove",
-                      "type":  "person",
-                      "blurb":  "A famed guildmaster of the merchant circuit, known for gala speeches and hot-air balloons.",
-                      "appearances":  2,
-                      "articles":  [
-                                       {
-                                           "id":  "owlbear-courier-startup-hootline-ipo-jumps-60",
-                                           "title":  "Owlbear Courier Startup Hootline Jumps 60% in Debut",
-                                           "date":  "2026-10-29"
-                                       },
-                                       {
-                                           "id":  "bag-of-holding-recall-3000-pettibone-vail",
-                                           "title":  "Bag of Holding Recall: 3,000 Packs Share One Pocket",
-                                           "date":  "2026-10-28"
                                        }
                                    ]
                   },
@@ -5061,25 +5143,6 @@
                                            "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
                                            "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
                                            "date":  "2026-10-10"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Quillmarch Bridge",
-                      "short":  "Quillmarch Bridge",
-                      "type":  "place",
-                      "blurb":  "The only river crossing for forty miles between the baronies of Ashenfold and Brackwater.",
-                      "appearances":  2,
-                      "articles":  [
-                                       {
-                                           "id":  "wish-spell-border-parley-swords-turnips-ashenfold",
-                                           "title":  "Wish Spell Turns Border Swords Into Turnips at Parley",
-                                           "date":  "2026-10-30"
-                                       },
-                                       {
-                                           "id":  "bridge-troll-toll-hike-quillmarch-parley",
-                                           "title":  "Bridge Troll Raises Toll to 3 Copper, Baronies Parley",
-                                           "date":  "2026-10-28"
                                        }
                                    ]
                   },
@@ -6715,20 +6778,6 @@
                                    ]
                   },
                   {
-                      "name":  "Envoy Halric Dunmere",
-                      "short":  "Dunmere",
-                      "type":  "person",
-                      "blurb":  "Ashenfold\u0027s envoy at the border parleys. Careful with words in theory, and careless with them in practice.",
-                      "appearances":  1,
-                      "articles":  [
-                                       {
-                                           "id":  "wish-spell-border-parley-swords-turnips-ashenfold",
-                                           "title":  "Wish Spell Turns Border Swords Into Turnips at Parley",
-                                           "date":  "2026-10-30"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Envoy Pete Hookstra",
                       "short":  "Hookstra",
                       "type":  "person",
@@ -6753,6 +6802,20 @@
                                            "id":  "special-envoy-humanitarian-czar-vlad-witcoffer",
                                            "title":  "Special Envoy Calls Czar Vlad a Humanitarian; Councilors Recoil",
                                            "date":  "2026-10-21"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Envoy Teodra Hallowmere",
+                      "short":  "Hallowmere",
+                      "type":  "person",
+                      "blurb":  "Brackwater\u0027s envoy at the border parleys. She taxes intent rather than goods.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "wish-spell-turnips-tariff-brackwater-ashenfold",
+                                           "title":  "Brackwater Slaps Tariff on 212 Wish Spell Turnips",
+                                           "date":  "2026-10-31"
                                        }
                                    ]
                   },
@@ -6907,20 +6970,6 @@
                                            "id":  "hurricane-isleias-884000-power-outages-wendell-soup",
                                            "title":  "Hurricane Isleias Darkens 884,000 Hearths; Cold Soup Advised",
                                            "date":  "2026-10-12"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Gorvash Pennyfist",
-                      "short":  "Gorvash",
-                      "type":  "person",
-                      "blurb":  "A bridge troll who has collected tolls on Quillmarch Bridge for nine winters.",
-                      "appearances":  1,
-                      "articles":  [
-                                       {
-                                           "id":  "bridge-troll-toll-hike-quillmarch-parley",
-                                           "title":  "Bridge Troll Raises Toll to 3 Copper, Baronies Parley",
-                                           "date":  "2026-10-28"
                                        }
                                    ]
                   },
@@ -7723,6 +7772,20 @@
                                    ]
                   },
                   {
+                      "name":  "Lamplighters\u0027 Lodge, Spectral Local 13",
+                      "short":  "the Lamplighters\u0027 Lodge",
+                      "type":  "organization",
+                      "blurb":  "The union of Brindlemoor\u0027s ghost lamplighters. It meets in a hall with a door nobody has ever closed.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "ghost-lamplighters-strike-hallows-eve-brindlemoor",
+                                           "title":  "Ghost Lamplighters Strike on Hallow\u0027s Eve Over Haunt Pay",
+                                           "date":  "2026-10-31"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Larrion Elfison the Elder",
                       "short":  "Elfison the Elder",
                       "type":  "person",
@@ -7747,6 +7810,20 @@
                                            "id":  "existing-home-sales-399-million-realm-tors",
                                            "title":  "Existing-Home Sales Hit 3.99M as Hearth Prices Climb",
                                            "date":  "2026-10-20"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Ledgerhall Counting House",
+                      "short":  "Ledgerhall",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor counting house staffed largely by skeleton clerks, now part of Vaultmere Holdings.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "lich-merger-400-skeleton-layoffs-desks",
+                                           "title":  "Lich Merger Rightsizes 400 Skeletons, Who Keep Coming In",
+                                           "date":  "2026-10-31"
                                        }
                                    ]
                   },
@@ -7887,6 +7964,20 @@
                                            "id":  "press-ban-ivory-keep-judge-blocks-donwald",
                                            "title":  "Judge Blocks Press Ban at the Ivory Keep, Orders Scribes Back",
                                            "date":  "2026-10-15"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Malgrim Dusk-Vael",
+                      "short":  "Dusk-Vael",
+                      "type":  "person",
+                      "blurb":  "Chief Executive Lich of Vaultmere Holdings. Believes retention is a solved problem.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "lich-merger-400-skeleton-layoffs-desks",
+                                           "title":  "Lich Merger Rightsizes 400 Skeletons, Who Keep Coming In",
+                                           "date":  "2026-10-31"
                                        }
                                    ]
                   },
@@ -10169,6 +10260,20 @@
                                            "id":  "cybersecurity-acquisition-varonyx-proofparchment-63b-gp",
                                            "title":  "6.3B gp Cybersecurity Buyout Sends Varonyx Private",
                                            "date":  "2026-10-20"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Vaultmere Holdings",
+                      "short":  "Vaultmere",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor holding company run by a lich. It has acquired the Ledgerhall Counting House.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "lich-merger-400-skeleton-layoffs-desks",
+                                           "title":  "Lich Merger Rightsizes 400 Skeletons, Who Keep Coming In",
+                                           "date":  "2026-10-31"
                                        }
                                    ]
                   },

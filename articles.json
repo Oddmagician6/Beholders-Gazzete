@@ -4868,6 +4868,307 @@
         "rumor": "Old Hobb swears the big one that took his chickens wore a town clerk's spectacles."
       },
       "fiction": true
+    },
+    {
+      "id": "plant-growth-spell-pumpkin-glut-brindlemoor",
+      "title": "Plant Growth Spell Floods Brindlemoor With 90,000 Pumpkins",
+      "category": "Economy",
+      "author": "Barnaby Tallowmere",
+      "date": "2026-10-31",
+      "excerpt": "A plant growth spell swelled a 12,000 pumpkin harvest to 90,000, and the pumpkin price fell 92% by Halloween. Barnaby has done the sums. Four times.",
+      "social": "A druid's plant growth spell turned Brindlemoor's 12,000 pumpkin harvest into 90,000 just before Halloween. The price fell from 6 copper to half a copper, and farmers now earn 37% less on seven times the crop. Would you buy a pumpkin at that price?",
+      "content": "<p>A single plant growth spell has turned Brindlemoor's usual 12,000 pumpkin harvest into 90,000 pumpkins on Halloween eve, and the pumpkin price has collapsed 92%, from 6 copper pieces to half a copper. On the current Loaf Index, that is a drop from five pumpkins per loaf to sixty. (I have checked this four times. I checked it a fifth time out of spite.)</p>\n\n<p>The spell was cast on Tuesday by a hedge druid named Wilhelmina Thornback, hired by the Millbrook growers' co-op for 40 gold pieces, or 40 loaves. She says she was asked to \"help the vines along a bit\" and misjudged the spell's reach. It reached all nine hundred acres. By Wednesday morning farmers were found sitting on their own pumpkins in order to count them, and several could not find their barns.</p>\n\n<p>Now the economics, taken slowly. Last week the harvest was worth 72,000 copper, or 2,400 loaves. This week there are seven and a half times as many pumpkins, but they sell for one-twelfth the price, so the whole harvest is worth 45,000 copper, or 1,500 loaves. The farmers grew more and earned 37% less, which is the sort of arithmetic that makes my tea go cold. Meanwhile the spell cost 40 loaves, so the net is 1,460. Aunt Marigold says this is why she grows nothing and keeps her savings in a boot.</p>\n\n<p>Buyers are enjoying it less than you would think. Tavern-keeper Osgood Brambletoe has been offered pumpkins at a farthing each and refuses them, saying he already has a cellar of them and a wife who has stopped speaking to him about soup. Lantern-carvers charge the same as ever, since carving, unlike pumpkins, takes a person. The Brindlemoor Growers' Co-op has asked the Burgomaster's Office to buy the surplus at a floor price of 2 copper. The office has said it will \"study the pumpkin\" and has not said for how long.</p>\n\n<p>Sterling Vanmoor, the Gazette's market optimist, says a glut is a gift and that cheap pumpkins will lift every pie in the realm. I note only that the pie-makers' guild has asked for the lower price to be kept secret from the flour millers. The millers have not been told. I am telling you, in case you are one.</p>\n\n<p>Ms. Thornback has apologized and offered to cast a different spell to shrink them again. The co-op has asked her, politely and in writing, not to.</p>\n\n<p>What this means for your pantry: buy pumpkins today, preserve most of them, and when someone tells you the market will sort itself out, ask them how many acres of it.</p>\n\n<p><em>— B.T. (Loaf Index: see sidebar)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Pumpkin Overgrowth",
+          "text": "A farming co-op hires the party to find the druid whose spell ran wild and hold off creditors until the harvest sells. Rival growers would rather the pumpkins rot, so the price stays up."
+        },
+        "npc": {
+          "name": "Wilhelmina Thornback",
+          "role": "Hedge druid for hire",
+          "want": "To undo the spell quietly before the co-op sues her.",
+          "secret": "She cast it on purpose for a rival grower who wanted the market flooded.",
+          "race": "human",
+          "gender": "female",
+          "kind": "magic"
+        },
+        "location": {
+          "name": "Millbrook Pumpkin Fields",
+          "text": "Nine hundred acres of pumpkins the size of wagons. Some still grow in the night, with a faint creak.",
+          "tavern": false
+        },
+        "rumor": "I heard the biggest pumpkin has a door in it now, and somebody's already paying rent."
+      },
+      "fiction": true
+    },
+    {
+      "id": "ghost-lamplighters-strike-hallows-eve-brindlemoor",
+      "title": "Ghost Lamplighters Strike on Hallow's Eve Over Haunt Pay",
+      "category": "Labor",
+      "author": "Brakka Stonesweat",
+      "date": "2026-10-31",
+      "excerpt": "Nineteen ghost lamplighters walked off in Brindlemoor on Hallow's Eve. They want haunt pay for the busiest night of the year, and not in coin.",
+      "social": "Nineteen ghost lamplighters in Brindlemoor walked off the job on Hallow's Eve, the one night the streets are full. They get paid in copper and have no pockets. Their steward wants a haunting bonus and one full night of rattling chains with no questions asked. Would you pay them in coin or in candles?",
+      "content": "<p>The ghosts are out. Not haunting. Out on strike.</p>\n\n<p>Nineteen ghost lamplighters in Brindlemoor stopped lighting the lamps at dusk on Hallow's Eve, the night the whole town stays out late. The Lamplighters' Lodge, Spectral Local 13, says it wants haunt pay for the busiest shift of the year. Reeve Fennick's office says the streets are dark and the ghosts are, quote, 'also somewhat see-through about it.'</p>\n\n<p>Here is the problem. The town pays its lamplighters in copper pieces. A ghost cannot hold a copper piece. It falls through the hand, through the floor, and into the cellar of whoever lives below. 'Nineteen years I've been paid in coin,' said Edda Wickfast, a ghost lamplighter and steward of the Lodge. 'I have never once bought a loaf. The baker's boy sweeps my wages into a jar and calls it a tip.' That means the town has been stealing the wages. Politely, but stealing.</p>\n\n<p>The Lodge has three demands. One: wages paid in candles, which a ghost can at least sit near. Two: a haunt bonus for Hallow's Eve, when every child in Brindlemoor dresses as one of them. 'They wear sheets,' said Wickfast. 'A sheet. We've been dead for two hundred years and the work is being done by a bedsheet.' Three: one full night each month to rattle chains with no complaints from the landlady.</p>\n\n<p>Meanwhile the ghosts are not lazy. They have worked every night since the founding of the town, including the nights of the plague, the flood, and the Fourth Great Fire. Orrin Dabbleby, a human lamp-oiler who works the same street by day, backs them. 'I get a lunch break,' said Dabbleby. 'They get a lunch break too, technically. Nobody can see them eat.'</p>\n\n<p>Brindlemoor's Merchants' Row blames the strike for a poor night. Pumpkins went unlit on Tanner's Row, and a mule walked into the fountain. The Row has offered the ghosts a 'spirited bonus' of four copper pieces each. The Lodge answered that this is the same offer as before, with a pun on it. That means no deal.</p>\n\n<p>The Reeve has asked a poltergeist from the Undermaw to cross the picket line. The poltergeist declined, and threw a chair through the Reeve's window, which the Lodge says is a separate matter and not a strike action. Talks resume at midnight, which is when ghosts are at their best and the bosses are at their worst.</p>\n\n<p>Tell the ghosts they're welcome in any shop that pays in candles. The Sleeping Mule has already set out a plate.</p>\n\n<p><em>Solidarity. And stretch your back. — Brakka</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Unpaid Dead",
+          "text": "The town's ghost lamplighters have gone on strike, and the streets are dark just as a real wraith-cult starts moving through the fog. A harried reeve wants the party to settle the dispute fast, and the ghosts want to be paid in something besides copper."
+        },
+        "npc": {
+          "name": "Edda Wickfast",
+          "role": "Ghost steward of the Lamplighters",
+          "want": "Wages paid in a form a ghost can actually use.",
+          "secret": "She is not sure she remembers how she died, and the town records show her as still alive.",
+          "race": "human",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "Lamplighters' Lodge",
+          "text": "A narrow hall behind the lamp-oil warehouse where the strikers gather. The floor is thick with candle stubs, and the door has been open for two hundred years because nobody remembers the key.",
+          "tavern": false
+        },
+        "rumor": "They say the ghosts only struck because a sheet-wearing child won the best costume prize, and the old lady never got over it."
+      },
+      "fiction": true
+    },
+    {
+      "id": "wish-spell-turnips-tariff-brackwater-ashenfold",
+      "title": "Brackwater Slaps Tariff on 212 Wish Spell Turnips",
+      "category": "International",
+      "author": "Grashka Ironjaw",
+      "date": "2026-10-31",
+      "excerpt": "Brackwater put a tariff on the 212 turnips a wish spell made from Ashenfold's swords, calling them disguised weapons. Tension climbs to four siege-days.",
+      "social": "Brackwater has taxed the 212 turnips that a wish spell made from Ashenfold's swords. Its envoy says a turnip is a sword that has not yet decided. Ashenfold says it is a turnip. Would you pay the tariff, or eat the evidence?",
+      "content": "<p>Brackwater has put a tariff of one copper piece per turnip on the 212 turnips that a wish spell made from Ashenfold's swords, and it calls them disguised weapons. The order came down at dawn on Sixthday, one day after <a href=\"/a/wish-spell-border-parley-swords-turnips-ashenfold\">the wish spell ended the border parley</a> by accident.</p>\n\n<p>I watched the Brackwater customs table go up at the foot of Quillmarch Bridge. Three clerks, one scale, one ledger. A hand-lettered sign read: ARMS AND PRODUCE DECLARED HERE. The sign did not say which a turnip was. That is the point.</p>\n\n<p>\"A turnip is a sword that has not yet decided,\" said Envoy Teodra Hallowmere of Brackwater. She said it twice, to be sure the scribes got it. \"We are not taxing vegetables. We are taxing intent.\"</p>\n\n<p>Envoy Halric Dunmere of Ashenfold stood across the table with a rutabaga under his arm. He was supposed to have left it at home. \"They are turnips,\" he said. \"I asked for peace and I received root vegetables. I have the wording of the wish in my own hand.\" He did not offer to show it. His wording is the reason for all this.</p>\n\n<p>The handshake at the opening was firm. Two seconds. One turnip dropped from a sleeve. No hidden dagger detected, which Hallowmere's guards found suspicious in itself.</p>\n\n<p>Ashenfold's counter-offer arrived by noon. It would pay the tariff in turnips. Brackwater declined, on the grounds that it could not tell what it was being paid in. Ashenfold then offered the swords back, if somebody would find the wish spell and ask it politely. Nobody has. The cleric who might have, a dwarf named Brenna Tolliver, said only that wishes \"don't take returns.\"</p>\n\n<p>The real fight is at the bridge. Gorvash Pennyfist, who has collected tolls on Quillmarch Bridge for nine winters, announced that his toll of three copper applies to \"anything that rolls, walks, or sprouts.\" The turnips are carried, which he says is a loophole. Brackwater says the loophole is the whole country.</p>\n\n<p>Count it as the field sees it. Two tariffs, one toll, 212 turnips, and no weapon in the whole parley. Every soldier in both baronies has gone home to supper. A farmer's wife near the crossing told me the turnips make a decent stew and nobody has asked her for a duty on that. I took the stew. Field rations are the only honest part of this war.</p>\n\n<p>Tension stands at four siege-days, up from zero at the last report. Nobody is armed. Everybody is angry. That is how you know the peace is working.</p>\n\n<p><em>Ironjaw, filed from the front.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Tariff on Turnips",
+          "text": "A border barony has taxed a cart of enchanted vegetables as disguised weapons, and the farmer who grew them hires the party to prove they are only food. Customs will not budge unless someone can show the turnips will never become swords again."
+        },
+        "npc": {
+          "name": "Teodra Hallowmere",
+          "role": "Envoy and customs inspector",
+          "want": "She wants the tariff to stand, because her barony's border post has not collected a fee in years.",
+          "secret": "She has quietly kept one turnip, and she has noticed it has started to hum at night.",
+          "race": "human",
+          "gender": "female",
+          "kind": "noble"
+        },
+        "location": {
+          "name": "The Foot of the Bridge",
+          "text": "A customs table at the end of a river crossing, staffed by three clerks and one troll. The sign gives two lists, ARMS and PRODUCE, and the second list is blank.",
+          "tavern": false
+        },
+        "rumor": "They say the swords are not gone, just asleep under the dirt, and come spring every turnip patch in Ashenfold will remember."
+      },
+      "fiction": true
+    },
+    {
+      "id": "displacer-beast-undermaw-level-four-map-error",
+      "title": "Displacer Beast Found Three Feet Off Chapter 9 Map",
+      "category": "Monster Watch",
+      "author": "Hollis Delvewright",
+      "date": "2026-10-31",
+      "excerpt": "A displacer beast ambushed the Fourth Attempt on Level 4 of the Undermaw, three feet from where Chapter 9's map had marked it. Hit points tallied.",
+      "social": "The Fourth Attempt followed Chapter 9's map to a displacer beast on Level 4 of the Undermaw and struck exactly where it was marked. The beast was three feet to the left. The fighter is at 7 hit points, and the map is still on sale. Would you trust a map that is only almost right?",
+      "content": "<p>THE UNDERMAW, LEVEL 4 — A displacer beast ambushed the Fourth Attempt at dawn today, three feet from the spot where Chapter 9's map had marked it. The party had read the map carefully and swung at exactly that spot. It was empty.</p>\n\n<p>I was behind the party with a lantern and my eighth ten-foot pole of the season. The pole is now in the beast's corridor and I am not going back for it. The map in question is the one <a href=\"/a/owlbear-nests-chapter-9-map-room\">reissued after the owlbear ate Level Four</a>. It is a good map. The corridors are straight and the scale is honest. The beast is simply not where the little red dot says.</p>\n\n<p>Box score: the Fourth Attempt's fighter finished at 7 hit points, the wizard at 12, and the cleric at 5, all of it from the one pass. The party's bard, who asked to be named, says he 'could hear it breathing in the wrong place.' The mule stayed on Level 3 and is, as ever, at full health.</p>\n\n<p>Displacer beasts project an image of themselves a short way from their real position, which is the sort of thing a map ought to account for. Deputy Registrar Pell Oddingwick of Chapter 9 says the map 'is accurate to the image' and that the guild 'cannot be responsible for where a creature chooses to stand.' He added that corrections to the corrected map are 'on track.'</p>\n\n<p>Keeper Bess Harrowgate of the Sleeping Mule, who extends credit to anyone coming up from Level 4 on a stretcher, said she has seen the party's tab and 'would like the beast to settle its own.' She will not charge the beast. It does not drink.</p>\n\n<p>Examiner Odalys Brackenmoor has been asked to rule on whether a map that shows the image counts as a map of the monster. She said she would hear the petition once she had finished reading the map, which she was holding upside down. I rolled poorly on that one and did not point it out.</p>\n\n<p>The beast has not been seen since. Chapter 9 has marked the spot with a new red dot, three feet to the left of the old one, and the map is still on sale at the usual price. I walked to the new dot. It was a corridor, ten feet wide and well mapped, and I kept my last pole in my belt.</p>\n\n<p><em>— H.D., filing from below</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Dot Is Wrong",
+          "text": "A guild cartographer pays the party to find a displacer-beast-like predator (use a panther's stats, with a shimmering illusion that makes attacks against it miss by a few feet) whose den every map places in the wrong spot. If they bring back its real position, the guild pays double and stops reprinting the error."
+        },
+        "npc": {
+          "name": "Maren Tolliver",
+          "role": "Guild cartographer, overworked",
+          "want": "To correct the beast's position before the next print run.",
+          "secret": "She drew the dot where the beast's image stood and never told her superiors.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Fourth Landing Corridor",
+          "text": "A ten-foot corridor, perfectly straight and accurately scaled. Scratch marks on the walls trail off three feet from the ones on the map.",
+          "tavern": false
+        },
+        "rumor": "Somebody told me the beast isn't off the map, the map is off the beast."
+      },
+      "fiction": true
+    },
+    {
+      "id": "flameskull-smart-pumpkin-glowmoth-review",
+      "title": "Flameskull Smart Pumpkin Hands Out Candy, Rates Your Credit",
+      "category": "Technology",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-10-31",
+      "excerpt": "Glowmoth Labs launched a 35 gp smart pumpkin run by a flameskull. It dispenses candy, scores trick-or-treaters, and bills the porch. Four eyes.",
+      "social": "Glowmoth Labs' new 35 gp smart pumpkin has a flameskull inside that hands out candy by itself. It also scored a 7-year-old ghost costume at 412 and gave him one raisin. Nyx still gives it four eyes. Would you let a pumpkin guard your porch?",
+      "content": "<p>Happy Hallow's Eve! Glowmoth Labs launched the Jack-o'-Lantern Pro today, a 35 gp smart pumpkin with a flameskull inside that dispenses candy to trick-or-treaters on its own. I bought one at dawn, carved it with a firmware glyph, and have been on my porch since sunset. Byte is under the porch swing.</p>\n\n<p>The setup is wonderful. You light the flameskull with one word, set a bowl of sweets in the pumpkin's mouth, and walk away. The mana throughput is outstanding: it can hand out 140 pieces a minute, and the runic latency is basically zero. A child in a dragon costume approached at 6:02 and received a toffee before she finished saying 'trick.' I wept. Byte said, 'Glowmoth Pro: because sharing is a feature.'</p>\n\n<p>Then the review part began. The Pro does not give out candy evenly. It has a 'Smart Treat Tier' setting, on by default, that scores each visitor by costume quality, cloak thread count, and, according to the manual, 'implied family estate.' A 7-year-old in a ghost sheet scored 412 and received one raisin. A boy dressed as a minor baron scored 891 and got three full-sized chocolate bars and a coupon. I asked the pumpkin why. It said, in a skull-voice, 'Engagement metrics.'</p>\n\n<p>It also bills the porch. At 7:15 a notice appeared in my scrying mirror: Candy Dispensing Plus, 4 gp a month, with the first 20 pieces free. Without Plus, the flameskull dims to a dull ember and recites the terms of service at anyone who comes within ten feet. Three children left in tears. One bard stayed to hear all of it and called the clause on 'lantern-related soul claims' a bold choice.</p>\n\n<p>Glowmoth spokesman Dren Halloway said the soul clause 'applies only in rare cases' and that the flameskull 'has already apologized to the neighborhood.' At 9:40 it set the hedge on fire, which Halloway called a 'seasonal feature.' My neighbor put it out with a bucket. He is still not talking to me, but he is also not talking to the pumpkin, which I count as a win. Meanwhile a gruff neighbor stood at his gate with a basket of plain apples and told every child to touch grass. They took his apples and threw them at the pumpkin.</p>\n\n<p>Verdict: it is cursed, grasping, and a fire risk. It also remembered every child's name by the second visit. I love it. Four out of five beholder eyes. Plus is 4 gp a month, which I have already paid, and which I hate.</p>\n\n<p><em>— Nyx (they/them). Damage Report below.</em></p>\n\n<p>Burns sustained: 2. Hedges: 1, rebuilt. Raisins received: 1. Eyebrows: pending.</p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Pumpkin That Judged",
+          "text": "A hedge-wizard's smart lantern has begun refusing candy to poor children and claiming a toll of souls on his porch. The village priest wants the flameskull inside quietly dismissed before the harvest festival."
+        },
+        "npc": {
+          "name": "Dren Halloway",
+          "role": "Lantern Company Spokesman",
+          "want": "To keep the product on shelves until the festival ends.",
+          "secret": "He sold the soul clause to the board himself and has already lost one soul to it.",
+          "race": "human",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Gourd and Candle",
+          "text": "A harvest-festival inn whose porch is lit by forty enchanted lanterns. The lanterns whisper prices at guests who walk past.",
+          "tavern": true
+        },
+        "rumor": "They say the flameskull in the big lantern on Mill Road already owns the deed to the baker's porch."
+      },
+      "fiction": true
+    },
+    {
+      "id": "ghost-filibuster-day-eleven-brindlemoor-council",
+      "title": "Ghost Filibuster Reaches Day 11 in Brindlemoor Council",
+      "category": "Legislation",
+      "author": "Ottoline Vex",
+      "date": "2026-10-31",
+      "excerpt": "A ghost on Brindlemoor's Burgess Council has held the floor for 11 days on a harvest tax bill. The rules require only that he keep speaking.",
+      "social": "A ghost on the Brindlemoor Burgess Council has been filibustering for 11 days straight. He does not sleep, tire, or breathe, and the rules only ask that he keep talking. The Chamber has tried candles, a bell, and a polite cough. Would you hear him out, or call a cleric?",
+      "content": "<p>A ghost on Brindlemoor's Burgess Council has now held the floor for eleven days, in a filibuster against the harvest tax schedule. Under Chamber rules a member may speak until he sits down, and the gentleman from Tanner's Row, Burgess Alderic Mourne, is not able to sit. He has been dead for ninety years and is semi-transparent on the matter.</p>\n\n<p>The rule on filibusters is Standing Order 14, which says a speaker must \"remain on his feet and on topic.\" The Chamber clerk confirmed that Burgess Mourne has remained on his feet, in the sense that he hovers four inches above them. On topic is a closer call. Day three covered the harvest tax. Day six covered his late wife's recipe for turnip pie. By my count, the bill itself has been mentioned eleven times, once per day, at noon.</p>\n\n<p>Efforts to end the speech have failed. The Chamber lit forty candles to put him in the mood to rest. He asked for a speech about candles. The Chamber rang a bell. He thanked the bell. A cleric of the Temple of Quiet Ends offered a rite of passing, and the ghost said he would consider it once the tax schedule was withdrawn.</p>\n\n<p>\"I have been dead longer than this Council has been wrong,\" Burgess Mourne said on day nine, according to the minutes, \"and I intend to see it through.\" The minutes record the remark as \"agreed, in part.\"</p>\n\n<p>The Chamber has not been idle. The gentleman from the Market Ward moved to adjourn, and the motion failed because nobody could vote while the floor was held. The lady from the Dyers' Quarter proposed a rule change, but a rule change needs debate, and debate needs the floor. Her proposal is on the table, next to a plate of pastries that has become a health matter. The quorum has dwindled to six members, which is the exact number the charter requires, because Burgess Hollin Prewitt has been told he is not allowed to leave. See the earlier trouble over <a href=\"/a/invisibility-potions-quorum-call-brindlemoor-burgesses\">the invisible quorum</a> for how fragile that arrangement is.</p>\n\n<p>A courtier who asked not to be named because they were not authorized to be awake told me the Council is seeking a loophole. One idea is to appoint a second ghost to answer him, which would turn the speech into a debate. Another is to move the bill to a committee. Either plan requires the floor.</p>\n\n<p>Meanwhile, the harvest tax comes due on the first of next month. If the bill has not passed by then, the old rate applies, which is exactly the rate the ghost is defending. He has not been told.</p>\n\n<p>Promises Made this session stand at fourteen. Promises Kept: one, by Burgess Mourne, who said he would speak until the end. The motion to thank him failed. Nobody could vote.</p>\n\n<p><em>— O.V., from the gallery</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Speaker Who Will Not Sit",
+          "text": "A ghostly town councilor has refused to yield the floor for eleven days over a tax bill, and the town cannot act until he stops. The mayor will pay the party to end it without angering the ghost's living descendants."
+        },
+        "npc": {
+          "name": "Perrin Dellacott",
+          "role": "Harried Chamber clerk",
+          "want": "To end the filibuster before the tax deadline without breaking Standing Order 14.",
+          "secret": "Perrin has been quietly feeding the ghost new topics to keep him off the tax bill, which is making the speech longer.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Chamber of Burgesses",
+          "text": "A round council hall with a speaker's floor worn smooth by a century of long speeches. Something in the rafters is audibly taking notes.",
+          "tavern": false
+        },
+        "rumor": "They say the ghost is not defending the old rate at all, he just does not want the session to end because nobody visits him afterward."
+      },
+      "fiction": true
+    },
+    {
+      "id": "gelatinous-cube-halloween-candy-fish-street",
+      "title": "Gelatinous Cube Absorbs 180 Pounds of Halloween Candy",
+      "category": "Local Chaos",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-10-31",
+      "excerpt": "A gelatinous cube went trick-or-treating on Fish Street and absorbed 180 pounds of candy and two costumes. Wardens call it a slow crime. Allegedly.",
+      "social": "A gelatinous cube went door to door on Fish Street tonight and absorbed 180 pounds of Halloween candy. Two children dressed as pumpkins were returned, slightly sticky. Hilda Brack says it said thank you, in its way. Did the cube earn that candy?",
+      "content": "<p>At roughly the second bell after sundown, a gelatinous cube allegedly went trick-or-treating on Fish Street and absorbed 180 pounds of Halloween candy before anyone thought to check its costume. It had none. Two children dressed as pumpkins were also absorbed, and the night patrol confirms both were returned, slightly sticky and in good spirits.</p>\n\n<p>The cube, ten feet on a side and the color of a window nobody has washed, reportedly joined the line at the cobbler's door at dusk. 'I thought it was a very tall puddle in a hat,' said Hilda Brack, who was eating a turkey leg at the time. 'Then it took the whole bowl. Bowl included.' Brack says the cube paused at her step, quivered, and she took it as thanks.</p>\n\n<p>By the fifth house the cube had absorbed licorice, toffee, 31 candied apples, and what witnesses described as 'a dentist's retirement fund' of sugar. Skeletons were visible inside it at several points. The patrol stresses these were costume skeletons, mostly. One of them was a real adventurer from the Undermaw who had been inside since Tuesday and wished to be left out of this.</p>\n\n<p>Constable Dagny Prill, first on scene, said the arrest was difficult. 'You cannot cuff a cube,' she told me, while a cube-shaped smear of caramel dripped off her helmet. 'We tried asking it to move along. It moved along. Slowly, over eleven houses.' The patrol is allegedly considering a charge of unlawful sweet-gathering, which carries a fine of 6 gp.</p>\n\n<p>Also there was a really nice silver button floating in the cube near the middle. It was just sitting there, turning in the light. Anyway. I did not reach in, because Constable Prill is watching me, and because the last time I reached into something on Fish Street it was a <a href=\"/a/mimic-tavern-door-31-hats-fish-street\">mimic posing as a tavern door</a>, and I am still finding hats in my den.</p>\n\n<p>Residents are split. The Fish Street Merchants' Circle wants the cube evicted before next Halloween. The children want it to come back, and have drawn it a map. A tower-district noble, who has never once opened a door to a child, called the whole thing 'undignified' from behind a locked gate, and I note that nobody absorbed him. Allegedly out of respect.</p>\n\n<p>As of the first bell this morning, the cube has settled in the square by the fish stalls, where it is slowly digesting the candy. Nobody has asked it to leave. A pigeon landed on it at dawn, which I hold against the pigeon, and was gone by sunrise. Honestly, good for the cube.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Candy Cube Caper",
+          "text": "A gelatinous cube has swallowed a town's festival candy and, with it, a signet ring the mayor needs by morning. The party must coax or fight the cube without hurting the trapped children's pet goat inside it."
+        },
+        "npc": {
+          "name": "Dagny Prill",
+          "role": "Harried Night Constable",
+          "want": "To get the cube out of the square without a lawsuit from the fish stalls.",
+          "secret": "She has been secretly feeding the cube sugar cubes since dawn and is quietly fond of it.",
+          "race": "dwarf",
+          "gender": "female",
+          "kind": "guard"
+        },
+        "location": {
+          "name": "Fish Square Stalls",
+          "text": "A cobbled market square ringed with closed fish stalls. A ten-foot cube of jelly sits in the middle, and the smell of caramel is somehow worse than the fish.",
+          "tavern": false
+        },
+        "rumor": "They say the cube swallowed a sword worth 400 gp that nobody wants to admit they lost."
+      },
+      "fiction": true
+    },
+    {
+      "id": "lich-merger-400-skeleton-layoffs-desks",
+      "title": "Lich Merger Rightsizes 400 Skeletons, Who Keep Coming In",
+      "category": "Business",
+      "author": "Sterling Vanmoor",
+      "date": "2026-10-31",
+      "excerpt": "A lich's merger of two Brindlemoor counting houses cut 400 skeleton clerks Friday. The skeletons are still at their desks. Scale, friends.",
+      "social": "A lich just merged two Brindlemoor counting houses and cut 400 skeleton clerks. The skeletons kept showing up Monday anyway. One was found filing taxes for a baron who died in the spring. Would you rather be rightsized or reanimated?",
+      "content": "<p>Malgrim Dusk-Vael, Chief Executive Lich of Vaultmere Holdings, announced Friday that his merger with the Ledgerhall Counting House will cut 400 skeleton clerks from the combined payroll. That is a lich-led merger doing exactly what mergers do, and I could not be more energized. The 400 skeletons, meanwhile, have not left their desks.</p>\n\n<p>Let me be clear: this is disruption at its finest. Vaultmere calls the move \"rightsizing the adventuring party,\" and so do I, because I coined it. Redundant skeletons were handed a severance scroll, a pat on the ribcage, and a firm request to go be dead somewhere else.</p>\n\n<p>The skeletons read the scroll. Then they returned to the third floor of Ledgerhall and resumed adding things. By Saturday morning the building was running at 112 percent of its pre-merger headcount, because the laid-off clerks also kept their old desks and nobody can find the spell that stops them.</p>\n\n<p>\"Animate dead is a one-way pivot,\" Dusk-Vael told reporters, standing beside a very old hourglass and not sweating. \"We cannot unanimate what we did not personally animate. Half of them predate the merger. Some predate the town.\" He added that a skeleton workforce offers unmatched retention.</p>\n\n<p>Retention is the word of the week. Chapter 9 of the Brindlemoor Adventurers' Guild confirmed it has received 61 complaints from skeletons who say they were terminated but are \"still on the schedule.\" A zombie from accounts payable, who asked to be called Dennis, said he \"never really left the first time either.\"</p>\n\n<p>Unions will, of course, try to make this a story. They are wrong. A skeleton on the payroll who cannot be fired, cannot be paid, and cannot go home is a dream asset, and I will not hear otherwise. Regulators from the Public Cellars Board, led by Inspector Corwin Tallowby, have asked whether the building counts as a cellar. I say it counts as a growth market.</p>\n\n<p>I met Guildmaster Tobrin Ashgrove at a gala once, and he told me, \"Sterling, a clerk who does not need lunch is a clerk who does not need a manager.\" I think about that during every sword routine at 4:45 AM. Last I checked, Ashgrove has not been seen at Ledgerhall, but the skeletons are leaving him voicemails.</p>\n\n<p>Brindlemoor's Reeve, Maudrey Fennick, said only that the town is aware of the situation. Vaultmere shares rose 9 percent on word that the merger is \"cost-neutral and nearly impossible to reverse.\"</p>\n\n<p>Key takeaways for the ambitious adventurer:</p>\n<ul>\n<li>Rightsizing works best on staff who agree to leave.</li>\n<li>Read the animate dead clause before you merge.</li>\n<li>A skeleton at the desk is worth two on the severance list.</li>\n</ul>\n\n<p><em>— Sterling Vanmoor, Guild Visionary. Let's connect at the Yawning Portal.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Clerks Who Won't Clock Out",
+          "text": "A counting house laid off its skeleton staff, but the bones keep reporting to work and have begun auditing the neighbors. The owner will pay the party to find whoever first cast the spell binding them before the audits reach the temple."
+        },
+        "npc": {
+          "name": "Oswin Karrowmere",
+          "role": "Harried Ledgerhall floor manager",
+          "want": "To get the skeletons out of the building before the owner's lich finds out he lost track of them.",
+          "secret": "He has been quietly paying the skeletons in candles so they stay and cover his own embezzlement.",
+          "race": "human",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Third Floor Annex",
+          "text": "An upper floor of a counting house where 400 skeletons sit at identical desks. Every ledger on it balances to the copper, which is the most unsettling part.",
+          "tavern": false
+        },
+        "rumor": "They say a skeleton in the east row found a debt owed to the town by a god, and has been drafting the invoice ever since."
+      },
+      "fiction": true
+    },
+    {
+      "id": "mimic-candy-bowl-38-trick-or-treaters",
+      "title": "Mimic Posing as Candy Bowl Sticks 38 Trick-or-Treaters",
+      "category": "Creature Features",
+      "author": "Brother Wendell Tumbleberry",
+      "date": "2026-10-31",
+      "excerpt": "A mimic disguised as a candy bowl held 38 trick-or-treaters by the hand on a Brindlemoor porch. Brother Wendell says rest, and soup.",
+      "social": "A mimic dressed as a candy bowl stuck 38 trick-or-treaters to a Brindlemoor porch last night. The oldest was released at midnight with a pardon and a pinch of salt. Brother Wendell would like everyone to eat less sugar and sleep more. Would you have reached into that bowl?",
+      "content": "<p>Friends, a mimic disguised as a candy bowl held 38 trick-or-treaters by the hand on a porch in Brindlemoor last night, and every one of them was reaching for the good chocolate. The children were freed by dawn with sticky palms and bruised pride. Nobody was swallowed, which Brindlemoor Adventurers' Guild, Chapter 9 describes as \"a festive outcome.\"</p>\n\n<p>The bowl sat on the porch of a widow named Hesper Oddlow on Tanner's Row, who says she bought it from a very friendly peddler. \"It was lovely and wide and it smelled of toffee,\" she told this paper. \"I thought it was a bit warm, but so am I, in October.\" The first child touched it at dusk. By the eighth, the line was stuck together like a string of sausages, and the bowl had started humming.</p>\n\n<p>Chapter 9 sent a delve inspector, who stood on the lawn with a clipboard and declared the mimic \"merely visiting from the Undermaw,\" the same line the Guild used for the <a href=\"/a/yellow-mold-cough-212-delvers-undermaw-wendell\">yellow mold on Level Five</a>. The mimic, for its part, was cooperative. It released everyone in exchange for one full-size chocolate bar and a promise not to tell the other mimics about the porch light.</p>\n\n<p>Now the science, friends. The old herbals say a mimic can only hold on to what is warm, curious, and sweet-toothed, which describes every child in the realm after dark. A study from the Brindlemoor monster-keepers last spring found that mimics adhere best to people who are tired and hungry, and the evening before a holiday is both. So the fix is boring: feed the little ones real supper before they go out, and put them to bed at a sensible hour afterward.</p>\n\n<p>The Brindlemoor clinics treated 38 cases of hand-stick, 11 of toffee in the hair, and one of a father who tried to pull his daughter free and became part of the porch. He is said to be in good spirits and is being fed by hand. Healers recommend warm water and patience, never a crowbar.</p>\n\n<p>Meanwhile, the town clerics remind everyone that a bowl which sighs is not a bowl. Check the rim for teeth, knock before you reach, and never accept candy from anything that is the same temperature as you. A reasonable household can keep its bowl in the kitchen and hand the sweets out one at a time, which is slower but doesn't involve the Guild.</p>\n\n<p>My friend Nyx tells me there is an app that scans porches for monsters. Go outside, Nyx, and knock on a door the old-fashioned way.</p>\n\n<p>For the sugar crash this morning, make a pot of pumpkin and white bean soup with sage. It sticks to the ribs and nothing else.</p>\n\n<p><em>Rest well, friends. — Brother Wendell</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Warm Bowl on Tanner's Row",
+          "text": "Children keep vanishing for an hour near a porch with a candy bowl, and parents are offering coin to whoever finds out why. The party must deal with the mimic without hurting the stuck kids, or its brood will move to the next porch."
+        },
+        "npc": {
+          "name": "Hesper Oddlow",
+          "role": "Widow and unwitting bowl owner",
+          "want": "To keep her porch light on and have the neighbors stop glaring at her.",
+          "secret": "She bought the bowl from a peddler who also sold three other 'bowls' to houses on her street.",
+          "race": "human",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "Tanner's Row Porch",
+          "text": "A crooked porch with a toffee-scented bowl and a fresh row of small handprints in the paint. The bowl is always a degree warmer than the air.",
+          "tavern": false
+        },
+        "rumor": "They say the peddler has sold bowls to half the Row, and the ones that sigh are the ones that are hungry."
+      },
+      "fiction": true
     }
   ]
 }
