@@ -1,0 +1,47 @@
+# One-time release: at 6 a.m. Chicago on November 2, merges the edition-2026-11-02
+# branch into main (GitHub Pages deploys it), then schedules its Facebook posts.
+# A push made with GITHUB_TOKEN doesn't start facebook.yml, so this runs the script itself.
+name: Release the November 2 edition
+
+on:
+  schedule:
+    - cron: '0 12 2 11 *' # 6 a.m. Chicago (CST)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency: facebook
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Merge the edition into main
+        id: merge
+        run: |
+          set -euo pipefail
+          git fetch origin edition-2026-11-02
+          if git merge-base --is-ancestor origin/edition-2026-11-02 HEAD; then
+            echo "Already released."
+            exit 0
+          fi
+          before=$(git rev-parse HEAD)
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git merge --no-edit origin/edition-2026-11-02
+          git push origin HEAD:main
+          echo "before=$before" >> "$GITHUB_OUTPUT"
+
+      - name: Schedule posts
+        if: steps.merge.outputs.before != ''
+        env:
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+        run: python3 .github/scripts/facebook-post.py --before "${{ steps.merge.outputs.before }}"
