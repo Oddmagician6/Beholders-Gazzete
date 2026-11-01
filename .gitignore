@@ -13,3 +13,7 @@ reel-factory/.venv-kokoro/
 
 # Python bytecode from running the workflow scripts locally
 __pycache__/
+
+# Codex instructions (local only; Codex runs on this PC)
+AGENTS.md
+.agents/
