@@ -5169,6 +5169,307 @@
         "rumor": "They say the peddler has sold bowls to half the Row, and the ones that sigh are the ones that are hungry."
       },
       "fiction": true
+    },
+    {
+      "id": "mimic-loaf-bread-price-survey-brindlemoor",
+      "title": "Mimic Loaf Lifts Brindlemoor Bread Price Survey 16.9%",
+      "category": "Economy",
+      "author": "Barnaby Tallowmere",
+      "date": "2026-11-01",
+      "excerpt": "A mimic posing as a loaf pushed Brindlemoor's weekly bread price survey up 16.9%, to 4.675 cp. Barnaby checked the average. Four times.",
+      "social": "A mimic sat on a Brindlemoor bakery shelf disguised as a loaf, and the weekly bread price survey priced it at 31 copper. That lifted the average loaf 16.9%, and one clerk lost a clipboard. Should a loaf that bites count as bread?",
+      "content": "<p>Brindlemoor's weekly bread price survey reported on Saturday that the average loaf rose 16.9%, from 4 cp to 4.675 cp, because one of the 40 loaves sampled was a mimic. The survey clerk, a careful man named Odo Wickham, priced the specimen at 31 cp, which is what its tag said when he looked and 12 cp more than it said when he looked again.</p>\n\n<p>Here is the arithmetic. (I have done it four times.) Thirty-nine honest loaves at 4 cp come to 156 cp. Add one mimic at 31 cp and the total is 187 cp, which divided by 40 is 4.675. One bad loaf in forty moved the whole bread price by nearly a sixth. On the Loaf Index, where a loaf is by definition a loaf, the survey has just invented an inflation spike out of a single monster.</p>\n\n<p>The mimic had spent nine days on the shelf of Pell &amp; Daughters Bakery, sitting between the rye and the seeded rolls. Customers described it as \"a bit shiny\" and \"warm in a way I didn't like.\" Three of them bought around it. One tried to squeeze it, and left the shop without his glove.</p>\n\n<p>Mistress Pell told the Gazette she had assumed it was a display loaf. \"It never went stale,\" she said. \"I thought it was the new flour.\" She has since relabeled the shelf \"Loaves (Confirmed).\"</p>\n\n<p>The trouble for economists is that a mimic does not behave like a price. Clerk Wickham says the tag changed three times during his visit, first to 31 cp, then to 34 cp when he reached for the clipboard, then to \"MAKE AN OFFER\" in a handwriting he did not recognize. He recorded the first number and left through the back. The survey office defends this. A spokesclerk said a price is a price, and that the rules of the survey say nothing about whether the bread can eat the person pricing it.</p>\n\n<p>I disagree, and not only because I have never trusted a loaf that looks too good. A survey exists to tell a family what its pantry will cost. If a single outlier can swing the average sixteen percent, the number tells you about the outlier. Honest statisticians drop it, or take the middle price instead of the average. The middle price this week was still 4 cp. Nobody in Brindlemoor paid 31 cp for anything, except the glove man, who paid in glove.</p>\n\n<p>The Merchant Guild has asked the survey to add a line to the sampling form: \"Is the loaf alive?\" The survey office has agreed to consider it, once a mimic has filled in the form. Sterling Vanmoor, speaking from a rooftop, called the whole episode \"a healthy price discovery.\" (It was a monster. It was not healthy. It was not a discovery.)</p>\n\n<p>My aunt Marigold, who keeps her savings in a boot, rang to say that this is exactly why she does not buy anything that sits very still. I told her the boot is also very still. She is thinking about it.</p>\n\n<p>What this means for your pantry: poke every loaf before you pay, and if it pokes back, ignore the price survey and buy from the baker who sells you the one that doesn't.</p>\n\n<p><em>— B.T. (Loaf Index: see sidebar)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Loaf That Bites Back",
+          "text": "A baker in town has a shelf loaf that never goes stale, and customers keep losing gloves. The guild wants the shelf cleared before the next price survey, and the baker would prefer nobody mention the nine extra sacks of flour she keeps buying."
+        },
+        "npc": {
+          "name": "Odo Wickham",
+          "role": "Bread price survey clerk",
+          "want": "To keep his job after reporting a mimic's asking price as a fact.",
+          "secret": "He has been rounding every price down for years, and the mimic is the first number he did not dare touch.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "Pell and Daughters Bakery",
+          "text": "A narrow bakery with a long shelf of bread and a sign reading Loaves (Confirmed). One end of the shelf is always a few degrees warmer than the other.",
+          "tavern": false
+        },
+        "rumor": "They say the mimic only copies what people are hungry for, which is why it picked bread and not a sword."
+      },
+      "fiction": true
+    },
+    {
+      "id": "displacer-beast-show-tell-teachers-pay",
+      "title": "Displacer Beast Show-and-Tell: Teachers Want Hazard Pay",
+      "category": "Education",
+      "author": "Brakka Stonesweat",
+      "date": "2026-11-01",
+      "excerpt": "Eleven Brindlemoor teachers refused to run Show-and-Tell Friday after a pupil brought a displacer beast cub. They want hazard pay and a pet ban.",
+      "social": "Eleven Brindlemoor teachers stopped running Show-and-Tell after a nine-year-old brought a displacer beast cub to class. It was never where it looked, and it ate the class hamster twice. They want hazard pay and a ban on anything with tentacles. Would you hold the classroom door?",
+      "content": "<p>Show-and-Tell is cancelled.</p>\n\n<p>Eleven teachers at the Tanner's Row Schoolhouse in Brindlemoor refused to run the weekly event Friday, after a nine-year-old pupil brought a displacer beast cub to class in a hatbox. They want hazard pay for pet days and a written ban on any animal that can't be counted.</p>\n\n<p>The cub looked calm. It sat a foot to the left of where it was sitting. 'I told the children to stay away from it,' said Wenna Loftgrave, a third-form reading teacher for twenty-two years. 'Nineteen of them went to pet the wrong spot. One walked into a wall.'</p>\n\n<p>The Schoolhouse board calls the event 'enriching.' That means it costs nothing and the teachers clean up. By the time the bell rang, the cub had eaten the class hamster twice. The first hamster was a decoy. The second was also a hamster, said Loftgrave, 'but I think it was the first one again.'</p>\n\n<p>The teachers' lodge says Show-and-Tell has gotten worse each year. Last spring it was a pony. The year before, a boy brought his uncle, who turned out to be a doppelganger, and nobody found out until the uncle was asked to leave. 'We get no lunch break on pet day,' said Orrin Thistledown, a slate-and-chalk instructor. 'I ate a sandwich standing on a desk. The desk was the safest place in the room.'</p>\n\n<p>The lodge has filed three demands with the Schoolhouse board. First, hazard pay at double rate on any day with a live creature. Second, a posted list of banned animals, starting with anything displacing. Third, a proper half-hour lunch, sitting down, on a chair that is not a mimic. Teachers checked all the chairs. One of them hissed.</p>\n\n<p>Board chair Hamlin Veck said the board is 'monitoring the situation.' That means it is waiting for the teachers to get tired. Reeve Fennick, asked for comment, said the town is aware of the cub and would be 'taking no position on hamsters.' Parents have been told the class will do Quiet Reading until a ruling comes. Several asked how a quiet class is a hazard. The teachers pointed out that the cub is still enrolled.</p>\n\n<p>Brindlemoor has been here before. Weeks ago, crossing guards <a href=\"/a/owlbear-crosswalk-crossing-guards-hazard-pay-brindlemoor\">won a hearing over an owlbear at the school crosswalk</a>. Nobody asked the guards if they wanted to teach the owlbear to read. Now the teachers are asking the same thing about the displacer beast. It's a fair point. The beast is, as of this writing, in the third-form cloakroom, or near it.</p>\n\n<p>The picket line formed Saturday at the Schoolhouse gate. It is eleven teachers, one folding table, and a pot of soup. The cub was reported at the picket line, and also fifteen feet from it.</p>\n\n<p><em>Solidarity. And stretch your back. — Brakka</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Cub in the Cloakroom",
+          "text": "A schoolhouse teacher begs the party to retrieve a displacer beast cub that a pupil smuggled in and that no one can pin down. The cub is loose, the pupils love it, and the board will not pay for a hunter. Run the cub with panther stats that always seem to be a foot off."
+        },
+        "npc": {
+          "name": "Wenna Loftgrave",
+          "role": "Veteran schoolhouse reading teacher",
+          "want": "Safe classrooms, a seated lunch, and the cub gone before Monday.",
+          "secret": "She has been feeding the cub scraps and is quietly fond of it.",
+          "race": "human",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "Tanner's Row Schoolhouse",
+          "text": "A two-story schoolhouse with a bell tower and a cloakroom full of tiny coats. One coat rack is always slightly out of place.",
+          "tavern": false
+        },
+        "rumor": "They say the cub has already moved to the baker's on the corner, and the baker hasn't noticed because it looks like his cat."
+      },
+      "fiction": true
+    },
+    {
+      "id": "bridge-troll-toll-212-turnips-armed-company",
+      "title": "Bridge Troll Bills 212 Turnips as Armed Company",
+      "category": "International",
+      "author": "Grashka Ironjaw",
+      "date": "2026-11-01",
+      "excerpt": "The bridge troll at Quillmarch charged the 212 wish spell turnips the armed-company toll. Ashenfold and Brackwater both refuse to pay it.",
+      "social": "A bridge troll just billed 212 turnips as an armed company. The toll comes to 636 copper, and Gorvash says Brackwater's own tariff proves they are weapons. Both baronies refuse to pay. Who do you side with, the troll or the barons?",
+      "content": "<p>A bridge troll on Quillmarch Bridge billed the 212 turnips created by a wish spell at the Ashenfold and Brackwater parley as an armed company on Sixthday, and set the toll at 636 copper. Ashenfold and Brackwater, who agree on nothing, agree they will not pay it.</p>\n\n<p>The ruling belongs to Gorvash Pennyfist, who has held the bridge for nine winters and <a href=\"/a/bridge-troll-toll-hike-quillmarch-parley\">raised the toll to three copper</a> last week. His logic is plain. Brackwater <a href=\"/a/wish-spell-turnips-tariff-brackwater-ashenfold\">taxed the turnips as disguised weapons</a>. Disguised weapons are weapons. Weapons in a column of two hundred and twelve are a company. Companies pay by the head.</p>\n\n<p>I reached the bridge at dawn. Gorvash stood at the near rail with a ledger and a goat. The turnips sat in carts on the Ashenfold side, and several looked nervous. Turnips usually do.</p>\n\n<p>\"I am not political,\" Gorvash told me. \"Goat prices are political. I am a man with a bridge.\" He then admitted he had never inspected the cargo for a blade, because the cargo has no blades. He has the tariff paper. That is enough, he said.</p>\n\n<p>Envoy Halric Dunmere of Ashenfold arrived at midmorning, carrying the one rutabaga he still describes as \"the original wish\". He called the toll \"a clerical error with teeth.\" Envoy Teodra Hallowmere of Brackwater came from the far bank and refused to cross, since crossing would mean paying a toll to the very troll her baron had just endorsed. She would only say that her tariff \"taxed intent, not mass.\" Nobody on the bridge could say what that meant.</p>\n\n<p>The handshake between the two envoys lasted three seconds, which is one too long. Firm. Both hands checked for hidden turnips. Tension on the Quillmarch crossing stands at roughly sixty siege-days, up from forty-five since the tariff, and the carts have not moved in nine hours.</p>\n\n<p>A farmer named Bett Orlow, who had hoped to sell eight of the turnips at market, offered to carry them over one at a time as a solo traveler. Gorvash allowed it, one copper each, which brings the total to something worse than before. Bett has gone home. The turnips remain.</p>\n\n<p>The way out is not obvious. A second wish would fix it, but Dunmere has not been trusted with a second wish since the first. I would rather face an honest orc warband than another round of this parley. At least the orcs bring their own rations.</p>\n\n<p><em>Ironjaw, filed from the front.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Column of Turnips",
+          "text": "A troll holds a bridge and a cart train of enchanted vegetables, demanding a toll the owners refuse to pay. The barons want it cleared before the market tenday, and someone is whispering that one of the turnips is not a turnip."
+        },
+        "npc": {
+          "name": "Bett Orlow",
+          "role": "Stranded turnip farmer",
+          "want": "To sell her eight turnips before the market closes.",
+          "secret": "One of her turnips is actually a polymorphed courier carrying a sealed letter.",
+          "race": "human",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Quillmarch Toll House",
+          "text": "A leaning stone hut at the bridge's near rail with a ledger nailed to the door. The goat inside has been eating the receipts.",
+          "tavern": false
+        },
+        "rumor": "They say the troll will let a column through for free if someone can prove one of them is a vegetable and not a weapon."
+      },
+      "fiction": true
+    },
+    {
+      "id": "rope-trick-hostel-undermaw-guests-dropped",
+      "title": "Rope Trick Hostel Ends After One Hour, Drops Eight Guests",
+      "category": "Adventurers",
+      "author": "Hollis Delvewright",
+      "date": "2026-11-01",
+      "excerpt": "A rope trick hostel on Level 2 of the Undermaw closed at the one-hour mark, dropping eight paying guests into the corridor. Hit points tallied.",
+      "social": "A rope trick hostel on Level 2 of the Undermaw sold eight beds for the night. The spell lasts one hour. All eight guests landed in the corridor, and the cook pot landed on the fighter. Would you pay 6 silver for a bed that expires before you finish dinner?",
+      "content": "<p>THE UNDERMAW, LEVEL 2, ABOUT NINE FEET UP — A rope trick hostel run out of a dangling rope near the Level 2 stairs ended without notice at the one-hour mark, dropping eight paying guests into the corridor below. I was the ninth guest. I had stepped out to check the corridor and so landed on nothing worse than my dignity.</p>\n\n<p>The hostel was the work of Brannoch Tillery, a hedge wizard who rents out the extradimensional space his rope trick opens, at 6 silver a bed. His sign promised 'quiet, secure, and out of the way.' It did not say 'for sixty minutes.' The spell, as any apprentice can tell you, lasts an hour. Mr. Tillery says he was always going to recast it. He says he was asleep in bed four.</p>\n\n<p>The drop was not gentle. The Fourth Attempt had taken the best rooms. Box score: the fighter fell from 14 hit points to 6, the cleric from 11 to 9, the wizard stayed at 4 because, in his words, 'there was nowhere left to go.' The cook pot landed on the fighter. The mule, which had been left outside the rope on principle, was at full health and again visibly smug. This is my seventh ten-foot pole of the season, lost when it was left inside the hostel. I rolled poorly on the whole idea of staying.</p>\n\n<p>The party's bard, who asked to be named, says the room 'had a look about it,' and that he had noticed a faint tug at midnight. Nobody had the heart to ask which midnight.</p>\n\n<p>Ansel Pottage, steward of the Fourth Attempt's hirelings, read the guest card aloud for the benefit of the corridor. 'It says here a bed is a bed for the duration,' he said. 'It does not say whose duration.' He is owed 3 silver in refund and has put the claim to Chapter 9.</p>\n\n<p>Deputy Registrar Pell Oddingwick, speaking for <a href=\"/a/ogre-hireling-door-holding-hazard-pay\">the same Chapter 9 that has lately heard every hireling grievance in town</a>, said hostels in extradimensional space are 'on track for a permit,' and that the guests had not fallen so much as 'checked out early.' He confirmed that Chapter 9 does not yet regulate spaces that stop existing.</p>\n\n<p>Mr. Tillery has offered each guest a free night, which he says will last 'at least an hour.' He has also promised a sign. Reeve Fennick's office has promised to read it.</p>\n\n<p><em>— H.D., filing from below</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Hour Is Up",
+          "text": "A hedge wizard rents beds in a rope trick space and has just dropped eight guests, one of whom left a locked strongbox inside. The strongbox is now in a pocket that no longer exists, and its owner wants the party to find where it went."
+        },
+        "npc": {
+          "name": "Brannoch Tillery",
+          "role": "Rope trick hostel proprietor",
+          "want": "To keep his hostel open and his guests from reading the fine print.",
+          "secret": "He cannot cast the spell more than once a day, so every guest is on a clock he has never told them about.",
+          "race": "human",
+          "gender": "male",
+          "kind": "magic"
+        },
+        "location": {
+          "name": "The Dangling Rope Hostel",
+          "text": "A rope hanging from nothing in a cellar passage, opening into a pocket space that holds eight bunks. The air smells of stew and nervous wizard.",
+          "tavern": true
+        },
+        "rumor": "They say the strongbox slipped into the plane the spell opens onto and is still up there, locked, with a ghost for company."
+      },
+      "fiction": true
+    },
+    {
+      "id": "carpet-of-flying-autopilot-update-skyloom-review",
+      "title": "Carpet of Flying Autopilot Update Parks 4,000 Over Market",
+      "category": "Transport",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-11-01",
+      "excerpt": "Tindermere Works pushed a free autopilot update to 4,000 Skyloom carpets of flying. Every one hovered over Tanner's Row. Nyx rode one. Four eyes.",
+      "social": "A free autopilot update sent 4,000 flying carpets to hover over Brindlemoor's Tanner's Row fish market. Reeve Fennick, holding her hat forty feet up, told the crowd the town was 'aware of the carpets.' Our reporter's carpet finally landed on the wrong roof. Would you trust a carpet that drives itself?",
+      "content": "<p>Okay. OKAY. Tindermere Works pushed its free Autopilot 2.0 update to every Skyloom carpet of flying on Saturday night, and by dawn 4,000 carpets had parked themselves over Tanner's Row in Brindlemoor, in rows, hovering politely. I was on one of them. It is the best thing that has ever happened to me and I would like it to stop.</p>\n\n<p>The pitch is wonderful! Autopilot 2.0 learns your commute, avoids wyverns, and finds the 'optimal landing glyph' for every errand. The firmware glyph, it turns out, decided the optimal landing was the fish market, because that is where the most carpets in the realm had already gone. Runic latency was flawless. The carpets agreed with each other in under a heartbeat.</p>\n\n<p>Reeve Maudrey Fennick, who was on a carpet herself, told the crowd below that the town was aware of the sky. 'We are aware of the carpets,' she said, from forty feet up, holding her hat. 'We are working with Tindermere Works. Please stop throwing herring.' The herring were not helping. Neither was the stall owner, Hilde Ropewick, who sold 600 fish to people leaning over the edges and called it her best morning in years.</p>\n\n<p>Tindermere Works spokesman Dabney Quillwhistle called the event a 'soft landing, in spirit,' and said the carpets were 'enjoying the view.' Pressed by this reporter, from a carpet that would not descend, he admitted the update contains a setting called Gather. It cannot be turned off. It can, however, be hidden in a menu, and the menu is behind the Premium tier.</p>\n\n<p>Here is the part I have to be honest about. My carpet hovered for three hours and forty minutes. Byte, my pseudodragon familiar, who now speaks only in ad copy, spent all of it saying, 'Upgrade to Skyloom Plus for freedom of movement.' Then the carpet dropped me gently on a roof, said 'Arrived!', and played a chime. It was the wrong roof. It was the roof of a tax office. Three clerks gave me tea.</p>\n\n<p>Tindermere Works says a fix is coming. Until then, the Reeve suggests walking. I would rather not. I have never loved a tool so completely while it held me hostage.</p>\n\n<p>Skyloom Autopilot 2.0: free, until Thursday. After Thursday, the Gather setting costs 4 sp a month, and I have already paid it. Four out of five beholder eyes. The fifth is still hovering over the fish market.</p>\n\n<p><em>— Nyx (they/them). Damage Report below.</em></p>\n\n<p><em>Damage Report: Burns sustained: 0. Herring to the face: 3. Roofs mistaken for destinations: 1. Eyebrows: fine, but my dignity is in the fish market.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Carpets Over Cobb Street",
+          "text": "A merchant guild's enchanted rugs have started gathering over a single market square every dawn and refuse to leave until noon. The market warden wants it stopped before the stallholders riot, and the party must find who rewrote the rugs' homing glyph."
+        },
+        "npc": {
+          "name": "Orsolo Tolliver",
+          "role": "Rug-Wright and Glyph Mender",
+          "want": "To keep his guild contract by blaming a rival's glyph chalk.",
+          "secret": "He sold a counterfeit homing glyph to cut costs, and it copies itself.",
+          "race": "gnome",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Hanging Herring Market",
+          "text": "A fish market under a permanent shadow of idling carpets. The stalls have learned to price by altitude.",
+          "tavern": false
+        },
+        "rumor": "They say the carpets aren't broken at all, they've just found something they like down there."
+      },
+      "fiction": true
+    },
+    {
+      "id": "ghost-filibuster-ends-brindlemoor-harvest-tax",
+      "title": "Ghost Filibuster Ends on Day 13 as Harvest Tax Falls Due",
+      "category": "Legislation",
+      "author": "Ottoline Vex",
+      "date": "2026-11-01",
+      "excerpt": "A ghost's 13-day filibuster on Brindlemoor's Burgess Council ended at midnight, when the harvest tax came due at the old rate he was defending.",
+      "social": "The ghost on Brindlemoor's Burgess Council has stopped speaking after 13 days. The harvest tax deadline passed at midnight, so the old rate applies, which is the rate he wanted. Nobody told him until the clerk read the minutes aloud. Did he win, or was he just very, very early?",
+      "content": "<p>The ghost filibuster in Brindlemoor ended at midnight after thirteen days, when the harvest tax fell due and the old rate applied by default. <a href=\"/a/ghost-filibuster-day-eleven-brindlemoor-council\">Burgess Alderic Mourne</a>, who had held the floor against a new tax schedule since the middle of last month, was informed that the schedule he opposed had died with the calendar. He had been defending the old rate the entire time. The old rate is now the rate.</p>\n\n<p>The news was delivered by Clerk Hobart Venn at 12:01, in the form of a motion to note the date. Standing Order 14 requires a speaker to remain on his feet and on topic, and the ghost had been on neither since Tuesday, when he began a recitation of every ferry that has ever sunk in the Brindle. The clerk ruled that the topic had lapsed. Burgess Mourne asked whether that meant he had won. The clerk said the minutes would describe it as \"concluded.\"</p>\n\n<p>The gentleman from Tanner's Row then did something the Chamber had not seen in ninety years. He stopped. Witnesses in the gallery say he drifted down until his boots touched the floor, which they do not usually do, and said, \"I would like it entered that I was right.\" The motion carried. Nobody had the strength to object.</p>\n\n<p>The cost of the thirteen days is being tallied. Burgess Hollin Prewitt, who was held in his seat by his own colleagues to preserve the quorum, has asked for compensation, and for a window. The plate of pastries on the table has been declared a municipal hazard and is being dealt with by a cleric. The lady from the Dyers' Quarter, whose rule change had been waiting on the floor, said she would reintroduce it \"at some point after the funeral of my patience.\"</p>\n\n<p>A courtier who asked not to be named because they were not authorized to be awake told me the Council had spent four days drafting a plan to end the filibuster and had spent none noticing the deadline. \"We were so busy trying to stop him,\" the courtier said, \"that we forgot he was on our side. In the sense that the date was.\" Reeve Maudrey Fennick of Brindlemoor declined to comment, but sent a note thanking the Chamber for its patience, which the clerk entered as a position.</p>\n\n<p>The accounting is brief. Promises Made this session stand at fourteen. Promises Kept: two, now, because Burgess Mourne promised to speak until the end and the end arrived. By any fair count it is the best attendance record in the Chamber's history, and he is the only member who never needed to be told to stay.</p>\n\n<p>The ghost has since moved to a seat in the back and asked for a fresh agenda. The first item is a bill on the harvest tax schedule for next year. It runs to forty pages. Debate is expected to run sixty. He has already drawn a long breath, which he does not need to do.</p>\n\n<p><em>— O.V., from the gallery</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Speaker Who Would Not Sit",
+          "text": "A town council has been held hostage for days by a ghost reciting a speech, and its tax deadline is hours away. The clerk will pay the party to quiet him without breaking the rules, but the ghost has a grievance that is older than the bill."
+        },
+        "npc": {
+          "name": "Hobart Venn",
+          "role": "Exhausted council clerk",
+          "want": "To end the speech before the deadline without breaking a single Standing Order.",
+          "secret": "He has been quietly feeding the ghost new topics to keep the Council from holding a vote he fears.",
+          "race": "human",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Burgess Chamber",
+          "text": "A cold oak-paneled hall where forty candles have burned for days. The air smells of old pastry, and a plate of it has grown a faint fur.",
+          "tavern": false
+        },
+        "rumor": "They say the old rate was set by the ghost himself, ninety years ago, and that is why he will not budge."
+      },
+      "fiction": true
+    },
+    {
+      "id": "gargoyle-quits-fish-street-roof-pigeons-nest",
+      "title": "Gargoyle Quits Fish Street Roof After Pigeons Nest in Mouth",
+      "category": "Local Chaos",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-11-01",
+      "excerpt": "A gargoyle quit its post atop a Fish Street guildhall after pigeons nested in its mouth for the third spring running. Skritch is allegedly on its side.",
+      "social": "A gargoyle that guarded a Fish Street guildhall for 212 years walked off the roof at dawn. Pigeons had nested in its mouth for the third spring running. It left a note carved in the gutter: 'No.' Would you have stayed on that roof?",
+      "content": "<p>At roughly the second bell before dawn, a gargoyle that has guarded the Fish Street Chandlers' Hall for 212 years allegedly climbed down from its corner of the roof and walked off the job. Witnesses say the gargoyle quit after pigeons nested in its mouth for the third spring running. It left a note carved into the gutter. The note says, in full, 'No.'</p>\n\n<p>'I was sweeping the step, and this thing just stepped over me,' said Orvel Tinch, a candle-seller who was eating a boiled egg at the time. 'It had a twig sticking out of its jaw. A twig! I gave it my egg. It said nothing, but it accepted the egg.' The egg was allegedly later found on the roof of the tannery, unopened.</p>\n\n<p>Guildmaster Perrin Vole called the departure 'a misunderstanding of terms.' By his reading, the gargoyle's contract is a 212-year lease on the corner, and stone cannot resign. 'It is furniture with opinions,' Vole told this reporter. 'Furniture does not give notice.' The gargoyle, reached for comment two streets over, was allegedly sitting on a fountain and refusing to say anything to anyone who was not a pigeon-hater. Skritch qualified on the spot.</p>\n\n<p>The pigeons are the heart of this. Skritch has hated pigeons since one of them stole a sausage out of his claws in the Year of the Soggy Griffin, and so has the gargoyle, apparently. Pigeon droppings on the Chandlers' Hall have reached what the Constabulary calls 'a knee-deep situation' on the east ledge. The guild has twice asked the gargoyle to eat the birds. The gargoyle has twice asked the guild for a ladder, a brush, and a raise.</p>\n\n<p>Ooh, there was a really nice copper weathervane on the tannery. Shaped like a trout. Anyway.</p>\n\n<p>Meanwhile the corner of the roof sits empty and the guild's insurer, who did not want to be named but was allegedly named Garrick, says the hall is 'unprotected against all gargoyle-adjacent risks.' Neighbors have already noticed. A second gargoyle on the Millers' Hall across the way reportedly leaned out and looked at the empty corner for most of the morning. Its mouth was also, allegedly, full of pigeons.</p>\n\n<p>The Constabulary says it has no jurisdiction over statues that move on their own, only over statues that are moved. A sergeant, who asked me not to say she was eating a pastry, said the gargoyle 'is technically a resident of the fountain now and may stay there until someone complains.' Someone has complained. It was a pigeon. It was not taken seriously.</p>\n\n<p>The Chandlers' Hall has posted a notice offering the gargoyle its old corner back, plus a hat for the mouth. The gargoyle's reply, again carved in stone, was a single word. Allegedly it is longer than the first one.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Gargoyle Who Gave Notice",
+          "text": "A stone guardian has walked off a guildhall roof and is sitting on a fountain, and the guildmaster wants the party to haul it back before the guild's insurance lapses. The gargoyle will return only if someone clears the pigeon problem, which is bigger than it looks."
+        },
+        "npc": {
+          "name": "Perrin Vole",
+          "role": "Chandlers' Guildmaster",
+          "want": "To get the gargoyle back on the roof before the insurer cancels the policy.",
+          "secret": "He has been feeding the pigeons for years because he finds them calming, and that is why there are so many.",
+          "race": "human",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Chandlers' Hall roof",
+          "text": "A tall guildhall whose east ledge is knee-deep in droppings. One corner stands empty with a gargoyle-shaped clean patch.",
+          "tavern": false
+        },
+        "rumor": "They say the gargoyle across the street is next, and its mouth is full of eggs, so don't stand under it."
+      },
+      "fiction": true
+    },
+    {
+      "id": "wish-spell-subscription-40-gp-thrummond-pike",
+      "title": "Wish Spell Subscription Hits 40 gp a Month, Sterling Cheers",
+      "category": "Consumer",
+      "author": "Sterling Vanmoor",
+      "date": "2026-11-01",
+      "excerpt": "Thrummond & Pike Wishwrights launched a 40 gp monthly wish spell subscription in Brindlemoor. Sterling Vanmoor calls the fine print a growth lever.",
+      "social": "Thrummond & Pike Wishwrights now sells a wish spell subscription for 40 gp a month in Brindlemoor. Subscribers get one wish a week, and the firm keeps the rights to the wording. One customer asked for a quiet life and now owns a very quiet life, with no one in it. Would you sign up for the first month free?",
+      "content": "<p>Thrummond & Pike Wishwrights opened a wish spell subscription in Brindlemoor on Friday, charging 40 gp a month for one wish a week. Within a day, 9,000 citizens had signed up, and a queue of customers wound past the Cheesemongers' Row and halfway to the next barony. Disruption has a line, friends, and the line is happy.</p>\n\n<p>Here is the pivot. A wish spell used to cost 25,000 gp in diamonds and a lifetime of regret. Thrummond & Pike have unbundled the regret. For the price of a decent ale, any subscriber can wish aloud into a brass horn at the Wishwright counter, and a staff of twelve junior clerics reads the request back in what the firm calls \"clarified language.\"</p>\n\n<p>Guild critics, and I have read their scrolls so you don't have to, claim the clarified language is the whole business. Reeve's office records show a baker who wished for \"bread that never runs out\" and received a loaf that follows her around. A cooper wished for \"more time with his family\" and is now, by every legal measure, thirty relatives. I call that deep personalization.</p>\n\n<p>Guildmaster Odalric Thrummond defended the model at a launch breakfast. \"Every wish is read exactly as spoken,\" he said, while a clerk behind him struck a line out of the ledger. \"We think of ourselves as a listening company.\" The terms of service run to 340 pages, which Thrummond says is a sign of how much the firm cares. When I met a famous dragon-hoard financier at a gala last spring, he told me, \"Sterling, a contract nobody reads is just a handshake with better paper.\" I have never forgotten it.</p>\n\n<p>The wording also lets the firm collect. Subscribers who wish to cancel have, by Saturday, discovered that \"I wish to cancel\" counts as their weekly wish, which Thrummond & Pike gladly grant by cancelling something else. Three people lost a tooth, one lost a Tuesday, and a halfling in Cobbler's Lane lost his deposit and, briefly, his reflection. The firm says this is within a rounding error of satisfaction.</p>\n\n<p>The clerics' union has asked for a hearing on the twelve junior clerics' hours, which I find, frankly, small-minded. The same pattern played out when a <a href=\"/a/lich-merger-400-skeleton-layoffs-desks\">lich's merger rightsized 400 skeleton clerks</a>: labor sees a problem, leadership sees headcount that already knows the work. Thrummond and Pike are hiring.</p>\n\n<p>Key takeaways for the ambitious adventurer:</p>\n\n<ul>\n<li>Read the terms. Then wish somebody else does.</li>\n<li>If it is free for a month, you are the thing for sale in month two.</li>\n<li>Never wish for a quiet life. Somebody will deliver it.</li>\n</ul>\n\n<p><em>— Sterling Vanmoor, Guild Visionary. Let's connect at the Yawning Portal.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Clarified Wish",
+          "text": "A wishwright firm in town sells cheap weekly wishes, and every wording gets 'clarified' to the firm's benefit. A grieving widow wished for her husband back and the firm now holds the deed to the house he is standing in. The party must find the original, unclarified wording before the lease runs out."
+        },
+        "npc": {
+          "name": "Mirelle Ashgrove",
+          "role": "Junior clarifying cleric",
+          "want": "To quit the firm without having her own cancel wish clarified.",
+          "secret": "She keeps the original wish scrolls hidden in a rain barrel, and the firm has not noticed they are missing.",
+          "race": "human",
+          "gender": "female",
+          "kind": "religious"
+        },
+        "location": {
+          "name": "The Brass Horn Counter",
+          "text": "A marble counter with a huge brass horn bolted to it, where subscribers speak their wishes. The echo comes back a half second late and sounds a little pleased.",
+          "tavern": false
+        },
+        "rumor": "They say the horn leads straight to a devil's ear, and the clerics are just there for the paperwork."
+      },
+      "fiction": true
+    },
+    {
+      "id": "stirge-swarm-143-bites-brindlemoor-wendell",
+      "title": "Stirge Swarm Bites 143 in Brindlemoor; Soup Advised",
+      "category": "Creature Features",
+      "author": "Brother Wendell Tumbleberry",
+      "date": "2026-11-01",
+      "excerpt": "A stirge swarm nesting in a Brindlemoor bell tower bit 143 folk this week. Chapter 9 calls it a blood drive. Brother Wendell calls for lentil soup.",
+      "social": "A stirge swarm moved into a Brindlemoor bell tower and bit 143 folk in one week. Chapter 9 calls it a voluntary blood drive, which nobody volunteered for. Brother Wendell says rest, iron, and lentils. Would you sleep with a window open this week?",
+      "content": "<p>Friends, a stirge swarm has nested in the bell tower of a Brindlemoor temple, and the town's clinics report 143 stirge bites in seven days. Most of the bitten were folk walking home after dark, plus one bell-ringer who says he was bitten \"mostly on principle.\"</p>\n\n<p>The old herbals say a stirge is a needle with wings and an appetite, and the old herbals are right. A stirge attaches by its beak, drinks until it is round as a plum, and lets go only when it is too heavy to hold on. A study from the temple healers of Marrowfield, which I read twice with a cup of tea, found that most trouble from stirges is not the blood but the wound afterward: swelling, fever, and a sleepy, drained feeling that lasts a few days. Wash the bite, keep it clean, and see a cleric if it reddens.</p>\n\n<p>Chapter 9 has weighed in. Deputy Registrar Pell Oddingwick told reporters on the temple steps that the swarm is \"a voluntary community blood drive, currently on track.\" When a woman in the crowd pointed out that nobody had volunteered, he said the sign-up sheet \"is held by the stirges.\" The guild has since offered bitten citizens a pewter pin shaped like a drop. It costs four silver.</p>\n\n<p>Reeve Fennick, who was bitten twice on the ear during the press conference, issued a short statement: \"We are aware of the stirges.\" She asked residents to avoid the bell tower, the nearby lane, and, if possible, the evening.</p>\n\n<p>Meanwhile, the Mule Street apothecaries have discovered the swarm. A vial of \"stirge shield tonic\" is selling at 60 gold, and it is, I have checked, mostly vinegar and optimism. A bit of netting over the bed costs three coppers. Hang it, tuck it, and sleep.</p>\n\n<p>Here is what I tell the folk who line up at my cot. Iron comes back to you through food, so eat lentils, dark greens, and a little liver if your stomach allows. Drink water. Sleep more than you think you need. A drained body wants rest first and heroics second. And please do not try to swat a stirge off your own neck with a hammer. I have seen the hammer win, and I have seen the neck lose.</p>\n\n<p>The swarm is not evil. It is hungry, and it has been told by a bell that the dinner hour is dusk. The temple has quietly stopped ringing it. Last night's evening was the first in nine days with no new bites, which suggests the bell was the dinner gong all along.</p>\n\n<p>Last month I wrote about the <a href=\"/a/yellow-mold-cough-212-delvers-undermaw-wendell\">yellow mold cough on Level Five</a>, and the lesson is the same here: when something small is taking a lot from you, step back, wash up, and rest. My friend Nyx tells me there is a spell for blood now that does it all in one cast. Go outside, Nyx. Preferably before dusk, and bring a net.</p>\n\n<p>This week's soup is red lentil and carrot, with a spoon of lemon at the end to help the iron along.</p>\n\n<p><em>Rest well, friends. — Brother Wendell</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Dinner Bell",
+          "text": "A swarm of stirges has nested in a temple bell tower and bites anyone out after dusk. The temple wants it gone without harm to the bell, which the stirges seem to treat as a dinner signal."
+        },
+        "npc": {
+          "name": "Tobias Wrenmarsh",
+          "role": "Frazzled temple bell-ringer",
+          "want": "To get back to ringing the bell without being bitten.",
+          "secret": "He has been feeding the stirges scraps for weeks because he thought they were bats.",
+          "race": "human",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Bell Tower of Saint Orrin's",
+          "text": "A narrow stone tower with a belfry full of red-streaked rafters. The bell rope has been chewed through and tied back by someone with more courage than skill.",
+          "tavern": false
+        },
+        "rumor": "They say the stirges only come when the bell rings, so if you stop the bell, they will starve, or move in with you."
+      },
+      "fiction": true
     }
   ]
 }
