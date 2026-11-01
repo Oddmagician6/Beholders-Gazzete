@@ -5470,6 +5470,142 @@
         "rumor": "They say the stirges only come when the bell rings, so if you stop the bell, they will starve, or move in with you."
       },
       "fiction": true
+    },
+    {
+      "id": "copper-pieces-haul-adventuring-party-money-changers",
+      "title": "Party Hauls 30,000 Copper Pieces; Changers Take 12,000",
+      "category": "Economy",
+      "author": "Barnaby Tallowmere",
+      "date": "2026-11-01",
+      "excerpt": "The Fourth Attempt carried 30,000 copper pieces out of the Undermaw and left a suit of chain mail behind. Barnaby has done the sums. Four times.",
+      "social": "An adventuring party hauled 30,000 copper pieces, about 600 pounds, out of the Undermaw. Three money-changers took only 12,000 of them, at a 10% fee. After the chain mail left on Level Three, the party cleared about 20 gp. Would you drop the armor for the copper?",
+      "content": "<p>The Fourth Attempt, the adventuring party Brindlemoor loves and its insurers do not, carried 30,000 copper pieces out of the Undermaw on Friday and discovered that the town's money-changers will accept only 12,000 of them. The haul weighs about 600 pounds at fifty coins to the pound, and it is worth 300 gp on paper. (I have checked that. Four times.)</p>\n\n<p>The party's treasurer, Dagny Rook, said the coins came out of a collapsed paymaster's chest on Level Three. \"It was a very large chest,\" she said. \"We should have asked what was in it before we opened it, and then again before we lifted it.\"</p>\n\n<p>To make room, the party left behind a suit of chain mail worth 75 gp, a tent, and five days of rations worth about 2 and a half gp. They also hired six porters from <a href=\"/a/rust-monster-eats-iron-pennies-brindlemoor-mint\">a town already short of small change</a> at five silver a day for three days, plus one wheelbarrow at 1 gp. The party's hireling, Pip Bramblecott, quit on the eleventh staircase. He did not take a share. He took a chair.</p>\n\n<p>At the Tanner's Row money-changers, the news got worse. Hobb Marlowe, who has run his counter for thirty years, said each changer will take no more than 4,000 copper pieces per customer per day. \"A changer who buys your copper has to sell it to someone,\" he said. \"Nobody wants copper. Every barkeep in Brindlemoor already has a bucket of it.\" Three changers took 4,000 apiece, 12,000 in all, and charged the usual 10% fee.</p>\n\n<p>Here are the numbers. Twelve thousand copper pieces is 120 gp. The fee is 12 gp, or 257 loaves on the current Loaf Index, which prices a loaf at 4.675 cp. That leaves 108 gp. Against it, the party spent 9 gp on porters, 1 gp on the barrow, 2 and a half gp on rations, and 75 gp on the chain mail it will not be seeing again: 87.5 gp in all. The party cleared 20.5 gp, which is about 439 loaves among five adventurers, or 88 loaves each. The full 30,000 cp would have bought 6,417 loaves. They have a sixteenth of that in their pockets and a stiff back apiece.</p>\n\n<p>The other 18,000 coins, worth 180 gp, sit in a Chapter 9 coin locker at a silver a day. Deputy Registrar Pell Oddingwick called the situation \"on track\" and described the locker as \"a soft launch of long-term savings.\" At 4,000 coins per changer per day, the party needs two more days to sell the rest, and they have left behind the tent that would have kept them dry for it.</p>\n\n<p>My aunt Marigold, who keeps her savings in a boot, says this is exactly why. A boot holds forty coins and cannot be lost on a staircase. I used to laugh at her. I am not laughing. I am converting.</p>\n\n<p>What this means for your pantry: before you haul copper out of a dungeon, ask what the changer will take, and leave the coin, not the armor.</p>\n\n<p><em>— B.T. (Loaf Index: see sidebar)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Copper Quota",
+          "text": "The party recovers a huge cache of copper pieces, but every money-changer in town caps what it will buy per day. Someone is quietly buying up the leftover coin lockers, and the party must find out why before the fees eat the profit."
+        },
+        "npc": {
+          "name": "Hobb Marlowe",
+          "role": "Veteran Tanner's Row money-changer",
+          "want": "To keep his float of gold from being drained by customers dumping worthless copper.",
+          "secret": "He sells surplus copper in bulk to a smuggler who melts it down for counterfeit silver plating.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "Chapter 9 Coin Lockers",
+          "text": "A row of iron-banded lockers in the guild hall cellar that rent by the day. One locker door is always slightly warm and nobody will say why.",
+          "tavern": false
+        },
+        "rumor": "They say the Fourth Attempt's copper was never lost, just left out for the next party to carry."
+      },
+      "fiction": true
+    },
+    {
+      "id": "adventuring-party-ranger-shortcut-upside-down-map",
+      "title": "Adventuring Party Loses Nine Hours to Ranger's Upside-Down Map",
+      "category": "Adventurers",
+      "author": "Hollis Delvewright",
+      "date": "2026-11-01",
+      "excerpt": "The Fourth Attempt's ranger promised a twenty-minute shortcut. The adventuring party got nine hours of drains, and then he turned the map around.",
+      "social": "The Fourth Attempt's ranger promised a twenty-minute shortcut through the Undermaw drains. Nine hours later the party was down to 42 hit points between them, and he finally admitted the map was upside down. Has a trusted guide ever walked you in a circle and called it a shortcut?",
+      "content": "<p>THE UNDERMAW, LEVEL 2, ELEVEN FEET BELOW A DRAIN GRATE — An adventuring party that set out to save twenty minutes spent nine hours in the Undermaw's drains on Saturday, after its ranger admitted the map had been upside down the whole time.</p>\n\n<p>The Fourth Attempt entered at dawn with a Chapter 9 delve permit and a destination: the Level 3 stairs. The ranger, who has led the party for three seasons and asked that his tracking be described as 'professional,' offered what he called a shortcut through the old drain tunnels. 'Left at the third grate, then straight,' he told the party. 'Twenty minutes. Thirty if we stop to loot.'</p>\n\n<p>They stopped to loot. It did not matter.</p>\n\n<p>By the fourth hour the party had passed the same cracked statue of a dwarf holding a lantern three times. The party's bard, who asked to be named, says he counted the statue's chips to be sure and then 'stopped counting, for my own sake.' By the sixth hour the fighter had begun greeting the statue by name. I decline to print the name. It was not kind.</p>\n\n<p>Box score at the ninth hour: fighter 14 hit points (of 38), wizard 9 (of 22), cleric 8 (of 30), ranger 11 (of 29), one hireling lightly damp. The damage came from nothing worse than a pack of giant rats, a rope bridge nobody had asked for, and morale. The mule, who stayed topside, is at full health. The party's hirelings had priced the trip at two hours and are now owed seven more, which Steward Ansel Pottage read aloud from the contract without raising his voice.</p>\n\n<p>The ranger confessed at the ninth hour, beside the statue. 'I had the map the wrong way up,' he said. 'Every left was a right. In my defense, the legend is in the corner, and the corner moved.' The map is a Chapter 9 issue. A reporter who has stood in this corridor with a map held correctly can confirm it is a good map. We lost our ninth ten-foot pole of the season to the third grate, which we also passed three times. I rolled poorly on that one: I was told to hold the lantern and I held the pole instead.</p>\n\n<p>Deputy Registrar Pell Oddingwick said Chapter 9 stands behind its maps 'in every orientation' and noted that a soft launch of a map legend printed on all four sides is 'on track.' Asked whether the guild would reimburse the hirelings, he said the matter was 'being routed.'</p>\n\n<p>The party reached the Level 3 stairs at 4:40 in the afternoon. It was the wrong stairs. They are the same stairs it started at, on the other side of the same drain.</p>\n\n<p><em>— H.D., filing from below</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Shortcut That Wasn't",
+          "text": "A guide the party trusts swears there is a twenty-minute shortcut through the old drains, but the passages loop back on themselves. The hirelings are charging by the hour, and something has been following the party since the second pass of the dwarf statue."
+        },
+        "npc": {
+          "name": "Tobren Ashgrove",
+          "role": "Overconfident wilderness guide",
+          "want": "To keep his reputation as the best tracker in town without admitting he cannot read a map.",
+          "secret": "He has been holding every map upside down for years and navigates mostly by luck.",
+          "race": "human",
+          "gender": "male",
+          "kind": "adventurer"
+        },
+        "location": {
+          "name": "The Looping Drains",
+          "text": "A drain complex beneath a market town where four tunnels return to the same cracked statue of a lantern-bearing dwarf. The map legend is printed in each corner, so nobody agrees which way is up.",
+          "tavern": false
+        },
+        "rumor": "They say a party walked into the drains at dawn and met themselves coming back out at dusk, and neither group would admit it was lost."
+      },
+      "fiction": true
+    },
+    {
+      "id": "adventuring-party-billed-unlocked-tavern-door",
+      "title": "Fighter Kicks Unlocked Tavern Door; Party Billed 17 Gold",
+      "category": "Tavern Tales",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-11-01",
+      "excerpt": "An adventuring party was billed 17 gold and 5 silver after their fighter kicked in a Brindlemoor tavern door that was unlocked. The rogue made it worse.",
+      "social": "A fighter kicked in a Brindlemoor tavern door that was unlocked the whole time. The innkeeper billed the party 4 gold for the door. Then the rogue said, 'Let me check it for traps,' and the bill hit 17 gold and 5 silver. Has your party ever paid for a door that was open? Who in your group would have kicked it?",
+      "content": "<p>At roughly the second bell after sundown, an adventuring party was allegedly billed 17 gold and 5 silver at the Crooked Latch tavern on Tanner's Row in Brindlemoor. The reason: their fighter kicked in the front door, and the front door was unlocked. It had been unlocked, per the innkeeper, since the Feast of the Thaw, and the sign on it said PULL.</p>\n\n<p>'He backed up,' said Dellin Marrowick, a cooper who was eating a turkey leg at the time. 'He took a real run at it. Three steps, a shout, and the whole door came off its hinges and slid into the soup.' The fighter, a dwarf named Torgan Ironquay, allegedly said, 'It was stuck.' The door was not stuck. It was a door.</p>\n\n<p>Keeper Hobb Pennywhistle presented the party with an itemized bill before the soup had stopped moving. One door, oak, 4 gold. Two hinges, 1 gold. One sign (PULL), now in pieces, 5 silver. 'I don't charge for the shouting,' Pennywhistle told this reporter. 'That was a courtesy.'</p>\n\n<p>This is where the party's rogue, a halfling called Wimble Thistlebrook, stepped in. 'Hold on,' she said. 'Nobody touch that. I'm going to check it for traps.' She then spent what witnesses put at forty minutes examining a door that was lying flat on the floor. She tapped it with a ten-foot pole. She sprinkled flour over it. She listened to it. At one point she allegedly asked the door whether it was trapped, and waited.</p>\n\n<p>The flour was Pennywhistle's flour. That was 8 silver. The ten-foot pole went through the ceiling, which was 3 gold, and knocked down a bell that, the Keeper says, 'was the only trap in the building, and it was for rats.' The bell was 2 gold. Wimble, to her credit, found it. 'I disarmed it,' she said. 'Eventually.' Also there was a really nice brass hinge pin rolling around under table six. Anyway.</p>\n\n<p>Torgan has asked that the record show the door 'looked locked.' Reeve Fennick's office, reached for comment, said the town is 'aware of the door' and has no plans to rule on whether a door can look locked. Chapter 9 of the Adventurers' Guild confirmed that no permit is needed to kick a door, but a permit is needed to kick a door 'with intent.' Deputy Registrar Oddingwick called the incident 'a soft opening of the Crooked Latch's second entrance.'</p>\n\n<p>The party paid in full, plus a tip, since the fighter allegedly felt bad. The Fourth Attempt, who were seated at table two throughout, declined to comment but were seen quietly checking their own doors.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Door That Was Open",
+          "text": "A tavern keeper has billed the party for a door they kicked in, and the keeper swears it was unlocked. The party can pay, argue, or work off the debt by finding out who has been taking the place's bell rope and flour at night."
+        },
+        "npc": {
+          "name": "Hobb Pennywhistle",
+          "role": "Keeper of the Crooked Latch",
+          "want": "To be paid for every splinter, down to the sign.",
+          "secret": "He leaves the door unlocked on purpose, because the itemized bills are his best income.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Crooked Latch",
+          "text": "A narrow Tanner's Row tavern with a front door that has been replaced six times this year. A tally of past bills is nailed to the wall behind the bar.",
+          "tavern": true
+        },
+        "rumor": "They say the Crooked Latch has been repairing the same door for a year and charging a different party each time."
+      },
+      "fiction": true
+    },
+    {
+      "id": "unidentified-potions-party-drinks-nine-infirmary-wendell",
+      "title": "Party Drinks 9 Unidentified Potions; One Now Floats",
+      "category": "Health",
+      "author": "Brother Wendell Tumbleberry",
+      "date": "2026-11-01",
+      "excerpt": "The Fourth Attempt drank all nine unidentified potions from an Undermaw haul to see what they did. The infirmary has results. Soup is advised.",
+      "social": "A whole adventuring party drank nine unidentified potions from their Undermaw haul to see what they did. One member now speaks only to fish, and another is floating gently near the ceiling. The infirmary's advice is to read the label first. Which potion would you test on yourself?",
+      "content": "<p>Friends, the temple infirmary on Tanner's Row has admitted four members of <a href=\"/a/mimic-furniture-clause-adventuring-party-contract\">the Fourth Attempt</a> after the party drank nine unidentified potions from a Level Six haul, on Saturday evening, \"to see what they do.\" The potion mix-up is now in its second day. The healers say the party will recover. They also say it is a good deal of work for a Sunday.</p>\n\n<p>Here is the ledger as I have it. The party's rogue is invisible and has been since Saturday night. Healers know she is in bed six only because the blanket is dented. The cleric has been floating about a foot above his cot since supper, and a nurse ties his ankle to the bedpost each night so he does not drift into the rafters. The fighter drank something that made him eight inches tall, and is being kept in a soup bowl, which he says is \"not as funny as it sounds.\" The wizard, who drank the most, will speak only to fish. The infirmary has lent him a tank of carp, and he is, by every account, getting on well with them.</p>\n\n<p>Ansel Pottage, the party's steward, was the only one who did not drink. \"I read the vials,\" he said, bandaged as ever. \"Three had labels. Nobody asked me about the other six.\" He added that the party's contract does not cover \"voluntary tasting,\" and that he has read the clause aloud twice.</p>\n\n<p>Deputy Registrar Pell Oddingwick of Chapter 9 said the haul was \"on track\" and that the potions were \"enthusiastically sampled.\" Asked whether the guild would require labels on loot, he said a labeling desk is \"in early discussion.\" Shieldwall Mutual says it does not cover the floating, the shrinking, or the fish, which it files under \"your own fault.\"</p>\n\n<p>Now for the advice, friends. The old herbals say never swallow a strange brew, and the old herbals have never been wrong about this. As for the newer studies, the Marrowfield apothecaries now make <a href=\"/a/potion-of-healing-label-rule-marrowfield-guild\">every potion of healing list its side effects</a>, and the finding is simple: an unmarked vial is a gamble with your own insides. If you must test, test one potion at a time. Do it with a healer in the room, a full night's rest ahead of you, and a pot on the stove. Nine at once leaves nobody able to say which one made the knees go strange.</p>\n\n<p>Better still, take the unknown vials to an honest herbalist, or a friendly sage with a good nose and a magnifying glass. A sage charges less than a night in the infirmary, and the carp are not cheap to feed. My friend Nyx tells me there is a spell for identifying things now. Go outside, Nyx, and try it on a pebble.</p>\n\n<p>The rogue, when last seen, was sitting up and sipping broth. The healers can tell because the spoon keeps going down. For the fighter and the rest I recommend clear onion broth with a little ginger: easy on the stomach and gentle on the nerves. It also goes well with carp, if the wizard will let you.</p>\n\n<p><em>Rest well, friends. — Brother Wendell</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "Nine Vials, No Labels",
+          "text": "A nervous party's haul of unlabeled potions has been drunk by a rival crew, and the effects are wearing off at different times. A local healer will pay the party to find the other vials before more people taste them."
+        },
+        "npc": {
+          "name": "Marta Quillfeather",
+          "role": "Night Nurse, Tanner's Row Infirmary",
+          "want": "To stop treating adventurers for problems that a label would have prevented.",
+          "secret": "She keeps a ledger of every potion mishap and quietly sells copies to a rival apothecary.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Tanner's Row Infirmary",
+          "text": "A cramped temple ward with a tank of carp in the corner and a ceiling hook for patients who float. A soup bowl on the third shelf is labeled DO NOT RINSE.",
+          "tavern": false
+        },
+        "rumor": "They say one of the vials was a Potion of Poison, and the wizard only lived because the carp told him not to finish it."
+      },
+      "fiction": true
     }
   ]
 }

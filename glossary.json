@@ -85,8 +85,13 @@
                                            "name":  "Sterling Vanmoor"
                                        }
                                    ],
-                        "article_count":  24,
+                        "article_count":  25,
                         "articles":  [
+                                         {
+                                             "id":  "copper-pieces-haul-adventuring-party-money-changers",
+                                             "title":  "Party Hauls 30,000 Copper Pieces; Changers Take 12,000",
+                                             "date":  "2026-11-01"
+                                         },
                                          {
                                              "id":  "mimic-loaf-bread-price-survey-brindlemoor",
                                              "title":  "Mimic Loaf Lifts Brindlemoor Bread Price Survey 16.9%",
@@ -106,11 +111,6 @@
                                              "id":  "red-dragon-hoard-collateral-copper-waterdeep-lenders",
                                              "title":  "Red Dragon\u0027s 2.4M gp Hoard Is Mostly Painted Copper",
                                              "date":  "2026-10-29"
-                                         },
-                                         {
-                                             "id":  "rust-monster-eats-iron-pennies-brindlemoor-mint",
-                                             "title":  "Rust Monster Eats 9,000 gp of Iron Pennies at Mint",
-                                             "date":  "2026-10-28"
                                          }
                                      ]
                     },
@@ -363,11 +363,16 @@
                                            "name":  "Nyx Spindlecoil"
                                        }
                                    ],
-                        "article_count":  24,
+                        "article_count":  25,
                         "articles":  [
                                          {
                                              "id":  "stirge-swarm-143-bites-brindlemoor-wendell",
                                              "title":  "Stirge Swarm Bites 143 in Brindlemoor; Soup Advised",
+                                             "date":  "2026-11-01"
+                                         },
+                                         {
+                                             "id":  "unidentified-potions-party-drinks-nine-infirmary-wendell",
+                                             "title":  "Party Drinks 9 Unidentified Potions; One Now Floats",
                                              "date":  "2026-11-01"
                                          },
                                          {
@@ -384,11 +389,6 @@
                                              "id":  "yellow-mold-cough-212-delvers-undermaw-wendell",
                                              "title":  "Yellow Mold Cough Hits 212 Delvers on Undermaw Level Five",
                                              "date":  "2026-10-29"
-                                         },
-                                         {
-                                             "id":  "owlbear-cubs-undermaw-chapter-9-visitors",
-                                             "title":  "3 Owlbear Cubs Found in Undermaw; Chapter 9 Says \u0027Visitors\u0027",
-                                             "date":  "2026-10-28"
                                          }
                                      ]
                     },
@@ -423,8 +423,13 @@
                                            "name":  "Hollis Delvewright"
                                        }
                                    ],
-                        "article_count":  24,
+                        "article_count":  25,
                         "articles":  [
+                                         {
+                                             "id":  "adventuring-party-billed-unlocked-tavern-door",
+                                             "title":  "Fighter Kicks Unlocked Tavern Door; Party Billed 17 Gold",
+                                             "date":  "2026-11-01"
+                                         },
                                          {
                                              "id":  "gargoyle-quits-fish-street-roof-pigeons-nest",
                                              "title":  "Gargoyle Quits Fish Street Roof After Pigeons Nest in Mouth",
@@ -444,11 +449,6 @@
                                              "id":  "dragon-sues-bard-harassment-50-gp-damages",
                                              "title":  "Dragon Sues Bard for Harassment; Court Awards 50 gp",
                                              "date":  "2026-10-29"
-                                         },
-                                         {
-                                             "id":  "mimic-tavern-door-31-hats-fish-street",
-                                             "title":  "Mimic Posing as Tavern Door Swallows 31 Hats on Fish Street",
-                                             "date":  "2026-10-28"
                                          }
                                      ]
                     },
@@ -481,8 +481,13 @@
                                            "name":  "Skritch Mudwhistle"
                                        }
                                    ],
-                        "article_count":  21,
+                        "article_count":  22,
                         "articles":  [
+                                         {
+                                             "id":  "adventuring-party-ranger-shortcut-upside-down-map",
+                                             "title":  "Adventuring Party Loses Nine Hours to Ranger\u0027s Upside-Down Map",
+                                             "date":  "2026-11-01"
+                                         },
                                          {
                                              "id":  "rope-trick-hostel-undermaw-guests-dropped",
                                              "title":  "Rope Trick Hostel Ends After One Hour, Drops Eight Guests",
@@ -502,11 +507,6 @@
                                              "id":  "stirge-swarm-temple-blood-drive-brindlemoor",
                                              "title":  "Stirge Swarm Joins Temple Blood Drive, Donors Drained",
                                              "date":  "2026-10-29"
-                                         },
-                                         {
-                                             "id":  "young-red-dragon-hoard-permit-approved",
-                                             "title":  "Young Red Dragon Hoard Permit Approved, With Cheese Conditions",
-                                             "date":  "2026-10-28"
                                          }
                                      ]
                     },
@@ -598,8 +598,13 @@
                       "short":  "the Guild",
                       "type":  "institution",
                       "blurb":  "A guild of heritage keepers who sue to protect old buildings and groves in the capital.",
-                      "appearances":  73,
+                      "appearances":  74,
                       "articles":  [
+                                       {
+                                           "id":  "adventuring-party-billed-unlocked-tavern-door",
+                                           "title":  "Fighter Kicks Unlocked Tavern Door; Party Billed 17 Gold",
+                                           "date":  "2026-11-01"
+                                       },
                                        {
                                            "id":  "mimic-loaf-bread-price-survey-brindlemoor",
                                            "title":  "Mimic Loaf Lifts Brindlemoor Bread Price Survey 16.9%",
@@ -619,11 +624,6 @@
                                            "id":  "mimic-candy-bowl-38-trick-or-treaters",
                                            "title":  "Mimic Posing as Candy Bowl Sticks 38 Trick-or-Treaters",
                                            "date":  "2026-10-31"
-                                       },
-                                       {
-                                           "id":  "cloaker-recall-12000-winter-cloaks-thistlewick",
-                                           "title":  "Cloaker Recall: 12,000 Winter Cloaks Found Alive",
-                                           "date":  "2026-10-30"
                                        }
                                    ]
                   },
@@ -662,6 +662,40 @@
                                    ]
                   },
                   {
+                      "name":  "Brindlemoor",
+                      "short":  "Brindlemoor",
+                      "type":  "place",
+                      "blurb":  "A frontier market town built on top of the entrance to the Undermaw. Its economy runs on adventurers, and so does its hospital.",
+                      "appearances":  43,
+                      "articles":  [
+                                       {
+                                           "id":  "adventuring-party-billed-unlocked-tavern-door",
+                                           "title":  "Fighter Kicks Unlocked Tavern Door; Party Billed 17 Gold",
+                                           "date":  "2026-11-01"
+                                       },
+                                       {
+                                           "id":  "carpet-of-flying-autopilot-update-skyloom-review",
+                                           "title":  "Carpet of Flying Autopilot Update Parks 4,000 Over Market",
+                                           "date":  "2026-11-01"
+                                       },
+                                       {
+                                           "id":  "copper-pieces-haul-adventuring-party-money-changers",
+                                           "title":  "Party Hauls 30,000 Copper Pieces; Changers Take 12,000",
+                                           "date":  "2026-11-01"
+                                       },
+                                       {
+                                           "id":  "displacer-beast-show-tell-teachers-pay",
+                                           "title":  "Displacer Beast Show-and-Tell: Teachers Want Hazard Pay",
+                                           "date":  "2026-11-01"
+                                       },
+                                       {
+                                           "id":  "ghost-filibuster-ends-brindlemoor-harvest-tax",
+                                           "title":  "Ghost Filibuster Ends on Day 13 as Harvest Tax Falls Due",
+                                           "date":  "2026-11-01"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "High Lord Donwald of the Golden Towers",
                       "short":  "Donwald",
                       "type":  "person",
@@ -696,46 +730,27 @@
                                    ]
                   },
                   {
-                      "name":  "Brindlemoor",
-                      "short":  "Brindlemoor",
-                      "type":  "place",
-                      "blurb":  "A frontier market town built on top of the entrance to the Undermaw. Its economy runs on adventurers, and so does its hospital.",
-                      "appearances":  41,
-                      "articles":  [
-                                       {
-                                           "id":  "carpet-of-flying-autopilot-update-skyloom-review",
-                                           "title":  "Carpet of Flying Autopilot Update Parks 4,000 Over Market",
-                                           "date":  "2026-11-01"
-                                       },
-                                       {
-                                           "id":  "displacer-beast-show-tell-teachers-pay",
-                                           "title":  "Displacer Beast Show-and-Tell: Teachers Want Hazard Pay",
-                                           "date":  "2026-11-01"
-                                       },
-                                       {
-                                           "id":  "ghost-filibuster-ends-brindlemoor-harvest-tax",
-                                           "title":  "Ghost Filibuster Ends on Day 13 as Harvest Tax Falls Due",
-                                           "date":  "2026-11-01"
-                                       },
-                                       {
-                                           "id":  "mimic-loaf-bread-price-survey-brindlemoor",
-                                           "title":  "Mimic Loaf Lifts Brindlemoor Bread Price Survey 16.9%",
-                                           "date":  "2026-11-01"
-                                       },
-                                       {
-                                           "id":  "stirge-swarm-143-bites-brindlemoor-wendell",
-                                           "title":  "Stirge Swarm Bites 143 in Brindlemoor; Soup Advised",
-                                           "date":  "2026-11-01"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Brindlemoor Adventurers\u0027 Guild, Chapter 9",
                       "short":  "Chapter 9",
                       "type":  "organization",
                       "blurb":  "The guild chapter that licenses parties to enter the Undermaw, sells the maps, and insists the maps are accurate.",
-                      "appearances":  31,
+                      "appearances":  35,
                       "articles":  [
+                                       {
+                                           "id":  "adventuring-party-billed-unlocked-tavern-door",
+                                           "title":  "Fighter Kicks Unlocked Tavern Door; Party Billed 17 Gold",
+                                           "date":  "2026-11-01"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-ranger-shortcut-upside-down-map",
+                                           "title":  "Adventuring Party Loses Nine Hours to Ranger\u0027s Upside-Down Map",
+                                           "date":  "2026-11-01"
+                                       },
+                                       {
+                                           "id":  "copper-pieces-haul-adventuring-party-money-changers",
+                                           "title":  "Party Hauls 30,000 Copper Pieces; Changers Take 12,000",
+                                           "date":  "2026-11-01"
+                                       },
                                        {
                                            "id":  "rope-trick-hostel-undermaw-guests-dropped",
                                            "title":  "Rope Trick Hostel Ends After One Hour, Drops Eight Guests",
@@ -745,21 +760,6 @@
                                            "id":  "stirge-swarm-143-bites-brindlemoor-wendell",
                                            "title":  "Stirge Swarm Bites 143 in Brindlemoor; Soup Advised",
                                            "date":  "2026-11-01"
-                                       },
-                                       {
-                                           "id":  "displacer-beast-undermaw-level-four-map-error",
-                                           "title":  "Displacer Beast Found Three Feet Off Chapter 9 Map",
-                                           "date":  "2026-10-31"
-                                       },
-                                       {
-                                           "id":  "lich-merger-400-skeleton-layoffs-desks",
-                                           "title":  "Lich Merger Rightsizes 400 Skeletons, Who Keep Coming In",
-                                           "date":  "2026-10-31"
-                                       },
-                                       {
-                                           "id":  "mimic-candy-bowl-38-trick-or-treaters",
-                                           "title":  "Mimic Posing as Candy Bowl Sticks 38 Trick-or-Treaters",
-                                           "date":  "2026-10-31"
                                        }
                                    ]
                   },
@@ -768,8 +768,23 @@
                       "short":  "Oddingwick",
                       "type":  "person",
                       "blurb":  "Chapter 9\u0027s spokesman on permits, openings and corrections. He has announced the opening of Level Seven more times than he has seen it.",
-                      "appearances":  27,
+                      "appearances":  31,
                       "articles":  [
+                                       {
+                                           "id":  "adventuring-party-billed-unlocked-tavern-door",
+                                           "title":  "Fighter Kicks Unlocked Tavern Door; Party Billed 17 Gold",
+                                           "date":  "2026-11-01"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-ranger-shortcut-upside-down-map",
+                                           "title":  "Adventuring Party Loses Nine Hours to Ranger\u0027s Upside-Down Map",
+                                           "date":  "2026-11-01"
+                                       },
+                                       {
+                                           "id":  "copper-pieces-haul-adventuring-party-money-changers",
+                                           "title":  "Party Hauls 30,000 Copper Pieces; Changers Take 12,000",
+                                           "date":  "2026-11-01"
+                                       },
                                        {
                                            "id":  "rope-trick-hostel-undermaw-guests-dropped",
                                            "title":  "Rope Trick Hostel Ends After One Hour, Drops Eight Guests",
@@ -779,21 +794,6 @@
                                            "id":  "stirge-swarm-143-bites-brindlemoor-wendell",
                                            "title":  "Stirge Swarm Bites 143 in Brindlemoor; Soup Advised",
                                            "date":  "2026-11-01"
-                                       },
-                                       {
-                                           "id":  "displacer-beast-undermaw-level-four-map-error",
-                                           "title":  "Displacer Beast Found Three Feet Off Chapter 9 Map",
-                                           "date":  "2026-10-31"
-                                       },
-                                       {
-                                           "id":  "doppelganger-hireling-three-wages-fourth-attempt",
-                                           "title":  "Doppelganger Hired as Three Hirelings, Collects Three Wages",
-                                           "date":  "2026-10-30"
-                                       },
-                                       {
-                                           "id":  "gargoyle-strike-chapter-9-stone-hours-pay",
-                                           "title":  "Gargoyle Strike: 14 Roof Sentries Want Pay for Stone Hours",
-                                           "date":  "2026-10-30"
                                        }
                                    ]
                   },
@@ -802,8 +802,13 @@
                       "short":  "Reeve Fennick",
                       "type":  "person",
                       "blurb":  "Brindlemoor\u0027s chief magistrate. Signs every dungeon permit, every bounty, and every apology to the farmers downwind.",
-                      "appearances":  27,
+                      "appearances":  28,
                       "articles":  [
+                                       {
+                                           "id":  "adventuring-party-billed-unlocked-tavern-door",
+                                           "title":  "Fighter Kicks Unlocked Tavern Door; Party Billed 17 Gold",
+                                           "date":  "2026-11-01"
+                                       },
                                        {
                                            "id":  "displacer-beast-show-tell-teachers-pay",
                                            "title":  "Displacer Beast Show-and-Tell: Teachers Want Hazard Pay",
@@ -823,11 +828,40 @@
                                            "id":  "stirge-swarm-143-bites-brindlemoor-wendell",
                                            "title":  "Stirge Swarm Bites 143 in Brindlemoor; Soup Advised",
                                            "date":  "2026-11-01"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Fourth Attempt",
+                      "short":  "the Fourth Attempt",
+                      "type":  "organization",
+                      "blurb":  "An adventuring party named in honor of the first three. Licensed by Chapter 9, popular with bards, unpopular with insurers.",
+                      "appearances":  25,
+                      "articles":  [
+                                       {
+                                           "id":  "adventuring-party-billed-unlocked-tavern-door",
+                                           "title":  "Fighter Kicks Unlocked Tavern Door; Party Billed 17 Gold",
+                                           "date":  "2026-11-01"
                                        },
                                        {
-                                           "id":  "ghost-lamplighters-strike-hallows-eve-brindlemoor",
-                                           "title":  "Ghost Lamplighters Strike on Hallow\u0027s Eve Over Haunt Pay",
-                                           "date":  "2026-10-31"
+                                           "id":  "adventuring-party-ranger-shortcut-upside-down-map",
+                                           "title":  "Adventuring Party Loses Nine Hours to Ranger\u0027s Upside-Down Map",
+                                           "date":  "2026-11-01"
+                                       },
+                                       {
+                                           "id":  "copper-pieces-haul-adventuring-party-money-changers",
+                                           "title":  "Party Hauls 30,000 Copper Pieces; Changers Take 12,000",
+                                           "date":  "2026-11-01"
+                                       },
+                                       {
+                                           "id":  "rope-trick-hostel-undermaw-guests-dropped",
+                                           "title":  "Rope Trick Hostel Ends After One Hour, Drops Eight Guests",
+                                           "date":  "2026-11-01"
+                                       },
+                                       {
+                                           "id":  "unidentified-potions-party-drinks-nine-infirmary-wendell",
+                                           "title":  "Party Drinks 9 Unidentified Potions; One Now Floats",
+                                           "date":  "2026-11-01"
                                        }
                                    ]
                   },
@@ -900,36 +934,36 @@
                                    ]
                   },
                   {
-                      "name":  "the Fourth Attempt",
-                      "short":  "the Fourth Attempt",
-                      "type":  "organization",
-                      "blurb":  "An adventuring party named in honor of the first three. Licensed by Chapter 9, popular with bards, unpopular with insurers.",
+                      "name":  "the Undermaw",
+                      "short":  "the Undermaw",
+                      "type":  "place",
+                      "blurb":  "The dungeon under Brindlemoor. Its levels are numbered, its bottom has never been found, and the Guild calls it mostly cleared.",
                       "appearances":  21,
                       "articles":  [
+                                       {
+                                           "id":  "adventuring-party-ranger-shortcut-upside-down-map",
+                                           "title":  "Adventuring Party Loses Nine Hours to Ranger\u0027s Upside-Down Map",
+                                           "date":  "2026-11-01"
+                                       },
+                                       {
+                                           "id":  "copper-pieces-haul-adventuring-party-money-changers",
+                                           "title":  "Party Hauls 30,000 Copper Pieces; Changers Take 12,000",
+                                           "date":  "2026-11-01"
+                                       },
                                        {
                                            "id":  "rope-trick-hostel-undermaw-guests-dropped",
                                            "title":  "Rope Trick Hostel Ends After One Hour, Drops Eight Guests",
                                            "date":  "2026-11-01"
                                        },
                                        {
+                                           "id":  "unidentified-potions-party-drinks-nine-infirmary-wendell",
+                                           "title":  "Party Drinks 9 Unidentified Potions; One Now Floats",
+                                           "date":  "2026-11-01"
+                                       },
+                                       {
                                            "id":  "displacer-beast-undermaw-level-four-map-error",
                                            "title":  "Displacer Beast Found Three Feet Off Chapter 9 Map",
                                            "date":  "2026-10-31"
-                                       },
-                                       {
-                                           "id":  "doppelganger-hireling-three-wages-fourth-attempt",
-                                           "title":  "Doppelganger Hired as Three Hirelings, Collects Three Wages",
-                                           "date":  "2026-10-30"
-                                       },
-                                       {
-                                           "id":  "yellow-mold-cough-212-delvers-undermaw-wendell",
-                                           "title":  "Yellow Mold Cough Hits 212 Delvers on Undermaw Level Five",
-                                           "date":  "2026-10-29"
-                                       },
-                                       {
-                                           "id":  "owlbear-cubs-undermaw-chapter-9-visitors",
-                                           "title":  "3 Owlbear Cubs Found in Undermaw; Chapter 9 Says \u0027Visitors\u0027",
-                                           "date":  "2026-10-28"
                                        }
                                    ]
                   },
@@ -968,36 +1002,70 @@
                                    ]
                   },
                   {
-                      "name":  "the Undermaw",
-                      "short":  "the Undermaw",
-                      "type":  "place",
-                      "blurb":  "The dungeon under Brindlemoor. Its levels are numbered, its bottom has never been found, and the Guild calls it mostly cleared.",
-                      "appearances":  18,
+                      "name":  "Shieldwall Mutual Assurance Society",
+                      "short":  "Shieldwall Mutual",
+                      "type":  "organization",
+                      "blurb":  "Brindlemoor\u0027s adventurer insurer. Covers death, dismemberment, and curses, except the ones that are your own fault, which is most of them.",
+                      "appearances":  17,
                       "articles":  [
+                                       {
+                                           "id":  "unidentified-potions-party-drinks-nine-infirmary-wendell",
+                                           "title":  "Party Drinks 9 Unidentified Potions; One Now Floats",
+                                           "date":  "2026-11-01"
+                                       },
+                                       {
+                                           "id":  "doppelganger-hireling-three-wages-fourth-attempt",
+                                           "title":  "Doppelganger Hired as Three Hirelings, Collects Three Wages",
+                                           "date":  "2026-10-30"
+                                       },
+                                       {
+                                           "id":  "invisibility-potions-quorum-call-brindlemoor-burgesses",
+                                           "title":  "Quorum Call Fails as Five Burgesses Drink Invisibility",
+                                           "date":  "2026-10-30"
+                                       },
+                                       {
+                                           "id":  "lycanthropy-61-cases-brindlemoor-full-moon-wendell",
+                                           "title":  "Lycanthropy Cases Hit 61 in Brindlemoor After Full Moon",
+                                           "date":  "2026-10-30"
+                                       },
+                                       {
+                                           "id":  "yellow-mold-cough-212-delvers-undermaw-wendell",
+                                           "title":  "Yellow Mold Cough Hits 212 Delvers on Undermaw Level Five",
+                                           "date":  "2026-10-29"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Ansel Pottage",
+                      "short":  "Pottage",
+                      "type":  "person",
+                      "blurb":  "Steward of the Fourth Attempt\u0027s hirelings. Reads contracts all the way to the end, which is more than the party can say.",
+                      "appearances":  16,
+                      "articles":  [
+                                       {
+                                           "id":  "adventuring-party-ranger-shortcut-upside-down-map",
+                                           "title":  "Adventuring Party Loses Nine Hours to Ranger\u0027s Upside-Down Map",
+                                           "date":  "2026-11-01"
+                                       },
                                        {
                                            "id":  "rope-trick-hostel-undermaw-guests-dropped",
                                            "title":  "Rope Trick Hostel Ends After One Hour, Drops Eight Guests",
                                            "date":  "2026-11-01"
                                        },
                                        {
-                                           "id":  "displacer-beast-undermaw-level-four-map-error",
-                                           "title":  "Displacer Beast Found Three Feet Off Chapter 9 Map",
-                                           "date":  "2026-10-31"
+                                           "id":  "unidentified-potions-party-drinks-nine-infirmary-wendell",
+                                           "title":  "Party Drinks 9 Unidentified Potions; One Now Floats",
+                                           "date":  "2026-11-01"
                                        },
                                        {
-                                           "id":  "gelatinous-cube-halloween-candy-fish-street",
-                                           "title":  "Gelatinous Cube Absorbs 180 Pounds of Halloween Candy",
-                                           "date":  "2026-10-31"
+                                           "id":  "doppelganger-hireling-three-wages-fourth-attempt",
+                                           "title":  "Doppelganger Hired as Three Hirelings, Collects Three Wages",
+                                           "date":  "2026-10-30"
                                        },
                                        {
-                                           "id":  "ghost-lamplighters-strike-hallows-eve-brindlemoor",
-                                           "title":  "Ghost Lamplighters Strike on Hallow\u0027s Eve Over Haunt Pay",
-                                           "date":  "2026-10-31"
-                                       },
-                                       {
-                                           "id":  "mimic-candy-bowl-38-trick-or-treaters",
-                                           "title":  "Mimic Posing as Candy Bowl Sticks 38 Trick-or-Treaters",
-                                           "date":  "2026-10-31"
+                                           "id":  "yellow-mold-cough-212-delvers-undermaw-wendell",
+                                           "title":  "Yellow Mold Cough Hits 212 Delvers on Undermaw Level Five",
+                                           "date":  "2026-10-29"
                                        }
                                    ]
                   },
@@ -1032,40 +1100,6 @@
                                            "id":  "cryptocurrency-falls-2-percent-lamp-oil-bitgold",
                                            "title":  "Cryptocurrency Falls 2% to 82,423 gp as Lamp Oil Soars",
                                            "date":  "2026-10-23"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Shieldwall Mutual Assurance Society",
-                      "short":  "Shieldwall Mutual",
-                      "type":  "organization",
-                      "blurb":  "Brindlemoor\u0027s adventurer insurer. Covers death, dismemberment, and curses, except the ones that are your own fault, which is most of them.",
-                      "appearances":  16,
-                      "articles":  [
-                                       {
-                                           "id":  "doppelganger-hireling-three-wages-fourth-attempt",
-                                           "title":  "Doppelganger Hired as Three Hirelings, Collects Three Wages",
-                                           "date":  "2026-10-30"
-                                       },
-                                       {
-                                           "id":  "invisibility-potions-quorum-call-brindlemoor-burgesses",
-                                           "title":  "Quorum Call Fails as Five Burgesses Drink Invisibility",
-                                           "date":  "2026-10-30"
-                                       },
-                                       {
-                                           "id":  "lycanthropy-61-cases-brindlemoor-full-moon-wendell",
-                                           "title":  "Lycanthropy Cases Hit 61 in Brindlemoor After Full Moon",
-                                           "date":  "2026-10-30"
-                                       },
-                                       {
-                                           "id":  "yellow-mold-cough-212-delvers-undermaw-wendell",
-                                           "title":  "Yellow Mold Cough Hits 212 Delvers on Undermaw Level Five",
-                                           "date":  "2026-10-29"
-                                       },
-                                       {
-                                           "id":  "bag-of-holding-recall-3000-pettibone-vail",
-                                           "title":  "Bag of Holding Recall: 3,000 Packs Share One Pocket",
-                                           "date":  "2026-10-28"
                                        }
                                    ]
                   },
@@ -1134,40 +1168,6 @@
                                            "id":  "strike-vote-97-percent-stellantern-wagonworks-marches",
                                            "title":  "Strike Vote Passes 97.3% at Stellantern Wagonworks",
                                            "date":  "2026-10-23"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Ansel Pottage",
-                      "short":  "Pottage",
-                      "type":  "person",
-                      "blurb":  "Steward of the Fourth Attempt\u0027s hirelings. Reads contracts all the way to the end, which is more than the party can say.",
-                      "appearances":  14,
-                      "articles":  [
-                                       {
-                                           "id":  "rope-trick-hostel-undermaw-guests-dropped",
-                                           "title":  "Rope Trick Hostel Ends After One Hour, Drops Eight Guests",
-                                           "date":  "2026-11-01"
-                                       },
-                                       {
-                                           "id":  "doppelganger-hireling-three-wages-fourth-attempt",
-                                           "title":  "Doppelganger Hired as Three Hirelings, Collects Three Wages",
-                                           "date":  "2026-10-30"
-                                       },
-                                       {
-                                           "id":  "yellow-mold-cough-212-delvers-undermaw-wendell",
-                                           "title":  "Yellow Mold Cough Hits 212 Delvers on Undermaw Level Five",
-                                           "date":  "2026-10-29"
-                                       },
-                                       {
-                                           "id":  "cloaker-coat-check-chapter-9-guild-hall",
-                                           "title":  "Cloaker Checked as Cloak at Chapter 9 Guild Hall",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "kobold-trap-resetters-union-vote-scrip",
-                                           "title":  "Kobolds Vote 31-2 to Unionize Over Scrip Pay at Chapter 9",
-                                           "date":  "2026-10-27"
                                        }
                                    ]
                   },
