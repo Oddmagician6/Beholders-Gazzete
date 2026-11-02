@@ -22,7 +22,7 @@ Use the existing Release when retrying; never recreate its initial state. Do not
 
 ## Files and storage
 
-- `.github/workflows/publish-npc-carousels.yml`: manual verification/arming and daily scheduled checks at 09:00 and 09:30 America/Chicago.
+- `.github/workflows/publish-npc-carousels.yml`: manual verification/arming and scheduled UTC checks corresponding to 09:00, 09:17, 09:37, 10:17, 11:17, and 12:17 America/Chicago for the approved November dates.
 - `.github/scripts/publish_npc_carousels.py`: publication, verification, and recovery.
 - `.github/scripts/test_npc_carousels.py`: behavior tests using a fake Meta service.
 - `.github/npc-carousel-queue.json`: the approved release tag and queue SHA-256.
@@ -57,7 +57,9 @@ Repository policy requires owner authorization before committing or pushing. Lea
 5. Dispatch `operation=arm`. This uploads unpublished Facebook photos, schedules the seven Facebook feed posts, verifies each returned schedule, and arms the dated Instagram queue. Instagram containers are created on the due date, avoiding advance-container expiry.
 6. Confirm the run succeeded and inspect its publishing report. Facebook should show seven confirmed native schedules. Instagram is queued in Actions, not natively scheduled through its API. Mark local records queued only after this confirmation; do not mark them published before Meta confirms publication.
 
-GitHub scheduled jobs can be delayed. The intended time is 09:00, with a 09:30 follow-up check; this is not a guarantee of publication at exactly 09:00:00. Late Instagram publication is limited to four hours after its approved time. The workflow disables itself after all 14 publications are confirmed, or on the first run after the final four-hour window. An expired queue is not silently backfilled.
+GitHub scheduled jobs can be delayed or dropped. The intended time is 09:00, with follow-up checks through 12:17; this is not a guarantee of publication at exactly 09:00:00. Late Instagram publication is limited to four hours after its approved time. The workflow disables itself after all 14 publications are confirmed, or on the first run after the final four-hour window. An expired queue is not silently backfilled. The current explicit UTC cron hours apply to these November CST dates; recalculate them for a future queue in daylight saving time.
+
+On November 2, Facebook published Mabel natively, but GitHub had recorded no scheduled NPC run and Instagram remained queued. A manual `run_due` recovered the approved carousel successfully in run `41474328950`, confirming both platforms and recording Instagram media `18173978695477961`. The missing scheduled event's cause was not established. Both batch schedules were changed from the timezone-based trigger to explicit UTC triggers with additional retries; duplicate protection remains in the existing publisher. A successful manual run proves publishing works, not that a future GitHub cron event will fire. Check the next scheduled run to confirm that separately.
 
 ## Recovery and future batches
 

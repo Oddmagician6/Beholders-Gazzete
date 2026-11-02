@@ -11,9 +11,10 @@ on:
         default: verify
         required: true
   schedule:
-    # The second run catches a delayed/missed first run; durable state prevents duplicates.
-    - cron: '0,30 9 * * *'
-      timezone: 'America/Chicago'
+    # November's approved dates are CST: 15:00 UTC is 09:00 Chicago.
+    # Off-hour retries stay inside the four-hour window; state prevents duplicates.
+    - cron: '0,17,37 15 * * *'
+    - cron: '17 16-18 * * *'
 
 concurrency:
   group: npc-carousel-publisher

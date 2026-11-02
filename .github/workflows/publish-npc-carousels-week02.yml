@@ -11,8 +11,9 @@ on:
         default: verify
         required: true
   schedule:
-    - cron: '0,30 9 * * *'
-      timezone: 'America/Chicago'
+    # November's approved dates are CST: 15:00 UTC is 09:00 Chicago.
+    - cron: '0,17,37 15 * * *'
+    - cron: '17 16-18 * * *'
 
 concurrency:
   group: npc-carousel-publisher
