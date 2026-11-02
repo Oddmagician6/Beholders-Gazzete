@@ -803,8 +803,7 @@ function rollOneShot(seed, opts = {}, set = {}) {
 
     // ── Act 3: the hoard in the last room ──
     const hoard = withSeed(seeds.hoard, () => OS_PF2E
-        // No trade goods: their lots are sized by 5e's hoard tiers, past a low level's whole treasure.
-        ? pf2eRollTreasure('hoard', level, { share: Lg.share, pcs: party, source: site.hoard.source, goods: false })
+        ? pf2eRollTreasure('hoard', level, { share: Lg.share, pcs: party, source: site.hoard.source })
         : rollTreasure('hoard', site.tier, 1, true, site.hoard.source));
 
     // ── The whole thing ──

@@ -205,11 +205,11 @@ function pf2eTrap(level) {
 function pf2eRollTreasure(kind, level, opts = {}) {
   const luck = opts.luckMult || 1;
   const row = PF2E_TREASURE[Math.min(20, Math.max(1, level))];
-  let coins, gems = [], art = [], magic = [];
+  let coins, gp, cash, gems = [], art = [], magic = [];
   if (kind === 'individual') {
     // The Gazette's call: about a twelfth of the level's coin, a consumable one time in four.
-    const gp = row.cur / 12 * (0.4 + rand() * 1.2) * luck;
-    let cash = gp;
+    gp = row.cur / 12 * (0.4 + rand() * 1.2) * luck;
+    cash = gp;
     if (rand() < 0.15) { const v = pf2eValuables(gp * 0.5, 1); gems = v.gems; art = v.art; cash = gp * 0.5 + v.left; }
     coins = pf2eCoins(cash, level);
     if (opts.items !== false && rand() < 0.25 * luck) {
@@ -218,10 +218,11 @@ function pf2eRollTreasure(kind, level, opts = {}) {
     }
   } else {
     const share = opts.share || 0.25, pcs = opts.pcs || 4;
-    const gp = Math.max(0, (row.cur + row.perPC * (pcs - 4)) * share * luck);
+    gp = Math.max(0, (row.cur + row.perPC * (pcs - 4)) * share * luck);
     const v = pf2eValuables(gp * (0.2 + rand() * 0.3), share >= 0.5 ? 8 : 4);
     gems = v.gems; art = v.art;
-    coins = pf2eCoins(gp - [...gems, ...art].reduce((t, g) => t + g.value, 0), level);
+    cash = gp - [...gems, ...art].reduce((t, g) => t + g.value, 0);
+    coins = pf2eCoins(cash, level);
     if (opts.items !== false) {
       // Each item slot of the level comes with the share's chance (a whole level keeps them all).
       for (const [list, k] of [[row.perm, 'permanent'], [row.cons, 'consumable']]) {
@@ -237,8 +238,16 @@ function pf2eRollTreasure(kind, level, opts = {}) {
   }
   const t = decorateTreasure({ coins, gems, art, magic }, kind, pf2eBand(level), {
     luckMult: luck, source: opts.source, goods: opts.goods,
+    // Trade goods come out of the find's own coin (5e's lots would dwarf a low level's treasure);
+    // coin is at least half the find, and a hoard's three lots at most 45%.
+    goodsRange: kind === 'individual' ? [gp * 0.1, gp * 0.4] : [gp * 0.05, gp * 0.15],
     lockDcs: PF2E_LOCK_DCS[pf2eBand(level)], trap: () => pf2eTrap(level)
   });
+  const goodsGp = t.goods.reduce((s, g) => s + g.value, 0);
+  if (goodsGp) {
+    t.coins = pf2eCoins(Math.max(0, cash - goodsGp), level);
+    t.totalValue = totalGP(t.coins, t.gems, t.art, t.magic, t.goods);
+  }
   return t;
 }
 

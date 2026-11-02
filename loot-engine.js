@@ -553,9 +553,10 @@ function magicFlavor(m) {
   return `Made by ${lootPick(MAGIC_MAKERS)}. ${lootFill(lootPick(MAGIC_QUIRKS))}`;
 }
 
-function lootGoodsLot(kind, cr, source, luckMult) {
-  const [lo, hi] = LOOT_GOODS_TARGET[kind][cr];
-  const target = (lo + rand() * (hi - lo)) * luckMult;
+// range: the lot's [lo, hi] gp with luck already in (Pathfinder's, from its own treasure budget).
+function lootGoodsLot(kind, cr, source, luckMult, range) {
+  const [lo, hi] = range || LOOT_GOODS_TARGET[kind][cr];
+  const target = (lo + rand() * (hi - lo)) * (range ? 1 : luckMult);
   const prefs = source.goods || [];
   // One person carries at most 30 of anything; a hoard can hold a whole cargo.
   const most = g => kind === 'individual' ? Math.min(g.qty[1], 30) : g.qty[1];
@@ -606,7 +607,7 @@ function decorateTreasure(t, kind, cr, opts = {}) {
   if (opts.goods !== false) {
     const lots = hoard ? (rand() < 0.6 ? lootRoll(1, cr === '17+' ? 3 : 2) : 0) : (rand() < 0.25 ? 1 : 0);
     for (let i = 0; i < lots; i++) {
-      const lot = lootGoodsLot(kind, cr, src, luckMult);
+      const lot = lootGoodsLot(kind, cr, src, luckMult, opts.goodsRange);
       if (lot && !t.goods.some(g => g.id === lot.id)) t.goods.push(lot);
     }
   }
