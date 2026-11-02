@@ -10,10 +10,101 @@
    outcomes keep their F28 seeds; lodging, the activity's setting, the weekly
    log, and gambling dice each draw from their own child seed.
    Uses buildName() from npc-data.js for names when it is loaded.
+   Pathfinder pages (DT_PF2E, ROADMAP L3 P4): Player Core's cost of living (priced by the week,
+   a part week by the day) and its downtime activities: Earn Income (one rolled check sets the
+   day's pay), Craft (setup, half the Price up front, extra days work off the rest), Subsist,
+   Learn a Spell, Retraining, and Long-Term Rest (tagged 'PC'). Carousing and gambling stay
+   house rules, gambling on Pathfinder's degrees of success against a DC by the character's level.
+   The lodging and weekly tables read a lifestyle's flavor (the 5e lifestyle it lives like).
    ============================================ */
 
+const DT_PF2E = ruleSystemId() === 'pf2e';
+
+// Player Core's Cost of Living, per week (month and year for reference); gp is the day's share.
+const DOWNTIME_PF2E_LIFESTYLES = {
+    subsistence: { label: 'Subsistence', icon: '🕯️', week: 0.4, month: 2, year: 24, flavor: 'poor' },
+    comfortable: { label: 'Comfortable', icon: '🍺', week: 1, month: 4, year: 52, flavor: 'modest' },
+    fine:        { label: 'Fine',        icon: '🍷', week: 30, month: 130, year: 1600, flavor: 'wealthy' },
+    extravagant: { label: 'Extravagant', icon: '👑', week: 100, month: 430, year: 5200, flavor: 'aristocratic' }
+};
+Object.values(DOWNTIME_PF2E_LIFESTYLES).forEach(L => { L.gp = L.week / 7; });
+
+const DOWNTIME_PF2E_ACTIVITIES = {
+    none:    { label: 'Just living', icon: '🛏️' },
+    earn:    { label: 'Earn Income', icon: '💼' },
+    craft:   { label: 'Craft', icon: '🔨' },
+    subsist: { label: 'Subsist', icon: '🏕️' },
+    learn:   { label: 'Learn a Spell', icon: '📚' },
+    retrain: { label: 'Retraining', icon: '🎓' },
+    rest:    { label: 'Long-term rest', icon: '🩹' },
+    carouse: { label: 'Carousing (house rule)', icon: '🍻' },
+    gamble:  { label: 'Gambling (house rule)', icon: '🎲' }
+};
+// The 5e activity whose setting and weekly events a Pathfinder one borrows.
+const DOWNTIME_PF2E_LIKE = { earn: 'work', learn: 'research', retrain: 'train', rest: 'recup' };
+
+// Proficiency ranks for Earn Income and Craft (the column of the income table).
+const DOWNTIME_PF2E_RANKS = {
+    trained:   { label: 'Trained', col: 2 },
+    expert:    { label: 'Expert', col: 3 },
+    master:    { label: 'Master', col: 4 },
+    legendary: { label: 'Legendary', col: 5 }
+};
+
+// Player Core Table 4-2, Income Earned, in gp a day: [DC, failed, trained, expert, master, legendary]
+// by task level 0–20; index 21 is a critical success at level 20.
+const DOWNTIME_PF2E_INCOME = [
+    [14, 0.01, 0.05, 0.05, 0.05, 0.05], [15, 0.02, 0.2, 0.2, 0.2, 0.2], [16, 0.04, 0.3, 0.3, 0.3, 0.3],
+    [18, 0.08, 0.5, 0.5, 0.5, 0.5], [19, 0.1, 0.7, 0.8, 0.8, 0.8], [20, 0.2, 0.9, 1, 1, 1],
+    [22, 0.3, 1.5, 2, 2, 2], [23, 0.4, 2, 2.5, 2.5, 2.5], [24, 0.5, 2.5, 3, 3, 3],
+    [26, 0.6, 3, 4, 4, 4], [27, 0.7, 4, 5, 6, 6], [28, 0.8, 5, 6, 8, 8],
+    [30, 0.9, 6, 8, 10, 10], [31, 1, 7, 10, 15, 15], [32, 1.5, 8, 15, 20, 20],
+    [34, 2, 10, 20, 28, 28], [35, 2.5, 13, 25, 36, 40], [36, 3, 15, 30, 45, 55],
+    [38, 4, 20, 45, 70, 90], [39, 6, 30, 60, 100, 130], [40, 8, 40, 75, 150, 200],
+    [null, null, 50, 90, 175, 300]
+];
+
+// Retraining (Player Core): days per change. A big class choice takes "at least a month".
+const DOWNTIME_PF2E_RETRAIN = {
+    feat:  { label: 'A feat', days: 7 },
+    skill: { label: 'A skill increase', days: 7 },
+    small: { label: 'A small class choice (a repertoire spell)', days: 7 },
+    big:   { label: 'A big class choice (an order, a school)', days: 30 }
+};
+
+// Learn a Spell (Player Core): price and typical DC by spell rank (a cantrip costs as 1st rank).
+const DOWNTIME_PF2E_SPELLS = [[2, 15], [2, 15], [6, 18], [16, 20], [36, 23], [70, 26], [140, 28], [300, 31], [650, 34], [1500, 36], [7000, 41]];
+
+const DT_PF2E_DEGREES = ['critical failure', 'failure', 'success', 'critical success'];
+
+// Pathfinder's degree of success: 0 = critical failure … 3 = critical success; a natural 20 or 1 moves it one step.
+function dtDegree(d20, total, dc) {
+    let deg = total >= dc + 10 ? 3 : total >= dc ? 2 : total > dc - 10 ? 1 : 0;
+    if (d20 === 20) deg = Math.min(3, deg + 1);
+    else if (d20 === 1) deg = Math.max(0, deg - 1);
+    return deg;
+}
+
+// A day's pay at a task level and rank; crit = a critical success (the next level up).
+function dtIncome(level, rank, crit) {
+    const lv = Math.min(20, Math.max(0, level));
+    const row = crit ? DOWNTIME_PF2E_INCOME[lv + 1] : DOWNTIME_PF2E_INCOME[lv];
+    return row[(DOWNTIME_PF2E_RANKS[rank] || DOWNTIME_PF2E_RANKS.trained).col];
+}
+
+const DT_PF2E_SETUP = 2;          // Craft's setup days without the formula
+const DT_PF2E_MAX_BONUS = 50;
+const DT_PF2E_MAX_SPELLS = 20;
+// GM Core's DC by level, 0–20 (the gambling DCs on Pathfinder pages).
+const DT_PF2E_LEVEL_DC = DOWNTIME_PF2E_INCOME.slice(0, 21).map(r => r[0]);
+
+// A character's level (Pathfinder pages), 1–20.
+function dtLevel(c) {
+    return Math.min(20, Math.max(1, Math.floor(Number(c.lvl) || 1)));
+}
+
 // SRD 5.1 Lifestyle Expenses, per day. Aristocratic is "10 gp minimum".
-const DOWNTIME_LIFESTYLES = {
+const DOWNTIME_LIFESTYLES = DT_PF2E ? DOWNTIME_PF2E_LIFESTYLES : {
     wretched:     { label: 'Wretched',     icon: '🥀', gp: 0 },
     squalid:      { label: 'Squalid',      icon: '🪳', gp: 0.1 },
     poor:         { label: 'Poor',         icon: '🕯️', gp: 0.2 },
@@ -23,8 +114,9 @@ const DOWNTIME_LIFESTYLES = {
     aristocratic: { label: 'Aristocratic', icon: '👑', gp: 10 }
 };
 const DOWNTIME_LIFE_KEYS = Object.keys(DOWNTIME_LIFESTYLES);
+const DOWNTIME_LIFE_DEFAULT = DT_PF2E ? 'comfortable' : 'modest';
 
-const DOWNTIME_ACTIVITIES = {
+const DOWNTIME_ACTIVITIES = DT_PF2E ? DOWNTIME_PF2E_ACTIVITIES : {
     none:     { label: 'Just living', icon: '🛏️' },
     craft:    { label: 'Crafting', icon: '🔨' },
     work:     { label: 'Working for pay', icon: '💼' },
@@ -36,18 +128,19 @@ const DOWNTIME_ACTIVITIES = {
 };
 
 // Gambling (house rule): each week, d20 + the character's check bonus against the game's DC.
+// On Pathfinder pages the DC is the character's level DC plus pf (easy −2, hard +2).
 const DOWNTIME_GAMES = ruleTable({
-    dice:   { label: 'Dice in the back room', check: 'Wisdom (dice set)', dc: 12 },
-    cards:  { label: 'Cards at a tavern table', check: 'Charisma (playing card set)', dc: 14 },
-    pits:   { label: 'Betting on the pits', check: '{skill:wis:animal-handling}', dc: 15 },
-    races:  { label: 'Betting on the races', check: '{skill:int:investigation}', dc: 15 },
-    high:   { label: 'A private high-stakes game', check: '{skill:cha:deception} or a gaming set', dc: 18 }
+    dice:   { label: 'Dice in the back room', check: '{alt:Wisdom (dice set)|Games Lore}', dc: 12, pf: -2 },
+    cards:  { label: 'Cards at a tavern table', check: '{alt:Charisma (playing card set)|Games Lore}', dc: 14, pf: 0 },
+    pits:   { label: 'Betting on the pits', check: '{skill:wis:animal-handling}', dc: 15, pf: 0 },
+    races:  { label: 'Betting on the races', check: '{skill:int:investigation}', dc: 15, pf: 0 },
+    high:   { label: 'A private high-stakes game', check: '{skill:cha:deception} or {alt:a gaming set|Games Lore}', dc: 18, pf: 2 }
 });
 const TRAIN_GP_PER_DAY = 1;      // house rule: a tutor's fee per day of lessons
 const GAMBLE_MAX_BONUS = 20;
 
-// Practicing a profession (SRD 5.1): the lifestyle the work pays for.
-const DOWNTIME_WORK = {
+// Practicing a profession (SRD 5.1): the lifestyle the work pays for. Pathfinder pages: the ranks.
+const DOWNTIME_WORK = DT_PF2E ? DOWNTIME_PF2E_RANKS : {
     trade:   { label: 'A trade or odd jobs', covers: 'modest' },
     org:     { label: 'For an organization (temple, guild)', covers: 'comfortable' },
     perform: { label: 'Performing (proficient in Performance)', covers: 'wealthy' }
@@ -259,7 +352,7 @@ const DOWNTIME_TOWN = ruleTable({
         { k: 'bad', t: "Someone has been using your name to run up bills at the tailor's." }
     ]
 });
-const DOWNTIME_EVENTS = {
+const DOWNTIME_EVENTS = ruleTable({
     craft: [
         { k: 'good', t: "A supplier has a surplus. Your materials cost a tenth less this week." },
         { k: 'good', t: "A customer sees your half-finished work and asks to buy the next one." },
@@ -303,11 +396,11 @@ const DOWNTIME_EVENTS = {
         { k: 'odd', t: "A book falls off the shelf at your feet. It is exactly what you were looking for." }
     ],
     recup: [
-        { k: 'good', t: "The rest does you good. Your next recovery save is made with advantage." },
+        { k: 'good', t: "{alt:The rest does you good. Your next recovery save is made with advantage.|The rest does you good. You wake on the last day feeling years younger.}" },
         { k: 'good', t: "A visitor brings fruit, gossip, and a very good pie." },
         { k: 'good', t: "{name}, who sits with the sick, teaches you a card game. You will be excellent at it by the end." },
         { k: 'bad', t: "The healer's tea tastes of feet. You are not sure it is helping." },
-        { k: 'bad', t: "You try to get up too soon. Your next recovery save is made with disadvantage." },
+        { k: 'bad', t: "{alt:You try to get up too soon. Your next recovery save is made with disadvantage.|You try to get up too soon and lose a day's rest.}" },
         { k: 'odd', t: "The patient in the next bed talks in their sleep, about you." },
         { k: 'odd', t: "A temple cat sleeps on your chest every night. You do feel better, oddly." },
         { k: 'odd', t: "You have vivid dreams about a door you've never seen." },
@@ -338,7 +431,7 @@ const DOWNTIME_EVENTS = {
         { k: 'bad', t: "The table is crooked and you only realize on the walk home." },
         { k: 'odd', t: "The house offers to wipe your losses if you'll deliver a message for them." }
     ]
-};
+});
 // Composed weekly events: who × what, with the kind on the what.
 const DOWNTIME_WHO = {
     low: ["A pickpocket named {name}", "A dockhand named {name}", "A one-legged sailor", "The rat-catcher", "A street urchin", "A tired watchman", "A hedge wizard"],
@@ -367,6 +460,13 @@ const GAMBLE_TIERS = [
     { min: 0, mult: 0.5, t: 'won half the stake' },
     { min: -4, mult: -0.5, t: 'lost half the stake' },
     { min: -Infinity, mult: -1, t: 'lost the stake' }
+];
+// Pathfinder pages: by degree of success, critical failure first.
+const GAMBLE_PF2E_TIERS = [
+    { mult: -1, t: 'critical failure: lost the stake' },
+    { mult: -0.5, t: 'failure: lost half the stake' },
+    { mult: 0.5, t: 'success: won half the stake' },
+    { mult: 1, t: 'critical success: won the stake' }
 ];
 const DOWNTIME_WEEKS_SHOWN = CAROUSE_SHOWN;
 const DOWNTIME_NAMES = ['Brine', 'Tamsin', 'Odo', 'Mags', 'Corvin', 'Pell', 'Wren', 'Hask', 'Ysolde', 'Fenn', 'Dorra', 'Juno', 'Bram', 'Ilse', 'Quill', 'Rook'];
@@ -411,7 +511,7 @@ function rollSetting(c, life, seed, i) {
         let text;
         if (c.act === 'none') text = `${dtPick(S.parts[0])} ${dtPick(S.parts[1])}`;
         else if (c.act === 'work') {
-            const w = DOWNTIME_WORK[c.work] ? c.work : 'trade';
+            const w = S.parts[c.work] ? c.work : 'trade';
             const [tasks, bosses] = S.parts[w];
             text = `${dtPick(tasks)} ${w === 'perform' ? 'at' : 'for'} ${dtPick(bosses)}`;
             if (w !== 'perform') text += `, ${dtPick(S.quirks)}`;
@@ -452,9 +552,13 @@ function rollDowntimeWeek(act, circle, seed, i, wk, seen) {
 function rollGambleWeek(stake, bonus, game, seed, i, wk) {
     const d20 = withSeed(deriveSeed(seed || '0', `gamble.${i}.${wk}`), () => 1 + Math.floor(rand() * 20));
     const total = d20 + bonus;
-    let tier = GAMBLE_TIERS.find(t => total - game.dc >= t.min);
-    if (d20 === 20) tier = { mult: 2, t: 'a natural 20: won double the stake' };
-    else if (d20 === 1) tier = { mult: -1, t: 'a natural 1: lost the stake' };
+    let tier;
+    if (DT_PF2E) tier = GAMBLE_PF2E_TIERS[dtDegree(d20, total, game.dc)];
+    else {
+        tier = GAMBLE_TIERS.find(t => total - game.dc >= t.min);
+        if (d20 === 20) tier = { mult: 2, t: 'a natural 20: won double the stake' };
+        else if (d20 === 1) tier = { mult: -1, t: 'a natural 1: lost the stake' };
+    }
     const net = Math.round(stake * tier.mult * 100) / 100;
     return { d20, total, dc: game.dc, net, tier: tier.t, k: net > 0 ? 'good' : 'bad' };
 }
@@ -479,15 +583,100 @@ function downtimeDays(weeks, days) {
 // Returns { days, life, lifeGp, extraGp, winGp, totalGp (negative = ahead), lines: [{ text, src }],
 //   craft?, train?, gamble?, carouse?, home?, setting?, weeks?: [{ k, t, roll? }], weeksTotal }.
 function downtimeFor(c, days, seed, i = 0, opts = {}) {
-    const L = DOWNTIME_LIFESTYLES[c.life] || DOWNTIME_LIFESTYLES.modest;
-    const life = DOWNTIME_LIFESTYLES[c.life] ? c.life : 'modest';
+    const L = DOWNTIME_LIFESTYLES[c.life] || DOWNTIME_LIFESTYLES[DOWNTIME_LIFE_DEFAULT];
+    const life = DOWNTIME_LIFESTYLES[c.life] ? c.life : DOWNTIME_LIFE_DEFAULT;
+    const fl = L.flavor || life;   // the 5e lifestyle the lodging and weekly tables read
     const lines = [];
     const out = { days, life, lifeGp: 0, extraGp: 0, winGp: 0, totalGp: 0, lines };
     const weeksTotal = days ? Math.max(1, Math.floor(days / 7)) : 0;
     const full = L.gp;
     let lifeGp = days * full;
 
-    if (c.act === 'craft') {
+    if (DT_PF2E && c.act === 'craft') {
+        // Player Core's Craft, on a success: setup days, half the Price in materials up front, then
+        // each extra day works off the day's pay for the crafter's level and rank from the other half.
+        const price = Math.max(0, Number(c.val) || 0);
+        const half = price / 2;
+        const done = Math.min(half, Math.max(0, Number(c.done) || 0));
+        const lvl = dtLevel(c);
+        const rate = dtIncome(lvl, c.work, false), critRate = dtIncome(lvl, c.work, true);
+        const setup = done ? 0 : Math.min(days, DT_PF2E_SETUP);
+        const left0 = half - done;
+        const made = Math.min(left0, Math.max(0, days - setup) * rate);
+        const workDays = made > 0 ? Math.ceil(made / rate - 1e-9) : 0;
+        const left = Math.round((left0 - made) * 100) / 100;
+        const started = done > 0 || days >= DT_PF2E_SETUP;
+        if (price && !done && days) out.extraGp += half;
+        out.craft = { value: half, done, made, craftDays: setup + workDays, finished: price > 0 && started && left <= 0,
+            daysLeft: left > 0 ? Math.ceil(left / rate - 1e-9) : 0, left };
+        out.busy = out.craft.craftDays;
+        const rank = (DOWNTIME_PF2E_RANKS[c.work] || DOWNTIME_PF2E_RANKS.trained).label.toLowerCase();
+        if (!price) lines.push({ text: "Enter the item's Price to track the crafting.", src: 'ruling' });
+        else {
+            if (!done) lines.push({ text: `Setup: ${DT_PF2E_SETUP} days (1 with the formula), then the Crafting check. Raw materials worth half the Price, ${formatCoins(half)}, go in up front.`, src: 'PC' });
+            if (left0 <= 0) lines.push({ text: 'The item is finished, with nothing more to pay.', src: 'PC' });
+            else if (!started) lines.push({ text: `${DT_PF2E_SETUP - days} more day${DT_PF2E_SETUP - days === 1 ? '' : 's'} of setup before the check.`, src: 'PC' });
+            else {
+                lines.push({ text: `On a success, each extra day works off ${formatCoins(rate)} of the other half (level ${lvl}, ${rank}); ${formatCoins(critRate)} a day on a critical success. A failure salvages the materials; a critical failure ruins a tenth of them.`, src: 'PC' });
+                if (made) lines.push({ text: `${formatCoins(done + made)} of ${formatCoins(half)} worked off.`, src: 'PC' });
+                lines.push({ text: left > 0
+                    ? `Pay ${formatCoins(left)} more in materials to finish now, or keep working: about ${out.craft.daysLeft} more day${out.craft.daysLeft === 1 ? '' : 's'}.`
+                    : `The item is finished${workDays ? ` after ${setup + workDays} days` : ''}, with nothing more to pay.`, src: 'PC' });
+            }
+            lines.push({ text: 'The item must be your level or lower: 9th level and up needs master Crafting, 17th legendary.', src: 'PC' });
+        }
+    } else if (DT_PF2E && c.act === 'earn') {
+        const task = c.val === '' || c.val === undefined ? null : Math.min(20, Math.max(0, Math.floor(Number(c.val) || 0)));
+        const bonus = Math.min(DT_PF2E_MAX_BONUS, Math.floor(Math.max(0, Number(c.done) || 0)));
+        const rank = (DOWNTIME_PF2E_RANKS[c.work] || DOWNTIME_PF2E_RANKS.trained).label.toLowerCase();
+        if (task === null) lines.push({ text: 'Enter the task level the GM offers: usually up to 0–1 in a village, 2–4 in a town, 5–7 in a city.', src: 'PC' });
+        else {
+            const dc = DOWNTIME_PF2E_INCOME[task][0];
+            const d20 = withSeed(deriveSeed(seed || '0', `earn.${i}`), () => 1 + Math.floor(rand() * 20));
+            const deg = dtDegree(d20, d20 + bonus, dc);
+            const perDay = deg === 3 ? dtIncome(task, c.work, true) : deg === 2 ? dtIncome(task, c.work, false) : deg === 1 ? DOWNTIME_PF2E_INCOME[task][1] : 0;
+            const paidDays = deg === 0 ? 0 : days;
+            out.busy = deg === 0 ? Math.min(days, 1) : days;
+            out.winGp = Math.round(perDay * paidDays * 100) / 100;
+            out.earn = { d20, total: d20 + bonus, dc, deg, perDay, task, tier: DT_PF2E_DEGREES[deg] };
+            lines.push({ text: `One check after the first day sets the pay for the whole task (DC ${dc} at task level ${task}).`, src: 'PC' });
+            lines.push({ text: deg === 0
+                ? 'Critical failure: no pay, fired on the spot, and word gets around town.'
+                : `${dtCap(DT_PF2E_DEGREES[deg])}: ${formatCoins(perDay)} a day${deg >= 2 ? ` (${rank})` : ''}, ${formatCoins(out.winGp)} for ${days} day${days === 1 ? '' : 's'}.${deg === 1 ? ' The GM will likely cut the job short.' : ''}`, src: 'PC' });
+            lines.push({ text: 'The GM sets how long the job lasts; the Gazette pays it for the whole stretch.', src: 'ruling' });
+        }
+    } else if (DT_PF2E && c.act === 'subsist') {
+        const sub = DOWNTIME_PF2E_LIFESTYLES.subsistence.gp;
+        lifeGp = days * Math.max(0, full - sub);
+        lines.push({ text: 'Subsist each day with Society in a settlement or Survival in the wild, against a DC the GM sets by the place. Success: a subsistence living for free. Critical success: a comfortable one, or food for one more. Failure: fatigued until you eat and sleep properly.', src: 'PC' });
+        if (life !== 'subsistence') lines.push({ text: 'Living above subsistence, the character pays the difference.', src: 'ruling' });
+    } else if (DT_PF2E && c.act === 'learn') {
+        const rk = c.val === '' || c.val === undefined ? 1 : Math.min(10, Math.max(0, Math.floor(Number(c.val) || 0)));
+        const n = c.done === '' || c.done === undefined ? 1 : Math.min(DT_PF2E_MAX_SPELLS, Math.max(1, Math.floor(Number(c.done) || 0)));
+        const [price, dc] = DOWNTIME_PF2E_SPELLS[rk];
+        const hours = Math.max(1, rk) * n;
+        if (days) out.extraGp += price * n;
+        out.busy = Math.min(days, Math.ceil(hours / 8));
+        lines.push({ text: `${n} ${rk ? `rank ${rk}` : 'cantrip'} spell${n === 1 ? '' : 's'}: ${formatCoins(price)} of materials each, ${hours} hour${hours === 1 ? '' : 's'} of study, typical DC ${dc} with your tradition's skill (higher for uncommon and rare spells).`, src: 'PC' });
+        lines.push({ text: 'A critical success spends half the materials. A failure spends nothing and can try again at the next level; a critical failure spends half.', src: 'PC' });
+    } else if (DT_PF2E && c.act === 'retrain') {
+        const kind = DOWNTIME_PF2E_RETRAIN[c.work] || DOWNTIME_PF2E_RETRAIN.feat;
+        const n = c.val === '' || c.val === undefined ? 1 : Math.min(20, Math.max(1, Math.floor(Number(c.val) || 0)));
+        const need = n * kind.days;
+        const had = Math.min(need, Math.floor(Math.max(0, Number(c.done) || 0)));
+        const used = Math.min(days, need - had);
+        out.train = { need, had, used, finished: had + used >= need };
+        out.busy = used;
+        lines.push({ text: `${kind.label}${n > 1 ? ` ×${n}` : ''}: ${kind.days === 7 ? 'a week' : 'at least a month'} each, and no other downtime meanwhile. No set price; an instructor may charge (the GM's call).`, src: 'PC' });
+        lines.push({ text: out.train.finished
+            ? `Retraining done: ${need} of ${need} days${used < days ? `, finished on day ${used}` : ''}.`
+            : `${had + used} of ${need} days: ${need - had - used} more to go.`, src: 'PC' });
+    } else if (DT_PF2E && c.act === 'rest') {
+        const lvl = dtLevel(c);
+        const con = Math.max(1, Math.floor(Number(c.val) || 0));
+        const hp = con * 2 * lvl;
+        lines.push({ text: `Each full day and night of rest heals ${hp} Hit Points (Constitution modifier ${con}, at least 1, × twice level ${lvl}).`, src: 'PC' });
+    } else if (c.act === 'craft') {
         const value = Math.max(0, Number(c.val) || 0);
         const done = Math.min(value, Math.max(0, Number(c.done) || 0));
         const helpers = Math.max(0, Math.floor(Number(c.help) || 0));
@@ -535,7 +724,7 @@ function downtimeFor(c, days, seed, i = 0, opts = {}) {
     } else if (c.act === 'carouse') {
         // House rule: carousing costs the lifestyle's daily price again on top (at least 1 sp a day).
         out.extraGp += days * Math.max(0.1, full);
-        const circle = carouseCircle(life);
+        const circle = carouseCircle(fl);
         const weeks = days ? Math.max(1, Math.floor(days / 7)) : 0;
         const table = CAROUSE_OUTCOMES[circle];
         out.carouse = { circle, weeks, outcomes: [] };
@@ -557,10 +746,13 @@ function downtimeFor(c, days, seed, i = 0, opts = {}) {
         } else lines.push({ text: 'Enter the days the training takes to track progress.', src: 'ruling' });
     } else if (c.act === 'gamble') {
         const stake = Math.max(0, Math.round((Number(c.val) || 0) * 100) / 100);
-        const bonus = Math.min(GAMBLE_MAX_BONUS, Math.floor(Math.max(0, Number(c.done) || 0)));
-        const game = DOWNTIME_GAMES[c.work] || DOWNTIME_GAMES.dice;
+        const bonus = Math.min(DT_PF2E ? DT_PF2E_MAX_BONUS : GAMBLE_MAX_BONUS, Math.floor(Math.max(0, Number(c.done) || 0)));
+        const g0 = DOWNTIME_GAMES[c.work] || DOWNTIME_GAMES.dice;
+        const game = DT_PF2E ? { ...g0, dc: DT_PF2E_LEVEL_DC[dtLevel(c)] + g0.pf } : g0;
         out.gamble = { stake, bonus, game, rolls: [], net: 0 };
-        lines.push({ text: `${game.label}: each week, ${/^[AEIOU]/.test(game.check) ? 'an' : 'a'} ${game.check} check (DC ${game.dc}). Beat the DC by 5 to win the stake, make it to win half; miss by up to 4 to lose half, or by more to lose it all. A natural 20 wins double; a natural 1 loses the stake.`, src: 'house' });
+        lines.push({ text: `${game.label}: each week, ${/^[AEIOU]/.test(game.check) ? 'an' : 'a'} ${game.check} check (DC ${game.dc}). ${DT_PF2E
+            ? 'A critical success wins the stake, a success half of it; a failure loses half, a critical failure all of it.'
+            : 'Beat the DC by 5 to win the stake, make it to win half; miss by up to 4 to lose half, or by more to lose it all. A natural 20 wins double; a natural 1 loses the stake.'}`, src: 'house' });
         if (!stake) lines.push({ text: 'Enter a weekly stake to roll the games.', src: 'ruling' });
         else {
             for (let wk = 0; wk < weeksTotal; wk++) {
@@ -576,16 +768,18 @@ function downtimeFor(c, days, seed, i = 0, opts = {}) {
     }
 
     if (opts.events !== false && days) {
-        out.home = rollLodging(life, seed, i);
-        out.setting = rollSetting(c, life, seed, i);
+        const like = DT_PF2E && DOWNTIME_PF2E_LIKE[c.act] || c.act;
+        out.home = rollLodging(fl, seed, i);
+        out.setting = rollSetting(like === c.act ? c : { ...c, act: like }, fl, seed, i);
         if (c.act !== 'carouse') {
             const seen = new Set();
             out.weeks = [];
             // Once the crafting or training is done, the rest of the weeks are ordinary ones.
-            const busyDays = out.craft && out.craft.value ? out.craft.craftDays : out.train && out.train.need ? out.train.used : days;
+            const busyDays = out.busy !== undefined ? out.busy : out.craft && out.craft.value ? out.craft.craftDays : out.train && out.train.need ? out.train.used : days;
             for (let wk = 0; wk < Math.min(weeksTotal, DOWNTIME_WEEKS_SHOWN); wk++) {
-                const act = wk * 7 < busyDays ? c.act : 'none';
-                const ev = rollDowntimeWeek(act, carouseCircle(life), seed, i, wk, seen);
+                const act = wk * 7 < busyDays ? like : 'none';
+                const ev = rollDowntimeWeek(act, carouseCircle(fl), seed, i, wk, seen);
+                if (wk === 0 && out.earn) ev.roll = out.earn;
                 if (out.gamble && out.gamble.rolls[wk]) ev.roll = out.gamble.rolls[wk];
                 out.weeks.push(ev);
             }
@@ -611,7 +805,7 @@ function downtimeMoney(gp) {
 
 // One gambling week as text: "🎲 14 + 3 = 17 vs DC 14: won half the stake (+5 gp)".
 function gambleRollText(g) {
-    return `🎲 ${g.d20}${g.total !== g.d20 ? ` + ${g.total - g.d20} = ${g.total}` : ''} vs DC ${g.dc}: ${g.tier} (${g.net >= 0 ? '+' : '−'}${formatCoins(Math.abs(g.net))})`;
+    return `🎲 ${g.d20}${g.total !== g.d20 ? ` + ${g.total - g.d20} = ${g.total}` : ''} vs DC ${g.dc}: ${g.tier}${g.net === undefined ? '' : ` (${g.net >= 0 ? '+' : '−'}${formatCoins(Math.abs(g.net))})`}`;
 }
 
 // [label, text] pairs for the page and the copied text; older results without the new fields give none.

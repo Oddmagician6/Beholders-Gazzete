@@ -8,6 +8,9 @@
    and gambling; ev=0 turns the week-by-week extras off). For gambling, the work slot
    holds the game.
    With nothing saved and no party in the URL, the characters are the Party tab's (party.js).
+   Pathfinder pages (DT_PF2E): each character also has a level (from the Party tab), the work
+   slot holds the proficiency rank (Earn Income, Craft) or what is retrained, and the level rides
+   in the link before the name: c=<life~act~val~done~help~work~lvl~name>.
    ============================================ */
 
 const DOWNTIME_KEY = ruleKey('gazette-downtime');
@@ -17,14 +20,32 @@ const DT_VALUE_MAX = 1000000;
 let dt = { seed: null, events: true, chars: [], results: [] };
 
 // What the shared value and done fields mean for each activity that uses them.
-const DT_FIELD_TEXT = {
+const DT_FIELD_TEXT = DT_PF2E ? {
+    earn:    { val: ['Task level (0–20)', 'e.g. 2'], done: ['Check bonus', 'e.g. 7'] },
+    craft:   { val: ["Item's Price (gp)", 'e.g. 20'], done: ['Worked off so far (gp)', '0'] },
+    learn:   { val: ['Spell rank (0 = cantrip)', '1'], done: ['How many spells', '1'] },
+    retrain: { val: ['How many', '1'], done: ['Days done so far', '0'] },
+    rest:    { val: ['Constitution modifier', 'e.g. 2'] },
+    gamble:  { val: ['Stake per week (gp)', 'e.g. 5'], done: ['Check bonus', '0'] }
+} : {
     craft:  { val: ["Item's value (gp)", 'e.g. 50'], done: ['Done so far (gp)', '0'] },
     train:  { val: ['Days needed', 'e.g. 100'], done: ['Days done so far', '0'] },
     gamble: { val: ['Stake per week (gp)', 'e.g. 10'], done: ['Check bonus', '0'] }
 };
+// Which activities show each field (data-for).
+const DT_FOR = DT_PF2E
+    ? { val: 'earn craft learn retrain rest gamble', done: 'earn craft learn retrain gamble', help: '', work: 'earn craft', lvl: 'craft rest gamble' }
+    : { val: 'craft train gamble', done: 'craft train gamble', help: 'craft', work: 'work' };
+const DT_WORK_DEFAULT = DT_PF2E ? 'trained' : 'trade';
 
 function dtBlankChar() {
-    return { name: '', life: 'modest', act: 'none', val: '', done: '', help: '0', work: 'trade' };
+    const c = { name: '', life: DOWNTIME_LIFE_DEFAULT, act: 'none', val: '', done: '', help: '0', work: DT_WORK_DEFAULT };
+    if (DT_PF2E) c.lvl = '1';
+    return c;
+}
+
+function dtWorkOk(k) {
+    return !!(DOWNTIME_WORK[k] || DOWNTIME_GAMES[k] || (DT_PF2E && DOWNTIME_PF2E_RETRAIN[k]));
 }
 
 function dtNum(v, max) {
@@ -35,24 +56,30 @@ function dtNum(v, max) {
 // A character as stored and shared: unknown keys fall back to the defaults.
 function dtClean(c) {
     const b = dtBlankChar();
-    return {
+    const out = {
         name: String(c.name || '').slice(0, 40),
         life: DOWNTIME_LIFESTYLES[c.life] ? c.life : b.life,
         act: DOWNTIME_ACTIVITIES[c.act] ? c.act : b.act,
         val: c.val === '' || c.val === undefined ? '' : String(dtNum(c.val, DT_VALUE_MAX)),
         done: c.done === '' || c.done === undefined ? '' : String(dtNum(c.done, DT_VALUE_MAX)),
         help: String(Math.min(DOWNTIME_MAX_CHARS - 1, Math.floor(dtNum(c.help, 99)))),
-        work: DOWNTIME_WORK[c.work] || DOWNTIME_GAMES[c.work] ? c.work : b.work
+        work: dtWorkOk(c.work) ? c.work : b.work
     };
+    if (DT_PF2E) out.lvl = String(dtLevel(c));
+    return out;
 }
 
 function dtEncode(c) {
-    return [c.life, c.act, c.val, c.done, c.help === '0' ? '' : c.help, c.work === 'trade' ? '' : c.work, c.name].join('~');
+    const p = [c.life, c.act, c.val, c.done, c.help === '0' ? '' : c.help, c.work === DT_WORK_DEFAULT ? '' : c.work];
+    if (DT_PF2E) p.push(c.lvl === '1' ? '' : c.lvl);
+    return [...p, c.name].join('~');
 }
 
 function dtDecode(s) {
     const p = String(s).split('~');
-    return dtClean({ life: p[0], act: p[1], val: p[2] || '', done: p[3] || '', help: p[4] || '0', work: p[5] || 'trade', name: p.slice(6).join('~') });
+    const n = DT_PF2E ? 7 : 6;
+    return dtClean({ life: p[0], act: p[1], val: p[2] || '', done: p[3] || '', help: p[4] || '0', work: p[5] || DT_WORK_DEFAULT,
+        lvl: DT_PF2E ? p[6] || '1' : undefined, name: p.slice(n).join('~') });
 }
 
 // Anything on the page that comes from the seed.
@@ -100,6 +127,7 @@ function dtOptions(table, selected, label) {
 }
 
 function lifeLabel(k, t) {
+    if (DT_PF2E) return `${t.icon} ${t.label} (${formatCoins(t.week)} a week${k === 'subsistence' ? ', or Subsist' : ''})`;
     const day = k === 'wretched' ? 'free' : `${formatCoins(t.gp)}${k === 'aristocratic' ? '+' : ''} a day, ${formatCoins(t.gp * 7)}${k === 'aristocratic' ? '+' : ''} a week`;
     return `${t.icon} ${t.label} (${day})`;
 }
@@ -111,11 +139,13 @@ function buildDowntimeRows() {
                 <label class="dt-f-name">Character <input type="text" class="dt-name" maxlength="40" autocomplete="off" placeholder="Character ${i + 1}" value="${esc(c.name)}"></label>
                 <label>Lifestyle <select class="dt-life">${dtOptions(DOWNTIME_LIFESTYLES, c.life, lifeLabel)}</select></label>
                 <label>Activity <select class="dt-act">${dtOptions(DOWNTIME_ACTIVITIES, c.act)}</select></label>
-                <label class="dt-only" data-for="craft train gamble"><span class="dt-l-val">Item's value (gp)</span> <input type="number" class="dt-val" min="0" max="${DT_VALUE_MAX}" step="0.01" inputmode="decimal" placeholder="e.g. 50" value="${esc(c.val)}"></label>
-                <label class="dt-only" data-for="craft train gamble"><span class="dt-l-done">Done so far (gp)</span> <input type="number" class="dt-done" min="0" max="${DT_VALUE_MAX}" step="0.01" inputmode="decimal" placeholder="0" value="${esc(c.done)}"></label>
-                <label class="dt-only" data-for="craft">Helpers <input type="number" class="dt-help" min="0" max="${DOWNTIME_MAX_CHARS - 1}" step="1" inputmode="numeric" value="${esc(c.help)}"></label>
-                <label class="dt-only dt-f-wide" data-for="work">Work <select class="dt-work">${dtOptions(DOWNTIME_WORK, c.work)}</select></label>
-                <label class="dt-only" data-for="gamble">Game <select class="dt-game">${dtOptions(DOWNTIME_GAMES, c.work, (k, g) => `${g.label} (DC ${g.dc})`)}</select></label>
+                ${DT_PF2E ? `<label class="dt-only" data-for="${DT_FOR.lvl}">Level <input type="number" class="dt-lvl" min="1" max="20" step="1" inputmode="numeric" value="${esc(c.lvl)}"></label>` : ''}
+                <label class="dt-only" data-for="${DT_FOR.val}"><span class="dt-l-val">Item's value (gp)</span> <input type="number" class="dt-val" min="0" max="${DT_VALUE_MAX}" step="0.01" inputmode="decimal" placeholder="e.g. 50" value="${esc(c.val)}"></label>
+                <label class="dt-only" data-for="${DT_FOR.done}"><span class="dt-l-done">Done so far (gp)</span> <input type="number" class="dt-done" min="0" max="${DT_VALUE_MAX}" step="0.01" inputmode="decimal" placeholder="0" value="${esc(c.done)}"></label>
+                <label class="dt-only" data-for="${DT_FOR.help}">Helpers <input type="number" class="dt-help" min="0" max="${DOWNTIME_MAX_CHARS - 1}" step="1" inputmode="numeric" value="${esc(c.help)}"></label>
+                <label class="dt-only${DT_PF2E ? '' : ' dt-f-wide'}" data-for="${DT_FOR.work}">${DT_PF2E ? 'Proficiency' : 'Work'} <select class="dt-work">${dtOptions(DOWNTIME_WORK, c.work)}</select></label>
+                ${DT_PF2E ? `<label class="dt-only dt-f-wide" data-for="retrain">Retraining <select class="dt-retrain">${dtOptions(DOWNTIME_PF2E_RETRAIN, c.work, (k, r) => `${r.label} (${r.days === 7 ? 'a week' : 'a month or more'})`)}</select></label>` : ''}
+                <label class="dt-only${DT_PF2E ? ' dt-f-wide' : ''}" data-for="gamble">Game <select class="dt-game">${dtOptions(DOWNTIME_GAMES, c.work, (k, g) => `${g.label} (${DT_PF2E ? `${g.pf < 0 ? 'easy' : g.pf > 0 ? 'hard' : 'standard'} DC` : `DC ${g.dc}`})`)}</select></label>
             </div>
             <button type="button" class="dt-remove" aria-label="Remove this character" title="Remove"${dt.chars.length === 1 ? ' hidden' : ''}>✕</button>
             <div class="dt-res" aria-live="polite"></div>
@@ -127,12 +157,13 @@ function readDowntimeRows() {
     dt.chars = [...document.querySelectorAll('#dt-chars .dt-char')].map(row => {
         const v = cls => row.querySelector('.' + cls).value;
         const act = v('dt-act');
-        return dtClean({ name: v('dt-name').trim(), life: v('dt-life'), act, val: v('dt-val'), done: v('dt-done'), help: v('dt-help'), work: v(act === 'gamble' ? 'dt-game' : 'dt-work') });
+        return dtClean({ name: v('dt-name').trim(), life: v('dt-life'), act, val: v('dt-val'), done: v('dt-done'), help: v('dt-help'),
+            work: v(act === 'gamble' ? 'dt-game' : act === 'retrain' ? 'dt-retrain' : 'dt-work'), lvl: DT_PF2E ? v('dt-lvl') : undefined });
     });
 }
 
 // ── Results ───────────────────────────────────────────────
-const DT_SRC = { SRD: ['SRD', ' srd'], ruling: ['ruling', ''], house: ['house rule', ' house'] };
+const DT_SRC = { SRD: ['SRD', ' srd'], PC: ['Player Core', ' srd'], ruling: ['ruling', ''], house: ['house rule', ' house'] };
 
 function renderDowntimeResults() {
     const days = dtDays();
@@ -146,19 +177,21 @@ function renderDowntimeResults() {
         if (ft) {
             row.querySelector('.dt-l-val').textContent = ft.val[0];
             row.querySelector('.dt-val').placeholder = ft.val[1];
-            row.querySelector('.dt-l-done').textContent = ft.done[0];
-            row.querySelector('.dt-done').placeholder = ft.done[1];
+            if (ft.done) {
+                row.querySelector('.dt-l-done').textContent = ft.done[0];
+                row.querySelector('.dt-done').placeholder = ft.done[1];
+            }
         }
-        const extraName = { craft: 'materials', research: 'research', carouse: 'carousing', train: 'tutor', gamble: 'losses' }[c.act] || 'extras';
+        const extraName = { craft: 'materials', research: 'research', carouse: 'carousing', train: 'tutor', gamble: 'losses', learn: 'spell materials' }[c.act] || 'extras';
         const parts = [`living ${formatCoins(r.lifeGp)}`];
         if (r.extraGp) parts.push(`${extraName} ${formatCoins(r.extraGp)}`);
-        if (r.winGp) parts.push(`winnings −${formatCoins(r.winGp)}`);
+        if (r.winGp) parts.push(`${c.act === 'earn' ? 'earned' : 'winnings'} −${formatCoins(r.winGp)}`);
         const bar = (pct, label) => `<div class="dt-bar" role="progressbar" aria-label="${label}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><span style="width:${pct}%"></span></div>`;
         const weeks = r.weeks || [];
         row.querySelector('.dt-res').innerHTML = `
             <div class="dt-cost"><b>${esc(downtimeMoney(r.totalGp))}</b><span>for ${days} day${days === 1 ? '' : 's'}${r.extraGp || r.winGp ? ` (${esc(parts.join(' + '))})` : ''}</span></div>
             ${r.craft && r.craft.value ? bar(Math.round((r.craft.done + r.craft.made) / r.craft.value * 100), 'Crafting progress') : ''}
-            ${r.train && r.train.need ? bar(Math.round((r.train.had + r.train.used) / r.train.need * 100), 'Training progress') : ''}
+            ${r.train && r.train.need ? bar(Math.round((r.train.had + r.train.used) / r.train.need * 100), DT_PF2E ? 'Retraining progress' : 'Training progress') : ''}
             ${downtimeSceneLines(r).length ? `<dl class="dt-scene">${downtimeSceneLines(r).map(([label, text]) => `<div><dt>${esc(label)}</dt><dd>${esc(text)}</dd></div>`).join('')}</dl>` : ''}
             ${r.lines.length ? `<ul class="dt-lines">${r.lines.map(l => `<li>${esc(l.text)}<span class="fx-src${DT_SRC[l.src][1]}">${DT_SRC[l.src][0]}</span></li>`).join('')}</ul>` : ''}
             ${weeks.length ? `<ol class="dt-carouse">${weeks.map((w, wk) => `<li class="dt-${w.k}"><b>Week ${wk + 1}</b>${w.roll ? ` <span class="dt-roll">${esc(gambleRollText(w.roll))}</span>` : ''} ${esc(w.t)}</li>`).join('')}</ol>
@@ -195,7 +228,7 @@ function setDowntime(state) {
 
 // The Party tab's characters, by name (party.js), or none.
 function dtPartyChars() {
-    return loadParty().map((m, i) => ({ ...dtBlankChar(), name: partyMemberName(m, i) }));
+    return loadParty().map((m, i) => dtClean({ ...dtBlankChar(), name: partyMemberName(m, i), lvl: m.level }));
 }
 
 // First visit to the tab with no party in the URL: the saved downtime, the Party tab's
@@ -210,7 +243,7 @@ function dtUseParty(list) {
     readDowntimeRows();
     const last = dt.chars[dt.chars.length - 1];
     dt.chars = list.slice(0, DOWNTIME_MAX_CHARS).map((m, i) =>
-        dtClean({ ...(dt.chars[i] || { ...dtBlankChar(), life: last ? last.life : 'modest' }), name: partyMemberName(m, i) }));
+        dtClean({ ...(dt.chars[i] || { ...dtBlankChar(), life: last ? last.life : DOWNTIME_LIFE_DEFAULT }), name: partyMemberName(m, i), lvl: m.level }));
     buildDowntimeRows();
     showDowntime(true);
     flash('downtime-status', `👥 ${dt.chars.length} character${dt.chars.length === 1 ? '' : 's'} from the party.`);
@@ -250,7 +283,7 @@ function setupDowntime() {
         readDowntimeRows();
         if (dt.chars.length >= DOWNTIME_MAX_CHARS) return;
         const last = dt.chars[dt.chars.length - 1];
-        dt.chars.push({ ...dtBlankChar(), life: last ? last.life : 'modest' });
+        dt.chars.push({ ...dtBlankChar(), life: last ? last.life : DOWNTIME_LIFE_DEFAULT, ...(DT_PF2E && last ? { lvl: last.lvl } : {}) });
         buildDowntimeRows();
         showDowntime(true);
         const names = box.querySelectorAll('.dt-name');
