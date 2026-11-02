@@ -8,12 +8,32 @@
    shared link brings it back; nothing goes in localStorage. Loading a saved
    Character Builder character (from the picker or ?char=<id>) only reads CB_KEY.
    Needs rng.js, character-data.js, and character-engine.js.
+   On a Pathfinder page (AM_PF2E) it runs Player Core's Strike rules instead:
+   degrees of success (beat the AC by 10 to crit, a natural 20 or 1 moves a
+   degree), the multiple attack penalty strike by strike (agile, flurry), a
+   crit doubling all the damage plus deadly or fatal, fortune and misfortune,
+   off-guard, lesser/standard/greater cover, a status bonus, and precision
+   damage on every hit or the first; no builder characters (og, sb, ev in the
+   address; a row's flags are a, f, d<die>, x<die>).
    ============================================ */
 
+const AM_PF2E = ruleSystemId() === 'pf2e';
 const AM_MAX_ROWS = 8;
-const AM_DEFAULTS = { ac: 15, cover: 0, mode: '', crit: 20, bless: false, lucky: false, xcrit: 0, once: '', pen: 5, bon: 10 };
-const amDefaultRow = () => ({ name: 'Longsword', n: 1, hit: 5, dmg: '1d8 + 3', gwf: false, trade: false, ranged: false });
-const AM_MODES = { '': 'Normal', adv: 'Advantage', dis: 'Disadvantage' };
+const AM_AC_MAX = AM_PF2E ? 60 : 40;
+const AM_HIT_MAX = AM_PF2E ? 50 : 30;
+const AM_DEFAULTS = { ac: AM_PF2E ? 16 : 15, cover: 0, mode: '', crit: 20, bless: false, lucky: false, xcrit: 0, once: '', pen: 5, bon: 10, offGuard: false, status: 0, every: false };
+const amDefaultRow = () => (AM_PF2E
+    ? { name: 'Longsword', n: 2, hit: 9, dmg: '1d8 + 4', gwf: false, trade: false, ranged: false, map: '', deadly: 0, fatal: 0 }
+    : { name: 'Longsword', n: 1, hit: 5, dmg: '1d8 + 3', gwf: false, trade: false, ranged: false });
+const AM_MODES = AM_PF2E ? { '': 'Normal', adv: 'Fortune', dis: 'Misfortune' } : { '': 'Normal', adv: 'Advantage', dis: 'Disadvantage' };
+const AM_COVERS = AM_PF2E ? [1, 2, 4] : [2, 5];
+// Multiple attack penalty for a row's weapon: [second strike, third and later]
+const AM_MAPS = { '': [5, 10], a: [4, 8], f: [3, 6], af: [2, 4] };
+const AM_MAP_LABELS = { '': '−5 / −10', a: 'Agile −4 / −8', f: 'Flurry −3 / −6', af: 'Agile flurry −2 / −4' };
+const AM_TRAITS = ['', 'd6', 'd8', 'd10', 'd12', 'x8', 'x10', 'x12'];
+const amTraitKey = r => (r.deadly ? 'd' + r.deadly : r.fatal ? 'x' + r.fatal : '');
+const amTraitLabel = k => (!k ? 'None' : (k[0] === 'd' ? 'Deadly d' : 'Fatal d') + k.slice(1));
+const amOrdinal = k => ['1st', '2nd', '3rd'][k] || `${k + 1}th`;
 
 const am = { ...AM_DEFAULTS, rows: [amDefaultRow()] };
 
@@ -101,8 +121,9 @@ function amOdds(bonus, ac, o) {
 
 // One round against a target AC (cover already added). tradeOn uses the trade-off on the
 // attacks marked for it. The once-per-turn rider lands on the first attack that hits,
-// in row order, and doubles its dice if that hit is a crit.
+// in row order, and doubles its dice if that hit is a crit. Pathfinder pages: amRoundPf.
 function amRound(o, ac, tradeOn) {
+    if (AM_PF2E) return amRoundPf(o, ac);
     const once = amParse(o.once);
     const onceAvg = once ? amAverages(once, false, 0, 0) : null;
     let total = 0, none = 1, hits = 0, rider = 0, attacks = 0;
@@ -126,8 +147,70 @@ function amRound(o, ac, tradeOn) {
     return { rows, rider, onceAvg, total: total + rider, any: attacks ? 1 - none : 0, hits, attacks };
 }
 
-const amTarget = () => am.ac + am.cover;
-const amHasTrade = () => am.rows.some(r => r.trade && amParse(r.dmg) && r.n);
+// ── Pathfinder Strikes ───────────────────────────────────
+// { hit, crit } by degree of success: a critical success beats the AC by 10, a natural 20
+// is one degree better and a natural 1 one degree worse.
+function amOddsPf(bonus, ac, mode) {
+    const nat = amNaturals(mode, false);
+    let hit = 0, crit = 0;
+    for (let n = 1; n <= 20; n++) {
+        const t = n + bonus;
+        let deg = t >= ac + 10 ? 3 : t >= ac ? 2 : t <= ac - 10 ? 0 : 1;
+        if (n === 20) deg = Math.min(3, deg + 1);
+        if (n === 1) deg = Math.max(0, deg - 1);
+        if (deg >= 2) hit += nat[n];
+        if (deg === 3) crit += nat[n];
+    }
+    return { hit, crit };
+}
+
+// A crit doubles all the damage. Fatal makes the weapon dice (the first dice in the roll) its
+// size and adds one more; deadly adds one die (two with three weapon dice, three with four).
+// Neither extra die is doubled.
+function amAveragesPf(roll, deadly, fatal) {
+    let dice = 0, fdice = 0;
+    const first = roll.dice.findIndex(([c]) => c > 0);
+    roll.dice.forEach(([c, z], i) => {
+        dice += c * amDieAvg(z, false);
+        fdice += c * amDieAvg(fatal && i === first ? fatal : z, false);
+    });
+    const count = first < 0 ? 0 : roll.dice[first][0];
+    const extra = fatal && first >= 0 ? amDieAvg(fatal, false)
+        : deadly && first >= 0 ? (count >= 4 ? 3 : count === 3 ? 2 : 1) * amDieAvg(deadly, false) : 0;
+    return { hit: Math.max(0, dice + roll.flat), crit: Math.max(0, 2 * (fdice + roll.flat) + extra) };
+}
+
+// One turn: the strikes go in row order, and each after the first takes the multiple attack
+// penalty of the weapon making it. The extra damage (precision) lands on every hit, or on
+// the first hit only, and doubles on a crit like the rest.
+function amRoundPf(o, ac) {
+    const once = amParse(o.once);
+    const onceAvg = once ? amAveragesPf(once, 0, 0) : null;
+    let total = 0, none = 1, hits = 0, rider = 0, k = 0;
+    const rows = o.rows.map(r => {
+        const roll = amParse(r.dmg);
+        const avg = roll ? amAveragesPf(roll, r.deadly, r.fatal) : { hit: 0, crit: 0 };
+        const n = roll ? r.n : 0;
+        const strikes = [];
+        for (let i = 0; i < n; i++, k++) {
+            const pen = k === 0 ? 0 : AM_MAPS[r.map || ''][k === 1 ? 0 : 1];
+            const bonus = r.hit + o.status - pen;
+            const odds = amOddsPf(bonus, ac, o.mode);
+            const each = (odds.hit - odds.crit) * avg.hit + odds.crit * avg.crit;
+            if (onceAvg) rider += (o.every ? 1 : none) * ((odds.hit - odds.crit) * onceAvg.hit + odds.crit * onceAvg.crit);
+            none *= 1 - odds.hit;
+            hits += odds.hit;
+            total += each;
+            strikes.push({ k, pen, bonus, odds, each });
+        }
+        const lead = strikes[0] || { bonus: r.hit + o.status, odds: amOddsPf(r.hit + o.status, ac, o.mode) };
+        return { r, roll, trade: false, bonus: lead.bonus, odds: lead.odds, avg, each: strikes.reduce((s, x) => s + x.each, 0) / (n || 1), n, strikes };
+    });
+    return { rows, rider, onceAvg, total: total + rider, any: k ? 1 - none : 0, hits, attacks: k };
+}
+
+const amTarget = () => am.ac + am.cover - (AM_PF2E && am.offGuard ? 2 : 0);
+const amHasTrade = () => !AM_PF2E && am.rows.some(r => r.trade && amParse(r.dmg) && r.n);
 
 // The AC ranges (1–30) where the trade-off adds damage, as [[lo, hi], …]. It usually pays
 // against low AC, stops paying in the middle, and pays again once only the crit range can
@@ -165,7 +248,11 @@ function amParams() {
     if (am.once.trim()) p.once = am.once.trim();
     if (am.pen !== AM_DEFAULTS.pen) p.pen = am.pen;
     if (am.bon !== AM_DEFAULTS.bon) p.bon = am.bon;
-    const rows = am.rows.map(r => [r.hit, r.dmg.replace(/\|/g, '').trim(), r.n, (r.gwf ? 'g' : '') + (r.trade ? 't' : '') + (r.ranged ? 'r' : ''), r.name].join('|'));
+    if (am.offGuard) p.og = 1;
+    if (am.status) p.sb = am.status;
+    if (am.every) p.ev = 1;
+    const flags = r => (AM_PF2E ? (r.map || '') + amTraitKey(r) : (r.gwf ? 'g' : '') + (r.trade ? 't' : '') + (r.ranged ? 'r' : ''));
+    const rows = am.rows.map(r => [r.hit, r.dmg.replace(/\|/g, '').trim(), r.n, flags(r), r.name].join('|'));
     const def = amDefaultRow();
     if (rows.length !== 1 || rows[0] !== [def.hit, def.dmg, def.n, '', def.name].join('|')) p.a = rows;
     return p;
@@ -173,21 +260,32 @@ function amParams() {
 
 function amFromUrl() {
     const q = urlParams();
-    am.ac = amClamp(q.get('ac'), 1, 40, AM_DEFAULTS.ac);
-    am.cover = [2, 5].includes(Number(q.get('cov'))) ? Number(q.get('cov')) : 0;
+    am.ac = amClamp(q.get('ac'), 1, AM_AC_MAX, AM_DEFAULTS.ac);
+    am.cover = AM_COVERS.includes(Number(q.get('cov'))) ? Number(q.get('cov')) : 0;
     am.mode = AM_MODES[q.get('mode')] && q.get('mode') ? q.get('mode') : '';
-    am.crit = [19, 18].includes(Number(q.get('crit'))) ? Number(q.get('crit')) : 20;
-    am.bless = q.get('bless') === '1';
-    am.lucky = q.get('lucky') === '1';
-    am.xcrit = amClamp(q.get('xc'), 0, 6, 0);
+    am.crit = !AM_PF2E && [19, 18].includes(Number(q.get('crit'))) ? Number(q.get('crit')) : 20;
+    am.bless = !AM_PF2E && q.get('bless') === '1';
+    am.lucky = !AM_PF2E && q.get('lucky') === '1';
+    am.xcrit = AM_PF2E ? 0 : amClamp(q.get('xc'), 0, 6, 0);
+    am.offGuard = AM_PF2E && q.get('og') === '1';
+    am.status = AM_PF2E ? amClamp(q.get('sb'), 0, 3, 0) : 0;
+    am.every = AM_PF2E && q.get('ev') === '1';
     am.once = amParse(q.get('once')) ? q.get('once').trim().slice(0, 40) : '';
     am.pen = amClamp(q.get('pen'), 0, 10, AM_DEFAULTS.pen);
     am.bon = amClamp(q.get('bon'), 0, 20, AM_DEFAULTS.bon);
     const rows = q.getAll('a').slice(0, AM_MAX_ROWS).map(v => {
         const [hit, dmg, n, flags, ...name] = v.split('|');
-        return {
-            name: amName(name.join(' ')), hit: amClamp(hit, -10, 30, 0), dmg: String(dmg || '').trim().slice(0, 40),
+        const row = {
+            name: amName(name.join(' ')), hit: amClamp(hit, -10, AM_HIT_MAX, 0), dmg: String(dmg || '').trim().slice(0, 40),
             n: amClamp(n, 0, 10, 1), gwf: /g/.test(flags || ''), trade: /t/.test(flags || ''), ranged: /r/.test(flags || '')
+        };
+        if (!AM_PF2E) return row;
+        const f = flags || '', trait = (f.match(/[dx]\d+/) || [''])[0];
+        return {
+            ...row, gwf: false, trade: false, ranged: false,
+            map: (/a/.test(f) ? 'a' : '') + (/f/.test(f) ? 'f' : ''),
+            deadly: AM_TRAITS.includes(trait) && trait[0] === 'd' ? Number(trait.slice(1)) : 0,
+            fatal: AM_TRAITS.includes(trait) && trait[0] === 'x' ? Number(trait.slice(1)) : 0
         };
     });
     am.rows = rows.length ? rows : [amDefaultRow()];
@@ -231,17 +329,23 @@ function amFromCharacter(c) {
 }
 
 // ── Drawing ──────────────────────────────────────────────
+// The Pathfinder page has its own settings (off-guard, status bonus, every hit) in place of
+// the 5e ones (crit range, Bless, Lucky, extra crit dice, trade-off); missing fields are skipped.
 function renderSettings() {
-    document.getElementById('am-ac').value = am.ac;
-    document.getElementById('am-cover').value = String(am.cover);
-    document.getElementById('am-mode').value = am.mode;
-    document.getElementById('am-crit').value = String(am.crit);
-    document.getElementById('am-bless').checked = am.bless;
-    document.getElementById('am-lucky').checked = am.lucky;
-    document.getElementById('am-xcrit').value = am.xcrit;
-    document.getElementById('am-once').value = am.once;
-    document.getElementById('am-pen').value = am.pen;
-    document.getElementById('am-bon').value = am.bon;
+    const set = (id, k, v) => { const el = document.getElementById(id); if (el) el[k] = v; };
+    set('am-ac', 'value', am.ac);
+    set('am-cover', 'value', String(am.cover));
+    set('am-mode', 'value', am.mode);
+    set('am-crit', 'value', String(am.crit));
+    set('am-bless', 'checked', am.bless);
+    set('am-lucky', 'checked', am.lucky);
+    set('am-xcrit', 'value', am.xcrit);
+    set('am-once', 'value', am.once);
+    set('am-pen', 'value', am.pen);
+    set('am-bon', 'value', am.bon);
+    set('am-offguard', 'checked', am.offGuard);
+    set('am-sb', 'value', String(am.status));
+    set('am-every', 'value', am.every ? '1' : '');
     markOnce();
 }
 
@@ -252,15 +356,19 @@ function markOnce() {
 
 function renderRows() {
     const trade = `${amSign(-am.pen)} / ${amSign(am.bon)}`;
-    document.getElementById('am-rows').innerHTML = am.rows.map((r, i) => `<div class="am-row">
-        <label class="am-field am-f-name">Attack<input type="text" maxlength="40" value="${esc(r.name)}" data-i="${i}" data-k="name" placeholder="Name"></label>
-        <label class="am-field am-f-n">Times<input type="number" min="0" max="10" inputmode="numeric" value="${r.n}" data-i="${i}" data-k="n"></label>
-        <label class="am-field am-f-hit">To hit<input type="number" min="-10" max="30" inputmode="numeric" value="${r.hit}" data-i="${i}" data-k="hit"></label>
-        <label class="am-field am-f-dmg">Damage<input type="text" maxlength="40" value="${esc(r.dmg)}" data-i="${i}" data-k="dmg" placeholder="1d8 + 3" spellcheck="false" aria-invalid="${amParse(r.dmg) ? 'false' : 'true'}"></label>
-        <div class="am-row-end">
+    const opts = (list, label, now) => list.map(v => `<option value="${v}"${v === now ? ' selected' : ''}>${label(v)}</option>`).join('');
+    const end = (r, i) => (AM_PF2E ? `
+          <label class="am-field am-f-map" title="The multiple attack penalty this weapon's Strike takes as your second, then third or later, attack in the turn">Attack penalty<select data-i="${i}" data-k="map">${opts(Object.keys(AM_MAP_LABELS), v => AM_MAP_LABELS[v], r.map || '')}</select></label>
+          <label class="am-field am-f-trait" title="Deadly and fatal add damage on a critical hit">Crit trait<select data-i="${i}" data-k="trait">${opts(AM_TRAITS, amTraitLabel, amTraitKey(r))}</select></label>` : `
           <label class="am-check" title="Reroll a 1 or 2 on the weapon's damage dice"><input type="checkbox" data-i="${i}" data-k="gwf"${r.gwf ? ' checked' : ''}> Great Weapon Fighting</label>
           <label class="am-check" title="Take the penalty to hit for the extra damage"><input type="checkbox" data-i="${i}" data-k="trade"${r.trade ? ' checked' : ''}> ${trade}</label>
-          <label class="am-check" title="Brutal Critical and Savage Attacks add no dice to a ranged attack"><input type="checkbox" data-i="${i}" data-k="ranged"${r.ranged ? ' checked' : ''}> Ranged</label>
+          <label class="am-check" title="Brutal Critical and Savage Attacks add no dice to a ranged attack"><input type="checkbox" data-i="${i}" data-k="ranged"${r.ranged ? ' checked' : ''}> Ranged</label>`);
+    document.getElementById('am-rows').innerHTML = am.rows.map((r, i) => `<div class="am-row">
+        <label class="am-field am-f-name">${AM_PF2E ? 'Strike' : 'Attack'}<input type="text" maxlength="40" value="${esc(r.name)}" data-i="${i}" data-k="name" placeholder="Name"></label>
+        <label class="am-field am-f-n">Times<input type="number" min="0" max="10" inputmode="numeric" value="${r.n}" data-i="${i}" data-k="n"></label>
+        <label class="am-field am-f-hit">To hit<input type="number" min="-10" max="${AM_HIT_MAX}" inputmode="numeric" value="${r.hit}" data-i="${i}" data-k="hit"></label>
+        <label class="am-field am-f-dmg">Damage<input type="text" maxlength="40" value="${esc(r.dmg)}" data-i="${i}" data-k="dmg" placeholder="${AM_PF2E ? '1d8 + 4' : '1d8 + 3'}" spellcheck="false" aria-invalid="${amParse(r.dmg) ? 'false' : 'true'}"></label>
+        <div class="am-row-end">${end(r, i)}
           <button type="button" class="am-btn am-small" data-del="${i}" aria-label="Remove ${esc(r.name || 'this attack')}"${am.rows.length < 2 ? ' disabled' : ''}>✕</button>
         </div>
     </div>`).join('');
@@ -272,7 +380,7 @@ function renderResults() {
     const trading = amHasTrade();
     const round = amRound(am, ac, true);
     const first = round.rows.find(x => x.n) || round.rows[0];
-    const coverText = am.cover ? ` (AC ${am.ac} + ${am.cover} cover)` : '';
+    const coverText = ac !== am.ac ? ` (AC ${am.ac}${am.cover ? ` + ${am.cover} cover` : ''}${AM_PF2E && am.offGuard ? ' − 2 off-guard' : ''})` : '';
     const out = [];
 
     out.push(`<h2 class="am-h">Against AC ${ac}${coverText}</h2>`);
@@ -286,9 +394,17 @@ function renderResults() {
     const bad = round.rows.map((x, i) => (x.roll ? '' : `row ${i + 1}`)).filter(Boolean);
     if (bad.length) out.push(`<p class="am-warn">Damage not understood on ${bad.join(', ')}: write it like 1d8 + 3 or 2d6 + 1d4 + 5. That row counts as 0.</p>`);
 
-    out.push(`<div class="am-scroll"><table class="am-table"><thead><tr><th scope="col">Attack</th><th scope="col">Times</th><th scope="col">To hit</th><th scope="col">Hit</th><th scope="col">Crit</th><th scope="col">On a hit</th><th scope="col">On a crit</th><th scope="col">Per round</th></tr></thead><tbody>
-        ${round.rows.map(x => `<tr${x.n ? '' : ' class="am-off"'}><td>${esc(x.r.name || 'Attack')}${x.trade ? ` <span class="am-tag">${amSign(-am.pen)}/${amSign(am.bon)}</span>` : ''}${x.r.gwf ? ' <span class="am-tag">GWF</span>' : ''}</td><td>×${x.n}</td><td>${amSign(x.bonus)}</td><td>${amPct(x.odds.hit)}</td><td>${amPct(x.odds.crit)}</td><td>${amNum(x.avg.hit)}</td><td>${amNum(x.avg.crit)}</td><td><b>${amNum(x.n * x.each)}</b></td></tr>`).join('')}
-        ${round.onceAvg ? `<tr><td>Once per turn: ${esc(am.once)}</td><td colspan="2" class="am-dim">first hit</td><td>${amPct(round.any)}</td><td></td><td>${amNum(round.onceAvg.hit)}</td><td>${amNum(round.onceAvg.crit)}</td><td><b>${amNum(round.rider)}</b></td></tr>` : ''}
+    // Pathfinder: a line per Strike, each with its own multiple attack penalty
+    const tags = x => (amTraitKey(x.r) ? ` <span class="am-tag">${amTraitLabel(amTraitKey(x.r))}</span>` : '');
+    const pfRows = x => (x.strikes.length
+        ? x.strikes.map(st => `<tr><td>${esc(x.r.name || 'Strike')} <span class="am-dim">${amOrdinal(st.k)}</span>${st.pen ? ` <span class="am-tag">${amSign(-st.pen)}</span>` : ''}${tags(x)}</td><td>×1</td><td>${amSign(st.bonus)}</td><td>${amPct(st.odds.hit)}</td><td>${amPct(st.odds.crit)}</td><td>${amNum(x.avg.hit)}</td><td>${amNum(x.avg.crit)}</td><td><b>${amNum(st.each)}</b></td></tr>`).join('')
+        : `<tr class="am-off"><td>${esc(x.r.name || 'Strike')}${tags(x)}</td><td>×0</td><td>${amSign(x.bonus)}</td><td>${amPct(x.odds.hit)}</td><td>${amPct(x.odds.crit)}</td><td>${amNum(x.avg.hit)}</td><td>${amNum(x.avg.crit)}</td><td><b>0.0</b></td></tr>`);
+    const every = AM_PF2E && am.every;
+    const riderLabel = AM_PF2E ? (every ? 'Every hit' : 'First hit') : 'Once per turn';
+
+    out.push(`<div class="am-scroll"><table class="am-table"><thead><tr><th scope="col">${AM_PF2E ? 'Strike' : 'Attack'}</th><th scope="col">Times</th><th scope="col">To hit</th><th scope="col">Hit</th><th scope="col">Crit</th><th scope="col">On a hit</th><th scope="col">On a crit</th><th scope="col">Per round</th></tr></thead><tbody>
+        ${AM_PF2E ? round.rows.map(pfRows).join('') : round.rows.map(x => `<tr${x.n ? '' : ' class="am-off"'}><td>${esc(x.r.name || 'Attack')}${x.trade ? ` <span class="am-tag">${amSign(-am.pen)}/${amSign(am.bon)}</span>` : ''}${x.r.gwf ? ' <span class="am-tag">GWF</span>' : ''}</td><td>×${x.n}</td><td>${amSign(x.bonus)}</td><td>${amPct(x.odds.hit)}</td><td>${amPct(x.odds.crit)}</td><td>${amNum(x.avg.hit)}</td><td>${amNum(x.avg.crit)}</td><td><b>${amNum(x.n * x.each)}</b></td></tr>`).join('')}
+        ${round.onceAvg ? `<tr><td>${riderLabel}: ${esc(am.once)}</td><td colspan="2" class="am-dim">${every ? 'each hit' : 'first hit'}</td><td>${every ? `${amNum(round.hits)} hits` : amPct(round.any)}</td><td></td><td>${amNum(round.onceAvg.hit)}</td><td>${amNum(round.onceAvg.crit)}</td><td><b>${amNum(round.rider)}</b></td></tr>` : ''}
     </tbody></table></div>`);
 
     const modes = Object.keys(AM_MODES).map(m => {
@@ -303,7 +419,7 @@ function renderResults() {
         out.push(`<div class="am-trade${diff > 1e-9 ? ' am-yes' : ' am-no'}"><b>${amSign(-am.pen)} to hit / ${amSign(am.bon)} damage:</b> ${amNum(round.total)} a round with it, ${amNum(off)} without (${diff >= 0 ? '+' : '−'}${amNum(Math.abs(diff))}). ${amTradeVerdict()}</div>`);
     }
 
-    const lo = Math.max(1, ac - 6), hi = Math.min(40, lo + 12);
+    const lo = Math.max(1, ac - 6), hi = Math.min(AM_AC_MAX, lo + 12);
     const rowsAc = [];
     for (let a = lo; a <= hi; a++) {
         const on = amRound(am, a, true), off = trading ? amRound(am, a, false) : on;
@@ -313,7 +429,7 @@ function renderResults() {
     }
     out.push(`<h3 class="am-h3">By armor class</h3>
       <div class="am-scroll"><table class="am-table am-ac-table"><thead><tr><th scope="col">AC</th><th scope="col">First attack hits</th><th scope="col">${trading ? 'Without trade-off' : 'Damage per round'}</th>${trading ? `<th scope="col">With ${amSign(-am.pen)}/${amSign(am.bon)}</th>` : ''}</tr></thead><tbody>${rowsAc.join('')}</tbody></table></div>
-      <p class="am-small-text am-dim">Rows use cover as set; the target's own AC is the number minus cover.${trading ? ' The better choice at each AC is in gold.' : ''}</p>`);
+      <p class="am-small-text am-dim">${AM_PF2E ? 'Rows use cover and off-guard as set; the target\'s own AC is the number minus cover, plus 2 if off-guard.' : 'Rows use cover as set; the target\'s own AC is the number minus cover.'}${trading ? ' The better choice at each AC is in gold.' : ''}</p>`);
 
     document.getElementById('am-results').innerHTML = out.join('');
 }
@@ -321,12 +437,16 @@ function renderResults() {
 function amText() {
     const ac = amTarget();
     const round = amRound(am, ac, true);
-    const opts = [AM_MODES[am.mode], am.crit < 20 ? `crit ${am.crit}–20` : '', am.bless ? 'Bless' : '', am.lucky ? 'Lucky' : '', am.xcrit ? `${am.xcrit} extra crit dice` : ''].filter(Boolean);
-    const lines = [`Attack math against AC ${ac}${am.cover ? ` (${am.ac} + ${am.cover} cover)` : ''}: ${opts.join(', ')}`];
-    round.rows.filter(x => x.n).forEach(x => {
+    const opts = [AM_MODES[am.mode], am.crit < 20 ? `crit ${am.crit}–20` : '', am.bless ? 'Bless' : '', am.lucky ? 'Lucky' : '', am.xcrit ? `${am.xcrit} extra crit dice` : '',
+        am.status ? `+${am.status} status bonus` : ''].filter(Boolean);
+    const lines = [`Attack math against AC ${ac}${ac !== am.ac ? ` (${am.ac}${am.cover ? ` + ${am.cover} cover` : ''}${AM_PF2E && am.offGuard ? ' − 2 off-guard' : ''})` : ''}: ${opts.join(', ')}`];
+    if (AM_PF2E) round.rows.forEach(x => x.strikes.forEach(st => {
+        lines.push(`${x.r.name || 'Strike'} (${amOrdinal(st.k)}): ${amSign(st.bonus)} to hit, ${x.r.dmg}${amTraitKey(x.r) ? ` (${amTraitLabel(amTraitKey(x.r))})` : ''}. Hits ${amPct(st.odds.hit)}, crits ${amPct(st.odds.crit)}, ${amNum(st.each)} a round`);
+    }));
+    else round.rows.filter(x => x.n).forEach(x => {
         lines.push(`${x.r.name || 'Attack'} ×${x.n}: ${amSign(x.bonus)} to hit, ${x.r.dmg}${x.trade ? ` ${amSign(am.bon)}` : ''}${x.r.gwf ? ' (GWF)' : ''}. Hits ${amPct(x.odds.hit)}, crits ${amPct(x.odds.crit)}, ${amNum(x.n * x.each)} a round`);
     });
-    if (round.onceAvg) lines.push(`Once per turn ${am.once}: ${amNum(round.rider)} a round`);
+    if (round.onceAvg) lines.push(`${AM_PF2E ? (am.every ? 'Every hit' : 'First hit') : 'Once per turn'} ${am.once}: ${amNum(round.rider)} a round`);
     lines.push(`Total: ${amNum(round.total)} damage a round; hits at least once ${amPct(round.any)}`);
     return lines.join('\n');
 }
@@ -352,12 +472,18 @@ function onInput(e) {
         if (k === 'name') r.name = amName(el.value);
         else if (k === 'dmg') { r.dmg = el.value.replace(/\|/g, '').slice(0, 40); el.setAttribute('aria-invalid', amParse(r.dmg) ? 'false' : 'true'); }
         else if (k === 'n') r.n = amClamp(el.value, 0, 10, r.n);
-        else if (k === 'hit') r.hit = amClamp(el.value, -10, 30, r.hit);
+        else if (k === 'hit') r.hit = amClamp(el.value, -10, AM_HIT_MAX, r.hit);
+        else if (k === 'map') r.map = AM_MAPS[el.value] ? el.value : '';
+        else if (k === 'trait') {
+            const t = AM_TRAITS.includes(el.value) ? el.value : '';
+            r.deadly = t[0] === 'd' ? Number(t.slice(1)) : 0;
+            r.fatal = t[0] === 'x' ? Number(t.slice(1)) : 0;
+        }
         else r[k] = el.checked;
         return amChanged();
     }
     switch (el.id) {
-        case 'am-ac': am.ac = amClamp(el.value, 1, 40, am.ac); break;
+        case 'am-ac': am.ac = amClamp(el.value, 1, AM_AC_MAX, am.ac); break;
         case 'am-cover': am.cover = Number(el.value) || 0; break;
         case 'am-mode': am.mode = el.value; break;
         case 'am-crit': am.crit = Number(el.value) || 20; break;
@@ -367,6 +493,9 @@ function onInput(e) {
         case 'am-once': am.once = el.value.slice(0, 40); markOnce(); break;
         case 'am-pen': am.pen = amClamp(el.value, 0, 10, am.pen); break;
         case 'am-bon': am.bon = amClamp(el.value, 0, 20, am.bon); break;
+        case 'am-offguard': am.offGuard = el.checked; break;
+        case 'am-sb': am.status = amClamp(el.value, 0, 3, 0); break;
+        case 'am-every': am.every = el.value === '1'; break;
         default: return;
     }
     amChanged();
@@ -390,6 +519,7 @@ function loadCharacter(c) {
 
 function fillCharacters() {
     const sel = document.getElementById('am-load');
+    if (!sel) return;
     const list = cbLoadAll().filter(c => cbClass(c.cls));
     sel.innerHTML = `<option value="">${list.length ? 'Load attacks from a saved character…' : 'No saved characters yet'}</option>`
         + list.map(c => `<option value="${esc(c.id)}">${esc(c.name || 'Unnamed')} (${esc(cbClass(c.cls).name)} ${c.level})</option>`).join('');
@@ -398,7 +528,7 @@ function fillCharacters() {
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('year').textContent = new Date().getFullYear();
-    const charId = urlParams().get('char');
+    const charId = AM_PF2E ? null : urlParams().get('char');
     amFromUrl();
     const c = charId && cbLoadAll().find(x => x.id === charId);
     if (c) loadCharacter(c);
@@ -428,7 +558,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const names = document.querySelectorAll('#am-rows input[data-k="name"]');
         names[names.length - 1].focus();
     });
-    document.getElementById('am-load').addEventListener('change', e => {
+    if (!AM_PF2E) document.getElementById('am-load').addEventListener('change', e => {
         const ch = cbLoadAll().find(x => x.id === e.target.value);
         e.target.value = '';
         if (ch) loadCharacter(ch);
@@ -445,5 +575,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('am-link').addEventListener('click', () => copyPageLink(ok => flash(ok === false ? 'Could not copy the link.' : '🔗 Link copied.', ok === false)));
     window.addEventListener('popstate', () => { amFromUrl(); render(); });
-    window.addEventListener('storage', e => { if (e.key === CB_KEY) fillCharacters(); });
+    if (!AM_PF2E) window.addEventListener('storage', e => { if (e.key === CB_KEY) fillCharacters(); });
 });
