@@ -20,6 +20,22 @@ gh workflow run publish-npc-carousels-week02.yml --repo Oddmagician6/Beholders-G
 
 Use the existing Release when retrying; never recreate its initial state. Do not run the staging exporter over an activated batch. The reviewed gallery remains the historical draft snapshot; save approval and activation evidence under `.poi-output/publishing/`.
 
+## Third approved batch
+
+The owner approved the finished days 15-21 and requested the same daily schedule after week 2: November 16-22, 2026 at 09:00 America/Chicago. The order is Osric Pennywake, Lenna Fairweather, Siv Mossfoot, Sir Patch, Edra Sootfall, Fenrick Vale, and Mina Turnwheel. Confirm activation before describing the batch as scheduled.
+
+Week 3 uses `.github/workflows/publish-npc-carousels-week03.yml`, `.github/npc-carousel-queue-week03.json`, and the `poi-stage-week03-20261116` Release. `NPC_BATCH=week03` selects its independent state and shutdown while retaining the shared publication concurrency group and the same November UTC retry times.
+
+```powershell
+node persons-of-interest/stage-publishing.mjs --week=3 --start=2026-11-16
+py .github/scripts/publish_npc_carousels.py --validate-queue .poi-output/publishing/poi-stage-week03-20261116/queue.json
+gh workflow run publish-npc-carousels-week03.yml --repo Oddmagician6/Beholders-Gazzete --ref main -f operation=verify
+# After successful verification:
+gh workflow run publish-npc-carousels-week03.yml --repo Oddmagician6/Beholders-Gazzete --ref main -f operation=arm
+```
+
+Keep the initial Release state intact after activation. `.poi-output/publishing/activation-week03.json` records confirmed activation; rendering or staging alone is not activation.
+
 ## Files and storage
 
 - `.github/workflows/publish-npc-carousels.yml`: manual verification/arming and scheduled UTC checks corresponding to 09:00, 09:17, 09:37, 10:17, 11:17, and 12:17 America/Chicago for the approved November dates.
