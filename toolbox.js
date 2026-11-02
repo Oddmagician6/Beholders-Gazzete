@@ -191,7 +191,9 @@ function clearKept() {
 // ── Travel (F22) ──────────────────────────────────────────
 const TRAVEL_MAX_DAYS = 60;
 // URL param → field id. Season is always written (its default follows today's date).
-const TRAVEL_FIELDS = { climate: 'tr-climate', season: 'tr-season', terrain: 'tr-terrain', pace: 'tr-pace', hours: 'tr-hours', ride: 'tr-ride', miles: 'tr-miles' };
+const TRAVEL_FIELDS = { climate: 'tr-climate', season: 'tr-season', terrain: 'tr-terrain', pace: 'tr-pace', hours: 'tr-hours', ride: 'tr-ride', speed: 'tr-speed', miles: 'tr-miles' };
+// Pathfinder pages ask for the party's Speed instead of a gallop.
+Object.keys(TRAVEL_FIELDS).forEach(k => { if (!document.getElementById(TRAVEL_FIELDS[k])) delete TRAVEL_FIELDS[k]; });
 
 let travel = { seed: null, day: 1, days: [] };
 
@@ -209,10 +211,15 @@ function setupTravelForm() {
     fill('tr-season', TRAVEL_SEASONS, seasonNow());
     fill('tr-terrain', TRAVEL_TERRAIN, 'road');
     const paces = {};
-    Object.entries(TRAVEL_PACES).forEach(([k, p]) => { paces[k] = { label: `${p.label} (${p.mph} mph, ${p.day} miles a day)` }; });
+    Object.entries(TRAVEL_PACES).forEach(([k, p]) => { paces[k] = { label: p.mph ? `${p.label} (${p.mph} mph, ${p.day} miles a day)` : p.label }; });
     fill('tr-pace', paces, 'normal');
+    if (TRAVEL_FIELDS.speed) {
+        const speeds = {};
+        TRAVEL_SPEEDS.forEach(ft => { speeds[ft] = { label: `${ft} feet (${String(ft / 10).replace('.5', '½')} mph, ${ft * 0.8} miles a day)` }; });
+        fill('tr-speed', speeds, String(TRAVEL_SPEED_DEFAULT));
+    }
     const hours = {};
-    for (let h = 1; h <= 12; h++) hours[h] = { label: h === 8 ? '8 hours (a full day)' : h > 8 ? `${h} hours (forced march)` : `${h} hour${h === 1 ? '' : 's'}` };
+    for (let h = 1; h <= 12; h++) hours[h] = { label: h === 8 ? '8 hours (a full day)' : h > 8 ? ruleText(`${h} hours ({alt:forced march|fatigued})`) : `${h} hour${h === 1 ? '' : 's'}` };
     fill('tr-hours', hours, '8');
 }
 
@@ -220,7 +227,7 @@ function travelOpts() {
     const v = id => document.getElementById(id).value;
     return {
         climate: v('tr-climate'), season: v('tr-season'), terrain: v('tr-terrain'), pace: v('tr-pace'),
-        hours: Number(v('tr-hours')), gallop: v('tr-ride') === '1',
+        hours: Number(v('tr-hours')), gallop: !!TRAVEL_FIELDS.ride && v('tr-ride') === '1', speed: TRAVEL_FIELDS.speed ? Number(v('tr-speed')) : undefined,
         miles: Math.min(5000, Math.max(0, Math.round(Number(v('tr-miles')) || 0)))
     };
 }
@@ -287,7 +294,7 @@ function renderTravel(opts) {
                     </div>
                 </div>
                 <p class="day-flavor">${esc(w.flavor)}</p>
-                ${w.effects.length ? `<ul class="day-fx">${w.effects.map(f => `<li>${esc(f.text)}<span class="fx-src${f.src === 'SRD' ? ' srd' : ''}">${f.src === 'SRD' ? 'SRD' : 'ruling'}</span></li>`).join('')}</ul>` : ''}
+                ${w.effects.length ? `<ul class="day-fx">${w.effects.map(f => `<li>${esc(f.text)}<span class="fx-src${f.src === 'ruling' ? '' : ' srd'}">${esc(f.src)}</span></li>`).join('')}</ul>` : ''}
                 <p class="day-sky">${moonArtHtml(d.sky.phase)} ${esc(moon.label)} · about ${d.sky.daylight} hours of daylight</p>
                 ${d.sign ? `<p class="day-sign"><strong>🌅 Signs for tomorrow:</strong> ${esc(d.sign)}</p>` : ''}
             </section>
@@ -307,11 +314,11 @@ function renderTravel(opts) {
             <section class="day-block">
                 <h4>🥾 Distance</h4>
                 <div class="dist-miles">${d.today}<small>miles today</small></div>
-                <p class="dist-sum">${esc(TRAVEL_PACES[d.dist.pace].label)} pace, ${d.dist.hours} hour${d.dist.hours === 1 ? '' : 's'} on the road.
+                <p class="dist-sum">${esc(travelPaceLabel(d.dist))}, ${d.dist.hours} hour${d.dist.hours === 1 ? '' : 's'} on the road.
                     ${goal ? `${d.covered} of ${goal} miles${d.arrived ? '' : `; about ${daysLeft} more day${daysLeft === 1 ? '' : 's'} at this pace`}.` : `${d.covered} miles since setting out.`}</p>
-                ${d.dist.notes.length || d.dist.forced.length || d.sky.effect ? `<ul class="dist-notes">
+                ${d.dist.notes.length || d.dist.forced.length || d.dist.fatigue || d.sky.effect ? `<ul class="dist-notes">
                     ${d.dist.notes.map(n => `<li>${esc(n)}</li>`).join('')}
-                    ${d.dist.forced.map(f => ruleText(`<li>Forced march, hour ${f.hour}: each traveler makes a DC ${f.dc} {save:con} save or gains one level of exhaustion.</li>`)).join('')}
+                    ${d.dist.forced.map(f => ruleText(`<li>Forced march, hour ${f.hour}: each traveler makes a DC ${f.dc} {save:con} save or gains one level of exhaustion.</li>`)).join('')}${d.dist.fatigue ? `<li>${esc(travelFatigueText(d.dist))}</li>` : ''}
                     ${d.sky.effect ? `<li>${esc(d.sky.effect)}</li>` : ''}
                 </ul>` : ''}
                 ${d.arrived ? `<p class="day-arrived">🏁 The party arrives on day ${d.day}.</p>` : ''}

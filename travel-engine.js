@@ -51,12 +51,24 @@ const TRAVEL_TERRAIN = {
     tundra:    { label: 'Tundra or snowfield', icon: '🧊' }
 };
 
+// Pathfinder pages (data-system="pf2e"): miles come from the party's Speed (Player Core's
+// Travel Speed table), the pace is full or half speed (the exploration activities that move
+// at half speed), and long days end in fatigue (GM Core) instead of a forced march.
+const TRAVEL_PF2E = ruleSystemId() === 'pf2e';
+
 // SRD 5.1 Travel Pace table: miles per hour and per (8-hour) day.
-const TRAVEL_PACES = ruleTable({
+const TRAVEL_PACES = TRAVEL_PF2E ? {
+    slow:   { label: 'Half speed', half: true, note: 'Half speed: travelers can Avoid Notice, Defend, Detect Magic, or Search as they go.' },
+    normal: { label: 'Full speed', note: '' }
+} : ruleTable({
     slow:   { label: 'Slow', mph: 2, day: 18, note: 'Slow pace: the party can move stealthily.' },
     normal: { label: 'Normal', mph: 3, day: 24, note: '' },
     fast:   { label: 'Fast', mph: 4, day: 30, note: 'Fast pace: −5 to passive {skill:wis:perception} scores.' }
 });
+
+// Player Core's Travel Speed table: a Speed in feet is a tenth as many miles an hour, eight hours a day.
+const TRAVEL_SPEEDS = [15, 20, 25, 30, 35, 40, 50, 60];
+const TRAVEL_SPEED_DEFAULT = 25;
 
 // ── Weather tables ───────────────────────────────────────
 // Temperature bands: index 0..7, each with the range the day's high is drawn from (°F).
@@ -1063,8 +1075,56 @@ function weatherTags(w) {
     return tags;
 }
 
-// What the weather means at the table. src: 'SRD' (SRD 5.1 rules) or 'ruling' (a suggestion).
+// GM Core's temperature categories, read from the day's high. Soaked travelers (heavy rain,
+// sleet, or a storm) treat cold as one step colder. fatigue: the hours of travel before fatigue.
+const TRAVEL_PF2E_TEMPS = [
+    { key: 'extreme-cold', label: 'Extreme cold', max: -20, fatigue: 4, dmg: 'minor cold damage every 10 minutes', gear: 'Cold-weather gear brings it down to minor cold damage every hour.' },
+    { key: 'severe-cold', label: 'Severe cold', max: 12, fatigue: 4, dmg: 'minor cold damage every hour', gear: 'Cold-weather gear stops the damage.' },
+    { key: 'mild-cold', label: 'Mild cold', max: 32, fatigue: 4 },
+    { key: 'normal', label: '', max: 94, fatigue: 8 },
+    { key: 'mild-heat', label: 'Mild heat', max: 104, fatigue: 4 },
+    { key: 'severe-heat', label: 'Severe heat', max: 114, fatigue: 4, dmg: 'minor fire damage every hour' },
+    { key: 'extreme-heat', label: 'Extreme heat', max: Infinity, fatigue: 4, dmg: 'minor fire damage every 10 minutes' }
+];
+const TRAVEL_PF2E_SOAKING = ['rain', 'thunder', 'sleet', 'icestorm'];
+// Anything heavier than drizzle or light snow tires travelers in 4 hours.
+const TRAVEL_PF2E_HEAVY = ['rain', 'thunder', 'snow', 'blizzard', 'sleet', 'icestorm'];
+
+function travelPf2eTemp(w) {
+    let i = TRAVEL_PF2E_TEMPS.findIndex(t => w.high <= t.max);
+    const soaked = TRAVEL_PF2E_SOAKING.includes(w.kind) && i <= 2;
+    if (soaked && i > 0) i--;
+    return { ...TRAVEL_PF2E_TEMPS[i], soaked };
+}
+
+// Hours on the road before the travelers are fatigued (GM Core: 8, or 4 in heavy weather or harsh temperatures).
+function travelPf2eFatigueHours(w) {
+    if (!w) return 8;
+    return TRAVEL_PF2E_HEAVY.includes(w.kind) ? 4 : travelPf2eTemp(w).fatigue;
+}
+
+function weatherEffectsPf2e(w) {
+    const fx = [];
+    const heavy = HEAVY_KINDS[w.kind];
+    if (heavy) fx.push({ src: 'GM Core', text: `Heavy ${heavy}: a circumstance penalty to visual Perception checks, and creatures far off are concealed.${heavy === 'dust' ? '' : ' It douses open flames.'}` });
+    if (w.kind === 'fog') fx.push({ src: 'GM Core', text: "Thick fog: a circumstance penalty to visual Perception checks, creatures seen through much of it are concealed, and nobody sees farther than half a mile." });
+    if (w.morningFog) fx.push({ src: 'GM Core', text: 'Morning fog: a circumstance penalty to visual Perception checks until about midday.' });
+    if (w.kind === 'thunder') fx.push({ src: 'GM Core', text: 'Lightning: a very small chance a traveler is struck, for moderate electricity damage.' });
+    if (w.slows) fx.push({ src: 'ruling', text: 'Hard going: the route counts as difficult terrain today, so the party covers half the distance.' });
+    if (w.wind === 3) fx.push({ src: 'GM Core', text: 'Gale-force wind: circumstance penalties to auditory Perception checks and to attacks with arrows and other physical ranged weapons, handheld flames blow out, fliers struggle, and walking may take an Athletics check.' });
+    else if (w.wind === 2) fx.push({ src: 'GM Core', text: 'Strong wind: handheld flames gutter out, and arrows and sounds carry badly (circumstance penalties to auditory Perception checks and physical ranged attacks).' });
+    if (TRAVEL_PF2E_HEAVY.includes(w.kind)) fx.push({ src: 'GM Core', text: 'Wet and miserable: travelers are fatigued after 4 hours on the road instead of 8.' });
+    const t = travelPf2eTemp(w);
+    const parts = [];
+    if (t.label && !TRAVEL_PF2E_HEAVY.includes(w.kind)) parts.push('travelers are fatigued after 4 hours on the road');
+    if (t.dmg) parts.push(`anyone exposed takes ${t.dmg}`);
+    if (parts.length) fx.push({ src: 'GM Core', text: `${t.label}${t.soaked ? ' (soaked, so one step colder)' : ''}: ${parts.join(', and ')}.${t.gear ? ` ${t.gear}` : ''}` });
+    return fx;
+}
+
+// What the weather means at the table. src: 'SRD' (SRD 5.1 rules), 'GM Core' (Pathfinder), or 'ruling' (a suggestion).
 function weatherEffects(w) {
+    if (TRAVEL_PF2E) return weatherEffectsPf2e(w);
     const fx = [];
     const heavy = HEAVY_KINDS[w.kind];
     if (heavy) fx.push({ src: 'ruling', text: ruleText(`Heavy ${heavy}: the area is lightly obscured, so {skill:wis:perception} checks that rely on sight have disadvantage.`) });
@@ -1192,7 +1252,10 @@ function travelSky(opts, moonAge, weather, hours) {
     let effect = null;
     if (dark) {
         const when = `The last ${dark === 1 ? 'hour' : `${dark} hours`} on the road ${dark === 1 ? 'is' : 'are'} after sunset.`;
-        effect = moonlit
+        if (TRAVEL_PF2E) effect = moonlit
+            ? `${when} The full moon gives dim light: without low-light vision, everything out there is concealed.`
+            : `${when} Without a light or darkvision, it is darkness: travelers can't see, and anything out there is hidden from them.`;
+        else effect = moonlit
             ? ruleText(`${when} The full moon gives dim light: the area is lightly obscured, so {skill:wis:perception} checks that rely on sight have disadvantage.`)
             : `${when} Without a light source or darkvision, it is darkness: the area is heavily obscured.`;
     }
@@ -1215,8 +1278,29 @@ function tomorrowSign(w, tm) {
 }
 
 // ── Distance (SRD 5.1 travel pace) ───────────────────────
+// Pathfinder: miles from the party's Speed (the slowest traveler's), full or half;
+// past the fatigue hours (8, or 4 in heavy weather or harsh temperatures) everyone is fatigued.
+function travelDistancePf2e(opts, weather) {
+    const paceKey = TRAVEL_PACES[opts.pace] ? opts.pace : 'normal';
+    const pace = TRAVEL_PACES[paceKey];
+    const speed = TRAVEL_SPEEDS.includes(Number(opts.speed)) ? Number(opts.speed) : TRAVEL_SPEED_DEFAULT;
+    const hours = Math.min(12, Math.max(1, Number(opts.hours) || 8));
+    const terrainDifficult = !!(TRAVEL_TERRAIN[opts.terrain] || {}).difficult;
+    const difficult = terrainDifficult || !!(weather && weather.slows);
+    const mph = speed / 10 / (pace.half ? 2 : 1);
+    let miles = mph * hours;
+    if (difficult) miles /= 2;
+
+    const notes = [];
+    if (pace.note) notes.push(pace.note);
+    if (difficult) notes.push(`Difficult terrain (${terrainDifficult ? TRAVEL_TERRAIN[opts.terrain].label.toLowerCase() : 'the weather'}): half the usual distance.`);
+    const tired = travelPf2eFatigueHours(weather);
+    return { pace: paceKey, mph, speed, hours, gallop: false, difficult, miles: Math.round(miles * 10) / 10, notes, forced: [], fatigue: hours > tired ? tired : 0 };
+}
+
 // opts: { pace, hours (1-12), gallop (bool), terrain }
 function travelDistance(opts, weather) {
+    if (TRAVEL_PF2E) return travelDistancePf2e(opts, weather);
     const pace = TRAVEL_PACES[opts.pace] || TRAVEL_PACES.normal;
     const hours = Math.min(12, Math.max(1, Number(opts.hours) || 8));
     const terrainDifficult = !!(TRAVEL_TERRAIN[opts.terrain] || {}).difficult;
@@ -1282,6 +1366,17 @@ function rollJourney(seed, opts, days) {
     return out;
 }
 
+// "Normal pace" (5e) or "Full speed at Speed 25 feet" (Pathfinder).
+function travelPaceLabel(dist) {
+    const p = TRAVEL_PACES[dist.pace];
+    return TRAVEL_PF2E ? `${p.label} at Speed ${dist.speed} feet` : `${p.label} pace`;
+}
+
+// Pathfinder's fatigue line for a long day, or ''.
+function travelFatigueText(dist) {
+    return dist.fatigue ? `After ${dist.fatigue} hours on the road, everyone is fatigued until a full night's rest.` : '';
+}
+
 // Plain-text lines for one day (Copy Day).
 function travelDayText(d, opts) {
     const w = d.weather;
@@ -1297,10 +1392,11 @@ function travelDayText(d, opts) {
         `Sky: ${moon.icon} ${moon.label}, about ${d.sky.daylight} hours of daylight.`,
         `${ev.icon} ${d.event.k === 'quiet' ? ev.label : `${ev.label}: ${d.event.t}`}. ${d.event.d}${d.event.hook ? ` Hook: ${d.event.hook}` : ''}`,
         ...(d.find ? [`🪶 By the way: ${d.find}`] : []),
-        `Travel: ${d.today} miles (${TRAVEL_PACES[d.dist.pace].label.toLowerCase()} pace, ${d.dist.hours} hours)` +
+        `Travel: ${d.today} miles (${travelPaceLabel(d.dist).replace(/^./, c => c.toLowerCase())}, ${d.dist.hours} hours)` +
             (goal ? `. ${d.covered} of ${goal} miles${d.arrived ? ', arrived!' : ''}` : `. ${d.covered} miles so far`),
         ...d.dist.notes.map(n => `  - ${n}`),
         ...d.dist.forced.map(f => ruleText(`  - Hour ${f.hour}: {save:con} save DC ${f.dc}, or one level of exhaustion.`)),
+        ...(d.dist.fatigue ? [`  - ${travelFatigueText(d.dist)}`] : []),
         ...(d.sky.effect ? [`  - ${d.sky.effect}`] : [])
     ];
     if (d.camp) {
