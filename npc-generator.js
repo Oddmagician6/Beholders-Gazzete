@@ -3,7 +3,7 @@
    ============================================ */
 
 // Data and the roller live in npc-data.js (shared with the Session Kit); the stat
-// block comes from npc-statblock.js.
+// block comes from npc-statblock.js, or on a Pathfinder page from npc-statblock-pf2e.js.
 
 // ==================== NPC GENERATION ====================
 
@@ -23,6 +23,12 @@ const npcAlign = npc => ruleHasAlignment() ? npc.alignment || '' : '';
 
 // The stat block toggle, off for good where the system has no NPC stat blocks yet.
 const showStatsOn = () => ruleHasStatBlocks() && document.getElementById('include-stats').checked;
+
+// A Pathfinder page's NPCs carry NPC Core blocks (npc-statblock-pf2e.js); a 5e block saved there
+// before them doesn't count. npcBlockName: the block's name for one-line lists.
+const NPC_PF2E = typeof renderPf2eStatBlock === 'function';
+const npcHasBlock = npc => !!npc.block && ruleHasStatBlocks() && !NPC_PF2E === !npc.block.pf2e;
+const npcBlockName = npc => npcHasBlock(npc) ? npc.block.title.replace(/ \(.*\)$/, '') : '';
 
 // Locked parts (NPC_PARTS in npc-data.js) keep their seed when the rest rerolls.
 const locks = new Set();
@@ -143,6 +149,7 @@ function displayNPC(includeStats, includeSecrets, includeQuest) {
 
 // Saves from before stat blocks keep the old quick stats (abilities, HP, AC, speed).
 function renderStatBlock(npc) {
+    if (NPC_PF2E) return renderPf2eStatBlock(npc);
     const b = npc.block;
     const stats = b ? b.stats : npc.stats;
     ['str', 'dex', 'con', 'int', 'wis', 'cha'].forEach(k => {
@@ -262,7 +269,7 @@ function npcParams() {
 
 // lock= token -> [part, { seed, extra }], or null if it doesn't make sense (parseNpcLock, npc-data.js).
 function parseLock(token) {
-    return parseNpcLock(token, ([cls, level]) => Object.hasOwn(SB_CLASSES, cls) && /^\d+$/.test(level) && +level >= 1 && +level <= 20);
+    return parseNpcLock(token, sbLockOk);
 }
 
 // Roll the NPC named in the address bar. Returns false when there's no seed in it.
@@ -324,10 +331,10 @@ ${currentNPC.doing ? `
 WHEN YOU MEET THEM: ${currentNPC.doing}
 POCKETS: ${pocketsText(currentNPC)}
 ` : ''}
-${showStats ? (currentNPC.block ? `STAT BLOCK
+${showStats ? (npcHasBlock(currentNPC) ? `STAT BLOCK
 ${statBlockText(currentNPC.block)}
 
-` : `STATS: STR ${currentNPC.stats.str} | DEX ${currentNPC.stats.dex} | CON ${currentNPC.stats.con} | INT ${currentNPC.stats.int} | WIS ${currentNPC.stats.wis} | CHA ${currentNPC.stats.cha}
+` : NPC_PF2E ? '' : `STATS: STR ${currentNPC.stats.str} | DEX ${currentNPC.stats.dex} | CON ${currentNPC.stats.con} | INT ${currentNPC.stats.int} | WIS ${currentNPC.stats.wis} | CHA ${currentNPC.stats.cha}
 HP: ${currentNPC.hp} | AC: ${currentNPC.ac} | Speed: ${currentNPC.speed}
 
 `) : ''}PERSONALITY:
@@ -377,7 +384,7 @@ function saveToNotebook() {
     const r = nbAdd({
         kind: 'npc',
         title: currentNPC.name,
-        sub: [npcRace(currentNPC), npcJob(currentNPC)].filter(Boolean).join(' ') + (currentNPC.block && ruleHasStatBlocks() ? `, ${currentNPC.block.title.replace(/ \(.*\)$/, '')}` : '') + (currentNPC.trait ? `. ${currentNPC.trait}` : ''),
+        sub: [npcRace(currentNPC), npcJob(currentNPC)].filter(Boolean).join(' ') + (npcBlockName(currentNPC) ? `, ${npcBlockName(currentNPC)}` : '') + (currentNPC.trait ? `. ${currentNPC.trait}` : ''),
         href: 'npc-generator?' + paramsQuery(npcParams())
     });
     say(!r ? '⚠️ Storage is off' : r.full ? '⚠️ Notebook is full' : r.existed ? '📓 Already saved' : '✅ Saved to the notebook');
@@ -434,7 +441,7 @@ function renderSavedNPCs() {
                 aria-label="Pick ${esc(npc.name)} for printing" onclick="event.stopPropagation()" onchange="togglePicked(this)">
             <div class="saved-text">
                 <h4>${esc(npc.name)}</h4>
-                <p>${esc(npcRace(npc).toLowerCase())} ${esc(npcJob(npc))}${npc.block && ruleHasStatBlocks() ? ` · ${esc(npc.block.title.replace(/ \(.*\)$/, ''))}` : ''}</p>
+                <p>${esc(npcRace(npc).toLowerCase())} ${esc(npcJob(npc))}${npcBlockName(npc) ? ` · ${esc(npcBlockName(npc))}` : ''}</p>
                 <div class="saved-meta">${new Date(npc.generatedAt).toLocaleDateString()}</div>
             </div>
         </div>`;
@@ -475,7 +482,7 @@ function sheetBlock(npc) {
         <div class="sheet-npc">
             <h4>${esc(npc.name)}</h4>
             <div class="sheet-sub">${esc([npcRace(npc), cap(npc.gender), npc.age, npcJob(npc), npcAlign(npc)].filter(Boolean).join(' · '))}</div>
-            ${showStats && npc.block ? sheetStatBlock(npc.block) : showStats && npc.stats ? `<div class="sheet-stats">
+            ${showStats && npcHasBlock(npc) ? (NPC_PF2E ? sheetPf2eStatBlock(npc.block) : sheetStatBlock(npc.block)) : showStats && npc.stats && !NPC_PF2E ? `<div class="sheet-stats">
                 ${['str', 'dex', 'con', 'int', 'wis', 'cha'].map(k => `<span><strong>${k.toUpperCase()}</strong> ${esc(s[k])}</span>`).join('')}
                 <span><strong>HP</strong> ${esc(npc.hp)}</span><span><strong>AC</strong> ${esc(npc.ac)}</span><span><strong>Speed</strong> ${esc(npc.speed)}</span>
             </div>` : ''}
@@ -509,10 +516,15 @@ function sheetStatBlock(b) {
         </div>`;
 }
 
+// A Pathfinder sheet waits for the block text (pf2e-creature-blocks.js) before it prints.
 function printSelected() {
     const saved = readSaved();
     const picked = saved.filter((npc, i) => pickedSaved.has(savedKey(npc, i)));
     if (!picked.length) return;
+    if (NPC_PF2E && showStatsOn() && picked.some(npcHasBlock) && typeof PF2E_BLOCKS === 'undefined') {
+        loadMonsterBlocks().then(printSelected, printSelected);
+        return;
+    }
     document.getElementById('print-sheet').innerHTML =
         `<h2 class="sheet-title">🎭 Cast of Characters</h2><div class="sheet-grid">${picked.map(sheetBlock).join('')}</div>` +
         `<p class="sheet-foot">The Beholder's Gazette · Town Square NPC Generator</p>`;
@@ -608,7 +620,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('sb-body').addEventListener('click', e => {
         const btn = e.target.closest('.sb-spell');
-        if (btn) showSpell(btn);
+        if (btn && btn.closest('.sb-feature')) sbSpellClick(btn);
+        else if (btn) showSpell(btn);
     });
     document.getElementById('select-all-saved').addEventListener('click', selectAllSaved);
     document.getElementById('print-saved').addEventListener('click', printSelected);

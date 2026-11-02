@@ -375,6 +375,11 @@ function sbSpell(name) {
     return typeof SPELLS_DATA !== 'undefined' ? SPELLS_DATA.find(s => s.name === name) : null;
 }
 
+// A lock's [class, level] from a link.
+function sbLockOk([cls, level]) {
+    return Object.hasOwn(SB_CLASSES, cls) && /^\d+$/.test(level) && +level >= 1 && +level <= 20;
+}
+
 // ==================== ROLL ====================
 
 // npc: from rollNPC. force (optional): { cls, level }, either one, from the pickers

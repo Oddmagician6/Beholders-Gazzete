@@ -26,8 +26,9 @@ function loadScript(src) {
     });
 }
 
+// A page without the encounter engine (the Pathfinder NPC page) goes by its system.
 function sbPf2e() {
-    return typeof ENC_PF2E !== 'undefined' && ENC_PF2E;
+    return typeof ENC_PF2E !== 'undefined' ? ENC_PF2E : ruleSystemId() === 'pf2e';
 }
 
 function blocksReady() {
@@ -250,9 +251,10 @@ function sbPf2eDefenses(m, b) {
     };
 }
 
-function sbPf2eHtml(m) {
-    if (!blocksReady()) return '<p class="sb-note">Loading the stat block…</p>';
-    const b = PF2E_BLOCKS[m.id];
+// block: the text to draw in place of PF2E_BLOCKS[m.id] (an adjusted NPC, npc-statblock-pf2e.js).
+function sbPf2eHtml(m, block = null) {
+    if (!block && !blocksReady()) return '<p class="sb-note">Loading the stat block…</p>';
+    const b = block || PF2E_BLOCKS[m.id];
     if (!b) return '<p class="sb-note">No stat block for this creature.</p>';
     const line = (k, v) => v ? `<p><strong>${k}</strong> ${esc(String(v))}</p>` : '';
     const abilities = list => (list || []).map(sbPf2eAbility).join('');
@@ -280,8 +282,8 @@ function sbPf2eHtml(m) {
         </div>`;
 }
 
-function sbPf2eText(m) {
-    const b = blocksReady() && PF2E_BLOCKS[m.id];
+function sbPf2eText(m, block = null) {
+    const b = block || (blocksReady() && PF2E_BLOCKS[m.id]);
     if (!b) return '';
     const ability = ([name, cost, traits, text]) =>
         `${name}${cost ? ` ${SB_PF2E_COST_WORDS[cost]}` : ''}${traits.length ? ` (${traits.join(', ')})` : ''} ${sbPf2ePlain(text).replace(/\n+/g, ' ')}`.trim();

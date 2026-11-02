@@ -88,8 +88,8 @@ function ruleHasAlignment() {
     return ruleSystem().alignment !== false;
 }
 
-// Whether the NPC page gives people a stat block in this system (Pathfinder's come with its NPC
-// stat blocks, ROADMAP L3 P4; until then its NPC page rolls the person only).
+// Whether the NPC page gives people a stat block in this system (Pathfinder's are NPC Core's,
+// npc-statblock-pf2e.js). A system with statBlocks: false rolls the person only.
 function ruleHasStatBlocks() {
     return ruleSystem().statBlocks !== false;
 }

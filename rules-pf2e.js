@@ -31,8 +31,6 @@ RULE_SYSTEMS.pf2e = {
     alt: (five, other) => other,
     // The Remaster dropped alignment; gods keep edicts and anathema instead.
     alignment: false,
-    // NPC stat blocks come with the Pathfinder rules tools (ROADMAP L3 P4).
-    statBlocks: false,
     // Pathfinder runs on silver: its goods cost about a tenth of 5e's (a longsword is 1 gp, not 15),
     // so a price the generators wrote in 5e gold is worth this much here.
     coinScale: 0.1,

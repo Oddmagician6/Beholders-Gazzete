@@ -435,6 +435,18 @@
         .sb-spell-detail table { border-collapse: collapse; margin: 6px 0; font-size: 0.85rem; }
         .sb-spell-detail td, .sb-spell-detail th { border: 1px solid var(--gold-dim); padding: 3px 8px; }
         .sb-book { display: inline-block; margin-top: 4px; font-family: var(--font-ui); font-size: 0.85rem; color: var(--gold-bright); }
+        /* Pathfinder blocks (npc-statblock-pf2e.js, drawn by toolbox-statblock.js) */
+        .stats-grid[hidden] { display: none; }
+        .sb-pf2e > .sb-type { margin: 0 0 8px; }
+        .sb-traits { display: inline-flex; flex-wrap: wrap; gap: 4px; margin-left: 6px; vertical-align: middle; font-style: normal; }
+        .sb-traits span { font-family: var(--font-ui); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-bright); border: 1px solid var(--gold-dim); border-radius: 3px; padding: 1px 6px; }
+        .sb-act { color: var(--gold-bright); font-size: 0.8em; letter-spacing: -0.08em; }
+        .sb-gloss { display: block; font-size: 0.86rem; font-style: italic; color: var(--text-dim); }
+        .sb-spell-rank { float: right; font-family: var(--font-ui); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim); }
+        .sb-spell-detail .sb-traits { display: flex; margin: 4px 0 8px; }
+        .sb-pf2e .sb-props + .sb-props { margin-top: 6px; }
+        .sb-spell-detail .sb-spell-meta + p:not(.sb-spell-meta) { margin-top: 8px; }
+        .sb-spell-detail ul { margin: 0 0 6px; padding-left: 20px; }
 
         .personality-grid {
             display: grid;
