@@ -14,12 +14,18 @@ from pathlib import Path
 from meta_page import get_page_context, graph_get, graph_post
 
 UTC = timezone.utc
-WORKFLOW = 'publish-npc-carousels.yml'
 PLATFORMS = ('facebook', 'instagram')
 
 
 class StateError(RuntimeError):
     pass
+
+
+def batch_files(batch=''):
+    if batch and not re.fullmatch(r'week0[2-4]', batch):
+        raise RuntimeError('Unexpected NPC publishing batch.')
+    suffix = '-' + batch if batch else ''
+    return 'npc-carousel-queue' + suffix + '.json', 'publish-npc-carousels' + suffix + '.yml'
 
 
 def timestamp(value):
@@ -178,7 +184,8 @@ class ReleaseStore:
         self.revision = new_revision
 
     def disable_workflow(self):
-        self.github('PUT', f'repos/{self.repo}/actions/workflows/{WORKFLOW}/disable')
+        _, workflow = batch_files(os.environ.get('NPC_BATCH', ''))
+        self.github('PUT', f'repos/{self.repo}/actions/workflows/{workflow}/disable')
 
 
 class Publisher:
@@ -387,7 +394,7 @@ def report(store, error=None):
         lines = ['## Persons of Interest publishing', '', '| Day | UTC time | Facebook | Instagram |', '| --- | --- | --- | --- |']
         for entry in store.queue['entries']:
             state = store.state.get('entries', {}).get(entry['id'], {})
-            lines.append(f"| {entry['day']} | {entry['publishAt']} | {state.get('facebook', {}).get('phase', 'not armed')} | {state.get('instagram', {}).get('phase', 'not armed')} |")
+            lines.append(f"| {entry.get('sourceDay', entry['day'])} | {entry['publishAt']} | {state.get('facebook', {}).get('phase', 'not armed')} | {state.get('instagram', {}).get('phase', 'not armed')} |")
         if error:
             lines += ['', 'Run stopped: ' + error]
         with open(summary, 'a', encoding='utf-8') as output:
@@ -401,7 +408,8 @@ def main():
         return
     if len(sys.argv) > 1:
         raise RuntimeError('Usage: publish_npc_carousels.py [--validate-queue queue.json]')
-    config = json.loads((Path(__file__).resolve().parents[1] / 'npc-carousel-queue.json').read_text(encoding='utf-8'))
+    config_name, _ = batch_files(os.environ.get('NPC_BATCH', ''))
+    config = json.loads((Path(__file__).resolve().parents[1] / config_name).read_text(encoding='utf-8'))
     if config.get('enabled') is not True:
         print('NPC carousel publishing is disabled.')
         return
@@ -415,6 +423,10 @@ def main():
         report(store)
         store.disable_workflow()
         print('Approved publishing window ended; scheduled workflow disabled. Inspect the report for any unconfirmed posts.')
+        return
+    if operation == 'run_due' and now < timestamp(store.queue['entries'][0]['publishAt']):
+        report(store)
+        print('This batch starts in the future; no Meta requests needed today.')
         return
     page_id = os.environ.get('FB_PAGE_ID', '').strip()
     user_token = os.environ.get('FB_PAGE_TOKEN', '').strip()

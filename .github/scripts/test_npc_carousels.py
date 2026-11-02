@@ -2,10 +2,12 @@ import copy
 import contextlib
 import io
 import json
+import os
 import unittest
 from datetime import datetime, timedelta, timezone
+from unittest.mock import Mock, patch
 
-from publish_npc_carousels import Publisher, StateError, iso, jpeg_size, timestamp, validate_queue
+from publish_npc_carousels import Publisher, ReleaseStore, StateError, batch_files, iso, jpeg_size, main, timestamp, validate_queue
 
 UTC = timezone.utc
 FIRST = datetime(2026, 11, 2, 15, tzinfo=UTC)
@@ -216,6 +218,61 @@ class PublisherTests(unittest.TestCase):
         data=b'\xff\xd8\xff\xc0\x00\x0b\x08'+(1350).to_bytes(2,'big')+(1080).to_bytes(2,'big')+b'\x01\x01\x11\x00'
         self.assertEqual(jpeg_size(data),(1080,1350))
         with self.assertRaises(RuntimeError):jpeg_size(b'not a JPEG')
+
+
+class BatchRoutingTests(unittest.TestCase):
+    def test_default_queue_is_unchanged_and_week_two_has_its_own_files(self):
+        self.assertEqual(batch_files(), ('npc-carousel-queue.json', 'publish-npc-carousels.yml'))
+        self.assertEqual(batch_files('week02'), ('npc-carousel-queue-week02.json', 'publish-npc-carousels-week02.yml'))
+        for invalid in ('week01', 'week00', '../week02', 'week02.yml', 'other'):
+            with self.assertRaises(RuntimeError): batch_files(invalid)
+
+    def test_week_two_shutdown_cannot_disable_first_week(self):
+        store = ReleaseStore.__new__(ReleaseStore)
+        store.repo = 'Oddmagician6/Beholders-Gazzete'
+        store.github = Mock()
+        with patch.dict(os.environ, {'NPC_BATCH':'week02'}): store.disable_workflow()
+        store.github.assert_called_once_with('PUT', 'repos/Oddmagician6/Beholders-Gazzete/actions/workflows/publish-npc-carousels-week02.yml/disable')
+
+    def run_main(self, now, operation='run_due'):
+        store = Mock()
+        store.queue = queue_fixture()
+        store.state = {'armed':True, 'entries':{}}
+        clock = patch('publish_npc_carousels.datetime', wraps=datetime)
+        mocked_clock = clock.start(); self.addCleanup(clock.stop)
+        mocked_clock.now.return_value = now
+        patches = [
+            patch.dict(os.environ, {'NPC_BATCH':'week02', 'OPERATION':operation, 'FB_PAGE_ID':'123', 'FB_PAGE_TOKEN':'fixture'}),
+            patch('publish_npc_carousels.sys.argv', ['publisher']),
+            patch('publish_npc_carousels.Path.read_text', autospec=True, return_value=json.dumps({'enabled':True})),
+            patch('publish_npc_carousels.ReleaseStore', return_value=store),
+            patch('publish_npc_carousels.get_page_context', return_value={'id':'123','access_token':'fixture','instagram_business_account':{'id':'ig'}}),
+            patch('publish_npc_carousels.graph_get', return_value={'username':'beholdersgazette'}),
+            patch('publish_npc_carousels.Publisher'),
+            patch('publish_npc_carousels.report'),
+            patch('sys.stdout', new_callable=io.StringIO),
+        ]
+        values = [p.start() for p in patches]
+        for p in patches: self.addCleanup(p.stop)
+        main()
+        self.assertEqual(values[2].call_args.args[0].name, 'npc-carousel-queue-week02.json')
+        return store, values[4], values[6]
+
+    def test_future_batch_skips_meta_requests_and_stays_enabled(self):
+        store, context, publisher = self.run_main(FIRST-timedelta(days=1))
+        context.assert_not_called(); publisher.assert_not_called()
+        store.disable_workflow.assert_not_called()
+
+    def test_expired_batch_stops_without_meta_or_publication(self):
+        store, context, publisher = self.run_main(FIRST+timedelta(days=7))
+        context.assert_not_called(); publisher.assert_not_called()
+        store.disable_workflow.assert_called_once()
+
+    def test_arm_uses_selected_batch_without_shutting_down(self):
+        store, context, publisher = self.run_main(FIRST-timedelta(days=1), 'arm')
+        context.assert_called_once(); publisher.return_value.arm.assert_called_once()
+        store.verify_images.assert_called_once_with(store.queue['entries'])
+        store.disable_workflow.assert_not_called()
 
 
 if __name__=='__main__':

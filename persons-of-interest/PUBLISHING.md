@@ -4,13 +4,29 @@ The owner approved the first seven reviewed posts for Facebook and Instagram, on
 
 The publisher runs ordinary Python in GitHub Actions. It does not call an image model, text model, Codex, or Claude, and does not need the owner's PC online. The existing article and Reel publishers are separate.
 
+## Second approved batch
+
+The owner approved the reviewed days 8-14 and chose November 9-15, 2026 at 09:00 America/Chicago, keeping one NPC per day after Noll on November 8. The order is Sella, Clack, Iria, Auntie Hush, Dorrin, Tuppence, and Ottoline. The approval was given on November 2. Confirm activation separately before describing this batch as scheduled.
+
+Week 2 uses `.github/workflows/publish-npc-carousels-week02.yml`, `.github/npc-carousel-queue-week02.json`, and the `poi-stage-week02-20261109` Release. The workflow sets `NPC_BATCH=week02` and reuses the tested Python publisher. Its state and automatic shutdown are independent of week 1. Both workflows share the concurrency group, so they cannot submit simultaneously. Before a batch's first date, scheduled checks read its durable state and make no Meta requests.
+
+```powershell
+node persons-of-interest/stage-publishing.mjs --week=2 --start=2026-11-09
+py .github/scripts/publish_npc_carousels.py --validate-queue .poi-output/publishing/poi-stage-week02-20261109/queue.json
+gh workflow run publish-npc-carousels-week02.yml --repo Oddmagician6/Beholders-Gazzete --ref main -f operation=verify
+# After successful verification:
+gh workflow run publish-npc-carousels-week02.yml --repo Oddmagician6/Beholders-Gazzete --ref main -f operation=arm
+```
+
+Use the existing Release when retrying; never recreate its initial state. Do not run the staging exporter over an activated batch. The reviewed gallery remains the historical draft snapshot; save approval and activation evidence under `.poi-output/publishing/`.
+
 ## Files and storage
 
 - `.github/workflows/publish-npc-carousels.yml`: manual verification/arming and daily scheduled checks at 09:00 and 09:30 America/Chicago.
 - `.github/scripts/publish_npc_carousels.py`: publication, verification, and recovery.
 - `.github/scripts/test_npc_carousels.py`: behavior tests using a fake Meta service.
 - `.github/npc-carousel-queue.json`: the approved release tag and queue SHA-256.
-- `stage-publishing.mjs`: local first-week exporter. It verifies the reviewed package checksums and creates 21 high-quality JPEGs, an approved dated queue, and initial release state under `.poi-output/publishing/poi-stage-week01-20261102/`. Rendering text and artwork are unchanged by JPEG conversion.
+- `stage-publishing.mjs`: local exporter accepting an explicit week and start date. It verifies the reviewed package checksums and creates 21 high-quality JPEGs, an approved dated queue, and initial release state under `.poi-output/publishing/<release-tag>/`. Rendering text and artwork are unchanged by JPEG conversion. Its default remains the original first-week package; later weeks write separate queue configs.
 
 Staged JPEGs and `queue.json` are public GitHub Release assets, rather than files in site Git history. The Release description contains a JSON state record. Keep the Release and its description intact until every post is verified: future Instagram publications still need the public images, and retries depend on this state. No secret values belong in either the assets or state.
 
@@ -51,7 +67,7 @@ State is saved atomically through a Release-description update, with a revision 
 
 For an ordinary retry, dispatch `operation=run_due`. Respect any `needs_review` or ambiguous-submission error: inspect the destination account and existing IDs before deciding whether a new submission is safe. Do not blindly rerun a fresh queue or create another release for the same seven posts.
 
-After automatic shutdown, a future approved queue requires a new staged release/config and `gh workflow enable publish-npc-carousels.yml`. Prepare its dates and captions explicitly, then verify and arm it. The first-week exporter currently has the approved November 2-8 dates; revise it deliberately for a new batch. Nothing in this workflow authorizes later NPCs, ads, Stories, or additional daily posts.
+After automatic shutdown, a future approved queue requires its own staged release/config and enabled batch workflow. Prepare its dates and captions explicitly, then verify and arm it. Never replace the first-week config while that batch is active. `NPC_BATCH` accepts only `week02` through `week04`; an empty value retains the original workflow/config. Each workflow disables only itself. Nothing in this workflow authorizes later NPCs, ads, Stories, or additional daily posts.
 
 No site exporters are needed. The local review gallery is not a live schedule ledger; the GitHub run report and Release state are authoritative for publishing.
 
