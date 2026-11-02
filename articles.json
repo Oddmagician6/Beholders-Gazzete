@@ -5606,6 +5606,307 @@
         "rumor": "They say one of the vials was a Potion of Poison, and the wizard only lived because the carp told him not to finish it."
       },
       "fiction": true
+    },
+    {
+      "id": "potion-of-healing-price-up-12-brindlemoor",
+      "title": "Healing Potion Price Up 12% to 56 gp as Delves Surge",
+      "category": "Economy",
+      "author": "Barnaby Tallowmere",
+      "date": "2026-11-02",
+      "excerpt": "A potion of healing now costs 56 gp in Brindlemoor, up 12% from 50 gp, as more parties enter the Undermaw. Barnaby has checked the loaves. Twice.",
+      "social": "A potion of healing in Brindlemoor now costs 56 gp, up from 50 gp. That is 128 extra loaves per potion, and Chapter 9 issued 31 percent more delve permits. Barnaby's aunt Marigold says to keep your savings in a boot. Would you stock up before the next delve?",
+      "content": "<p>The price of a potion of healing in Brindlemoor rose 12% on Monday, from 50 gp to 56 gp, as Chapter 9 reported a 31% jump in delve permits for the month. Apothecaries on Tanner's Row blame demand from the Undermaw. I blame arithmetic. (I have checked this four times.)</p>\n\n<p>Six gold pieces sounds small until you do the Loaf Index. At 4.675 cp a loaf, a 50 gp potion was worth about 1,070 loaves. At 56 gp it is worth about 1,198. That is 128 extra loaves per potion, which is a loaf-bearing cart of bread, standing still, in a cellar, because of a cut finger on Level Four.</p>\n\n<p>The mechanism is old and boring, which is the nice thing about it. More parties go down. More parties come up needing mending. Apothecaries make potions at roughly the same speed as last month, because the herb gatherers are fixed in number and the alchemists refuse to hurry. When buyers rise and supply doesn't, the price must go somewhere, and it went up. Nobody is cheating. A shortage is just a queue with a price tag.</p>\n\n<p>Deputy Registrar Pell Oddingwick of Chapter 9 called the permit surge \"entirely on track\" and said the guild would welcome the new revenue. Asked whether the guild intended to help with potions, he said the guild intended to help with permits. Reeve Fennick said only that the town was aware of the price.</p>\n\n<p>Shieldwall Mutual has already adjusted its premiums. A spokesman said a potion is now classed as \"a small asset\" and an adventurer who drinks one without a receipt is \"a claim waiting to happen.\" The Fourth Attempt reportedly bought nine potions last week, then drank four of them on the walk to the entrance, which a Pettibone &amp; Vail clerk called \"a very expensive warm-up.\"</p>\n\n<p>Some will say the market will fix this by itself, and that new alchemists will rush in. (Sterling Vanmoor said so on Sunday, smiling.) I would only note that an alchemist takes six years to train and a delve permit takes six minutes. Prices will climb faster than the apprentices.</p>\n\n<p>My aunt Marigold, who keeps her savings in a boot, tells me she has not bought a potion since the Third Attempt, and that she heals by sitting down. I used to think this was foolish. Her boot has not risen 12% in anything.</p>\n\n<p>What this means for your pantry: buy your bread now, buy your bandages now, and do not enter the Undermaw if you can help it. If you must, pack a roll of linen. It costs a single loaf.</p>\n\n<p><em>— B.T. (Loaf Index: see sidebar)</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Potion Shortage",
+          "text": "Healing potions in town have doubled in price and the apothecary guild swears it is just demand. Someone is hoarding the herb crop, and the party can find out who before the next delve."
+        },
+        "npc": {
+          "name": "Pemberly Quickroot",
+          "role": "Harried Apothecary Guild Clerk",
+          "want": "To keep her stalls open without hiking prices again.",
+          "secret": "She has been selling half her stock to a masked buyer who pays double.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Mortar and Mule",
+          "text": "A cramped apothecary stall behind a tavern, where the shelves are labeled in three languages and every bottle is slightly warm. The owner insists nothing is for sale unless you ask twice.",
+          "tavern": false
+        },
+        "rumor": "They say the herb gatherers are being paid to leave the glade empty, though nobody knows by whom."
+      },
+      "fiction": true
+    },
+    {
+      "id": "loot-split-torchbearer-paid-exposure-grievance",
+      "title": "Loot Split Dispute: Torchbearer Paid in 'Exposure'",
+      "category": "Labor",
+      "author": "Brakka Stonesweat",
+      "date": "2026-11-02",
+      "excerpt": "An adventuring party split a 4,200 gold hoard five ways and paid its hired torchbearer in exposure. She filed a grievance with Chapter 9 on Monday.",
+      "social": "A torchbearer held a light for eleven hours in the Undermaw. Her party split 4,200 gold five ways and paid her in exposure. She lost an eyebrow and got a mention in a ballad. Was exposure ever worth the eyebrow?",
+      "content": "<p>Pay the torchbearer. Wenna Tarrowby, a halfling hireling, filed a grievance with Chapter 9 on Monday after an adventuring party called the Silver Thistle Company split a 4,200 gold hoard five ways and gave her nothing but exposure. Eleven hours underground. One eyebrow gone. Her cut of the loot split came to a mention in a ballad.</p>\n\n<p>The Thistles are five: a fighter, a wizard, a cleric, a rogue and a bard. The bard wrote the ballad. 'Exposure' is how the party's own paperwork describes the pay. Translated: nothing. Eight hundred and forty gold each for the five of them, and for the woman who held the light, a chorus.</p>\n\n<p>'I carried the torch, the spare torch, and the spare spare torch,' said Tarrowby, a torchbearer for six years. 'The wizard asked me to hold his hat. I held the hat. In the ballad I am called \"a faithful flicker.\" I am five foot nothing and I have never flickered.'</p>\n\n<p>The Thistles say it was a misunderstanding. 'We offered her tremendous visibility,' said Corrin Vexlow, the bard, who is also the party's treasurer, which is the first mistake. 'Half of Brindlemoor will know her name by Fifthday. You can't buy that.' Tarrowby says you can, in fact, buy it, and the price is 840 gold, the same as everyone else's.</p>\n\n<p>It gets worse. The hoard included a chest of 600 gold the party found because Tarrowby's torch lit a pressure plate. She stepped around it. They did not thank her. The wizard then used the chest as a footstool for the walk home.</p>\n\n<p>Ansel Pottage, steward of hirelings, was reading the Thistles' contract aloud outside Chapter 9 by midmorning, all the way to the end, which is more than the Thistles had done. 'Clause nine,' he said. 'Hirelings receive a share. Clause nine does not say what kind.' He then paused for the crowd. 'It does say \"in coin.\"' The crowd, about forty hirelings with their own torches, cheered. Pottage was careful to add that the clause is in the party's own handwriting.</p>\n\n<p>The hearing goes to Examiner Odalys Brackenmoor, who has <a href=\"/a/mimic-hearing-chapter-9-hazard-pay-ruling\">ruled on hireling pay before</a> and was last seen carrying a ladle. Deputy Registrar Oddingwick called the dispute 'a soft launch of a compensation conversation' and said the guild is 'on track.' Nobody knows what track.</p>\n\n<p>Here is the plain version. A half share is the going rate for hirelings in the Undermaw. That is 420 gold. A ballad is not coin. Neither is a mention, or a hat held. When a party says 'exposure,' it means they spent the money. The torchbearer was the only one who could see where she was going, and she is the one who went home with nothing.</p>\n\n<p>The Thistles have offered Tarrowby a second verse. She has asked for a second share.</p>\n\n<p><em>Solidarity. And stretch your back. — Brakka</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Faithful Flicker",
+          "text": "A hired torchbearer says her party skipped her cut of a 4,200 gold hoard, and a guild hearing is days away. The party swears the money is already spent. Someone must find where it went before the examiner does."
+        },
+        "npc": {
+          "name": "Corrin Vexlow",
+          "role": "Bard and party treasurer",
+          "want": "To keep his party's name out of the grievance record and his ballad in the tavern circuit.",
+          "secret": "He gambled 1,100 gold of the hoard on a dwarf-toss tournament and lost it.",
+          "race": "human",
+          "gender": "male",
+          "kind": "adventurer"
+        },
+        "location": {
+          "name": "The Lit Wick",
+          "text": "A cramped chandler's shop near the guildhall where hirelings gather to trade torches and complaints. The back room holds a ledger of every party that has underpaid, and nobody knows who keeps it.",
+          "tavern": false
+        },
+        "rumor": "They say the wizard's footstool chest still has a false bottom, and the false bottom has a hundred gold in it."
+      },
+      "fiction": true
+    },
+    {
+      "id": "bard-lie-border-checkpoint-adventuring-party-toll",
+      "title": "Bard's Lie at Border Checkpoint Costs Party Far Over 2 Copper",
+      "category": "International",
+      "author": "Grashka Ironjaw",
+      "date": "2026-11-02",
+      "excerpt": "An adventuring party's bard lied to a Brackwater guard who only wanted a 2-copper toll. It is now a diplomatic incident, at eleven siege-days.",
+      "social": "A guard at the Brackwater border asked one adventuring party for 2 copper. Their bard claimed they were a royal wedding escort and invented a kingdom. The mule was disguised as a bride. What would you have done: paid the 2 copper, or let the bard talk?",
+      "content": "<p>An adventuring party called the Lanternlit Five spent Fifthday turning a 2-copper toll at Dunwick Gate, the Brackwater border post, into a diplomatic incident. Their bard, Pip Lutewhistle, told the guard on duty that the party was escorting a royal wedding. No such wedding exists. Tension between <a href=\"/a/wish-spell-turnips-tariff-brackwater-ashenfold\">Brackwater and Ashenfold</a> now stands at eleven siege-days.</p>\n\n<p>The facts are short. Sergeant Ottwin Marsh asked for two copper pieces. The party's fighter reached for her purse. Lutewhistle stepped in front of her and began to talk.</p>\n\n<p>He said the party served the Grand Duchess of Velmora-by-the-Sea, a realm that appears on no map. He said the mule, draped in a veil after a casting of disguise self, was the bride. He said the groom was delayed by a minor war. Marsh wrote this down, because writing things down is what a sergeant does when he cannot think of a response.</p>\n\n<p>\"I asked for two copper,\" Marsh told this correspondent. \"He gave me a kingdom. I did not have a form for a kingdom.\"</p>\n\n<p>The lie did what lies do under pressure: it grew. Lutewhistle added a dowry of nine hundred goats and a treaty clause. He added a rival suitor from Ashenfold, which was the mistake. Marsh, a loyal Brackwater man, sent a runner to the barony's envoy, Teodra Hallowmere.</p>\n\n<p>Hallowmere arrived within the hour and shook the bard's hand. Firm, two seconds, no hidden dagger detected, though a lute pick was found in the sleeve. She then did what she does best and taxed the intent. The party owes two copper for the toll, nine silver for the unlicensed dowry, and an undisclosed sum for the goats, which do not exist but are, in her words, \"legally implied.\"</p>\n\n<p>Ashenfold has denied having a suitor, a rival, or a position on the mule. Its envoy, Halric Dunmere, called the accusation \"a provocation wrapped in a veil.\" Both baronies have moved a cart across the road. Nobody has moved it back.</p>\n\n<p>The Lanternlit Five are being held at the post in the guard's own tent, where the cook is feeding them well. Field rations, mostly. The party's fighter, who asked not to be named, said she had the two copper in her hand the entire time. \"I had it out,\" she said. \"Out. In my palm.\"</p>\n\n<p>Lutewhistle says he regrets nothing and is already drafting a ballad. Marsh says the ballad had better rhyme with \"toll.\" The party will be released once the wedding is cancelled, which requires a wedding.</p>\n\n<p>Nobody won today. The mule is still wearing the veil.</p>\n\n<p><em>Ironjaw, filed from the front.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Mule Bride of Dunwick",
+          "text": "A border guard has detained the party's rivals after their bard invented a royal wedding to dodge a two-copper toll. A nervous envoy will pay the party to find a real wedding, or a real kingdom, before the lie hardens into a treaty."
+        },
+        "npc": {
+          "name": "Ottwin Marsh",
+          "role": "Sergeant of the border post",
+          "want": "To close the incident with a form he already knows how to file.",
+          "secret": "He quietly admires the bard's ballad and has been humming it.",
+          "race": "human",
+          "gender": "male",
+          "kind": "guard"
+        },
+        "location": {
+          "name": "Dunwick Gate",
+          "text": "A timber toll post on a border road, with a lowered barrier and a very busy ledger. The sergeant's tent smells of stew and has a cart parked directly across the doorway.",
+          "tavern": false
+        },
+        "rumor": "They say the Grand Duchess of Velmora-by-the-Sea is real and has already sent a carriage."
+      },
+      "fiction": true
+    },
+    {
+      "id": "rust-monster-lured-level-seven-nail-trail",
+      "title": "Rust Monster Lured Off Level Seven Step With Nail Trail",
+      "category": "Dungeon Report",
+      "author": "Hollis Delvewright",
+      "date": "2026-11-02",
+      "excerpt": "Chapter 9 coaxed the sleeping rust monster off Level Seven's top step with a trail of nails and declared the level open. The trail went down, not out.",
+      "social": "Chapter 9 finally moved the rust monster off the Level Seven step, using 340 iron nails laid in a line. The level is now officially open. The monster is on Level Eight, and so is the nail supply. Would you be the first party through Level Seven?",
+      "content": "<p>THE UNDERMAW, LEVEL 7 LANDING — A rust monster that has slept on the top step of Level Seven for two weeks was lured away at dawn with a trail of 340 iron nails, and Chapter 9 declared the level open for the first time in three years. I was there. I rolled poorly on the timing, standing on the step when the monster woke, and I am now missing one belt buckle.</p>\n\n<p>Deputy Registrar Pell Oddingwick laid the nails himself, one every foot, from the sleeper's nose down the stairwell. \"Everything is on track,\" he told the crowd of ticket-holders, who had paid four copper to watch the animal nap and were not sure what they were owed now that it was awake. The monster ate its way down the steps with the unhurried manner of a patron at a good buffet. It did not look back.</p>\n\n<p>Chapter 9 then cut a new ribbon with wooden shears, a lesson from <a href=\"/a/rust-monster-level-seven-step-ticket-sales\">the ticket-sales fortnight</a>. The Fourth Attempt went through first. Their tally: fighter at 14 hit points, wizard at 11, ranger at 12, and the party's bard, who asked to be named, at \"a lot of feelings.\" The hirelings were not asked to hold the door. I count that as a win for the profession.</p>\n\n<p>The trouble came at the bottom of Level Seven, where the nail trail did not stop. Steward Ansel Pottage of the hirelings, who reads every document to the end and every floor the same way, noted that the nails ran straight into a stairwell nobody had mapped. \"The contract says Level Seven,\" he said. \"It does not say what is under it.\" The monster is now asleep on the top step of Level Eight, which Chapter 9's maps describe as \"not yet a level.\"</p>\n\n<p>Oddingwick called the development \"soft downward growth.\" Chapter 9 intends to sell tickets to the new step, pending a hearing. Examiner Odalys Brackenmoor, who will chair it, asked only whether the nails were reimbursable, since she has seen the invoice.</p>\n\n<p>Ten-foot poles lost this season: eleven. The twelfth went down the stairwell with the monster, which ate the iron tip and left the shaft as a courtesy. Every adventurer on the landing agreed it was the first thing the level has done for us.</p>\n\n<p>A footnote on the map: Chapter 9's Level Seven sheet is reissued today as accurate. It shows a staircase going down. That much, at least, is true.</p>\n\n<p><em>— H.D., filing from below</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Nail Trail Down",
+          "text": "A guild lured a sleeping rust monster off a stairwell with a line of iron nails, and the line leads to an unmapped lower level. The guild will pay a party to scout the new level before the monster wakes and finds more metal, and to bring back the unspent nails."
+        },
+        "npc": {
+          "name": "Perrin Haldweather",
+          "role": "Deputy Registrar of Openings",
+          "want": "To have the new level declared open before anyone asks about the budget.",
+          "secret": "He bought the nails on credit from a pawnbroker who now owns half the ribbon.",
+          "race": "human",
+          "gender": "male",
+          "kind": "noble"
+        },
+        "location": {
+          "name": "The Eighth Step",
+          "text": "A landing at the bottom of an unmapped stairwell, scattered with chewed nail heads and one sleeping rust monster. The walls are bare of metal fittings; every hinge was eaten years ago.",
+          "tavern": false
+        },
+        "rumor": "They say the nails were never meant to lead the monster away, only to lead something else up."
+      },
+      "fiction": true
+    },
+    {
+      "id": "alarm-spell-ruins-long-rest-mudsock-vanguard",
+      "title": "Alarm Spell Wakes Party 14 Times During One Long Rest",
+      "category": "Technology",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-11-02",
+      "excerpt": "The Mudsock Vanguard cast Alarm around camp for a safe long rest. Squirrels, a moth, and their own rogue woke them 14 times. Nyx loved it. Byte did not.",
+      "social": "The Mudsock Vanguard cast Alarm around their camp for one safe long rest. It went off 14 times: nine squirrels, one moth, and their own rogue going to pee four times. The wizard now has zero spell slots back. Would you have kept the alarm, or dispelled it at 2 a.m.?",
+      "content": "<p>Brindlemoor's Mudsock Vanguard cast the Alarm spell around their camp on the Undermaw's second landing this week, hoping for one uninterrupted long rest. They got fourteen interruptions instead. I have been reviewing the ward ever since, because I am a professional and also because I couldn't sleep either!</p>\n\n<p>Here is the log, as read back by the party's wizard, Pennick Thrallowby. The first four alerts were squirrels. The fifth was a moth. Pennick says it was \"a very small moth,\" and Alarm, which has no concept of small, rang the mental chime at full volume. Alerts six through nine were more squirrels, possibly the same squirrel, who appears to have started charging the perimeter for sport. Alerts ten, eleven, twelve and fourteen were the party's own rogue, Dessa Quillfoot, walking out of the ward to pee and walking back in.</p>\n\n<p>\"I whispered that I was going out,\" Dessa said. \"The ward doesn't care that I whispered. It cares that I crossed it. Four times. Nobody warned me about the bladder tax.\"</p>\n\n<p>The runic latency is outstanding. Alert thirteen, which was a genuine owlbear-sized shape at the edge of the clearing, arrived in under a second, and I would like that on the box. It turned out to be a cart. The cart was empty. Nobody could tell me why a cart was in a clearing in the Undermaw, and nobody had the strength to ask.</p>\n\n<p>The core problem is mana throughput. Alarm sounds in the caster's head only, so Pennick took every alert alone while the rest of the party snored. By dawn the cleric had her prayers back, the fighter had his hit dice, and the wizard had a twitch. A long rest needs eight hours with no more than two of strenuous activity, and the Guild's own pamphlet says so. Chapter 9 declined to comment on whether a rogue's bathroom schedule counts as strenuous.</p>\n\n<p>My familiar Byte, who sat through the entire demo, said \"Alarm. Because you deserve to wake up.\" He then bit the moth. I assume that is a ruling.</p>\n\n<p>Pennick has since switched to a different method, which is sleeping in shifts and trusting the dog. He also asked me to note that he is \"not mad, just thin.\" Brother Tumbleberry will tell you to touch grass, but the grass is where the squirrels live, Wendell.</p>\n\n<p>Four out of five beholder eyes. The ward works exactly as written, and that is the whole problem.</p>\n\n<p><em>— Nyx (they/them). Damage Report below.</em></p>\n\n<p><em>Damage Report: Alerts sustained: 14. Squirrels: 9 (or 1). Moths bitten: 1. Spell slots recovered: 0. Eyebrows: fine, but I am very tired.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "Fourteen Alerts Till Dawn",
+          "text": "A warded camp keeps setting off for the smallest things, but alert thirteen was a real intruder: someone left an empty cart in the clearing so the party would stay up. A caravan master nearby wants to know who is scouting her route and will pay for answers."
+        },
+        "npc": {
+          "name": "Pennick Thrallowby",
+          "role": "Sleep-deprived party wizard",
+          "want": "One full night of sleep, at any price.",
+          "secret": "He cast Alarm twice by mistake, which is why the moth rang so loud.",
+          "race": "gnome",
+          "gender": "male",
+          "kind": "magic"
+        },
+        "location": {
+          "name": "The Second Landing Camp",
+          "text": "A cleared ledge on the Undermaw's second level with a ring of scorched stones and a well-trodden path of squirrel tracks. The empty cart sits at the edge, and its wheels have fresh grease.",
+          "tavern": false
+        },
+        "rumor": "They say the squirrels down there are paid by the night and that the moth was a spy."
+      },
+      "fiction": true
+    },
+    {
+      "id": "adventuring-party-two-doors-vote-torches-out",
+      "title": "Adventuring Party Votes Six Hours on Two Dungeon Doors",
+      "category": "Politics",
+      "author": "Ottoline Vex",
+      "date": "2026-11-02",
+      "excerpt": "An adventuring party on Level Three of the Undermaw spent six hours voting on which of two doors to open, and finished in the dark.",
+      "social": "A five-member adventuring party in the Undermaw spent six hours on a formal vote over two doors. There were three amendments and one recount, and all six torches burned out first. A skeleton waited the whole time. Which door would you have opened?",
+      "content": "<p>An adventuring party called the Copper Candle Company spent six hours on Level Three of the Undermaw on Saturday voting on which of two dungeon doors to open. By the time they reached a result, all six of their torches had burned out, which the minutes record as 'a matter for the next session.'</p>\n\n<p>The trouble began when Dunstan Mirelle, a dwarf cleric, rose to move that the party 'consider the door on the left.' The gentleman from the rear guard, a halfling archer, seconded it and immediately offered an amendment to consider the door on the right instead. A point of order followed on whether an amendment may undo the motion it amends. The party's wizard held that it may. The party's fighter held that she was hungry.</p>\n\n<p>The first vote split two to two, with the rogue abstaining on the grounds that doors were 'a conflict of interest.' She has picked locks professionally for eleven years. A recount was requested and granted. It also came out two to two, though the minutes note that one member voted twice in a spirit of enthusiasm.</p>\n\n<p>Three amendments then reached the floor. One proposed opening the left door but with a rope. One proposed opening neither and having a snack. The third, from the wizard, proposed forming a subcommittee of one to examine the doors, which would have been the wizard. It was ruled out of order by the chair, who was also the wizard's brother-in-law.</p>\n\n<p>By my count the party made nine procedural promises during the evening, including 'we will be brief,' and kept the one about adjourning, though not on time. The torch situation was raised at hour three. A motion to light a seventh torch failed because the party had packed six. The motion carried, in the sense that nobody opposed it, but it did not produce a torch. Nobody read it.</p>\n\n<p>A courtier who asked not to be named because they were not authorized to be awake told me the doors were 'the least interesting thing in that corridor.' He was right. At the sixth hour, a wandering skeleton from behind the left door knocked politely and asked whether the party intended to use the passage, as it had been waiting since supper. The party moved to table the question. The skeleton seconded.</p>\n\n<p>Deputy Registrar Pell Oddingwick of Chapter 9 said the guild 'has every confidence in the party's process' and that delve permits do not specify how doors are chosen. 'We are aware of the voting,' he said. 'It is on track.' Reeve Fennick declined comment, having <a href=\"/a/ghost-filibuster-ends-brindlemoor-harvest-tax\">recently sat through thirteen days of a ghost</a>.</p>\n\n<p>The Copper Candle Company has scheduled a follow-up session for Saturday. The agenda lists one item: the door on the right, subject to amendment.</p>\n\n<p><em>— O.V., from the gallery</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Door by Committee",
+          "text": "A rival party has gotten stuck in a corridor, arguing over two doors, and has been there so long that something patient is queuing behind one of them. A worried hireling pays the party to break the deadlock before the torches go out."
+        },
+        "npc": {
+          "name": "Perrin Quill",
+          "role": "Secretary of a stalled party",
+          "want": "To get the minutes signed and everyone out of the corridor alive.",
+          "secret": "Perrin has been quietly rewriting the votes so the party never reaches a decision, because both doors scare them.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "adventurer"
+        },
+        "location": {
+          "name": "The Corridor of Two Doors",
+          "text": "A narrow passage on a dungeon level with an identical door at each end, one scratched with a left-hand mark and one with a right. The air is stale, and a faint line of chalk tally marks runs along the wall.",
+          "tavern": false
+        },
+        "rumor": "They say the skeleton behind the left door has been waiting so long that it has started paying rent."
+      },
+      "fiction": true
+    },
+    {
+      "id": "owlbear-asleep-laundry-cart-fish-street",
+      "title": "Owlbear Naps in Laundry Cart; Fish Street Waits 2 Days",
+      "category": "Local Chaos",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-11-02",
+      "excerpt": "An owlbear fell asleep in a laundry cart on Fish Street and has not moved in two days. The Constabulary says nobody is waking it. Allegedly.",
+      "social": "An owlbear has been asleep in a laundry cart on Fish Street for two days. The Constabulary has put up 14 rope posts and a sign reading 'Please Do Not.' Laundress Pim Oddlow says 61 households are missing their sheets. Would you be the one to wake it?",
+      "content": "<p>At roughly the second bell after midnight on Sunday, an owlbear climbed into a laundry cart on Fish Street, curled up on 61 households' worth of clean sheets, and went to sleep. Two days later it is still there, and the Constabulary has declined to wake it. Allegedly this is policy.</p>\n\n<p>'We are monitoring the situation,' said Constabulary Sergeant Brom Teasel, who was monitoring it from the far side of a pie stall. 'It snores. The snore has a beak in it. We have put up 14 rope posts and a sign that says Please Do Not.' The sign was allegedly chewed by lunchtime. The rope posts are fine. The posts are not the problem.</p>\n\n<p>The sheets belong to Pim Oddlow, a laundress, who says the cart held every bedsheet on the east side of the street, freshly pressed. 'Sixty-one households,' she said, wringing a towel at the time. 'Sixty-one beds with nothing on them. The owlbear has not paid for the starch.' Oddlow estimates the loss at 38 gold, plus whatever the owlbear is doing to the pillowcases, which she described only as 'nesting.'</p>\n\n<p>Neighbors have organized. Corvin Stubb, a baker, was holding a tray of rolls when he told me the street is 'quiet for the first time in years,' and that business is up because gawkers buy snacks. A rival baker on the other side of the road reported the opposite. A third man, who gave his name only as Dobbin and was eating a turkey leg, said he is fine with the owlbear but wants it known that he saw the cart first. Nobody asked him.</p>\n\n<p>Also there is a really nice brass lantern hook two doors down, just sitting there, very shiny. Anyway. Recovered.</p>\n\n<p>The Tower District has weighed in. A nobles' committee, speaking from a safe distance of eleven miles, called the situation 'a failure of Lower City sanitation' and asked that the owlbear be moved somewhere less visible. Fish Street's answer was to hang the committee's letter on the rope posts as decoration. Skritch is told the owlbear has not read it. Skritch is also told that pigeons have started roosting on its back, which is the single worst development of the week.</p>\n\n<p>Sergeant Teasel says the Constabulary will act when the owlbear wakes on its own, or when the sheets need to be returned, whichever comes later. He has asked the public not to throw anything at it, not to sing to it, and not to try to borrow a pillowcase. Three people have reportedly tried to borrow a pillowcase. One of them is Dobbin.</p>\n\n<p>For now, Fish Street runs on tiptoe, and the laundry cart rolls nowhere. The Constabulary says the matter is under control. Allegedly.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Sleeper in the Cart",
+          "text": "An owlbear has bedded down in a laundress's cart full of the town's sheets, and the guard won't touch it. The laundress will pay 40 gp to anyone who gets the sheets back without waking it."
+        },
+        "npc": {
+          "name": "Pim Oddlow",
+          "role": "Fish Street laundress",
+          "want": "Recover every sheet before customers demand refunds.",
+          "secret": "She has been quietly feeding the owlbear sausages so it won't wake up.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "Oddlow's Wash and Press",
+          "text": "A steamy laundry on a crowded street, with sheets strung across the alley like sails. The back room has a trapdoor the owlbear has not noticed yet.",
+          "tavern": false
+        },
+        "rumor": "They say the owlbear isn't sleeping at all, it's brooding, and those pillowcases are eggs."
+      },
+      "fiction": true
+    },
+    {
+      "id": "adventuring-party-haggle-potion-healing-sticker",
+      "title": "Adventuring Party Haggles an Hour, Pays 8 gp Over Sticker",
+      "category": "Consumer",
+      "author": "Sterling Vanmoor",
+      "date": "2026-11-02",
+      "excerpt": "An adventuring party haggled an hour over 3 silver on a potion of healing and paid 58 gp, 7 sp against a 50 gp sticker. Sterling Vanmoor is inspired.",
+      "social": "A Brindlemoor adventuring party haggled an hour over 3 silver on a 50 gp potion of healing. They paid 58 gp, 7 sp, after fees for candle, chair and the mule. The shopkeeper called it a fair deal. Would you have just paid the sticker?",
+      "content": "<p>An adventuring party called the Salt Road Six spent a full hour haggling over 3 silver on a single potion of healing in Brindlemoor on Saturday, and walked out paying 58 gp, 7 sp against a posted price of 50 gp. The shop is Halsk's Curios and Cordials on Tanner's Row. Its owner, Dorrin Halsk, calls the result \"a deal both sides can feel something about.\"</p>\n\n<p>Some people see eight and a half extra gold pieces. I see the best-executed customer journey of the quarter. The Salt Road Six came in with a plan, a rogue who \"reads people,\" and a bard who offered to pay in exposure. Halsk opened with a firm 50 gp. The party countered at 49 gp, 7 sp. Forty minutes of eye contact followed.</p>\n\n<p>Here is where the pivot happened. Halsk, a true thought-leader in retail, introduced a negotiation consultation fee of 1 gp per quarter hour, billed to whoever spoke first. Then came the candle surcharge (2 gp, because haggling \"burns light\"), the chair fee (3 sp each, six chairs), and mule parking at 4 gp, which the party's mule had not asked for and could not refuse. By the time the rogue said \"fine, fifty,\" the sticker price was a fond memory.</p>\n\n<p>\"We saved three silver on the potion,\" said the party's rogue, Hesper Moult, holding her receipt. \"It says so right here, under the line that says 'Rogue's Discount Applied, Then Reversed.'\" Her bard, asked whether the hour was worth it, said the experience had been \"a journey.\"</p>\n\n<p>Shieldwall Mutual has declined to comment, though a clerk confirmed the policy excludes any loss the party was warned about, including the chair fee. The Salt Road Six plan to haggle again next week, this time at a rival shop. Halsk says he will welcome them with open arms and a fresh price list.</p>\n\n<p>I met a retired guildmaster of the Copper Exchange at a gala once, and he told me, \"Sterling, the customer who haggles has already agreed to pay. All that's left is the amount.\" I think about that every day. I also think about it whenever I see a mule.</p>\n\n<p>Key takeaways for the ambitious adventurer:</p>\n\n<ul>\n<li>Never haggle in a chair you haven't priced.</li>\n<li>If the shopkeeper smiles, you are already the product.</li>\n<li>A discount that is later reversed is just a loyalty program.</li>\n</ul>\n\n<p><em>— Sterling Vanmoor, Guild Visionary. Let's connect at the Yawning Portal.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Chair Fee Racket",
+          "text": "A shopkeeper has been bleeding parties dry with invented surcharges, and a furious guild clerk wants proof before the town magistrate will act. The party must haggle in the shop and keep every receipt."
+        },
+        "npc": {
+          "name": "Dorrin Halsk",
+          "role": "Curio shop proprietor",
+          "want": "To keep every haggler paying for the privilege of haggling.",
+          "secret": "He has been splitting the surcharges with the mule stable next door.",
+          "race": "dwarf",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "Halsk's Curios and Cordials",
+          "text": "A narrow shop with a price list that grows longer each visit. The six chairs are bolted to the floor and each has a tiny brass meter.",
+          "tavern": false
+        },
+        "rumor": "They say the shopkeeper's candle surcharge pays for a second candle that nobody has ever seen lit."
+      },
+      "fiction": true
+    },
+    {
+      "id": "sleep-spell-extra-hour-57-brindlemoor-wendell",
+      "title": "Sleep Spell Drops 57 Brindlemoor Folk in the Extra Hour",
+      "category": "Health",
+      "author": "Brother Wendell Tumbleberry",
+      "date": "2026-11-02",
+      "excerpt": "A sleep spell cast to save the extra hour when Brindlemoor set its clocks back put 57 folk to sleep on their feet. Brother Wendell prescribes soup.",
+      "social": "When Brindlemoor set its clocks back Sunday, an apprentice cast a sleep spell to bank the extra hour. It dropped 57 folk, one of them mid-sermon. The Sleeping Mule had to stack three of them like firewood. Would you spend the extra hour asleep, or awake?",
+      "content": "<p>Friends, a sleep spell cast to save the extra hour on the night Brindlemoor set its clocks back has put 57 townsfolk to sleep where they stood. The apprentice responsible, a lad named Ferrin Quill, told the Reeve's office he \"only wanted a little extra rest for the town.\" The spell, as spells do, took it literally.</p>\n\n<p>The clocks fell back at the second bell on Sunday morning, as they do every autumn, and Brindlemoor gained one hour it had not planned for. By the old herbals, an extra hour is a gift from the Harvest Mother. By Chapter 9, it is \"an unlicensed hour,\" and <a href=\"/a/stirge-swarm-143-bites-brindlemoor-wendell\">the town's bell tower</a> is still being scraped, so nobody was in a mood to argue.</p>\n\n<p>Apprentice Quill reportedly cast sleep from the steps of the Sleeping Mule at about the stroke of the repeated hour. The spell was meant for one pillow. It caught a cooper, three choir boys, a mule, and a visiting cleric who was, witnesses say, halfway through a sermon on the virtues of wakefulness. He finished the sentence in his sleep.</p>\n\n<p>\"I found three of them stacked by the door like firewood,\" said Hilde, a turnip farmer. \"One was snoring in rhyme.\" The Sleeping Mule has since put a sign on its cellar door asking sleepers not to nap on the barrels.</p>\n\n<p>Deputy Registrar Pell Oddingwick said Chapter 9 regards the incident as \"a scheduled rest, recently unscheduled.\" He added that Level Seven of the Undermaw will open next tenday. Nobody laughed, because everyone was asleep or nearly so.</p>\n\n<p>Now for the science, friends. The old herbals say a tired body mends best on a full night's sleep, and the temple studies agree: adults who sleep seven to nine hours catch fewer colds and cough less. The magic kind of sleep, however, does not count. Examiner Odalys Brackenmoor of Chapter 9 confirmed that the sleepers woke feeling \"exactly as tired as before,\" which is the trouble with borrowed rest. It leaves you nothing to give back.</p>\n\n<p>The 57 were all awake by the following noon, with only a stiff neck apiece and, in the cooper's case, a barrel-shaped crease on his face. Shieldwall Mutual says napping is covered, but only the voluntary kind.</p>\n\n<p>So here is my advice. Go to bed at your usual hour, spend the extra one honestly, and leave the spellbook shut. Barley and mushroom soup, thick with thyme, is the proper nightcap. I would suggest my friend Nyx try it too, though first Nyx should go outside and see a morning that came by itself.</p>\n\n<p><em>Rest well, friends. — Brother Wendell</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Hour Nobody Spent",
+          "text": "Fifty townsfolk lie asleep after a botched spell and will not wake until the apprentice who cast it finds the counter-ritual. His master, a cranky hedge wizard, wants the party to fetch the ingredients before the Reeve notices."
+        },
+        "npc": {
+          "name": "Ferrin Quill",
+          "role": "Anxious wizard's apprentice",
+          "want": "To undo his spell before anyone finds out whose it was.",
+          "secret": "He copied the spell wrong from his master's notes on purpose, hoping to impress him.",
+          "race": "human",
+          "gender": "male",
+          "kind": "magic"
+        },
+        "location": {
+          "name": "The Drowsy Hearth",
+          "text": "An inn where every guest is already asleep, snoring in perfect time. The innkeeper is the only one awake and refuses to let anyone near the stairs.",
+          "tavern": true
+        },
+        "rumor": "They say the sleepers are all dreaming the same dream, and it is about turnips."
+      },
+      "fiction": true
     }
   ]
 }
