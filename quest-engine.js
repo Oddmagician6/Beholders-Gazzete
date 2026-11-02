@@ -14,11 +14,20 @@
    opts.world 'realms' (realms.js, ROADMAP L4 D2): the job is near a Forgotten Realms city, the
    giver has a Realms name, and one of the Realms' factions takes an interest (q.realms), all
    from draws of their own.
+   On Pathfinder pages the foe is Pathfinder creatures (encounter-engine.js matches the place's
+   types through encSceneType) and the pay follows GM Core's party treasure (QUEST_PAY_PF2E).
    ============================================ */
 
 // gp per character for a side quest, by party level (house rule; index = level).
 const QUEST_PAY = [0, 10, 20, 35, 50, 100, 150, 200, 275, 350, 450,
     650, 850, 1100, 1400, 1800, 2300, 3000, 3800, 4800, 6000];
+// Pathfinder: a tenth of GM Core's party currency for the level, per character (the one-shot's rate).
+const QUEST_PAY_PF2E = [0, 4, 7, 12, 20, 32, 50, 72, 100, 140, 200,
+    280, 400, 600, 900, 1300, 2000, 3000, 4800, 8000, 14000];
+
+function questPayBase(level) {
+    return ruleSystemId() === "pf2e" ? QUEST_PAY_PF2E[level] : QUEST_PAY[level];
+}
 
 // Where it happens: [name, short name for titles, monster types that might be there, best fit first].
 const QUEST_PLACES = [
@@ -764,7 +773,7 @@ function rollQuest(seed, opts = {}) {
     const deadline = part("deadline", () => questFill(randomArray(QUEST_DEADLINES), ctx));
 
     const reward = part("reward", () => ({
-        gp: questRound(QUEST_PAY[level] * size * j.pay * (0.75 + rand() * 0.5)),
+        gp: questRound(questPayBase(level) * size * j.pay * (0.75 + rand() * 0.5)),
         terms: randomArray(QUEST_TERMS),
         bonus: rand() < 0.4 ? fillTemplate(randomArray(QUEST_BONUSES)) : null,
         inKind: rand() < 0.2 ? randomArray(QUEST_GOODS) : null
@@ -824,7 +833,7 @@ function questText(q) {
         `${j.label} · party of ${q.size}, level ${q.level}`,
         q.task,
         "",
-        `Quest giver: ${g.name} (${questCap(g.race)}, ${g.age}, ${g.profession.toLowerCase()}). ${g.trait}. Voice: ${g.voice}.`,
+        `Quest giver: ${g.name} (${questCap(ruleWord("race", g.race))}, ${g.age}, ${ruleWord("class", g.profession).toLowerCase()}). ${g.trait}. Voice: ${g.voice}.`,
         `"${g.dialogue}"`,
         `Why you: ${g.why}`,
         `Secret: ${g.secret}`,

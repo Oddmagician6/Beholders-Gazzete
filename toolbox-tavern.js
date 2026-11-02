@@ -88,7 +88,7 @@ function priceRows(items) {
 }
 
 function npcSub(n, extra) {
-    return [extra, capWord(n.race), n.age].filter(Boolean).map(esc).join(' · ');
+    return [extra, capWord(ruleWord('race', n.race)), n.age].filter(Boolean).map(esc).join(' · ');
 }
 
 function rumorBlock() {
@@ -147,7 +147,7 @@ function renderTavern() {
                 <ul class="tv-regulars">${tv.regulars.map((r, i) => `
                     <li>
                         <div class="tv-npc-name">${npcFaceHtml(r)} ${esc(r.name)}</div>
-                        <div class="tv-npc-sub">${npcSub(r, r.profession)}</div>
+                        <div class="tv-npc-sub">${npcSub(r, ruleWord('class', r.profession))}</div>
                         <p>Found ${esc(r.habit)}. ${esc(r.trait)}.${r.tie ? ` ${esc(capWord(r.tie))}.` : ''}${esc(tavernTieText(r))}</p>
                         ${i === 0 ? `<p class="tv-hook"><b>Has work:</b> ${esc(r.questHook)}</p>` : ''}
                     </li>`).join('')}

@@ -13,7 +13,11 @@
    kind, menu, rooms, and stakes, never the owner, the sign, the staff, or the regulars.
    opts.world 'realms' (realms.js, ROADMAP L4 D2): the tavern stands in a Forgotten Realms city
    and its people get Realms names, from draws of their own (the rest stays the same).
+   On Pathfinder pages (TAVERN_PF2E) the tiers keep their names, and the prices come from
+   Player Core's Food and Lodging (tagged 'Player Core'); the rest is priced to match.
    ============================================ */
+
+const TAVERN_PF2E = ruleSystemId() === 'pf2e';
 
 // SRD 5.1: meals and an inn stay, per day, for each lifestyle.
 const TAVERN_TIERS = {
@@ -37,7 +41,31 @@ const TAVERN_SRD_ITEMS = [
     { name: 'Meat, a chunk', gp: 0.3, kind: 'food', from: 'poor', to: 'wealthy' },
     { name: 'Banquet (per person)', gp: 10, kind: 'food', from: 'wealthy', to: 'aristocratic' }
 ];
-const TAVERN_STABLING = 0.5;   // SRD 5.1: stabling, per day
+const TAVERN_STABLING = TAVERN_PF2E ? 0.02 : 0.5;   // stabling, per day (SRD 5.1; Player Core)
+
+// Pathfinder (Player Core): floor space 3 cp, a bed 1 sp, a private room 8 sp, an extravagant suite
+// 10 gp a night; a poor meal 1 cp, a square meal 3 cp, fine dining 1 gp. The tiers between are ours.
+if (TAVERN_PF2E) {
+    const pf = {
+        squalid:      { meal: 0.02, stay: 0.03, ale: 0.01, src: 'Player Core' },
+        poor:         { meal: 0.03, stay: 0.1,  ale: 0.01, src: 'Player Core' },
+        modest:       { meal: 0.09, stay: 0.8,  ale: 0.01, src: 'Player Core' },
+        comfortable:  { meal: 0.3,  stay: 2,    ale: 0.02, src: 'house' },
+        wealthy:      { meal: 1,    stay: 5,    ale: 0.05, src: 'house' },
+        aristocratic: { meal: 3,    stay: 10,   ale: 0.1,  src: 'Player Core' }
+    };
+    Object.keys(pf).forEach(k => Object.assign(TAVERN_TIERS[k], pf[k]));
+    TAVERN_SRD_ITEMS.splice(0, TAVERN_SRD_ITEMS.length,
+        { name: 'Ale, by the mug', gp: 0.01, kind: 'drink', from: 'squalid', to: 'comfortable' },
+        { name: 'Ale, by the keg', gp: 0.2, kind: 'drink', from: 'poor', to: 'comfortable' },
+        { name: 'Coffee or tea, by the pot', gp: 0.02, kind: 'drink', from: 'modest', to: 'aristocratic' },
+        { name: 'Wine (bottle)', gp: 0.1, kind: 'drink', from: 'poor', to: 'wealthy' },
+        { name: 'Wine, fine (bottle)', gp: 1, kind: 'drink', from: 'comfortable', to: 'aristocratic' },
+        { name: 'A poor meal', gp: 0.01, kind: 'food', from: 'squalid', to: 'poor' },
+        { name: 'A square meal', gp: 0.03, kind: 'food', from: 'poor', to: 'comfortable' },
+        { name: 'Fine dining (per person)', gp: 1, kind: 'food', from: 'wealthy', to: 'aristocratic' });
+}
+const TAVERN_SRC = TAVERN_PF2E ? 'Player Core' : 'SRD';
 
 // What kind of place it is. tiers: [lowest, highest] tier index it can be.
 // where: where it stands. dish/drink: what it's known for (a house item on the menu).
@@ -380,24 +408,24 @@ const TAVERN_RULES = ['Pay before you drink.', 'Peace-bond your blades at the do
 // A game in the corner: how it plays, and stakes off the tier's night in a room.
 const TAVERN_GAMES = ruleTable([
     { name: 'Dragonbones', how: 'Everyone rolls 3d6. Highest total takes the pot, any double beats a plain total, and triples take double from everyone.' },
-    { name: 'Liar\'s dice', how: 'Five d6 each under a cup, bidding on how many of a face are on the table. A {skill:wis:insight} check opposed by {skill:cha:deception} reads a bluff.' },
+    { name: 'Liar\'s dice', how: 'Five d6 each under a cup, bidding on how many of a face are on the table. A {skill:wis:insight} check {alt:opposed by|against the bluffer\'s} {skill:cha:deception}{alt:| DC} reads a bluff.' },
     { name: 'Knucklebones', how: 'Toss the bones and catch them on the back of the hand. {skill:dex:sleight-of-hand}, {alt:DC 10, then 13, then 16|DC 13, then 16, then 19}. Most catches wins.' },
-    { name: 'Arm-wrestling', how: 'Opposed {skill:str:athletics} checks, best two of three. The loser buys a round too.' },
-    { name: 'A drinking contest', how: 'Each round, a {save:con} saving throw: {dc:10}, rising by 2 each round. Fail twice and you pay the tab, and you are poisoned for an hour.' },
-    { name: 'Find the pea', how: 'Three cups and a pea. A {dc:15} {skill:wis:perception} check follows it. The dealer cheats on a 1 or 2 on a d6 (Sleight of Hand +5).' },
-    { name: 'Kings and Beggars', how: 'A card game of bluff. Three hands of opposed {skill:cha:deception} against {skill:wis:insight}; win two to take the pot.' },
+    { name: 'Arm-wrestling', how: '{alt:Opposed |}{skill:str:athletics} checks{alt:| against each other\'s Athletics DC}, best two of three. The loser buys a round too.' },
+    { name: 'A drinking contest', how: 'Each round, a {save:con} saving throw: {dc:10}, rising by 2 each round. Fail twice and you pay the tab, and you are {alt:poisoned|sickened 1} for an hour.' },
+    { name: 'Find the pea', how: 'Three cups and a pea. A {dc:15} {skill:wis:perception} check follows it. The dealer cheats on a 1 or 2 on a d6 ({alt:Sleight of Hand|Thievery} +5).' },
+    { name: 'Kings and Beggars', how: 'A card game of bluff. Three hands of {alt:opposed |}{skill:cha:deception} against {alt:|the others\' }{skill:wis:insight}{alt:| DC}; win two to take the pot.' },
     { name: 'Knife toss', how: 'Three throws at a board across the room: {ability:dex} checks at {alt:DC 12, 15, and 18|DC 15, 18, and 21}. Hit all three and the house pays double.' },
     { name: 'Beetle racing', how: 'Pick a beetle (there are six) and roll a d6 for it each round. The first to six steps wins. The house beetle never seems to lose.' },
     { name: 'Coin in the cup', how: 'Bounce a coin off the table into a mug. {ability:dex}, {dc:13}. Miss and the coin is the house\'s.' },
     { name: 'Riddle duel', how: 'Trade riddles until someone fails. {ability:int} checks, {dc:12}, rising by 1 a riddle. The barkeep judges, badly.' },
     { name: 'Rat-catching', how: 'Turn over a cup on the floor and hope. {skill:dex:acrobatics}, {dc:14}. There are a lot of rats and they are fast.' },
-    { name: 'Stare-down', how: 'Two players stare until one looks away. Opposed {save:wis} saving throws. Blinking counts.' },
+    { name: 'Stare-down', how: 'Two players stare until one looks away. {alt:Opposed |}{save:wis} saving throws{alt:| against each other\'s Will DC}. Blinking counts.' },
     { name: 'High-low', how: 'The dealer rolls a d20; guess if the next roll is higher or lower. Five right in a row breaks the bank.' }
 ]);
 
 // Trouble brewing tonight (a hook, often with a check).
 const TAVERN_TROUBLE = ruleTable([
-    'A pickpocket is working the room (Sleight of Hand +5). A passive Perception of 14 spots them.',
+    'A pickpocket is working the room ({alt:Sleight of Hand|Thievery} +5). {alt:A passive Perception of 14 spots them|Each lift is rolled against the mark\'s Perception DC}.',
     'Two caravan guards are one insult away from a brawl. A {dc:13} {skill:cha:persuasion} check calms them; otherwise chairs fly within the hour.',
     'The ale is watered, and a regular is about to say so loudly.',
     'There is a body in the cellar, and the cook will find it within the hour.',
@@ -414,7 +442,7 @@ const TAVERN_TROUBLE = ruleTable([
     'A rat king is nesting in the cellar, and the rats are getting bold.',
     'The bard has insulted a noble in song. The noble has guards.',
     'A guest has died in their room. It looks natural. It isn\'t.',
-    'The stew has gone off, and half the room is about to find out ({dc:10} {save:con} save or poisoned until morning).',
+    'The stew has gone off, and half the room is about to find out ({dc:10} {save:con} save or {alt:poisoned|sickened 1} until morning).',
     'A cult is meeting in the back room, under the name of a book club.',
     'A child has come in looking for their parent, who is one of the regulars and pretending not to be.'
 ]);
@@ -506,11 +534,11 @@ const TAVERN_GAMES_MORE = ruleTable([
     { name: 'Toad racing', how: 'Pick a toad (there are five) and roll a d4 for it each round. The first to ten hops wins. One toad always just sits there.' },
     { name: 'Candle and coin', how: 'Snuff a candle across the table by flicking a coin at it. {ability:dex}, {dc:15}. The house relights it for a copper.' },
     { name: 'Tankard tower', how: 'Stack empty tankards in turns. {skill:dex:sleight-of-hand}, {dc:8} plus the number already stacked. Whoever topples it buys the round.' },
-    { name: 'Slaps', how: 'Hands stacked on the table. Opposed {ability:dex} checks; the winner slaps, and the loser pays a copper a slap. Three slaps ends it.' },
-    { name: 'The dragon\'s hoard', how: 'Everyone puts a coin in and draws a token from a bag; whoever draws the dragon takes the hoard. A {dc:16} Sleight of Hand check palms a second token.' },
+    { name: 'Slaps', how: 'Hands stacked on the table. {alt:Opposed |}{ability:dex} checks{alt:| against each other\'s Reflex DC}; the winner slaps, and the loser pays a copper a slap. Three slaps ends it.' },
+    { name: 'The dragon\'s hoard', how: 'Everyone puts a coin in and draws a token from a bag; whoever draws the dragon takes the hoard. A {dc:16} {alt:Sleight of Hand|Thievery} check palms a second token.' },
     { name: 'Tall tales', how: 'Each player tells a story of their own deeds and the table votes. {skill:cha:performance} checks; a {dc:13} {skill:wis:insight} catches an outright lie, which forfeits.' },
-    { name: 'Axe throwing', how: 'Three throws at a log in the yard: attack rolls against AC 12, 14, and 16. Hit all three to take the pot; miss all three and pay for the log.' },
-    { name: 'Stones and pits', how: 'A board of pits and pebbles. Opposed {ability:int} checks, best of three; a natural 20 clears the board.' },
+    { name: 'Axe throwing', how: 'Three throws at a log in the yard: attack rolls against {alt:AC 12, 14, and 16|AC 15, 17, and 19}. Hit all three to take the pot; miss all three and pay for the log.' },
+    { name: 'Stones and pits', how: 'A board of pits and pebbles. {alt:Opposed |}{ability:int:games-lore} checks{alt:| against each other\'s Games Lore DC}, best of three; a natural 20 clears the board.' },
     { name: 'Last one standing', how: 'Everyone rolls a d12; the lowest drops out each round until one is left. Pay double the stake once to reroll.' }
 ]);
 const TAVERN_TROUBLE_MORE = ruleTable([
@@ -654,7 +682,7 @@ function rollTavern(seed, opts = {}) {
 
     const menu = part('menu', () => {
         const sells = i => TAVERN_TIER_KEYS.indexOf(i.from) <= ti && ti <= TAVERN_TIER_KEYS.indexOf(i.to);
-        const srd = TAVERN_SRD_ITEMS.filter(sells).map(i => ({ name: i.name, gp: i.gp, kind: i.kind, src: 'SRD' }));
+        const srd = TAVERN_SRD_ITEMS.filter(sells).map(i => ({ name: i.name, gp: i.gp, kind: i.kind, src: TAVERN_SRC }));
         // Three plates, each fixed or composed; the first is the house special.
         const fixed = pickSome(TAVERN_DISHES[tier], 3);
         const dishes = fixed.map(d => { const c = tavernDish(band); return rand() < 0.45 ? c : d; })
@@ -681,12 +709,12 @@ function rollTavern(seed, opts = {}) {
     const rooms = part('rooms', () => {
         const list = [ti - 1, ti, ti + 1].filter(i => i >= 0 && i < TAVERN_TIER_KEYS.length).map(i => {
             const r = TAVERN_TIERS[TAVERN_TIER_KEYS[i]];
-            return { name: r.room, gp: r.stay, tier: TAVERN_TIER_KEYS[i], src: 'SRD' };
+            return { name: r.room, gp: r.stay, tier: TAVERN_TIER_KEYS[i], src: r.src || TAVERN_SRC };
         });
         const vacant = randomInt(0, 6);
         const special = randomArray(TAVERN_SPECIAL_ROOMS), price = tavernPrice(t.stay * special.mult);
         if (rand() < 0.35 && ti >= 1) list.push({ name: special.name, gp: price, src: 'house' });
-        list.push({ name: 'Stabling, per mount', gp: TAVERN_STABLING, src: 'SRD' });
+        list.push({ name: 'Stabling, per mount', gp: TAVERN_STABLING, src: TAVERN_SRC });
         if (ti >= 2) list.push({ name: 'A hot bath', gp: tavernPrice(t.ale * 2), src: 'house' });
         return { list, vacant };
     });
@@ -717,7 +745,8 @@ function rollTavern(seed, opts = {}) {
 }
 
 function tavernNpcLine(n) {
-    return `${n.name} (${n.race.charAt(0).toUpperCase() + n.race.slice(1)}, ${n.age})`;
+    const race = ruleWord('race', n.race);
+    return `${n.name} (${race.charAt(0).toUpperCase() + race.slice(1)}, ${n.age})`;
 }
 
 // "on the docks", or "on the docks in Waterdeep" for a Forgotten Realms tavern.
@@ -748,7 +777,7 @@ function tavernText(tv, rumor) {
         'Staff:',
         ...tv.staff.map(s => `  ${s.role}: ${tavernNpcLine(s)}, ${s.note}.`),
         'Regulars:',
-        ...tv.regulars.map((r, i) => `  ${tavernNpcLine(r)}, ${r.profession.toLowerCase()}, ${r.habit}. ${r.trait}.${r.tie ? ` ${tavernCap(r.tie)}.` : ''}${tavernTieText(r)}${i === 0 && r.questHook ? ` Has work: ${r.questHook}${/[.!?]$/.test(r.questHook) ? '' : '.'}` : ''}`),
+        ...tv.regulars.map((r, i) => `  ${tavernNpcLine(r)}, ${ruleWord('class', r.profession).toLowerCase()}, ${r.habit}. ${r.trait}.${r.tie ? ` ${tavernCap(r.tie)}.` : ''}${tavernTieText(r)}${i === 0 && r.questHook ? ` Has work: ${r.questHook}${/[.!?]$/.test(r.questHook) ? '' : '.'}` : ''}`),
         '',
         'Food:', ...tv.menu.food.map(i => '  ' + price(i)),
         'Drink:', ...tv.menu.drink.map(i => '  ' + price(i)),

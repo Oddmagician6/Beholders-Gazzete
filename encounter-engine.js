@@ -200,7 +200,7 @@ function rollEncounter(budget, diff, type = '') {
     diff = encDiffKey(diff);
     const target = budget[diff];
     const maxCr = encMaxCr(budget);
-    const pool = ENC_MONSTERS.filter(m => m.xp > 0 && m.xp <= target && crValue(m.cr) <= maxCr && (!type || m.type === type));
+    const pool = ENC_MONSTERS.filter(m => m.xp > 0 && m.xp <= target && crValue(m.cr) <= maxCr && (!type || encSceneType(m) === type));
     if (!pool.length) return [];
     return fillEncounter(pool, budget, diff);
 }

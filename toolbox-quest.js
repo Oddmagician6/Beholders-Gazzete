@@ -58,7 +58,7 @@ function questFoeHTML(q) {
     if (!q.foe) return `<p class="tv-muted">No fight is planned. Whether it stays that way is up to the party.</p>`;
     const lvl = ENCOUNTER_LEVELS[q.foe.rating];
     return `<ul class="qs-foes">${q.foe.list.map(e => `
-            <li><b>${e.count} × ${esc(e.m.name)}</b> <span class="tv-npc-sub">CR ${esc(e.m.cr)} · AC ${e.m.ac} · HP ${e.m.hp}</span></li>`).join('')}
+            <li><b>${e.count} × ${esc(e.m.name)}</b> <span class="tv-npc-sub">${esc(crLabel(e.m.cr))} · AC ${e.m.ac} · HP ${e.m.hp}</span></li>`).join('')}
         </ul>
         <p class="tv-small">${q.foe.xp.toLocaleString('en-US')} XP${lvl ? `: ${lvl.icon} ${esc(lvl.label)} for a party of ${q.size} at level ${q.level}` : ''}.</p>
         <a class="btn qs-enc" href="${esc(questEncounterLink(q))}">👹 Open in Encounter</a>`;
@@ -81,7 +81,7 @@ function renderQuest() {
                     <span class="tv-icon" aria-hidden="true">${npcFaceHtml(g)}</span>
                     <div>
                         <div class="tv-npc-name">${esc(g.name)}</div>
-                        <div class="tv-npc-sub">${npcSub(g, g.profession)}</div>
+                        <div class="tv-npc-sub">${npcSub(g, ruleWord('class', g.profession))}</div>
                     </div>
                 </div>
                 <p>${esc(g.trait)}. ${esc(g.voice)}.</p>
@@ -135,7 +135,7 @@ function saveQuestToNotebook() {
         sub: q.task,
         href: 'toolbox?' + paramsQuery(questParams()),
         status: 'open',
-        giver: [g.name, g.profession].filter(Boolean).join(', '),
+        giver: [g.name, ruleWord('class', g.profession)].filter(Boolean).join(', '),
         reward: `${formatCoins(q.reward.gp)} for the party. ${questRewardText(q.reward)}`
     });
     if (!r) flash('quest-status', "⚠️ This browser won't keep a notebook (storage is full or off).");
@@ -169,6 +169,8 @@ function setupQuest() {
     document.getElementById('qs-print').addEventListener('click', printQuest);
     window.addEventListener('afterprint', () => document.body.classList.remove('print-quest'));
     // The Handout Maker (F48) rebuilds the quest from its link: a bounty board first, a letter one click away.
+    // It has no Pathfinder page yet, so a Pathfinder quest doesn't offer it.
+    document.getElementById('qs-handout').hidden = !ruleLinkOk('handouts');
     document.getElementById('qs-handout').addEventListener('click', () => {
         if (!quest.seed) return;
         const { tab, ...p } = questParams();
