@@ -181,7 +181,7 @@ const CP_LEADS = ruleTable([
     '{Boss} carries a map with {nextTown} circled, and a date written beside it.',
     'A prisoner freed in the last room overheard where the next shipment goes: {nextSite}.',
     'The hoard holds a ledger, and one name in it keeps getting paid in {nextTown}.',
-    'A coded note ({dc:13} {skill:int:investigation} to read it) names {nextSite} and a day.',
+    'A coded note ({dc:13} {skill:int:investigation:society} to read it) names {nextSite} and a day.',
     "{Patron} sends word: {faction}'s people have been seen near {nextTown}.",
     'A survivor swears the rest went to {nextSite}, and took the cart with them.',
     "{Boss}'s orders, half burned in a brazier, name {nextTown} and a buyer there.",
@@ -238,7 +238,17 @@ const CP_FORMS = {
     fey: '{Villain} struck a bargain under the hill, and paid with {vtheir} own nature: {vthey} {vthey:is|are} {monster} now.'
 };
 // Else the villain stands beside the boss, as the strongest of these (SRD people) that fits the level.
-const CP_STAND = {
+// On Pathfinder pages, NPC Core's people, highest level first.
+const CP_STAND = typeof ENC_PF2E !== 'undefined' && ENC_PF2E ? {
+    cult: ['eldritch-emeritus', 'god-caller', 'cult-leader', 'demonologist', 'false-priest', 'cultist'],
+    thieves: ['crime-kingpin', 'assassin', 'gang-leader', 'spy', 'burglar', 'leaping-thief', 'bandit'],
+    house: ['mage-knight', 'knight', 'veteran-noble', 'advisor', 'noble', 'political-upstart'],
+    guild: ['crime-kingpin', 'guildmaster', 'spy', 'fence', 'loan-shark', 'merchant'],
+    company: ['siegebreaker', 'warmonger', 'drill-sergeant', 'knight', 'captain-of-the-guard', 'tournament-combatant', 'infantry-soldier'],
+    order: ['grand-inquisitor', 'mage-knight', 'knight', 'captain-of-the-guard', 'watch-officer', 'guard'],
+    temple: ['god-caller', 'high-priest-of-the-grave', 'priest-of-the-dawn', 'false-priest', 'acolyte-of-valor'],
+    circle: ['tree-singer', 'dedicated-druid', 'druid-initiate']
+} : {
     cult: ['archmage', 'mage', 'priest', 'cult-fanatic'], thieves: ['assassin', 'spy', 'bandit-captain'], house: ['mage', 'knight', 'noble'],
     guild: ['assassin', 'spy', 'noble'], company: ['gladiator', 'knight', 'veteran', 'bandit-captain'], order: ['knight', 'veteran', 'priest'],
     temple: ['priest', 'cult-fanatic', 'acolyte'], circle: ['druid', 'scout']
@@ -444,6 +454,8 @@ function rollCampaign(seed, opts = {}, set = {}) {
         if (ch.ltMissed) serves += ` ${ch.ltMissed.name}, ${cpPoss(c.faction)} ${ch.ltMissed.role.toLowerCase()}, set this up and left before the party arrived.`;
         ch.serves = serves;
         ch.lead = next ? cpFill(arc.leads[i], { ...cc, nextSite: next.o.site.name, nextTown: next.o.town }) : '';
+        // A Pathfinder check's DC is the chapter's level DC (GM Core), not the table's fixed one.
+        if (OS_PF2E) ch.lead = ch.lead.replace(/\bDC \d+/, `DC ${osClueDc(o.site)}`);
         ch.stage = i < n - 1 ? fill(arc.front[i]) : '';
         // The pitch opens with where the chapter sits in the arc, in place of the one-shot's tone line.
         const at = ch.last ? 'last' : i === 0 ? 'first' : i === reveal ? 'reveal' : i < reveal ? 'early' : i === n - 2 ? 'near' : 'late';

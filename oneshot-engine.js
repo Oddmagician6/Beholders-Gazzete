@@ -690,10 +690,10 @@ function rollOneShot(seed, opts = {}, set = {}) {
     let named = !!(gv && osNameable(site)), form = '', guard = '', stood = null;
     if (named) site.boss.leader.name = gv.name;
     const L0 = site.boss && site.boss.leader, v0 = osVillain(site), m0 = v0.monster && MONSTER_BY_ID[v0.monster];
-    if (gv && !named && gv.forms && L0 && m0 && v0.mind === 'folk' && gv.forms.includes(m0.type)) {
+    if (gv && !named && gv.forms && L0 && m0 && v0.mind === 'folk' && gv.forms.includes(encSceneType(m0))) {
         L0.name = gv.name;
         named = true;
-        form = m0.type;
+        form = encSceneType(m0);
     }
     const lastFight = site.rooms[site.rooms.length - 1].fight;
     if (gv && !named && gv.stand && lastFight) {

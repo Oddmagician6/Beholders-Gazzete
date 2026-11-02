@@ -15,6 +15,9 @@
 const CP_PART_LABELS = { world: 'World', arc: 'Villain & arc' };
 const CP_WORLD_KEYS = Object.keys(CP_USES);
 
+// This page's own address (Save to Notebook links back to it).
+const CP_PAGE = OS_PF2E ? 'pathfinder-campaign-generator' : 'dnd-campaign-generator';
+
 const cps = { seed: '', level: 1, party: 4, len: 'standard', tone: '', links: {}, set: {}, lock: [], ch: 0, data: null };
 
 function cpLabel(id) {
@@ -267,7 +270,7 @@ function cpBookHtml(cp) {
     all.sort((a, b) => b.xp - a.xp || a.name.localeCompare(b.name));
     return cp.chapters.map(ch => `<div class="cp-book-ch">${cpGlueHtml(cp, ch, false)}${oneShotBodyHtml(ch.o, { appendix: false })}</div>`).join('')
         + `<section class="os-act os-appendix">${osPlainHead('Appendix', 'Stat blocks')}${all.map(m => `<details class="os-sb" open>
-            <summary>${esc(m.name)} <span class="os-dim">CR ${esc(m.cr)} · ${m.xp.toLocaleString('en-US')} XP</span></summary>
+            <summary>${esc(m.name)} <span class="os-dim">${esc(crLabel(m.cr))} · ${m.xp.toLocaleString('en-US')} XP</span></summary>
             <div class="sb-box">${monsterBlockHtml(m)}</div></details>`).join('')}</section>`;
 }
 
@@ -306,7 +309,7 @@ function cpWorldEntry(W, tab) {
 // The campaign as a quest, each chapter as a quest of its own, and the world they stand on, all linked.
 function saveToNotebook() {
     const cp = cps.data, v = cp.villain;
-    const href = 'dnd-campaign-generator?' + paramsQuery(cpParams(false));
+    const href = CP_PAGE + '?' + paramsQuery(cpParams(false));
     // The scheme and the front are the DM's alone, as on the page: the 🔒 notes, never the players' ones.
     const dm = [`The scheme: ${osCap(v.name)} ${v.scheme}.`, `What everyone wants: ${cp.relic.text}.`,
         'The front:', ...cp.front.map((t, i) => `${i + 1}. ${t}`), `Secret: ${v.secret}`, `Their people call ${v.name} ${cp.alias}.`].join('\n');
@@ -323,7 +326,7 @@ function saveToNotebook() {
     cp.chapters.forEach(ch => {
         const o = ch.o;
         const r = nbAdd({ kind: 'quest', title: `${cp.title}, chapter ${ch.i + 1}: ${o.title}`, sub: `Level ${ch.level} · ${o.site.name}`,
-            href: 'dnd-campaign-generator?' + paramsQuery({ ...cpParams(false), ch: ch.i + 1 }),
+            href: CP_PAGE + '?' + paramsQuery({ ...cpParams(false), ch: ch.i + 1 }),
             notes: [o.pitch, `In the campaign: ${ch.serves}`, ch.lead ? `The way on: ${ch.lead}` : ''].filter(Boolean).join('\n'),
             dm: `Twist: ${o.twist}\nPatron's secret: ${o.patron.secret}`, giver: o.patron.name, reward: formatCoins(o.reward), status: 'open' });
         tally(r);
