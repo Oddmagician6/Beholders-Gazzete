@@ -13,9 +13,12 @@
    or a stat block, and hides monster names the way the Initiative tab's player view does.
    Needs rules-data.js, toolbox-clocks.js (clockSvg, cleanClock), table-engine.js, party.js,
    init-view.js, and notebook.js on the page.
+   On a Pathfinder page (the GM Screen) the layouts keep their own key, the rules cards are
+   rules-data-pf2e.js's, and the party shows Perception in place of passive Perception.
    ============================================ */
 
-const DS_KEY = 'gazette-dm-screen';
+const DS_KEY = ruleKey('gazette-dm-screen');
+const DS_PF2E = ruleSystemId() === 'pf2e';
 const DS_LIMITS = { layouts: 12, cards: 24, name: 40, title: 60, text: 4000, formula: 80, diceRolls: 6, tableRolls: 5, result: 1000, steps: 300, detail: 300 };
 // show: whether the card may go to the player view (a stat block never does).
 const DS_TYPES = {
@@ -197,6 +200,11 @@ function dsCardTitle(c, ctx) {
     return DS_TYPES[c.type].label;
 }
 
+// A bonus with its sign (Perception +7).
+function dsSigned(n) {
+    return `${n < 0 ? '−' : '+'}${Math.abs(n)}`;
+}
+
 // Text with its line breaks, escaped.
 function dsPre(text) {
     return `<div class="ds-pre">${dsEsc(text)}</div>`;
@@ -236,7 +244,7 @@ function dsPlayerCardHtml(c, ctx) {
         const party = ctx.party();
         body = party.length ? `<ul class="sv-party">${party.map((p, i) => `<li><strong>${dsEsc(partyMemberName(p, i))}</strong>
             <span>${dsEsc([p.cls, `level ${p.level}`].filter(Boolean).join(' '))}</span>
-            ${p.ac !== null ? `<span>AC ${p.ac}</span>` : ''}${p.pp !== null ? `<span>Passive Perception ${p.pp}</span>` : ''}</li>`).join('')}</ul>`
+            ${p.ac !== null ? `<span>AC ${p.ac}</span>` : ''}${DS_PF2E ? `<span>Perception ${dsSigned(p.init)}</span>` : p.pp !== null ? `<span>Passive Perception ${p.pp}</span>` : ''}</li>`).join('')}</ul>`
             : '<p class="sv-faint">No party yet.</p>';
     } else if (c.type === 'entry') {
         const e = nbFind(ctx.nb(), c.entry);

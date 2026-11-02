@@ -6,6 +6,8 @@
    📺 on a card puts it in the player view (screen-view.html), which follows this browser's storage.
    Clock, table, party, initiative, and notebook cards read and write their own tools' keys,
    and redraw when another tab changes them.
+   On a Pathfinder page (pathfinder-gm-screen, DS_PF2E) the creatures are Pathfinder's (no homebrew),
+   the dice say fortune and misfortune, and the links go to the Pathfinder tools.
    ============================================ */
 
 let ds = dsLoad();
@@ -96,7 +98,7 @@ function pickerHtml(c, ctx) {
     if (c.type === 'monster') {
         const m = Object.hasOwn(MONSTER_BY_ID, c.m) ? MONSTER_BY_ID[c.m] : null;
         return `<form class="ds-inline" data-form="monster">
-            <label class="ds-pick-label"><span>Monster (SRD or your homebrew)</span><input type="text" name="m" list="ds-monsters" maxlength="80" placeholder="Type a name: goblin, lich…" autocomplete="off" value="${m ? dsEsc(monsterLabel(m)) : ''}"></label>
+            <label class="ds-pick-label"><span>${DS_PF2E ? 'Creature' : 'Monster (SRD or your homebrew)'}</span><input type="text" name="m" list="ds-monsters" maxlength="80" placeholder="Type a name: goblin, ${DS_PF2E ? 'ogre' : 'lich'}…" autocomplete="off" value="${m ? dsEsc(monsterLabel(m)) : ''}"></label>
             <button type="submit" class="ds-btn">🐉 Show</button>
         </form>`;
     }
@@ -107,15 +109,21 @@ function monsterLabel(m) {
     return m.hb ? `${m.name} (homebrew)` : m.name;
 }
 
+// The encounter engine's creatures (Pathfinder's on the GM Screen). Homebrew monsters are 5e
+// stat blocks, so the GM Screen leaves them out.
+function monsterRows() {
+    return DS_PF2E ? ENC_MONSTERS : [...hbRows, ...ENC_MONSTERS];
+}
+
 function renderMonsterList() {
-    const rows = [...hbRows, ...MONSTERS];
+    const rows = monsterRows();
     document.getElementById('ds-monsters').innerHTML = rows.map(m => `<option value="${dsEsc(monsterLabel(m))}"></option>`).join('');
 }
 
 function findMonster(text) {
     const k = text.trim().toLowerCase();
     if (!k) return null;
-    const rows = [...hbRows, ...MONSTERS];
+    const rows = monsterRows();
     return rows.find(m => monsterLabel(m).toLowerCase() === k) || rows.find(m => m.name.toLowerCase() === k)
         || rows.find(m => m.name.toLowerCase().startsWith(k)) || null;
 }
@@ -164,8 +172,8 @@ function diceBody(c) {
         <form class="ds-inline" data-form="dice">
             <label class="ds-pick-label"><span>Roll</span><input type="text" name="f" maxlength="${DS_LIMITS.formula}" value="${dsEsc(c.f)}" placeholder="2d6+3, 4d6kh3" autocomplete="off" spellcheck="false"></label>
             <button type="submit" class="ds-btn ds-gold" name="mode" value="normal">🎲 Roll</button>
-            <button type="submit" class="ds-btn" name="mode" value="adv" title="Roll the d20 twice, keep the higher">Adv</button>
-            <button type="submit" class="ds-btn" name="mode" value="dis" title="Roll the d20 twice, keep the lower">Dis</button>
+            <button type="submit" class="ds-btn" name="mode" value="adv" title="Roll the d20 twice, keep the higher">${DS_PF2E ? 'Fortune' : 'Adv'}</button>
+            <button type="submit" class="ds-btn" name="mode" value="dis" title="Roll the d20 twice, keep the lower">${DS_PF2E ? 'Misfortune' : 'Dis'}</button>
         </form>
         ${c.rolls.length ? `<ol class="ds-results ds-dice-results">${c.rolls.map((r, i) => `<li${i ? '' : ' class="ds-latest"'}>
             <span class="ds-total">${r.total}</span><span class="ds-dice-f">${dsEsc(r.f)}</span>${r.crit ? DS_CRIT[r.crit] : ''}<span class="ds-steps">${dsEsc(r.d)}</span></li>`).join('')}</ol>
@@ -176,7 +184,8 @@ const DS_HEALTH = { healthy: '💚', bloodied: '🩸', down: '💀' };
 
 function initBody(ctx) {
     const f = ctx.fight();
-    const links = '<p class="ds-links"><a href="toolbox?tab=init">⚔️ Open the tracker</a> <a href="player-view" target="gazette-player-view">📺 Players\' initiative</a></p>';
+    // A link with a target skips tab-pages.js's moves, so the player view's address is picked here.
+    const links = `<p class="ds-links"><a href="toolbox?tab=init">⚔️ Open the tracker</a> <a href="${DS_PF2E ? 'pathfinder-player-view' : 'player-view'}" target="gazette-player-view">📺 Players' initiative</a></p>`;
     const blank = `<table class="ds-print-only ds-grid-table"><thead><tr><th>Init</th><th>Name</th><th>HP</th><th>Conditions</th></tr></thead><tbody>${'<tr><td></td><td></td><td></td><td></td></tr>'.repeat(10)}</tbody></table>`;
     const list = f.list.filter(c => c && typeof c.name === 'string').slice(0, 40);
     if (!list.length) return `<p class="ds-faint">No fight yet. Add combatants on the Toolbox's Initiative tab, and they show up here.</p>${blank}${links}`;
@@ -208,9 +217,9 @@ function partyBody(ctx) {
     const party = ctx.party();
     if (!party.length) return '<p class="ds-faint">No party yet. Enter the characters once on the <a href="toolbox?tab=party">Toolbox\'s Party tab</a>.</p>';
     const n = v => (v === null ? '' : v);
-    return `<table class="ds-table"><thead><tr><th>Character</th><th>Class</th><th>AC</th><th>HP</th><th title="Passive Perception">PP</th></tr></thead><tbody>
+    return `<table class="ds-table"><thead><tr><th>Character</th><th>Class</th><th>AC</th><th>HP</th>${DS_PF2E ? '<th title="Perception">Perc</th>' : '<th title="Passive Perception">PP</th>'}</tr></thead><tbody>
         ${party.map((p, i) => `<tr><td>${dsEsc(partyMemberName(p, i))}${p.player && p.name ? `<span class="ds-steps">${dsEsc(p.player)}</span>` : ''}</td>
-            <td>${dsEsc(p.cls)} ${p.level}</td><td>${n(p.ac)}</td><td>${partyHpCell(p)}</td><td>${n(p.pp)}</td></tr>`).join('')}
+            <td>${dsEsc(p.cls)} ${p.level}</td><td>${n(p.ac)}</td><td>${partyHpCell(p)}</td><td>${DS_PF2E ? dsSigned(p.init) : n(p.pp)}</td></tr>`).join('')}
         </tbody></table>
         <p class="ds-links"><a href="toolbox?tab=party">👥 Edit the party</a></p>`;
 }
@@ -241,7 +250,8 @@ function monsterBody(c) {
     const failed = !m.block && dsUi.blocksFailed;
     const links = [
         `<a href="toolbox?${paramsQuery({ tab: 'init', add: `${m.id}.1` })}">⚔️ Add to Initiative</a>`,
-        m.hb ? `<a href="monster-maker?nb=${dsEsc(m.id.slice(HB_PREFIX.length))}">🐲 Open in the Monster Maker</a>` : `<a href="bestiary?m=${dsEsc(m.id)}">🐉 Open in the Bestiary</a>`
+        m.hb ? `<a href="monster-maker?nb=${dsEsc(m.id.slice(HB_PREFIX.length))}">🐲 Open in the Monster Maker</a>`
+            : DS_PF2E ? `<a href="pf2e/monster/${dsEsc(m.id)}">🐉 Open in the Bestiary</a>` : `<a href="bestiary?m=${dsEsc(m.id)}">🐉 Open in the Bestiary</a>`
     ];
     return `${failed ? '<p class="ds-faint">⚠️ The stat blocks didn\'t load (offline?). <button type="button" class="ds-btn ds-mini" data-act="blocks-retry">Try again</button></p>' : `<div class="sb-box">${monsterBlockHtml(m)}</div>`}
         <p class="ds-links">${links.join(' ')}</p>`;
@@ -312,7 +322,7 @@ function renderBar() {
     document.getElementById('ds-del').disabled = ds.layouts.length < 2;
     document.getElementById('ds-new').disabled = document.getElementById('ds-copy').disabled = ds.layouts.length >= DS_LIMITS.layouts;
     const L = dsLayout();
-    document.getElementById('ds-print-head').textContent = `The Beholder's Gazette · DM Screen${L.name ? ` · ${L.name}` : ''}`;
+    document.getElementById('ds-print-head').textContent = `The Beholder's Gazette · ${DS_PF2E ? 'GM' : 'DM'} Screen${L.name ? ` · ${L.name}` : ''}`;
     const shown = L.cards.filter(c => c.show).length;
     document.getElementById('ds-count').textContent = `${L.cards.length} of ${DS_LIMITS.cards} cards${shown ? ` · ${shown} in the player view` : ''}`;
     document.querySelectorAll('[data-add]').forEach(b => { b.disabled = L.cards.length >= DS_LIMITS.cards; });
