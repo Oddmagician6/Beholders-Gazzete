@@ -90,7 +90,7 @@ function psFromUrl() {
         c.level = Math.min(20, Math.max(1, Math.round(Number(q.get('lv'))) || 1));
         c.ch = PF2E_CHOICES[q.get('ch')] && PF2E_CHOICES[q.get('ch')].c === c.cls ? q.get('ch') : '';
         c.ch2 = PF2E_CHOICES[q.get('ch2')] && PF2E_CHOICES[q.get('ch2')].c === c.cls ? q.get('ch2') : '';
-        c.sub = PC_TRADITIONS.includes(q.get('tr')) ? q.get('tr') : '';
+        c.sub = PC_TRADITIONS.includes(q.get('tr')) || PC_ELEMENTS.includes(q.get('tr')) ? q.get('tr') : '';
         const m = Math.round(Number(q.get('m')));
         ps.m = Number.isFinite(m) && q.get('m') !== null ? Math.min(7, Math.max(-1, m)) : 4;
         const raw = { ct: list('ct'), book: list('bk'), rep: {}, prep: {}, sig: {}, focus: list('fo'), fav: list('f') };
@@ -244,6 +244,7 @@ function renderSetup() {
         <label class="ps-field ps-narrow">Level<select data-set="lv">${Array.from({ length: 20 }, (_, i) => `<option${i + 1 === c.level ? ' selected' : ''}>${i + 1}</option>`).join('')}</select></label>
         ${cls ? choiceSel('ch', cls.ch) + choiceSel('ch2', cls.ch2) : ''}
         ${ch && ch.tr === 'choice' ? `<label class="ps-field">Tradition<select data-set="tr"><option value="">Pick one</option>${PC_TRADITIONS.map(t => `<option value="${t}"${t === c.sub ? ' selected' : ''}>${pcCap(t)}</option>`).join('')}</select></label>` : ''}
+        ${c.ch === 'bloodline-elemental' ? `<label class="ps-field">Elemental influence<select data-set="tr"><option value="">Pick one</option>${PC_ELEMENTS.map(t => `<option value="${t}"${t === c.sub ? ' selected' : ''}>${pcCap(t)}</option>`).join('')}</select></label>` : ''}
         ${r ? `<label class="ps-field ps-narrow">${esc(PC_ABIL_NAMES[r.attr] || 'Attribute')}<select data-set="m" aria-label="Spellcasting attribute modifier">${[-1, 0, 1, 2, 3, 4, 5, 6, 7].map(n => `<option value="${n}"${n === ps.m ? ' selected' : ''}>${pcSign(n)}</option>`).join('')}</select></label>` : ''}
     </div><p class="ps-dim ps-small-text">Changing the class, level, or choice drops any picks that no longer fit. A character from the <a href="pathfinder-character-builder">Character Builder</a> brings its own numbers and feats.</p>`;
 }
@@ -527,7 +528,7 @@ function psSetStandalone(field, value) {
     if (field === 'cls') { c.cls = Object.hasOwn(PF2E_CLASSES, value) ? value : ''; c.ch = ''; c.ch2 = ''; c.sub = ''; }
     if (field === 'lv') c.level = Math.min(20, Math.max(1, Number(value) || 1));
     if (field === 'ch' || field === 'ch2') { c[field] = PF2E_CHOICES[value] && PF2E_CHOICES[value].c === c.cls ? value : ''; if (field === 'ch') c.sub = ''; }
-    if (field === 'tr') c.sub = PC_TRADITIONS.includes(value) ? value : '';
+    if (field === 'tr') c.sub = PC_TRADITIONS.includes(value) || PC_ELEMENTS.includes(value) ? value : '';
     if (field === 'm') ps.m = Math.min(7, Math.max(-1, Number(value) || 0));
     psGrants();
     psChanged();

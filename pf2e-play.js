@@ -7,7 +7,8 @@
    wounded), recovery checks, death at dying 4 less doomed, massive damage at double the HP
    maximum, drained lowering the maximum, Heroic Recovery, Refocus, and a night's rest with daily
    preparations. ppPenalty works out the status and circumstance penalties conditions put on a
-   roll or DC (only the worst of each kind counts).
+   roll or DC (only the worst of each kind counts). Also persistent damage, Treat Wounds, and the
+   inventory's Bulk and coins.
    Needs pf2e-character.js (pcStats, pcCasting) and PF2E_CONDITIONS (rules-pf2e.js).
    ============================================ */
 
@@ -201,6 +202,104 @@ function ppEndTurn(c) {
     if (!f) return '';
     ppSetCond(c, 'Frightened', f - 1);
     return f > 1 ? `frightened ${f - 1}` : 'no longer frightened';
+}
+
+// ── Persistent damage ────────────────────────────────────
+// c.play.pd: [{ f: '2d6', type: 'fire' }], one per type, as the Initiative tracker keeps it. It's taken
+// at the end of your turn, then a DC 15 flat check ends it.
+const PP_PD_TYPES = ['bleed', 'fire', 'acid', 'cold', 'electricity', 'sonic', 'poison', 'mental', 'spirit', 'vitality', 'void', 'force', 'bludgeoning', 'piercing', 'slashing'];
+const PP_PD_ICON = { bleed: '🩸', fire: '🔥', acid: '🧪', cold: '❄️', electricity: '⚡', poison: '☠️', mental: '🌀' };
+const PP_PD_MAX = 6;
+const PP_PD_RE = /^(\d{1,2}d\d{1,3}|\d{1,3})([+-]\d{1,3})?$/;
+
+// A dice formula's average ("2d6+1" → 8), to tell which of two is higher.
+function ppAvg(f) {
+    const m = PP_PD_RE.exec(f);
+    if (!m) return 0;
+    const d = /^(\d+)d(\d+)$/.exec(m[1]);
+    return (d ? Number(d[1]) * (Number(d[2]) + 1) / 2 : Number(m[1])) + Number(m[2] || 0);
+}
+
+// Adds persistent damage → { kept: the one already there, when it's higher } or null when the dice don't read.
+// The same type doesn't stack: the higher amount stays.
+function ppAddPersistent(c, f, type) {
+    f = String(f).replace(/\s+/g, '').toLowerCase();
+    if (!PP_PD_RE.test(f) || !PP_PD_TYPES.includes(type)) return null;
+    const had = c.play.pd.find(p => p.type === type);
+    if (had && ppAvg(had.f) >= ppAvg(f)) return { kept: had };
+    c.play.pd = [...c.play.pd.filter(p => p.type !== type), { f, type }].slice(0, PP_PD_MAX);
+    return { kept: null, had };
+}
+
+// The end of your turn's persistent damage, from the page's rolls: rolls[i] = { dmg, flat } for c.play.pd[i].
+// Each type is its own damage (so each raises dying while you're dying), then its flat check.
+// → { total, ended: [types], going: [types], down, dead, dying }
+function ppPersistentTick(c, s, rolls) {
+    const out = { total: 0, ended: [], going: [], down: false, dead: false, dying: 0 };
+    c.play.pd = c.play.pd.filter((p, i) => {
+        const r = rolls[i];
+        if (!ppDead(c)) {
+            const hit = ppDamage(c, s, r.dmg);
+            out.total += r.dmg;
+            out.down = out.down || hit.down;
+        }
+        (r.flat >= 15 ? out.ended : out.going).push(p.type);
+        return r.flat < 15;
+    });
+    out.dying = ppCond(c, 'Dying');
+    out.dead = ppDead(c);
+    return out;
+}
+
+// ── Treat Wounds ─────────────────────────────────────────
+// Medicine, 10 minutes: DC 15 when trained; an expert can try DC 20 for 10 more HP, a master DC 30
+// for 30 more, a legendary healer DC 40 for 50 more.
+const PP_TREAT = [{ dc: 15, rank: 1, add: 0 }, { dc: 20, rank: 2, add: 10 }, { dc: 30, rank: 3, add: 30 }, { dc: 40, rank: 4, add: 50 }];
+// The dice for each degree: critical failure 1d8 damage, failure nothing, success 2d8, critical success 4d8.
+const PP_TREAT_DICE = ['1d8', '', '2d8', '4d8'];
+
+// Treat Wounds on this character, from the degree and the dice the page rolled (roll) at a DC
+// of PP_TREAT (t). A success heals and ends wounded. → { healed, hurt } or null for the dead.
+function ppTreatWounds(c, s, degree, t, roll) {
+    if (ppDead(c)) return null;
+    if (degree >= 2) {
+        const healed = ppHeal(c, s, roll + t.add);
+        ppSetCond(c, 'Wounded', 0);
+        return { healed, hurt: 0 };
+    }
+    if (degree === 0) return { healed: 0, hurt: ppDamage(c, s, roll).hp };
+    return { healed: 0, hurt: 0 };
+}
+
+// Ten minutes' rest at full Hit Points ends wounded. → false when that can't happen now.
+function ppRestTen(c, s = pcStats(c)) {
+    if (!ppCond(c, 'Wounded') || ppHp(c, s) < ppMax(c, s)) return false;
+    ppSetCond(c, 'Wounded', 0);
+    return true;
+}
+
+// ── Inventory ─────────────────────────────────────────────
+// c.play.coins { pp, gp, sp, cp }; c.play.inv [{ n, q, bu }] with bu as PF2E_ITEMS writes it
+// ('—' none, 'L' light, or a number). 10 light items make 1 Bulk; 1,000 coins make 1 Bulk.
+const PP_BULKS = ['—', 'L', '1', '2', '3', '4', '6', '8', '12', '16'];
+const PP_COINS = [['pp', 10], ['gp', 1], ['sp', 0.1], ['cp', 0.01]];
+
+// What the character carries → { bulk (whole), light (left over), cap (encumbered past it), max, items: [{ n, q, bu, gear }] }.
+// The builder's armor, shield, and weapons count too.
+function ppBulk(c, s = pcStats(c)) {
+    const gear = [c.gear.armor, c.gear.shield, ...c.gear.weapons.map(w => w.id)]
+        .filter(id => id && PF2E_ITEMS[id]).map(id => ({ n: PF2E_ITEMS[id].n, q: 1, bu: PF2E_ITEMS[id].bu || '—', gear: true }));
+    const items = [...gear, ...c.play.inv];
+    let bulk = 0, light = 0;
+    items.forEach(x => { if (x.bu === 'L') light += x.q; else if (x.bu !== '—') bulk += (Number(x.bu) || 0) * x.q; });
+    const coins = PP_COINS.reduce((n, [k]) => n + c.play.coins[k], 0);
+    bulk += Math.floor(light / 10) + Math.floor(coins / 1000);
+    return { bulk, light: light % 10, cap: 5 + s.mods.str, max: 10 + s.mods.str, items, coins };
+}
+
+// The coins' worth in gold pieces.
+function ppWorth(c) {
+    return Math.round(PP_COINS.reduce((n, [k, gp]) => n + c.play.coins[k] * gp, 0) * 100) / 100;
 }
 
 // Refocus (10 minutes): 1 Focus Point back. → false when the pool is full.

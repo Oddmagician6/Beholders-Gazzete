@@ -235,6 +235,7 @@ function stepClass() {
             h += `<div class="pb-chosen">`;
             if (ch.skc) h += `<h4>Trained skill from ${esc(ch.n)}</h4><div class="cb-chips">${ch.skc.map(k => `<button type="button" class="cb-chip" data-chskill="${k}" aria-pressed="${cur.skills.ch === k}" data-focus="chs-${k}">${skillName(k)}</button>`).join('')}</div>`;
             if (ch.tr === 'choice') h += `<h4>Tradition</h4><div class="cb-chips">${PC_TRADITIONS.map(t => `<button type="button" class="cb-chip" data-sub="${t}" aria-pressed="${cur.sub === t}" data-focus="sub-${t}">${pcCap(t)} <small>trained in ${skillName(PB_TRAD_SKILL[t])}</small></button>`).join('')}</div>`;
+            if (cur[field] === 'bloodline-elemental') h += `<h4>Elemental influence</h4><div class="cb-chips">${PC_ELEMENTS.map(t => `<button type="button" class="cb-chip" data-sub="${t}" aria-pressed="${cur.sub === t}" data-focus="sub-${t}">${pcCap(t)}</button>`).join('')}</div>`;
             if (ch.ft) h += `<p><b>Grants</b> ${ch.ft.map(esc).join(', ')}</p>`;
             h += textBox(`ch:${cur[field]}`, `📖 ${esc(ch.n)}: the rules`, true) + '</div>';
         }

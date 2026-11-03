@@ -32,6 +32,8 @@ const PC_SPELL_ATTR = { champion: 'cha' };
 const PC_FAVORED = { 'cloistered-cleric': { 1: 1, 11: 2 }, warpriest: { 1: 1, 7: 2, 19: 3 } };
 const PC_DIVINE_FONTS = { heal: 'Healing font (heal)', harm: 'Harmful font (harm)' };
 const PC_TRADITIONS = ['arcane', 'divine', 'occult', 'primal'];
+// The elemental bloodline's influences (c.sub holds the one picked, as a tradition for the others).
+const PC_ELEMENTS = ['air', 'earth', 'fire', 'metal', 'water', 'wood'];
 // The level-19 features that give one 10th-rank slot.
 const PC_TENTH = ['Archwizard\'s Spellcraft', 'Miraculous Spell', 'Primal Hierophant', 'Patron\'s Gift', 'Magnum Opus', 'Bloodline Paragon', 'Oracular Clarity'];
 
@@ -55,9 +57,10 @@ function pcBlank() {
 // The Play Sheet's session state (pf2e-play.js): hp (null = full), temp, cond the conditions as the
 // Initiative tracker writes them ("Frightened 2", "Prone"), hero points, focus points spent, slots
 // spent by rank (spontaneous), cast prepared slots by rank (their indexes), font slots spent, and
-// counters of the player's own (an alchemist's reagents and such) with what's used of each.
+// counters of the player's own (an alchemist's reagents and such) with what's used of each,
+// persistent damage (pd), coins, and the inventory beyond the builder's gear (inv).
 function pcBlankPlay() {
-    return { hp: null, temp: 0, cond: [], hero: 1, focus: 0, slots: {}, cast: {}, font: 0, res: [] };
+    return { hp: null, temp: 0, cond: [], hero: 1, focus: 0, slots: {}, cast: {}, font: 0, res: [], pd: [], coins: { pp: 0, gp: 0, sp: 0, cp: 0 }, inv: [] };
 }
 
 // The Spell Planner's picks (spell keys of pf2e-spells-data.js): ct cantrips, rep a repertoire by rank,
@@ -85,7 +88,7 @@ function pcClean(raw) {
     c.cls = pcId(raw.cls, PF2E_CLASSES);
     c.ch = pcId(raw.ch, PF2E_CHOICES);
     c.ch2 = pcId(raw.ch2, PF2E_CHOICES);
-    c.sub = PC_TRADITIONS.includes(raw.sub) ? raw.sub : '';
+    c.sub = PC_TRADITIONS.includes(raw.sub) || PC_ELEMENTS.includes(raw.sub) ? raw.sub : '';
     const b = raw.boosts && typeof raw.boosts === 'object' ? raw.boosts : {};
     c.boosts.anc = pcAbilList(b.anc, 4);
     c.boosts.ancFree = b.ancFree === true;
@@ -191,6 +194,17 @@ function pcCleanPlay(raw) {
         const max = int(r.max, 1, 99, 1);
         return { n: pcStr(r.n, 40).trim(), max, used: int(r.used, 0, max, 0), day: r.day !== false };
     }) : [];
+    // Persistent damage, coins, and items (the PP_ lists are pf2e-play.js's; pages without it keep what reads right).
+    const pdTypes = typeof PP_PD_TYPES === 'undefined' ? null : PP_PD_TYPES;
+    const seenPd = new Set();
+    p.pd = Array.isArray(raw.pd) ? raw.pd.filter(x => x && typeof x.f === 'string' && /^(\d{1,2}d\d{1,3}|\d{1,3})([+-]\d{1,3})?$/.test(x.f)
+        && typeof x.type === 'string' && /^[a-z]{3,12}$/.test(x.type) && (!pdTypes || pdTypes.includes(x.type)) && !seenPd.has(x.type) && seenPd.add(x.type))
+        .slice(0, 6).map(x => ({ f: x.f, type: x.type })) : [];
+    const coins = raw.coins && typeof raw.coins === 'object' ? raw.coins : {};
+    ['pp', 'gp', 'sp', 'cp'].forEach(k => { p.coins[k] = int(coins[k], 0, 999999, 0); });
+    p.inv = Array.isArray(raw.inv) ? raw.inv.filter(x => x && typeof x === 'object' && pcStr(x.n, 40).trim()).slice(0, 40).map(x => ({
+        n: pcStr(x.n, 40).trim(), q: int(x.q, 1, 999, 1), bu: /^(—|L|\d{1,2})$/.test(x.bu) ? x.bu : '—'
+    })) : [];
     return p;
 }
 
@@ -698,13 +712,22 @@ function pcSpellRules(c) {
 
 // A class choice's text as [header, label, value]: "**Head** 1st: A; 2nd: B", "**Head**" then
 // "- **1st:** A" lines, or "**Head** Value". sub picks a draconic exemplar's own gifts.
+// "cantrip: Shield; 1st: Fear" or (Player Core 2) "cantrip Light, 1st: Heal" → [['cantrip', 'Shield'], ['1st', 'Fear']], or null.
+const PC_LABEL_RE = /(?:^|[;,])\s*(cantrips?|initial|advanced|greater|\d(?:st|nd|rd|th))\b\s*:?\s*/gi;
+function pcLabelSplit(rest) {
+    const at = [...rest.matchAll(PC_LABEL_RE)];
+    if (!at.length || at[0].index !== 0) return null;
+    return at.map((m, i) => [m[1].toLowerCase(), rest.slice(m.index + m[0].length, i + 1 < at.length ? at[i + 1].index : rest.length).trim()]);
+}
+
 function pcTextPairs(text, sub = '') {
     const out = [];
     let head = '';
     String(text || '').split('\n').forEach(line => {
-        let m = /^- \*\*(\w+)—Tradition\*\*\s*(\w+);.*?\*\*Sorcerous Gifts\*\*\s*(.+)$/.exec(line);
+        // A draconic exemplar's or an elemental influence's gifts, kept only for the one picked (c.sub).
+        let m = /^- \*\*(\w+)—(?:Tradition\*\*.*?\*\*)?Sorcerous Gifts\*\*\s*(.+?)(?:;\s*\*\*.*)?$/.exec(line);
         if (m) {
-            if (m[2] === sub) m[3].split(';').forEach(p => { const q = /^\s*(\w+)\s*:\s*(.+)$/.exec(p); if (q) out.push(['Sorcerous Gifts', q[1].toLowerCase(), q[2]]); });
+            if (m[1].toLowerCase() === sub) (pcLabelSplit(m[2]) || []).forEach(([l, v]) => out.push(['Sorcerous Gifts', l, v]));
             return;
         }
         m = /^- \*\*(.+?):\*\*\s*(.+)$/.exec(line);
@@ -714,9 +737,9 @@ function pcTextPairs(text, sub = '') {
         head = m[1].trim();
         const rest = m[2].trim();
         if (!rest) return;
-        if (/^(cantrips?|initial|\d(st|nd|rd|th))\s*:/i.test(rest)) {
-            rest.split(';').forEach(p => { const q = /^\s*([\w ]+?)\s*:\s*(.+)$/.exec(p); if (q) out.push([head, q[1].toLowerCase(), q[2]]); });
-        } else out.push([head, '', rest]);
+        const parts = pcLabelSplit(rest);
+        if (parts) parts.forEach(([l, v]) => out.push([head, l, v]));
+        else out.push([head, '', rest]);
     });
     return out;
 }
@@ -767,7 +790,7 @@ function pcSpellGrants(c) {
                 if (ok) names(value).forEach(k => addFocus(k, x.n));
             }
         });
-        const hex = /You gain the (.+?) hex cantrip/.exec(text);
+        const hex = /You (?:gain|learn) the (.+?) hex\b/.exec(text);
         if (hex) addFocus(pcSpellKey(hex[1]), x.n);
         const fam = /familiar learns (.+?)\./.exec(text);
         if (fam) names(fam[1]).forEach(key => out.list.push({ key, rank: PF2E_SPELLS[key].r, from: x.n, counts: false, to: 'book' }));
@@ -891,7 +914,8 @@ function pcTodo(c) {
         if (p.cls.ch && !p.ch) out.push(['class', `Pick your ${p.cls.ch[1].toLowerCase()}.`]);
         if (p.cls.ch2 && !p.ch2) out.push(['class', `Pick your ${p.cls.ch2[1].toLowerCase()}.`]);
         if (p.ch && p.ch.skc && !p.ch.skc.includes(c.skills.ch)) out.push(['class', `Pick the skill from your ${p.ch.n}.`]);
-        if (p.ch && p.ch.tr === 'choice' && !c.sub) out.push(['class', 'Pick your bloodline\'s tradition.']);
+        if (p.ch && p.ch.tr === 'choice' && !PC_TRADITIONS.includes(c.sub)) out.push(['class', 'Pick your bloodline\'s tradition.']);
+        if (c.ch === 'bloodline-elemental' && !PC_ELEMENTS.includes(c.sub)) out.push(['class', 'Pick your elemental influence.']);
         if ((c.cls === 'cleric' || c.cls === 'champion') && !c.deity.skill) out.push(['class', 'Pick your deity\'s skill.']);
         if (c.cls === 'cleric' && !c.deity.font) out.push(['class', 'Pick your divine font.']);
     }

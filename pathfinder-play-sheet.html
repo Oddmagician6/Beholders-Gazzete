@@ -257,6 +257,21 @@
     .pp-prep .cs-pip { width: 18px; height: 18px; flex: none; }
     .pp-prep li.pp-cast a { opacity: 0.55; text-decoration: line-through; }
     .pp-label { font-family: var(--font-ui); font-size: 0.72rem; color: var(--gold-mid); }
+    /* Degree of success against a typed DC, persistent damage, inventory */
+    .pp-dc { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-ui); font-size: 0.76rem; color: var(--text-dim); }
+    .pp-dc input { width: 4.2em; padding: 5px 6px; margin: 0; }
+    .pp-deg { font-style: normal; font-weight: 700; padding: 1px 8px; border-radius: 10px; border: 1px solid currentColor; }
+    .pp-d0 { color: #e57368; }
+    .pp-d1 { color: #e5a868; }
+    .pp-d2 { color: #a8d88f; }
+    .pp-d3 { color: #7fdc6a; }
+    .cs-chip.pp-pd { border-color: #c25b50; color: var(--text-bright); }
+    .pp-coins { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+    .pp-coins .cs-field { min-width: 0; }
+    .pp-coins input { width: 100%; }
+    .pp-bulk { font-family: var(--font-ui); font-size: 0.8rem; color: var(--text-dim); margin-top: 4px; }
+    .pp-bulk b { color: var(--text-bright); }
+    .pp-bulk.pp-over b { color: #f0a29a; }
   </style>
 </head>
 <body>

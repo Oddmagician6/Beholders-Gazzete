@@ -6,7 +6,8 @@
    slot by slot), the cleric's divine font, counters of the player's own, a night's rest with daily
    preparations, and rolls from the sheet: Perception, saves, skills, Lores, every Strike at each
    multiple attack penalty, damage, critical damage (doubled, with deadly and fatal), and spell
-   attacks. Rules live in pf2e-play.js; the session state is the character's c.play, saved through
+   attacks, each graded against a DC the player types. Also persistent damage at the end of the turn,
+   Treat Wounds, and an inventory with coins and Bulk. Rules live in pf2e-play.js; the session state is the character's c.play, saved through
    pcSave (PC_KEY) on every change. Rolls go through the shared roll history (dice-engine.js).
    Every save also pushes the state to the GM's tools (party.js partyPushLive) when the character
    is in the party, so the Party Tracker and Initiative tracker follow the sheet on this browser.
@@ -20,6 +21,10 @@ let lastRoll = null;         // { label, f, mode, d20, r, hero } shown in the ro
 let notice = null;           // { text, ok } after damage, a recovery check, or a rest
 let restArmed = 0;
 let addForm = { n: '', max: '1', day: true };   // the Counters box, kept across redraws
+let target = '';             // the roll bar's DC: d20 rolls show their degree of success against it
+let pdForm = { f: '1d6', type: 'fire' };        // the persistent damage box
+let itemForm = { n: '', q: '1', bu: '—' };      // the Inventory box
+let treat = { by: 'me', dc: 0 };                // Treat Wounds: who rolls, and the PP_TREAT row
 
 const PS_NO_GRANTS = { list: [], curr: {}, focus: [] };
 
@@ -153,6 +158,15 @@ function adj(c, n, what) {
 }
 const penNote = a => (a.why ? `<small class="pp-pen" title="${esc(a.why)}">${esc(a.why)}</small>` : '');
 
+// The last d20 roll's degree of success against the typed DC (a natural 20 one step better, a natural 1 one worse).
+function degreeHtml() {
+    const dc = Math.round(Number(target));
+    if (!lastRoll || !lastRoll.d20 || !target || !(dc > 0)) return '';
+    const r = lastRoll.r;
+    const d = ppDegree(r.total, dc, r.crit === 'nat20' ? 20 : r.crit === 'nat1' ? 1 : 0);
+    return `<em class="pp-deg pp-d${d}">${PP_DEGREES[d]} vs DC ${dc}</em>`;
+}
+
 function renderRollbar() {
     const el = document.getElementById('cs-rollbar');
     if (!el || !cur) return;
@@ -167,7 +181,8 @@ function renderRollbar() {
     const reroll = lastRoll && lastRoll.d20 && !lastRoll.hero && p.hero > 0
         ? `<button type="button" class="cs-btn cs-mini" data-act="reroll" title="Spend a Hero Point to roll it again and take the new result">⭐ Reroll (Hero Point)</button>` : '';
     el.innerHTML = `<div class="cs-modes" role="group" aria-label="Roll d20s with">${[['normal', 'Normal'], ['adv', 'Fortune'], ['dis', 'Misfortune']].map(([v, t]) => `<button type="button" class="cs-btn cs-mini" data-act="mode" data-v="${v}" aria-pressed="${mode === v}">${t}</button>`).join('')}</div>
-        <div class="cs-last" aria-live="polite">${last}</div>${reroll}
+        <div class="cs-last" aria-live="polite">${last}<span id="pp-deg">${degreeHtml()}</span></div>
+        <label class="pp-dc" title="The DC or AC you're rolling against, if the GM told you: each d20 roll then shows its degree of success">vs DC <input type="number" id="pp-dc" min="1" max="60" inputmode="numeric" placeholder="?" value="${esc(target)}"></label>${reroll}
         ${warn.length ? `<span class="cs-dim">⚠️ ${esc(warn.join(', ').toLowerCase())}: already taken off the numbers</span>` : ''}`;
 }
 
@@ -207,7 +222,26 @@ function hpPanel(c, d) {
           <button type="button" class="cs-btn" data-act="rest">${Date.now() - restArmed < 3000 ? '🛌 Really? Tap again' : '🛌 Rest &amp; Daily Preparations'}</button>
           <button type="button" class="cs-btn" data-act="session" title="A new session starts each player at 1 Hero Point">⭐ New Session</button></div>
         <p class="cs-dim" style="margin:8px 0 0">A night's rest heals ${restHp} HP (Constitution modifier, at least 1, × level), lowers drained and doomed by 1, ends fatigued, and refills spell slots${s.cast && s.cast.font ? ', the font' : ''}${d.focus.points ? ', Focus Points' : ''}, and daily counters. Wounded stays until Treat Wounds heals you or you rest 10 minutes at full HP.</p>`;
-    return h + '</section>';
+    if (ppCond(c, 'Wounded') && hp === max) h += `<div class="cs-btnrow" style="margin-top:8px"><button type="button" class="cs-btn" data-act="restten">⏳ Rest 10 Minutes (ends wounded)</button></div>`;
+    return h + treatHtml(c, d) + '</section>';
+}
+
+// Treat Wounds: roll your own Medicine, or put in the degree a friend rolled on you.
+function treatHtml(c, d) {
+    const rank = d.s.ranks.medicine || 0;
+    const by = rank ? treat.by : 'friend';
+    const rows = PP_TREAT.filter(t => by === 'friend' || t.rank <= rank);
+    const t = rows[Math.min(treat.dc, rows.length - 1)];
+    const med = adj(c, d.s.skills.medicine, { kind: 'skill', abil: 'wis' });
+    let h = `<h3>🩹 Treat Wounds</h3>
+        <div class="cs-add">
+          ${rank ? `<label class="cs-field cs-narrow" style="flex-basis:150px">Who rolls<select id="pp-tw-by"><option value="me"${by === 'me' ? ' selected' : ''}>I do (Medicine ${pcSign(med.v)})</option><option value="friend"${by === 'friend' ? ' selected' : ''}>A friend, on me</option></select></label>` : ''}
+          <label class="cs-field cs-narrow" style="flex-basis:150px">DC<select id="pp-tw-dc">${rows.map((x, i) => `<option value="${i}"${x === t ? ' selected' : ''}>DC ${x.dc}${x.add ? ` (+${x.add} HP, ${PC_RANKS[x.rank].toLowerCase()})` : ''}</option>`).join('')}</select></label>`;
+    if (by === 'me') h += `<button type="button" class="cs-btn cs-green" data-act="treat">🎲 Treat My Wounds</button>`;
+    h += `</div>`;
+    if (by === 'friend') h += `<div class="cs-btnrow" role="group" aria-label="The friend's result">${[3, 2, 1, 0].map(i => `<button type="button" class="cs-btn cs-mini${i >= 2 ? ' cs-green' : i === 0 ? ' cs-red' : ''}" data-act="treated" data-n="${i}">${PP_DEGREES[i]}</button>`).join('')}</div>`;
+    h += `<p class="cs-dim" style="margin:8px 0 0">10 minutes. Success heals 2d8${t.add ? ` + ${t.add}` : ''}, a critical success 4d8${t.add ? ` + ${t.add}` : ''}, and either ends wounded; a critical failure deals 1d8. ${rank ? '' : 'You\'re untrained in Medicine, so a friend has to do it. '}The same patient can't be treated again for an hour.</p>`;
+    return h;
 }
 
 function statusPanel(c) {
@@ -221,9 +255,17 @@ function statusPanel(c) {
         <ul class="cs-rows">
           <li><span class="cs-name">Hero Points<small>Spend 1 to reroll a check (the ⭐ in the roll bar), or all of them to avoid death.</small></span>
             ${pips(3, p.hero, 'hero', '', 'pp-hero')}</li>
-          <li><span class="cs-name">End of your turn<small>Frightened drops by 1. Persistent damage, if any: take it, then a DC 15 flat check.</small></span>
+          <li><span class="cs-name">End of your turn<small>Frightened drops by 1. Persistent damage${p.pd.length ? ' is rolled and taken, then a DC 15 flat check for each' : ', if any: take it, then a DC 15 flat check'}.</small></span>
             <button type="button" class="cs-btn" data-act="endturn">⏭️ End Turn</button></li>
         </ul>
+        <h3>Persistent damage</h3>
+        ${p.pd.length ? `<div class="cs-chips">${p.pd.map((x, i) => `<button type="button" class="cs-chip pp-pd" data-act="pd-x" data-i="${i}" title="Remove it (assisted recovery, or the source is gone)">${PP_PD_ICON[x.type] || '💥'} ${esc(x.f)} ${esc(x.type)} ✕</button>`).join('')}</div>` : ''}
+        <div class="cs-add">
+          <label class="cs-field cs-narrow">Dice<input type="text" id="pp-pd-f" maxlength="12" autocomplete="off" placeholder="1d6" value="${esc(pdForm.f)}"></label>
+          <label class="cs-field cs-narrow" style="flex-basis:130px">Type<select id="pp-pd-type">${PP_PD_TYPES.map(t => `<option${t === pdForm.type ? ' selected' : ''}>${t}</option>`).join('')}</select></label>
+          <button type="button" class="cs-btn" data-act="pd-add"${p.pd.length >= PP_PD_MAX ? ' disabled' : ''}>➕ Add</button>
+        </div>
+        <p class="cs-dim" style="margin:0">One of each type: a new one replaces the old only if it's higher. If your GM's Initiative tracker already rolls yours, track it there instead.</p>
         <h3>Conditions</h3>
         <div class="cs-chips" role="group" aria-label="Conditions">${names.map(n => {
             const v = ppCond(c, n), max = PF2E_CONDITIONS[n].max;
@@ -250,6 +292,35 @@ function countersPanel(c) {
           <label class="pp-check"><input type="checkbox" id="pp-res-day"${addForm.day ? ' checked' : ''}> Refills each day</label>
           <button type="button" class="cs-btn" data-act="res-add"${list.length >= 12 ? ' disabled' : ''}>➕ Add</button>
         </div>
+    </section>`;
+}
+
+const bulkText = (bulk, light) => (bulk || !light ? String(bulk) : '') + (light ? (bulk ? ' + ' : '') + light + ' L' : '');
+
+function inventoryPanel(c, d) {
+    const p = c.play, b = ppBulk(c, d.s);
+    const over = b.bulk > b.cap;
+    const enc = ppCond(c, 'Encumbered');
+    const rows = b.items.map((x, j) => {
+        const i = j - (b.items.length - p.inv.length);
+        const ctl = x.gear ? `<a class="cs-tag" href="pathfinder-character-builder?char=${encodeURIComponent(c.id)}" title="Armor, shield, and weapons are picked in the builder">builder</a>`
+            : `<span class="cs-step"><button type="button" class="cs-btn" data-act="inv-q" data-i="${i}" data-n="-1" aria-label="One fewer ${esc(x.n)}"${x.q > 1 ? '' : ' disabled'}>−</button><span>${x.q}</span><button type="button" class="cs-btn" data-act="inv-q" data-i="${i}" data-n="1" aria-label="One more ${esc(x.n)}"${x.q < 999 ? '' : ' disabled'}>＋</button></span>
+              <button type="button" class="cs-btn cs-mini" data-act="inv-del" data-i="${i}" aria-label="Remove ${esc(x.n)}">✕</button>`;
+        return `<li><span class="cs-name">${esc(x.n)}<small>Bulk ${x.bu === '—' ? '—' : x.q > 1 ? `${esc(x.bu)} each` : esc(x.bu)}</small></span>${ctl}</li>`;
+    });
+    return `<section class="cs-panel" aria-labelledby="cs-in-h"><h2 id="cs-in-h">🎒 Inventory</h2>
+        <div class="pp-coins">${PP_COINS.map(([k]) => `<label class="cs-field">${k}<input type="number" id="pp-coin-${k}" data-coin="${k}" min="0" max="999999" inputmode="numeric" value="${p.coins[k]}"></label>`).join('')}</div>
+        <p class="cs-dim" style="margin:6px 0 10px">Worth ${ppWorth(c)} gp. 10 cp = 1 sp, 10 sp = 1 gp, 10 gp = 1 pp.</p>
+        <ul class="cs-rows">${rows.join('') || '<li><span class="cs-dim">Nothing carried yet.</span></li>'}</ul>
+        <div class="cs-add">
+          <label class="cs-field" style="flex:1 1 160px">Item<input type="text" id="pp-item-n" maxlength="40" autocomplete="off" list="pp-items" placeholder="Rope" value="${esc(itemForm.n)}"></label>
+          <label class="cs-field cs-narrow" style="flex-basis:70px">How many<input type="number" id="pp-item-q" min="1" max="999" inputmode="numeric" value="${esc(itemForm.q)}"></label>
+          <label class="cs-field cs-narrow" style="flex-basis:80px">Bulk<select id="pp-item-bu">${PP_BULKS.map(x => `<option${x === itemForm.bu ? ' selected' : ''}>${x}</option>`).join('')}</select></label>
+          <button type="button" class="cs-btn" data-act="inv-add"${p.inv.length >= 40 ? ' disabled' : ''}>➕ Add</button>
+        </div>
+        <div class="pp-bulk${over ? ' pp-over' : ''}"><b>Bulk ${bulkText(b.bulk, b.light)}</b> <span>of ${b.cap} · encumbered past ${b.cap}, ${b.max} at most${b.coins >= 1000 ? ` · coins count ${Math.floor(b.coins / 1000)}` : ''}</span></div>
+        ${b.bulk > b.max ? '<p class="cs-dim pp-pen" style="font-size:0.78rem">You can\'t carry more than that: drop something.</p>' : ''}
+        ${over !== !!enc ? `<div class="cs-btnrow" style="margin-top:6px"><button type="button" class="cs-btn cs-mini" data-act="cond" data-v="Encumbered">${over ? '⚠️ Mark Encumbered (clumsy 1, −10 ft. Speed)' : 'No longer encumbered: clear it'}</button></div>` : ''}
     </section>`;
 }
 
@@ -377,7 +448,7 @@ function render() {
         <div class="cs-title"><h2>${esc(who())}</h2><p>${esc(pcLine(c))}${p.her ? ' · ' + esc(p.her.n) : ''}${p.bg ? ' · ' + esc(p.bg.n) : ''}${c.player ? ' · played by ' + esc(c.player) : ''}</p>
         ${todo.length ? `<p class="cs-dim">⚠️ ${todo.length} pick${todo.length > 1 ? 's' : ''} still to make in the <a href="pathfinder-character-builder?char=${encodeURIComponent(c.id)}">builder</a>.</p>` : ''}</div></div>
         <div class="cs-rollbar" id="cs-rollbar"></div>
-        <div class="cs-grid"><div class="cs-col">${hpPanel(c, d)}${statusPanel(c)}${countersPanel(c)}</div>
+        <div class="cs-grid"><div class="cs-col">${hpPanel(c, d)}${statusPanel(c)}${countersPanel(c)}${inventoryPanel(c, d)}</div>
         <div class="cs-col">${rollsPanel(c, d)}${strikesPanel(c, d)}${spellsPanel(c, d)}
           <section class="cs-panel" aria-labelledby="cs-lg-h"><h2 id="cs-lg-h">📜 Recent Rolls</h2><ul class="cs-log" id="cs-log"></ul></section></div></div>`;
     renderRollbar();
@@ -528,9 +599,82 @@ function onClick(e) {
     if (act === 'session') { change(p => { p.hero = 1; }); flash('⭐ New session: 1 Hero Point.'); return; }
     if (act === 'hero') { change(p => { p.hero = Math.max(0, Math.min(3, p.hero + (filled ? -1 : 1))); }); return; }
     if (act === 'endturn') {
-        let what = '';
-        change(() => { what = ppEndTurn(cur); });
-        flash(what ? `⏭️ Turn over: ${what}.` : '⏭️ Turn over.');
+        // Persistent damage first: each type rolled into the history, then its flat check.
+        const rolls = [];
+        for (const x of cur.play.pd) {
+            const dmg = doRoll(x.f, `persistent ${x.type} damage`, false);
+            const flat = doRoll('1d20', `flat check to end persistent ${x.type} (DC 15)`, false);
+            if (!dmg || !flat) return;
+            rolls.push({ dmg: Math.max(0, dmg.total), flat: flat.total });
+        }
+        let what = '', tick = null;
+        change(() => {
+            if (rolls.length) tick = ppPersistentTick(cur, s, rolls);
+            what = ppEndTurn(cur);
+        });
+        if (tick) {
+            const types = [...tick.ended, ...tick.going];
+            let text = `${(types.length === 1 && PP_PD_ICON[types[0]]) || '💥'} Persistent damage: ${rolls.map(r => r.dmg).join(' + ')}${rolls.length > 1 ? ` = ${tick.total}` : ''}.`;
+            if (tick.ended.length) text += ` Ended: ${tick.ended.join(', ')}.`;
+            if (tick.going.length) text += ` Still burning on: ${tick.going.join(', ')}.`;
+            if (tick.dead) text += ` Dying ${tick.dying}: dead.`;
+            else if (tick.down) text += ` Knocked out: dying ${tick.dying}, unconscious.`;
+            else if (tick.dying) text += ` Dying ${tick.dying}.`;
+            if (what) text += ` And ${what}.`;
+            notice = { text, ok: false };
+            render();
+        } else flash(what ? `⏭️ Turn over: ${what}.` : '⏭️ Turn over.');
+        return;
+    }
+    if (act === 'pd-add') {
+        let got = null;
+        change(() => { got = ppAddPersistent(cur, pdForm.f, pdForm.type); });
+        if (!got) { flash('Type the damage as dice or a number, such as 1d6, 2d4+1, or 5.', true); document.getElementById('pp-pd-f').focus(); return; }
+        flash(got.kept ? `Kept ${got.kept.f} ${got.kept.type}: it's higher, and the same type doesn't stack.`
+            : `${PP_PD_ICON[pdForm.type] || '💥'} Persistent ${pdForm.f} ${pdForm.type}${got.had ? ` (in place of ${got.had.f})` : ''}: End Turn rolls it.`);
+        return;
+    }
+    if (act === 'pd-x') { change(p => { p.pd.splice(i, 1); }); return; }
+    if (act === 'treat' || act === 'treated') {
+        const rank = s.ranks.medicine || 0;
+        const rows = PP_TREAT.filter(t => act === 'treated' || t.rank <= rank);
+        const t = rows[Math.min(treat.dc, rows.length - 1)];
+        let degree = n;
+        if (act === 'treat') {
+            const med = adj(cur, s.skills.medicine, { kind: 'skill', abil: 'wis' }).v;
+            const r = doRoll(`1d20${plus(med)}`, `Treat Wounds (Medicine, DC ${t.dc})`);
+            if (!r) return;
+            degree = ppDegree(r.total, t.dc, r.crit === 'nat20' ? 20 : r.crit === 'nat1' ? 1 : 0);
+        }
+        const dice = PP_TREAT_DICE[degree];
+        const heal = dice ? doRoll(dice, degree ? 'Treat Wounds healing' : 'Treat Wounds critical failure damage', false) : null;
+        if (dice && !heal) return;
+        let res = null;
+        change(() => { res = ppTreatWounds(cur, s, degree, t, heal ? heal.total : 0); });
+        const head = `🩹 Treat Wounds, DC ${t.dc}: ${PP_DEGREES[degree].toLowerCase()}`;
+        notice = !res ? { text: 'The dead can\'t be treated.', ok: false }
+            : degree >= 2 ? { text: `${head}. +${res.healed} HP (${heal.total}${t.add ? ` + ${t.add}` : ''}${res.healed < heal.total + t.add ? ', the rest past your maximum' : ''}), and wounded is gone.`, ok: true }
+            : degree === 0 ? { text: `${head}. −${res.hurt} HP.`, ok: false }
+            : { text: `${head}. No healing this time.`, ok: false };
+        render();
+        return;
+    }
+    if (act === 'restten') { change(() => { ppRestTen(cur, s); }); flash('⏳ Ten minutes at full HP: no longer wounded.'); return; }
+    if (act === 'inv-q') { change(p => { const x = p.inv[i]; if (x) x.q = Math.max(1, Math.min(999, x.q + n)); }); return; }
+    if (act === 'inv-del') { change(p => { p.inv.splice(i, 1); }); return; }
+    if (act === 'inv-add') {
+        const name = itemForm.n.trim().slice(0, 40);
+        if (!name) { flash('Name the item first.', true); document.getElementById('pp-item-n').focus(); return; }
+        const q = Math.min(999, Math.max(1, Math.round(Number(itemForm.q)) || 1));
+        change(p => {
+            // The same item again adds to its count.
+            const had = p.inv.find(x => x.n.toLowerCase() === name.toLowerCase() && x.bu === itemForm.bu);
+            if (had) had.q = Math.min(999, had.q + q);
+            else p.inv.push({ n: name, q, bu: itemForm.bu });
+        });
+        itemForm = { n: '', q: '1', bu: '—' };
+        render();
+        document.getElementById('pp-item-n').focus();
         return;
     }
     if (act === 'cond') {
@@ -577,15 +721,45 @@ document.addEventListener('DOMContentLoaded', () => {
     const sheet = document.getElementById('cs-sheet');
     sheet.addEventListener('click', onClick);
     document.getElementById('cs-links').addEventListener('click', onClick);
+    // Item names for the Inventory box: picking one fills in its Bulk.
+    const itemBulk = new Map();
+    const list = document.createElement('datalist');
+    list.id = 'pp-items';
+    Object.values(PF2E_ITEMS).forEach(x => { if (!itemBulk.has(x.n.toLowerCase())) { itemBulk.set(x.n.toLowerCase(), x.bu || '—'); list.appendChild(new Option(x.n)); } });
+    document.body.appendChild(list);
+
     sheet.addEventListener('input', e => {
-        if (e.target.id === 'cs-amt') amount = e.target.value.slice(0, 4);
-        if (e.target.id === 'pp-res-n') addForm.n = e.target.value.slice(0, 40);
-        if (e.target.id === 'pp-res-max') addForm.max = e.target.value.slice(0, 3);
+        const id = e.target.id;
+        if (id === 'cs-amt') amount = e.target.value.slice(0, 4);
+        if (id === 'pp-res-n') addForm.n = e.target.value.slice(0, 40);
+        if (id === 'pp-res-max') addForm.max = e.target.value.slice(0, 3);
+        if (id === 'pp-dc') { target = e.target.value.slice(0, 2); document.getElementById('pp-deg').innerHTML = degreeHtml(); }
+        if (id === 'pp-pd-f') pdForm.f = e.target.value.slice(0, 12);
+        if (id === 'pp-item-q') itemForm.q = e.target.value.slice(0, 3);
+        if (id === 'pp-item-n') {
+            itemForm.n = e.target.value.slice(0, 40);
+            const bu = itemBulk.get(itemForm.n.trim().toLowerCase());
+            if (bu && PP_BULKS.includes(bu)) { itemForm.bu = bu; document.getElementById('pp-item-bu').value = bu; }
+        }
     });
-    sheet.addEventListener('change', e => { if (e.target.id === 'pp-res-day') addForm.day = e.target.checked; });
+    sheet.addEventListener('change', e => {
+        const id = e.target.id;
+        if (id === 'pp-res-day') addForm.day = e.target.checked;
+        if (id === 'pp-pd-type') pdForm.type = e.target.value;
+        if (id === 'pp-item-bu') itemForm.bu = e.target.value;
+        if (id === 'pp-tw-by') { treat.by = e.target.value; render(); }
+        if (id === 'pp-tw-dc') { treat.dc = Number(e.target.value) || 0; render(); }
+        if (e.target.dataset.coin) {
+            const k = e.target.dataset.coin, v = Math.min(999999, Math.max(0, Math.round(Number(e.target.value)) || 0));
+            change(p => { p.coins[k] = v; });
+        }
+    });
     sheet.addEventListener('keydown', e => {
         if (e.key !== 'Enter') return;
         if (e.target.id === 'pp-res-n' || e.target.id === 'pp-res-max') { e.preventDefault(); sheet.querySelector('[data-act="res-add"]').click(); }
+        if (e.target.id === 'pp-item-n' || e.target.id === 'pp-item-q') { e.preventDefault(); sheet.querySelector('[data-act="inv-add"]').click(); }
+        if (e.target.id === 'pp-pd-f') { e.preventDefault(); sheet.querySelector('[data-act="pd-add"]').click(); }
+        if (e.target.dataset.coin) { e.preventDefault(); e.target.blur(); }
         if (e.target.id === 'cs-amt') e.preventDefault();
     });
     document.getElementById('cs-pick').addEventListener('change', e => {
