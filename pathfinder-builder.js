@@ -424,7 +424,7 @@ function stepSheet() {
     if (s.cast) {
         h += `<h3>Spellcasting</h3><p>${s.cast.kind === 'focus' ? 'Focus spells' : `${pcCap(s.cast.trad || 'any')} ${s.cast.kind} spells`} · ${PC_ABIL_NAMES[s.cast.attr] || ''} · DC ${s.spellDc}, attack ${pcSign(s.spellAtk)} (${PC_RANKS[s.prof.spell].toLowerCase()})</p>`;
         if (s.cast.slots.length) h += `<p>${s.cast.cantrips ? `<span class="cb-slot">Cantrips ${s.cast.cantrips}</span>` : ''}${s.cast.slots.map((n, i) => (n ? `<span class="cb-slot">Rank ${i + 1}: ${n}</span>` : '')).join('')}</p>`;
-        h += '<p class="cb-faint">Pick the spells themselves in the <a href="pf2e/spells">Pathfinder spell list</a>; a spell planner is on the way.</p>';
+        h += `<p class="cb-faint">Pick the spells themselves in the <a href="pathfinder-spell-planner?char=${encodeURIComponent(cur.id)}">🃏 Spell Planner</a>; they save onto this character.</p>`;
     }
     h += '</div><div>';
     h += `<h3>Strikes</h3><div class="cb-scroll"><table class="cb-table"><thead><tr><th>Strike</th><th class="cb-num">Attack</th><th>Damage</th></tr></thead><tbody>${s.strikes.map(x => `<tr><td>${esc(x.name)}${x.traits.length ? `<br><span class="cb-tag">${esc(x.traits.join(', '))}${x.range ? ` · range ${x.range} ft` : ''}</span>` : ''}</td><td class="cb-num">${x.atk.map(pcSign).join(' / ')}</td><td>${esc(x.dmg)}</td></tr>`).join('')}</tbody></table></div>`;

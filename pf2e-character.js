@@ -48,8 +48,15 @@ function pcBlank() {
         boosts: { anc: [], ancFree: false, bg: [], key: '', l1: [], 5: [], 10: [], 15: [], 20: [] },
         skills: { cls: [], ch: '', inc: {}, lore: [] }, paths: {}, feats: {}, langs: [],
         deity: { name: '', weapon: '', font: '', skill: '' },
-        gear: { armor: '', arPot: 0, shield: '', weapons: [] }, notes: '', updated: Date.now()
+        gear: { armor: '', arPot: 0, shield: '', weapons: [] }, notes: '', spells: pcBlankSpells(), updated: Date.now()
     };
+}
+
+// The Spell Planner's picks (spell keys of pf2e-spells-data.js): ct cantrips, rep a repertoire by rank,
+// book a wizard's spellbook or a witch's familiar, prep each rank's slots (a slot can be ''), sig a
+// signature spell by rank, focus focus spells added by hand, fav favorites.
+function pcBlankSpells() {
+    return { ct: [], rep: {}, book: [], prep: {}, sig: {}, focus: [], fav: [] };
 }
 
 // ── Cleaning (saves and imports keep only these fields, as plain values) ─
@@ -102,8 +109,38 @@ function pcClean(raw) {
             .map(w => ({ id: w.id, pot: rune(w.pot), str: rune(w.str) })) : []
     };
     c.notes = pcStr(raw.notes, 4000);
+    c.spells = pcCleanSpells(raw.spells);
     c.updated = Number.isFinite(raw.updated) ? raw.updated : Date.now();
     return c;
+}
+
+// A spell key. Pages without pf2e-spells-data.js (the builder) keep any well-formed key.
+function pcSpellOk(k) {
+    return typeof k === 'string' && k.length <= 60 && /^[a-z0-9]+(-[a-z0-9]+)*$/.test(k)
+        && (typeof PF2E_SPELLS === 'undefined' || Object.hasOwn(PF2E_SPELLS, k));
+}
+
+function pcCleanSpells(raw) {
+    const s = pcBlankSpells();
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return s;
+    const keys = (v, n) => (Array.isArray(v) ? [...new Set(v.filter(pcSpellOk))].slice(0, n) : []);
+    const ranks = (v, fn) => {
+        const out = {};
+        if (v && typeof v === 'object' && !Array.isArray(v)) {
+            for (const [r, x] of Object.entries(v)) if (/^([1-9]|10)$/.test(r)) { const y = fn(x); if (y.length) out[r] = y; }
+        }
+        return out;
+    };
+    s.ct = keys(raw.ct, 12);
+    s.rep = ranks(raw.rep, x => keys(x, 12));
+    s.book = keys(raw.book, 160);
+    s.prep = ranks(raw.prep, x => (Array.isArray(x) ? x.slice(0, 12).map(k => (pcSpellOk(k) ? k : '')) : []));
+    if (raw.sig && typeof raw.sig === 'object') {
+        for (const [r, k] of Object.entries(raw.sig)) if (/^[1-9]$/.test(r) && pcSpellOk(k)) s.sig[r] = k;
+    }
+    s.focus = keys(raw.focus, 12);
+    s.fav = keys(raw.fav, 80);
+    return s;
 }
 
 function pcLoadAll() {
@@ -436,7 +473,12 @@ function pcStrikes(c) {
 }
 
 // ── Spells ──────────────────────────────────────────────
-// The class's casting: { trad, kind, attr, cantrips, slots: [count per rank 1..10] } or null.
+// Sorcerers and (Player Core 2) oracles cast 3 spells of a new rank and 4 after; the rest 2, then 3.
+const PC_BIG_SLOTS = ['sorcerer', 'oracle'];
+
+// The class's casting: { trad, kind, attr, cantrips, slots: [count per rank 1..10], curr, font } or null.
+// curr: a wizard's last slot of each rank 1-9 (and one cantrip) is for curriculum spells (not the
+// school of unified magical theory). font: a cleric's heal or harm slots at the highest rank.
 function pcCasting(c) {
     const { cls, ch } = pcParts(c);
     if (!cls || !cls.cast) return null;
@@ -444,17 +486,218 @@ function pcCasting(c) {
     let trad = trad0;
     if (ch && ch.tr) trad = ch.tr === 'choice' ? c.sub : ch.tr;
     const attr = PC_SPELL_ATTR[c.cls] || pcKey(c);
-    if (kind === 'focus') return { trad, kind, attr, cantrips: 0, slots: [] };
+    if (kind === 'focus') return { trad, kind, attr, cantrips: 0, slots: [], curr: false, font: null };
+    const curr = c.cls === 'wizard' && !!ch && c.ch !== 'school-of-unified-magical-theory';
     const top = Math.min(9, Math.ceil(c.level / 2));
     const slots = [];
     for (let r = 1; r <= top; r++) {
-        const fresh = c.level === 2 * r - 1; // the level a rank opens: 2 slots (3 for a sorcerer)
-        let n = c.cls === 'sorcerer' ? (fresh ? 3 : 4) : (fresh ? 2 : 3);
-        if (c.cls === 'wizard') n += 1; // the curriculum slot
+        const fresh = c.level === 2 * r - 1; // the level a rank opens
+        let n = PC_BIG_SLOTS.includes(c.cls) ? (fresh ? 3 : 4) : (fresh ? 2 : 3);
+        if (curr) n += 1;
         slots.push(n);
     }
     if (c.level >= 19 && pcFeatures(c).some(f => PC_TENTH.includes(f.name))) slots.push(...Array(10 - slots.length - 1).fill(0), 1);
-    return { trad, kind, attr, cantrips: 5 + (c.cls === 'wizard' ? 1 : 0), slots };
+    const font = c.cls === 'cleric' ? { n: c.level >= 15 ? 6 : c.level >= 5 ? 5 : 4, rank: top, spell: c.deity.font } : null;
+    return { trad, kind, attr, cantrips: 5 + (curr ? 1 : 0), slots, curr, font };
+}
+
+// ── Spell picks (the Spell Planner) ─────────────────────
+// These need pf2e-spells-data.js; pcSpellGrants also needs the text file (pcLoadText).
+const PC_RANK_WORDS = { cantrip: 0, cantrips: 0, '1st': 1, '2nd': 2, '3rd': 3, '4th': 4, '5th': 5, '6th': 6, '7th': 7, '8th': 8, '9th': 9 };
+// rep: a repertoire (spontaneous), list: the whole tradition (prepared), book: a spellbook or familiar.
+const PC_SPELL_TYPES = { bard: 'rep', oracle: 'rep', sorcerer: 'rep', cleric: 'list', druid: 'list', wizard: 'book', witch: 'book' };
+// Feats that add a choice's advanced or greater focus spell (bloodline, revelation, school).
+const PC_FOCUS_TIERS = { advanced: ['advanced-bloodline', 'advanced-revelation', 'advanced-school-spell'], greater: ['greater-bloodline', 'greater-revelation'] };
+const PC_FOCUS_HEADS = ['Bloodline Spells', 'Revelation Spells', 'School Spells', 'Order Spell'];
+
+function pcSpellKey(name) {
+    const k = String(name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    return typeof PF2E_SPELLS !== 'undefined' && Object.hasOwn(PF2E_SPELLS, k) ? k : '';
+}
+
+// A focus spell, or a focus cantrip (a composition or hex cantrip: a cantrip on no tradition's list).
+function pcIsFocus(k) {
+    const s = PF2E_SPELLS[k];
+    return !!s && (s.k === 'f' || (s.k === 'c' && !(s.td || []).length));
+}
+
+// What the class's spellcasting allows: pcCasting plus { type, top, ctLimit, rep [picks per rank],
+// sig [ranks with a signature spell], book { cantrips, spells } (what a new book holds) }.
+function pcSpellRules(c) {
+    const cast = pcCasting(c);
+    if (!cast) return null;
+    const type = cast.kind === 'focus' ? 'focus' : PC_SPELL_TYPES[c.cls] || 'list';
+    const top = cast.slots.length;
+    const out = { ...cast, type, top, ctLimit: cast.cantrips, rep: [], sig: [], book: null };
+    if (type === 'rep') {
+        out.rep = cast.slots.slice();
+        if (c.level >= 3) out.sig = cast.slots.map((n, i) => i + 1).filter(r => r <= 9);
+    }
+    if (type === 'book') {
+        const own = c.cls === 'witch' ? 6 : cast.curr ? 7 + Math.min(9, top) - 1 : 6; // 5 + lesson, curriculum, or unified's one
+        out.book = { cantrips: 10, spells: own + 2 * (c.level - 1) };
+    }
+    return out;
+}
+
+// A class choice's text as [header, label, value]: "**Head** 1st: A; 2nd: B", "**Head**" then
+// "- **1st:** A" lines, or "**Head** Value". sub picks a draconic exemplar's own gifts.
+function pcTextPairs(text, sub = '') {
+    const out = [];
+    let head = '';
+    String(text || '').split('\n').forEach(line => {
+        let m = /^- \*\*(\w+)—Tradition\*\*\s*(\w+);.*?\*\*Sorcerous Gifts\*\*\s*(.+)$/.exec(line);
+        if (m) {
+            if (m[2] === sub) m[3].split(';').forEach(p => { const q = /^\s*(\w+)\s*:\s*(.+)$/.exec(p); if (q) out.push(['Sorcerous Gifts', q[1].toLowerCase(), q[2]]); });
+            return;
+        }
+        m = /^- \*\*(.+?):\*\*\s*(.+)$/.exec(line);
+        if (m && head) { out.push([head, m[1].trim().toLowerCase(), m[2]]); return; }
+        m = /^\*\*(.+?)\*\*\s*(.*)$/.exec(line);
+        if (!m) { head = ''; return; }
+        head = m[1].trim();
+        const rest = m[2].trim();
+        if (!rest) return;
+        if (/^(cantrips?|initial|\d(st|nd|rd|th))\s*:/i.test(rest)) {
+            rest.split(';').forEach(p => { const q = /^\s*([\w ]+?)\s*:\s*(.+)$/.exec(p); if (q) out.push([head, q[1].toLowerCase(), q[2]]); });
+        } else out.push([head, '', rest]);
+    });
+    return out;
+}
+
+let pcFocusNames = null;
+// Focus spells a text says you learn or gain, by name (sentences that offer a choice don't count).
+function pcFocusInText(text) {
+    if (!pcFocusNames) {
+        pcFocusNames = Object.keys(PF2E_SPELLS).filter(pcIsFocus).map(k => [PF2E_SPELLS[k].n, k]).sort((a, b) => b[0].length - a[0].length);
+    }
+    const out = [];
+    String(text || '').split(/(?<=[.!?])\s+|\n/).forEach(sen => {
+        if (!/\b(learn|gain)s?\b/.test(sen) || /\b(or|either|choice|choose)\b/i.test(sen)) return;
+        let rest = sen;
+        pcFocusNames.forEach(([n, k]) => {
+            const i = rest.indexOf(n);
+            if (i < 0 || /\w/.test(rest[i - 1] || '') || /\w/.test(rest[i + n.length] || '')) return;
+            out.push(k);
+            rest = rest.slice(0, i) + rest.slice(i + n.length);
+        });
+    });
+    return out;
+}
+
+// The spells the character gets without picking them: { list: [{ key, rank, from, counts, to }],
+// curr: { rank: [keys] } (a wizard's curriculum), focus: [{ key, from }] }. counts: the spell takes
+// one of the rank's repertoire picks (a sorcerous gift); to: 'rep' or 'book'.
+function pcSpellGrants(c) {
+    const out = { list: [], curr: {}, focus: [] };
+    const r = pcSpellRules(c) || { top: 0 };
+    const parts = pcParts(c);
+    const feats = new Set([...Object.values(c.feats), ...pcGrantedFeats(c).map(g => g.key).filter(Boolean)]);
+    const names = v => v.replace(/\([^)]*\)/g, '').split(/,|\band\b/).map(pcSpellKey).filter(Boolean);
+    const addFocus = (key, from) => { if (key && pcIsFocus(key) && !out.focus.some(f => f.key === key)) out.focus.push({ key, from }); };
+    [[parts.ch, c.ch], [parts.ch2, c.ch2]].forEach(([x, id]) => {
+        if (!x) return;
+        const text = pcText('ch:' + id);
+        pcTextPairs(text, c.sub).forEach(([head, label, value]) => {
+            const rank = Object.hasOwn(PC_RANK_WORDS, label) ? PC_RANK_WORDS[label] : -1;
+            if (head === 'Sorcerous Gifts' || head === 'Granted Spells' || head === 'Muse Spell') {
+                const at = head === 'Muse Spell' ? 1 : rank;
+                if (at < 0 || at > r.top) return;
+                names(value).forEach(key => out.list.push({ key, rank: at, from: x.n, counts: head === 'Sorcerous Gifts', to: 'rep' }));
+            }
+            if (head === 'Curriculum' && rank >= 0 && rank <= r.top) out.curr[rank] = names(value);
+            if (PC_FOCUS_HEADS.includes(head)) {
+                const ok = !label || label === 'initial' || (PC_FOCUS_TIERS[label] || []).some(f => feats.has(f));
+                if (ok) names(value).forEach(k => addFocus(k, x.n));
+            }
+        });
+        const hex = /You gain the (.+?) hex cantrip/.exec(text);
+        if (hex) addFocus(pcSpellKey(hex[1]), x.n);
+        const fam = /familiar learns (.+?)\./.exec(text);
+        if (fam) names(fam[1]).forEach(key => out.list.push({ key, rank: PF2E_SPELLS[key].r, from: x.n, counts: false, to: 'book' }));
+    });
+    pcFeatures(c).forEach(f => pcFocusInText(pcText('cf:' + f.key)).forEach(k => addFocus(k, f.name)));
+    feats.forEach(f => pcFocusInText(pcText('ft:' + f)).forEach(k => addFocus(k, PF2E_FEATS[f].n)));
+    return out;
+}
+
+// Cantrips to pick: a sorcerer's gift cantrip is one of the five.
+function pcCantripLimit(r, grants) {
+    return r.ctLimit - grants.list.filter(g => g.to === 'rep' && g.rank === 0 && g.counts).length;
+}
+
+// A repertoire rank's picks: its slots, less the sorcerous gift at that rank.
+function pcRepLimit(r, grants, n) {
+    return (r.rep[n - 1] || 0) - grants.list.filter(g => g.to === 'rep' && g.rank === n && g.counts).length;
+}
+
+// Spells of the character's tradition up to a rank (0: cantrips), common ones unless rare is set.
+function pcSpellPool(c, rank, rare = false) {
+    const cast = pcCasting(c);
+    if (!cast || !cast.trad) return [];
+    return Object.keys(PF2E_SPELLS).filter(k => {
+        const s = PF2E_SPELLS[k];
+        return (rank === 0 ? s.k === 'c' : s.k === 's' && s.r <= rank) && (s.td || []).includes(cast.trad) && (rare || !s.ra);
+    });
+}
+
+// The class's own focus spells (by trait) a character of this level can have.
+function pcFocusPool(c) {
+    const top = Math.ceil(c.level / 2);
+    return Object.keys(PF2E_SPELLS).filter(k => pcIsFocus(k) && PF2E_SPELLS[k].r <= top && PF2E_SPELLS[k].tr.includes(c.cls));
+}
+
+// Every focus spell the character has, and the pool: one Focus Point per focus spell, up to 3
+// (focus cantrips cost none and add none).
+function pcFocus(c, grants = pcSpellGrants(c)) {
+    const list = [...grants.focus];
+    c.spells.focus.forEach(k => { if (pcIsFocus(k) && !list.some(f => f.key === k)) list.push({ key: k, from: '' }); });
+    return { list, points: Math.min(3, list.filter(f => PF2E_SPELLS[f.key].k === 'f').length) };
+}
+
+// Drop picks that no longer fit the class, level, and tradition (rare: uncommon spells allowed).
+function pcFitSpells(c, grants = pcSpellGrants(c), rare = true) {
+    const r = pcSpellRules(c);
+    const s = c.spells;
+    const S = k => PF2E_SPELLS[k];
+    s.focus = s.focus.filter(pcIsFocus);
+    if (!r || r.type === 'focus') { Object.assign(s, { ct: [], rep: {}, book: [], prep: {}, sig: {} }); return; }
+    const onList = k => S(k) && (S(k).td || []).includes(r.trad) && (rare || !S(k).ra);
+    const given = new Set(grants.list.map(g => g.key));
+    const ok = k => onList(k) || given.has(k);
+    s.book = r.type === 'book' ? s.book.filter(k => ok(k) && (S(k).k === 'c' || (S(k).k === 's' && S(k).r <= r.top))) : [];
+    const bookHas = k => s.book.includes(k) || grants.list.some(g => g.key === k && g.to === 'book');
+    const ctGiven = grants.list.filter(g => g.to === 'rep' && g.rank === 0).map(g => g.key);
+    s.ct = s.ct.filter(k => S(k).k === 'c' && !ctGiven.includes(k) && (r.type === 'book' ? bookHas(k) : ok(k))).slice(0, pcCantripLimit(r, grants));
+    const rep = {};
+    if (r.type === 'rep') {
+        for (let n = 1; n <= r.top; n++) {
+            const mine = grants.list.filter(g => g.to === 'rep' && g.rank === n);
+            const keep = (s.rep[n] || []).filter(k => S(k).k === 's' && S(k).r <= n && ok(k) && !mine.some(g => g.key === k));
+            if (keep.length) rep[n] = keep.slice(0, Math.max(0, pcRepLimit(r, grants, n)));
+        }
+    }
+    s.rep = rep;
+    const prep = {};
+    if (r.type !== 'rep') {
+        for (let n = 1; n <= r.top; n++) {
+            const slots = r.slots[n - 1];
+            if (!slots) continue;
+            const row = (s.prep[n] || []).slice(0, slots).map((k, i) => {
+                if (!k || S(k).k !== 's' || S(k).r > n) return '';
+                if (r.curr && n <= 9 && i === slots - 1) return Object.values(grants.curr).flat().includes(k) && bookHas(k) ? k : '';
+                return (r.type === 'book' ? bookHas(k) : ok(k)) ? k : '';
+            });
+            if (row.some(Boolean)) prep[n] = row;
+        }
+    }
+    s.prep = prep;
+    const sig = {};
+    r.sig.forEach(n => {
+        const k = s.sig[n];
+        if (k && ((s.rep[n] || []).includes(k) || grants.list.some(g => g.to === 'rep' && g.rank === n && g.key === k))) sig[n] = k;
+    });
+    s.sig = sig;
 }
 
 // ── The whole sheet ─────────────────────────────────────
