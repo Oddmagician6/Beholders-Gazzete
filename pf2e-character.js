@@ -74,7 +74,7 @@ function pcClean(raw) {
     const b = raw.boosts && typeof raw.boosts === 'object' ? raw.boosts : {};
     c.boosts.anc = pcAbilList(b.anc, 4);
     c.boosts.ancFree = b.ancFree === true;
-    c.boosts.bg = pcAbilList(b.bg, 2);
+    c.boosts.bg = pcAbilList(b.bg, 3);   // Amnesiac has three
     c.boosts.key = PC_ABILS.includes(b.key) ? b.key : '';
     c.boosts.l1 = pcAbilList(b.l1, 4);
     PC_BOOST_LEVELS.forEach(l => { c.boosts[l] = pcAbilList(b[l], 4); });
