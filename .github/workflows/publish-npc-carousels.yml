@@ -12,9 +12,10 @@ on:
         required: true
   schedule:
     # November's approved dates are CST: 15:00 UTC is 09:00 Chicago.
-    # Off-hour retries stay inside the four-hour window; state prevents duplicates.
-    - cron: '0,17,37 15 * * *'
-    - cron: '17 16-18 * * *'
+    # GitHub starts scheduled runs late or drops them (often by hours, worst on the hour),
+    # so retries run every half hour through the 12-hour window; state prevents duplicates.
+    - cron: '7,37 15-23 * * *'
+    - cron: '7,37 0-2 * * *'
 
 concurrency:
   group: npc-carousel-publisher

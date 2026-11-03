@@ -1,0 +1,32 @@
+name: Publish queued Instagram Reels
+run-name: Instagram Reel queue - ${{ github.event_name }}
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Instagram's API can't schedule, so this checks .github/instagram-reels.json every
+    # half hour. GitHub starts scheduled runs late (sometimes by hours), so a Reel may
+    # post after its time, but never twice: posted Reels are found by their article link.
+    - cron: '23,53 * * * *'
+
+concurrency:
+  group: instagram-reel-queue
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - name: Check queue behavior
+        run: python3 -m unittest discover -s .github/scripts -p 'test_instagram_reel_queue.py' -v
+      - name: Publish the next due Reel
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+        run: python3 .github/scripts/run_instagram_reel_queue.py

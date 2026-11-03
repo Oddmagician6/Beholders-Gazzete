@@ -164,12 +164,13 @@ class PublisherTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError,'ambiguous'):self.publisher.schedule_facebook(entry)
         self.assertEqual(len([c for c in self.api.calls if c[:2]==('POST','page/feed')]),1)
 
-    def test_due_window_never_publishes_early_or_after_four_hours(self):
+    def test_due_window_never_publishes_early_or_after_twelve_hours(self):
         with self.assertRaises(RuntimeError):self.publisher.due()
         self.arm()
         self.set_now(FIRST-timedelta(seconds=1));self.assertEqual(self.publisher.due(),[])
         self.set_now(FIRST);self.assertEqual([p['day'] for p in self.publisher.due()],[1])
-        self.set_now(FIRST+timedelta(hours=4,seconds=1));self.assertEqual(self.publisher.due(),[])
+        self.set_now(FIRST+timedelta(hours=8,minutes=28));self.assertEqual([p['day'] for p in self.publisher.due()],[1])
+        self.set_now(FIRST+timedelta(hours=12,seconds=1));self.assertEqual(self.publisher.due(),[])
 
     def test_instagram_carousel_order_caption_alt_and_repeat_run(self):
         self.arm();self.set_now(FIRST+timedelta(minutes=1))

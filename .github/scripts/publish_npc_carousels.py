@@ -15,6 +15,8 @@ from meta_page import get_page_context, graph_get, graph_post
 
 UTC = timezone.utc
 PLATFORMS = ('facebook', 'instagram')
+# GitHub often starts scheduled runs hours late; a wide window lets a late run still post.
+INSTAGRAM_WINDOW = timedelta(hours=12)
 
 
 class StateError(RuntimeError):
@@ -357,7 +359,7 @@ class Publisher:
     def due(self):
         if self.state.get('armed') is not True:
             raise RuntimeError('The queue is not armed. Verify and arm it before scheduled publishing.')
-        return [entry for entry in self.queue['entries'] if timestamp(entry['publishAt']) <= self.now <= timestamp(entry['publishAt']) + timedelta(hours=4)]
+        return [entry for entry in self.queue['entries'] if timestamp(entry['publishAt']) <= self.now <= timestamp(entry['publishAt']) + INSTAGRAM_WINDOW]
 
     def run_due(self):
         due = self.due()
@@ -418,7 +420,7 @@ def main():
     if operation not in ('verify', 'arm', 'run_due'):
         raise RuntimeError('Unknown publisher operation.')
     now = datetime.now(UTC)
-    expired = now > timestamp(store.queue['entries'][-1]['publishAt']) + timedelta(hours=4)
+    expired = now > timestamp(store.queue['entries'][-1]['publishAt']) + INSTAGRAM_WINDOW
     if operation == 'run_due' and expired:
         report(store)
         store.disable_workflow()

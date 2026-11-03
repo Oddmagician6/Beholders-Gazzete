@@ -1,0 +1,25 @@
+{
+  "reels": [
+    {
+      "article_id": "loot-split-torchbearer-paid-exposure-grievance",
+      "release_tag": "reel-stage-nov02-torchbearer-ig-20261102-1454",
+      "hashtags": "#Torchbearer #LootSplit #Hirelings",
+      "publishAt": "2026-11-02T16:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "bard-lie-border-checkpoint-adventuring-party-toll",
+      "release_tag": "reel-stage-nov02-bard-ig-20261102-1454",
+      "hashtags": "#Bard #MuleBride #BorderCheckpoint",
+      "publishAt": "2026-11-02T20:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "adventuring-party-two-doors-vote-torches-out",
+      "release_tag": "reel-stage-nov02-doors-ig-20261102-1454",
+      "hashtags": "#DungeonDoors #AdventuringParty #Skeleton",
+      "publishAt": "2026-11-03T00:00:00Z",
+      "custom_artwork_confirmed": true
+    }
+  ]
+}

@@ -100,6 +100,7 @@ def publish(article_id, video_url, extra_tags, share_to_feed):
     if not media_id:
         raise RuntimeError(f"Instagram returned no media ID after publishing container {container_id}. Check Instagram before retrying.")
     print(f"Instagram confirmed Reel publication. Instagram media ID: {media_id}")
+    return media_id
 
 
 def main():
