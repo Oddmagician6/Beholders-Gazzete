@@ -102,18 +102,7 @@ const featLine = f => `${f.a ? `<span class="pb-act">${PB_ACTION[f.a]}</span> ` 
 
 // ── Prerequisites: a quick check of the plain ones (rank in a skill, Perception, a feat) ─
 function prereqMet(c, text, stats) {
-    const t = text.trim();
-    let m = /^(trained|expert|master|legendary) in (\w+)(?: Lore)?$/i.exec(t);
-    if (m) {
-        const need = ['trained', 'expert', 'master', 'legendary'].indexOf(m[1].toLowerCase()) + 1;
-        const k = m[2].toLowerCase();
-        if (Object.hasOwn(PC_SKILLS, k)) return stats.ranks[k] >= need;
-        if (k === 'perception') return stats.prof.per >= need;
-        return null;
-    }
-    const key = pcFeatKey(t);
-    if (key) return Object.values(c.feats).includes(key) || pcGrantedFeats(c).some(g => g.key === key);
-    return null;
+    return pcPrereqMet(c, text, stats);
 }
 
 function prereqHtml(c, f, stats) {
@@ -340,6 +329,13 @@ function stepFeats() {
     const stats = pcStats(cur);
     let h = `<h2>Feats</h2><p class="cb-lead">A feat at each feat level, from lists that fit the slot. Prerequisites show ✓ when the sheet can tell you meet them and ✗ when it can tell you don't; the rest are up to you and your GM. Feats change your numbers only as text: apply their effects yourself.</p>${todoBox('feats')}`;
     h += `<label class="pb-check"><input type="checkbox" data-archetype data-focus="archetype"${showArchetype ? ' checked' : ''}> Show archetype feats in class feat slots (dedications and the feats after them)</label>`;
+    h += `<label class="pb-check"><input type="checkbox" data-fa data-focus="fa"${cur.fa ? ' checked' : ''}> Free Archetype (a variant rule, with your GM's say-so): an archetype feat at every even level</label>`;
+    const arch = pcArchetypeCheck(cur);
+    if (arch.list.length || arch.issues.length) {
+        const names = pcArchetypes();
+        h += `<p class="cb-faint">Archetypes: ${arch.list.map(a => `${esc(names[a.key].n)} (${a.feats.length} feat${a.feats.length === 1 ? '' : 's'} after the dedication)`).join(', ') || 'none yet'}${arch.need ? `. Take ${arch.need} more ${esc(names[arch.current].n)} feat${arch.need === 1 ? '' : 's'} before another dedication` : ''}. Plan them in the <a href="pathfinder-archetype-helper?char=${encodeURIComponent(cur.id)}">🔀 Archetype Helper</a>.</p>`;
+        arch.issues.forEach(x => { h += `<p class="cb-warn">⚠️ Level ${esc(x.slot.replace(/^\D+/, ''))}: ${esc(x.text)}</p>`; });
+    } else h += `<p class="cb-faint">Browse dedications and plan the feats after them in the <a href="pathfinder-archetype-helper?char=${encodeURIComponent(cur.id)}">🔀 Archetype Helper</a>.</p>`;
     const granted = pcGrantedFeats(cur);
     if (granted.length) h += `<h3>Granted</h3><div class="pb-feats">${granted.map(g => g.key
         ? `<div>${textBox(`ft:${g.key}`, `${featLine(PF2E_FEATS[g.key])} <span class="cb-tag">from ${esc(g.from)}</span>`)}</div>`
@@ -590,6 +586,7 @@ function onChange(e) {
     }
     if (d.ancFree !== undefined) return change(c => { c.boosts.ancFree = el.checked; c.boosts.anc = []; });
     if (d.archetype !== undefined) { showArchetype = el.checked; render(); return; }
+    if (d.fa !== undefined) return change(c => { c.fa = el.checked; });
     if (d.langs !== undefined) return change(c => { c.langs = el.value.split(',').map(x => x.trim().slice(0, 30)).filter(Boolean).slice(0, 12); });
 }
 

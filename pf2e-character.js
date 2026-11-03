@@ -48,7 +48,7 @@ function pcBlank() {
         boosts: { anc: [], ancFree: false, bg: [], key: '', l1: [], 5: [], 10: [], 15: [], 20: [] },
         skills: { cls: [], ch: '', inc: {}, lore: [] }, paths: {}, feats: {}, langs: [],
         deity: { name: '', weapon: '', font: '', skill: '' },
-        gear: { armor: '', arPot: 0, shield: '', weapons: [] }, notes: '', spells: pcBlankSpells(), play: pcBlankPlay(), updated: Date.now()
+        fa: false, gear: { armor: '', arPot: 0, shield: '', weapons: [] }, notes: '', spells: pcBlankSpells(), play: pcBlankPlay(), updated: Date.now()
     };
 }
 
@@ -116,6 +116,7 @@ function pcClean(raw) {
         weapons: Array.isArray(g.weapons) ? g.weapons.filter(w => w && Object.hasOwn(PF2E_ITEMS, w.id)).slice(0, 8)
             .map(w => ({ id: w.id, pot: rune(w.pot), str: rune(w.str) })) : []
     };
+    c.fa = raw.fa === true;
     c.notes = pcStr(raw.notes, 4000);
     c.spells = pcCleanSpells(raw.spells);
     c.play = pcCleanPlay(raw.play);
@@ -378,6 +379,9 @@ const PC_SLOT_KINDS = {
     anc: ['Ancestry feat', 'anc'], cls: ['Class feat', 'cls'], gen: ['General feat', 'gen'], skf: ['Skill feat', 'skf']
 };
 
+// Free Archetype (a GM Core variant, c.fa): one more class feat at every even level, for archetype feats only.
+const PC_FREE_ARCH = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20];
+
 // Every feat slot up to the character's level: { slot, kind, level, label }.
 function pcFeatSlots(c, level = c.level) {
     const { cls } = pcParts(c);
@@ -386,7 +390,8 @@ function pcFeatSlots(c, level = c.level) {
     Object.entries(PC_SLOT_KINDS).forEach(([kind, [label, lvKey]]) => {
         cls.lv[lvKey].filter(l => l <= level).forEach(l => out.push({ slot: kind + l, kind, level: l, label }));
     });
-    const order = { anc: 0, cls: 1, skf: 2, gen: 3 };
+    if (c.fa) PC_FREE_ARCH.filter(l => l <= level).forEach(l => out.push({ slot: 'arc' + l, kind: 'arc', level: l, label: 'Free archetype feat' }));
+    const order = { anc: 0, cls: 1, arc: 2, skf: 3, gen: 4 };
     return out.sort((a, b) => a.level - b.level || order[a.kind] - order[b.kind]);
 }
 
@@ -431,6 +436,7 @@ function pcFeatsFor(c, slot, { archetype = false } = {}) {
         let fits = false;
         if (kind === 'anc') fits = f.c === 'ancestry' && f.tr.some(t => traits.includes(t));
         else if (kind === 'cls') fits = f.c === 'class' && (f.ar ? archetype : f.tr.includes(c.cls));
+        else if (kind === 'arc') fits = f.ar === 1;
         else if (kind === 'skf') fits = f.c === 'skill';
         else if (kind === 'gen') fits = f.c === 'general' || f.c === 'skill';
         if (!fits) continue;
@@ -438,6 +444,106 @@ function pcFeatsFor(c, slot, { archetype = false } = {}) {
         out.push({ key, feat: f, taken: taken.has(key) && !(f.mx > 1) });
     }
     return out.sort((a, b) => b.feat.l - a.feat.l || a.feat.n.localeCompare(b.feat.n));
+}
+
+// Whether the character has a feat: in a slot (up to their level, or before a slot) or granted.
+function pcHasFeat(c, key, before = '') {
+    const slots = pcFeatSlots(c);
+    const end = before ? slots.findIndex(s => s.slot === before) : slots.length;
+    return slots.slice(0, end < 0 ? slots.length : end).some(s => c.feats[s.slot] === key) || pcGrantedFeats(c).some(g => g.key === key);
+}
+
+// A quick check of the plain prerequisites: true met, false not, null can't tell.
+// "Strength +2", "trained in Stealth", "trained in Nature or Society", "trained in Stealth and Survival",
+// "expert in Arcana, Nature, Occultism, or Religion", "trained in Perception", or a feat's name.
+function pcPrereqMet(c, text, stats = pcStats(c)) {
+    const t = String(text).trim().replace(/\.$/, '');
+    let m = /^(strength|dexterity|constitution|intelligence|wisdom|charisma) \+(\d)$/i.exec(t);
+    if (m) return stats.mods[PC_ABILS.find(a => PC_ABIL_NAMES[a].toLowerCase() === m[1].toLowerCase())] >= Number(m[2]);
+    m = /^(trained|expert|master|legendary) in (.+)$/i.exec(t);
+    if (m) {
+        const need = PC_RANKS.indexOf(pcCap(m[1].toLowerCase()));
+        const any = /\bor\b/i.test(m[2]);
+        const parts = m[2].split(/,\s*(?:and |or )?|\s+(?:and|or)\s+/i).map(x => x.trim().toLowerCase()).filter(Boolean);
+        const ok = parts.map(k => (Object.hasOwn(PC_SKILLS, k) ? stats.ranks[k] >= need : k === 'perception' ? stats.prof.per >= need : null));
+        if (ok.includes(null)) return null;
+        return any ? ok.includes(true) : !ok.includes(false);
+    }
+    const key = pcFeatKey(t);
+    return key ? Object.values(c.feats).includes(key) || pcGrantedFeats(c).some(g => g.key === key) : null;
+}
+
+// ── Archetypes ──────────────────────────────────────────
+// Every Player Core archetype, found through its dedication feat: { key: { n, ded, l, mc, feats } }.
+// mc: the class of a multiclass archetype. feats: the archetype feats that name the dedication
+// as a prerequisite, carry the archetype's trait, or name a feat that does (Advanced Arcana needs Basic Arcana).
+let pcArchCache = null;
+function pcArchetypes() {
+    if (pcArchCache) return pcArchCache;
+    const out = {};
+    Object.entries(PF2E_FEATS).forEach(([k, f]) => {
+        if (!f.ar || !f.tr.includes('dedication')) return;
+        const key = k.replace(/-dedication$/, '');
+        out[key] = { n: f.n.replace(/ Dedication$/, ''), ded: k, l: f.l, mc: f.tr.includes('multiclass') && Object.hasOwn(PF2E_CLASSES, key) ? key : '', feats: [] };
+    });
+    const owners = {};
+    const names = Object.entries(out).map(([key, a]) => [key, `${a.n} Dedication`.toLowerCase()]);
+    const rest = Object.entries(PF2E_FEATS).filter(([, f]) => f.ar && !f.tr.includes('dedication'));
+    rest.forEach(([k, f]) => {
+        const pr = (f.pr || []).join('; ').toLowerCase();
+        let own = names.filter(([, n]) => pr.includes(n)).map(([key]) => key);
+        if (!own.length) own = f.tr.filter(t => Object.hasOwn(out, t));   // Stunning Appearance: the vigilante trait
+        if (own.length) owners[k] = own;
+    });
+    for (let changed = true; changed;) {
+        changed = false;
+        rest.forEach(([k, f]) => {
+            if (owners[k]) return;
+            const own = [...new Set((f.pr || []).flatMap(p => owners[pcFeatKey(p)] || []))];
+            if (own.length) { owners[k] = own; changed = true; }
+        });
+    }
+    Object.entries(owners).forEach(([k, own]) => own.forEach(a => out[a].feats.push(k)));
+    Object.values(out).forEach(a => a.feats.sort((x, y) => PF2E_FEATS[x].l - PF2E_FEATS[y].l || PF2E_FEATS[x].n.localeCompare(PF2E_FEATS[y].n)));
+    pcArchCache = out;
+    return out;
+}
+
+// The archetypes a feat belongs to (its own one for a dedication).
+function pcFeatArchetypes(key) {
+    return Object.entries(pcArchetypes()).filter(([, a]) => a.ded === key || a.feats.includes(key)).map(([k]) => k);
+}
+
+// The character's archetypes in the order taken, and what breaks the rules:
+// { list: [{ key, slot, level, feats: [{ slot, key }] }], current, need, issues: [{ slot, text }] }.
+// need: feats still to take from the current archetype before another dedication (the two-feat rule).
+function pcArchetypeCheck(c) {
+    const arch = pcArchetypes();
+    const list = [];
+    const issues = [];
+    let current = null;
+    pcFeatSlots(c).forEach(s => {
+        const key = c.feats[s.slot];
+        const f = key && PF2E_FEATS[key];
+        if (!f || !f.ar) return;
+        const own = pcFeatArchetypes(key);
+        if (f.tr.includes('dedication')) {
+            const a = arch[own[0]];
+            if (!a) return;
+            if (a.mc && a.mc === c.cls) issues.push({ slot: s.slot, text: `You can't take the ${a.n} Dedication: you're already a ${a.n.toLowerCase()}.` });
+            if (current && current.feats.length < 2) issues.push({ slot: s.slot, text: `${a.n} Dedication comes too soon: take ${2 - current.feats.length} more ${arch[current.key].n} feat${current.feats.length === 1 ? '' : 's'} first (two after each dedication).` });
+            current = { key: own[0], slot: s.slot, level: s.level, feats: [] };
+            list.push(current);
+            return;
+        }
+        const mine = list.filter(x => own.includes(x.key));
+        if (!mine.length) {
+            if (own.length) issues.push({ slot: s.slot, text: `${f.n} needs the ${own.map(k => arch[k].n).join(' or ')} Dedication first.` });
+            return;
+        }
+        mine.forEach(x => x.feats.push({ slot: s.slot, key }));
+    });
+    return { list, current: current ? current.key : '', need: current ? Math.max(0, 2 - current.feats.length) : 0, issues };
 }
 
 // ── Class features ──────────────────────────────────────
@@ -836,5 +942,10 @@ function pcLoadText(done) {
 }
 
 function pcText(key) {
-    return pcTextState === 2 && Object.hasOwn(PF2E_CHAR_TEXT, key) ? PF2E_CHAR_TEXT[key] : '';
+    if (pcTextState !== 2 || !Object.hasOwn(PF2E_CHAR_TEXT, key)) return '';
+    const t = PF2E_CHAR_TEXT[key];
+    // A dedication's text ends with its archetype's name on a line (a link to the archetype's page in the source).
+    const m = /^ft:(.+)-dedication$/.exec(key);
+    if (m) { const lines = t.split('\n'); if (lines[lines.length - 1].toLowerCase().replace(/[^a-z]+/g, '-') === m[1]) return lines.slice(0, -1).join('\n'); }
+    return t;
 }
