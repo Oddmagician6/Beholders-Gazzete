@@ -12,13 +12,15 @@
    Export writes one journal as JSON; import only parses JSON and keeps what
    passes jnClean (plain text in known fields), so nothing in a file ever runs.
    Reading builder characters only parses CB_KEY ('gazette-characters'), so
-   the page needs no character data.
+   the page needs no character data. The Pathfinder page (data-system="pf2e")
+   keeps its journals and reads its characters under the "-pf2e" keys.
    ============================================ */
 
-const JN_KEY = 'gazette-journals';
+const JN_KEY = ruleKey('gazette-journals');
 const JN_MAX = 30;
 const JN_LIMITS = { entries: 400, name: 80, title: 120, text: 4000, field: 200, tags: 12, tag: 30 };
-const JN_CB_KEY = 'gazette-characters';
+const JN_CB_KEY = ruleKey('gazette-characters');
+const JN_BUILDER = ruleSystemId() === 'pf2e' ? 'pathfinder-character-builder' : 'character-builder';
 
 const JN_KINDS = {
     session: { icon: '📖', label: 'Session', many: 'Sessions' },
@@ -317,7 +319,7 @@ function renderBar() {
         + (linked ? `<option value="${esc(cur.char)}" selected>A deleted character</option>` : '');
     const c = charFor(cur);
     document.getElementById('jn-char-line').innerHTML = c
-        ? `🧝 ${esc(c.name)}${c.line ? ' · ' + esc(c.line) : ''} · <a href="character-builder?char=${encodeURIComponent(c.id)}">Open in the Character Builder</a>`
+        ? `🧝 ${esc(c.name)}${c.line ? ' · ' + esc(c.line) : ''} · <a href="${JN_BUILDER}?char=${encodeURIComponent(c.id)}">Open in the Character Builder</a>`
         : linked ? 'Its Character Builder character was deleted; the journal stays. Pick another or keep it on its own.' : '';
 }
 

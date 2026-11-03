@@ -6,13 +6,19 @@
    localStorage except a character saved through cbSave (CB_KEY).
    Traits, ideals, bonds, flaws, and names come from npc-data.js.
    Needs rng.js, npc-data.js, character-data.js, and character-engine.js.
+   The Pathfinder page (data-system="pf2e") needs pf2e-character-data.js and
+   pf2e-character.js in place of the last two, then backstory-pf2e.js after
+   this file for its ancestries' and classes' lines; it saves to that builder.
    ============================================ */
+
+const BS_PF2E = ruleSystemId() === 'pf2e';
+const BS_GM = BS_PF2E ? 'GM' : 'DM';
 
 // Each line has its own seed (by id), so the order here is only the order shown.
 const BS_LINES = [
     ['name', 'Name'], ['trait', 'Personality'], ['ideal', 'Ideal'], ['bond', 'Bond'], ['flaw', 'Flaw'],
     ['upbringing', 'Grew up'], ['family', 'Family'], ['mentor', 'Mentor'], ['rival', 'Rival'], ['events', 'Turning points'],
-    ['reason', 'Why I adventure'], ['secret', 'Secret'], ['hook', 'Hook for the DM'], ['useit', 'For the DM']
+    ['reason', 'Why I adventure'], ['secret', 'Secret'], ['hook', `Hook for the ${BS_GM}`], ['useit', `For the ${BS_GM}`]
 ];
 const BS_IDS = BS_LINES.map(l => l[0]);
 const BS_GENDERS = [['', 'Any names'], ['male', 'Masculine names'], ['female', 'Feminine names'], ['nonbinary', 'Neutral names']];
@@ -628,6 +634,33 @@ function bsFill(text, mine = false) {
 
 const bs = { seed: '', race: '', cls: '', bg: '', gender: '', set: {}, lock: [] };
 
+// The page's builder: races and classes for the pickers ({ id, name, icon }), and its saved characters.
+const BS_RACES = () => (BS_PF2E ? Object.entries(PF2E_ANCESTRIES).map(([id, a]) => ({ id, name: a.n, icon: '' })) : CB_RACES);
+const BS_CLASSES = () => (BS_PF2E ? Object.entries(PF2E_CLASSES).map(([id, k]) => ({ id, name: k.n, icon: '' })) : CB_CLASSES);
+const bsRaceOk = id => (BS_PF2E ? Object.hasOwn(PF2E_ANCESTRIES, id || '') : !!cbRace(id));
+const bsClassOk = id => (BS_PF2E ? Object.hasOwn(PF2E_CLASSES, id || '') : !!cbClass(id));
+const BS_CB_KEY = BS_PF2E ? PC_KEY : CB_KEY;
+const BS_BUILDER = BS_PF2E ? 'pathfinder-character-builder' : 'character-builder';
+
+// Saved characters for the picker: { id, name, about }. A Pathfinder save is only read here,
+// since cleaning it (pcLoadAll) needs the item list, which loads when a backstory is saved.
+function bsCharList() {
+    if (!BS_PF2E) {
+        return cbLoadAll().map(c => {
+            const k = cbClass(c.cls), r = cbRace(c.race);
+            return { id: c.id, name: c.name, about: [r && r.name, k && `${k.name} ${c.level}`].filter(Boolean).join(' ') };
+        });
+    }
+    let list = [];
+    try { list = JSON.parse(localStorage.getItem(PC_KEY)); } catch (e) {}
+    if (!Array.isArray(list)) return [];
+    return list.filter(c => c && typeof c.id === 'string' && /^[a-z0-9]{1,16}$/.test(c.id)).slice(0, PC_MAX).map(c => {
+        const a = PF2E_ANCESTRIES[c.race], k = PF2E_CLASSES[c.cls];
+        const lv = Number.isInteger(c.level) && c.level >= 1 && c.level <= 20 ? c.level : 1;
+        return { id: c.id, name: typeof c.name === 'string' ? c.name.slice(0, 60) : '', about: [a && a.n, k && `${k.n} ${lv}`].filter(Boolean).join(' ') };
+    });
+}
+
 function esc(s) {
     return String(s === undefined || s === null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
@@ -661,8 +694,8 @@ function bsParams() {
 function bsFromUrl() {
     const q = urlParams();
     bs.seed = parseSeed(q.get('seed')) || newSeed();
-    bs.race = cbRace(q.get('race')) ? q.get('race') : '';
-    bs.cls = cbClass(q.get('cls')) ? q.get('cls') : '';
+    bs.race = bsRaceOk(q.get('race')) ? q.get('race') : '';
+    bs.cls = bsClassOk(q.get('cls')) ? q.get('cls') : '';
     bs.bg = BS_BG[q.get('bg')] ? q.get('bg') : '';
     bs.gender = BS_GENDERS.some(g => g[0] && g[0] === q.get('g')) ? q.get('g') : '';
     bs.set = {};
@@ -701,12 +734,8 @@ function render() {
 function renderChars() {
     const sel = document.getElementById('bs-char');
     const was = sel.value;
-    const list = cbLoadAll();
-    sel.innerHTML = '<option value="">A new character</option>' + list.map(c => {
-        const k = cbClass(c.cls), r = cbRace(c.race);
-        const about = [r && r.name, k && `${k.name} ${c.level}`].filter(Boolean).join(' ');
-        return `<option value="${c.id}">${esc(c.name || 'Unnamed character')}${about ? ` (${esc(about)})` : ''}</option>`;
-    }).join('');
+    const list = bsCharList();
+    sel.innerHTML = '<option value="">A new character</option>' + list.map(c => `<option value="${c.id}">${esc(c.name || 'Unnamed character')}${c.about ? ` (${esc(c.about)})` : ''}</option>`).join('');
     if (list.some(c => c.id === was)) sel.value = was;
 }
 
@@ -719,12 +748,13 @@ function bsText(withName = true) {
     return out.join('\n');
 }
 
+// What saving needs: the spell list for a D&D character, the item list for a Pathfinder one.
 let spellsLoading = null;
 function loadSpells() {
-    if (typeof SPELLS_DATA !== 'undefined') return Promise.resolve();
+    if (BS_PF2E ? typeof PF2E_ITEMS !== 'undefined' : typeof SPELLS_DATA !== 'undefined') return Promise.resolve();
     if (!spellsLoading) spellsLoading = new Promise((ok, fail) => {
         const s = document.createElement('script');
-        s.src = 'spells-data.js';
+        s.src = BS_PF2E ? 'pf2e-items-data.js' : 'spells-data.js';
         s.onload = ok;
         s.onerror = () => { spellsLoading = null; fail(); };
         document.head.appendChild(s);
@@ -740,21 +770,25 @@ async function useForCharacter() {
     btn.disabled = true;
     const fail = msg => { flash(msg, true); btn.disabled = false; };
     try {
-        // Saving re-cleans every saved character, which drops spells it can't look up.
+        // Saving re-cleans every saved character, which drops spells (or Pathfinder gear) it can't look up.
         await loadSpells();
     } catch (e) {
-        return fail('Could not load the spell list; check your connection and try again.');
+        return fail(`Could not load the ${BS_PF2E ? 'item' : 'spell'} list; check your connection and try again.`);
     }
     const id = document.getElementById('bs-char').value;
-    const list = cbLoadAll();
+    const list = BS_PF2E ? pcLoadAll() : cbLoadAll();
+    const max = BS_PF2E ? PC_MAX : CB_MAX;
     let c = id ? list.find(x => x.id === id) : null;
     if (id && !c) { renderChars(); return fail('That character is gone; pick another.'); }
     if (!c) {
-        if (list.length >= CB_MAX) return fail(`You have ${CB_MAX} characters saved; delete one in the Character Builder first.`);
-        c = cbBlank();
-        const r = cbRace(bs.race);
+        if (list.length >= max) return fail(`You have ${max} characters saved; delete one in the Character Builder first.`);
+        if (BS_PF2E) c = pcBlank();
+        else {
+            c = cbBlank();
+            const r = cbRace(bs.race);
+            c.subrace = r && r.subraces ? r.subraces[0].id : '';
+        }
         c.race = bs.race;
-        c.subrace = r && r.subraces ? r.subraces[0].id : '';
         c.cls = bs.cls;
     }
     if (!c.name) c.name = bsLine('name').slice(0, 60);
@@ -762,8 +796,8 @@ async function useForCharacter() {
     const notes = c.notes.trim() ? `${c.notes.trimEnd()}\n\n${block}` : block;
     if (notes.length > 4000) return fail('That character\'s notes are nearly full (4,000 characters); trim them in the builder first.');
     c.notes = notes;
-    if (!cbSave(c)) return fail('Could not save: this browser\'s storage is full or blocked.');
-    location.href = 'character-builder';
+    if (!(BS_PF2E ? pcSave(c) : cbSave(c))) return fail('Could not save: this browser\'s storage is full or blocked.');
+    location.href = BS_BUILDER;
 }
 
 function rollNew() {
@@ -774,8 +808,8 @@ function rollNew() {
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('year').textContent = new Date().getFullYear();
-    document.getElementById('bs-race').innerHTML = '<option value="">Any race</option>' + CB_RACES.map(r => `<option value="${r.id}">${r.icon} ${esc(r.name)}</option>`).join('');
-    document.getElementById('bs-class').innerHTML = '<option value="">Any class</option>' + CB_CLASSES.map(k => `<option value="${k.id}">${k.icon} ${esc(k.name)}</option>`).join('');
+    document.getElementById('bs-race').innerHTML = `<option value="">Any ${BS_PF2E ? 'ancestry' : 'race'}</option>` + BS_RACES().map(r => `<option value="${r.id}">${r.icon ? r.icon + ' ' : ''}${esc(r.name)}</option>`).join('');
+    document.getElementById('bs-class').innerHTML = '<option value="">Any class</option>' + BS_CLASSES().map(k => `<option value="${k.id}">${k.icon ? k.icon + ' ' : ''}${esc(k.name)}</option>`).join('');
     document.getElementById('bs-bg').innerHTML = BS_BACKGROUNDS.map(([v, t]) => `<option value="${v}">${esc(t)}</option>`).join('');
     document.getElementById('bs-gender').innerHTML = BS_GENDERS.map(([v, t]) => `<option value="${v}">${t}</option>`).join('');
 
@@ -815,5 +849,5 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('bs-print').addEventListener('click', () => window.print());
     document.getElementById('bs-use').addEventListener('click', useForCharacter);
     window.addEventListener('popstate', () => { bsFromUrl(); render(); });
-    window.addEventListener('storage', e => { if (e.key === CB_KEY || e.key === null) renderChars(); });
+    window.addEventListener('storage', e => { if (e.key === BS_CB_KEY || e.key === null) renderChars(); });
 });

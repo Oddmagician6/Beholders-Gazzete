@@ -599,7 +599,7 @@ function pcWeaponRank(c, w, prof) {
     return rank;
 }
 
-// The character's Strikes: their weapons and a fist. Each: { name, atk: [3 MAP steps], dmg, traits, rank }.
+// The character's Strikes: their weapons and a fist. Each: { key (the item's, '' for the fist), name, atk: [3 MAP steps], dmg, traits, rank }.
 function pcStrikes(c) {
     const { mods } = pcAttrs(c);
     const prof = pcProfs(c);
@@ -623,7 +623,7 @@ function pcStrikes(c) {
         else if (tr.includes('propulsive')) bonus = mods.str > 0 ? Math.floor(mods.str / 2) : mods.str;
         bonus += pcSpecDamage(c, rank);
         const dmg = dice ? `${dice}${bonus ? (bonus > 0 ? ' + ' : ' − ') + Math.abs(bonus) : ''} ${m[3] || ''}`.trim() : '';
-        return { name: w.n + (w.pot ? ` +${w.pot}` : '') + (w.str ? ` (${['', 'striking', 'greater striking', 'major striking'][w.str]})` : ''),
+        return { key: w.key, name: w.n + (w.pot ? ` +${w.pot}` : '') + (w.str ? ` (${['', 'striking', 'greater striking', 'major striking'][w.str]})` : ''),
             atk, dmg, traits: tr, rank, ranged, range: w.rg || 0 };
     });
 }

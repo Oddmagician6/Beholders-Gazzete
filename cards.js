@@ -207,7 +207,7 @@ function featureCards(host, f, tag = '') {
     }));
 }
 
-// An attack: { name, sub, hit, hitLabel, dmg, dmgType, more: [[label, value]], notes: [lines] }. One card.
+// An attack: { name, sub, hit, hitLabel, dmg, dmgType, more: [[label, value]], notes: [lines], link }. One card.
 function attackCardHtml(a, tag = '') {
     const stat = (k, v) => `<div><dt>${k}</dt><dd>${gcEsc(v)}</dd></div>`;
     const dmg = `<div><dt>Damage</dt><dd>${gcEsc(a.dmg)}${a.dmgType ? `<small>${gcEsc(a.dmgType)}</small>` : ''}</dd></div>`;
@@ -215,6 +215,6 @@ function attackCardHtml(a, tag = '') {
         + (a.more && a.more.length ? `<dl class="gc-stats">${a.more.map(([k, v]) => stat(k, v)).join('')}</dl>` : '');
     return gcTextCard({
         color: GC_KIND_COLORS.attack, name: a.name, sub: a.sub, stats,
-        body: (a.notes || []).map(n => `<p>${gcInline(n)}</p>`).join(''), tag, link: `${GC_SITE}/character-builder`
+        body: (a.notes || []).map(n => `<p>${gcInline(n)}</p>`).join(''), tag, link: a.link || `${GC_SITE}/character-builder`
     });
 }
