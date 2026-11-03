@@ -24,7 +24,7 @@ class StateError(RuntimeError):
 
 
 def batch_files(batch=''):
-    if batch and not re.fullmatch(r'week0[2-4]', batch):
+    if batch and not re.fullmatch(r'week0[2-5]', batch):
         raise RuntimeError('Unexpected NPC publishing batch.')
     suffix = '-' + batch if batch else ''
     return 'npc-carousel-queue' + suffix + '.json', 'publish-npc-carousels' + suffix + '.yml'
@@ -55,8 +55,11 @@ def validate_queue(queue):
     if queue.get('timezone') != 'America/Chicago' or queue.get('expectedInstagramUsername') != 'beholdersgazette':
         raise RuntimeError('Unexpected queue time zone or Instagram destination.')
     entries = queue.get('entries', [])
-    if len(entries) != 7:
-        raise RuntimeError('This approved queue must contain exactly seven posts.')
+    final_batch = queue.get('id') == 'persons-of-interest-week05'
+    if len(entries) != (2 if final_batch else 7):
+        raise RuntimeError('Expected seven approved posts, or the final two-post batch.')
+    if final_batch and [entry.get('sourceDay') for entry in entries] != [29, 30]:
+        raise RuntimeError('The final batch must contain reviewed days 29 and 30.')
     ids, dates, filenames = set(), set(), set()
     previous = None
     for index, entry in enumerate(entries):
@@ -406,7 +409,7 @@ def report(store, error=None):
 def main():
     if len(sys.argv) == 3 and sys.argv[1] == '--validate-queue':
         queue = validate_queue(json.loads(Path(sys.argv[2]).read_text(encoding='utf-8')))
-        print(f"Validated {len(queue['entries'])} approved posts and 21 image references without network or publishing.")
+        print(f"Validated {len(queue['entries'])} approved posts and {len(queue['entries']) * 3} image references without network or publishing.")
         return
     if len(sys.argv) > 1:
         raise RuntimeError('Usage: publish_npc_carousels.py [--validate-queue queue.json]')
@@ -448,7 +451,7 @@ def main():
         else:
             store.verify_images(publisher.due())
         if operation == 'verify':
-            print('Verified approved queue, all 21 public JPEGs, and connected Instagram destination. No posts were created.')
+            print(f"Verified approved queue, all {len(store.queue['entries']) * 3} public JPEGs, and connected Instagram destination. No posts were created.")
         elif operation == 'arm':
             publisher.arm()
         else:
@@ -457,7 +460,7 @@ def main():
         completed = all(store.state.get('entries', {}).get(entry['id'], {}).get(platform, {}).get('phase') == 'published' for entry in store.queue['entries'] for platform in PLATFORMS)
         if completed and operation == 'run_due':
             store.disable_workflow()
-            print('All 14 publications confirmed; scheduled workflow disabled.')
+            print(f"All {len(store.queue['entries']) * 2} publications confirmed; scheduled workflow disabled.")
     except Exception as error:
         detail = str(error).replace(user_token, '[redacted]').replace(page['access_token'], '[redacted]')
         report(store, detail)

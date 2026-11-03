@@ -12,7 +12,7 @@ const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const json = value => JSON.stringify(value, null, 2) + '\n';
 
 async function main(args) {
-  if (args.some(arg => !/^--week=[1-4]$/.test(arg) && !/^--start=\d{4}-\d{2}-\d{2}$/.test(arg)) || args.filter(arg => arg.startsWith('--week=')).length > 1 || args.filter(arg => arg.startsWith('--start=')).length > 1) throw new Error('Usage: node persons-of-interest/stage-publishing.mjs [--week=1..4] [--start=YYYY-MM-DD]');
+  if (args.some(arg => !/^--week=[1-5]$/.test(arg) && !/^--start=\d{4}-\d{2}-\d{2}$/.test(arg)) || args.filter(arg => arg.startsWith('--week=')).length > 1 || args.filter(arg => arg.startsWith('--start=')).length > 1) throw new Error('Usage: node persons-of-interest/stage-publishing.mjs [--week=1..5] [--start=YYYY-MM-DD]');
   const week = Number(args.find(arg => arg.startsWith('--week='))?.split('=')[1] || 1);
   const weekId = `week${String(week).padStart(2,'0')}`;
   const start = args.find(arg => arg.startsWith('--start='))?.split('=')[1] || (week === 1 ? '2026-11-02' : null);
@@ -23,7 +23,8 @@ async function main(args) {
   const source = path.join(root, '.poi-output', 'batches', 'month-01', `week-${String(week).padStart(2,'0')}`);
   const output = path.join(root, '.poi-output', 'publishing', releaseTag);
   const manifest = JSON.parse(await readFile(path.join(source, 'manifest.json'), 'utf8'));
-  if (manifest.entries.length !== 7 || manifest.cardCount !== 21 || manifest.id !== `month-01-week-${String(week).padStart(2,'0')}`) throw new Error('Expected the selected reviewed seven-post package.');
+  const count = week === 5 ? 2 : 7;
+  if (manifest.entries.length !== count || manifest.cardCount !== count * 3 || manifest.id !== `month-01-week-${String(week).padStart(2,'0')}`) throw new Error('Expected the selected reviewed package.');
   await mkdir(output, { recursive: true });
   const entries = [];
   for (const [index, entry] of manifest.entries.entries()) {
@@ -51,7 +52,7 @@ async function main(args) {
     const instagram = originalInstagram.replaceAll('@thebeholdersgazette','@beholdersgazette');
     entries.push({ id:`${weekId}-day${String(entry.day).padStart(2,'0')}-${entry.characterId}`, day:index+1, sourceDay:entry.day, characterId:entry.characterId, name:entry.name, approved:true, publishAt, localTime:local, captions:{facebook,instagram}, captionAdjustment:instagram===originalInstagram?null:'Correct Instagram self-mention to the connected account @beholdersgazette.', images });
   }
-  const queue = {schemaVersion:1,id:`persons-of-interest-${weekId}`,timezone:'America/Chicago',expectedInstagramUsername:'beholdersgazette',approved:true,approval:`Owner approved the seven reviewed posts for ${weekId} and requested daily Facebook and Instagram publication starting ${start} at 09:00 America/Chicago.`,entries};
+  const queue = {schemaVersion:1,id:`persons-of-interest-${weekId}`,timezone:'America/Chicago',expectedInstagramUsername:'beholdersgazette',approved:true,approval:`Owner approved the ${count} reviewed posts for ${weekId} and requested daily Facebook and Instagram publication starting ${start} at 09:00 America/Chicago.`,entries};
   const queueBytes = Buffer.from(json(queue));
   const queueSha256 = sha(queueBytes);
   await writeFile(path.join(output,'queue.json'),queueBytes);
@@ -60,7 +61,7 @@ async function main(args) {
   const configFile = week === 1 ? 'npc-carousel-queue.json' : `npc-carousel-queue-${weekId}.json`;
   await writeFile(path.join(root,'.github',configFile),json(config));
   await writeFile(path.join(output,'schedule.txt'),entries.map(e=>`${e.localTime} America/Chicago | ${e.name} | Facebook + Instagram`).join('\n')+'\n');
-  console.log(`Prepared 21 JPEGs and seven approved dates in ${path.relative(root,output)}.`);
+  console.log(`Prepared ${count * 3} JPEGs and ${count} approved dates in ${path.relative(root,output)}.`);
   console.log(`Queue SHA-256: ${queueSha256}`);
   console.log(entries.map(e=>`${e.localTime} America/Chicago: ${e.name}`).join('\n'));
 }

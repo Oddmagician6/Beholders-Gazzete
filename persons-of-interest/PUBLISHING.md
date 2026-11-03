@@ -36,13 +36,26 @@ gh workflow run publish-npc-carousels-week03.yml --repo Oddmagician6/Beholders-G
 
 Keep the initial Release state intact after activation. `.poi-output/publishing/activation-week03.json` records confirmed activation; rendering or staging alone is not activation.
 
+## Final nine approved posts
+
+The owner approved the finished days 22-30 and requested the continuing daily Facebook/Instagram schedule at 09:00 America/Chicago. Week 4 runs November 23-29, 2026: Old Oat, Gilly Brinewool, Pell Underbough, Rusk, Ione Glassfin, Sister Beryl, and Garran Softstep. Week 5 contains Wren Knott on November 30 and Sable Quill on December 1.
+
+The batches use their own `publish-npc-carousels-week04.yml` / `week05.yml` workflows, matching queue configs, and `poi-stage-week04-20261123` / `poi-stage-week05-20261130` Releases. They share the existing publication concurrency group. Only queue ID `persons-of-interest-week05` may contain two posts, and those must be source days 29 and 30. All other queues still require seven posts. Each workflow shuts down independently after completion or expiry.
+
+```powershell
+node persons-of-interest/stage-publishing.mjs --week=4 --start=2026-11-23
+node persons-of-interest/stage-publishing.mjs --week=5 --start=2026-11-30
+```
+
+Verify and arm each batch separately using its workflow. Save confirmed activation as `.poi-output/publishing/activation-week04.json` and `activation-week05.json`. Never recreate Release state after activation.
+
 ## Files and storage
 
-- `.github/workflows/publish-npc-carousels.yml`: manual verification/arming and scheduled UTC checks corresponding to 09:00, 09:17, 09:37, 10:17, 11:17, and 12:17 America/Chicago for the approved November dates.
+- `.github/workflows/publish-npc-carousels.yml` and batch workflows: manual verification/arming and scheduled UTC checks every half hour from 09:07 through 20:37 America/Chicago during these CST dates.
 - `.github/scripts/publish_npc_carousels.py`: publication, verification, and recovery.
 - `.github/scripts/test_npc_carousels.py`: behavior tests using a fake Meta service.
 - `.github/npc-carousel-queue.json`: the approved release tag and queue SHA-256.
-- `stage-publishing.mjs`: local exporter accepting an explicit week and start date. It verifies the reviewed package checksums and creates 21 high-quality JPEGs, an approved dated queue, and initial release state under `.poi-output/publishing/<release-tag>/`. Rendering text and artwork are unchanged by JPEG conversion. Its default remains the original first-week package; later weeks write separate queue configs.
+- `stage-publishing.mjs`: local exporter accepting an explicit week and start date. It verifies the reviewed package checksums and creates three high-quality JPEGs per post, an approved dated queue, and initial release state under `.poi-output/publishing/<release-tag>/`. Weeks 1-4 have seven posts; week 5 has two. Rendering text and artwork are unchanged by JPEG conversion. Its default remains the original first-week package; later weeks write separate queue configs.
 
 Staged JPEGs and `queue.json` are public GitHub Release assets, rather than files in site Git history. The Release description contains a JSON state record. Keep the Release and its description intact until every post is verified: future Instagram publications still need the public images, and retries depend on this state. No secret values belong in either the assets or state.
 
@@ -73,7 +86,7 @@ Repository policy requires owner authorization before committing or pushing. Lea
 5. Dispatch `operation=arm`. This uploads unpublished Facebook photos, schedules the seven Facebook feed posts, verifies each returned schedule, and arms the dated Instagram queue. Instagram containers are created on the due date, avoiding advance-container expiry.
 6. Confirm the run succeeded and inspect its publishing report. Facebook should show seven confirmed native schedules. Instagram is queued in Actions, not natively scheduled through its API. Mark local records queued only after this confirmation; do not mark them published before Meta confirms publication.
 
-GitHub scheduled jobs can be delayed or dropped. The intended time is 09:00, with follow-up checks through 12:17; this is not a guarantee of publication at exactly 09:00:00. Late Instagram publication is limited to four hours after its approved time. The workflow disables itself after all 14 publications are confirmed, or on the first run after the final four-hour window. An expired queue is not silently backfilled. The current explicit UTC cron hours apply to these November CST dates; recalculate them for a future queue in daylight saving time.
+GitHub scheduled jobs can be delayed or dropped. The intended time is 09:00, with checks from 09:07 through 20:37; this is not a guarantee of publication at exactly 09:00:00. The existing publisher allows late Instagram publication up to twelve hours after its approved time. The workflow disables itself after all publications are confirmed, or on the first run after the final twelve-hour window. An expired queue is not silently backfilled. The current explicit UTC cron hours apply to these November/December CST dates; recalculate them for a future queue in daylight saving time.
 
 On November 2, Facebook published Mabel natively, but GitHub had recorded no scheduled NPC run and Instagram remained queued. A manual `run_due` recovered the approved carousel successfully in run `41474328950`, confirming both platforms and recording Instagram media `18173978695477961`. The missing scheduled event's cause was not established. Both batch schedules were changed from the timezone-based trigger to explicit UTC triggers with additional retries; duplicate protection remains in the existing publisher. A successful manual run proves publishing works, not that a future GitHub cron event will fire. Check the next scheduled run to confirm that separately.
 
@@ -85,7 +98,7 @@ State is saved atomically through a Release-description update, with a revision 
 
 For an ordinary retry, dispatch `operation=run_due`. Respect any `needs_review` or ambiguous-submission error: inspect the destination account and existing IDs before deciding whether a new submission is safe. Do not blindly rerun a fresh queue or create another release for the same seven posts.
 
-After automatic shutdown, a future approved queue requires its own staged release/config and enabled batch workflow. Prepare its dates and captions explicitly, then verify and arm it. Never replace the first-week config while that batch is active. `NPC_BATCH` accepts only `week02` through `week04`; an empty value retains the original workflow/config. Each workflow disables only itself. Nothing in this workflow authorizes later NPCs, ads, Stories, or additional daily posts.
+After automatic shutdown, a future approved queue requires its own staged release/config and enabled batch workflow. Prepare its dates and captions explicitly, then verify and arm it. Never replace the first-week config while that batch is active. `NPC_BATCH` accepts only `week02` through `week05`; an empty value retains the original workflow/config. Each workflow disables only itself. Nothing in this workflow authorizes later NPCs, ads, Stories, or additional daily posts.
 
 No site exporters are needed. The local review gallery is not a live schedule ledger; the GitHub run report and Release state are authoritative for publishing.
 

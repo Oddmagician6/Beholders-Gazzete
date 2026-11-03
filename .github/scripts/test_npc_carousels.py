@@ -141,6 +141,30 @@ class PublisherTests(unittest.TestCase):
         with self.assertRaises(RuntimeError):self.arm()
         self.assertFalse(any(c[0]=='POST' for c in self.api.calls))
 
+    def test_final_two_posts_arm_and_publish_once_each(self):
+        self.queue['id'] = 'persons-of-interest-week05'
+        self.queue['entries'] = self.queue['entries'][:2]
+        for index, entry in enumerate(self.queue['entries']): entry['sourceDay'] = index + 29
+        validate_queue(self.queue)
+        self.arm(); self.arm()
+        self.assertEqual(len(self.api.scheduled), 2)
+        self.assertEqual(len([c for c in self.api.calls if c[:2] == ('POST','page/photos')]), 6)
+        for index in range(2):
+            self.set_now(FIRST + timedelta(days=index))
+            self.publisher.run_due(); self.publisher.run_due()
+        self.assertEqual(self.api.publications, 2)
+        self.assertTrue(all(self.state['entries'][e['id']][p]['phase'] == 'published' for e in self.queue['entries'] for p in ('facebook','instagram')))
+
+    def test_short_queue_requires_final_batch_and_days(self):
+        bad = copy.deepcopy(self.queue); bad['entries'] = bad['entries'][:2]
+        with self.assertRaises(RuntimeError): validate_queue(bad)
+        bad['id'] = 'persons-of-interest-week05'
+        with self.assertRaises(RuntimeError): validate_queue(bad)
+        for index, entry in enumerate(bad['entries']): entry['sourceDay'] = index + 29
+        validate_queue(bad)
+        bad['entries'].pop()
+        with self.assertRaises(RuntimeError): validate_queue(bad)
+
     def test_rearming_does_not_create_duplicate_facebook_posts(self):
         self.arm();self.arm()
         self.assertEqual(len(self.api.scheduled),7)
@@ -234,6 +258,14 @@ class BatchRoutingTests(unittest.TestCase):
         store.github = Mock()
         with patch.dict(os.environ, {'NPC_BATCH':'week02'}): store.disable_workflow()
         store.github.assert_called_once_with('PUT', 'repos/Oddmagician6/Beholders-Gazzete/actions/workflows/publish-npc-carousels-week02.yml/disable')
+
+    def test_final_batch_routes_and_disables_only_itself(self):
+        self.assertEqual(batch_files('week05'), ('npc-carousel-queue-week05.json', 'publish-npc-carousels-week05.yml'))
+        with self.assertRaises(RuntimeError): batch_files('week06')
+        store = ReleaseStore.__new__(ReleaseStore)
+        store.repo = 'Oddmagician6/Beholders-Gazzete'; store.github = Mock()
+        with patch.dict(os.environ, {'NPC_BATCH':'week05'}): store.disable_workflow()
+        store.github.assert_called_once_with('PUT', 'repos/Oddmagician6/Beholders-Gazzete/actions/workflows/publish-npc-carousels-week05.yml/disable')
 
     def run_main(self, now, operation='run_due'):
         store = Mock()

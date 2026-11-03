@@ -1,0 +1,50 @@
+name: Publish approved NPC carousels - week 4
+run-name: NPC week 4 - ${{ inputs.operation || 'run_due' }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: Verify without posting, arm this approved batch, or publish due Instagram posts
+        type: choice
+        options: [verify, arm, run_due]
+        default: verify
+        required: true
+  schedule:
+    # This batch's approved dates are CST: 15:00 UTC is 09:00 Chicago.
+    # GitHub starts scheduled runs late or drops them (often by hours, worst on the hour),
+    # so retries run every half hour through the 12-hour window; state prevents duplicates.
+    - cron: '7,37 15-23 * * *'
+    - cron: '7,37 0-2 * * *'
+
+concurrency:
+  group: npc-carousel-publisher
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - name: Check publisher behavior
+        run: python3 -m unittest discover -s .github/scripts -p 'test_npc_carousels.py' -v
+      - name: Verify, arm, or publish approved week-four carousels
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+          OPERATION: ${{ inputs.operation || 'run_due' }}
+          NPC_BATCH: week04
+        run: python3 .github/scripts/publish_npc_carousels.py
+      - name: Upload publishing report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: npc-carousel-week04-report-${{ github.run_id }}
+          path: ${{ runner.temp }}/npc-carousel-report.json
+          if-no-files-found: ignore
