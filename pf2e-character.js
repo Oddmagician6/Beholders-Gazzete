@@ -48,8 +48,16 @@ function pcBlank() {
         boosts: { anc: [], ancFree: false, bg: [], key: '', l1: [], 5: [], 10: [], 15: [], 20: [] },
         skills: { cls: [], ch: '', inc: {}, lore: [] }, paths: {}, feats: {}, langs: [],
         deity: { name: '', weapon: '', font: '', skill: '' },
-        gear: { armor: '', arPot: 0, shield: '', weapons: [] }, notes: '', spells: pcBlankSpells(), updated: Date.now()
+        gear: { armor: '', arPot: 0, shield: '', weapons: [] }, notes: '', spells: pcBlankSpells(), play: pcBlankPlay(), updated: Date.now()
     };
+}
+
+// The Play Sheet's session state (pf2e-play.js): hp (null = full), temp, cond the conditions as the
+// Initiative tracker writes them ("Frightened 2", "Prone"), hero points, focus points spent, slots
+// spent by rank (spontaneous), cast prepared slots by rank (their indexes), font slots spent, and
+// counters of the player's own (an alchemist's reagents and such) with what's used of each.
+function pcBlankPlay() {
+    return { hp: null, temp: 0, cond: [], hero: 1, focus: 0, slots: {}, cast: {}, font: 0, res: [] };
 }
 
 // The Spell Planner's picks (spell keys of pf2e-spells-data.js): ct cantrips, rep a repertoire by rank,
@@ -110,6 +118,7 @@ function pcClean(raw) {
     };
     c.notes = pcStr(raw.notes, 4000);
     c.spells = pcCleanSpells(raw.spells);
+    c.play = pcCleanPlay(raw.play);
     c.updated = Number.isFinite(raw.updated) ? raw.updated : Date.now();
     return c;
 }
@@ -141,6 +150,47 @@ function pcCleanSpells(raw) {
     s.focus = keys(raw.focus, 12);
     s.fav = keys(raw.fav, 80);
     return s;
+}
+
+// Conditions are checked against PF2E_CONDITIONS (rules-pf2e.js) and keep their values in range.
+function pcCleanPlay(raw) {
+    const p = pcBlankPlay();
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return p;
+    const int = (v, lo, hi, def) => { const n = Math.round(Number(v)); return v !== null && v !== '' && Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : def; };
+    p.hp = raw.hp === null ? null : int(raw.hp, 0, 9999, null);
+    p.temp = int(raw.temp, 0, 9999, 0);
+    if (Array.isArray(raw.cond)) {
+        const seen = new Set();
+        raw.cond.forEach(x => {
+            const m = typeof x === 'string' && /^([A-Z][A-Za-z-]{2,15})(?: (\d))?$/.exec(x);
+            if (!m || seen.has(m[1])) return;
+            const def = typeof PF2E_CONDITIONS === 'undefined' ? { max: m[2] ? 9 : 0 } : PF2E_CONDITIONS[m[1]];
+            if (!def) return;
+            const v = def.max ? int(m[2], 1, def.max, 0) : 0;
+            if (def.max && !v) return;
+            seen.add(m[1]);
+            p.cond.push(def.max ? `${m[1]} ${v}` : m[1]);
+        });
+        p.cond.sort();
+    }
+    p.hero = int(raw.hero, 0, 3, 1);
+    p.focus = int(raw.focus, 0, 3, 0);
+    const ranks = (v, fn) => {
+        const out = {};
+        if (v && typeof v === 'object' && !Array.isArray(v)) {
+            for (const [r, x] of Object.entries(v)) if (/^([1-9]|10)$/.test(r)) { const y = fn(x); if (y !== null) out[r] = y; }
+        }
+        return out;
+    };
+    p.slots = ranks(raw.slots, x => int(x, 1, 12, null));
+    p.cast = ranks(raw.cast, x => (Array.isArray(x) ? [...new Set(x.map(i => int(i, 0, 11, null)).filter(i => i !== null))].sort((a, b) => a - b) : null));
+    Object.keys(p.cast).forEach(r => { if (!p.cast[r].length) delete p.cast[r]; });
+    p.font = int(raw.font, 0, 6, 0);
+    p.res = Array.isArray(raw.res) ? raw.res.filter(r => r && typeof r === 'object' && pcStr(r.n, 40).trim()).slice(0, 12).map(r => {
+        const max = int(r.max, 1, 99, 1);
+        return { n: pcStr(r.n, 40).trim(), max, used: int(r.used, 0, max, 0), day: r.day !== false };
+    }) : [];
+    return p;
 }
 
 function pcLoadAll() {

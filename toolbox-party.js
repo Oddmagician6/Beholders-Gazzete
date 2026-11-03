@@ -44,7 +44,7 @@ function partyCardHtml(c, i) {
 function partyLiveHtml(c) {
     if (!c.live) return '';
     const down = !c.live.hp, low = c.live.hp <= c.live.max / 2;
-    return `<p class="pt-live${down ? ' pt-down' : low ? ' pt-low' : ''}">▶️ <a href="dnd-character-sheet?char=${encodeURIComponent(c.id)}" title="Open this character's Play Sheet">Play Sheet</a>: ${esc(partyLiveText(c.live))}</p>`;
+    return `<p class="pt-live${down ? ' pt-down' : low ? ' pt-low' : ''}">▶️ <a href="${PARTY_PF2E ? 'pathfinder-play-sheet' : 'dnd-character-sheet'}?char=${encodeURIComponent(c.id)}" title="Open this character's Play Sheet">Play Sheet</a>: ${esc(partyLiveText(c.live))}</p>`;
 }
 
 function renderPartyTab() {

@@ -53,6 +53,8 @@ function cleanPartyMember(c) {
 }
 
 // The Play Sheet's state on a party member; null when it has none. at: when it was pushed.
+// Pathfinder's conditions can carry a value and a hyphen ("Frightened 2", "Off-Guard").
+const PARTY_COND_RE = PARTY_PF2E ? /^[A-Z][A-Za-z-]{2,15}( \d)?$/ : /^[A-Z][a-z]{2,15}$/;
 function cleanPartyLive(v) {
     if (!v || typeof v !== 'object' || Array.isArray(v)) return null;
     const max = partyInt(v.max, 1, 9999, null);
@@ -60,7 +62,7 @@ function cleanPartyLive(v) {
     const ds = Array.isArray(v.ds) ? v.ds : [];
     return {
         hp: partyInt(v.hp, 0, max, max), max, temp: partyInt(v.temp, 0, 9999, 0),
-        conds: Array.isArray(v.conds) ? [...new Set(v.conds.filter(x => typeof x === 'string' && /^[A-Z][a-z]{2,15}$/.test(x)))].sort().slice(0, 15) : [],
+        conds: Array.isArray(v.conds) ? [...new Set(v.conds.filter(x => typeof x === 'string' && PARTY_COND_RE.test(x)))].sort().slice(0, 15) : [],
         exh: partyInt(v.exh, 0, 6, 0), conc: partyText(v.conc), ds: [partyInt(ds[0], 0, 3, 0), partyInt(ds[1], 0, 3, 0)],
         at: partyInt(v.at, 0, 8.64e15, 0)
     };
@@ -106,7 +108,8 @@ function partyLiveToCombatant(c, live) {
 // "23 / 31 HP, +5 temp · Poisoned · exhaustion 2 · concentrating on Bless"
 function partyLiveText(live) {
     const bits = [`${live.hp} / ${live.max} HP${live.temp ? `, +${live.temp} temp` : ''}`];
-    if (!live.hp) bits.push(live.ds[1] >= 3 ? 'dead' : live.ds[0] >= 3 ? 'stable' : `death saves ${live.ds[0]}✓ ${live.ds[1]}✗`);
+    // Pathfinder has no death saves: dying and wounded are in the conditions.
+    if (!live.hp && !PARTY_PF2E) bits.push(live.ds[1] >= 3 ? 'dead' : live.ds[0] >= 3 ? 'stable' : `death saves ${live.ds[0]}✓ ${live.ds[1]}✗`);
     bits.push(...live.conds);
     if (live.exh) bits.push(`exhaustion ${live.exh}`);
     if (live.conc) bits.push(`concentrating on ${live.conc}`);
