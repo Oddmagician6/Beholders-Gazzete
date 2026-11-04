@@ -20,6 +20,27 @@
       "hashtags": "#DungeonDoors #AdventuringParty #Skeleton",
       "publishAt": "2026-11-03T00:00:00Z",
       "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "potion-testers-strike-polymorph-batch-newts-brindlemoor",
+      "release_tag": "reel-stage-nov04-newts-ig-20261104",
+      "hashtags": "#PotionTesters #NewtStrike #Polymorph #Brindlemoor",
+      "publishAt": "2026-11-04T16:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "rope-trick-pod-cinderlatch-review-extradimensional",
+      "release_tag": "reel-stage-nov04-rope-ig-20261104",
+      "hashtags": "#RopeTrick #PocketDimension #Cinderlatch #EgressPlus",
+      "publishAt": "2026-11-04T20:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "mimic-ballot-box-eats-31-votes-brindlemoor",
+      "release_tag": "reel-stage-nov04-ballot-ig-20261104",
+      "hashtags": "#Mimic #BallotBox #Brindlemoor #ByElection",
+      "publishAt": "2026-11-05T00:00:00Z",
+      "custom_artwork_confirmed": true
     }
   ]
 }
