@@ -18,8 +18,10 @@
    there until the DM reveals them (shown: true; 🙈/👁️ on each row).
    Pathfinder pages (INIT_PF2E, ROADMAP L3 P4): Pathfinder's conditions (rules-pf2e.js), the valued
    ones saved with their value ("Frightened 2") and stepped with − and +; frightened drops by 1 at the
-   end of its owner's turn; a character dropped to 0 HP becomes dying (1 + wounded) and unconscious,
-   and healing clears dying and adds wounded (damage while dying adds 1); persistent damage (pd) is
+   end of its owner's turn; a character dropped to 0 HP becomes dying (1 + wounded, 2 + wounded from
+   💥 critical damage) and unconscious, and healing clears dying and adds wounded (damage while dying
+   adds 1, or 2 from a crit; double the HP maximum in one blow kills); a dying character's recovery
+   check is rolled at the start of their turn (a Play Sheet character's is left to the sheet); persistent damage (pd) is
    rolled at the end of its owner's turn, then a DC 15 flat check; creatures come from ENC_MONSTERS.
    Loads after toolbox.js (uses its esc() and flash()).
    ============================================ */
@@ -403,8 +405,31 @@ function pf2eTurnNote(ended, now) {
         notes.push(fear > 1 ? `😨 ${ended.name} is frightened ${fear - 1} now.` : `😌 ${ended.name} is no longer frightened.`);
     }
     const dying = now ? condOf(now, 'Dying') : 0;
-    if (dying && !pf2eDead(now)) notes.push(`🎲 ${now.name} rolls a recovery check: DC ${10 + dying} flat check.`);
+    if (dying && !pf2eDead(now)) {
+        // A Play Sheet character rolls on the sheet, which would overwrite a roll made here.
+        notes.push(now.party ? `🎲 ${now.name} rolls a recovery check on their Play Sheet: DC ${10 + dying} flat check.` : pf2eRecovery(now));
+    }
     return notes.join(' ');
+}
+
+// A recovery check for c (flat check, DC 10 + dying), rolled and applied: critical success
+// dying 2 less, success 1 less, failure 1 more, critical failure 2 more; a natural 20 is one
+// step better, a natural 1 one step worse. Losing dying this way leaves them unconscious at
+// 0 HP and wounded 1 more. Returns what to say.
+function pf2eRecovery(c) {
+    const dying = condOf(c, 'Dying'), dc = 10 + dying, v = rollDie(20);
+    let degree = v >= dc + 10 ? 3 : v >= dc ? 2 : v <= dc - 10 ? 0 : 1;
+    if (v === 20) degree = Math.min(3, degree + 1);
+    if (v === 1) degree = Math.max(0, degree - 1);
+    const next = dying + [2, 1, -1, -2][degree];
+    const head = `🎲 ${c.name}'s recovery check: ${v} vs DC ${dc}, ${['a critical failure', 'a failure', 'a success', 'a critical success'][degree]}.`;
+    if (next <= 0) {
+        setCond(c, 'Dying', 0);
+        setCond(c, 'Wounded', condOf(c, 'Wounded') + 1);
+        return `${head} No longer dying: stable at 0 HP, still unconscious, wounded ${condOf(c, 'Wounded')}.`;
+    }
+    setCond(c, 'Dying', next);
+    return `${head} ${pf2eDead(c) ? `${c.name} dies.` : `Dying ${next}.`}`;
 }
 
 // Rolls c's persistent damage, takes it off their HP (temporary HP first), and rolls each one's
@@ -426,7 +451,7 @@ function pf2ePersistent(c) {
         const wasUp = c.hp > 0;
         c.temp -= soak;
         c.hp = Math.max(0, c.hp - (total - soak));
-        ko = (wasUp && c.hp === 0 ? ` ${c.name} falls.` : '') + pf2eKnockout(c, wasUp, true);
+        ko = (wasUp && c.hp === 0 ? ` ${c.name} falls.` : '') + pf2eKnockout(c, wasUp, total > soak);
     }
     return `${icon} ${c.name} takes persistent damage: ${parts.join(', ')}.${ko}`;
 }
@@ -437,19 +462,26 @@ function pf2eDead(c) {
     return d > 0 && d >= Math.max(1, 4 - condOf(c, 'Doomed'));
 }
 
-// Pathfinder: a character dropped to 0 HP is dying (1 plus their wounded value) and unconscious;
-// damaged while dying, their dying goes up 1; healed from 0, they lose dying, wake, and gain
-// wounded 1 (or 1 more). Returns what to say.
-function pf2eKnockout(c, wasUp, hurt = false) {
+// Pathfinder: a character dropped to 0 HP is dying (1 plus their wounded value, 2 plus it from a
+// critical hit) and unconscious, and so is one hurt again at 0 HP after stabilizing; damaged while
+// dying, their dying goes up 1 (2 from a critical hit); one blow of double their HP maximum kills
+// outright. Healed from 0, they lose dying, wake, and gain wounded 1 (or 1 more). hurt: HP were
+// lost (temporary HP don't count). Returns what to say.
+function pf2eKnockout(c, wasUp, hurt = false, crit = false, massive = false) {
     if (!INIT_PF2E || !c.pc) return '';
-    if (!wasUp && hurt && condOf(c, 'Dying') && !pf2eDead(c)) {
-        setCond(c, 'Dying', condOf(c, 'Dying') + 1);
-        return pf2eDead(c) ? ` ${c.name} dies.` : ` Hurt while dying: dying ${condOf(c, 'Dying')}.`;
-    }
-    if (wasUp && c.hp === 0) {
-        setCond(c, 'Dying', 1 + condOf(c, 'Wounded'));
+    if (hurt && massive && !pf2eDead(c)) {
+        setCond(c, 'Dying', Math.max(1, 4 - condOf(c, 'Doomed')));
         setCond(c, 'Unconscious', 1);
-        return pf2eDead(c) ? ` ${c.name} dies.` : ` Dying ${condOf(c, 'Dying')} (a critical hit makes it 1 more: press +).`;
+        return ` Massive damage (double their HP maximum in one blow): ${c.name} dies.`;
+    }
+    if (!wasUp && hurt && condOf(c, 'Dying') && !pf2eDead(c)) {
+        setCond(c, 'Dying', condOf(c, 'Dying') + (crit ? 2 : 1));
+        return pf2eDead(c) ? ` ${c.name} dies.` : ` Hurt while dying${crit ? ' by a critical hit' : ''}: dying ${condOf(c, 'Dying')}.`;
+    }
+    if (hurt && c.hp === 0 && !condOf(c, 'Dying')) {
+        setCond(c, 'Dying', (crit ? 2 : 1) + condOf(c, 'Wounded'));
+        setCond(c, 'Unconscious', 1);
+        return pf2eDead(c) ? ` ${c.name} dies.` : ` Dying ${condOf(c, 'Dying')}${crit ? ' (a critical hit)' : ''}.`;
     }
     if (!wasUp && c.hp > 0 && condOf(c, 'Dying')) {
         setCond(c, 'Dying', 0);
@@ -494,7 +526,8 @@ function removeCombatant(id) {
     renderFight();
 }
 
-function changeHp(id, sign) {
+// crit (Pathfinder player characters): the damage came from a critical hit.
+function changeHp(id, sign, crit = false) {
     const c = fight.list.find(x => x.id === id);
     const box = document.querySelector(`.hp-amt[data-id="${id}"]`);
     const amt = Math.abs(num(box && box.value) ?? 0);
@@ -506,10 +539,11 @@ function changeHp(id, sign) {
     const wasUp = c.hp > 0;
     c.temp -= soak;
     c.hp = sign < 0 ? Math.max(0, c.hp - (amt - soak)) : Math.min(c.max ?? Infinity, c.hp + amt);
-    const ko = pf2eKnockout(c, wasUp, sign < 0);
+    const lost = sign < 0 ? amt - soak : 0;
+    const ko = pf2eKnockout(c, wasUp, lost > 0, crit, c.max > 0 && lost >= 2 * c.max);
     saveFight();
     renderFight();
-    flash('init-status', (sign < 0 ? `🩸 ${c.name} takes ${amt}${soak ? ` (${soak} off temporary HP)` : ''}${wasUp && c.hp === 0 ? ' and falls' : ''}.` : `💚 ${c.name} heals ${amt}.`)
+    flash('init-status', (sign < 0 ? `${crit ? '💥' : '🩸'} ${c.name} takes ${amt}${crit ? ' from a critical hit' : ''}${soak ? ` (${soak} off temporary HP)` : ''}${wasUp && c.hp === 0 ? ' and falls' : ''}.` : `💚 ${c.name} heals ${amt}.`)
         + ko + (c.party ? ' Their Play Sheet decides from its next change.' : ''));
     const again = document.querySelector(`.hp-amt[data-id="${id}"]`);
     if (again) again.focus();
@@ -536,7 +570,7 @@ function toggleCond(id, cond, step = 0) {
 
 // A player character at 0 HP: its death saves, from its Play Sheet when it has one.
 function deathSaveText(c) {
-    if (INIT_PF2E) return pf2eDead(c) ? '💀 dead' : condOf(c, 'Dying') ? `🩸 dying ${condOf(c, 'Dying')}` : '🩸 at 0 HP';
+    if (INIT_PF2E) return pf2eDead(c) ? '💀 dead' : condOf(c, 'Dying') ? `🩸 dying ${condOf(c, 'Dying')}` : '🩹 stable at 0 HP';
     if (c.ds[1] >= 3) return '💀 dead';
     if (c.ds[0] >= 3) return '🩹 stable';
     return c.party ? `🩸 death saves ${c.ds[0]}✓ ${c.ds[1]}✗` : '🩸 death saves';
@@ -617,6 +651,7 @@ function renderFight(scroll = false) {
                 <span><span class="hp-now${low || down ? ' hp-low' : ''}">${c.hp}</span> / ${c.max}${c.temp ? ` <span class="hp-temp" title="Temporary hit points">+${c.temp}</span>` : ''}</span>
                 <input type="number" class="hp-amt" data-id="${c.id}" min="0" max="9999" placeholder="amt" aria-label="Damage or healing for ${esc(c.name)}">
                 <button type="button" data-act="dmg" data-id="${c.id}" title="Damage" aria-label="Damage ${esc(c.name)}">−</button>
+                ${INIT_PF2E && c.pc ? `<button type="button" data-act="crit" data-id="${c.id}" title="Damage from a critical hit: dying 2 instead of 1 if it knocks them out" aria-label="Critical damage to ${esc(c.name)}">💥</button>` : ''}
                 <button type="button" data-act="heal" data-id="${c.id}" title="Heal" aria-label="Heal ${esc(c.name)}">+</button>`}
             </div>
             <button type="button" class="init-x" data-act="remove" data-id="${c.id}" title="Remove" aria-label="Remove ${esc(c.name)}">✕</button>
@@ -643,6 +678,7 @@ function onFightClick(e) {
     if (b.dataset.act === 'sb') toggleFightBlock(id);
     else if (b.dataset.cond) toggleCond(id, b.dataset.cond, Number(b.dataset.step) || 0);
     else if (b.dataset.act === 'dmg') changeHp(id, -1);
+    else if (b.dataset.act === 'crit') changeHp(id, -1, true);
     else if (b.dataset.act === 'heal') changeHp(id, 1);
     else if (b.dataset.act === 'remove') removeCombatant(id);
     else if (b.dataset.act === 'reveal') toggleShown(id);
