@@ -50,7 +50,7 @@ function pcBlank() {
         boosts: { anc: [], ancFree: false, bg: [], key: '', l1: [], 5: [], 10: [], 15: [], 20: [] },
         skills: { cls: [], ch: '', inc: {}, lore: [] }, paths: {}, feats: {}, langs: [],
         deity: { name: '', weapon: '', font: '', skill: '' },
-        fa: false, gear: { armor: '', arPot: 0, shield: '', weapons: [] }, notes: '', spells: pcBlankSpells(), play: pcBlankPlay(), updated: Date.now()
+        fa: false, mc: {}, gear: { armor: '', arPot: 0, shield: '', weapons: [] }, notes: '', spells: pcBlankSpells(), play: pcBlankPlay(), updated: Date.now()
     };
 }
 
@@ -58,16 +58,18 @@ function pcBlank() {
 // Initiative tracker writes them ("Frightened 2", "Prone"), hero points, focus points spent, slots
 // spent by rank (spontaneous), cast prepared slots by rank (their indexes), font slots spent, and
 // counters of the player's own (an alchemist's reagents and such) with what's used of each,
-// persistent damage (pd), coins, and the inventory beyond the builder's gear (inv).
+// persistent damage (pd), coins, the inventory beyond the builder's gear (inv), and a spellcasting
+// archetype's slots spent and prepared slots cast, by class (mc: { wizard: { slots, cast } }).
 function pcBlankPlay() {
-    return { hp: null, temp: 0, cond: [], hero: 1, focus: 0, slots: {}, cast: {}, font: 0, res: [], pd: [], coins: { pp: 0, gp: 0, sp: 0, cp: 0 }, inv: [] };
+    return { hp: null, temp: 0, cond: [], hero: 1, focus: 0, slots: {}, cast: {}, font: 0, res: [], pd: [], coins: { pp: 0, gp: 0, sp: 0, cp: 0 }, inv: [], mc: {} };
 }
 
 // The Spell Planner's picks (spell keys of pf2e-spells-data.js): ct cantrips, rep a repertoire by rank,
 // book a wizard's spellbook or a witch's familiar, prep each rank's slots (a slot can be ''), sig a
-// signature spell by rank, focus focus spells added by hand, fav favorites.
+// signature spell by rank, focus focus spells added by hand, fav favorites, mc a spellcasting
+// archetype's own picks by class (ct, rep, book, prep).
 function pcBlankSpells() {
-    return { ct: [], rep: {}, book: [], prep: {}, sig: {}, focus: [], fav: [] };
+    return { ct: [], rep: {}, book: [], prep: {}, sig: {}, focus: [], fav: [], mc: {} };
 }
 
 // ── Cleaning (saves and imports keep only these fields, as plain values) ─
@@ -120,6 +122,14 @@ function pcClean(raw) {
             .map(w => ({ id: w.id, pot: rune(w.pot), str: rune(w.str) })) : []
     };
     c.fa = raw.fa === true;
+    // Multiclass dedication picks: the class choice, a tradition, skills ('' keeps a pick's place).
+    if (raw.mc && typeof raw.mc === 'object' && !Array.isArray(raw.mc)) {
+        Object.entries(raw.mc).forEach(([cls, x]) => {
+            if (!Object.hasOwn(PC_MC, cls) || !x || typeof x !== 'object') return;
+            c.mc[cls] = { ch: PF2E_CHOICES[x.ch] && PF2E_CHOICES[x.ch].c === cls ? x.ch : '', tr: PC_TRADITIONS.includes(x.tr) ? x.tr : '',
+                sk: Array.isArray(x.sk) ? x.sk.slice(0, 4).map(k => (Object.hasOwn(PC_SKILLS, k) ? k : '')) : [] };
+        });
+    }
     c.notes = pcStr(raw.notes, 4000);
     c.spells = pcCleanSpells(raw.spells);
     c.play = pcCleanPlay(raw.play);
@@ -133,7 +143,7 @@ function pcSpellOk(k) {
         && (typeof PF2E_SPELLS === 'undefined' || Object.hasOwn(PF2E_SPELLS, k));
 }
 
-function pcCleanSpells(raw) {
+function pcCleanSpells(raw, arc = false) {
     const s = pcBlankSpells();
     if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return s;
     const keys = (v, n) => (Array.isArray(v) ? [...new Set(v.filter(pcSpellOk))].slice(0, n) : []);
@@ -153,6 +163,14 @@ function pcCleanSpells(raw) {
     }
     s.focus = keys(raw.focus, 12);
     s.fav = keys(raw.fav, 80);
+    if (arc) { delete s.mc; return s; }
+    if (raw.mc && typeof raw.mc === 'object' && !Array.isArray(raw.mc)) {
+        Object.entries(raw.mc).forEach(([cls, x]) => {
+            if (!Object.hasOwn(PC_MC, cls) || !PC_MC[cls].cast) return;
+            const a = pcCleanSpells(x, true);
+            s.mc[cls] = { ct: a.ct, rep: a.rep, book: a.book, prep: a.prep };
+        });
+    }
     return s;
 }
 
@@ -186,9 +204,21 @@ function pcCleanPlay(raw) {
         }
         return out;
     };
-    p.slots = ranks(raw.slots, x => int(x, 1, 12, null));
-    p.cast = ranks(raw.cast, x => (Array.isArray(x) ? [...new Set(x.map(i => int(i, 0, 11, null)).filter(i => i !== null))].sort((a, b) => a - b) : null));
-    Object.keys(p.cast).forEach(r => { if (!p.cast[r].length) delete p.cast[r]; });
+    const slots = v => ranks(v, x => int(x, 1, 12, null));
+    const cast = v => {
+        const out = ranks(v, x => (Array.isArray(x) ? [...new Set(x.map(i => int(i, 0, 11, null)).filter(i => i !== null))].sort((a, b) => a - b) : null));
+        Object.keys(out).forEach(r => { if (!out[r].length) delete out[r]; });
+        return out;
+    };
+    p.slots = slots(raw.slots);
+    p.cast = cast(raw.cast);
+    if (raw.mc && typeof raw.mc === 'object' && !Array.isArray(raw.mc)) {
+        Object.entries(raw.mc).forEach(([cls, x]) => {
+            if (!Object.hasOwn(PC_MC, cls) || !PC_MC[cls].cast || !x || typeof x !== 'object') return;
+            const m = { slots: slots(x.slots), cast: cast(x.cast) };
+            if (Object.keys(m.slots).length || Object.keys(m.cast).length) p.mc[cls] = m;
+        });
+    }
     p.font = int(raw.font, 0, 6, 0);
     p.res = Array.isArray(raw.res) ? raw.res.filter(r => r && typeof r === 'object' && pcStr(r.n, 40).trim()).slice(0, 12).map(r => {
         const max = int(r.max, 1, 99, 1);
@@ -314,6 +344,19 @@ function pcProfs(c, level = c.level) {
         const save = c.paths[lv];
         if (Number(lv) <= level && save) r[save] = Math.max(r[save], rank);
     });
+    // Multiclass dedications: martial weapons, armor, and the spell attack and DC (one rank for all your spells).
+    pcDedications(c, level).forEach(d => {
+        const m = PC_MC[d.cls];
+        if (m.wp) r[m.wp] = Math.max(r[m.wp], 1);
+        if (m.ar === 'light') r.light = Math.max(r.light, 1);
+        if (m.ar === 'champion') {
+            // Champion Dedication: light and medium (heavy too if you had both), rising with your class's armor.
+            const kinds = r.light && r.medium ? ['light', 'medium', 'heavy'] : ['light', 'medium'];
+            const rank = Math.max(1, r.light, r.medium, r.heavy, level >= 13 && r.unarmored >= 2 ? 2 : 0);
+            kinds.forEach(k => { r[k] = Math.max(r[k], rank); });
+        }
+        if (m.cast) r.spell = Math.max(r.spell, pcArcSpellRank(c, d.cls, level));
+    });
     return r;
 }
 
@@ -366,6 +409,7 @@ function pcSkillRanks(c, level = c.level) {
     const ranks = Object.fromEntries(Object.keys(PC_SKILLS).map(k => [k, 0]));
     pcGivenSkills(c).forEach(([k]) => { ranks[k] = 1; });
     pcPickedSkills(c).forEach(k => { ranks[k] = 1; });
+    pcDedications(c, level).forEach(d => d.skills.forEach(k => { ranks[k] = 1; }));
     const lores = {};
     pcLores(c).forEach(l => { lores[l] = 1; });
     const { cls } = pcParts(c);
@@ -560,6 +604,123 @@ function pcArchetypeCheck(c) {
     return { list, current: current ? current.key : '', need: current ? Math.max(0, 2 - current.feats.length) : 0, issues };
 }
 
+// ── Multiclass dedications ──────────────────────────────
+// What each multiclass dedication gives (Player Core 1 and 2): sk skills it trains, pk skills to
+// pick (a list to pick from, or a hint for any skill), chs what the class choice it asks for adds
+// ('sk' its skills, 'or' Acrobatics or the style's skill), dc its class DC, wp/ar weapon and armor
+// training, cast [tradition ('' = the choice's), attribute, type, cantrips prepared], br its Breadth.
+const PC_MC = {
+    alchemist: { sk: ['crafting'], dc: 1 },
+    barbarian: { sk: ['athletics'], dc: 1 },
+    bard: { sk: ['occultism', 'performance'], cast: ['occult', 'cha', 'rep', 2], br: 'occult-breadth' },
+    champion: { sk: ['religion'], pk: ['your deity\'s skill'], dc: 1, ar: 'champion' },
+    cleric: { sk: ['religion'], pk: ['your deity\'s skill'], cast: ['divine', 'wis', 'list', 2], br: 'divine-breadth' },
+    druid: { sk: ['nature'], chs: 'sk', cast: ['primal', 'wis', 'list', 2], br: 'primal-breadth' },
+    fighter: { pk: [['acrobatics', 'athletics']], dc: 1, wp: 'martial' },
+    investigator: { sk: ['society'], pk: ['a skill of your choice'], dc: 1 },
+    monk: { pk: [['acrobatics', 'athletics']], dc: 1 },
+    oracle: { sk: ['religion'], chs: 'sk', cast: ['divine', 'cha', 'rep', 2], br: 'mysterious-breadth' },
+    ranger: { sk: ['survival'], dc: 1 },
+    rogue: { pk: [['stealth', 'thievery'], 'a skill of your choice'], dc: 1, ar: 'light' },
+    sorcerer: { chs: 'sk', cast: ['', 'cha', 'rep', 2], br: 'bloodline-breadth' },
+    swashbuckler: { chs: 'or', dc: 1 },
+    witch: { chs: 'sk', cast: ['', 'int', 'book', 1], br: 'patron-s-breadth' },
+    wizard: { sk: ['arcana'], cast: ['arcane', 'int', 'book', 2], br: 'arcane-breadth' }
+};
+const PC_TRAD_SKILL = { arcane: 'arcana', divine: 'religion', occult: 'occultism', primal: 'nature' };
+
+// The picks for a dedication (c.mc): ch the class choice, tr a draconic bloodline's tradition, sk skill picks.
+function pcMcPick(c, cls) {
+    return (c.mc && c.mc[cls]) || { ch: '', tr: '', sk: [] };
+}
+
+// Whether a feat sits in a slot at or below a level.
+function pcFeatAt(c, key, level = c.level) {
+    return pcFeatSlots(c, level).some(s => c.feats[s.slot] === key);
+}
+
+// The multiclass dedications taken by a level, in slot order, and what each gives:
+// [{ cls, key, slot, level, n, ch, tr, skills, picks: [{ opts, hint, v }], todo }].
+// A skill the character is already trained in becomes a pick of any skill, as the feats say.
+function pcDedications(c, level = c.level) {
+    const out = [];
+    const trained = new Set([...pcGivenSkills(c).map(([k]) => k), ...pcPickedSkills(c)]);
+    pcFeatSlots(c, level).forEach(s => {
+        const key = c.feats[s.slot] || '';
+        const cls = key.replace(/-dedication$/, '');
+        if (key === cls || !Object.hasOwn(PC_MC, cls) || cls === c.cls || out.some(d => d.cls === cls)) return;
+        const m = PC_MC[cls], mine = pcMcPick(c, cls), name = PF2E_CLASSES[cls].n;
+        const tag = PF2E_CLASSES[cls].ch;
+        const ch = PF2E_CHOICES[mine.ch] && PF2E_CHOICES[mine.ch].c === cls ? PF2E_CHOICES[mine.ch] : null;
+        const todo = [];
+        let tr = '';
+        if (m.cast) {
+            tr = m.cast[0] || (ch && ch.tr && ch.tr !== 'choice' ? ch.tr : ch && PC_TRADITIONS.includes(mine.tr) ? mine.tr : '');
+            if (!tr && ch) todo.push(`pick your ${name.toLowerCase()} spells' tradition`);
+        }
+        if ((m.chs || (m.cast && !m.cast[0])) && !ch && tag) todo.push(`pick your ${tag[1].toLowerCase()}`);
+        const fixed = [...(m.sk || [])];
+        const lists = (m.pk || []).map(p => (Array.isArray(p) ? { opts: p, hint: p.map(pcCap).join(' or ') } : { opts: null, hint: p }));
+        if (ch && m.chs === 'sk') fixed.push(...(ch.sk || []));
+        if (cls === 'sorcerer' && ch && ch.tr === 'choice' && tr) fixed.push(PC_TRAD_SKILL[tr]);
+        if (m.chs === 'or') lists.push(ch ? { opts: ['acrobatics', ...(ch.sk || [])], hint: `Acrobatics or ${pcCap((ch.sk || [''])[0])}` } : { opts: null, hint: 'Acrobatics or your style\'s skill' });
+        const skills = [];
+        fixed.forEach(k => {
+            if (trained.has(k) || skills.includes(k)) lists.push({ opts: null, hint: `in place of ${pcCap(k)}` });
+            else skills.push(k);
+        });
+        skills.forEach(k => trained.add(k));
+        const picks = lists.map((p, i) => {
+            const open = p.opts ? p.opts.filter(k => !trained.has(k)) : null;
+            const opts = open && open.length ? open : null;
+            const want = mine.sk[i] || '';
+            const v = Object.hasOwn(PC_SKILLS, want) && !trained.has(want) && (!opts || opts.includes(want)) ? want : '';
+            if (v) { trained.add(v); skills.push(v); }
+            return { opts, hint: opts ? p.hint : p.opts ? `${p.hint} (both trained already: any skill)` : p.hint, v };
+        });
+        const left = picks.filter(p => !p.v).length;
+        if (left) todo.push(`pick ${left} trained skill${left === 1 ? '' : 's'}`);
+        out.push({ cls, key, slot: s.slot, level: s.level, n: name, ch, tr, skills, picks, todo });
+    });
+    return out;
+}
+
+// Spell attack and DC rank from archetype spellcasting: trained, expert, master.
+function pcArcSpellRank(c, cls, level = c.level) {
+    if (pcFeatAt(c, `master-${cls}-spellcasting`, level)) return 3;
+    if (pcFeatAt(c, `expert-${cls}-spellcasting`, level)) return 2;
+    return 1;
+}
+
+// A spellcasting archetype's spells, shaped like pcSpellRules: the Basic, Expert, and Master
+// Spellcasting feats give one slot a rank (1st-3rd from level 4, 6, 8; 4th-6th from 12, 14, 16;
+// 7th and 8th from 18 and 20), its Breadth feat one more of each rank but the two highest. A
+// repertoire grows with the slots; a wizard's book starts with 4 cantrips and gains 2 spells a
+// rank, a witch's familiar 2 cantrips and 2 spells a rank. No signature spells, curriculum, or font.
+function pcArcRules(c, cls) {
+    const m = PC_MC[cls];
+    const d = m && m.cast ? pcDedications(c).find(x => x.cls === cls) : null;
+    if (!d) return null;
+    const L = c.level, has = k => pcFeatAt(c, `${k}-${cls}-spellcasting`);
+    const slots = [];
+    for (let r = 1; r <= 8; r++) {
+        if (!(r <= 3 ? has('basic') && L >= 2 * r + 2 : r <= 6 ? has('expert') && L >= 2 * r + 4 : has('master') && L >= 2 * r + 4)) break;
+        slots.push(1);
+    }
+    if (pcFeatAt(c, m.br)) slots.forEach((n, i) => { if (i < slots.length - 2) slots[i] += 1; });
+    const [, attr, type, cantrips] = m.cast;
+    const top = slots.length;
+    return { trad: d.tr, kind: type === 'rep' ? 'spontaneous' : 'prepared', attr, cantrips, slots, curr: false, font: null,
+        type, top, ctLimit: cantrips, rep: type === 'rep' ? slots.slice() : [], sig: [],
+        book: type === 'book' ? { cantrips: cls === 'wizard' ? 4 : 2, spells: 2 * top } : null,
+        prof: pcArcSpellRank(c, cls), arc: cls, n: d.n };
+}
+
+// The spellcasting archetypes a character has: [pcArcRules, ...].
+function pcArcCastings(c) {
+    return pcDedications(c).filter(d => PC_MC[d.cls].cast).map(d => pcArcRules(c, d.cls));
+}
+
 // ── Class features ──────────────────────────────────────
 function pcFeatures(c, level = c.level) {
     const { cls } = pcParts(c);
@@ -650,6 +811,7 @@ const PC_BIG_SLOTS = ['sorcerer', 'oracle'];
 // curr: a wizard's last slot of each rank 1-9 (and one cantrip) is for curriculum spells (not the
 // school of unified magical theory). font: a cleric's heal or harm slots at the highest rank.
 function pcCasting(c) {
+    if (c.arcOf) return pcArcRules(c.arcBase, c.arcOf);   // the Spell Planner's view of an archetype's spells
     const { cls, ch } = pcParts(c);
     if (!cls || !cls.cast) return null;
     const [trad0, kind] = cls.cast;
@@ -694,6 +856,7 @@ function pcIsFocus(k) {
 // What the class's spellcasting allows: pcCasting plus { type, top, ctLimit, rep [picks per rank],
 // sig [ranks with a signature spell], book { cantrips, spells } (what a new book holds) }.
 function pcSpellRules(c) {
+    if (c.arcOf) return pcArcRules(c.arcBase, c.arcOf);
     const cast = pcCasting(c);
     if (!cast) return null;
     const type = cast.kind === 'focus' ? 'focus' : PC_SPELL_TYPES[c.cls] || 'list';
@@ -891,13 +1054,18 @@ function pcStats(c) {
     const cast = pcCasting(c);
     const spellAtk = cast ? mods[cast.attr || 'cha'] + pcBonus(prof.spell, L) : null;
     const { ranks, lores } = pcSkillRanks(c);
+    // Each multiclass dedication's class DC (trained, its class's key attribute: the better one if it has two)
+    // and each spellcasting archetype's spell attack and DC.
+    const mcDc = pcDedications(c).filter(d => PC_MC[d.cls].dc).map(d => ({ cls: d.cls, n: d.n,
+        dc: 10 + Math.max(...PF2E_CLASSES[d.cls].key.map(a => mods[a])) + pcBonus(1, L) }));
+    const arcs = pcArcCastings(c).map(r => { const atk = mods[r.attr] + pcBonus(prof.spell, L); return { ...r, atk, dc: 10 + atk }; });
     const skills = Object.fromEntries(Object.entries(PC_SKILLS).map(([k, a]) => [k, mods[a] + pcBonus(ranks[k], L)]));
     const loreMods = Object.fromEntries(Object.entries(lores).map(([n, r]) => [n, mods.int + pcBonus(r, L)]));
     return {
         parts, mods, partial, prof, key, hp, saves, ranks, skills, lores, loreMods,
         per: mods.wis + pcBonus(prof.per, L),
         classdc: parts.cls ? 10 + (key ? mods[key] : 0) + pcBonus(prof.classdc, L) : null,
-        spellAtk, spellDc: spellAtk === null ? null : 10 + spellAtk, cast,
+        spellAtk, spellDc: spellAtk === null ? null : 10 + spellAtk, cast, mcDc, arcs,
         ac: pcAC(c), speed: pcSpeed(c), strikes: pcStrikes(c)
     };
 }
@@ -932,6 +1100,7 @@ function pcTodo(c) {
         const feats = pcFeatSlots(c).filter(s => !c.feats[s.slot]).length;
         if (feats) out.push(['feats', `${feats} feat${feats === 1 ? '' : 's'} to pick.`]);
         Object.keys(p.cls.pp || {}).filter(l => Number(l) <= c.level && !c.paths[l]).forEach(l => out.push(['class', `Pick the save for your level ${l} Path to Perfection.`]));
+        pcDedications(c).forEach(d => { if (d.todo.length) out.push(['feats', `${d.n} Dedication: ${d.todo.join(', ')}.`]); });
     }
     return out;
 }

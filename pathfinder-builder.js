@@ -337,6 +337,8 @@ function stepFeats() {
         h += `<p class="cb-faint">Archetypes: ${arch.list.map(a => `${esc(names[a.key].n)} (${a.feats.length} feat${a.feats.length === 1 ? '' : 's'} after the dedication)`).join(', ') || 'none yet'}${arch.need ? `. Take ${arch.need} more ${esc(names[arch.current].n)} feat${arch.need === 1 ? '' : 's'} before another dedication` : ''}. Plan them in the <a href="pathfinder-archetype-helper?char=${encodeURIComponent(cur.id)}">🔀 Archetype Helper</a>.</p>`;
         arch.issues.forEach(x => { h += `<p class="cb-warn">⚠️ Level ${esc(x.slot.replace(/^\D+/, ''))}: ${esc(x.text)}</p>`; });
     } else h += `<p class="cb-faint">Browse dedications and plan the feats after them in the <a href="pathfinder-archetype-helper?char=${encodeURIComponent(cur.id)}">🔀 Archetype Helper</a>.</p>`;
+    const deds = pcDedications(cur);
+    if (deds.length) h += `<h3>Dedications</h3><div class="pb-slots">${deds.map(d => dedicationBox(d, stats)).join('')}</div>`;
     const granted = pcGrantedFeats(cur);
     if (granted.length) h += `<h3>Granted</h3><div class="pb-feats">${granted.map(g => g.key
         ? `<div>${textBox(`ft:${g.key}`, `${featLine(PF2E_FEATS[g.key])} <span class="cb-tag">from ${esc(g.from)}</span>`)}</div>`
@@ -358,6 +360,35 @@ function stepFeats() {
     const nextLv = [...new Set(Object.values(p.cls.lv).flat())].filter(l => l > cur.level).sort((a, b) => a - b)[0];
     if (nextLv) h += `<p class="cb-faint">More feats come at level ${nextLv}. Raise the level in the bar above to plan ahead.</p>`;
     return h;
+}
+
+// A multiclass dedication's picks (its class choice, a tradition, skills) and what it gives the sheet.
+function dedicationBox(d, stats) {
+    const m = PC_MC[d.cls], mine = pcMcPick(cur, d.cls), tag = PF2E_CLASSES[d.cls].ch;
+    const sel = (attr, label, opts, v, empty) => `<label class="cb-field">${label}<select ${attr} data-focus="${attr.replace(/[^a-z0-9-]/gi, '')}"><option value="">${empty}</option>${opts.map(([k, t]) => `<option value="${esc(k)}"${k === v ? ' selected' : ''}>${esc(t)}</option>`).join('')}</select></label>`;
+    let h = `<div class="pb-slot"><p><span class="cb-lv">Level ${d.level}</span><b>${esc(d.n)} Dedication</b></p><div class="cb-row">`;
+    if (tag) {
+        const opts = Object.entries(PF2E_CHOICES).filter(([, x]) => x.c === d.cls && x.t === tag[0]).sort((a, b) => a[1].n.localeCompare(b[1].n)).map(([k, x]) => [k, x.n.replace(/^Bloodline: /, '')]);
+        h += sel(`data-mc-ch="${d.cls}"`, tag[1], opts, d.ch ? mine.ch : '', `Pick your ${tag[1].toLowerCase()}`);
+    }
+    if (m.cast && d.ch && d.ch.tr === 'choice') h += sel(`data-mc-tr="${d.cls}"`, 'Tradition', PC_TRADITIONS.map(t => [t, pcCap(t)]), d.tr, 'Pick one');
+    d.picks.forEach((pk, i) => {
+        const opts = (pk.opts || Object.keys(PC_SKILLS).filter(k => !stats.ranks[k] || pk.v === k)).map(k => [k, skillName(k)]);
+        h += sel(`data-mc-sk="${d.cls}" data-i="${i}"`, `Trained skill <small>(${esc(pk.hint)})</small>`, opts, pk.v, 'Pick a skill');
+    });
+    h += '</div>';
+    const gives = [];
+    if (d.skills.length) gives.push(`trained in ${d.skills.map(skillName).join(', ')}`);
+    const dc = stats.mcDc.find(x => x.cls === d.cls);
+    if (dc) gives.push(`${d.n.toLowerCase()} class DC ${dc.dc}`);
+    if (m.wp) gives.push(`${m.wp} weapons`);
+    if (m.ar === 'light') gives.push('light armor');
+    if (m.ar === 'champion') gives.push('light and medium armor (heavy too if you had both)');
+    const arc = stats.arcs.find(x => x.arc === d.cls);
+    if (arc) gives.push(`${arc.trad ? pcCap(arc.trad) + ' ' : ''}spells with ${PC_ABIL_NAMES[arc.attr]}: DC ${arc.dc}, attack ${pcSign(arc.atk)}, ${arc.cantrips} cantrip${arc.cantrips === 1 ? '' : 's'}${arc.slots.length ? `, slots ${arc.slots.map((n, i) => `${n}× rank ${i + 1}`).join(', ')}` : ' (slots come with Basic ' + esc(d.n) + ' Spellcasting)'}`);
+    h += `<p class="cb-faint">${gives.length ? 'Gives you: ' + gives.join('; ') + '.' : ''} The rest of the feat (class features, anathema) is in its text.</p>`;
+    d.todo.forEach(t => { h += `<p class="cb-warn">⚠️ Still to do: ${esc(t)}.</p>`; });
+    return h + '</div>';
 }
 
 // ── Step: gear ──────────────────────────────────────────
@@ -409,7 +440,8 @@ function stepSheet() {
     h += `<div class="cb-sheet-btns"><a class="cb-btn cb-gold" href="pathfinder-play-sheet?char=${encodeURIComponent(cur.id)}">▶️ Play Sheet</a><button type="button" class="cb-btn" data-act="print">🖨️ Print</button><a class="cb-btn" href="pathfinder-character-cards?char=${encodeURIComponent(cur.id)}">🎴 Cards</a><a class="cb-btn" href="pathfinder-player-journal?char=${encodeURIComponent(cur.id)}">📓 Journal</a><button type="button" class="cb-btn" data-act="party">👥 Add to Party</button><button type="button" class="cb-btn" data-act="copy">📋 Copy Summary</button></div>`;
     const vital = (v, label, sub = '') => `<div class="cb-vital"><b>${v}</b><span>${label}</span>${sub ? `<small>${sub}</small>` : ''}</div>`;
     h += `<div class="cb-vitals">${vital(s.hp, 'Hit Points')}${vital(s.ac.ac, 'AC', s.ac.armor ? esc(s.ac.armor.n) : 'unarmored')}${vital(pcSign(s.per), 'Perception', PC_RANKS[s.prof.per])}${vital(s.speed + ' ft', 'Speed')}
-        ${Object.entries(PC_SAVES).map(([k, [n]]) => vital(pcSign(s.saves[k]), n, PC_RANKS[s.prof[k]])).join('')}${s.classdc !== null ? vital(s.classdc, 'Class DC', PC_RANKS[s.prof.classdc]) : ''}${s.cast ? vital(s.spellDc, 'Spell DC', `attack ${pcSign(s.spellAtk)}`) : ''}</div>`;
+        ${Object.entries(PC_SAVES).map(([k, [n]]) => vital(pcSign(s.saves[k]), n, PC_RANKS[s.prof[k]])).join('')}${s.classdc !== null ? vital(s.classdc, 'Class DC', PC_RANKS[s.prof.classdc]) : ''}${s.cast ? vital(s.spellDc, 'Spell DC', `attack ${pcSign(s.spellAtk)}`) : ''}
+        ${s.mcDc.map(x => vital(x.dc, `${esc(x.n)} DC`, 'archetype')).join('')}${s.arcs.map(x => vital(x.dc, `${esc(x.n)} spell DC`, `attack ${pcSign(x.atk)}`)).join('')}</div>`;
     h += `<div class="cb-abil-grid">${PC_ABILS.map(a => `<div class="cb-abil"><b>${abilShort(a)}</b><span class="cb-total">${pcSign(s.mods[a])}</span><span class="cb-from">${PC_ABIL_NAMES[a]}${s.partial[a] ? ' · ½' : ''}</span></div>`).join('')}</div>`;
     h += '<div class="cb-cols"><div>';
     h += `<h3>Skills</h3><ul class="cb-skill-list">${Object.keys(PC_SKILLS).map(k => `<li class="${s.ranks[k] ? 'p' : ''}">${rankTag(s.ranks[k])}<span class="cb-val">${pcSign(s.skills[k])}</span> ${skillName(k)}</li>`).join('')}${Object.entries(s.lores).map(([n, r]) => `<li class="p">${rankTag(r)}<span class="cb-val">${pcSign(s.loreMods[n])}</span> ${esc(n)}</li>`).join('')}</ul>`;
@@ -423,6 +455,11 @@ function stepSheet() {
         h += `<h3>Spellcasting</h3><p>${s.cast.kind === 'focus' ? 'Focus spells' : `${pcCap(s.cast.trad || 'any')} ${s.cast.kind} spells`} · ${PC_ABIL_NAMES[s.cast.attr] || ''} · DC ${s.spellDc}, attack ${pcSign(s.spellAtk)} (${PC_RANKS[s.prof.spell].toLowerCase()})</p>`;
         if (s.cast.slots.length) h += `<p>${s.cast.cantrips ? `<span class="cb-slot">Cantrips ${s.cast.cantrips}</span>` : ''}${s.cast.slots.map((n, i) => (n ? `<span class="cb-slot">Rank ${i + 1}: ${n}</span>` : '')).join('')}</p>`;
         h += `<p class="cb-faint">Pick the spells themselves in the <a href="pathfinder-spell-planner?char=${encodeURIComponent(cur.id)}">🃏 Spell Planner</a>; they save onto this character.</p>`;
+    }
+    if (s.arcs.length) {
+        h += `<h3>Archetype spellcasting</h3>${s.arcs.map(x => `<p><b>${esc(x.n)}</b> · ${pcCap(x.trad || 'any')} ${x.kind} spells · ${PC_ABIL_NAMES[x.attr]} · DC ${x.dc}, attack ${pcSign(x.atk)} (${PC_RANKS[s.prof.spell].toLowerCase()})</p>
+            <p><span class="cb-slot">Cantrips ${x.cantrips}</span>${x.slots.map((n, i) => `<span class="cb-slot">Rank ${i + 1}: ${n}</span>`).join('')}</p>`).join('')}`;
+        h += `<p class="cb-faint">Plan these spells in the <a href="pathfinder-spell-planner?char=${encodeURIComponent(cur.id)}&amp;arc=${s.arcs[0].arc}">🃏 Spell Planner</a> too.</p>`;
     }
     h += '</div><div>';
     h += `<h3>Strikes</h3><div class="cb-scroll"><table class="cb-table"><thead><tr><th>Strike</th><th class="cb-num">Attack</th><th>Damage</th></tr></thead><tbody>${s.strikes.map(x => `<tr><td>${esc(x.name)}${x.traits.length ? `<br><span class="cb-tag">${esc(x.traits.join(', '))}${x.range ? ` · range ${x.range} ft` : ''}</span>` : ''}</td><td class="cb-num">${x.atk.map(pcSign).join(' / ')}</td><td>${esc(x.dmg)}</td></tr>`).join('')}</tbody></table></div>`;
@@ -441,7 +478,7 @@ function summaryText(c) {
     const s = pcStats(c);
     const lines = [`${c.name || 'Unnamed hero'}: ${pcLine(c)}`,
         `HP ${s.hp} · AC ${s.ac.ac} · Perception ${pcSign(s.per)} · Speed ${s.speed} ft`,
-        `Fort ${pcSign(s.saves.fort)} · Ref ${pcSign(s.saves.ref)} · Will ${pcSign(s.saves.will)}${s.classdc !== null ? ` · Class DC ${s.classdc}` : ''}${s.cast ? ` · Spell DC ${s.spellDc}` : ''}`,
+        `Fort ${pcSign(s.saves.fort)} · Ref ${pcSign(s.saves.ref)} · Will ${pcSign(s.saves.will)}${s.classdc !== null ? ` · Class DC ${s.classdc}` : ''}${s.cast ? ` · Spell DC ${s.spellDc}` : ''}${s.mcDc.map(x => ` · ${x.n} DC ${x.dc}`).join('')}${s.arcs.map(x => ` · ${x.n} spell DC ${x.dc}`).join('')}`,
         PC_ABILS.map(a => `${abilShort(a)} ${pcSign(s.mods[a])}`).join(' '),
         'Skills: ' + Object.keys(PC_SKILLS).filter(k => s.ranks[k]).map(k => `${skillName(k)} ${pcSign(s.skills[k])}`).join(', '),
         ...s.strikes.map(x => `${x.name} ${x.atk.map(pcSign).join('/')} (${x.dmg})`)];
@@ -589,6 +626,15 @@ function onChange(e) {
     if (d.ancFree !== undefined) return change(c => { c.boosts.ancFree = el.checked; c.boosts.anc = []; });
     if (d.archetype !== undefined) { showArchetype = el.checked; render(); return; }
     if (d.fa !== undefined) return change(c => { c.fa = el.checked; });
+    const mcCls = d.mcCh || d.mcTr || d.mcSk;
+    if (mcCls) {
+        return change(c => {
+            const m = c.mc[mcCls] = { ch: '', tr: '', sk: [], ...c.mc[mcCls] };
+            if (d.mcCh) { m.ch = el.value; m.tr = ''; }
+            if (d.mcTr) m.tr = el.value;
+            if (d.mcSk) { m.sk = m.sk.slice(); m.sk[Number(d.i)] = el.value; for (let i = 0; i < m.sk.length; i++) m.sk[i] = m.sk[i] || ''; }
+        });
+    }
     if (d.langs !== undefined) return change(c => { c.langs = el.value.split(',').map(x => x.trim().slice(0, 30)).filter(Boolean).slice(0, 12); });
 }
 

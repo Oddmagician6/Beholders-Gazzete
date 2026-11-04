@@ -320,11 +320,12 @@ function ppRest(c, s = pcStats(c)) {
         const got = ppHeal(c, s, Math.max(1, s.mods.con) * c.level);
         if (got) back.push(`${got} HP`);
     }
-    if (Object.keys(p.slots).length || Object.keys(p.cast).length) back.push('spell slots');
+    if (Object.keys(p.slots).length || Object.keys(p.cast).length || Object.keys(p.mc).length) back.push('spell slots');
     if (p.font) back.push('divine font');
     if (p.focus) back.push('Focus Points');
     p.slots = {};
     p.cast = {};
+    p.mc = {};
     p.font = 0;
     p.focus = 0;
     p.res.forEach(r => { if (r.day && r.used) { r.used = 0; back.push(r.n); } });
@@ -335,12 +336,17 @@ function ppRest(c, s = pcStats(c)) {
 // focusMax: the pool's size (pcFocus), which needs the spell data; left out, focus stays as it is.
 function ppFit(c, s = pcStats(c), focusMax = null) {
     const p = c.play, cast = s.cast;
-    const slots = cast ? cast.slots : [];
-    const slotsOut = {}, castOut = {};
-    Object.entries(p.slots).forEach(([r, n]) => { const m = Math.min(n, slots[r - 1] || 0); if (m) slotsOut[r] = m; });
-    Object.entries(p.cast).forEach(([r, list]) => { const keep = list.filter(i => i < (slots[r - 1] || 0)); if (keep.length) castOut[r] = keep; });
-    p.slots = slotsOut;
-    p.cast = castOut;
+    const trim = (st, slots) => {
+        const slotsOut = {}, castOut = {};
+        Object.entries(st.slots).forEach(([r, n]) => { const m = Math.min(n, slots[r - 1] || 0); if (m) slotsOut[r] = m; });
+        Object.entries(st.cast).forEach(([r, list]) => { const keep = list.filter(i => i < (slots[r - 1] || 0)); if (keep.length) castOut[r] = keep; });
+        st.slots = slotsOut;
+        st.cast = castOut;
+        return Object.keys(slotsOut).length || Object.keys(castOut).length;
+    };
+    trim(p, cast ? cast.slots : []);
+    // A spellcasting archetype's slots (an archetype dropped in the builder takes its spent slots with it).
+    Object.keys(p.mc).forEach(k => { const a = s.arcs.find(x => x.arc === k); if (!a || !trim(p.mc[k], a.slots)) delete p.mc[k]; });
     p.font = Math.min(p.font, cast && cast.font ? cast.font.n : 0);
     if (focusMax !== null) p.focus = Math.min(p.focus, focusMax);
     if (p.hp !== null && p.hp >= ppMax(c, s)) p.hp = null;

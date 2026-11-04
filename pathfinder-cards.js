@@ -166,9 +166,10 @@ function pkFeatures(c) {
 }
 
 // The character's spells: cantrips, repertoire or prepared spells (a spellbook if nothing is
-// prepared), granted ones, and focus spells, each once: [{ key, how }].
+// prepared), granted ones, focus spells, and a spellcasting archetype's, each once: [{ key, how }].
 function pkSpells(c) {
-    if (!pcCasting(c)) return [];
+    const arcs = pcArcCastings(c);
+    if (!pcCasting(c) && !arcs.length) return [];
     const s = c.spells;
     const grants = pcSpellGrants(c);
     const out = new Map();
@@ -181,6 +182,15 @@ function pkSpells(c) {
     prepped.forEach(k => add(k, 'prepared'));
     if (!prepped.length) s.book.forEach(k => add(k, 'spellbook'));
     pcFocus(c, grants).list.forEach(f => add(f.key, f.from || 'focus'));
+    arcs.forEach(a => {
+        const m = s.mc[a.arc];
+        if (!m) return;
+        const how = `${a.n.toLowerCase()} archetype`;
+        m.ct.forEach(k => add(k, how));
+        Object.values(m.rep).flat().forEach(k => add(k, how));
+        const prep = Object.values(m.prep).flat().filter(Boolean);
+        (prep.length ? prep : m.book).forEach(k => add(k, how));
+    });
     return [...out].map(([key, how]) => ({ key, how }));
 }
 
@@ -269,7 +279,7 @@ function renderChars() {
 
 function renderSets() {
     const counts = pkCounts();
-    const sets = PK_SETS.filter(([id]) => id === 'items' || (pk.c && (id !== 'spell' || pcCasting(pk.c))));
+    const sets = PK_SETS.filter(([id]) => id === 'items' || (pk.c && (id !== 'spell' || pcCasting(pk.c) || pcArcCastings(pk.c).length)));
     let h = `<div class="cc-sets">${sets.map(([id, label]) => `<label class="cc-check"><input type="checkbox" data-set="${id}"${pk.off.has(id) ? '' : ' checked'}> ${label} <span class="cc-n">${counts[id] || 0}</span></label>`).join('')}</div>`;
     if (!pk.c) {
         h += `<p class="cc-hint">${pkChars().length ? 'Pick a character for its Strike, feature, feat, and spell cards, or' : 'Save a character in the <a href="pathfinder-character-builder">Character Builder</a> for its Strike, feature, feat, and spell cards, or'} add items below.</p>`;

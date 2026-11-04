@@ -11,7 +11,9 @@
    it in PC_KEY, c.spells), or a caster that lives in the address bar (cls, lv, ch,
    ch2, tr, m = spell attribute modifier, ct, bk, r1-r10 repertoire, p1-p10 slots
    ('-' = empty), sg = rank.key signature spells, fo focus, f favorites, ra = show
-   uncommon and rare). Rules come from pf2e-character.js; needs pf2e-character-data.js,
+   uncommon and rare). A saved character with a spellcasting archetype (Wizard Dedication and
+   the Basic Wizard Spellcasting after it) plans those spells too (&arc=<class>): they save in
+   c.spells.mc[class], in a view of the character as that class (pcArcRules). Rules come from pf2e-character.js; needs pf2e-character-data.js,
    pf2e-items-data.js (pcClean), and pf2e-spells-data.js before it, and loads
    pf2e-character-text.js for the grants.
    ============================================ */
@@ -29,7 +31,9 @@ const PS_FOCUS_HINT = {
 };
 
 // edit: '' | 'ct' | 'book'; before: the spells when editing began (for Cancel).
-const ps = { charId: '', c: null, g: null, m: 4, edit: '', before: null, filter: '', favOnly: false, rare: false, textReady: false };
+// base: the saved character; arc: the archetype being planned ('' = the class), when c is its view.
+const ps = { charId: '', c: null, base: null, arc: '', g: null, m: 4, edit: '', before: null, filter: '', favOnly: false, rare: false, textReady: false };
+const PS_NO_GRANTS = { list: [], curr: {}, focus: [] };
 
 function esc(s) {
     return String(s === undefined || s === null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -52,8 +56,25 @@ const psOrd = n => n + (n === 1 ? 'st' : n === 2 ? 'nd' : n === 3 ? 'rd' : 'th')
 const psFav = k => ps.c.spells.fav.includes(k);
 
 function psGrants() {
-    ps.g = pcSpellGrants(ps.c);
+    ps.g = ps.arc ? PS_NO_GRANTS : pcSpellGrants(ps.c);
     return ps.g;
+}
+
+// The saved character seen as its archetype's class, holding that archetype's picks (c.spells.mc).
+function psView(base, arc) {
+    const v = psCopy(base);
+    const mine = base.spells.mc[arc] || {};
+    Object.assign(v, { cls: arc, ch: '', ch2: '', sub: '', arcOf: arc, arcBase: base });
+    v.spells = { ...pcBlankSpells(), ...psCopy(mine), focus: [], sig: {}, fav: base.spells.fav.slice() };
+    delete v.spells.mc;
+    return v;
+}
+
+// Open the saved character on its class's spells or an archetype's ('' when it has none of those now).
+function psOpen(base, arc) {
+    ps.base = base;
+    ps.arc = arc && pcArcCastings(base).some(r => r.arc === arc) ? arc : '';
+    ps.c = ps.arc ? psView(base, ps.arc) : base;
 }
 
 // Drop picks that no longer fit, once the class text is in (before it, grants like a curriculum are unknown).
@@ -64,7 +85,7 @@ function psFit() {
 // ── Address bar ──────────────────────────────────────────
 function psParams() {
     const c = ps.c, s = c.spells;
-    if (ps.charId) return { char: ps.charId, ra: ps.rare ? 1 : '' };
+    if (ps.charId) return { char: ps.charId, arc: ps.arc, ra: ps.rare ? 1 : '' };
     const p = { cls: c.cls, lv: c.level, ch: c.ch, ch2: c.ch2, tr: c.sub, m: ps.m, ct: s.ct.join(','), bk: s.book.join(','),
         sg: Object.entries(s.sig).map(([r, k]) => `${r}.${k}`).join(','), fo: s.focus.join(','), f: s.fav.join(','), ra: ps.rare ? 1 : '' };
     Object.entries(s.rep).forEach(([r, list]) => { p['r' + r] = list.join(','); });
@@ -81,9 +102,11 @@ function psFromUrl() {
     const saved = id && pcLoadAll().find(c => c.id === id);
     if (saved) {
         ps.charId = id;
-        ps.c = saved;
+        psOpen(saved, q.get('arc') || '');
     } else {
         ps.charId = '';
+        ps.base = null;
+        ps.arc = '';
         const list = v => (q.get(v) || '').split(',').filter(Boolean);
         const c = pcBlank();
         c.cls = Object.hasOwn(PF2E_CLASSES, q.get('cls')) && PF2E_CLASSES[q.get('cls')].cast ? q.get('cls') : '';
@@ -118,9 +141,13 @@ function psSave() {
             ps.charId = '';
             flash('That character is gone (deleted in another tab?). Your picks are kept in the address bar instead.', true);
         } else {
-            fresh.spells = psCopy(ps.c.spells);
+            if (ps.arc) {
+                const { ct, rep, book, prep, fav } = psCopy(ps.c.spells);
+                fresh.spells.mc[ps.arc] = { ct, rep, book, prep };
+                fresh.spells.fav = fav;
+            } else fresh.spells = { ...psCopy(ps.c.spells), mc: fresh.spells.mc };
             if (!pcSave(fresh)) flash('Could not save: this browser\'s storage is full or blocked.', true);
-            ps.c = fresh;
+            psOpen(fresh, ps.arc);
         }
     }
     psWriteUrl();
@@ -137,6 +164,10 @@ function psChanged() {
 function psNumbers() {
     const r = psRules();
     if (!r) return null;
+    if (ps.arc) {
+        const s = pcStats(ps.base), a = s.arcs.find(x => x.arc === ps.arc);
+        return { atk: a.atk, dc: a.dc, mod: s.mods[a.attr] || 0, rank: s.prof.spell };
+    }
     if (ps.charId) { const s = pcStats(ps.c); return { atk: s.spellAtk, dc: s.spellDc, mod: s.mods[r.attr] || 0, rank: s.prof.spell }; }
     const rank = pcProfs(ps.c).spell;
     const atk = ps.m + pcBonus(rank, ps.c.level);
@@ -202,13 +233,14 @@ function psEditInfo() {
     if (!r || !ps.edit) return null;
     if (ps.edit === 'ct') {
         const limit = pcCantripLimit(r, ps.g);
-        const note = r.type === 'book' ? `Prepare ${limit} cantrips from your ${PS_BOOK_WORD[ps.c.cls][1]} each day${r.curr ? ', one of them from your curriculum' : ''}.`
+        const note = r.type === 'book' ? `Prepare ${limit} cantrip${limit === 1 ? '' : 's'} from your ${PS_BOOK_WORD[ps.c.cls][1]} each day${r.curr ? ', one of them from your curriculum' : ''}.`
             : r.type === 'rep' ? 'Cantrips in your repertoire: you can swap one each time you gain a level.' : `Prepare ${limit} cantrips each day from the ${r.trad} list.`;
         return { key: 'ct', title: '✨ Cantrips', limit, cap: true, note };
     }
     const b = r.book;
     return { key: 'book', title: PS_BOOK_WORD[ps.c.cls][0], limit: b.cantrips + b.spells, cap: false,
-        note: ps.c.cls === 'wizard'
+        note: ps.arc ? `The ${ps.arc} archetype's ${PS_BOOK_WORD[ps.arc][1]} starts with ${b.cantrips} cantrips, and each new rank of slot adds 2 common spells of that rank: ${b.cantrips} cantrips and ${b.spells} spells at level ${ps.c.level}. Spells learned on top go in too.`
+        : ps.c.cls === 'wizard'
             ? `A wizard's book starts with 10 cantrips and 5 1st-rank spells${r.curr ? ' plus 2 from the curriculum' : ''}, and gains 2 spells each level${r.curr ? ' and a curriculum spell with each new rank' : ''}: ${b.cantrips} cantrips and ${b.spells} spells at level ${ps.c.level}. Spells copied with Learn a Spell go on top.`
             : `A witch's familiar starts with 10 cantrips, 5 1st-rank spells, and the spell from your patron's lesson, and learns 2 spells each level: ${b.cantrips} cantrips and ${b.spells} spells at level ${ps.c.level}. Scrolls it eats (Learn a Spell) go on top.` };
 }
@@ -226,8 +258,12 @@ function renderSetup() {
     const el = document.getElementById('ps-setup');
     const c = ps.c;
     if (ps.charId) {
-        el.innerHTML = `<p class="ps-hint">${esc(c.name || 'This character')}'s class, level, choices, and attributes come from the <a href="pathfinder-character-builder">Character Builder</a>; the spells you pick here save onto the character.
-            <button type="button" class="ps-btn ps-small" id="ps-open-builder">🧝 Open in the Builder</button></p>`;
+        const arcs = pcArcCastings(ps.base);
+        const base = PF2E_CLASSES[ps.base.cls];
+        const tab = (arc, label) => `<button type="button" class="ps-btn ps-small${ps.arc === arc ? ' ps-on' : ''}" data-arc="${arc}" aria-pressed="${ps.arc === arc}">${label}</button>`;
+        el.innerHTML = `<p class="ps-hint">${esc(ps.base.name || 'This character')}'s class, level, choices, and attributes come from the <a href="pathfinder-character-builder">Character Builder</a>; the spells you pick here save onto the character.
+            <button type="button" class="ps-btn ps-small" id="ps-open-builder">🧝 Open in the Builder</button></p>`
+            + (arcs.length ? `<div class="ps-tabs" role="group" aria-label="Which spells to plan">${tab('', `🎓 ${esc(base ? base.n : 'Class')} spells`)}${arcs.map(r => tab(r.arc, `🔀 ${esc(r.n)} archetype`)).join('')}</div>` : '');
         return;
     }
     const cls = PF2E_CLASSES[c.cls];
@@ -262,19 +298,21 @@ function renderStats() {
     const num = psNumbers();
     const f = pcFocus(c, ps.g);
     const stats = [
-        ['Class', `${esc(PF2E_CLASSES[c.cls].n)} ${c.level}`],
+        ['Class', ps.arc ? `${esc(r.n)} archetype` : `${esc(PF2E_CLASSES[c.cls].n)} ${c.level}`],
         ['Tradition', r.trad ? pcCap(r.trad) : '—'],
         ['Spell DC', num.dc],
         ['Spell attack', pcSign(num.atk)],
         ['Proficiency', PC_RANKS[num.rank]],
-        ['Focus Points', f.points || '—']
+        ...(ps.arc ? [['Level', c.level]] : [['Focus Points', f.points || '—']])
     ];
-    let slots = '';
+    let slots = ps.arc && !r.slots.length ? `<b>Spell slots:</b> none yet. Basic ${esc(r.n)} Spellcasting (a level 4 archetype feat) gives the first.` : '';
     if (r.slots.length) slots = `<b>Spell slots:</b> ${r.slots.map((n, i) => (n ? `${psOrd(i + 1)} ${n}` : '')).filter(Boolean).join(' · ')}${r.curr ? ' (one a rank for the curriculum)' : ''}${r.font ? ` · <b>Divine font:</b> ${r.font.n} × ${r.font.spell ? pcCap(r.font.spell) : 'heal or harm'} at ${psOrd(r.font.rank)} rank` : ''}`;
     el.innerHTML = `<div class="ps-stats">${stats.map(([t, v]) => `<div class="ps-stat"><span>${t}</span><b>${v}</b></div>`).join('')}</div>`
         + (slots ? `<p class="ps-slots">${slots}</p>` : '')
         + `<p class="ps-dim ps-small-text">Cantrips and focus spells are heightened to rank ${Math.ceil(c.level / 2)}.${r.sig.length ? ' Signature spells (✦) heighten freely to any rank you can cast.' : ''}</p>`
-        + (!r.trad && r.type !== 'focus' ? `<p class="ps-warn">Pick your ${esc((PF2E_CLASSES[c.cls].ch || ['', 'choice'])[1].toLowerCase())}${PF2E_CHOICES[c.ch] && PF2E_CHOICES[c.ch].tr === 'choice' ? '\'s tradition' : ''} to set your tradition.</p>` : '');
+        + (ps.arc ? `<p class="ps-dim ps-small-text">Archetype slots: one a rank from Basic (1st–3rd), Expert (4th–6th), and Master (7th–8th) ${esc(r.n)} Spellcasting as you level, and one more of each rank but the two highest with the Breadth feat.</p>` : '')
+        + (ps.arc && !r.trad ? `<p class="ps-warn">Pick your ${esc(PF2E_CLASSES[ps.arc].ch[1].toLowerCase())} (and its tradition) on the Character Builder's Feats step to set your tradition.</p>` : '')
+        + (!ps.arc && !r.trad && r.type !== 'focus' ? `<p class="ps-warn">Pick your ${esc((PF2E_CLASSES[c.cls].ch || ['', 'choice'])[1].toLowerCase())}${PF2E_CHOICES[c.ch] && PF2E_CHOICES[c.ch].tr === 'choice' ? '\'s tradition' : ''} to set your tradition.</p>` : '');
 }
 
 // Cantrips: picked ones, plus granted ones.
@@ -398,8 +436,8 @@ function renderPlan() {
         h += sectionCantrips(r);
         h += r.type === 'rep' ? sectionRepertoire(r) : sectionSlots(r);
     }
-    h += sectionFocus();
-    h += `<div class="ps-actions"><button type="button" class="ps-btn" id="ps-copy">📋 Copy List</button><button type="button" class="ps-btn" id="ps-link">🔗 Copy Link</button></div>`;
+    if (!ps.arc) h += sectionFocus();
+    h += `<div class="ps-actions"><button type="button" class="ps-btn" id="ps-copy">📋 Copy List</button>${ps.arc ? '' : '<button type="button" class="ps-btn" id="ps-link">🔗 Copy Link</button>'}</div>`;
     el.innerHTML = h;
 }
 
@@ -454,7 +492,7 @@ function psText() {
     const f = pcFocus(c, ps.g);
     const out = [];
     const num = psNumbers();
-    if (r) out.push(`${c.name ? c.name + ', ' : ''}${PF2E_CLASSES[c.cls].n} ${c.level}${r.trad ? ` (${r.trad})` : ''}: spell DC ${num.dc}, spell attack ${pcSign(num.atk)}`);
+    if (r) out.push(`${c.name ? c.name + ', ' : ''}${ps.arc ? `${r.n} archetype, level` : PF2E_CLASSES[c.cls].n} ${c.level}${r.trad ? ` (${r.trad})` : ''}: spell DC ${num.dc}, spell attack ${pcSign(num.atk)}`);
     const names = keys => keys.map(k => S(k).n + (Object.values(c.spells.sig).includes(k) ? ' ✦' : '')).join(', ');
     if (r && r.type !== 'focus') {
         const ct = [...psGivenAt('rep', 0).map(g => g.key), ...c.spells.ct];
@@ -544,6 +582,14 @@ function onClick(e) {
     if (!b || b.disabled) return;
     const d = b.dataset;
     if (d.fav) return psToggleFav(d.fav);
+    if (d.arc !== undefined) {
+        if (ps.edit) psEndEdit(false);
+        psOpen(ps.base, d.arc);
+        psGrants();
+        psFit();
+        psWriteUrl();
+        return render();
+    }
     if (d.edit) return psStartEdit(d.edit);
     if (b.id === 'ps-done') return psEndEdit(true);
     if (b.id === 'ps-cancel') return psEndEdit(false);

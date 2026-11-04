@@ -344,6 +344,8 @@ function rollsPanel(c, d) {
           <button type="button" class="cs-vital" data-act="init"><span>Perception</span><b>${pcSign(per.v)}</b><small>🎲 initiative</small>${penNote(per)}</button>
           ${cls ? `<div class="cs-vital"><span>Class DC</span><b>${cls.v}</b>${penNote(cls)}</div>` : ''}
           ${spell ? `<button type="button" class="cs-vital" data-act="spellatk"><span>Spell DC</span><b>${spell.v}</b><small>🎲 attack ${pcSign(spell.v - 10)}</small>${penNote(spell)}</button>` : ''}
+          ${s.mcDc.map(x => { const a = dc(x.dc, PF2E_CLASSES[x.cls].key[0]); return `<div class="cs-vital"><span>${esc(x.n)} DC</span><b>${a.v}</b><small>archetype</small>${penNote(a)}</div>`; }).join('')}
+          ${s.arcs.map(x => { const a = dc(x.dc, x.attr); return `<button type="button" class="cs-vital" data-act="spellatk" data-v="${x.arc}"><span>${esc(x.n)} spell DC</span><b>${a.v}</b><small>🎲 attack ${pcSign(a.v - 10)}</small>${penNote(a)}</button>`; }).join('')}
         </div>
         <div class="pp-saves">${Object.entries(PC_SAVES).map(([k, [n]]) => {
             const a = adj(c, s.saves[k], { kind: k });
@@ -375,35 +377,43 @@ function strikesPanel(c, d) {
 
 const spellLink = (k, tag = '') => `<a href="pf2e/spell/${k}" target="_blank" rel="noopener" title="Open ${esc(S(k).n)} in a new tab">${esc(S(k).n)}</a>${tag ? ` <span class="cs-tag">${esc(tag)}</span>` : ''}`;
 
+// Each rank's slots: pips for a repertoire, the prepared spells for the rest. sp: the picks
+// (c.spells or an archetype's), st: what's spent (c.play or its mc entry), arc: the archetype's class.
+function slotRows(r, sp, st, grants, arc = '') {
+    const rows = [];
+    const at = arc ? ` data-arc="${arc}"` : '';
+    r.slots.forEach((n, i) => {
+        const rank = i + 1;
+        if (!n) return;
+        if (r.type === 'rep') {
+            const used = st.slots[rank] || 0;
+            const known = [...grants.list.filter(g => g.to === 'rep' && g.rank === rank).map(g => g.key), ...(sp.rep[rank] || [])];
+            rows.push(`<li><div class="pp-rank"><span>Rank ${rank}</span>${pips(n, n - used, 'slot', ` data-v="${rank}"${at}`)}<span class="cs-tag">${n - used} of ${n}</span></div>
+                ${known.length ? `<p class="pp-known">${[...new Set(known)].map(k => spellLink(k, (sp.sig || {})[rank] === k ? '★ signature' : '')).join(', ')}</p>` : ''}</li>`);
+        } else {
+            const list = sp.prep[rank] || [];
+            const cast = st.cast[rank] || [];
+            rows.push(`<li><div class="pp-rank"><span>Rank ${rank}</span><span class="cs-tag">${n - cast.length} of ${n} left</span></div>
+                <ul class="pp-prep">${Array.from({ length: n }, (_, j) => {
+                    const k = list[j] || '';
+                    const done = cast.includes(j);
+                    const curr = r.curr && rank <= 9 && j === n - 1;
+                    return `<li class="${done ? 'pp-cast' : ''}"><button type="button" class="cs-pip${done ? ' cs-used' : ''}" data-act="prep" data-v="${rank}" data-i="${j}"${at} aria-label="${done ? 'Mark not cast' : 'Mark cast'}"></button>
+                        ${k ? spellLink(k, curr ? 'curriculum' : '') : `<span class="cs-dim">empty slot${curr ? ' (curriculum)' : ''}</span>`}</li>`;
+                }).join('')}</ul></li>`);
+        }
+    });
+    return rows;
+}
+
 function spellsPanel(c, d) {
     const { s, r, grants, focus } = d;
-    if (!spellsReady() || (!s.cast && !focus.list.length)) return '';
+    if (!spellsReady() || (!s.cast && !focus.list.length && !s.arcs.length)) return '';
     const p = c.play, sp = c.spells;
     const top = Math.ceil(c.level / 2);
     let h = `<section class="cs-panel" aria-labelledby="cs-sp-h"><h2 id="cs-sp-h">🔮 Spells</h2>`;
     if (r && r.type !== 'focus') {
-        const rows = [];
-        r.slots.forEach((n, i) => {
-            const rank = i + 1;
-            if (!n) return;
-            if (r.type === 'rep') {
-                const used = p.slots[rank] || 0;
-                const known = [...grants.list.filter(g => g.to === 'rep' && g.rank === rank).map(g => g.key), ...(sp.rep[rank] || [])];
-                rows.push(`<li><div class="pp-rank"><span>Rank ${rank}</span>${pips(n, n - used, 'slot', ` data-v="${rank}"`)}<span class="cs-tag">${n - used} of ${n}</span></div>
-                    ${known.length ? `<p class="pp-known">${[...new Set(known)].map(k => spellLink(k, sp.sig[rank] === k ? '★ signature' : '')).join(', ')}</p>` : ''}</li>`);
-            } else {
-                const list = sp.prep[rank] || [];
-                const cast = p.cast[rank] || [];
-                rows.push(`<li><div class="pp-rank"><span>Rank ${rank}</span><span class="cs-tag">${n - cast.length} of ${n} left</span></div>
-                    <ul class="pp-prep">${Array.from({ length: n }, (_, j) => {
-                        const k = list[j] || '';
-                        const done = cast.includes(j);
-                        const curr = r.curr && rank <= 9 && j === n - 1;
-                        return `<li class="${done ? 'pp-cast' : ''}"><button type="button" class="cs-pip${done ? ' cs-used' : ''}" data-act="prep" data-v="${rank}" data-i="${j}" aria-label="${done ? 'Mark not cast' : 'Mark cast'}"></button>
-                            ${k ? spellLink(k, curr ? 'curriculum' : '') : `<span class="cs-dim">empty slot${curr ? ' (curriculum)' : ''}</span>`}</li>`;
-                    }).join('')}</ul></li>`);
-            }
-        });
+        const rows = slotRows(r, sp, p, grants);
         if (r.font) {
             const fn = r.font.n;
             rows.push(`<li><div class="pp-rank"><span>Font</span>${pips(fn, fn - p.font, 'font')}<span class="cs-tag">rank ${r.font.rank} ${r.font.spell ? esc(pcCap(r.font.spell)) : 'heal or harm'} only</span></div></li>`);
@@ -412,12 +422,19 @@ function spellsPanel(c, d) {
         h += `<ul class="pp-ranks">${rows.join('')}</ul>`;
         h += `<p><b class="pp-label">Cantrips</b> ${cts.length ? cts.map(k => spellLink(k)).join(', ') : '<span class="cs-dim">none picked yet</span>'} <span class="cs-tag">· rank ${top}, no slot</span></p>`;
     }
+    s.arcs.forEach(a => {
+        const asp = sp.mc[a.arc] || pcBlankSpells();
+        const st = p.mc[a.arc] || { slots: {}, cast: {} };
+        h += `<h3>${esc(a.n)} archetype <span class="cs-tag">${a.trad ? pcCap(a.trad) + ' · ' : ''}DC ${a.dc}</span></h3>`;
+        if (a.slots.length) h += `<ul class="pp-ranks">${slotRows(a, asp, st, PS_NO_GRANTS, a.arc).join('')}</ul>`;
+        h += `<p><b class="pp-label">Cantrips</b> ${asp.ct.length ? asp.ct.map(k => spellLink(k)).join(', ') : '<span class="cs-dim">none picked yet</span>'} <span class="cs-tag">· rank ${top}, no slot</span></p>`;
+    });
     if (focus.list.length) {
         h += `<h3>Focus spells</h3>`;
         if (focus.points) h += `<div class="pp-rank"><span>Focus Points</span>${pips(focus.points, focus.points - p.focus, 'focus')}<span class="cs-tag">Refocus for 1 back</span></div>`;
         h += `<p>${focus.list.map(f => spellLink(f.key, S(f.key).k === 'c' ? 'cantrip, free' : '')).join(', ')} <span class="cs-tag">· rank ${top}</span></p>`;
     }
-    h += `<p class="cs-tag" style="margin-top:6px">Change the spells themselves in the <a href="pathfinder-spell-planner?char=${encodeURIComponent(c.id)}">🃏 Spell Planner</a>.${pcTextState === 1 ? ' Loading granted spells…' : ''}</p>`;
+    h += `<p class="cs-tag" style="margin-top:6px">Change the spells themselves in the <a href="pathfinder-spell-planner?char=${encodeURIComponent(c.id)}">🃏 Spell Planner</a>${s.arcs.length ? ` (archetype spells: ${s.arcs.map(a => `<a href="pathfinder-spell-planner?char=${encodeURIComponent(c.id)}&amp;arc=${a.arc}">${esc(a.n)}</a>`).join(', ')})` : ''}.${pcTextState === 1 ? ' Loading granted spells…' : ''}</p>`;
     return h + '</section>';
 }
 
@@ -525,7 +542,12 @@ function onClick(e) {
         doRoll(`1d20${plus(adj(cur, total, { kind: 'skill', abil: lore ? 'int' : PC_SKILLS[v] }).v)}`, lore || pcCap(v));
         return;
     }
-    if (act === 'spellatk') { doRoll(`1d20${plus(adj(cur, s.spellAtk, { kind: 'spell', abil: s.cast.attr }).v)}`, 'spell attack'); return; }
+    if (act === 'spellatk') {
+        const a = v ? s.arcs.find(x => x.arc === v) : null;
+        if (v && !a) return;
+        doRoll(`1d20${plus(adj(cur, a ? a.atk : s.spellAtk, { kind: 'spell', abil: a ? a.attr : s.cast.attr }).v)}`, a ? `${a.n} spell attack` : 'spell attack');
+        return;
+    }
     if (act === 'atk') {
         const x = s.strikes[i];
         const hit = x.atk[n] + ppPenalty(cur, { kind: 'attack', abil: ppStrikeAbil(cur, s, x) }).n;
@@ -688,9 +710,11 @@ function onClick(e) {
         return;
     }
     if (act === 'cstep') { change(() => { ppSetCond(cur, v, ppCond(cur, v) + n); }); return; }
-    if (act === 'slot') { change(p => { const r = Number(v); p.slots[r] = Math.max(0, (p.slots[r] || 0) + (filled ? 1 : -1)); if (!p.slots[r]) delete p.slots[r]; }); return; }
+    const arcState = p => { const a = b.dataset.arc; if (!a) return p; p.mc[a] = p.mc[a] || { slots: {}, cast: {} }; return p.mc[a]; };
+    if (act === 'slot') { change(p => { p = arcState(p); const r = Number(v); p.slots[r] = Math.max(0, (p.slots[r] || 0) + (filled ? 1 : -1)); if (!p.slots[r]) delete p.slots[r]; }); return; }
     if (act === 'prep') {
         change(p => {
+            p = arcState(p);
             const list = new Set(p.cast[v] || []);
             if (list.has(i)) list.delete(i); else list.add(i);
             p.cast[v] = [...list].sort((a, b) => a - b);
