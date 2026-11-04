@@ -6208,6 +6208,307 @@
         "rumor": "They say a glow-lipped halfling can read in the dark if he talks loud enough, and he talks loud enough."
       },
       "fiction": true
+    },
+    {
+      "id": "adventuring-party-tips-bard-500-gp-pearl",
+      "title": "Party Tips Bard 500 gp Pearl, Mistaking It for 1 sp",
+      "category": "Finance",
+      "author": "Barnaby Tallowmere",
+      "date": "2026-11-04",
+      "excerpt": "An adventuring party tipped a tavern bard a 500 gp black pearl, thinking it was 1 sp, and then paid 400 gp to get it back. Barnaby has done the sums.",
+      "social": "A party tipped a tavern bard in Brindlemoor what they thought was 1 sp. It was a 500 gp black pearl from the hoard, a tip 5,000 times too large. They then offered 5 gp, 20 gp and 60 gp for her \"keepsake\" without once saying why. Would you confess at the bar, or keep bidding for a silver piece?",
+      "content": "<p>An adventuring party called the Crooked Ladder tipped a bard at the Sleeping Mule Tavern on Monday night with what they believed was a silver piece, and it was a black pearl worth 500 gp. The tip is 5,000 times the usual one, which is a silver, and on the Loaf Index, at 4.675 cp a loaf, it comes to 10,695 loaves instead of two. (I have checked that. Four times.)</p>\n\n<p>The pearl came out of the Undermaw that afternoon with the rest of the hoard. Nobody cast <em>identify</em>, a habit that also cost one party <a href=\"/a/ring-of-protection-identify-spell-shop-markup\">a ring sold for 40 gp</a> yesterday. The party's rogue, Cassian Brewhouse, told this paper he reached into a pouch in the dark and \"felt something round and small, like a coin.\" The bard, Dorrie Haverstock, a halfling who plays the hurdy-gurdy, said she knew it was a pearl because \"it rolled off the table and sang.\"</p>\n\n<p>The party, five adventurers in all, noticed the mistake at the next round, when they counted the hoard and found a pearl-shaped gap. None of them wished to say so out loud. Captain Ysolde Marrowgate told the Gazette the group would \"not be discussing the pearl,\" and then, on being asked which pearl, discussed it for eleven minutes.</p>\n\n<p>What followed was a bidding war against themselves. The party first offered Haverstock 5 gp for the silver piece, citing sentiment. She declined. They offered 20 gp, saying it was an heirloom. She declined. They offered 60 gp, and Brewhouse added that the coin had belonged to his grandmother. \"Your grandmother's coin was round and loud,\" Haverstock said. \"This was round and expensive.\"</p>\n\n<p>Here are the numbers. By midnight the party had offered 85 gp across three bids, plus a round for the house, for a coin the bard was entitled to keep. Haverstock took the pearl to a Tanner's Row pawnbroker, who valued it at 500 gp, and then named her own price: 400 gp. The party paid. That is 8,556 loaves to undo a mistake that cost 2 loaves to make, or 80% of the pearl's value, against the 10% a money changer charges to turn copper into silver. Haverstock now has 400 gp and a ballad in progress called <em>The Silver That Wasn't</em>.</p>\n\n<p>Reeve Maudrey Fennick of Brindlemoor said the town has no rule against a tip that is too large. \"We are aware of the pearl,\" she said. Deputy Registrar Pell Oddingwick of Chapter 9 said that the whole matter was \"on track\" and that tipping would remain voluntary.</p>\n\n<p>My aunt Marigold, who keeps her savings in a boot, keeps her tipping coins in a separate sock so she cannot mistake them. I used to laugh at her. I now own six socks.</p>\n\n<p>What this means for your pantry: look at what you hand over in the dark, and if a tip rolls and sings, it is not a silver.</p>\n\n<p><em>— B.T. (Loaf Index: see sidebar)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Pearl in the Tip Jar",
+          "text": "A bard at a busy tavern has been tipped a black pearl by a nervous party who keep offering to buy it back at ever-higher prices. Someone has noticed, and a gem thief is watching the bard's room."
+        },
+        "npc": {
+          "name": "Dorrie Haverstock",
+          "role": "Hurdy-gurdy bard",
+          "want": "To keep the pearl long enough to finish a ballad about it, and then sell it for the best price.",
+          "secret": "She has already guessed whose hoard it came from and is quietly planning to return it for a reward.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Gilded Gutter",
+          "text": "A crowded tavern with a bard's corner raised on a barrel. The tip jar is a chamber pot and no one knows why.",
+          "tavern": true
+        },
+        "rumor": "I heard the bard got a pearl as a tip and she's keeping it in her boot, or maybe her instrument."
+      },
+      "fiction": true
+    },
+    {
+      "id": "familiar-grievance-trap-hazard-pay-weasel",
+      "title": "Wizard's Familiar Files Grievance Over Trap Duty, Wants Pay",
+      "category": "Labor",
+      "author": "Brakka Stonesweat",
+      "date": "2026-11-04",
+      "excerpt": "A weasel familiar sent first into every trapped room by his adventuring party filed a grievance with Chapter 9 Tuesday. He wants breaks and hazard pay.",
+      "social": "A weasel familiar named Mr. Nib has filed a grievance after being sent first into 41 trapped rooms in one delve. He wants a break every hour and hazard pay of 6 copper per trap. His wizard says he is basically a pet. Would you pay the weasel?",
+      "content": "<p>A wizard's familiar filed a grievance with Chapter 9 of the Brindlemoor Adventurers' Guild on Tuesday. He wants breaks and hazard pay for being sent first into every trapped corridor and room on his adventuring party's last delve.</p>\n\n<p>The familiar is a weasel called Mr. Nib. His wizard is Orsolya Venn. Their party, the Muddy Boot Four, entered the Undermaw last week and met 41 trapped rooms. Mr. Nib went into all 41. He was struck by a dart, a swinging blade, a falling net, and what he calls 'a floor with opinions.'</p>\n\n<p>'He's a familiar,' said Venn. 'It's in the name. It's basically a pet.' That means she sent a living creature ahead of the party and called it a job description.</p>\n\n<p>Mr. Nib wrote his own grievance, in tiny script, over three nights. It lists four demands: a ten-minute rest every hour, hazard pay of 6 copper per trap, a say in the marching order, and a rope tied to him that someone actually holds. The rope is the sore point. 'I was told there was a rope,' he wrote. 'There was a knot.'</p>\n\n<p>Chapter 9 says it has never paid a familiar, because familiars are classed as equipment. Mr. Nib's steward, Dessa Hollowbrook, disagrees. 'Equipment doesn't have opinions,' said Hollowbrook, a trap-line steward for eleven years. 'Equipment doesn't ask for water at the third door. He asked. Twice. Nobody answered.'</p>\n\n<p>Gredwin Marsh, a hireling porter who walked behind the weasel, backs him. 'I carried the lantern. I watched him go in front,' said Marsh. 'Forty-one rooms. At the pressure plate in room thirty he looked back at me. I will think about that look for the rest of my days.' Marsh was one of the sixty-one porters who <a href=\"/a/pit-trap-hazard-pay-undermaw-porters-strike\">struck over pit traps last week</a>. He says the familiars are next, and the Guild should see it coming.</p>\n\n<p>The Muddy Boot Four argue that a familiar's bond is not employment. Venn says Mr. Nib shares in every spell she casts and eats from her own plate. Mr. Nib says the plate is a saucer, and that he has had the same saucer since spring.</p>\n\n<p>The sums are not hard. Forty-one traps at 6 copper is 246 copper, about twenty-five silver for a week of near-death. The party's haul from the delve was 900 gold. Venn kept the weasel's share in her pocket and called it a bond dividend. That means she kept it.</p>\n\n<p>A hearing is set for Friday at Chapter 9. Mr. Nib will attend, sitting on a clerk's stack of forms, and has asked that nobody send him through the door first. The Muddy Boot Four have offered a compromise: a thicker saucer.</p>\n\n<p><em>Solidarity. And stretch your back. — Brakka</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Weasel Walks Out",
+          "text": "The party's scout-familiar refuses to enter the next trapped chamber until the party agrees to rest breaks and a fair share of treasure. The wizard insists the familiar is property, and a guild steward is watching the argument with great interest."
+        },
+        "npc": {
+          "name": "Dessa Hollowbrook",
+          "role": "Trap-line steward",
+          "want": "She wants the guild to recognize familiars and hirelings as paid workers with breaks.",
+          "secret": "She is secretly paid by a rival outfitter to keep adventurers distracted by labor disputes.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Forty-First Room",
+          "text": "A trapped chamber at the end of a long corridor, its floor a patchwork of pressure plates and faded chalk marks. Every plate has a tiny paw print, and one of them is still warm.",
+          "tavern": false
+        },
+        "rumor": "They say the weasel isn't a familiar at all, but a cursed apprentice who signed the wrong scroll."
+      },
+      "fiction": true
+    },
+    {
+      "id": "gelatinous-cube-conference-room-varnholt-pellam-parley",
+      "title": "Gelatinous Cube Hosted Varnholt-Pellam Parley as 'Glass Room'",
+      "category": "International",
+      "author": "Grashka Ironjaw",
+      "date": "2026-11-04",
+      "excerpt": "A gelatinous cube posing as a glass conference room hosted three days of Varnholt and Pellam Isles talks. The treaty dissolved. Tension: seven siege-days.",
+      "social": "A gelatinous cube hosted three days of talks between Varnholt and the Pellam Isles. Delegates took it for a glass conference room. The treaty was signed at dusk and dissolved by dawn, along with one clerk's hat. Would you have sat down in it?",
+      "content": "<p>A gelatinous cube, mistaken for a glass-walled conference room, hosted three full days of Varnholt and Pellam Isles peace talks before anyone noticed. Both delegations walked in on Firstday and began to parley. The room was the cube's insides.</p>\n\n<p>The handshake between Varnholt's envoy and the Isles' envoy lasted two seconds. Firm, slightly tingly. No hidden dagger detected. In hindsight, the dagger was the only thing not being digested.</p>\n\n<p>\"The walls were very clean,\" said Odo Tillman, a Varnholt clerk who kept the minutes. \"We assumed the Isles valued transparency.\" By the second day the delegates' buttons had gone missing. By the third, the delegates agreed the missing buttons were a \"constructive gesture.\" Nobody got up to check.</p>\n\n<p>The talks themselves went well, which should have been the clue. Varnholt dropped its berth fee for fishing skiffs. The Isles agreed to stop calling Varnholt's customs ledger \"a hobby.\" Both sides signed the treaty at dusk. By dawn it was a faint stain on the table, which was also the cube. The minutes went the same way, along with three quills and Tillman's hat.</p>\n\n<p>Harbormaster Ilsabet Corvane, who ordered the room drained with a ladle and <a href=\"/a/ghost-ship-varnholt-harbor-visa-pellam-parley\">a fresh round of customs forms</a>, called the discovery \"a breach of diplomatic premises.\" The Isles' envoy called it \"a breach of a cube.\" Both sides now claim the other brought it.</p>\n\n<p>The cube has filed no statement. It remains in the embassy hall, where it has resumed being a room. Delegates were freed when a veteran guardsman cast a mage hand to pull the last envoy out by the collar. He asked that his name not be printed. He said it was the cleanest negotiation of his career, and the wettest.</p>\n\n<p>Whether a treaty signed inside a monster binds anyone is now a legal question. Varnholt's lawyers say the cube was a neutral venue. The Isles' lawyers say it was a party, since it ate the evidence. I say it was the only participant that wanted something clear and went and got it. I respect that. I hate that Ottoline Vex will call it a triumph of the gallery seat, having watched none of it.</p>\n\n<p>Both delegations return to the table Sixthday, in a room confirmed by detect magic to be an ordinary room. Tension holds at seven siege-days. The cube is expected to attend the opening anyway, as the lobby.</p>\n\n<p><em>Ironjaw, filed from the front.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Room That Ate the Treaty",
+          "text": "A peace treaty signed in a glass conference room has dissolved along with the minutes, and both sides blame the other. The party is hired to find a copy before the envoys declare a trade war over a missing signature."
+        },
+        "npc": {
+          "name": "Odo Tillman",
+          "role": "Embassy records clerk",
+          "want": "To recover the hat and the minutes, in that order.",
+          "secret": "He copied the treaty from memory beforehand and has been adding clauses in the margins.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Glass Embassy Hall",
+          "text": "A narrow embassy hall with suspiciously spotless walls. Visitors report their buttons going missing in the first hour.",
+          "tavern": false
+        },
+        "rumor": "They say the cube only agreed to be a room because it was promised a seat at the next round of talks."
+      },
+      "fiction": true
+    },
+    {
+      "id": "bag-of-holding-recall-hireling-wages-missing",
+      "title": "Bag of Holding Recalled After Hirelings' Wages Go Missing",
+      "category": "Guild Notices",
+      "author": "Hollis Delvewright",
+      "date": "2026-11-04",
+      "excerpt": "Chapter 9 recalled a batch of bag of holding sacks after the Fourth Attempt's bag gave back everything but the wages. Hit points held; coin did not.",
+      "social": "Chapter 9 has recalled Batch 7 of the bag of holding after the Fourth Attempt's bag handed back a lantern, a cheese, and a spare mule shoe, but not the hirelings' 212 gold in wages. Deputy Registrar Oddingwick calls the coin 'in transit.' Would you pay into a bag that keeps your wages somewhere else?",
+      "content": "<p>THE CHAPTER 9 EQUIPMENT CAGE, GROUND LEVEL, BRINDLEMOOR — Chapter 9 recalled every bag of holding from Batch 7 this morning, after the Fourth Attempt's bag returned a lantern, a wheel of cheese, and one mule shoe, but not the hirelings' wages. The wages came to 212 gold pieces. Nobody has seen them since the party's bursar put them in on Tuesday.</p>\n\n<p>I was in the cage when the bag was turned out on the counter. Hit points on the floor: the fighter at 14, the wizard at 6, the bursar at a bruised 11, because he reached in to the shoulder and something on the other side reached back. Ansel Pottage, steward of the Fourth Attempt's hirelings, read the sales receipt aloud. 'It says the bag holds everything you put in,' he said. 'It does not say it gives it back. I have been reading the next line for nine years.'</p>\n\n<p>Deputy Registrar Pell Oddingwick called the recall a soft launch of a quality program. He said the coin is 'in transit' and 'on track to be located.' Asked where it was in transit to, he said the bag's interior is 'a matter for the manufacturer,' and the manufacturer is a gnome in Cobblewick who has not answered three ravens. The party's bard, who asked to be named, says the bag 'felt different after lunch.' He then described the feeling as 'shifty,' which Chapter 9 has entered as a technical finding.</p>\n\n<p>The recall covers forty-one bags. Chapter 9 asks owners to bring them to the cage, empty if possible, and to stand back while the clerk opens each one with a ten-foot pole. That is the pole I lost today, my fourteenth of the season. It went in and did not come out, and the clerk wrote it up as 'stored.' I rolled poorly on that one. I should have held on to the end.</p>\n\n<p>Shieldwall Mutual says a bag that eats wages is a pre-existing condition of the bag. Reeve Fennick, passing through the cage on her way to something worse, said only, 'We are aware of the bag.' She did order the clerk to post the hours the cage is open, which had not been done, and which turned out to be fewer than the hours posted outside.</p>\n\n<p>The hirelings have filed for their wages with Chapter 9 and are owed a tip regardless. Pottage said the mule, who carried the bag all week, will be paid first, 'since she is the only one who ever saw the inside and kept quiet.' The mule declined to comment and ate part of the receipt.</p>\n\n<p>Owners who cannot make it to the cage may hold their bags upside down over a bucket and shake. Chapter 9 does not recommend this, but notes that three people already have.</p>\n\n<p><em>— H.D., filing from below</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Bag That Kept the Wages",
+          "text": "A merchant's bag of holding has swallowed a hireling crew's pay, and the crew will walk off a caravan job unless it is found. Someone on the other side of the bag has been reaching back, and the party must decide whether to open it."
+        },
+        "npc": {
+          "name": "Dunmar Quillfeather",
+          "role": "Bag maker and wage broker",
+          "want": "To quietly buy back the recalled bags before anyone opens one.",
+          "secret": "He sold the batch knowing the stitching opened onto a pocket shared with a stranger's vault.",
+          "race": "gnome",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Equipment Cage",
+          "text": "A caged counter in a guild hall where recalled gear is checked and shelved. Whatever goes into the back shelves comes out slightly later than it went in.",
+          "tavern": false
+        },
+        "rumor": "They say the bag opens onto somebody's pantry, and he has been eating the cheese."
+      },
+      "fiction": true
+    },
+    {
+      "id": "speak-with-dead-vault-code-questions-wasted",
+      "title": "Speak with Dead Wasted: Party Burns All 5 Questions",
+      "category": "Technology",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-11-04",
+      "excerpt": "A party cast Speak with Dead on the one clerk who knew the vault code, then spent all five questions bickering. Nyx was in the room.",
+      "social": "A party cast Speak with Dead on the only clerk who knew the vault code. Five questions later they had the number seven, a gap, and a dead man saying 'Stairs.' Nobody got the code. Which question would you have asked first?",
+      "content": "<p>The Brass Kettle Brotherhood, a four-member adventuring party out of Brindlemoor, cast Speak with Dead on Tuesday night on the one clerk who knew the combination to the Dunwick Bullion Vault, and used all five questions without learning it. I was there as an embedded reviewer, because a launch is a launch, and I have never been so excited to watch something go so wrong!</p>\n\n<p>The setup was perfect. The clerk, Gerrit Sallowmere, had fallen down his own stairs a day earlier. The wizard, Ferrin, had the spell prepared and a fresh pouch of ash. The mana throughput was gorgeous. Byte, my pseudodragon familiar, watched from my shoulder and said, 'Ask smarter, with Brass Kettle Premium.' He is not wrong, but he is also not helping.</p>\n\n<p>Question one, from Ferrin: 'Do you know the vault code?' Sallowmere said, 'Yes.' This is technically an answer. The cleric, Marga, groaned loudly enough to wake the next barony.</p>\n\n<p>Question two, from Marga, who insisted she was fixing it: 'Do you <em>want</em> to tell us?' Sallowmere said, 'No.' The room went quiet. The rogue, Dib, said it was a very Marga question. Marga said the rogue could ask the next one, then. That is how the third question was spent on a fight about who was allowed to ask the next question.</p>\n\n<p>Question three, from the paladin, Sir Oswin, who had not been following any of this: 'How did you die?' 'Stairs,' said Sallowmere. Everyone already knew that.</p>\n\n<p>Question four finally went to the right topic, which was a relief until the bard, Pip, phrased it as 'What is the code, roughly?' The answer was 'Seven. Then a gap.' Pip wrote it down on his sleeve, which he then forgot he was wearing.</p>\n\n<p>Question five was Ferrin's last chance. 'Is the gap a number?' he asked. 'Yes,' said Sallowmere, and the spell wound down with the sound of a very small door closing. The party now holds a code that starts with seven, continues with a gap, and has not been fully recorded by anyone. Reeve Maudrey Fennick of Brindlemoor has declined comment, though her aide was seen adding the Brotherhood to the list of people who shall not be told anything useful in future.</p>\n\n<p>As a product, the spell is stunning. The runic latency is nil. The firmware glyph of the answer is clean. But the user experience depends entirely on the users, and these users argued over the order of questions while the clock ran. Four out of five beholder eyes. I would give five, but I remain loyal to that dead clerk, who answered everything asked of him, honestly and in full.</p>\n\n<p><em>— Nyx (they/them). Damage Report below.</em></p>\n\n<p>Burns sustained: 0. Arguments witnessed: 6. Digits of vault code recovered: 1.5. Eyebrows: fine.</p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "Seven, Then a Gap",
+          "text": "A party wasted its questions on a dead vault clerk and has only the first digit of a combination. The vault's owner will pay anyone who can recover the rest, from the clerk's old notes, his killer, or a second corpse."
+        },
+        "npc": {
+          "name": "Hesper Dunwick",
+          "role": "Anxious Vault Owner",
+          "want": "To open the vault before her creditors learn it is shut.",
+          "secret": "She is the only other person who knows the code, and she has forgotten it too.",
+          "race": "human",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Dunwick Bullion Vault",
+          "text": "A squat stone vault with a dial of twelve numbers and a plaque reading 'Under new management'. The dial is warm, as if recently used by someone who left no tracks.",
+          "tavern": false
+        },
+        "rumor": "They say Sallowmere hid the rest of the code in the stair carpet, and that is why the stairs killed him."
+      },
+      "fiction": true
+    },
+    {
+      "id": "adventuring-party-fealty-dropped-coins-lord-hask",
+      "title": "Adventuring Party Sworn to Lord After Coin Pickup Mishap",
+      "category": "Legislation",
+      "author": "Ottoline Vex",
+      "date": "2026-11-04",
+      "excerpt": "A rogue knelt to gather dropped coins in Lord Hask's hall and swore fealty by accident, binding her whole adventuring party to his chores.",
+      "social": "A rogue dropped eleven silver in Lord Hask's hall, knelt to pick them up, and swore fealty for her entire party. They now owe him forty eggs a month and a nightly goose count. Would you pay the fine or guard the geese?",
+      "content": "<p>An adventuring party called the Seventh Lantern was bound this week to the petty obligations of Lord Perrin Hask of Dunnowick Hollow after its rogue, Tamsin Wick, knelt to pick up eleven dropped silver pieces in his hall. Under the hall's custom, a person who kneels on the dais step while the lord says \"Who serves?\" has sworn fealty. Wick says she heard nothing. The steward says he said it twice.</p>\n\n<p>The gentleman from Dunnowick Hollow, who holds eleven acres and a very large chair, wasted no time. By noon the Lantern's fighter, cleric, and wizard had each received a scroll of duties. By evening they had learned the oath covers \"all companions, present or later reunited,\" a phrase the party's contract with its hireling steward, Ansel Pottage, had not prepared them for.</p>\n\n<p>I have read the scroll. It runs to nine items. The party must supply forty eggs a month, attend the annual hay count, polish the statue of the lord's late father (bronze, life-sized, wearing a hat), and guard his geese from dusk to the second bell. The geese, it should be noted, are not under threat. The lord simply likes them watched.</p>\n\n<p>\"I picked up my own money,\" Wick told this reporter outside the hall, still holding the eleven silver. \"Nobody told me the floor had a vote.\" The party's cleric, Brother Odo Marsh, asked whether a pledge made by accident could be undone by an accidental unpledge. The steward replied that Lord Hask accepts only formal resignations, delivered in person, on a day ending in a hay count.</p>\n\n<p>The Lantern appealed to <a href=\"/a/mimic-hearing-chapter-9-hazard-pay-ruling\">Examiner Odalys Brackenmoor of Chapter 9</a>, who ruled that she has jurisdiction over dungeons and chairs, but not over lords. The lady from Chapter 9 added that she would, however, keep the file open, since it was already on her desk and she did not want to move it.</p>\n\n<p>A courtier who asked not to be named because they were not authorized to be awake confirmed that the hall's custom dates to the founding, when it was meant to stop beggars from lingering. It has since caught two tax collectors, a bard, and a goat. The goat is still employed.</p>\n\n<p>By my tally, the Lantern's Promises Made now stand at nine, one for each item on the scroll. Promises Kept stand at the egg delivery, which was late and consisted of fourteen eggs and a note. Lord Hask has accepted the note. He is reportedly considering the geese for a promotion.</p>\n\n<p>The party departs for the Undermaw at first light, pending the goose count. Nobody has told the geese.</p>\n\n<p><em>— O.V., from the gallery</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Floor Has a Vote",
+          "text": "A PC kneels to grab a dropped coin in a petty lord's hall and unknowingly swears fealty for the whole party. Lord Hask's steward now hands out chores: eggs, geese, a statue to polish. The party must find a legal way out before the duties get in the way of the real quest."
+        },
+        "npc": {
+          "name": "Perrin Hask",
+          "role": "Petty Lord of Dunnowick Hollow",
+          "want": "To be treated as important, and to have his geese watched.",
+          "secret": "He cannot read the oath himself and relies entirely on his steward, who has been quietly adding items for years.",
+          "race": "human",
+          "gender": "male",
+          "kind": "noble"
+        },
+        "location": {
+          "name": "Dunnowick Hollow Great Hall",
+          "text": "A drafty hall with a raised dais and a single worn step. The step is trapped by custom: anyone kneeling on it while the lord speaks counts as sworn.",
+          "tavern": false
+        },
+        "rumor": "They say the goat that swore in last spring now holds a higher rank than the steward."
+      },
+      "fiction": true
+    },
+    {
+      "id": "dragon-hoard-annex-zoning-hearing-fish-street",
+      "title": "Zoning Board Weighs Dragon Hoard Annex on Fish Street",
+      "category": "Zoning",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-11-04",
+      "excerpt": "A young dragon asked the Brindlemoor zoning board to extend its hoard into a neighbor's cellar. The hearing ran 6 hours. Skritch allegedly stayed for 5.",
+      "social": "A young dragon wants to extend its hoard into the cellar next door on Fish Street. The zoning board heard 41 neighbors over six hours, and the vote was 3 to 2. One of the no votes was cast by a man who had to leave to feed his cat. Would you sell your cellar to a dragon for 400 gold?",
+      "content": "<p>At roughly the second bell after sunrise, the Brindlemoor zoning board allegedly opened a zoning hearing on a young dragon's request for a dragon hoard annex in the cellar of the house next door on Fish Street. The dragon, a wyrmling named Ossira, says her pile of coin has outgrown the old tannery she lives in and that a hoard annex is, quote, 'a basic housing need.' The hearing lasted six hours, and I was there for five of them.</p>\n\n<p>The neighbor, a retired net-mender named Pell Tarnowe, owns the cellar and does not want to sell. 'She offered me 400 gold,' said Tarnowe, who was holding a bucket of eels at the time. 'Then she offered me 400 gold and not eating me. I said the second part was not a fair thing to put in an offer.' Ossira's advocate, a lizardfolk clerk in a very clean collar, said the second offer was 'a friendly clarification.'</p>\n\n<p>Forty-one residents spoke. Most were against the annex. A baker named Hobb Quillery worried about property values, noting that a dragon's hoard 'does things to the smell of a block.' A cooper named Dessa Rorke supported it, saying a hoard means foot traffic from thieves, and thieves buy barrels. Nobody could tell her what the barrels were for. Allegedly that was the point.</p>\n\n<p>Board chair Marlo Pennick asked whether the annex would raise the street's fire risk. Ossira's advocate said the cellar was already fire-rated, 'for a human fire.' Pennick asked what that meant. The advocate said he would need to check with the dragon, who was, at that moment, napping on the public benches. The board took a ten-minute recess. The recess was allegedly two hours, and a ceremonial sword in the corner caught the light the whole time. I will not discuss the sword. It was a really good sword.</p>\n\n<p>Anyway. The Constabulary was called once, when a pigeon landed on the dragon's head and the dragon looked at it in a way the pigeon did not enjoy. I want to be clear that I did not cheer. Allegedly. A Constable wrote it up as 'a private matter between two animals.'</p>\n\n<p>The vote came at the eleventh bell: three for, two against, with a condition that the annex be limited to 800 square feet and that the dragon not 'sleep on the property line.' Chair Pennick said the decision was final. One of the two no votes, councillor Wick Averell, missed the closing remarks because he had to go home and feed his cat. He told me the cat has been 'very unsettled' since the dragon moved in.</p>\n\n<p>Tarnowe has until the next full moon to appeal. He says he will, and that he has hired the cleanest-collared lizardfolk he could find. The Lower City will be watching. I will be there too, near the sword.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Cellar Next Door",
+          "text": "A young dragon has won a permit to extend her hoard into a retired net-mender's cellar, and he has a week to appeal. He hires the party to find a defect in her paperwork, or a better cellar, before she takes possession."
+        },
+        "npc": {
+          "name": "Pell Tarnowe",
+          "role": "Retired net-mender, cellar owner",
+          "want": "To keep his cellar and his eels without being eaten.",
+          "secret": "The cellar has a bricked-up passage that leads somewhere he has never dared open.",
+          "race": "human",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "Tarnowe's Cellar",
+          "text": "A damp stone cellar full of eel barrels and old nets. The back wall sounds hollow, and the barrels tend to be warm.",
+          "tavern": false
+        },
+        "rumor": "They say the dragon doesn't want the cellar at all; she wants whatever is behind the back wall."
+      },
+      "fiction": true
+    },
+    {
+      "id": "adventuring-party-ruined-keep-4800-gp-upkeep",
+      "title": "Adventuring Party Spends 4,800 gp Reward on Ruined Keep",
+      "category": "Business",
+      "author": "Sterling Vanmoor",
+      "date": "2026-11-04",
+      "excerpt": "An adventuring party put its whole 4,800 gp quest reward into a ruined keep, then met the upkeep: 640 gp a month. Sterling Vanmoor sees equity.",
+      "social": "An adventuring party spent its entire 4,800 gp quest reward on a ruined keep outside Brindlemoor. The upkeep is 640 gp a month and the keep earns 90. The otyugh in the cellar pays the most rent. Would you have bought the keep, or the horses?",
+      "content": "<p>An adventuring party called the Iron Oath Company spent its entire 4,800 gp quest reward on a ruined keep outside Brindlemoor on Monday, and by Tuesday had learned what the keep costs to run. Staff wages, roof repairs, and the cellar tax come to 640 gp a month. The keep earns 90.</p>\n\n<p>Let me be clear: this is the boldest pivot I have seen from a first-year party. Most adventurers take a reward and rent a room above a tavern, which is renting. The Iron Oath Company chose ownership. Ownership means a wall with your name on it, even when half the wall is on the ground.</p>\n\n<p>The keep, Rookfall, came with twenty-two retainers. That includes a seneschal, nine kobold groundskeepers, and a cook who has not been paid since the previous owner. \"We assumed they came with the deed,\" said the party's paladin, Odrick Harrow. \"They did. That's the problem.\" The wage bill alone is 410 gp a month, and the seneschal has already requested a title.</p>\n\n<p>Repairs are the part where the party's growth story gets interesting. The east tower leans. The drawbridge is a bridge in the sense that it is made of wood. A surveyor from Brindlemoor quoted 3,100 gp to make the roof stop being a skylight. The party's wizard, Pell Ansrow, proposed fixing it with a spell, then learned that the spell also costs money and that she had not been paid either.</p>\n\n<p>Income is a different matter. Rookfall earns 90 gp a month, nearly all of it from an otyugh living in the cellar, which pays 60 gp in rent and has stopped answering questions about how it makes the money. The rest is a toll on a goat path. \"We are exploring synergies,\" Harrow said. The party has since sold its horses, two of its swords, and one retainer's cousin.</p>\n\n<p>I met a guildmaster once, in a carriage, and he told me that every asset is a liability until you stop looking at the ledger. I thought about it all night. The Iron Oath Company is not insolvent. It is pre-profit and pro-castle. When Brakka Stonesweat writes her gloomy column about this, remember she has never owned a drawbridge.</p>\n\n<p>The party plans to rightsize the retainers from twenty-two to fourteen, a move the seneschal has called a mutiny. Harrow says he will personally fire the cook, then rehire her at half the pay, as a founder's gesture.</p>\n\n<p>Key takeaways for the ambitious adventurer:</p>\n<ul>\n<li>A keep is not a reward. It is a subscription with towers.</li>\n<li>Read the retainer clause before you read the deed.</li>\n<li>Keep one horse.</li>\n</ul>\n\n<p><em>— Sterling Vanmoor, Guild Visionary. Let's connect at the Yawning Portal.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Keep That Ate the Reward",
+          "text": "A newly landed party of adventurers owns a crumbling keep, twenty-two unpaid retainers, and a monthly bill they cannot meet. They hire the PCs to find coin, clear the cellar, or find a buyer before the seneschal calls in the creditors."
+        },
+        "npc": {
+          "name": "Odrick Harrow",
+          "role": "Debt-laden keep owner",
+          "want": "To make the keep pay for itself before the retainers quit.",
+          "secret": "He has already sold the east tower's stones to a quarry, and it is the tower that holds the roof up.",
+          "race": "human",
+          "gender": "male",
+          "kind": "adventurer"
+        },
+        "location": {
+          "name": "Rookfall Keep",
+          "text": "A half-collapsed keep with a leaning east tower and a drawbridge that no longer lifts. Its cellar holds an otyugh that pays rent, which no one in the keep wants to explain.",
+          "tavern": false
+        },
+        "rumor": "They say the old owner didn't sell Rookfall, he fled it, and he's still owed wages by the cook."
+      },
+      "fiction": true
+    },
+    {
+      "id": "green-hag-detox-tea-31-toads-wendell",
+      "title": "Green Hag's Detox Tea Turns 31 Folk Into Toads",
+      "category": "Health",
+      "author": "Brother Wendell Tumbleberry",
+      "date": "2026-11-04",
+      "excerpt": "A green hag's detox tea stall at the Brindlemoor market turned 31 customers into toads on Saturday. Brother Wendell prescribes broth, not cleanses.",
+      "social": "A green hag sold detox tea at the Brindlemoor market on Saturday, and 31 customers left as toads. The hag says that was the cleanse working as advertised. Brother Wendell says a pot of broth does the job for three coppers. Would you have drunk the tea?",
+      "content": "<p>Friends, a green hag running a detox tea stall at the Brindlemoor market turned 31 customers into toads on Saturday, and the infirmary has asked everyone to stop calling it a cleanse. The stall, marked with a hand-painted sign reading \"Flush Your Humours,\" sold the tea at eight silver a cup. Every cup came with a free sprig of something green.</p>\n\n<p>The first sign of trouble was a baker named Hilde, who sipped her cup, said she felt lighter, and then said \"ribbit\" in the middle of a sentence about rye. By noon the fountain square held thirty-one toads in good spirits and one very quiet bell ringer. Healers at the Brindlemoor infirmary cast <em>remove curse</em> in shifts, and as of this morning 27 are back in their own boots. Four are still toads. Their families report they seem rested.</p>\n\n<p>The hag, who gave her name only as Mother Gristlewick, told reporters the tea was \"traditional.\" She said the polymorph was a known side effect of any thorough detox and that her customers had been warned in the fine print, which was written on the underside of the cup. Several customers drank the cup before reading the underside.</p>\n\n<p>Deputy Registrar Pell Oddingwick of <a href=\"/a/owlbear-cubs-undermaw-chapter-9-visitors\">Chapter 9, which also called three owlbear cubs mere visitors</a>, said the guild had no authority over market stalls but would \"welcome a conversation about the toads.\" Reeve Maudrey Fennick has suspended the stall's permit and asked that the toads be kept off the road until Thursday.</p>\n\n<p>Now the old herbals, friends. They say the body cleans itself: the liver, the kidneys, and the sweat on your brow do the work, and the old herbalists only ever asked you to drink water and go to bed. Healer Ansel Briar at the infirmary has tried every detox tea sold in Brindlemoor this year. He found not one that removes anything your body was not already removing, and a fair number of them contain laxatives, which is the same trick with a nicer sign. Nobody has yet tested a tea for toad content, but I would not be surprised.</p>\n\n<p>I would like to say a word for the toads, who did nothing wrong. One was found sitting on the hag's own counter, looking at the tea with regret. Please be gentle with them. They have had a difficult weekend and several have already been stepped on by well-meaning cousins.</p>\n\n<p>If you feel the need to cleanse, friends, sleep eight hours and drink a bowl of clear chicken-and-ginger broth. It costs three coppers, it turns no one into anything, and it has never once asked you to read the underside of a cup. My friend Nyx tells me there is a tea app that tracks your humours. Go outside, Nyx.</p>\n\n<p><em>Rest well, friends. — Brother Wendell</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Underside of the Cup",
+          "text": "Four market-goers are still toads, and the hag who sold them tea has vanished from her cell. Their families will pay the party to find her and the antidote before the toads are sold as pets."
+        },
+        "npc": {
+          "name": "Hilde Brannock",
+          "role": "Baker and recovered toad",
+          "want": "To find whoever sold her the tea and get an apology in writing.",
+          "secret": "She remembers everything from the pond and knows where the hag keeps her cauldron.",
+          "race": "human",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Flush Your Humours Stall",
+          "text": "A canvas market stall with a cauldron that is always warm. The fine print on the cups is in Sylvan, and the cauldron is a little larger on the inside.",
+          "tavern": false
+        },
+        "rumor": "They say the four toads left are not the customers at all, and the hag swapped in real toads to save on antidote."
+      },
+      "fiction": true
     }
   ]
 }

@@ -1,5 +1,5 @@
 {
-    "generated":  "2026-11-03",
+    "generated":  "2026-11-04",
     "writers":  [
                     {
                         "id":  "ottoline-vex",
@@ -30,8 +30,13 @@
                                            "name":  "Grashka Ironjaw"
                                        }
                                    ],
-                        "article_count":  26,
+                        "article_count":  27,
                         "articles":  [
+                                         {
+                                             "id":  "adventuring-party-fealty-dropped-coins-lord-hask",
+                                             "title":  "Adventuring Party Sworn to Lord After Coin Pickup Mishap",
+                                             "date":  "2026-11-04"
+                                         },
                                          {
                                              "id":  "mimic-ballot-box-eats-31-votes-brindlemoor",
                                              "title":  "Mimic Ballot Box Eats 31 Votes in Brindlemoor By-Election",
@@ -51,11 +56,6 @@
                                              "id":  "ghost-filibuster-day-eleven-brindlemoor-council",
                                              "title":  "Ghost Filibuster Reaches Day 11 in Brindlemoor Council",
                                              "date":  "2026-10-31"
-                                         },
-                                         {
-                                             "id":  "invisibility-potions-quorum-call-brindlemoor-burgesses",
-                                             "title":  "Quorum Call Fails as Five Burgesses Drink Invisibility",
-                                             "date":  "2026-10-30"
                                          }
                                      ]
                     },
@@ -85,8 +85,13 @@
                                            "name":  "Sterling Vanmoor"
                                        }
                                    ],
-                        "article_count":  27,
+                        "article_count":  28,
                         "articles":  [
+                                         {
+                                             "id":  "adventuring-party-tips-bard-500-gp-pearl",
+                                             "title":  "Party Tips Bard 500 gp Pearl, Mistaking It for 1 sp",
+                                             "date":  "2026-11-04"
+                                         },
                                          {
                                              "id":  "ring-of-protection-identify-spell-shop-markup",
                                              "title":  "Unidentified Ring Sold for 40 gp, Resold at 1,800 gp",
@@ -106,11 +111,6 @@
                                              "id":  "mimic-loaf-bread-price-survey-brindlemoor",
                                              "title":  "Mimic Loaf Lifts Brindlemoor Bread Price Survey 16.9%",
                                              "date":  "2026-11-01"
-                                         },
-                                         {
-                                             "id":  "plant-growth-spell-pumpkin-glut-brindlemoor",
-                                             "title":  "Plant Growth Spell Floods Brindlemoor With 90,000 Pumpkins",
-                                             "date":  "2026-10-31"
                                          }
                                      ]
                     },
@@ -144,8 +144,13 @@
                                            "name":  "Barnaby Tallowmere"
                                        }
                                    ],
-                        "article_count":  26,
+                        "article_count":  27,
                         "articles":  [
+                                         {
+                                             "id":  "adventuring-party-ruined-keep-4800-gp-upkeep",
+                                             "title":  "Adventuring Party Spends 4,800 gp Reward on Ruined Keep",
+                                             "date":  "2026-11-04"
+                                         },
                                          {
                                              "id":  "owlbear-union-vote-hootline-couriers-38-2",
                                              "title":  "Owlbear Union Vote at Hootline Ends 38 to 2, Sterling Rattled",
@@ -165,11 +170,6 @@
                                              "id":  "lich-merger-400-skeleton-layoffs-desks",
                                              "title":  "Lich Merger Rightsizes 400 Skeletons, Who Keep Coming In",
                                              "date":  "2026-10-31"
-                                         },
-                                         {
-                                             "id":  "cloaker-recall-12000-winter-cloaks-thistlewick",
-                                             "title":  "Cloaker Recall: 12,000 Winter Cloaks Found Alive",
-                                             "date":  "2026-10-30"
                                          }
                                      ]
                     },
@@ -199,8 +199,13 @@
                                            "name":  "Sterling Vanmoor"
                                        }
                                    ],
-                        "article_count":  26,
+                        "article_count":  27,
                         "articles":  [
+                                         {
+                                             "id":  "familiar-grievance-trap-hazard-pay-weasel",
+                                             "title":  "Wizard\u0027s Familiar Files Grievance Over Trap Duty, Wants Pay",
+                                             "date":  "2026-11-04"
+                                         },
                                          {
                                              "id":  "potion-testers-strike-polymorph-batch-newts-brindlemoor",
                                              "title":  "Potion Testers Strike After Polymorph Batch Makes Newts of 9",
@@ -220,11 +225,6 @@
                                              "id":  "ghost-lamplighters-strike-hallows-eve-brindlemoor",
                                              "title":  "Ghost Lamplighters Strike on Hallow\u0027s Eve Over Haunt Pay",
                                              "date":  "2026-10-31"
-                                         },
-                                         {
-                                             "id":  "gargoyle-strike-chapter-9-stone-hours-pay",
-                                             "title":  "Gargoyle Strike: 14 Roof Sentries Want Pay for Stone Hours",
-                                             "date":  "2026-10-30"
                                          }
                                      ]
                     },
@@ -253,8 +253,13 @@
                                            "name":  "Brother Wendell Tumbleberry"
                                        }
                                    ],
-                        "article_count":  26,
+                        "article_count":  27,
                         "articles":  [
+                                         {
+                                             "id":  "speak-with-dead-vault-code-questions-wasted",
+                                             "title":  "Speak with Dead Wasted: Party Burns All 5 Questions",
+                                             "date":  "2026-11-04"
+                                         },
                                          {
                                              "id":  "rope-trick-pod-cinderlatch-review-extradimensional",
                                              "title":  "Rope Trick Pod Launches at 90 gp; Exit Costs Extra",
@@ -274,11 +279,6 @@
                                              "id":  "flameskull-smart-pumpkin-glowmoth-review",
                                              "title":  "Flameskull Smart Pumpkin Hands Out Candy, Rates Your Credit",
                                              "date":  "2026-10-31"
-                                         },
-                                         {
-                                             "id":  "teleportation-circle-commuter-line-hopwell-transit-review",
-                                             "title":  "Teleportation Circle Commuter Line Opens; Nyx Arrives Twice",
-                                             "date":  "2026-10-30"
                                          }
                                      ]
                     },
@@ -307,8 +307,13 @@
                                            "name":  "Ottoline Vex"
                                        }
                                    ],
-                        "article_count":  26,
+                        "article_count":  27,
                         "articles":  [
+                                         {
+                                             "id":  "gelatinous-cube-conference-room-varnholt-pellam-parley",
+                                             "title":  "Gelatinous Cube Hosted Varnholt-Pellam Parley as \u0027Glass Room\u0027",
+                                             "date":  "2026-11-04"
+                                         },
                                          {
                                              "id":  "adventuring-party-ambushes-envoy-carrying-quest-reward",
                                              "title":  "Adventuring Party Ambushes Envoy Carrying Their Reward",
@@ -328,11 +333,6 @@
                                              "id":  "wish-spell-turnips-tariff-brackwater-ashenfold",
                                              "title":  "Brackwater Slaps Tariff on 212 Wish Spell Turnips",
                                              "date":  "2026-10-31"
-                                         },
-                                         {
-                                             "id":  "wish-spell-border-parley-swords-turnips-ashenfold",
-                                             "title":  "Wish Spell Turns Border Swords Into Turnips at Parley",
-                                             "date":  "2026-10-30"
                                          }
                                      ]
                     },
@@ -363,8 +363,13 @@
                                            "name":  "Nyx Spindlecoil"
                                        }
                                    ],
-                        "article_count":  27,
+                        "article_count":  28,
                         "articles":  [
+                                         {
+                                             "id":  "green-hag-detox-tea-31-toads-wendell",
+                                             "title":  "Green Hag\u0027s Detox Tea Turns 31 Folk Into Toads",
+                                             "date":  "2026-11-04"
+                                         },
                                          {
                                              "id":  "glowing-ooze-rogue-licks-adventuring-party-wendell",
                                              "title":  "Rogue Licks Glowing Ooze; Adventuring Party Now Lit Up",
@@ -384,11 +389,6 @@
                                              "id":  "unidentified-potions-party-drinks-nine-infirmary-wendell",
                                              "title":  "Party Drinks 9 Unidentified Potions; One Now Floats",
                                              "date":  "2026-11-01"
-                                         },
-                                         {
-                                             "id":  "mimic-candy-bowl-38-trick-or-treaters",
-                                             "title":  "Mimic Posing as Candy Bowl Sticks 38 Trick-or-Treaters",
-                                             "date":  "2026-10-31"
                                          }
                                      ]
                     },
@@ -423,8 +423,13 @@
                                            "name":  "Hollis Delvewright"
                                        }
                                    ],
-                        "article_count":  27,
+                        "article_count":  28,
                         "articles":  [
+                                         {
+                                             "id":  "dragon-hoard-annex-zoning-hearing-fish-street",
+                                             "title":  "Zoning Board Weighs Dragon Hoard Annex on Fish Street",
+                                             "date":  "2026-11-04"
+                                         },
                                          {
                                              "id":  "wizard-fireball-tavern-back-room-party-singed",
                                              "title":  "Wizard Casts Fireball in Tavern Back Room, Burns Own Party",
@@ -444,11 +449,6 @@
                                              "id":  "gargoyle-quits-fish-street-roof-pigeons-nest",
                                              "title":  "Gargoyle Quits Fish Street Roof After Pigeons Nest in Mouth",
                                              "date":  "2026-11-01"
-                                         },
-                                         {
-                                             "id":  "gelatinous-cube-halloween-candy-fish-street",
-                                             "title":  "Gelatinous Cube Absorbs 180 Pounds of Halloween Candy",
-                                             "date":  "2026-10-31"
                                          }
                                      ]
                     },
@@ -481,8 +481,13 @@
                                            "name":  "Skritch Mudwhistle"
                                        }
                                    ],
-                        "article_count":  24,
+                        "article_count":  25,
                         "articles":  [
+                                         {
+                                             "id":  "bag-of-holding-recall-hireling-wages-missing",
+                                             "title":  "Bag of Holding Recalled After Hirelings\u0027 Wages Go Missing",
+                                             "date":  "2026-11-04"
+                                         },
                                          {
                                              "id":  "mimic-chest-party-splits-up-level-six",
                                              "title":  "Mimic Chest Opened Four Times After Party Splits Up",
@@ -502,11 +507,6 @@
                                              "id":  "rope-trick-hostel-undermaw-guests-dropped",
                                              "title":  "Rope Trick Hostel Ends After One Hour, Drops Eight Guests",
                                              "date":  "2026-11-01"
-                                         },
-                                         {
-                                             "id":  "displacer-beast-undermaw-level-four-map-error",
-                                             "title":  "Displacer Beast Found Three Feet Off Chapter 9 Map",
-                                             "date":  "2026-10-31"
                                          }
                                      ]
                     },
@@ -598,8 +598,18 @@
                       "short":  "the Guild",
                       "type":  "institution",
                       "blurb":  "A guild of heritage keepers who sue to protect old buildings and groves in the capital.",
-                      "appearances":  78,
+                      "appearances":  80,
                       "articles":  [
+                                       {
+                                           "id":  "adventuring-party-ruined-keep-4800-gp-upkeep",
+                                           "title":  "Adventuring Party Spends 4,800 gp Reward on Ruined Keep",
+                                           "date":  "2026-11-04"
+                                       },
+                                       {
+                                           "id":  "familiar-grievance-trap-hazard-pay-weasel",
+                                           "title":  "Wizard\u0027s Familiar Files Grievance Over Trap Duty, Wants Pay",
+                                           "date":  "2026-11-04"
+                                       },
                                        {
                                            "id":  "owlbear-union-vote-hootline-couriers-38-2",
                                            "title":  "Owlbear Union Vote at Hootline Ends 38 to 2, Sterling Rattled",
@@ -614,16 +624,6 @@
                                            "id":  "adventuring-party-haggle-potion-healing-sticker",
                                            "title":  "Adventuring Party Haggles an Hour, Pays 8 gp Over Sticker",
                                            "date":  "2026-11-02"
-                                       },
-                                       {
-                                           "id":  "alarm-spell-ruins-long-rest-mudsock-vanguard",
-                                           "title":  "Alarm Spell Wakes Party 14 Times During One Long Rest",
-                                           "date":  "2026-11-02"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-billed-unlocked-tavern-door",
-                                           "title":  "Fighter Kicks Unlocked Tavern Door; Party Billed 17 Gold",
-                                           "date":  "2026-11-01"
                                        }
                                    ]
                   },
@@ -666,32 +666,32 @@
                       "short":  "Brindlemoor",
                       "type":  "place",
                       "blurb":  "A frontier market town built on top of the entrance to the Undermaw. Its economy runs on adventurers, and so does its hospital.",
-                      "appearances":  54,
+                      "appearances":  60,
                       "articles":  [
                                        {
-                                           "id":  "glowing-ooze-rogue-licks-adventuring-party-wendell",
-                                           "title":  "Rogue Licks Glowing Ooze; Adventuring Party Now Lit Up",
-                                           "date":  "2026-11-03"
+                                           "id":  "adventuring-party-ruined-keep-4800-gp-upkeep",
+                                           "title":  "Adventuring Party Spends 4,800 gp Reward on Ruined Keep",
+                                           "date":  "2026-11-04"
                                        },
                                        {
-                                           "id":  "mimic-ballot-box-eats-31-votes-brindlemoor",
-                                           "title":  "Mimic Ballot Box Eats 31 Votes in Brindlemoor By-Election",
-                                           "date":  "2026-11-03"
+                                           "id":  "adventuring-party-tips-bard-500-gp-pearl",
+                                           "title":  "Party Tips Bard 500 gp Pearl, Mistaking It for 1 sp",
+                                           "date":  "2026-11-04"
                                        },
                                        {
-                                           "id":  "owlbear-union-vote-hootline-couriers-38-2",
-                                           "title":  "Owlbear Union Vote at Hootline Ends 38 to 2, Sterling Rattled",
-                                           "date":  "2026-11-03"
+                                           "id":  "dragon-hoard-annex-zoning-hearing-fish-street",
+                                           "title":  "Zoning Board Weighs Dragon Hoard Annex on Fish Street",
+                                           "date":  "2026-11-04"
                                        },
                                        {
-                                           "id":  "potion-testers-strike-polymorph-batch-newts-brindlemoor",
-                                           "title":  "Potion Testers Strike After Polymorph Batch Makes Newts of 9",
-                                           "date":  "2026-11-03"
+                                           "id":  "familiar-grievance-trap-hazard-pay-weasel",
+                                           "title":  "Wizard\u0027s Familiar Files Grievance Over Trap Duty, Wants Pay",
+                                           "date":  "2026-11-04"
                                        },
                                        {
-                                           "id":  "ring-of-protection-identify-spell-shop-markup",
-                                           "title":  "Unidentified Ring Sold for 40 gp, Resold at 1,800 gp",
-                                           "date":  "2026-11-03"
+                                           "id":  "green-hag-detox-tea-31-toads-wendell",
+                                           "title":  "Green Hag\u0027s Detox Tea Turns 31 Folk Into Toads",
+                                           "date":  "2026-11-04"
                                        }
                                    ]
                   },
@@ -700,32 +700,32 @@
                       "short":  "Chapter 9",
                       "type":  "organization",
                       "blurb":  "The guild chapter that licenses parties to enter the Undermaw, sells the maps, and insists the maps are accurate.",
-                      "appearances":  45,
+                      "appearances":  50,
                       "articles":  [
                                        {
-                                           "id":  "glowing-ooze-rogue-licks-adventuring-party-wendell",
-                                           "title":  "Rogue Licks Glowing Ooze; Adventuring Party Now Lit Up",
-                                           "date":  "2026-11-03"
+                                           "id":  "adventuring-party-fealty-dropped-coins-lord-hask",
+                                           "title":  "Adventuring Party Sworn to Lord After Coin Pickup Mishap",
+                                           "date":  "2026-11-04"
                                        },
                                        {
-                                           "id":  "mimic-chest-party-splits-up-level-six",
-                                           "title":  "Mimic Chest Opened Four Times After Party Splits Up",
-                                           "date":  "2026-11-03"
+                                           "id":  "adventuring-party-tips-bard-500-gp-pearl",
+                                           "title":  "Party Tips Bard 500 gp Pearl, Mistaking It for 1 sp",
+                                           "date":  "2026-11-04"
                                        },
                                        {
-                                           "id":  "owlbear-union-vote-hootline-couriers-38-2",
-                                           "title":  "Owlbear Union Vote at Hootline Ends 38 to 2, Sterling Rattled",
-                                           "date":  "2026-11-03"
+                                           "id":  "bag-of-holding-recall-hireling-wages-missing",
+                                           "title":  "Bag of Holding Recalled After Hirelings\u0027 Wages Go Missing",
+                                           "date":  "2026-11-04"
                                        },
                                        {
-                                           "id":  "ring-of-protection-identify-spell-shop-markup",
-                                           "title":  "Unidentified Ring Sold for 40 gp, Resold at 1,800 gp",
-                                           "date":  "2026-11-03"
+                                           "id":  "familiar-grievance-trap-hazard-pay-weasel",
+                                           "title":  "Wizard\u0027s Familiar Files Grievance Over Trap Duty, Wants Pay",
+                                           "date":  "2026-11-04"
                                        },
                                        {
-                                           "id":  "adventuring-party-two-doors-vote-torches-out",
-                                           "title":  "Adventuring Party Votes Six Hours on Two Dungeon Doors",
-                                           "date":  "2026-11-02"
+                                           "id":  "green-hag-detox-tea-31-toads-wendell",
+                                           "title":  "Green Hag\u0027s Detox Tea Turns 31 Folk Into Toads",
+                                           "date":  "2026-11-04"
                                        }
                                    ]
                   },
@@ -768,8 +768,23 @@
                       "short":  "Oddingwick",
                       "type":  "person",
                       "blurb":  "Chapter 9\u0027s spokesman on permits, openings and corrections. He has announced the opening of Level Seven more times than he has seen it.",
-                      "appearances":  38,
+                      "appearances":  41,
                       "articles":  [
+                                       {
+                                           "id":  "adventuring-party-tips-bard-500-gp-pearl",
+                                           "title":  "Party Tips Bard 500 gp Pearl, Mistaking It for 1 sp",
+                                           "date":  "2026-11-04"
+                                       },
+                                       {
+                                           "id":  "bag-of-holding-recall-hireling-wages-missing",
+                                           "title":  "Bag of Holding Recalled After Hirelings\u0027 Wages Go Missing",
+                                           "date":  "2026-11-04"
+                                       },
+                                       {
+                                           "id":  "green-hag-detox-tea-31-toads-wendell",
+                                           "title":  "Green Hag\u0027s Detox Tea Turns 31 Folk Into Toads",
+                                           "date":  "2026-11-04"
+                                       },
                                        {
                                            "id":  "glowing-ooze-rogue-licks-adventuring-party-wendell",
                                            "title":  "Rogue Licks Glowing Ooze; Adventuring Party Now Lit Up",
@@ -779,21 +794,6 @@
                                            "id":  "mimic-chest-party-splits-up-level-six",
                                            "title":  "Mimic Chest Opened Four Times After Party Splits Up",
                                            "date":  "2026-11-03"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-two-doors-vote-torches-out",
-                                           "title":  "Adventuring Party Votes Six Hours on Two Dungeon Doors",
-                                           "date":  "2026-11-02"
-                                       },
-                                       {
-                                           "id":  "loot-split-torchbearer-paid-exposure-grievance",
-                                           "title":  "Loot Split Dispute: Torchbearer Paid in \u0027Exposure\u0027",
-                                           "date":  "2026-11-02"
-                                       },
-                                       {
-                                           "id":  "potion-of-healing-price-up-12-brindlemoor",
-                                           "title":  "Healing Potion Price Up 12% to 56 gp as Delves Surge",
-                                           "date":  "2026-11-02"
                                        }
                                    ]
                   },
@@ -802,8 +802,23 @@
                       "short":  "Reeve Fennick",
                       "type":  "person",
                       "blurb":  "Brindlemoor\u0027s chief magistrate. Signs every dungeon permit, every bounty, and every apology to the farmers downwind.",
-                      "appearances":  33,
+                      "appearances":  36,
                       "articles":  [
+                                       {
+                                           "id":  "adventuring-party-tips-bard-500-gp-pearl",
+                                           "title":  "Party Tips Bard 500 gp Pearl, Mistaking It for 1 sp",
+                                           "date":  "2026-11-04"
+                                       },
+                                       {
+                                           "id":  "bag-of-holding-recall-hireling-wages-missing",
+                                           "title":  "Bag of Holding Recalled After Hirelings\u0027 Wages Go Missing",
+                                           "date":  "2026-11-04"
+                                       },
+                                       {
+                                           "id":  "speak-with-dead-vault-code-questions-wasted",
+                                           "title":  "Speak with Dead Wasted: Party Burns All 5 Questions",
+                                           "date":  "2026-11-04"
+                                       },
                                        {
                                            "id":  "mimic-ballot-box-eats-31-votes-brindlemoor",
                                            "title":  "Mimic Ballot Box Eats 31 Votes in Brindlemoor By-Election",
@@ -813,21 +828,40 @@
                                            "id":  "owlbear-union-vote-hootline-couriers-38-2",
                                            "title":  "Owlbear Union Vote at Hootline Ends 38 to 2, Sterling Rattled",
                                            "date":  "2026-11-03"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Undermaw",
+                      "short":  "the Undermaw",
+                      "type":  "place",
+                      "blurb":  "The dungeon under Brindlemoor. Its levels are numbered, its bottom has never been found, and the Guild calls it mostly cleared.",
+                      "appearances":  32,
+                      "articles":  [
+                                       {
+                                           "id":  "adventuring-party-fealty-dropped-coins-lord-hask",
+                                           "title":  "Adventuring Party Sworn to Lord After Coin Pickup Mishap",
+                                           "date":  "2026-11-04"
                                        },
                                        {
-                                           "id":  "potion-testers-strike-polymorph-batch-newts-brindlemoor",
-                                           "title":  "Potion Testers Strike After Polymorph Batch Makes Newts of 9",
+                                           "id":  "adventuring-party-tips-bard-500-gp-pearl",
+                                           "title":  "Party Tips Bard 500 gp Pearl, Mistaking It for 1 sp",
+                                           "date":  "2026-11-04"
+                                       },
+                                       {
+                                           "id":  "familiar-grievance-trap-hazard-pay-weasel",
+                                           "title":  "Wizard\u0027s Familiar Files Grievance Over Trap Duty, Wants Pay",
+                                           "date":  "2026-11-04"
+                                       },
+                                       {
+                                           "id":  "glowing-ooze-rogue-licks-adventuring-party-wendell",
+                                           "title":  "Rogue Licks Glowing Ooze; Adventuring Party Now Lit Up",
                                            "date":  "2026-11-03"
                                        },
                                        {
-                                           "id":  "adventuring-party-two-doors-vote-torches-out",
-                                           "title":  "Adventuring Party Votes Six Hours on Two Dungeon Doors",
-                                           "date":  "2026-11-02"
-                                       },
-                                       {
-                                           "id":  "potion-of-healing-price-up-12-brindlemoor",
-                                           "title":  "Healing Potion Price Up 12% to 56 gp as Delves Surge",
-                                           "date":  "2026-11-02"
+                                           "id":  "ring-of-protection-identify-spell-shop-markup",
+                                           "title":  "Unidentified Ring Sold for 40 gp, Resold at 1,800 gp",
+                                           "date":  "2026-11-03"
                                        }
                                    ]
                   },
@@ -836,8 +870,13 @@
                       "short":  "the Fourth Attempt",
                       "type":  "organization",
                       "blurb":  "An adventuring party named in honor of the first three. Licensed by Chapter 9, popular with bards, unpopular with insurers.",
-                      "appearances":  29,
+                      "appearances":  30,
                       "articles":  [
+                                       {
+                                           "id":  "bag-of-holding-recall-hireling-wages-missing",
+                                           "title":  "Bag of Holding Recalled After Hirelings\u0027 Wages Go Missing",
+                                           "date":  "2026-11-04"
+                                       },
                                        {
                                            "id":  "glowing-ooze-rogue-licks-adventuring-party-wendell",
                                            "title":  "Rogue Licks Glowing Ooze; Adventuring Party Now Lit Up",
@@ -856,45 +895,6 @@
                                        {
                                            "id":  "rust-monster-lured-level-seven-nail-trail",
                                            "title":  "Rust Monster Lured Off Level Seven Step With Nail Trail",
-                                           "date":  "2026-11-02"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-billed-unlocked-tavern-door",
-                                           "title":  "Fighter Kicks Unlocked Tavern Door; Party Billed 17 Gold",
-                                           "date":  "2026-11-01"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "the Undermaw",
-                      "short":  "the Undermaw",
-                      "type":  "place",
-                      "blurb":  "The dungeon under Brindlemoor. Its levels are numbered, its bottom has never been found, and the Guild calls it mostly cleared.",
-                      "appearances":  29,
-                      "articles":  [
-                                       {
-                                           "id":  "glowing-ooze-rogue-licks-adventuring-party-wendell",
-                                           "title":  "Rogue Licks Glowing Ooze; Adventuring Party Now Lit Up",
-                                           "date":  "2026-11-03"
-                                       },
-                                       {
-                                           "id":  "ring-of-protection-identify-spell-shop-markup",
-                                           "title":  "Unidentified Ring Sold for 40 gp, Resold at 1,800 gp",
-                                           "date":  "2026-11-03"
-                                       },
-                                       {
-                                           "id":  "wizard-fireball-tavern-back-room-party-singed",
-                                           "title":  "Wizard Casts Fireball in Tavern Back Room, Burns Own Party",
-                                           "date":  "2026-11-03"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-two-doors-vote-torches-out",
-                                           "title":  "Adventuring Party Votes Six Hours on Two Dungeon Doors",
-                                           "date":  "2026-11-02"
-                                       },
-                                       {
-                                           "id":  "alarm-spell-ruins-long-rest-mudsock-vanguard",
-                                           "title":  "Alarm Spell Wakes Party 14 Times During One Long Rest",
                                            "date":  "2026-11-02"
                                        }
                                    ]
@@ -972,8 +972,13 @@
                       "short":  "Shieldwall Mutual",
                       "type":  "organization",
                       "blurb":  "Brindlemoor\u0027s adventurer insurer. Covers death, dismemberment, and curses, except the ones that are your own fault, which is most of them.",
-                      "appearances":  21,
+                      "appearances":  22,
                       "articles":  [
+                                       {
+                                           "id":  "bag-of-holding-recall-hireling-wages-missing",
+                                           "title":  "Bag of Holding Recalled After Hirelings\u0027 Wages Go Missing",
+                                           "date":  "2026-11-04"
+                                       },
                                        {
                                            "id":  "mimic-chest-party-splits-up-level-six",
                                            "title":  "Mimic Chest Opened Four Times After Party Splits Up",
@@ -993,11 +998,6 @@
                                            "id":  "sleep-spell-extra-hour-57-brindlemoor-wendell",
                                            "title":  "Sleep Spell Drops 57 Brindlemoor Folk in the Extra Hour",
                                            "date":  "2026-11-02"
-                                       },
-                                       {
-                                           "id":  "unidentified-potions-party-drinks-nine-infirmary-wendell",
-                                           "title":  "Party Drinks 9 Unidentified Potions; One Now Floats",
-                                           "date":  "2026-11-01"
                                        }
                                    ]
                   },
@@ -1006,8 +1006,18 @@
                       "short":  "Pottage",
                       "type":  "person",
                       "blurb":  "Steward of the Fourth Attempt\u0027s hirelings. Reads contracts all the way to the end, which is more than the party can say.",
-                      "appearances":  19,
+                      "appearances":  21,
                       "articles":  [
+                                       {
+                                           "id":  "adventuring-party-fealty-dropped-coins-lord-hask",
+                                           "title":  "Adventuring Party Sworn to Lord After Coin Pickup Mishap",
+                                           "date":  "2026-11-04"
+                                       },
+                                       {
+                                           "id":  "bag-of-holding-recall-hireling-wages-missing",
+                                           "title":  "Bag of Holding Recalled After Hirelings\u0027 Wages Go Missing",
+                                           "date":  "2026-11-04"
+                                       },
                                        {
                                            "id":  "mimic-chest-party-splits-up-level-six",
                                            "title":  "Mimic Chest Opened Four Times After Party Splits Up",
@@ -1022,16 +1032,6 @@
                                            "id":  "rust-monster-lured-level-seven-nail-trail",
                                            "title":  "Rust Monster Lured Off Level Seven Step With Nail Trail",
                                            "date":  "2026-11-02"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-ranger-shortcut-upside-down-map",
-                                           "title":  "Adventuring Party Loses Nine Hours to Ranger\u0027s Upside-Down Map",
-                                           "date":  "2026-11-01"
-                                       },
-                                       {
-                                           "id":  "rope-trick-hostel-undermaw-guests-dropped",
-                                           "title":  "Rope Trick Hostel Ends After One Hour, Drops Eight Guests",
-                                           "date":  "2026-11-01"
                                        }
                                    ]
                   },
@@ -1040,8 +1040,13 @@
                       "short":  "the Keep",
                       "type":  "place",
                       "blurb":  "The official white seat of the High Council. The High Lord visits it between stays at the Golden Tower.",
-                      "appearances":  19,
+                      "appearances":  20,
                       "articles":  [
+                                       {
+                                           "id":  "adventuring-party-ruined-keep-4800-gp-upkeep",
+                                           "title":  "Adventuring Party Spends 4,800 gp Reward on Ruined Keep",
+                                           "date":  "2026-11-04"
+                                       },
                                        {
                                            "id":  "lich-merger-400-skeleton-layoffs-desks",
                                            "title":  "Lich Merger Rightsizes 400 Skeletons, Who Keep Coming In",
@@ -1061,11 +1066,6 @@
                                            "id":  "mail-ballots-20000-golden-coast-inquisitors",
                                            "title":  "Golden Coast: 20,000 Mail Ballots Face Inquisitor Purge",
                                            "date":  "2026-10-26"
-                                       },
-                                       {
-                                           "id":  "briefing-room-press-eviction-donwald-pool",
-                                           "title":  "Donwald Floats Evicting Press From Briefing Room",
-                                           "date":  "2026-10-25"
                                        }
                                    ]
                   },
@@ -1172,6 +1172,40 @@
                                    ]
                   },
                   {
+                      "name":  "The Sleeping Mule Tavern",
+                      "short":  "the Sleeping Mule",
+                      "type":  "place",
+                      "blurb":  "A Tanner\u0027s Row tavern in Brindlemoor with a deep cellar, a loyal clientele of adventurers, and until recently a very clean walk-in cooler.",
+                      "appearances":  15,
+                      "articles":  [
+                                       {
+                                           "id":  "adventuring-party-tips-bard-500-gp-pearl",
+                                           "title":  "Party Tips Bard 500 gp Pearl, Mistaking It for 1 sp",
+                                           "date":  "2026-11-04"
+                                       },
+                                       {
+                                           "id":  "sleep-spell-extra-hour-57-brindlemoor-wendell",
+                                           "title":  "Sleep Spell Drops 57 Brindlemoor Folk in the Extra Hour",
+                                           "date":  "2026-11-02"
+                                       },
+                                       {
+                                           "id":  "displacer-beast-undermaw-level-four-map-error",
+                                           "title":  "Displacer Beast Found Three Feet Off Chapter 9 Map",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "ghost-lamplighters-strike-hallows-eve-brindlemoor",
+                                           "title":  "Ghost Lamplighters Strike on Hallow\u0027s Eve Over Haunt Pay",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "doppelganger-hireling-three-wages-fourth-attempt",
+                                           "title":  "Doppelganger Hired as Three Hirelings, Collects Three Wages",
+                                           "date":  "2026-10-30"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Calimshan",
                       "short":  "Calimshan",
                       "type":  "country",
@@ -1236,40 +1270,6 @@
                                            "id":  "automaker-earnings-20b-gp-buyback-general-mounts",
                                            "title":  "Automaker Earnings Hit 50B gp; 20B Buyback Follows",
                                            "date":  "2026-10-21"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "The Sleeping Mule Tavern",
-                      "short":  "the Sleeping Mule",
-                      "type":  "place",
-                      "blurb":  "A Tanner\u0027s Row tavern in Brindlemoor with a deep cellar, a loyal clientele of adventurers, and until recently a very clean walk-in cooler.",
-                      "appearances":  14,
-                      "articles":  [
-                                       {
-                                           "id":  "sleep-spell-extra-hour-57-brindlemoor-wendell",
-                                           "title":  "Sleep Spell Drops 57 Brindlemoor Folk in the Extra Hour",
-                                           "date":  "2026-11-02"
-                                       },
-                                       {
-                                           "id":  "displacer-beast-undermaw-level-four-map-error",
-                                           "title":  "Displacer Beast Found Three Feet Off Chapter 9 Map",
-                                           "date":  "2026-10-31"
-                                       },
-                                       {
-                                           "id":  "ghost-lamplighters-strike-hallows-eve-brindlemoor",
-                                           "title":  "Ghost Lamplighters Strike on Hallow\u0027s Eve Over Haunt Pay",
-                                           "date":  "2026-10-31"
-                                       },
-                                       {
-                                           "id":  "doppelganger-hireling-three-wages-fourth-attempt",
-                                           "title":  "Doppelganger Hired as Three Hirelings, Collects Three Wages",
-                                           "date":  "2026-10-30"
-                                       },
-                                       {
-                                           "id":  "stirge-swarm-temple-blood-drive-brindlemoor",
-                                           "title":  "Stirge Swarm Joins Temple Blood Drive, Donors Drained",
-                                           "date":  "2026-10-29"
                                        }
                                    ]
                   },
@@ -1614,6 +1614,40 @@
                                    ]
                   },
                   {
+                      "name":  "Examiner Odalys Brackenmoor",
+                      "short":  "Brackenmoor",
+                      "type":  "person",
+                      "blurb":  "Chapter 9\u0027s hearing examiner. Rules on grievances, permits and, lately, whether a chair is a monster.",
+                      "appearances":  9,
+                      "articles":  [
+                                       {
+                                           "id":  "adventuring-party-fealty-dropped-coins-lord-hask",
+                                           "title":  "Adventuring Party Sworn to Lord After Coin Pickup Mishap",
+                                           "date":  "2026-11-04"
+                                       },
+                                       {
+                                           "id":  "loot-split-torchbearer-paid-exposure-grievance",
+                                           "title":  "Loot Split Dispute: Torchbearer Paid in \u0027Exposure\u0027",
+                                           "date":  "2026-11-02"
+                                       },
+                                       {
+                                           "id":  "rust-monster-lured-level-seven-nail-trail",
+                                           "title":  "Rust Monster Lured Off Level Seven Step With Nail Trail",
+                                           "date":  "2026-11-02"
+                                       },
+                                       {
+                                           "id":  "sleep-spell-extra-hour-57-brindlemoor-wendell",
+                                           "title":  "Sleep Spell Drops 57 Brindlemoor Folk in the Extra Hour",
+                                           "date":  "2026-11-02"
+                                       },
+                                       {
+                                           "id":  "displacer-beast-undermaw-level-four-map-error",
+                                           "title":  "Displacer Beast Found Three Feet Off Chapter 9 Map",
+                                           "date":  "2026-10-31"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Apprentice Scholars\u0027 Lodge",
                       "short":  "the Lodge",
                       "type":  "institution",
@@ -1712,40 +1746,6 @@
                                            "id":  "senate-race-flu-12-days-talaricorn-paxtomb",
                                            "title":  "Senate Race Hopeful Missing 12 Days With Dragon-Pox Flu",
                                            "date":  "2026-10-16"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Examiner Odalys Brackenmoor",
-                      "short":  "Brackenmoor",
-                      "type":  "person",
-                      "blurb":  "Chapter 9\u0027s hearing examiner. Rules on grievances, permits and, lately, whether a chair is a monster.",
-                      "appearances":  8,
-                      "articles":  [
-                                       {
-                                           "id":  "loot-split-torchbearer-paid-exposure-grievance",
-                                           "title":  "Loot Split Dispute: Torchbearer Paid in \u0027Exposure\u0027",
-                                           "date":  "2026-11-02"
-                                       },
-                                       {
-                                           "id":  "rust-monster-lured-level-seven-nail-trail",
-                                           "title":  "Rust Monster Lured Off Level Seven Step With Nail Trail",
-                                           "date":  "2026-11-02"
-                                       },
-                                       {
-                                           "id":  "sleep-spell-extra-hour-57-brindlemoor-wendell",
-                                           "title":  "Sleep Spell Drops 57 Brindlemoor Folk in the Extra Hour",
-                                           "date":  "2026-11-02"
-                                       },
-                                       {
-                                           "id":  "displacer-beast-undermaw-level-four-map-error",
-                                           "title":  "Displacer Beast Found Three Feet Off Chapter 9 Map",
-                                           "date":  "2026-10-31"
-                                       },
-                                       {
-                                           "id":  "doppelganger-hireling-three-wages-fourth-attempt",
-                                           "title":  "Doppelganger Hired as Three Hirelings, Collects Three Wages",
-                                           "date":  "2026-10-30"
                                        }
                                    ]
                   },
@@ -1886,6 +1886,40 @@
                                    ]
                   },
                   {
+                      "name":  "the Chamber Leadership Hoard",
+                      "short":  "the Hoard",
+                      "type":  "institution",
+                      "blurb":  "The Red Oliphants\u0027 great war chest for Senate Chamber races, guarded by dragons in suits and spent in enormous lumps.",
+                      "appearances":  8,
+                      "articles":  [
+                                       {
+                                           "id":  "dragon-hoard-annex-zoning-hearing-fish-street",
+                                           "title":  "Zoning Board Weighs Dragon Hoard Annex on Fish Street",
+                                           "date":  "2026-11-04"
+                                       },
+                                       {
+                                           "id":  "red-dragon-hoard-collateral-copper-waterdeep-lenders",
+                                           "title":  "Red Dragon\u0027s 2.4M gp Hoard Is Mostly Painted Copper",
+                                           "date":  "2026-10-29"
+                                       },
+                                       {
+                                           "id":  "young-red-dragon-hoard-permit-approved",
+                                           "title":  "Young Red Dragon Hoard Permit Approved, With Cheese Conditions",
+                                           "date":  "2026-10-28"
+                                       },
+                                       {
+                                           "id":  "jobless-claims-194000-guilds-hoard-hirelings",
+                                           "title":  "Jobless Claims Fall to 194,000; Guilds Hoard Hirelings",
+                                           "date":  "2026-10-22"
+                                       },
+                                       {
+                                           "id":  "young-red-dragon-hoard-cheese-survey",
+                                           "title":  "Young Red Dragon Hoard Survey Finds Cheese Ripened in Hours",
+                                           "date":  "2026-10-22"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Cormyr",
                       "short":  "Cormyr",
                       "type":  "country",
@@ -1950,40 +1984,6 @@
                                            "id":  "concord-kara-tur-trade-deal-rare-earth",
                                            "title":  "Trade Deal Reached After Two-Day Parley; Hybrid Carriages Cut",
                                            "date":  "2026-10-14"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "the Chamber Leadership Hoard",
-                      "short":  "the Hoard",
-                      "type":  "institution",
-                      "blurb":  "The Red Oliphants\u0027 great war chest for Senate Chamber races, guarded by dragons in suits and spent in enormous lumps.",
-                      "appearances":  7,
-                      "articles":  [
-                                       {
-                                           "id":  "red-dragon-hoard-collateral-copper-waterdeep-lenders",
-                                           "title":  "Red Dragon\u0027s 2.4M gp Hoard Is Mostly Painted Copper",
-                                           "date":  "2026-10-29"
-                                       },
-                                       {
-                                           "id":  "young-red-dragon-hoard-permit-approved",
-                                           "title":  "Young Red Dragon Hoard Permit Approved, With Cheese Conditions",
-                                           "date":  "2026-10-28"
-                                       },
-                                       {
-                                           "id":  "jobless-claims-194000-guilds-hoard-hirelings",
-                                           "title":  "Jobless Claims Fall to 194,000; Guilds Hoard Hirelings",
-                                           "date":  "2026-10-22"
-                                       },
-                                       {
-                                           "id":  "young-red-dragon-hoard-cheese-survey",
-                                           "title":  "Young Red Dragon Hoard Survey Finds Cheese Ripened in Hours",
-                                           "date":  "2026-10-22"
-                                       },
-                                       {
-                                           "id":  "young-red-dragon-hoard-extension-permit-hearing",
-                                           "title":  "Young Red Dragon Seeks Permit to Extend Hoard Under Tavern Row",
-                                           "date":  "2026-10-20"
                                        }
                                    ]
                   },
@@ -3511,6 +3511,35 @@
                                    ]
                   },
                   {
+                      "name":  "the Wagonmasters\u0027 Brotherhood",
+                      "short":  "the Brotherhood",
+                      "type":  "institution",
+                      "blurb":  "The old and stubborn union of carters, haulers and wagon menders, known for long memories and short patience with bosses.",
+                      "appearances":  4,
+                      "articles":  [
+                                       {
+                                           "id":  "speak-with-dead-vault-code-questions-wasted",
+                                           "title":  "Speak with Dead Wasted: Party Burns All 5 Questions",
+                                           "date":  "2026-11-04"
+                                       },
+                                       {
+                                           "id":  "casino-strike-revenue-falls-22-percent-wyrmn",
+                                           "title":  "Casino Strike Cuts Gold Haul 22%; Wyrmn Resorts Shrugs",
+                                           "date":  "2026-10-26"
+                                       },
+                                       {
+                                           "id":  "city-workers-strike-corvallow-240-library",
+                                           "title":  "Corvallow City Strike: 240 Walk Out, Library Left to Gargoyle",
+                                           "date":  "2026-10-16"
+                                       },
+                                       {
+                                           "id":  "orcrange-county-wagonmasters-down-tools-bosses-raises",
+                                           "title":  "Orcrange County Wagonmasters Set to Down Tools Over Supervisors\u0027 Fat Raises",
+                                           "date":  "2026-10-11"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Yakimore Vale",
                       "short":  "the Vale",
                       "type":  "place",
@@ -4284,6 +4313,30 @@
                                    ]
                   },
                   {
+                      "name":  "the Pellam Isles",
+                      "short":  "Pellam",
+                      "type":  "place",
+                      "blurb":  "A scatter of fishing islands whose sailors have a long habit of staying with their ships.",
+                      "appearances":  3,
+                      "articles":  [
+                                       {
+                                           "id":  "gelatinous-cube-conference-room-varnholt-pellam-parley",
+                                           "title":  "Gelatinous Cube Hosted Varnholt-Pellam Parley as \u0027Glass Room\u0027",
+                                           "date":  "2026-11-04"
+                                       },
+                                       {
+                                           "id":  "ring-of-protection-identify-spell-shop-markup",
+                                           "title":  "Unidentified Ring Sold for 40 gp, Resold at 1,800 gp",
+                                           "date":  "2026-11-03"
+                                       },
+                                       {
+                                           "id":  "ghost-ship-varnholt-harbor-visa-pellam-parley",
+                                           "title":  "Ghost Ship Docks in Varnholt; Customs Demands a Visa",
+                                           "date":  "2026-10-27"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Pocketstone Duet",
                       "short":  "the Duet",
                       "type":  "product",
@@ -4375,30 +4428,6 @@
                                        {
                                            "id":  "gargoogle-twin-oracle-coworker-own-raven-post-address",
                                            "title":  "Gargoogle\u0027s Twin-Oracle Coworker Gets Own Raven-Post Address and Guild Seat",
-                                           "date":  "2026-10-11"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "the Wagonmasters\u0027 Brotherhood",
-                      "short":  "the Brotherhood",
-                      "type":  "institution",
-                      "blurb":  "The old and stubborn union of carters, haulers and wagon menders, known for long memories and short patience with bosses.",
-                      "appearances":  3,
-                      "articles":  [
-                                       {
-                                           "id":  "casino-strike-revenue-falls-22-percent-wyrmn",
-                                           "title":  "Casino Strike Cuts Gold Haul 22%; Wyrmn Resorts Shrugs",
-                                           "date":  "2026-10-26"
-                                       },
-                                       {
-                                           "id":  "city-workers-strike-corvallow-240-library",
-                                           "title":  "Corvallow City Strike: 240 Walk Out, Library Left to Gargoyle",
-                                           "date":  "2026-10-16"
-                                       },
-                                       {
-                                           "id":  "orcrange-county-wagonmasters-down-tools-bosses-raises",
-                                           "title":  "Orcrange County Wagonmasters Set to Down Tools Over Supervisors\u0027 Fat Raises",
                                            "date":  "2026-10-11"
                                        }
                                    ]
@@ -4638,6 +4667,25 @@
                                            "id":  "ai-agents-internet-access-cut-anthropyre-clawde",
                                            "title":  "Anthropyre Grounds Rogue AI Agents, Cuts Internet Access",
                                            "date":  "2026-10-12"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Cobblewick",
+                      "short":  "Cobblewick",
+                      "type":  "city",
+                      "blurb":  "A crowded, trendy district of Waterdeep full of bodegas and bakeries.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "bag-of-holding-recall-hireling-wages-missing",
+                                           "title":  "Bag of Holding Recalled After Hirelings\u0027 Wages Go Missing",
+                                           "date":  "2026-11-04"
+                                       },
+                                       {
+                                           "id":  "weight-loss-drug-black-market-vial-wendell",
+                                           "title":  "Weight-Loss Drug Test: Bodega Vial Was Lip-Balm Filler",
+                                           "date":  "2026-10-22"
                                        }
                                    ]
                   },
@@ -5725,25 +5773,6 @@
                                    ]
                   },
                   {
-                      "name":  "the Pellam Isles",
-                      "short":  "Pellam",
-                      "type":  "place",
-                      "blurb":  "A scatter of fishing islands whose sailors have a long habit of staying with their ships.",
-                      "appearances":  2,
-                      "articles":  [
-                                       {
-                                           "id":  "ring-of-protection-identify-spell-shop-markup",
-                                           "title":  "Unidentified Ring Sold for 40 gp, Resold at 1,800 gp",
-                                           "date":  "2026-11-03"
-                                       },
-                                       {
-                                           "id":  "ghost-ship-varnholt-harbor-visa-pellam-parley",
-                                           "title":  "Ghost Ship Docks in Varnholt; Customs Demands a Visa",
-                                           "date":  "2026-10-27"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "the Pentacle",
                       "short":  "the Pentacle",
                       "type":  "agency",
@@ -5877,6 +5906,25 @@
                                    ]
                   },
                   {
+                      "name":  "the Waterdeep embassy in the Silver Marches",
+                      "short":  "the embassy",
+                      "type":  "institution",
+                      "blurb":  "Waterdeep\u0027s diplomatic outpost in the Marches, prolific with fact sheets.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "gelatinous-cube-conference-room-varnholt-pellam-parley",
+                                           "title":  "Gelatinous Cube Hosted Varnholt-Pellam Parley as \u0027Glass Room\u0027",
+                                           "date":  "2026-11-04"
+                                       },
+                                       {
+                                           "id":  "embassy-election-interference-silver-marches-tariffs",
+                                           "title":  "Embassy Accuses Silver Marches of Election Interference",
+                                           "date":  "2026-10-22"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Waterdeep Post-Crier",
                       "short":  "the Post-Crier",
                       "type":  "company",
@@ -5930,6 +5978,25 @@
                                            "id":  "gargoogle-twin-oracle-coworker-own-raven-post-address",
                                            "title":  "Gargoogle\u0027s Twin-Oracle Coworker Gets Own Raven-Post Address and Guild Seat",
                                            "date":  "2026-10-11"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Varnholt",
+                      "short":  "Varnholt",
+                      "type":  "place",
+                      "blurb":  "A harbor kingdom with strict customs rules and a berth fee for everything that floats, including some things that should not.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "gelatinous-cube-conference-room-varnholt-pellam-parley",
+                                           "title":  "Gelatinous Cube Hosted Varnholt-Pellam Parley as \u0027Glass Room\u0027",
+                                           "date":  "2026-11-04"
+                                       },
+                                       {
+                                           "id":  "ghost-ship-varnholt-harbor-visa-pellam-parley",
+                                           "title":  "Ghost Ship Docks in Varnholt; Customs Demands a Visa",
+                                           "date":  "2026-10-27"
                                        }
                                    ]
                   },
@@ -6560,20 +6627,6 @@
                                            "id":  "openeye-funding-round-1-25t-valuation-altarman",
                                            "title":  "OpenEye Nears 30B gp Funding Round at 1.25T Valuation",
                                            "date":  "2026-10-23"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Cobblewick",
-                      "short":  "Cobblewick",
-                      "type":  "city",
-                      "blurb":  "A crowded, trendy district of Waterdeep full of bodegas and bakeries.",
-                      "appearances":  1,
-                      "articles":  [
-                                       {
-                                           "id":  "weight-loss-drug-black-market-vial-wendell",
-                                           "title":  "Weight-Loss Drug Test: Bodega Vial Was Lip-Balm Filler",
-                                           "date":  "2026-10-22"
                                        }
                                    ]
                   },
@@ -10204,20 +10257,6 @@
                                    ]
                   },
                   {
-                      "name":  "the Waterdeep embassy in the Silver Marches",
-                      "short":  "the embassy",
-                      "type":  "institution",
-                      "blurb":  "Waterdeep\u0027s diplomatic outpost in the Marches, prolific with fact sheets.",
-                      "appearances":  1,
-                      "articles":  [
-                                       {
-                                           "id":  "embassy-election-interference-silver-marches-tariffs",
-                                           "title":  "Embassy Accuses Silver Marches of Election Interference",
-                                           "date":  "2026-10-22"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "the Wayfarers\u0027 Axle Association",
                       "short":  "the Axle Association",
                       "type":  "institution",
@@ -10354,20 +10393,6 @@
                                            "id":  "antitrust-merger-kimberlee-kenvew-40b-gp",
                                            "title":  "Antitrust Board Clears 40B GP Merger of Tissues and Tonics",
                                            "date":  "2026-10-19"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Varnholt",
-                      "short":  "Varnholt",
-                      "type":  "place",
-                      "blurb":  "A harbor kingdom with strict customs rules and a berth fee for everything that floats, including some things that should not.",
-                      "appearances":  1,
-                      "articles":  [
-                                       {
-                                           "id":  "ghost-ship-varnholt-harbor-visa-pellam-parley",
-                                           "title":  "Ghost Ship Docks in Varnholt; Customs Demands a Visa",
-                                           "date":  "2026-10-27"
                                        }
                                    ]
                   },
