@@ -1,0 +1,101 @@
+{
+  "_note": "Roll table bank. Original Gazette text only (no SRD paste). die is 6 or 20 and rows must match it. status: draft until the owner approves a table.",
+  "tables": [
+    {
+      "id": "goblin-pocket",
+      "status": "approved",
+      "die": 6,
+      "title": "What's in the Goblin's Pocket?",
+      "kicker": "Searched after the ambush on the Tanner's Row road",
+      "rows": [
+        "Three copper pieces and a fourth that is clearly a button",
+        "A tooth. Not a goblin tooth. Not a tooth of anyone nearby",
+        "A map of the road you are standing on, with your faces drawn on it",
+        "A half-eaten pie, still warm. Whose oven?",
+        "An IOU signed by a much bigger goblin",
+        "A tiny portrait of a goblin mother, signed “come home safe”"
+      ],
+      "question": "Roll a d6 and tell us what you found. Then tell us what your party did about it.",
+      "week": 1
+    },
+    {
+      "id": "notice-board",
+      "status": "approved",
+      "die": 20,
+      "title": "What's on the Notice Board?",
+      "kicker": "Nailed up outside the Sleeping Mule this morning",
+      "rows": [
+        "Lost: one cat. Answers to nothing. Is on fire",
+        "Help wanted at the mill. Ask about the basement",
+        "Reward for the return of a stolen bell",
+        "Adventurers wanted. Must own their own shovel",
+        "The well is fine. Stop asking about the well",
+        "Bard seeks band. Lute player left suddenly",
+        "Found: one boot, foot still inside",
+        "Duel at dawn. Bring a second. And a third",
+        "Free goats. Do not ask why",
+        "Escort needed to the next town. Pays in pie",
+        "Missing: the bridge. Last seen on Tuesday",
+        "Lessons in swordplay. Bandages not included",
+        "Do not feed the thing under the stairs",
+        "Haunted chair for sale. Comfortable",
+        "Witness to the fire, please come forward",
+        "Wedding Friday. Groom still undecided",
+        "Ratcatcher wanted. Previous one eaten",
+        "Taxes due. The collector is armed now",
+        "A map, torn in half. The other half: inquire",
+        "Your own name, in your own handwriting"
+      ],
+      "question": "Roll a d20. Which notice does your party take down, and which one should they have left alone?",
+      "week": 2
+    },
+    {
+      "id": "locked-door",
+      "status": "approved",
+      "die": 6,
+      "title": "Why Is This Door Locked?",
+      "kicker": "A dungeon architect's guide to the third corridor",
+      "rows": [
+        "To keep something in. It is still in there",
+        "To keep you out. It has been waiting a long time",
+        "The key-keeper died with the key, inside, behind the door",
+        "It isn't locked. It's being held shut from the other side",
+        "There is a very good treasure room behind it. Was",
+        "The dungeon's owner locks it every night out of habit"
+      ],
+      "question": "Roll a d6. What does your rogue find when the lock gives?",
+      "week": 3
+    },
+    {
+      "id": "tavern-corner",
+      "status": "approved",
+      "die": 20,
+      "title": "Who's in the Corner Booth?",
+      "kicker": "The table nobody at the Sleeping Mule sits at",
+      "rows": [
+        "A hooded stranger. Obviously",
+        "A dwarf asleep in his own beard",
+        "Your party's last hireling",
+        "Two halflings in one long coat",
+        "A bard writing a song about you",
+        "A knight who lost a bet",
+        "A goblin with a very good fake mustache",
+        "Someone who looks just like your cleric",
+        "A tax collector, off duty, still counting",
+        "A ghost who hasn't noticed yet",
+        "A retired adventurer with one story",
+        "The tavern's cat, on a chair, paying",
+        "A wizard arguing with his hat",
+        "Three dice players. One always wins",
+        "A merchant selling maps to here",
+        "An orc reading poetry, crying a little",
+        "A child who says she owns the place",
+        "A mimic. It's the booth",
+        "A dragon in a very convincing hat",
+        "Nobody. The ale is still warm"
+      ],
+      "question": "Roll a d20. Who's in the corner booth, and does your party go over and say hello?",
+      "week": 4
+    }
+  ]
+}

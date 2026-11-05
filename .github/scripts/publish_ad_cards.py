@@ -2,7 +2,7 @@
 
 Single-image sibling of publish_npc_carousels.py: it reuses that publisher's release state,
 Facebook scheduling, and duplicate recovery, and swaps the carousel parts for one image.
-Two series share it (CARD_SERIES): Ad of the Week (ad, the default) and Map of the Week (map).
+Three series share it (CARD_SERIES): Ad of the Week (ad, the default), Map of the Week (map), and Roll for It (roll).
 """
 import json
 import os
@@ -20,6 +20,7 @@ MAX_POSTS = 5
 SERIES = {
     'ad': {'queue': 'ad-of-the-week', 'tag': 'ad-stage', 'config': 'ad-card-queue', 'workflow': 'publish-ad-cards'},
     'map': {'queue': 'map-of-the-week', 'tag': 'map-stage', 'config': 'map-card-queue', 'workflow': 'publish-map-cards'},
+    'roll': {'queue': 'roll-for-it', 'tag': 'roll-stage', 'config': 'roll-card-queue', 'workflow': 'publish-roll-cards'},
 }
 
 
