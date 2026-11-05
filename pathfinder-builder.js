@@ -562,7 +562,7 @@ function onClick(e) {
             c[field] = val;
             if (field === 'race') { c.boosts.anc = []; if (PF2E_HERITAGES[c.her] && PF2E_HERITAGES[c.her].a) c.her = ''; }
             if (field === 'bg') c.boosts.bg = [];
-            if (field === 'cls') { c.ch = ''; c.ch2 = ''; c.sub = ''; c.skills.ch = ''; c.boosts.key = ''; c.paths = {}; Object.keys(c.feats).filter(s => /^cls/.test(s)).forEach(s => delete c.feats[s]); }
+            if (field === 'cls') { c.ch = ''; c.ch2 = ''; c.sub = ''; c.skills.ch = ''; c.boosts.key = ''; c.paths = {}; Object.keys(c.feats).filter(s => /^x?cls/.test(s)).forEach(s => delete c.feats[s]); }
             if (field === 'ch') { c.skills.ch = ''; c.sub = ''; }
         });
     }
@@ -615,7 +615,10 @@ function onChange(e) {
     if (!cur) return;
     if (d.sel) return change(c => { const [a, b] = d.sel.split('.'); c[a][b] = el.value; });
     if (d.inc) return change(c => { if (el.value) c.skills.inc[d.inc] = el.value; else delete c.skills.inc[d.inc]; });
-    if (d.feat) return change(c => { if (el.value) c.feats[d.feat] = el.value; else delete c.feats[d.feat]; });
+    if (d.feat) return change(c => {
+        if (c.feats[d.feat] !== el.value) delete c.feats['x' + d.feat];   // a Basic X feat's own pick goes with it
+        if (el.value) c.feats[d.feat] = el.value; else delete c.feats[d.feat];
+    });
     if (d.path) return change(c => { if (el.value) c.paths[d.path] = el.value; else delete c.paths[d.path]; });
     if (d.rune) {
         return change(c => {

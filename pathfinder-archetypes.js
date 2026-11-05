@@ -280,7 +280,7 @@ function paTake(key, slot) {
     const after = pa.c ? pcArchetypeCheck(pa.c).issues : [];
     render();
     if (after.length > before) flash(`⚠️ ${after[after.length - 1].text}`, true);
-    else flash(`✔ ${F(key).n} taken as your ${paSlotName(slot)}.`);
+    else flash(`✔ ${F(key).n} taken as your ${paSlotName(slot)}.${pcSubFeat(key, paSlotLevel(slot)) ? ' Pick the class feat it gives in the Character Builder.' : ''}`);
 }
 
 function onClick(e) {
@@ -292,6 +292,7 @@ function onClick(e) {
     if (d.drop) {
         const name = F(pa.c.feats[d.drop]).n;
         delete pa.c.feats[d.drop];
+        delete pa.c.feats['x' + d.drop];   // the class feat a Basic or Advanced X feat gave
         paSave();
         render();
         return flash(`${name} removed. Feats that needed it stay until you change them.`);

@@ -458,8 +458,30 @@ function pcFeatSlots(c, level = c.level) {
     // Rogue Dedication gives a skill feat of its own, at the dedication's level.
     const rogue = c.cls !== 'rogue' && out.find(s => c.feats[s.slot] === 'rogue-dedication');
     if (rogue) out.push({ slot: 'mcs' + rogue.level, kind: 'mcs', level: rogue.level, label: 'Skill feat (Rogue Dedication)' });
-    const order = { anc: 0, cls: 1, arc: 2, skf: 3, mcs: 3, gen: 4 };
+    // Basic and Advanced X (Basic Dogma, Advanced Kata...) give a class feat of their own: slot 'x' + theirs.
+    out.filter(s => s.kind === 'cls' || s.kind === 'arc').forEach(s => {
+        const sub = pcSubFeat(c.feats[s.slot], s.level);
+        if (sub) out.push({ slot: 'x' + s.slot, kind: 'sub', level: s.level, label: `${PF2E_CLASSES[sub.cls].n} feat (${PF2E_FEATS[c.feats[s.slot]].n})`, parent: s.slot });
+    });
+    const order = { anc: 0, cls: 1, arc: 2, sub: 2.5, skf: 3, mcs: 3, gen: 4 };
     return out.sort((a, b) => a.level - b.level || order[a.kind] - order[b.kind]);
+}
+
+// The archetype feats that give a feat of the class (Player Core 1 and 2): Basic X a 1st- or
+// 2nd-level one, Advanced X one up to half the character's level (it can be taken more than once).
+const PC_SUB_FEAT = {
+    wizard: 'arcana', sorcerer: 'blood-potency', alchemist: 'concoction', investigator: 'deduction', champion: 'devotion',
+    cleric: 'dogma', swashbuckler: 'flair', barbarian: 'fury', ranger: 'hunter-s-trick', monk: 'kata', fighter: 'maneuver',
+    bard: 'muse-s-whispers', oracle: 'mysteries', rogue: 'trickery', druid: 'wilding', witch: 'witchcraft'
+};
+// A Basic or Advanced X feat taken at a level → { cls, cap (highest feat level), adv }, or null.
+function pcSubFeat(key, level) {
+    const m = /^(basic|advanced)-(.+)$/.exec(key || '');
+    if (!m) return null;
+    const cls = Object.keys(PC_SUB_FEAT).find(k => PC_SUB_FEAT[k] === m[2]);
+    if (!cls) return null;
+    const adv = m[1] === 'advanced';
+    return { cls, cap: adv ? Math.floor(level / 2) : 2, adv };
 }
 
 // Feats the character has without a slot: background, class choice, warpriest's Shield Block.
@@ -497,10 +519,12 @@ function pcFeatsFor(c, slot, { archetype = false } = {}) {
     const taken = new Set(Object.entries(c.feats).filter(([s]) => s !== slot).map(([, f]) => f));
     pcGrantedFeats(c).forEach(g => { if (g.key) taken.add(g.key); });
     const traits = pcAncestryTraits(c);
+    const sub = kind.startsWith('x') ? pcSubFeat(c.feats[slot.slice(1)], level) : null;
     const out = [];
     for (const [key, f] of Object.entries(PF2E_FEATS)) {
         if (f.l > level) continue;
         let fits = false;
+        if (sub) fits = f.c === 'class' && !f.ar && f.tr.includes(sub.cls) && f.l <= sub.cap;
         if (kind === 'anc') fits = f.c === 'ancestry' && f.tr.some(t => traits.includes(t));
         else if (kind === 'cls') fits = f.c === 'class' && (f.ar ? archetype : f.tr.includes(c.cls));
         else if (kind === 'arc') fits = f.ar === 1;
@@ -508,7 +532,7 @@ function pcFeatsFor(c, slot, { archetype = false } = {}) {
         else if (kind === 'gen') fits = f.c === 'general' || f.c === 'skill';
         if (!fits) continue;
         if (kind === 'cls' && f.ar && f.c === 'class' && !archetype) continue;
-        out.push({ key, feat: f, taken: taken.has(key) && !(f.mx > 1) });
+        out.push({ key, feat: f, taken: taken.has(key) && !(f.mx > 1) && !(pcSubFeat(key, level) || {}).adv });
     }
     return out.sort((a, b) => b.feat.l - a.feat.l || a.feat.n.localeCompare(b.feat.n));
 }
