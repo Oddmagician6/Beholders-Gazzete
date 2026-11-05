@@ -364,14 +364,14 @@ function stepFeats() {
 
 // A multiclass dedication's picks (its class choice, a tradition, skills) and what it gives the sheet.
 function dedicationBox(d, stats) {
-    const m = PC_MC[d.cls], mine = pcMcPick(cur, d.cls), tag = PF2E_CLASSES[d.cls].ch;
+    const m = PC_MC[d.cls], mine = pcMcPick(cur, d.cls), tag = m.n ? null : PF2E_CLASSES[d.cls].ch;
     const sel = (attr, label, opts, v, empty) => `<label class="cb-field">${label}<select ${attr} data-focus="${attr.replace(/[^a-z0-9-]/gi, '')}"><option value="">${empty}</option>${opts.map(([k, t]) => `<option value="${esc(k)}"${k === v ? ' selected' : ''}>${esc(t)}</option>`).join('')}</select></label>`;
     let h = `<div class="pb-slot"><p><span class="cb-lv">Level ${d.level}</span><b>${esc(d.n)} Dedication</b></p><div class="cb-row">`;
     if (tag) {
         const opts = Object.entries(PF2E_CHOICES).filter(([, x]) => x.c === d.cls && x.t === tag[0]).sort((a, b) => a[1].n.localeCompare(b[1].n)).map(([k, x]) => [k, x.n.replace(/^Bloodline: /, '')]);
         h += sel(`data-mc-ch="${d.cls}"`, tag[1], opts, d.ch ? mine.ch : '', `Pick your ${tag[1].toLowerCase()}`);
     }
-    if (m.cast && d.ch && d.ch.tr === 'choice') h += sel(`data-mc-tr="${d.cls}"`, 'Tradition', PC_TRADITIONS.map(t => [t, pcCap(t)]), d.tr, 'Pick one');
+    if (d.cast && ((d.ch && d.ch.tr === 'choice') || (m.n && !m.cast[0]))) h += sel(`data-mc-tr="${d.cls}"`, 'Tradition', PC_TRADITIONS.map(t => [t, pcCap(t)]), d.tr, 'Pick one');
     d.picks.forEach((pk, i) => {
         const opts = (pk.opts || Object.keys(PC_SKILLS).filter(k => !stats.ranks[k] || pk.v === k)).map(k => [k, skillName(k)]);
         h += sel(`data-mc-sk="${d.cls}" data-i="${i}"`, `Trained skill <small>(${esc(pk.hint)})</small>`, opts, pk.v, 'Pick a skill');
@@ -385,8 +385,9 @@ function dedicationBox(d, stats) {
     if (m.ar === 'light') gives.push('light armor');
     if (m.ar === 'champion') gives.push('light and medium armor (heavy too if you had both)');
     const arc = stats.arcs.find(x => x.arc === d.cls);
-    if (arc) gives.push(`${arc.trad ? pcCap(arc.trad) + ' ' : ''}spells with ${PC_ABIL_NAMES[arc.attr]}: DC ${arc.dc}, attack ${pcSign(arc.atk)}, ${arc.cantrips} cantrip${arc.cantrips === 1 ? '' : 's'}${arc.slots.length ? `, slots ${arc.slots.map((n, i) => `${n}× rank ${i + 1}`).join(', ')}` : ' (slots come with Basic ' + esc(d.n) + ' Spellcasting)'}`);
-    h += `<p class="cb-faint">${gives.length ? 'Gives you: ' + gives.join('; ') + '.' : ''} The rest of the feat (class features, anathema) is in its text.</p>`;
+    if (arc) gives.push(`${arc.trad ? pcCap(arc.trad) + ' ' : ''}spells with ${PC_ABIL_NAMES[arc.attr]}: DC ${arc.dc}, attack ${pcSign(arc.atk)}, ${arc.cantrips} cantrip${arc.cantrips === 1 ? '' : 's'}${arc.ctAtk ? ' (one that makes a spell attack roll)' : ''}${arc.slots.length ? `, slots ${arc.slots.map((n, i) => `${n}× rank ${i + 1}`).join(', ')}` : ' (slots come with Basic ' + esc(d.n) + ' Spellcasting)'}`);
+    if (m.cast && !d.cast) gives.push(`no spells of its own, since your class already casts from spell slots`);
+    h += `<p class="cb-faint">${gives.length ? 'Gives you: ' + gives.join('; ') + '.' : ''} The rest of the feat (${m.n ? 'Eldritch Shot' : 'class features, anathema'}) is in its text.</p>`;
     d.todo.forEach(t => { h += `<p class="cb-warn">⚠️ Still to do: ${esc(t)}.</p>`; });
     return h + '</div>';
 }

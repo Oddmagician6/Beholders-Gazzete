@@ -357,7 +357,7 @@ function pcProfs(c, level = c.level) {
             const rank = Math.max(1, r.light, r.medium, r.heavy, level >= 13 && r.unarmored >= 2 ? 2 : 0);
             kinds.forEach(k => { r[k] = Math.max(r[k], rank); });
         }
-        if (m.cast) r.spell = Math.max(r.spell, pcArcSpellRank(c, d.cls, level));
+        if (d.cast) r.spell = Math.max(r.spell, pcArcSpellRank(c, d.cls, level));
     });
     return r;
 }
@@ -614,6 +614,9 @@ function pcArchetypeCheck(c) {
 // pick (a list to pick from, or a hint for any skill), chs what the class choice it asks for adds
 // ('sk' its skills, 'or' Acrobatics or the style's skill), dc its class DC, wp/ar weapon and armor
 // training, cast [tradition ('' = the choice's), attribute, type, cantrips prepared], br its Breadth.
+// An archetype that isn't a class carries its name in n: the eldritch archer casts on its own
+// (Player Core 2) only for a character whose class doesn't cast from spell slots, with a tradition
+// they pick and one cantrip that makes a spell attack roll (atk).
 const PC_MC = {
     alchemist: { sk: ['crafting'], dc: 1 },
     barbarian: { sk: ['athletics'], dc: 1 },
@@ -630,7 +633,8 @@ const PC_MC = {
     sorcerer: { chs: 'sk', cast: ['', 'cha', 'rep', 2], br: 'bloodline-breadth' },
     swashbuckler: { chs: 'or', dc: 1 },
     witch: { chs: 'sk', cast: ['', 'int', 'book', 1], br: 'patron-s-breadth' },
-    wizard: { sk: ['arcana'], cast: ['arcane', 'int', 'book', 2], br: 'arcane-breadth' }
+    wizard: { sk: ['arcana'], cast: ['arcane', 'int', 'book', 2], br: 'arcane-breadth' },
+    'eldritch-archer': { n: 'Eldritch Archer', cast: ['', 'cha', 'rep', 1], atk: 1 }
 };
 const PC_TRAD_SKILL = { arcane: 'arcana', divine: 'religion', occult: 'occultism', primal: 'nature' };
 
@@ -645,7 +649,7 @@ function pcFeatAt(c, key, level = c.level) {
 }
 
 // The multiclass dedications taken by a level, in slot order, and what each gives:
-// [{ cls, key, slot, level, n, ch, tr, skills, picks: [{ opts, hint, v }], todo }].
+// [{ cls, key, slot, level, n, ch, tr, cast (it gives spells of its own), skills, picks: [{ opts, hint, v }], todo }].
 // A skill the character is already trained in becomes a pick of any skill, as the feats say.
 function pcDedications(c, level = c.level) {
     const out = [];
@@ -654,14 +658,16 @@ function pcDedications(c, level = c.level) {
         const key = c.feats[s.slot] || '';
         const cls = key.replace(/-dedication$/, '');
         if (key === cls || !Object.hasOwn(PC_MC, cls) || cls === c.cls || out.some(d => d.cls === cls)) return;
-        const m = PC_MC[cls], mine = pcMcPick(c, cls), name = PF2E_CLASSES[cls].n;
-        const tag = PF2E_CLASSES[cls].ch;
+        const m = PC_MC[cls], mine = pcMcPick(c, cls), name = m.n || PF2E_CLASSES[cls].n;
+        const tag = m.n ? null : PF2E_CLASSES[cls].ch;
         const ch = PF2E_CHOICES[mine.ch] && PF2E_CHOICES[mine.ch].c === cls ? PF2E_CHOICES[mine.ch] : null;
         const todo = [];
         let tr = '';
-        if (m.cast) {
-            tr = m.cast[0] || (ch && ch.tr && ch.tr !== 'choice' ? ch.tr : ch && PC_TRADITIONS.includes(mine.tr) ? mine.tr : '');
-            if (!tr && ch) todo.push(`pick your ${name.toLowerCase()} spells' tradition`);
+        const own = PF2E_CLASSES[c.cls] && PF2E_CLASSES[c.cls].cast;
+        const cast = !!m.cast && !(m.n && own && own[1] !== 'focus');
+        if (cast) {
+            tr = m.cast[0] || (ch && ch.tr && ch.tr !== 'choice' ? ch.tr : (ch || m.n) && PC_TRADITIONS.includes(mine.tr) ? mine.tr : '');
+            if (!tr && (ch || m.n)) todo.push(`pick your ${name.toLowerCase()} spells' tradition`);
         }
         if ((m.chs || (m.cast && !m.cast[0])) && !ch && tag) todo.push(`pick your ${tag[1].toLowerCase()}`);
         const fixed = [...(m.sk || [])];
@@ -685,7 +691,7 @@ function pcDedications(c, level = c.level) {
         });
         const left = picks.filter(p => !p.v).length;
         if (left) todo.push(`pick ${left} trained skill${left === 1 ? '' : 's'}`);
-        out.push({ cls, key, slot: s.slot, level: s.level, n: name, ch, tr, skills, picks, todo });
+        out.push({ cls, key, slot: s.slot, level: s.level, n: name, ch, tr, cast, skills, picks, todo });
     });
     return out;
 }
@@ -704,7 +710,7 @@ function pcArcSpellRank(c, cls, level = c.level) {
 // rank, a witch's familiar 2 cantrips and 2 spells a rank. No signature spells, curriculum, or font.
 function pcArcRules(c, cls) {
     const m = PC_MC[cls];
-    const d = m && m.cast ? pcDedications(c).find(x => x.cls === cls) : null;
+    const d = m && m.cast ? pcDedications(c).find(x => x.cls === cls && x.cast) : null;
     if (!d) return null;
     const L = c.level, has = k => pcFeatAt(c, `${k}-${cls}-spellcasting`);
     const slots = [];
@@ -712,18 +718,18 @@ function pcArcRules(c, cls) {
         if (!(r <= 3 ? has('basic') && L >= 2 * r + 2 : r <= 6 ? has('expert') && L >= 2 * r + 4 : has('master') && L >= 2 * r + 4)) break;
         slots.push(1);
     }
-    if (pcFeatAt(c, m.br)) slots.forEach((n, i) => { if (i < slots.length - 2) slots[i] += 1; });
+    if (m.br && pcFeatAt(c, m.br)) slots.forEach((n, i) => { if (i < slots.length - 2) slots[i] += 1; });
     const [, attr, type, cantrips] = m.cast;
     const top = slots.length;
     return { trad: d.tr, kind: type === 'rep' ? 'spontaneous' : 'prepared', attr, cantrips, slots, curr: false, font: null,
         type, top, ctLimit: cantrips, rep: type === 'rep' ? slots.slice() : [], sig: [],
         book: type === 'book' ? { cantrips: cls === 'wizard' ? 4 : 2, spells: 2 * top } : null,
-        prof: pcArcSpellRank(c, cls), arc: cls, n: d.n };
+        prof: pcArcSpellRank(c, cls), arc: cls, n: d.n, br: !!m.br, ctAtk: !!m.atk };
 }
 
 // The spellcasting archetypes a character has: [pcArcRules, ...].
 function pcArcCastings(c) {
-    return pcDedications(c).filter(d => PC_MC[d.cls].cast).map(d => pcArcRules(c, d.cls));
+    return pcDedications(c).filter(d => d.cast).map(d => pcArcRules(c, d.cls));
 }
 
 // ── Class features ──────────────────────────────────────
@@ -1025,8 +1031,13 @@ function pcSpellPool(c, rank, rare = false) {
     if (!cast || !cast.trad) return [];
     return Object.keys(PF2E_SPELLS).filter(k => {
         const s = PF2E_SPELLS[k];
-        return (rank === 0 ? s.k === 'c' : s.k === 's' && s.r <= rank) && (s.td || []).includes(cast.trad) && (rare || !s.ra);
+        return (rank === 0 ? s.k === 'c' && (!cast.ctAtk || pcAttackSpell(k)) : s.k === 's' && s.r <= rank) && (s.td || []).includes(cast.trad) && (rare || !s.ra);
     });
+}
+
+// A spell that makes a spell attack roll (the eldritch archer's cantrip has to).
+function pcAttackSpell(k) {
+    return /spell attack/i.test(PF2E_SPELLS[k].x || '');
 }
 
 // The focus spells (by trait) of the class, its dedications, and its focus archetypes that a
@@ -1057,7 +1068,7 @@ function pcFitSpells(c, grants = pcSpellGrants(c), rare = true) {
     s.book = r.type === 'book' ? s.book.filter(k => ok(k) && (S(k).k === 'c' || (S(k).k === 's' && S(k).r <= r.top))) : [];
     const bookHas = k => s.book.includes(k) || grants.list.some(g => g.key === k && g.to === 'book');
     const ctGiven = grants.list.filter(g => g.to === 'rep' && g.rank === 0).map(g => g.key);
-    s.ct = s.ct.filter(k => S(k).k === 'c' && !ctGiven.includes(k) && (r.type === 'book' ? bookHas(k) : ok(k))).slice(0, pcCantripLimit(r, grants));
+    s.ct = s.ct.filter(k => S(k).k === 'c' && !ctGiven.includes(k) && (!r.ctAtk || pcAttackSpell(k)) && (r.type === 'book' ? bookHas(k) : ok(k))).slice(0, pcCantripLimit(r, grants));
     const rep = {};
     if (r.type === 'rep') {
         for (let n = 1; n <= r.top; n++) {

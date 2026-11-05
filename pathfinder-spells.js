@@ -241,6 +241,7 @@ function psEditInfo() {
     if (ps.edit === 'ct') {
         const limit = pcCantripLimit(r, ps.g);
         const note = r.type === 'book' ? `Prepare ${limit} cantrip${limit === 1 ? '' : 's'} from your ${PS_BOOK_WORD[ps.c.cls][1]} each day${r.curr ? ', one of them from your curriculum' : ''}.`
+            : r.ctAtk ? 'One cantrip in your repertoire, and it has to make a spell attack roll (only those are listed). You can swap it each time you gain a level.'
             : r.type === 'rep' ? 'Cantrips in your repertoire: you can swap one each time you gain a level.' : `Prepare ${limit} cantrips each day from the ${r.trad} list.`;
         return { key: 'ct', title: '✨ Cantrips', limit, cap: true, note };
     }
@@ -317,8 +318,8 @@ function renderStats() {
     el.innerHTML = `<div class="ps-stats">${stats.map(([t, v]) => `<div class="ps-stat"><span>${t}</span><b>${v}</b></div>`).join('')}</div>`
         + (slots ? `<p class="ps-slots">${slots}</p>` : '')
         + `<p class="ps-dim ps-small-text">Cantrips and focus spells are heightened to rank ${Math.ceil(c.level / 2)}.${r.sig.length ? ' Signature spells (✦) heighten freely to any rank you can cast.' : ''}</p>`
-        + (ps.arc ? `<p class="ps-dim ps-small-text">Archetype slots: one a rank from Basic (1st–3rd), Expert (4th–6th), and Master (7th–8th) ${esc(r.n)} Spellcasting as you level, and one more of each rank but the two highest with the Breadth feat.</p>` : '')
-        + (ps.arc && !r.trad ? `<p class="ps-warn">Pick your ${esc(PF2E_CLASSES[ps.arc].ch[1].toLowerCase())} (and its tradition) on the Character Builder's Feats step to set your tradition.</p>` : '')
+        + (ps.arc ? `<p class="ps-dim ps-small-text">Archetype slots: one a rank from Basic (1st–3rd), Expert (4th–6th), and Master (7th–8th) ${esc(r.n)} Spellcasting as you level${r.br ? ', and one more of each rank but the two highest with the Breadth feat' : ''}.</p>` : '')
+        + (ps.arc && !r.trad ? `<p class="ps-warn">Pick your ${PF2E_CLASSES[ps.arc] ? `${esc(PF2E_CLASSES[ps.arc].ch[1].toLowerCase())} (and its tradition)` : `${esc(r.n.toLowerCase())} tradition`} on the Character Builder's Feats step to set your tradition.</p>` : '')
         + (!ps.arc && !r.trad && r.type !== 'focus' ? `<p class="ps-warn">Pick your ${esc((PF2E_CLASSES[c.cls].ch || ['', 'choice'])[1].toLowerCase())}${PF2E_CHOICES[c.ch] && PF2E_CHOICES[c.ch].tr === 'choice' ? '\'s tradition' : ''} to set your tradition.</p>` : '');
 }
 
