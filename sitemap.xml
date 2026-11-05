@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://gazette.ashforgestudio.com/</loc><lastmod>2026-11-04</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/</loc><lastmod>2026-11-05</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/about</loc><lastmod>2026-11-02</lastmod></url>
-  <url><loc>https://gazette.ashforgestudio.com/archive</loc><lastmod>2026-11-04</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/archive</loc><lastmod>2026-11-05</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/bestiary</loc><lastmod>2026-11-02</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/character-builder</loc><lastmod>2026-11-02</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/dm-screen</loc><lastmod>2026-11-02</lastmod></url>
@@ -38,7 +38,7 @@
   <url><loc>https://gazette.ashforgestudio.com/fantasy-history-generator</loc><lastmod>2026-11-02</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/fantasy-map-generator</loc><lastmod>2026-11-02</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/fantasy-world-map-maker</loc><lastmod>2026-11-02</lastmod></url>
-  <url><loc>https://gazette.ashforgestudio.com/glossary</loc><lastmod>2026-11-04</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/glossary</loc><lastmod>2026-11-05</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/handouts</loc><lastmod>2026-11-02</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/loot-generator</loc><lastmod>2026-11-02</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/monster-maker</loc><lastmod>2026-11-02</lastmod></url>
@@ -97,16 +97,16 @@
   <url><loc>https://gazette.ashforgestudio.com/tavern-name-generator</loc><lastmod>2026-11-02</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/toolbox</loc><lastmod>2026-11-02</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/worldbuilder</loc><lastmod>2026-11-02</lastmod></url>
-  <url><loc>https://gazette.ashforgestudio.com/desk/barnaby-tallowmere</loc><lastmod>2026-11-04</lastmod></url>
-  <url><loc>https://gazette.ashforgestudio.com/desk/brakka-stonesweat</loc><lastmod>2026-11-04</lastmod></url>
-  <url><loc>https://gazette.ashforgestudio.com/desk/grashka-ironjaw</loc><lastmod>2026-11-04</lastmod></url>
-  <url><loc>https://gazette.ashforgestudio.com/desk/hollis-delvewright</loc><lastmod>2026-11-04</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/desk/barnaby-tallowmere</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/desk/brakka-stonesweat</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/desk/grashka-ironjaw</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/desk/hollis-delvewright</loc><lastmod>2026-11-05</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/desk/matthias-ashmoor</loc><lastmod>2026-10-17</lastmod></url>
-  <url><loc>https://gazette.ashforgestudio.com/desk/nyx-spindlecoil</loc><lastmod>2026-11-04</lastmod></url>
-  <url><loc>https://gazette.ashforgestudio.com/desk/ottoline-vex</loc><lastmod>2026-11-04</lastmod></url>
-  <url><loc>https://gazette.ashforgestudio.com/desk/skritch-mudwhistle</loc><lastmod>2026-11-04</lastmod></url>
-  <url><loc>https://gazette.ashforgestudio.com/desk/sterling-vanmoor</loc><lastmod>2026-11-04</lastmod></url>
-  <url><loc>https://gazette.ashforgestudio.com/desk/wendell-tumbleberry</loc><lastmod>2026-11-04</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/desk/nyx-spindlecoil</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/desk/ottoline-vex</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/desk/skritch-mudwhistle</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/desk/sterling-vanmoor</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/desk/wendell-tumbleberry</loc><lastmod>2026-11-05</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/spell/acid-arrow</loc><lastmod>2026-10-10</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/spell/acid-splash</loc><lastmod>2026-10-10</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/spell/aid</loc><lastmod>2026-10-10</lastmod></url>
@@ -2669,6 +2669,15 @@
   <url><loc>https://gazette.ashforgestudio.com/pf2e/hazard/titanic-flytrap</loc><lastmod>2026-10-29</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/pf2e/hazard/vorpal-executioner</loc><lastmod>2026-10-29</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/pf2e/hazard/wheel-of-misery</loc><lastmod>2026-10-29</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/a/unidentified-potions-brass-kettle-healing-last-vial</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/a/banshee-call-center-service-award-wailwell-support</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/a/adventuring-party-unlocked-bakery-door-9-gp</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/a/wish-spell-unanimous-vote-brindlemoor-council</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/a/bag-of-holding-unlimited-storage-voidpocket-review</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/a/long-rest-interrupted-watch-rotation-fourth-attempt</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/a/adventuring-party-shortcut-border-nine-hours-incident</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/a/loot-split-equal-share-torchbearer-20-gold</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/a/gelatinous-cube-storage-rent-brindlemoor-warehouse</loc><lastmod>2026-11-05</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/a/green-hag-detox-tea-31-toads-wendell</loc><lastmod>2026-11-04</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/a/adventuring-party-ruined-keep-4800-gp-upkeep</loc><lastmod>2026-11-04</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/a/dragon-hoard-annex-zoning-hearing-fish-street</loc><lastmod>2026-11-04</lastmod></url>

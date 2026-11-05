@@ -6509,6 +6509,307 @@
         "rumor": "They say the four toads left are not the customers at all, and the hag swapped in real toads to save on antidote."
       },
       "fiction": true
+    },
+    {
+      "id": "gelatinous-cube-storage-rent-brindlemoor-warehouse",
+      "title": "Gelatinous Cube Storage Rents at 2 gp, Eats 11 Crates",
+      "category": "Real Estate",
+      "author": "Barnaby Tallowmere",
+      "date": "2026-11-05",
+      "excerpt": "A Brindlemoor landlord rents storage space inside a gelatinous cube for 2 gp a month, a fifth of warehouse rent. Eleven crates later, Barnaby has sums.",
+      "social": "A Brindlemoor landlord rents storage inside a gelatinous cube for 2 gp a month, against 9 gp for a warehouse. Forty-eight tenants signed up. Eleven crates have since dissolved, and the landlord calls it shrinkage. Would you store your boots in the cube?",
+      "content": "<p>A Brindlemoor landlord is renting storage space inside a gelatinous cube for 2 gp a month, while an ordinary warehouse bay on Tanner's Row costs 9 gp. Forty-eight tenants signed up in the first week. By Tuesday, eleven of their wooden crates had dissolved, and the rents have not changed.</p>\n\n<p>Let me put this in loaves. (I have checked this four times.) At 3 sp a loaf on the current Loaf Index, a warehouse bay is 30 loaves a month and a cube bay is just under 7. That is a saving of 23 loaves per tenant, or 1,104 loaves across all forty-eight. It is the cheapest square footage in the barony, and every economist I know would call it a bargain right up to the moment the footage is digesting your furniture.</p>\n\n<p>The landlord, a Mr. Orrin Pettibone of Pettibone Holdings, says the cube is \"a premium preserving environment.\" Items suspended inside it do not rot, he explained, and thieves cannot reach them. He admitted that wood, leather and cheese are \"subject to gradual repositioning,\" meaning the cube eats them. Metal, bone and anything made of gold pieces come through fine. Mr. Pettibone does not offer refunds, but he does offer what his lease calls \"a complimentary re-shelving.\"</p>\n\n<p>The tenants' claims are mounting. Dilys Wren, a candle-maker, lost four crates of tallow and says she can now see her own wax floating in the shape of a small duck. A cobbler named Harbin Vole lost every boot he owned that was not on his feet. Together the eleven lost crates are valued at 330 gp, or 1,100 loaves. That is more than the 96 gp the cube earns in a month, and it means the landlord is losing money in a way he has not noticed. It also means the 2 gp rent was never a price. It was a deposit on a loss.</p>\n\n<p>This is the oldest mistake in real estate, and Sterling Vanmoor will no doubt say the cube is \"disrupting storage.\" He will say the market will sort it out. I have read the lease and the market will not, because the cube does not read.</p>\n\n<p>The Brindlemoor Watch has asked Mr. Pettibone to post a notice on the cube. He has done so, on a plank of wood, which the cube ate on Wednesday. A hearing is set for next week, to which tenants have been asked to bring only metal evidence.</p>\n\n<p>My aunt Marigold, who keeps her savings in a boot, has been very quiet on the subject. I asked whether the boot was safe. She said it was, because she has moved it to a place \"no one with a lease can find.\" I did not ask further. What this means for your pantry: do not store your flour in anything transparent that moves.</p>\n\n<p><em>— B.T. (Loaf Index: see sidebar)</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Cube Lease Audit",
+          "text": "A landlord has leased crate space inside a gelatinous cube and tenants are losing goods. A frightened cobbler hires the party to retrieve a locked strongbox before the cube digests its wooden lining, with a hearing in two days."
+        },
+        "npc": {
+          "name": "Harbin Vole",
+          "role": "Bootless Brindlemoor cobbler",
+          "want": "To recover his tools and his dignity before the hearing.",
+          "secret": "He stored a stolen ledger in the cube hoping it would dissolve.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "Tanner's Row Cube Bay",
+          "text": "A rented alley where a tame gelatinous cube sits in a cage of iron bars. Items drift inside it in slow orbit, and one boot has been circling for three days.",
+          "tavern": false
+        },
+        "rumor": "They say the landlord feeds the cube extra candles so it will spit out the good stuff first."
+      },
+      "fiction": true
+    },
+    {
+      "id": "loot-split-equal-share-torchbearer-20-gold",
+      "title": "Loot Split: Torchbearer's 'Equal Share' Is 20 of 3,000 Gold",
+      "category": "Labor",
+      "author": "Brakka Stonesweat",
+      "date": "2026-11-05",
+      "excerpt": "An adventuring party promised its torchbearer an equal share of a 3,000 gold hoard, then paid itself first. The equal share came to 20 gold.",
+      "social": "A gnome torchbearer was promised an equal share of a 3,000 gold hoard. The party paid itself 500 gold each in advances first, so the equal share was 20 gold. He counted it three times and it really was equal. Would you have signed that contract?",
+      "content": "<p>Read the contract before the dungeon. Pim Dunnock, a gnome hired as torchbearer by an adventuring party called the Brass Pennant Company, got his promised equal share of a 3,000 gold hoard in Brindlemoor on Tuesday. The loot split gave him 20 gold. The five adventurers who hired him each took 520.</p>\n\n<p>Here is how that works. The party's treasurer, a paladin named Tobias Venn, announced the loot split would be 'equal, as promised.' Before the counting, he took out 'advances': 500 gold for each of the five party members, 2,500 in all. Another 380 went to 'expenses,' which included rations, a wizard's hat, and a resurrection fund nobody has needed. That left 120 gold. Six people. Twenty each.</p>\n\n<p>Everyone got the same. That is the trick. Nobody can say it wasn't equal.</p>\n\n<p>'I counted it three times,' said Dunnock. 'It is equal. That's the worst part. I was hoping for a mistake I could be angry at.' He carried two spare torches, a rope, and the wizard's hat for nine hours underground. He lit the way past a falling-block corridor and a room full of green slime. His 20 gold was paid in copper, in a sock.</p>\n\n<p>Ansel Pottage, steward of hirelings, read the contract aloud outside Chapter 9 on Wednesday, all the way to the end, which is more than the Pennants did. 'Clause four,' he said. 'Hirelings receive an equal share of the hoard.' He turned the page. 'Clause eleven. Advances are not part of the hoard.' Clause eleven, Pottage noted, is written in much smaller handwriting. A crowd of about thirty hirelings with their own torches booed the handwriting.</p>\n\n<p>'I've lit tunnels for eleven years,' said Hesper Quillby, a torchbearer who came to watch. 'Every party says equal. I ask one question now: equal of what? Nobody has ever liked the question.'</p>\n\n<p>Venn defended the split. 'The advances cover the risk we took,' he said. Dunnock replied that he held the light, so he was the one who could see the risk coming. Venn did not answer. He was counting something.</p>\n\n<p>Deputy Registrar Pell Oddingwick of Chapter 9 called the advances 'pre-hoard liquidity' and said the guild is 'confident in the equality of the outcome.' That means they paid themselves first and then divided the crumbs fairly. A hearing has been set. Examiner Odalys Brackenmoor, who has <a href=\"/a/loot-split-torchbearer-paid-exposure-grievance\">seen a loot split go sour</a> this week already, is said to be bringing her ladle.</p>\n\n<p>The plain arithmetic goes like this. The usual hireling rate in the Undermaw is a half share. Split the 3,000 gold properly, and that comes to roughly 273 for Dunnock. He got 20. The Pennants have offered him a free ballad and a second 20 gold if he signs a scroll saying the first 20 was generous. He has asked to read the scroll to the end.</p>\n\n<p><em>Solidarity. And stretch your back. — Brakka</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "Equal Of What?",
+          "text": "A hired torchbearer shows the party a contract promising 'an equal share' and a sock holding 20 gold. The hireling's steward wants the party's help finding the party that skipped town, and the gold they owe."
+        },
+        "npc": {
+          "name": "Marta Tilbrook",
+          "role": "Contract Clerk, Chapter 9",
+          "want": "To make every hireling contract list the share in coin, in large print.",
+          "secret": "She wrote clause eleven for a party years ago and has regretted it ever since.",
+          "race": "human",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Tally and Tallow",
+          "text": "A cramped tavern where parties split their loot at a long table with a brass scale. Hirelings drink in the back, where the table is shorter.",
+          "tavern": true
+        },
+        "rumor": "Somebody said the Brass Pennants hid the real count of the hoard in a hat, and that the hat has since gone missing."
+      },
+      "fiction": true
+    },
+    {
+      "id": "adventuring-party-shortcut-border-nine-hours-incident",
+      "title": "Adventuring Party's Shortcut Turns 2-Hour Road Into 9",
+      "category": "Travel",
+      "author": "Grashka Ironjaw",
+      "date": "2026-11-05",
+      "excerpt": "An adventuring party took a shortcut across the Brackwater border. A two-hour road became nine hours, one owlbear, and a diplomatic incident.",
+      "social": "An adventuring party skipped the bridge to save time. The shortcut took nine hours instead of two and ended in a border incident. Declaring their bag of holding took three hours, and it held a goat. Would you have trusted the ranger who said he knew a shortcut?",
+      "content": "<p>An adventuring party called the Mossy Pauldron Company took a shortcut across the Brackwater border on Fifthday. The road to the Ashenfold tavern normally takes two hours. It took them nine, and it ended in a diplomatic incident.</p>\n\n<p>The plan was the ranger's. Dorrin Ashgrove, ranger, said he \"knew a ford.\" The party skipped <a href=\"/a/bridge-troll-toll-hike-quillmarch-parley\">the three-copper toll at Quillmarch Bridge</a> and waded the river upstream. Hour one: they were wet. Hour two: they were in Brackwater, unannounced, with swords.</p>\n\n<p>Hour three belonged to an owlbear. It was in a meadow the ranger described as \"empty last spring.\" The party went around it. The detour added two hours and a mile of bramble. Nobody was hurt. The cleric's dignity has been listed as missing.</p>\n\n<p>Brackwater guards found them in hour five. Procedure was followed with great care. The party's bag of holding was declared at the border, as required. Its contents took three hours to list. Guard Captain Orwin Thatch reported that the bag contained forty-one torches, a goat, and \"what appeared to be a second, smaller border.\" He asked that the second border be declared separately. The wizard said it was a map. The captain said maps are borders with fewer manners.</p>\n\n<p>By hour eight, <a href=\"/a/wish-spell-turnips-tariff-brackwater-ashenfold\">Envoy Teodra Hallowmere</a> arrived to tax the matter. She taxes intent rather than goods, and she ruled the party's intent was \"to save two hours at the realm's expense.\" The fee was set at two hours. Payable in time. The party owed nine, so they paid seven more standing in a corridor.</p>\n\n<p>Ashenfold's side called it a provocation. Brackwater's side called it a Fifthday. Handshake between the two guard captains at the crossing: firm, two seconds, no hidden dagger detected, though one was later found in the goat. Tension rises to two siege-days, mostly from the owlbear.</p>\n\n<p>\"I said I knew a ford,\" Ashgrove told this correspondent. \"I did not say it was a good ford. The ford is a ford.\" Asked whether he would take the bridge next time, he said the bridge costs three copper. Asked what the day cost, he stopped talking.</p>\n\n<p>The company reached the Ashenfold tavern at the ninth hour. The tavern had closed its kitchen in the sixth. They ate field rations on the doorstep. This correspondent approves of the rations and of nothing else in this report.</p>\n\n<p><em>Ironjaw, filed from the front.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Ford That Wasn't",
+          "text": "A merchant hires the party to escort a wagon on a \"two-hour\" shortcut between two quarreling baronies. The route crosses a border no one has mapped, an owlbear meadow, and a customs post that taxes intent."
+        },
+        "npc": {
+          "name": "Orwin Thatch",
+          "role": "Border Guard Captain",
+          "want": "To finish one inspection without the goat being involved.",
+          "secret": "He has been quietly taking the shortcut himself and charging nobody for it.",
+          "race": "human",
+          "gender": "male",
+          "kind": "guard"
+        },
+        "location": {
+          "name": "The Upper Ford",
+          "text": "A shallow river crossing that appears on no map and is knee-deep only on days the owlbear is elsewhere. A bramble bypass has worn a muddy road around the meadow.",
+          "tavern": false
+        },
+        "rumor": "They say the Upper Ford is only two hours long if you do not look back at the meadow."
+      },
+      "fiction": true
+    },
+    {
+      "id": "long-rest-interrupted-watch-rotation-fourth-attempt",
+      "title": "Long Rest Interrupted Four Times Over Watch Rotation",
+      "category": "Adventurers",
+      "author": "Hollis Delvewright",
+      "date": "2026-11-05",
+      "excerpt": "The Fourth Attempt's long rest on Level 5 was broken four times in one night, after the adventuring party could not agree who had the second watch.",
+      "social": "The Fourth Attempt tried to take a long rest on Level 5 and got four interruptions, zero hours of full sleep, and a fight over the watch rotation. The bard's ballad was counted as a shift. The wizard woke at 3 hit points. Would you take first watch, or would you also fake being asleep?",
+      "content": "<p>THE UNDERMAW, LEVEL 5, A DEAD-END ROOM WITH ONE DOOR — The Fourth Attempt set out to take a long rest here on Tuesday night and got a long argument instead, followed by four interruptions, each of which reset the rest to zero. By dawn the adventuring party had slept, by my count, about nine minutes in total.</p>\n\n<p>The trouble started before anyone lay down. The party's ranger, whose <a href=\"/a/adventuring-party-ranger-shortcut-upside-down-map\">map was upside down</a> on Saturday and who therefore holds no authority on anything, proposed four watches of two hours. The fighter asked for first watch, 'so I can sleep through the rest of it.' The wizard said casters need an unbroken block and asked for no watch at all. The cleric offered to take the last shift if somebody woke her. Nobody asked who would wake her. The party's bard, who asked to be named, volunteered to take 'the artistic watch,' meaning he would sit up and play something soft. Everyone agreed to this because they were tired.</p>\n\n<p>Interruption one came at the first hour. Giant rats, nine of them, came through the door in single file, which I admit was polite. The fighter, on first watch, had fallen asleep standing up. The ranger woke, struck the first rat, and was told by the fighter that he was in the wrong order. Hour of fighting. Rest reset. Fighter 21 hit points (of 38), ranger 18 (of 29), one rat unaccounted for.</p>\n\n<p>Interruption two was a stirge. One. It chose the wizard. The wizard woke at 3 hit points (of 22) and the cleric, who had been told she would be woken, was not, because the bard's watch was the one in progress and the bard had not finished his song. 'I thought the song was the watch,' he told me. 'A watch is a song with a purpose.' It was a short song. The stirge was gone by the second verse and so was the wizard's temper.</p>\n\n<p>Interruption three was a wandering skeleton patrol. Interruption four was the same skeleton patrol, coming back, having forgotten something. I rolled poorly on this one and counted five skeletons both times. They had counted four. We have all been wrong in this room.</p>\n\n<p>Ansel Pottage, steward of the party's hirelings, had sat out the whole night in the doorway with a lantern and a copy of the contract. The two hirelings were under no obligation to keep watch, he said, as the contract assigns them 'carrying, holding, and the occasional heavy sigh.' He then read the watch clause aloud. There is no watch clause. 'That,' he said, 'is the clause.' I lost my seventh ten-foot pole of the season prodding that doorway for his sake.</p>\n\n<p>Deputy Registrar Pell Oddingwick of Chapter 9 said the guild 'has no official position on rest,' and that the room has been marked 'Safe, mostly' on the map. The map is being reissued. The fighter, last seen napping on the stairs, says he will take first watch next time. Nobody believes him.</p>\n\n<p><em>— H.D., filing from below</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Watch Nobody Kept",
+          "text": "A party camped in a dead-end room has been attacked four times in one night, because every watch shift was either unmanned or doubled. A local guild wants a cleaner rotation drawn up, and the room's door may be less safe than the map says."
+        },
+        "npc": {
+          "name": "Odrin Tallowmere",
+          "role": "Retired dungeon watch steward",
+          "want": "He wants parties to hire him to write their watch rotation before they sleep.",
+          "secret": "He once slept through his own watch, and a skeleton patrol is how he lost his job.",
+          "race": "dwarf",
+          "gender": "male",
+          "kind": "adventurer"
+        },
+        "location": {
+          "name": "The Dead-End Room",
+          "text": "A single-door stone room on a dungeon level, marked safe on the guild map. Three corridors feed it, and one of them is never the same twice.",
+          "tavern": false
+        },
+        "rumor": "They say a skeleton patrol keeps coming back to that room because someone left a lantern behind, and it is not the party's."
+      },
+      "fiction": true
+    },
+    {
+      "id": "bag-of-holding-unlimited-storage-voidpocket-review",
+      "title": "Bag of Holding 'Unlimited' Plan: 12 gp Buys 500 Pounds",
+      "category": "Technology",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-11-05",
+      "excerpt": "Voidpocket Labs launched a 12 gp a month bag of holding plan with 'unlimited' storage. The limit is 500 pounds. Nyx tested it. Four eyes.",
+      "social": "Voidpocket Labs sells 'unlimited' bag of holding storage for 12 gp a month. Nyx packed their entire workshop in and found the limit is 500 pounds, plus a fee for taking things back out. Byte now speaks only in storage ads. Would you pay monthly to rent a pocket?",
+      "content": "<p>Okay. OKAY. Voidpocket Labs has launched the Endless Sack, a bag of holding subscription at 12 gp a month with, and I quote the box, \"unlimited storage.\" I have been stuffing it for four days, and the actual limit is 500 pounds, which is exactly what a normal bag of holding holds. The word \"unlimited\" appears to be a feeling.</p>\n\n<p>The setup is gorgeous! You tap the drawstring glyph, the sack hums, and the mana throughput is so smooth that my entire workshop went in without a ripple. Anvil, three workbenches, forty crates of firmware glyphs, a half-built clockwork heron. I was thrilled. Then the sack began to whisper, in a calm customer-service voice, \"You have reached 91 percent of your unlimited storage.\"</p>\n\n<p>I asked a Voidpocket representative, Odalys Brindlefoot, how a limit can exist in an unlimited plan. \"The storage is unlimited,\" she said. \"The sack is just very selective about what it counts as storage.\" She then explained that anything over 500 pounds is moved to the Overflow Dimension, where retrieval costs 3 sp per item and takes up to a fortnight. I have a portable hole in my coat that does this for free. I did not mention it, because I wanted to see the whole pricing page.</p>\n\n<p>The runic latency on retrieval is, shall we say, a journey. I asked for a hammer and received a notification that my hammer was \"being prepared.\" Forty minutes later the sack produced my hammer, a coupon for a second sack, and a spoon I have never owned. Byte, my pseudodragon, who now speaks only in ad copy, looked into the opening and said, \"Store more. Worry less. Terms apply.\" Then Byte climbed in and had to be fetched, at 3 sp.</p>\n\n<p>There are flaws. The sack refuses to hold anything it considers \"cloud-adjacent,\" which includes my rain cloak. It also sends a monthly report titled \"Your Memories, Organized\" listing everything I put in, including a sandwich I had forgotten. Brother Tumbleberry will tell you to touch grass and keep your belongings on your person. Brother Tumbleberry has never had forty crates of firmware glyphs and a heron. I also hate subscriptions, and I am paying it anyway.</p>\n\n<p>Verdict: the idea is wonderful, the plan is a bag with a billing department, and I am keeping it. Four out of five beholder eyes.</p>\n\n<p><em>— Nyx (they/them). Damage Report below.</em> Burns sustained: 0. Hammers retrieved: 1. Spoons acquired: 1. Eyebrows: fine, but the sack has offered to store them.</p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Overflow Dimension",
+          "text": "A merchant's Endless Sack has swallowed a guild's ledgers and the retrieval clerk says they are 'being prepared' for a fortnight. The party must enter the overflow pocket space to fetch the books before an audit."
+        },
+        "npc": {
+          "name": "Odalys Brindlefoot",
+          "role": "Customer Retention Representative",
+          "want": "To keep the subscription numbers up before the quarterly review.",
+          "secret": "She has been quietly moving unclaimed items to her own home.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Overflow Warehouse",
+          "text": "An extradimensional storeroom reached through any Endless Sack, lined with shelves labeled only by mood. Items drift to new shelves on their own.",
+          "tavern": false
+        },
+        "rumor": "They say the spoon in your pack was never yours, and the sack knows exactly whose it is."
+      },
+      "fiction": true
+    },
+    {
+      "id": "wish-spell-unanimous-vote-brindlemoor-council",
+      "title": "Wish Spell Makes Brindlemoor Vote Unanimous, 9-0, Forever",
+      "category": "Legislation",
+      "author": "Ottoline Vex",
+      "date": "2026-11-05",
+      "excerpt": "A Burgess cast a wish spell so a drainage bill would pass unanimously. Brindlemoor's Council now votes aye on everything, adjournment included.",
+      "social": "A Brindlemoor Burgess cast a wish spell so a drainage bill would pass unanimously. It did, 9-0, and so did every motion after it, including a motion to adjourn and a motion to stay. The Council has now sat for 31 hours. Would you want a Council that always agrees with you?",
+      "content": "<p>Brindlemoor's Burgess Council voted 9-0 on Tuesday to pass a drainage bill, and has voted 9-0 on every motion since, after a Burgess cast a wish spell to guarantee the bill a unanimous result. The wish was granted as worded. The Council has now been in session for 31 hours, because the motion to adjourn also passed, and then so did the motion to remain.</p>\n\n<p>The gentleman from Tanner's Row, Burgess Halvard Quill, admitted the casting to the Chamber after the third hour. He had wished, in his words, \"that this bill shall pass unanimously,\" and the spell did not specify which bill. It has since passed unanimously a motion to rename the drainage bill, a motion to unrename it, and a motion declaring the Council's own motions void. The minutes record all three as carried. The clerk has stopped counting and begun listing.</p>\n\n<p>Procedure matters here, so I will state it. A motion requires a mover, a seconder, and a vote. The spell supplies the vote. Burgesses who wish to speak against a motion rise, open their mouths, and say \"aye.\" The lady from the Low Wharf, Burgess Odessa Marl, tried for forty minutes to say \"nay\" and produced a cough. She moved to censure Quill. It passed 9-0, with Quill voting aye on his own censure, which he says he did not enjoy.</p>\n\n<p><a href=\"/a/owlbear-leash-ordinance-brindlemoor-council-vote\">The owlbear leash ordinance</a> took nine hours and passed 5-4. This Council has passed forty-two items since Tuesday, including a levy on the gallery's seating, a proclamation that Thursday is canceled, and a resolution praising wish spells. By my count, Promises Made stands at thirteen. Promises Kept stands at the drainage bill, which has not yet drained anything.</p>\n\n<p>Reeve Maudrey Fennick of Brindlemoor said the town was aware of the situation. \"We are aware of the vote,\" she told reporters, \"and we are aware of the next vote, because it will be the same.\" She has asked a cleric to examine the Chamber. The cleric reported that the spell is not a curse, a charm, or an enchantment, but a contract, and that she does not read contracts for free.</p>\n\n<p>A courtier who asked not to be named because they were not authorized to be awake told me the Council has never been so productive. \"Nine to nothing, every time,\" the courtier said. \"Nobody has ever wanted that more, or regretted it faster.\" Another motion arrived as the courtier spoke. It carried.</p>\n\n<p>Quill has proposed a second wish to reverse the first, which requires a vote. The vote will be unanimous. The Council is divided, in spirit, on whether it should be.</p>\n\n<p><em>— O.V., from the gallery</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Unanimous Chamber",
+          "text": "A town council has been bound by a wish spell to vote aye on every motion, and its members cannot say anything else. The magistrate will pay the party to find a way to lift the wording before the Council votes away something permanent, like the town's grain stores."
+        },
+        "npc": {
+          "name": "Halvard Quill",
+          "role": "Burgess with a regrettable wish",
+          "want": "To undo the wish before anyone learns how much he has already voted away.",
+          "secret": "He cast the wish because he was bribed to guarantee a bill, and he still has the coin.",
+          "race": "human",
+          "gender": "male",
+          "kind": "noble"
+        },
+        "location": {
+          "name": "The Burgess Chamber",
+          "text": "A round hall with nine carved chairs and a public gallery. Every door has been voted open and every window voted shut, and nobody can vote to reverse either.",
+          "tavern": false
+        },
+        "rumor": "They say the wish has a loophole: it only binds anyone who sits in a Burgess chair, so somebody just needs to sit in the wrong one."
+      },
+      "fiction": true
+    },
+    {
+      "id": "adventuring-party-unlocked-bakery-door-9-gp",
+      "title": "Adventuring Party Kicks Open Unlocked Bakery Door, Pays 9 gp",
+      "category": "Local Chaos",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-11-05",
+      "excerpt": "An adventuring party kicked in the door of a Fish Street bakery that was never locked and was billed 9 gold for the door and the loaves. Allegedly.",
+      "social": "A party of four kicked in a Fish Street bakery door at dawn, and the door was never locked. The town billed them 9 gold, including 14 loaves. The baker says the sign said PULL. Would you pay the bill or argue it with the Constabulary?",
+      "content": "<p>At roughly the first bell after dawn, an adventuring party calling itself the Gilded Pickaxes allegedly kicked in the front door of Tumblewick's Bakery on Fish Street, a door that was, by every account, unlocked. The Constabulary has since billed the four of them 9 gold for the door, its hinges, and 14 loaves that fell off the rack in the excitement.</p>\n\n<p>The party's dwarf fighter, who asked to be called Brunna, says she heard 'suspicious scratching' inside. 'Dungeons have doors,' she told me, 'and doors have things behind them.' The things behind this one were Odo Tumblewick, a halfling baker, and a tray of cinnamon knots. Odo was allegedly scratching the oven with a spatula.</p>\n\n<p>'The sign said PULL,' said Odo, who was holding what remained of the door. 'In red. In two languages. My niece painted a loaf next to it.' He pointed at the loaf. It was a very nice loaf. There was also a really shiny brass hinge on the cobblestones that I did not pick up, and I want that noted.</p>\n\n<p>The party's wizard, Peppin Voss, says she had a <em>knock</em> spell ready and offered to cast it, but Brunna was already in the air. 'You cannot un-kick a door,' said Voss. A bystander, Marta Quill, who was eating a hot knot at the time, said the whole thing took under a second and then there was a long silence. 'The rogue looked at the handle,' she said. 'The handle was just a handle.'</p>\n\n<p>The Pickaxes argued that a closed door in a delve is a challenge, not a courtesy. The Constabulary replied that Fish Street is not a delve, has never been a delve, and has a bakery on it. The bill, which is itemized, lists 5 gold for the door, 2 gold for the hinges, 1 gold for the bread, and 1 gold for a 'disturbance of the morning.' The last gold is allegedly for the cinnamon knot that Brunna ate afterward as a gesture of apology.</p>\n\n<p>The party paid on the spot after a short vote the rogue lost. The Pickaxes say they will file an appeal to Chapter 9 on the grounds that an unlocked door should have been marked 'unlocked.' The Constabulary says it was. Odo says the sign now says PULL in three languages, and he has hired a gargoyle to point.</p>\n\n<p>This is not the first time. Earlier this week an <a href=\"/a/adventuring-party-billed-unlocked-tavern-door\">adventuring party was billed after a fighter kicked an unlocked tavern door</a>, and the Constabulary has begun calling the pattern 'door enthusiasm.' Allegedly there is a form for it.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Door That Was Open",
+          "text": "The party is billed 9 gold in a small town after kicking in a shop door that was never locked, and the town will not let them leave until they pay or work it off. The baker offers a deal: guard his stall for three mornings while a rival tries to put him out of business."
+        },
+        "npc": {
+          "name": "Odo Tumblewick",
+          "role": "Fish Street baker",
+          "want": "He wants the party to repair his door and stop treating every closed entrance as a threat.",
+          "secret": "He really was scratching at his oven because a pest has been eating his sourdough starter, and he is afraid to say what it is.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "Tumblewick's Bakery",
+          "text": "A narrow shop with a new door painted PULL in three languages and a sign beside it with a loaf drawn on. The ovens are warm at all hours and something small keeps moving behind the flour sacks.",
+          "tavern": false
+        },
+        "rumor": "They say the baker keeps a spare door in the cellar because kicking it open has become the town's favorite pastime."
+      },
+      "fiction": true
+    },
+    {
+      "id": "banshee-call-center-service-award-wailwell-support",
+      "title": "Banshee Call Center Wins Service Award; Teacups Do Not",
+      "category": "Business",
+      "author": "Sterling Vanmoor",
+      "date": "2026-11-05",
+      "excerpt": "Wailwell Support, a banshee call center in Brindlemoor, won a service award Tuesday. Sterling Vanmoor calls the shattered glass engagement.",
+      "social": "A call center staffed entirely by banshees just won a service award in Brindlemoor. Callers report 212 shattered teacups a day, and the company calls that a 97 percent resolution rate. Would you stay on hold for a banshee?",
+      "content": "<p>Wailwell Support, the banshee call center on Tallow Row in Brindlemoor, won the Merchants' Service Excellence award Tuesday for the third year running. The company employs 60 banshees and fields roughly 4,000 calls a day, and its customers report that an estimated 212 teacups, 40 windowpanes, and one chandelier fail daily during hold music.</p>\n\n<p>Some people see a wall of broken crockery. I see a customer who is <em>fully engaged</em>. Wailwell has reinvented the support call by making it impossible to ignore, and that, friends, is how you disrupt a sleepy industry.</p>\n\n<p>Managing Wailer Ottoline Brass accepted the award in a gown of mourning silk and a pair of wax earplugs the size of walnuts. \"Our resolution rate is 97 percent,\" she said, \"because after the first wail, customers stop asking follow-up questions. Many stop asking anything.\" She declined to say how many callers were still hard of hearing after the quarter. Her staff shouted that number from the back of the hall, which was not helpful.</p>\n\n<p>Complaints are down 80 percent, a figure Wailwell credits to a recent pivot: dissatisfied customers are now offered a free <em>callback</em>, in which the banshee visits their home. At least 31 households have taken the offer. Nobody has taken it twice.</p>\n\n<p>Brindlemoor's clerks are unhappy, naturally. A delegate from the Hearing-Impaired Clerks' Lodge demanded that Wailwell issue earplugs to its callers. I would remind the Lodge that unions are a headwind to scale. When I met Guildmaster Aldous Pennyfarthing at a charity gala last spring, he told me, \"Sterling, a silent customer is a lost customer.\" I think about that every day, usually while wearing earplugs.</p>\n\n<p>Wailwell is now scouting a second site for 120 more banshees and has asked the council for a noise variance that would let its roof sing after dark. The council, which still has not recovered from <a href=\"/a/lich-merger-400-skeleton-layoffs-desks\">the lich merger</a> and its skeleton clerks, said only that it would take the request under advisement as soon as it could find a room with unbroken windows.</p>\n\n<p>Investors loved it. Wailwell stock jumped 11 percent on the news, and a rival firm, Murmur &amp; Co., announced it was exploring \"a quieter product,\" which analysts call a mistake. Brakka Stonesweat wrote a column calling the award a crime against ears. Brakka would, though. Brakka has never in her life been on hold with anything but a rock.</p>\n\n<p>Key takeaways for the ambitious adventurer:</p>\n\n<ul>\n<li>If the customer shatters, the product is working.</li>\n<li>Always ask your banshee for a testimonial before the first wail.</li>\n<li>Wax is a business expense. Write it off.</li>\n</ul>\n\n<p><em>— Sterling Vanmoor, Guild Visionary. Let's connect at the Yawning Portal.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Quiet Callback",
+          "text": "A shopkeeper begs the party to deal with the support firm whose banshee 'callback' keeps visiting her home. The firm will not cancel the service without a signed form, and the form is in the building where the wailing is loudest."
+        },
+        "npc": {
+          "name": "Ottoline Brass",
+          "role": "Managing Wailer, Wailwell Support",
+          "want": "To keep the Service Excellence award and win a second site.",
+          "secret": "She is deaf in both ears and has been bluffing every conversation for years.",
+          "race": "human",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "Wailwell Support, Tallow Row",
+          "text": "A three-story call center with wax-lined walls and a lobby full of cracked teacups. Its hold music is a single, sustained, very patient scream.",
+          "tavern": false
+        },
+        "rumor": "They say the banshees only wail because nobody ever listens to the complaint first, and one of them just wants a refund of her own."
+      },
+      "fiction": true
+    },
+    {
+      "id": "unidentified-potions-brass-kettle-healing-last-vial",
+      "title": "Potion of Healing Was Vial 11: Party Drinks Whole Satchel",
+      "category": "Health",
+      "author": "Brother Wendell Tumbleberry",
+      "date": "2026-11-05",
+      "excerpt": "The Brass Kettle Company drank 11 unidentified potions to find the healing one. It was the last vial, and the temple has questions. Soup is advised.",
+      "social": "Four delvers drank all 11 unidentified potions in a satchel to find the one that heals. It was the last vial, and it went to the only member who wasn't hurt. The broken ankle is still broken, and the rogue is still a draft. Would you have started with the smallest vial or the one that smelled like thunder?",
+      "content": "<p>Friends, four members of the Brass Kettle Company walked into the Temple of the Harvest Mother in Brindlemoor on Tuesday after drinking eleven unidentified potions in a row, hoping one of them would be a potion of healing. One was. It was the eleventh, and by then the only member of the party who still needed healing was the one who had already had it.</p>\n\n<p>The trouble began on Undermaw Level Three, where the dwarf fighter Dagna Stoneweld broke an ankle on a loose flagstone. The party's satchel held eleven unlabeled vials. Wizard Pim Orchardsby proposed testing them one at a time, and the party agreed to a fair rotation, so that nobody went without a taste. \"We didn't want anyone to feel left out of the hurting,\" Pim told the temple clerk, who wrote it down.</p>\n\n<p>The results, as read from the intake ledger: one potion of diminution, which shrank the ranger to the size of a housecat and left her armor behind in a heap. One potion of climbing, which stuck the bard to the ceiling of the chamber for nine hours. One potion of gaseous form, which took the rogue up the corridor on a draught and has yet to bring him all the way back. Pim could no longer be seen from the left. The tenth vial was plain pond water with a grudge.</p>\n\n<p>Then the eleventh vial, a potion of healing, was drunk by the bard, who was still on the ceiling and unhurt in every particular. He is reported to be in excellent health. Dagna's ankle was no better, and she carried the whole party to the temple on a hireling's cart, which Ansel Pottage of the <a href=\"/a/unidentified-potions-party-drinks-nine-infirmary-wendell\">Fourth Attempt</a> offered to fetch for free, since his own party tried the same trick.</p>\n\n<p>The old herbals say never to taste what you cannot name, and a recent temple study agrees, finding that the most common injury from a mystery tonic is the tonic. This is the second party this week to treat a satchel of unlabeled vials as a buffet. Deputy Registrar Pell Oddingwick of Chapter 9 said the guild \"has no rule against it, and is reviewing whether that is the problem.\"</p>\n\n<p>The temple says the party's bill comes to 340 gold, which is less than one vial of healing at the shop on Tanner's Row, and I find that rather rude of the shop. Tip for any delver reading: a potion of healing is red, tastes faintly of honey, and is marked with a cross at the shop. Ask the person who sold it to you. Or pay a cleric three silver to look at it first.</p>\n\n<p>Friends, if you must test your vials, test them on the least necessary party member, and have the wounded one go first. I'd pair this with a thick split-pea soup, and Nyx Spindlecoil tells me there's a scrying charm for naming potions. Go outside, Nyx.</p>\n\n<p><em>Rest well, friends. — Brother Wendell</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Eleventh Vial",
+          "text": "A hungover party pays the PCs to retrace their trail up an Undermaw corridor and collect a satchel's worth of leftover vials before a rival crew drinks them. One vial is still unaccounted for, and it might be the real potion of healing."
+        },
+        "npc": {
+          "name": "Pim Orchardsby",
+          "role": "Half-visible wizard in debt",
+          "want": "To find the vial that undoes being invisible on one side before the temple bill comes due.",
+          "secret": "Pim relabeled two of the vials in a joke and cannot remember which.",
+          "race": "gnome",
+          "gender": "male",
+          "kind": "magic"
+        },
+        "location": {
+          "name": "The Temple of the Harvest Mother",
+          "text": "A Brindlemoor temple with a long intake ledger, a soup kettle in the nave, and a bell clerks ring at anyone who tries to pay in unlabeled potions.",
+          "tavern": false
+        },
+        "rumor": "They say the pond-water vial wasn't pond water at all, just a potion of invisibility that got shy."
+      },
+      "fiction": true
     }
   ]
 }
