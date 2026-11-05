@@ -248,7 +248,7 @@ function stepClass() {
           <label class="cb-field">Divine skill<select data-sel="deity.skill" data-focus="deity-skill"><option value="">Pick a skill</option>${Object.keys(PC_SKILLS).map(k => `<option value="${k}"${cur.deity.skill === k ? ' selected' : ''}>${skillName(k)}</option>`).join('')}</select></label>
           <label class="cb-field">Favored weapon<select data-sel="deity.weapon" data-focus="deity-weapon"><option value="">None</option>${weapons.map(([id, w]) => `<option value="${id}"${cur.deity.weapon === id ? ' selected' : ''}>${esc(w.n)}</option>`).join('')}</select></label>
           ${cur.cls === 'cleric' ? `<label class="cb-field">Divine font<select data-sel="deity.font" data-focus="deity-font"><option value="">Pick one</option>${Object.entries(PC_DIVINE_FONTS).map(([k, v]) => `<option value="${k}"${cur.deity.font === k ? ' selected' : ''}>${v}</option>`).join('')}</select></label>` : ''}
-        </div>`;
+        </div>${cur.cls === 'cleric' ? `<p class="cb-faint">Your deity also adds ${PC_DEITY_SPELLS} spells to your list: pick them in the <a href="pathfinder-spell-planner?char=${encodeURIComponent(cur.id)}">🃏 Spell Planner</a>${cur.spells.dy.length ? ` (${cur.spells.dy.length} picked)` : ''}.</p>` : ''}`;
     }
     if (c.pp) {
         h += `<h3>Paths to Perfection</h3><div class="cb-row">${Object.entries(c.pp).map(([lv, rank]) => `<label class="cb-field">Level ${lv} (${PC_RANKS[rank].toLowerCase()})<select data-path="${lv}" data-focus="path-${lv}"${Number(lv) > cur.level ? ' disabled' : ''}><option value="">Pick a save</option>${Object.entries(PC_SAVES).map(([k, [n]]) => `<option value="${k}"${cur.paths[lv] === k ? ' selected' : ''}>${n}</option>`).join('')}</select></label>`).join('')}</div>`;

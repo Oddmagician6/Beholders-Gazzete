@@ -6,11 +6,12 @@
    sorcerer) build a repertoire by rank and pick signature spells. Granted spells
    (sorcerous gifts, an oracle's mystery, a muse) and focus spells from the class
    choice, class features, and feats are found in the rules text; other focus
-   spells are added by hand. A cleric's divine font is counted for you.
+   spells are added by hand. A cleric's divine font is counted for you, and the
+   deity's spells (picked here, since the Gazette names no gods) join the cleric's list.
    Two modes: a saved Character Builder character (?char=<id>; the picks save onto
    it in PC_KEY, c.spells), or a caster that lives in the address bar (cls, lv, ch,
    ch2, tr, m = spell attribute modifier, ct, bk, r1-r10 repertoire, p1-p10 slots
-   ('-' = empty), sg = rank.key signature spells, fo focus, f favorites, ra = show
+   ('-' = empty), sg = rank.key signature spells, fo focus, f favorites, dy a cleric's deity's spells, ra = show
    uncommon and rare). A saved character with a spellcasting archetype (Wizard Dedication and
    the Basic Wizard Spellcasting after it) plans those spells too (&arc=<class>): they save in
    c.spells.mc[class], in a view of the character as that class (pcArcRules). Rules come from pf2e-character.js; needs pf2e-character-data.js,
@@ -94,7 +95,7 @@ function psParams() {
     const c = ps.c, s = c.spells;
     if (ps.charId) return { char: ps.charId, arc: ps.arc, ra: ps.rare ? 1 : '' };
     const p = { cls: c.cls, lv: c.level, ch: c.ch, ch2: c.ch2, tr: c.sub, m: ps.m, ct: s.ct.join(','), bk: s.book.join(','),
-        sg: Object.entries(s.sig).map(([r, k]) => `${r}.${k}`).join(','), fo: s.focus.join(','), f: s.fav.join(','), ra: ps.rare ? 1 : '' };
+        sg: Object.entries(s.sig).map(([r, k]) => `${r}.${k}`).join(','), fo: s.focus.join(','), f: s.fav.join(','), dy: s.dy.join(','), ra: ps.rare ? 1 : '' };
     Object.entries(s.rep).forEach(([r, list]) => { p['r' + r] = list.join(','); });
     Object.entries(s.prep).forEach(([r, list]) => { p['p' + r] = list.map(k => k || '-').join(','); });
     return p;
@@ -123,7 +124,7 @@ function psFromUrl() {
         c.sub = PC_TRADITIONS.includes(q.get('tr')) || PC_ELEMENTS.includes(q.get('tr')) ? q.get('tr') : '';
         const m = Math.round(Number(q.get('m')));
         ps.m = Number.isFinite(m) && q.get('m') !== null ? Math.min(7, Math.max(-1, m)) : 4;
-        const raw = { ct: list('ct'), book: list('bk'), rep: {}, prep: {}, sig: {}, focus: list('fo'), fav: list('f') };
+        const raw = { ct: list('ct'), book: list('bk'), rep: {}, prep: {}, sig: {}, focus: list('fo'), fav: list('f'), dy: list('dy') };
         for (let r = 1; r <= 10; r++) {
             if (q.get('r' + r)) raw.rep[r] = list('r' + r);
             if (q.get('p' + r)) raw.prep[r] = (q.get('p' + r) || '').split(',').map(k => (k === '-' ? '' : k));
@@ -382,6 +383,22 @@ function sectionRepertoire(r) {
     return h + '</section>';
 }
 
+// A cleric's deity's spells: picked here, then prepared like divine spells in a slot of their rank or higher.
+function sectionDeity() {
+    const c = ps.c;
+    const mine = c.spells.dy;
+    const god = c.deity.name ? esc(c.deity.name) : 'Your deity';
+    const rm = k => `<button type="button" class="ps-x" data-dy-off="${k}" aria-label="Take ${esc(S(k).n)} off your deity's spells">✕</button>`;
+    let h = `<section class="ps-sec"><div class="ps-top"><h2 class="ps-h">🙏 ${god}'s spells <span class="ps-count">${mine.length} / ${PC_DEITY_SPELLS}</span></h2></div>
+        <p class="ps-dim ps-small-text">A deity adds spells to its clerics' list, usually one of 1st rank and two higher. The Gazette names no gods, so pick your deity's here (any tradition): you prepare them like divine spells once you have slots of their rank, and they count as divine.</p>`;
+    h += mine.length ? `<ul class="ps-spells">${mine.slice().sort(psByRank).map(k => psRow(k, { tag: `rank ${S(k).r}`, extra: rm(k) })).join('')}</ul>` : '<p class="ps-hint">No deity spells picked yet.</p>';
+    if (mine.length < PC_DEITY_SPELLS) {
+        const pool = Object.keys(PF2E_SPELLS).filter(k => S(k).k === 's' && !mine.includes(k) && (!ps.favOnly || psFav(k)));
+        h += `<label class="ps-add">Add a deity spell<select data-dy-add="1">${psOptions(pool, '', 'Pick a spell your deity grants…')}</select></label>`;
+    }
+    return h + '</section>';
+}
+
 // Prepared slots, rank by rank (and a cleric's font).
 function sectionSlots(r) {
     const c = ps.c;
@@ -437,12 +454,13 @@ function sectionFocus() {
 
 function renderPlan() {
     const el = document.getElementById('ps-plan');
-    const r = psRules();
-    if (!ps.c.cls) { el.innerHTML = ''; return; }
+    const r = psRules(), c = ps.c;
+    if (!c.cls) { el.innerHTML = ''; return; }
     let h = '';
     if (r && r.type !== 'focus') {
         if (r.type === 'book') h += sectionBook(r);
         h += sectionCantrips(r);
+        if (c.cls === 'cleric' && !ps.arc) h += sectionDeity();
         h += r.type === 'rep' ? sectionRepertoire(r) : sectionSlots(r);
     }
     if (!ps.arc) h += sectionFocus();
@@ -506,6 +524,8 @@ function psText() {
     if (r && r.type !== 'focus') {
         const ct = [...psGivenAt('rep', 0).map(g => g.key), ...c.spells.ct];
         if (ct.length) out.push(`Cantrips: ${names(ct)}`);
+        const dy = pcDeitySpells(c);
+        if (dy.length) out.push(`${c.deity.name || 'Deity'}'s spells: ${dy.map(k => S(k).n).join(', ')}`);
         for (let n = 1; n <= r.top; n++) {
             if (!r.slots[n - 1]) continue;
             if (r.type === 'rep') {
@@ -615,6 +635,7 @@ function onClick(e) {
         return psChanged();
     }
     if (d.focusOff) { ps.c.spells.focus = ps.c.spells.focus.filter(x => x !== d.focusOff); return psChanged(); }
+    if (d.dyOff) { ps.c.spells.dy = ps.c.spells.dy.filter(x => x !== d.dyOff); psGrants(); return psChanged(); }
     if (b.id === 'ps-clear-slots') { ps.c.spells.prep = {}; psChanged(); return flash('🌙 Every slot is empty.'); }
     if (b.id === 'ps-copy') { const t = psText(); if (t) psCopyText(t, '📋 List copied.'); return; }
     if (b.id === 'ps-link') {
@@ -658,6 +679,14 @@ function onChange(e) {
         return;
     }
     if (d.focusAdd && el.value) { ps.c.spells.focus.push(el.value); return psChanged(); }
+    if (d.dyAdd && el.value) {
+        ps.c.spells.dy.push(el.value);
+        psGrants();
+        psChanged();
+        const next = document.querySelector('select[data-dy-add]');
+        if (next) next.focus();
+        return;
+    }
     if (el.id === 'ps-rare') { ps.rare = el.checked; psWriteUrl(); return render(); }
     if (el.id === 'ps-favonly') { ps.favOnly = el.checked; return render(); }
 }

@@ -31,6 +31,9 @@ const PC_SPELL_ATTR = { champion: 'cha' };
 // The cleric's deity's favored weapon: rank by level for each doctrine.
 const PC_FAVORED = { 'cloistered-cleric': { 1: 1, 11: 2 }, warpriest: { 1: 1, 7: 2, 19: 3 } };
 const PC_DIVINE_FONTS = { heal: 'Healing font (heal)', harm: 'Harmful font (harm)' };
+// A deity adds spells to its clerics' list (Player Core lists three: a 1st-rank one and two higher).
+// Only the cleric class gets them; the Cleric Dedication says it gains nothing else from the deity.
+const PC_DEITY_SPELLS = 3;
 const PC_TRADITIONS = ['arcane', 'divine', 'occult', 'primal'];
 // The elemental bloodline's influences (c.sub holds the one picked, as a tradition for the others).
 const PC_ELEMENTS = ['air', 'earth', 'fire', 'metal', 'water', 'wood'];
@@ -68,9 +71,9 @@ function pcBlankPlay() {
 // The Spell Planner's picks (spell keys of pf2e-spells-data.js): ct cantrips, rep a repertoire by rank,
 // book a wizard's spellbook or a witch's familiar, prep each rank's slots (a slot can be ''), sig a
 // signature spell by rank, focus focus spells added by hand, fav favorites, mc a spellcasting
-// archetype's own picks by class (ct, rep, book, prep).
+// archetype's own picks by class (ct, rep, book, prep), dy a cleric's deity's spells.
 function pcBlankSpells() {
-    return { ct: [], rep: {}, book: [], prep: {}, sig: {}, focus: [], fav: [], mc: {} };
+    return { ct: [], rep: {}, book: [], prep: {}, sig: {}, focus: [], fav: [], mc: {}, dy: [] };
 }
 
 // ── Cleaning (saves and imports keep only these fields, as plain values) ─
@@ -164,6 +167,7 @@ function pcCleanSpells(raw, arc = false) {
     }
     s.focus = keys(raw.focus, 12);
     s.fav = keys(raw.fav, 80);
+    s.dy = keys(raw.dy, PC_DEITY_SPELLS);
     if (arc) { delete s.mc; return s; }
     if (raw.mc && typeof raw.mc === 'object' && !Array.isArray(raw.mc)) {
         Object.entries(raw.mc).forEach(([cls, x]) => {
@@ -1012,7 +1016,14 @@ function pcSpellGrants(c) {
     });
     pcFeatures(c).forEach(f => pcFocusInText(pcText('cf:' + f.key)).forEach(k => addFocus(k, f.name)));
     feats.forEach(f => pcFocusInText(pcText('ft:' + f)).forEach(k => addFocus(k, PF2E_FEATS[f].n)));
+    pcDeitySpells(c).forEach(key => out.list.push({ key, rank: PF2E_SPELLS[key].r, from: c.deity.name || 'Your deity', counts: false, to: 'list' }));
     return out;
+}
+
+// A cleric's deity's spells (c.spells.dy): on their list at their own rank, of any tradition or rarity.
+function pcDeitySpells(c) {
+    if (c.cls !== 'cleric' || c.arcOf) return [];
+    return c.spells.dy.filter(k => PF2E_SPELLS[k] && PF2E_SPELLS[k].k === 's');
 }
 
 // Cantrips to pick: a sorcerer's gift cantrip is one of the five.
@@ -1025,14 +1036,17 @@ function pcRepLimit(r, grants, n) {
     return (r.rep[n - 1] || 0) - grants.list.filter(g => g.to === 'rep' && g.rank === n && g.counts).length;
 }
 
-// Spells of the character's tradition up to a rank (0: cantrips), common ones unless rare is set.
+// Spells of the character's tradition up to a rank (0: cantrips), common ones unless rare is set,
+// and a cleric's deity's spells.
 function pcSpellPool(c, rank, rare = false) {
     const cast = pcCasting(c);
     if (!cast || !cast.trad) return [];
-    return Object.keys(PF2E_SPELLS).filter(k => {
+    const out = Object.keys(PF2E_SPELLS).filter(k => {
         const s = PF2E_SPELLS[k];
         return (rank === 0 ? s.k === 'c' && (!cast.ctAtk || pcAttackSpell(k)) : s.k === 's' && s.r <= rank) && (s.td || []).includes(cast.trad) && (rare || !s.ra);
     });
+    if (rank > 0) pcDeitySpells(c).forEach(k => { if (PF2E_SPELLS[k].r <= rank && !out.includes(k)) out.push(k); });
+    return out;
 }
 
 // A spell that makes a spell attack roll (the eldritch archer's cantrip has to).
@@ -1061,7 +1075,8 @@ function pcFitSpells(c, grants = pcSpellGrants(c), rare = true) {
     const s = c.spells;
     const S = k => PF2E_SPELLS[k];
     s.focus = s.focus.filter(pcIsFocus);
-    if (!r || r.type === 'focus') { Object.assign(s, { ct: [], rep: {}, book: [], prep: {}, sig: {} }); return; }
+    if (!r || r.type === 'focus') { Object.assign(s, { ct: [], rep: {}, book: [], prep: {}, sig: {}, dy: [] }); return; }
+    s.dy = pcDeitySpells(c);
     const onList = k => S(k) && (S(k).td || []).includes(r.trad) && (rare || !S(k).ra);
     const given = new Set(grants.list.map(g => g.key));
     const ok = k => onList(k) || given.has(k);
