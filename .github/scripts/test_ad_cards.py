@@ -110,6 +110,15 @@ class AdPublisherTests(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             batch_files('week02')
         self.assertEqual(batch_files('month01'), ('ad-card-queue-month01.json', 'publish-ad-cards-month01.yml'))
+        self.assertEqual(batch_files('month01', 'map'), ('map-card-queue-month01.json', 'publish-map-cards-month01.yml'))
+        with self.assertRaises(RuntimeError):
+            batch_files('month01', 'poster')
+        maps = queue_fixture()
+        maps['id'] = 'map-of-the-week-month01'
+        self.assertEqual(len(validate_queue(maps)['entries']), 4)
+        maps['id'] = 'poster-of-the-week-month01'
+        with self.assertRaises(RuntimeError):
+            validate_queue(maps)
 
     def test_arm_schedules_one_photo_per_facebook_post(self):
         self.publisher.arm()

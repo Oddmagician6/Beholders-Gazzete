@@ -11,9 +11,18 @@ reel-factory/.venv/
 reel-factory/.venv-kokoro/
 .reel-output/
 
+# Local Persons of Interest portraits, cards, and draft packages
+.poi-output/
+
 # Python bytecode from running the workflow scripts locally
 __pycache__/
 
 # Codex instructions (local only; Codex runs on this PC)
 AGENTS.md
 .agents/
+
+# Local Ad of the Week cards and review page
+.ad-output/
+
+# Local Map of the Week cards and review page
+.map-output/

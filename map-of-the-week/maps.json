@@ -1,0 +1,41 @@
+{
+  "_note": "Map bank. Each map is a seed for the site's Continent Map Generator (default options) and the number of the site the card features. expect is what that seed made when it was picked; render fails if the generator has since changed it. Everything on a map is generated and fictional. status: draft until the owner approves a map; week is its slot in the posting order.",
+  "maps": [
+    {
+      "id": "valreth-reach-black-peak",
+      "status": "approved",
+      "seed": "13yq6yh",
+      "poi": 6,
+      "expect": { "name": "The Valreth Reach", "site": "The Black Peak" },
+      "question": "What's the first demand on the dragon's list?",
+      "week": 1
+    },
+    {
+      "id": "arorund-arania-mine",
+      "status": "approved",
+      "seed": "1ao9b5g",
+      "poi": 0,
+      "expect": { "name": "Arorund", "site": "The Arania Mine" },
+      "question": "What song are the canaries singing?",
+      "week": 2
+    },
+    {
+      "id": "sarorford-reach-belois-dance",
+      "status": "approved",
+      "seed": "109c55y",
+      "poi": 5,
+      "expect": { "name": "The Sarorford Reach", "site": "Belois's Dance" },
+      "question": "What happens when the stones strike the hour?",
+      "week": 3
+    },
+    {
+      "id": "roseford-expanse-smoking-brazier",
+      "status": "approved",
+      "seed": "tfcvom",
+      "poi": 2,
+      "expect": { "name": "The Roseford Expanse", "site": "The Smoking Brazier" },
+      "question": "What did they see in the smoke?",
+      "week": 4
+    }
+  ]
+}

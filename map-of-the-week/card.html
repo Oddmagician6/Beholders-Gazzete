@@ -1,0 +1,105 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Map of the Week</title><style>
+/* Map of the Week card. map.mjs serves the repo and opens this page in headless Chrome:
+   ?seed=<seed>&poi=<n> draws one card; ?roll=<count> rolls random seeds and lists them (no card).
+   The map and its text come from the site's own Continent tab (fantasy-map-generator), loaded in a
+   hidden frame, so the card always matches what a reader gets from the same seed. */
+@font-face{font-family:Cinzel;font-weight:700;src:url(/ad-of-the-week/fonts/cinzel-latin-700-normal.woff2)}
+@font-face{font-family:Cinzel;font-weight:900;src:url(/ad-of-the-week/fonts/cinzel-latin-900-normal.woff2)}
+@font-face{font-family:Fell;src:url(/ad-of-the-week/fonts/im-fell-english-latin-400-normal.woff2)}
+@font-face{font-family:Fell;font-style:italic;src:url(/ad-of-the-week/fonts/im-fell-english-latin-400-italic.woff2)}
+*{box-sizing:border-box}html,body{margin:0;width:1080px;height:1350px;overflow:hidden}
+body{background:#2a1a0e;color:#2a1a0c;font-family:Fell,Georgia,serif}
+iframe{position:absolute;left:-3000px;top:0;width:1400px;height:1000px;border:0}
+/* The frame in its own pixels (1086 x 1448), scaled to 1350 tall. */
+.stage{position:absolute;left:33.75px;top:0;width:1086px;height:1448px;transform:scale(.93232);transform-origin:0 0}
+.stage>img.frame{position:absolute;inset:0;width:1086px;height:1448px}
+.slot{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.debug .slot{outline:3px dashed #e0115f}
+.mast{left:170px;top:26px;width:760px;height:72px;color:#f3dfa8;font:900 40px/1 Cinzel,serif;letter-spacing:1px;text-shadow:0 2px 3px #0008}
+.title{left:200px;top:142px;width:700px;height:124px}
+.title .series{font:700 19px/1 Cinzel,serif;letter-spacing:6px;color:#6e2a17;display:flex;gap:16px;align-items:center;width:100%}
+.title .series:before,.title .series:after{content:'';flex:1;border-top:2px solid #7b5a3399}
+.title h1{margin:6px 0 2px;font:900 54px/1 Cinzel,serif;white-space:nowrap}
+.title p{margin:0;font-style:italic;font-size:23px;color:#5a3a1c;white-space:nowrap}
+.map{left:76px;top:330px;width:936px;height:588px;overflow:hidden;border-radius:10px;background:#20343a}
+.map svg{display:block;width:100%;height:100%}
+.text{left:84px;top:992px;width:922px;height:300px;padding:0 24px}
+.text h2{margin:0 0 12px;font:900 calc(var(--k,1)*34px)/1.1 Cinzel,serif;color:#6e2a17}
+.text p{margin:0;font-size:calc(var(--k,1)*32px);line-height:1.25}
+.text small{margin-top:14px;font:700 16px/1 Cinzel,serif;letter-spacing:3px;color:#7b5a33}
+.foot{left:70px;top:1372px;width:946px;height:48px;flex-direction:row;align-items:baseline;padding-top:12px;white-space:nowrap;font:700 17px/1 Cinzel,serif;letter-spacing:2.5px;color:#4a3420}
+.foot b{font-family:Fell,serif;font-weight:400;letter-spacing:1px;font-size:22px;text-transform:none}
+</style></head><body>
+<iframe id="tool" title="Continent Map Generator"></iframe>
+<div class="stage"><img class="frame" src="/map-of-the-week/frames/map.png" alt="">
+<div class="slot mast">The Beholder's Gazette</div>
+<div class="slot title"><div class="series">MAP OF THE WEEK</div><h1 id="name"></h1><p id="sum"></p></div>
+<div class="slot map" id="map"></div>
+<div class="slot text" id="text"><h2 id="q"></h2><p id="hook"></p><small id="prompt">WHERE WOULD YOUR PARTY START?</small></div>
+<div class="slot foot">ROLL YOUR OWN · GAZETTE.ASHFORGESTUDIO.COM · SEED&nbsp;<b id="seed"></b></div>
+</div>
+<script type="application/json" id="out">null</script>
+<script>
+var q = new URLSearchParams(location.search), seed = q.get('seed'), roll = Number(q.get('roll') || 0);
+if (q.has('debug')) document.body.classList.add('debug');
+var f = document.getElementById('tool');
+f.src = '/fantasy-map-generator' + (seed ? '?seed=' + encodeURIComponent(seed) : '');
+function done(state, data) {
+  if (data) document.getElementById('out').textContent = JSON.stringify(data);
+  document.body.dataset.state = state;
+}
+// What the captions and the review need, read from the generated continent.
+function facts(w, c, poi) {
+  var p = c.pois[poi], kinds = w.eval('CONT_POIS');   // a const: not on window
+  return {
+    seed: c.seed, name: w.facCap(c.name), size: c.size,
+    nations: c.nations.map(function (n) { return n.name; }),
+    towns: c.towns.length, places: c.pois.length,
+    site: p ? w.contMid(p.name).replace(/^the /, 'The ') : '', siteKind: p ? kinds[p.kind].label : '',
+    hook: p ? w.contPoiHook(c, p) : '',
+    sites: c.pois.map(function (x) { return w.contMid(x.name).replace(/^the /, 'The ') + ' — ' + w.contPoiHook(c, x); })
+  };
+}
+f.onload = function () {
+  var w = f.contentWindow, tries = 0;
+  (function wait() {
+    var ready = w.eval('typeof contState !== "undefined" && typeof contCached === "function" && typeof contOpts === "function"');
+    var st = ready && w.eval('contState');
+    if (!ready || (seed && !st.data)) { if (++tries > 150) return done('no-map'); return setTimeout(wait, 100); }
+    if (roll) {
+      var list = [];
+      for (var i = 0; i < roll; i++) {
+        var s = w.newSeed(), c = w.contCached(s, w.contOpts());
+        c.seed = s;
+        list.push(facts(w, c, 0));
+      }
+      return done('ok', list);
+    }
+    var c = st.data, poi = Number(q.get('poi') || 0);
+    c.seed = seed;
+    if (!c.pois[poi]) return done('no-poi');
+    var d = facts(w, c, poi);
+    document.getElementById('name').textContent = d.name;
+    document.getElementById('sum').textContent = d.nations.length + ' nations, ' + d.towns + ' towns, ' + d.places + ' places worth the trip';
+    document.getElementById('seed').textContent = seed;
+    document.getElementById('q').textContent = "What's in " + d.site.replace(/^The /, 'the ') + '?';
+    document.getElementById('hook').textContent = d.hook;
+    if (q.get('prompt')) document.getElementById('prompt').textContent = q.get('prompt').toUpperCase();
+    var svg = w.contMapSvg(c, 'Map of ' + d.name, 'cmw', 'atlas');
+    w.mapInlineImages(svg).then(function (inl) {
+      document.getElementById('map').innerHTML = inl.replace(/<svg([^>]*)>/, '<svg$1 preserveAspectRatio="xMidYMid slice"><style>' + w.mapPageCss('.cm-') + '</style>');
+      document.fonts.ready.then(function () {
+        // The question and hook shrink a little when long; any other slot that overflows fails the card.
+        var text = document.getElementById('text'), k = 1;
+        while (text.scrollHeight > text.clientHeight + 1 && k > 0.8) { k -= 0.01; text.style.setProperty('--k', k.toFixed(2)); }
+        var over = Array.prototype.filter.call(document.querySelectorAll('.slot'), function (el) {
+          return el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1 ||
+            Array.prototype.some.call(el.querySelectorAll('h1,p'), function (x) { return x.scrollWidth > x.clientWidth + 1; });
+        }).map(function (el) { return el.className.split(' ')[1]; });
+        var imgs = Array.from(document.images).every(function (img) { return img.complete && img.naturalWidth > 0; });
+        setTimeout(function () { done(!imgs ? 'missing-image' : over.length ? 'overflow:' + over.join(',') : 'ok', d); }, 300);
+      });
+    });
+  })();
+};
+</script></body></html>

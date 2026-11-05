@@ -1,7 +1,8 @@
-"""Schedule approved Ad of the Week cards on Facebook and publish them on Instagram when due.
+"""Schedule approved weekly single-image cards on Facebook and publish them on Instagram when due.
 
 Single-image sibling of publish_npc_carousels.py: it reuses that publisher's release state,
 Facebook scheduling, and duplicate recovery, and swaps the carousel parts for one image.
+Two series share it (CARD_SERIES): Ad of the Week (ad, the default) and Map of the Week (map).
 """
 import json
 import os
@@ -15,12 +16,24 @@ from meta_page import get_page_context, graph_get, graph_post
 from publish_npc_carousels import INSTAGRAM_WINDOW, PLATFORMS, UTC, Publisher, ReleaseStore, StateError, digest, iso, report, timestamp
 
 MAX_POSTS = 5
+# Each series: its queue ID prefix, staging Release tag prefix, queue config, and workflow file prefixes.
+SERIES = {
+    'ad': {'queue': 'ad-of-the-week', 'tag': 'ad-stage', 'config': 'ad-card-queue', 'workflow': 'publish-ad-cards'},
+    'map': {'queue': 'map-of-the-week', 'tag': 'map-stage', 'config': 'map-card-queue', 'workflow': 'publish-map-cards'},
+}
 
 
-def batch_files(batch):
+def series_info(series):
+    if series not in SERIES:
+        raise RuntimeError('Unexpected card series.')
+    return SERIES[series]
+
+
+def batch_files(batch, series='ad'):
+    info = series_info(series)
     if not re.fullmatch(r'month[0-9]{2}', batch or ''):
-        raise RuntimeError('Unexpected ad publishing batch.')
-    return f'ad-card-queue-{batch}.json', f'publish-ad-cards-{batch}.yml'
+        raise RuntimeError('Unexpected card publishing batch.')
+    return f"{info['config']}-{batch}.json", f"{info['workflow']}-{batch}.yml"
 
 
 def validate_queue(queue):
@@ -28,8 +41,8 @@ def validate_queue(queue):
         raise RuntimeError('The publishing queue must be explicitly approved.')
     if queue.get('timezone') != 'America/Chicago' or queue.get('expectedInstagramUsername') != 'beholdersgazette':
         raise RuntimeError('Unexpected queue time zone or Instagram destination.')
-    if not re.fullmatch(r'ad-of-the-week-month[0-9]{2}', queue.get('id', '')):
-        raise RuntimeError('Unexpected ad queue ID.')
+    if not re.fullmatch(r'(?:%s)-month[0-9]{2}' % '|'.join(info['queue'] for info in SERIES.values()), queue.get('id', '')):
+        raise RuntimeError('Unexpected card queue ID.')
     entries = queue.get('entries', [])
     if not 1 <= len(entries) <= MAX_POSTS:
         raise RuntimeError(f'Expected one to {MAX_POSTS} approved ads.')
@@ -65,12 +78,14 @@ def validate_queue(queue):
 
 
 class AdReleaseStore(ReleaseStore):
-    def __init__(self, config, batch):
+    def __init__(self, config, batch, series='ad'):
         self.batch = batch
+        self.series = series
+        info = series_info(series)
         self.repo = config.get('repository', '')
         self.tag = config.get('releaseTag', '')
         self.expected_hash = config.get('queueSha256', '')
-        if self.repo != 'Oddmagician6/Beholders-Gazzete' or not re.fullmatch(r'ad-stage-month[0-9]{2}-[0-9]{8}', self.tag):
+        if self.repo != 'Oddmagician6/Beholders-Gazzete' or not re.fullmatch(re.escape(info['tag']) + r'-month[0-9]{2}-[0-9]{8}', self.tag):
             raise RuntimeError('Unexpected repository or staging release.')
         if not re.fullmatch(r'[a-f0-9]{64}', self.expected_hash):
             raise RuntimeError('The queue configuration needs its SHA-256.')
@@ -87,13 +102,15 @@ class AdReleaseStore(ReleaseStore):
         if digest(queue_bytes) != self.expected_hash:
             raise RuntimeError('Staged queue does not match the approved configuration.')
         self.queue = validate_queue(json.loads(queue_bytes))
+        if not self.queue['id'].startswith(info['queue'] + '-'):
+            raise RuntimeError('The staged queue belongs to another card series.')
         self.state = json.loads(self.release.get('body') or '{}')
         if self.state.get('queueSha256') != self.expected_hash or not isinstance(self.state.get('entries'), dict):
             raise RuntimeError('Release state does not belong to this queue.')
         self.revision = self.state.get('revision', 0)
 
     def disable_workflow(self):
-        _, workflow = batch_files(self.batch)
+        _, workflow = batch_files(self.batch, self.series)
         self.github('PUT', f'repos/{self.repo}/actions/workflows/{workflow}/disable')
 
 
@@ -163,12 +180,13 @@ def main():
     if len(sys.argv) > 1:
         raise RuntimeError('Usage: publish_ad_cards.py [--validate-queue queue.json]')
     batch = os.environ.get('AD_BATCH', '')
-    config_name, _ = batch_files(batch)
+    series = os.environ.get('CARD_SERIES', 'ad')
+    config_name, _ = batch_files(batch, series)
     config = json.loads((Path(__file__).resolve().parents[1] / config_name).read_text(encoding='utf-8'))
     if config.get('enabled') is not True:
         print('Ad publishing is disabled.')
         return
-    store = AdReleaseStore(config, batch)
+    store = AdReleaseStore(config, batch, series)
     operation = os.environ.get('OPERATION', 'verify')
     if operation not in ('verify', 'arm', 'run_due'):
         raise RuntimeError('Unknown publisher operation.')
