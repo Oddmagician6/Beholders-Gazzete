@@ -41,6 +41,27 @@
       "hashtags": "#Mimic #BallotBox #Brindlemoor #ByElection",
       "publishAt": "2026-11-05T00:00:00Z",
       "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "bag-of-holding-unlimited-storage-voidpocket-review",
+      "release_tag": "reel-stage-nov05-bag-ig-20261105",
+      "hashtags": "#BagOfHolding #Voidpocket #EndlessSack #Pseudodragon",
+      "publishAt": "2026-11-05T16:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "loot-split-equal-share-torchbearer-20-gold",
+      "release_tag": "reel-stage-nov05-loot-ig-20261105",
+      "hashtags": "#LootSplit #Torchbearer #Hirelings #Brindlemoor",
+      "publishAt": "2026-11-05T20:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "banshee-call-center-service-award-wailwell-support",
+      "release_tag": "reel-stage-nov05-banshee-ig-20261105",
+      "hashtags": "#Banshee #WailwellSupport #Brindlemoor #CustomerService",
+      "publishAt": "2026-11-06T00:00:00Z",
+      "custom_artwork_confirmed": true
     }
   ]
 }
