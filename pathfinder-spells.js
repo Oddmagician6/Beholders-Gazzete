@@ -29,6 +29,13 @@ const PS_FOCUS_HINT = {
     monk: 'Qi spell feats give the spell they name: add it below.',
     ranger: 'Warden spell feats give the spell they name: add it below.'
 };
+// The same for a multiclass dedication's focus spells, which come through its feats.
+const PS_DED_FOCUS_HINT = {
+    champion: 'Champion Dedication: Devout Magic, or a champion feat through Basic Devotion, gives a devotion spell of your choice: add it below.',
+    cleric: 'Cleric Dedication: a domain feat through Basic Dogma gives a domain spell of your choice: add it below.',
+    monk: 'Monk Dedication: a qi spell feat through Basic Kata gives the spell you pick: add it below.',
+    ranger: 'Ranger Dedication: a warden spell feat through Basic Hunter\'s Trick gives the spell you pick: add it below.'
+};
 
 // edit: '' | 'ct' | 'book'; before: the spells when editing began (for Cancel).
 // base: the saved character; arc: the archetype being planned ('' = the class), when c is its view.
@@ -419,9 +426,10 @@ function sectionFocus() {
     } else h += '<p class="ps-hint">No focus spells yet.</p>';
     if (!ps.textReady) h += '<p class="ps-dim ps-small-text">Reading your class and feats for focus spells…</p>';
     if (PS_FOCUS_HINT[c.cls]) h += `<p class="ps-dim ps-small-text">${esc(PS_FOCUS_HINT[c.cls])}</p>`;
+    pcDedications(c).forEach(d => { if (PS_DED_FOCUS_HINT[d.cls]) h += `<p class="ps-dim ps-small-text">${esc(PS_DED_FOCUS_HINT[d.cls])}</p>`; });
     const have = new Set(f.list.map(x => x.key));
     const pool = pcFocusPool(c).filter(k => !have.has(k));
-    if (pool.length && c.spells.focus.length < 12) h += `<label class="ps-add">Add a focus spell<select data-focus-add="1">${psOptions(pool, '', `Pick a ${PF2E_CLASSES[c.cls] ? PF2E_CLASSES[c.cls].n.toLowerCase() : ''} focus spell…`)}</select></label>`;
+    if (pool.length && c.spells.focus.length < 12) h += `<label class="ps-add">Add a focus spell<select data-focus-add="1">${psOptions(pool, '', 'Pick a focus spell…')}</select></label>`;
     h += '<p class="ps-dim ps-small-text">Your pool holds one Focus Point per focus spell, up to 3 (focus cantrips cost none). Refocus for 10 minutes to get one back.</p>';
     return h + '</section>';
 }

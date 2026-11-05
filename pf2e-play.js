@@ -260,8 +260,11 @@ const PP_TREAT_DICE = ['1d8', '', '2d8', '4d8'];
 
 // Treat Wounds on this character, from the degree and the dice the page rolled (roll) at a DC
 // of PP_TREAT (t). A success heals and ends wounded. → { healed, hurt } or null for the dead.
-function ppTreatWounds(c, s, degree, t, roll) {
+// Whatever the result, you're then immune to that healer's Treat Wounds for an hour (by: 'me' or
+// 'friend' in c.play.tw); ppHourPassed or a night's rest ends it.
+function ppTreatWounds(c, s, degree, t, roll, by = 'me') {
     if (ppDead(c)) return null;
+    if (!c.play.tw.includes(by)) c.play.tw = [...c.play.tw, by].sort();
     if (degree >= 2) {
         const healed = ppHeal(c, s, roll + t.add);
         ppSetCond(c, 'Wounded', 0);
@@ -269,6 +272,13 @@ function ppTreatWounds(c, s, degree, t, roll) {
     }
     if (degree === 0) return { healed: 0, hurt: ppDamage(c, s, roll).hp };
     return { healed: 0, hurt: 0 };
+}
+
+// An hour has gone by: Treat Wounds works on you again. → false when nothing was waiting on it.
+function ppHourPassed(c) {
+    if (!c.play.tw.length) return false;
+    c.play.tw = [];
+    return true;
 }
 
 // Ten minutes' rest at full Hit Points ends wounded. → false when that can't happen now.
@@ -311,7 +321,7 @@ function ppRefocus(c) {
 
 // A full night's rest and daily preparations → the names of what came back.
 // HP: Constitution modifier (at least 1) × level. Drained and doomed drop by 1, fatigued ends,
-// and slots, the font, Focus Points, and daily counters refill. Wounded stays (Treat Wounds or full HP and rest end it).
+// and slots, the font, Focus Points, and daily counters refill; Treat Wounds immunity is long over. Wounded stays (Treat Wounds or full HP and rest end it).
 function ppRest(c, s = pcStats(c)) {
     const p = c.play, back = [];
     ['Drained', 'Doomed'].forEach(n => { const v = ppCond(c, n); if (v) { ppSetCond(c, n, v - 1); back.push(`${n.toLowerCase()} ${v} → ${v - 1 || 'gone'}`); } });
@@ -328,6 +338,7 @@ function ppRest(c, s = pcStats(c)) {
     p.mc = {};
     p.font = 0;
     p.focus = 0;
+    p.tw = [];
     p.res.forEach(r => { if (r.day && r.used) { r.used = 0; back.push(r.n); } });
     return back;
 }
@@ -355,7 +366,8 @@ function ppFit(c, s = pcStats(c), focusMax = null) {
 
 // What the Play Sheet pushes to the GM's tools (party.js partyPushLive). Dying and wounded ride
 // in the conditions, as the Initiative tracker keeps them; there are no death saves to send.
+// Persistent damage goes in the tracker's shape ({ dice, type }).
 function ppPartyLive(c, s = pcStats(c)) {
     const p = c.play;
-    return { hp: ppHp(c, s), max: ppMax(c, s), temp: p.temp, conds: p.cond.slice(), exh: 0, conc: '', ds: [0, 0], at: Date.now() };
+    return { hp: ppHp(c, s), max: ppMax(c, s), temp: p.temp, conds: p.cond.slice(), exh: 0, conc: '', ds: [0, 0], pd: p.pd.map(x => ({ dice: x.f, type: x.type })), at: Date.now() };
 }

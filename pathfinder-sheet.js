@@ -237,10 +237,12 @@ function treatHtml(c, d) {
         <div class="cs-add">
           ${rank ? `<label class="cs-field cs-narrow" style="flex-basis:150px">Who rolls<select id="pp-tw-by"><option value="me"${by === 'me' ? ' selected' : ''}>I do (Medicine ${pcSign(med.v)})</option><option value="friend"${by === 'friend' ? ' selected' : ''}>A friend, on me</option></select></label>` : ''}
           <label class="cs-field cs-narrow" style="flex-basis:150px">DC<select id="pp-tw-dc">${rows.map((x, i) => `<option value="${i}"${x === t ? ' selected' : ''}>DC ${x.dc}${x.add ? ` (+${x.add} HP, ${PC_RANKS[x.rank].toLowerCase()})` : ''}</option>`).join('')}</select></label>`;
-    if (by === 'me') h += `<button type="button" class="cs-btn cs-green" data-act="treat">🎲 Treat My Wounds</button>`;
+    const immune = c.play.tw.includes(by);
+    if (by === 'me' && !immune) h += `<button type="button" class="cs-btn cs-green" data-act="treat">🎲 Treat My Wounds</button>`;
     h += `</div>`;
+    if (immune) h += `<p class="cs-dim" style="margin:8px 0">⏳ ${by === 'me' ? 'You treated your wounds less than an hour ago: your Treat Wounds can\'t help you again until the hour is up.' : 'The friend who treated you can\'t again for an hour; another healer can.'} <button type="button" class="cs-btn cs-mini" data-act="hour">⏱️ An Hour Has Passed</button></p>`;
     if (by === 'friend') h += `<div class="cs-btnrow" role="group" aria-label="The friend's result">${[3, 2, 1, 0].map(i => `<button type="button" class="cs-btn cs-mini${i >= 2 ? ' cs-green' : i === 0 ? ' cs-red' : ''}" data-act="treated" data-n="${i}">${PP_DEGREES[i]}</button>`).join('')}</div>`;
-    h += `<p class="cs-dim" style="margin:8px 0 0">10 minutes. Success heals 2d8${t.add ? ` + ${t.add}` : ''}, a critical success 4d8${t.add ? ` + ${t.add}` : ''}, and either ends wounded; a critical failure deals 1d8. ${rank ? '' : 'You\'re untrained in Medicine, so a friend has to do it. '}The same patient can't be treated again for an hour.</p>`;
+    h += `<p class="cs-dim" style="margin:8px 0 0">10 minutes. Success heals 2d8${t.add ? ` + ${t.add}` : ''}, a critical success 4d8${t.add ? ` + ${t.add}` : ''}, and either ends wounded; a critical failure deals 1d8. ${rank ? '' : 'You\'re untrained in Medicine, so a friend has to do it. '}Afterward the same healer can't treat you again for an hour.</p>`;
     return h;
 }
 
@@ -663,6 +665,7 @@ function onClick(e) {
         const t = rows[Math.min(treat.dc, rows.length - 1)];
         let degree = n;
         if (act === 'treat') {
+            if (cur.play.tw.includes('me')) { flash('Your Treat Wounds can\'t help you again until the hour is up.', true); return; }
             const med = adj(cur, s.skills.medicine, { kind: 'skill', abil: 'wis' }).v;
             const r = doRoll(`1d20${plus(med)}`, `Treat Wounds (Medicine, DC ${t.dc})`);
             if (!r) return;
@@ -672,7 +675,7 @@ function onClick(e) {
         const heal = dice ? doRoll(dice, degree ? 'Treat Wounds healing' : 'Treat Wounds critical failure damage', false) : null;
         if (dice && !heal) return;
         let res = null;
-        change(() => { res = ppTreatWounds(cur, s, degree, t, heal ? heal.total : 0); });
+        change(() => { res = ppTreatWounds(cur, s, degree, t, heal ? heal.total : 0, act === 'treat' ? 'me' : 'friend'); });
         const head = `🩹 Treat Wounds, DC ${t.dc}: ${PP_DEGREES[degree].toLowerCase()}`;
         notice = !res ? { text: 'The dead can\'t be treated.', ok: false }
             : degree >= 2 ? { text: `${head}. +${res.healed} HP (${heal.total}${t.add ? ` + ${t.add}` : ''}${res.healed < heal.total + t.add ? ', the rest past your maximum' : ''}), and wounded is gone.`, ok: true }
@@ -681,6 +684,7 @@ function onClick(e) {
         render();
         return;
     }
+    if (act === 'hour') { change(() => { ppHourPassed(cur); }); flash('⏱️ An hour on: Treat Wounds can help you again.'); return; }
     if (act === 'restten') { change(() => { ppRestTen(cur, s); }); flash('⏳ Ten minutes at full HP: no longer wounded.'); return; }
     if (act === 'inv-q') { change(p => { const x = p.inv[i]; if (x) x.q = Math.max(1, Math.min(999, x.q + n)); }); return; }
     if (act === 'inv-del') { change(p => { p.inv.splice(i, 1); }); return; }

@@ -64,8 +64,21 @@ function cleanPartyLive(v) {
         hp: partyInt(v.hp, 0, max, max), max, temp: partyInt(v.temp, 0, 9999, 0),
         conds: Array.isArray(v.conds) ? [...new Set(v.conds.filter(x => typeof x === 'string' && PARTY_COND_RE.test(x)))].sort().slice(0, 15) : [],
         exh: partyInt(v.exh, 0, 6, 0), conc: partyText(v.conc), ds: [partyInt(ds[0], 0, 3, 0), partyInt(ds[1], 0, 3, 0)],
+        ...(PARTY_PF2E ? { pd: cleanPartyPersistent(v.pd) } : {}),
         at: partyInt(v.at, 0, 8.64e15, 0)
     };
+}
+
+// Pathfinder's persistent damage from the sheet, as the Initiative tracker keeps it:
+// [{ dice: '2d6', type: 'fire' }], one per type, six at most.
+function cleanPartyPersistent(v) {
+    const out = [];
+    if (Array.isArray(v)) v.forEach(p => {
+        if (!p || typeof p.dice !== 'string' || typeof p.type !== 'string' || out.length >= 6) return;
+        const dice = p.dice.replace(/\s+/g, '').toLowerCase();
+        if (/^(\d{1,2}d\d{1,3}|\d{1,3})([+-]\d{1,3})?$/.test(dice) && /^[a-z]{3,12}$/.test(p.type) && !out.some(x => x.type === p.type)) out.push({ dice, type: p.type });
+    });
+    return out;
 }
 
 function newPartyId() {
@@ -94,7 +107,8 @@ function partyMemberName(c, i) {
 
 // ── Live from the Play Sheet (F68) ─────────────────────────
 // Copies a member's live state onto an Initiative combatant. Exhaustion joins the conditions
-// (its level rides along as exh); the tracker's own conditions are replaced, since the sheet decides.
+// (its level rides along as exh); the tracker's own conditions (and on Pathfinder, its persistent
+// damage) are replaced, since the sheet decides.
 function partyLiveToCombatant(c, live) {
     c.hp = live.hp;
     c.max = live.max;
@@ -103,6 +117,7 @@ function partyLiveToCombatant(c, live) {
     c.exh = live.exh;
     c.conc = live.conc;
     c.ds = live.ds.slice();
+    if (live.pd) c.pd = live.pd.map(p => ({ ...p }));
 }
 
 // "23 / 31 HP, +5 temp · Poisoned · exhaustion 2 · concentrating on Bless"

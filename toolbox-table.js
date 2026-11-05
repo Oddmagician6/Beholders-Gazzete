@@ -22,7 +22,8 @@
    💥 critical damage) and unconscious, and healing clears dying and adds wounded (damage while dying
    adds 1, or 2 from a crit; double the HP maximum in one blow kills); a dying character's recovery
    check is rolled at the start of their turn (a Play Sheet character's is left to the sheet); persistent damage (pd) is
-   rolled at the end of its owner's turn, then a DC 15 flat check; creatures come from ENC_MONSTERS.
+   rolled at the end of its owner's turn, then a DC 15 flat check (a Play Sheet character's comes from the
+   sheet, which rolls it); creatures come from ENC_MONSTERS.
    Loads after toolbox.js (uses its esc() and flash()).
    ============================================ */
 
@@ -398,7 +399,10 @@ function nextTurn() {
 // recovery check. Returns what to say ('' for nothing).
 function pf2eTurnNote(ended, now) {
     const notes = [];
-    if (ended && ended.pd.length) notes.push(pf2ePersistent(ended));
+    // A Play Sheet character's persistent damage is rolled by the sheet's End Turn too, so it's left there.
+    if (ended && ended.pd.length) {
+        notes.push(ended.party ? `${PD_ICON[ended.pd[0].type] || '💥'} ${ended.name} takes persistent ${ended.pd.map(p => `${p.dice} ${p.type}`).join(', ')} damage on their Play Sheet: its End Turn rolls the damage and the flat checks.` : pf2ePersistent(ended));
+    }
     const fear = ended ? condOf(ended, 'Frightened') : 0;
     if (fear) {
         setCond(ended, 'Frightened', fear - 1);

@@ -59,9 +59,10 @@ function pcBlank() {
 // spent by rank (spontaneous), cast prepared slots by rank (their indexes), font slots spent, and
 // counters of the player's own (an alchemist's reagents and such) with what's used of each,
 // persistent damage (pd), coins, the inventory beyond the builder's gear (inv), and a spellcasting
-// archetype's slots spent and prepared slots cast, by class (mc: { wizard: { slots, cast } }).
+// archetype's slots spent and prepared slots cast, by class (mc: { wizard: { slots, cast } }),
+// and who has used Treat Wounds on you in the last hour (tw: 'me', 'friend').
 function pcBlankPlay() {
-    return { hp: null, temp: 0, cond: [], hero: 1, focus: 0, slots: {}, cast: {}, font: 0, res: [], pd: [], coins: { pp: 0, gp: 0, sp: 0, cp: 0 }, inv: [], mc: {} };
+    return { hp: null, temp: 0, cond: [], hero: 1, focus: 0, slots: {}, cast: {}, font: 0, res: [], pd: [], coins: { pp: 0, gp: 0, sp: 0, cp: 0 }, inv: [], mc: {}, tw: [] };
 }
 
 // The Spell Planner's picks (spell keys of pf2e-spells-data.js): ct cantrips, rep a repertoire by rank,
@@ -235,6 +236,7 @@ function pcCleanPlay(raw) {
     p.inv = Array.isArray(raw.inv) ? raw.inv.filter(x => x && typeof x === 'object' && pcStr(x.n, 40).trim()).slice(0, 40).map(x => ({
         n: pcStr(x.n, 40).trim(), q: int(x.q, 1, 999, 1), bu: /^(—|L|\d{1,2})$/.test(x.bu) ? x.bu : '—'
     })) : [];
+    p.tw = Array.isArray(raw.tw) ? ['friend', 'me'].filter(k => raw.tw.includes(k)) : [];
     return p;
 }
 
@@ -332,7 +334,7 @@ function pcProfs(c, level = c.level) {
     Object.entries(cls.atk).forEach(([k, v]) => { r[k] = v; });
     Object.entries(cls.def).forEach(([k, v]) => { r[k] = v; });
     r.classdc = 1;
-    r.spell = cls.cast ? 1 : 0;
+    r.spell = cls.cast || pcFocusOnly(c) ? 1 : 0;
     const up = steps => Object.entries(steps || {}).forEach(([lv, s]) => {
         if (Number(lv) > level) return;
         Object.entries(s).forEach(([k, v]) => { r[k] = Math.max(r[k] || 0, v); });
@@ -449,7 +451,10 @@ function pcFeatSlots(c, level = c.level) {
         cls.lv[lvKey].filter(l => l <= level).forEach(l => out.push({ slot: kind + l, kind, level: l, label }));
     });
     if (c.fa) PC_FREE_ARCH.filter(l => l <= level).forEach(l => out.push({ slot: 'arc' + l, kind: 'arc', level: l, label: 'Free archetype feat' }));
-    const order = { anc: 0, cls: 1, arc: 2, skf: 3, gen: 4 };
+    // Rogue Dedication gives a skill feat of its own, at the dedication's level.
+    const rogue = c.cls !== 'rogue' && out.find(s => c.feats[s.slot] === 'rogue-dedication');
+    if (rogue) out.push({ slot: 'mcs' + rogue.level, kind: 'mcs', level: rogue.level, label: 'Skill feat (Rogue Dedication)' });
+    const order = { anc: 0, cls: 1, arc: 2, skf: 3, mcs: 3, gen: 4 };
     return out.sort((a, b) => a.level - b.level || order[a.kind] - order[b.kind]);
 }
 
@@ -495,7 +500,7 @@ function pcFeatsFor(c, slot, { archetype = false } = {}) {
         if (kind === 'anc') fits = f.c === 'ancestry' && f.tr.some(t => traits.includes(t));
         else if (kind === 'cls') fits = f.c === 'class' && (f.ar ? archetype : f.tr.includes(c.cls));
         else if (kind === 'arc') fits = f.ar === 1;
-        else if (kind === 'skf') fits = f.c === 'skill';
+        else if (kind === 'skf' || kind === 'mcs') fits = f.c === 'skill';
         else if (kind === 'gen') fits = f.c === 'general' || f.c === 'skill';
         if (!fits) continue;
         if (kind === 'cls' && f.ar && f.c === 'class' && !archetype) continue;
@@ -813,7 +818,11 @@ const PC_BIG_SLOTS = ['sorcerer', 'oracle'];
 function pcCasting(c) {
     if (c.arcOf) return pcArcRules(c.arcBase, c.arcOf);   // the Spell Planner's view of an archetype's spells
     const { cls, ch } = pcParts(c);
-    if (!cls || !cls.cast) return null;
+    if (!cls) return null;
+    if (!cls.cast) {
+        const fo = pcFocusOnly(c);
+        return fo ? { trad: fo.trad, kind: 'focus', attr: fo.attr, cantrips: 0, slots: [], curr: false, font: null, from: fo.from } : null;
+    }
     const [trad0, kind] = cls.cast;
     let trad = trad0;
     if (ch && ch.tr) trad = ch.tr === 'choice' ? c.sub : ch.tr;
@@ -833,6 +842,33 @@ function pcCasting(c) {
     return { trad, kind, attr, cantrips: 5 + (curr ? 1 : 0), slots, curr, font };
 }
 
+// Focus spells with no spell slots behind them: a ranger's warden spells and a monk's qi spells
+// (from class feats), and the champion, ranger, and monk dedications' and the blessed one's and
+// beastmaster's focus spells. Their tradition ('' = the player's call) and attribute, by class or
+// archetype; the trait their spells carry is the same word.
+const PC_FOCUS_ONLY = { ranger: ['primal', 'wis'], monk: ['', 'wis'], champion: ['divine', 'cha'], 'blessed-one': ['divine', 'cha'], beastmaster: ['primal', 'cha'] };
+
+// The classes and archetypes whose focus spells a character can take: their own class, each
+// multiclass dedication's, and the archetypes above.
+function pcFocusSources(c) {
+    const out = [c.cls, ...pcDedications(c).map(d => d.cls)];
+    ['blessed-one', 'beastmaster'].forEach(a => { if (pcFeatAt(c, `${a}-dedication`)) out.push(a); });
+    return [...new Set(out.filter(Boolean))];
+}
+
+// A character with no class spellcasting who casts focus spells → { trad, attr, from } or null.
+// Trained in spell attack and DC once a spell is theirs (blessed one: from the start): one added in
+// the Spell Planner, or one a feat names (that needs the spell data and the feat text).
+function pcFocusOnly(c) {
+    const src = pcFocusSources(c).find(k => Object.hasOwn(PC_FOCUS_ONLY, k));
+    if (!src) return null;
+    const has = src === 'blessed-one' || c.spells.focus.length > 0 || (typeof PF2E_SPELLS !== 'undefined'
+        && Object.values(c.feats).some(f => pcFocusInText(pcText('ft:' + f)).length));
+    if (!has) return null;
+    const [trad, attr] = PC_FOCUS_ONLY[src];
+    return { trad, attr, from: src };
+}
+
 // ── Spell picks (the Spell Planner) ─────────────────────
 // These need pf2e-spells-data.js; pcSpellGrants also needs the text file (pcLoadText).
 const PC_RANK_WORDS = { cantrip: 0, cantrips: 0, '1st': 1, '2nd': 2, '3rd': 3, '4th': 4, '5th': 5, '6th': 6, '7th': 7, '8th': 8, '9th': 9 };
@@ -841,6 +877,8 @@ const PC_SPELL_TYPES = { bard: 'rep', oracle: 'rep', sorcerer: 'rep', cleric: 'l
 // Feats that add a choice's advanced or greater focus spell (bloodline, revelation, school).
 const PC_FOCUS_TIERS = { advanced: ['advanced-bloodline', 'advanced-revelation', 'advanced-school-spell'], greater: ['greater-bloodline', 'greater-revelation'] };
 const PC_FOCUS_HEADS = ['Bloodline Spells', 'Revelation Spells', 'School Spells', 'Order Spell'];
+// The dedication feats that give the class choice's initial focus spell, and the choice text's heading for it.
+const PC_MC_FOCUS = { wizard: ['arcane-school-spell', 'School Spells'], sorcerer: ['basic-bloodline-spell', 'Bloodline Spells'], oracle: ['first-revelation', 'Revelation Spells'], druid: ['order-spell', 'Order Spell'] };
 
 function pcSpellKey(name) {
     const k = String(name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -958,6 +996,14 @@ function pcSpellGrants(c) {
         const fam = /familiar learns (.+?)\./.exec(text);
         if (fam) names(fam[1]).forEach(key => out.list.push({ key, rank: PF2E_SPELLS[key].r, from: x.n, counts: false, to: 'book' }));
     });
+    // Basic Bloodline Spell and the like: the dedication's class choice gives its initial focus spell.
+    pcDedications(c).forEach(d => {
+        const mf = PC_MC_FOCUS[d.cls];
+        if (!mf || !d.ch || !feats.has(mf[0])) return;
+        pcTextPairs(pcText('ch:' + pcMcPick(c, d.cls).ch)).forEach(([head, label, value]) => {
+            if (head === mf[1] && (!label || label === 'initial')) names(value).forEach(k => addFocus(k, PF2E_FEATS[mf[0]].n));
+        });
+    });
     pcFeatures(c).forEach(f => pcFocusInText(pcText('cf:' + f.key)).forEach(k => addFocus(k, f.name)));
     feats.forEach(f => pcFocusInText(pcText('ft:' + f)).forEach(k => addFocus(k, PF2E_FEATS[f].n)));
     return out;
@@ -983,10 +1029,11 @@ function pcSpellPool(c, rank, rare = false) {
     });
 }
 
-// The class's own focus spells (by trait) a character of this level can have.
+// The focus spells (by trait) of the class, its dedications, and its focus archetypes that a
+// character of this level can have.
 function pcFocusPool(c) {
-    const top = Math.ceil(c.level / 2);
-    return Object.keys(PF2E_SPELLS).filter(k => pcIsFocus(k) && PF2E_SPELLS[k].r <= top && PF2E_SPELLS[k].tr.includes(c.cls));
+    const top = Math.ceil(c.level / 2), src = pcFocusSources(c);
+    return Object.keys(PF2E_SPELLS).filter(k => pcIsFocus(k) && PF2E_SPELLS[k].r <= top && PF2E_SPELLS[k].tr.some(t => src.includes(t)));
 }
 
 // Every focus spell the character has, and the pool: one Focus Point per focus spell, up to 3
