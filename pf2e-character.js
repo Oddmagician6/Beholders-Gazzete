@@ -474,14 +474,13 @@ const PC_SUB_FEAT = {
     cleric: 'dogma', swashbuckler: 'flair', barbarian: 'fury', ranger: 'hunter-s-trick', monk: 'kata', fighter: 'maneuver',
     bard: 'muse-s-whispers', oracle: 'mysteries', rogue: 'trickery', druid: 'wilding', witch: 'witchcraft'
 };
-// A Basic or Advanced X feat taken at a level → { cls, cap (highest feat level), adv }, or null.
+// A Basic or Advanced X feat taken at a level → { cls, cap (highest feat level) }, or null.
 function pcSubFeat(key, level) {
     const m = /^(basic|advanced)-(.+)$/.exec(key || '');
     if (!m) return null;
     const cls = Object.keys(PC_SUB_FEAT).find(k => PC_SUB_FEAT[k] === m[2]);
     if (!cls) return null;
-    const adv = m[1] === 'advanced';
-    return { cls, cap: adv ? Math.floor(level / 2) : 2, adv };
+    return { cls, cap: m[1] === 'advanced' ? Math.floor(level / 2) : 2 };
 }
 
 // Feats the character has without a slot: background, class choice, warpriest's Shield Block.
@@ -532,7 +531,7 @@ function pcFeatsFor(c, slot, { archetype = false } = {}) {
         else if (kind === 'gen') fits = f.c === 'general' || f.c === 'skill';
         if (!fits) continue;
         if (kind === 'cls' && f.ar && f.c === 'class' && !archetype) continue;
-        out.push({ key, feat: f, taken: taken.has(key) && !(f.mx > 1) && !(pcSubFeat(key, level) || {}).adv });
+        out.push({ key, feat: f, taken: taken.has(key) && !(f.mx > 1) });
     }
     return out.sort((a, b) => b.feat.l - a.feat.l || a.feat.n.localeCompare(b.feat.n));
 }
