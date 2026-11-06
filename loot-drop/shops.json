@@ -78,7 +78,56 @@
         "manacles"
       ],
       "question": "Which one does your ranger regret buying?",
-      "note": "spare"
+      "date": "2026-12-10",
+      "week": 5
+    },
+    {
+      "id": "rack-and-ruin",
+      "status": "approved",
+      "seed": "17if7m5",
+      "expect": {
+        "name": "Rack & Ruin Sorceries"
+      },
+      "items": [
+        "staff-of-power",
+        "vorpal-sword",
+        "necklace-of-fireballs"
+      ],
+      "question": "Which one does your party pool its gold for?",
+      "date": "2026-12-17",
+      "week": 6
+    },
+    {
+      "id": "crimson-stocking",
+      "status": "approved",
+      "seed": "gtaieo",
+      "expect": {
+        "name": "Crimson Stocking Hattery"
+      },
+      "items": [
+        "silk-yard",
+        "perfume-vial",
+        "clothes-traveler-s"
+      ],
+      "question": "Which one goes in your fighter's Christmas stocking?",
+      "date": "2026-12-24",
+      "week": 7
+    },
+    {
+      "id": "yarrows-parlor",
+      "status": "approved",
+      "seed": "693bec",
+      "expect": {
+        "name": "Yarrow's Parlor"
+      },
+      "items": [
+        "stone-of-good-luck",
+        "wine-fine-bottle",
+        "dice-set"
+      ],
+      "question": "Which one does your bard win at midnight?",
+      "date": "2026-12-31",
+      "week": 8
     }
   ]
 }

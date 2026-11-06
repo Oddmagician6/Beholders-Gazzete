@@ -96,6 +96,102 @@
       ],
       "question": "Roll a d20. Who's in the corner booth, and does your party go over and say hello?",
       "week": 4
+    },
+    {
+      "id": "dragon-hoard",
+      "status": "approved",
+      "die": 20,
+      "title": "What Else Is in the Hoard?",
+      "kicker": "Not the gold. The other stuff",
+      "rows": [
+        "A teacup. The dragon is very particular about it",
+        "Forty-one left boots, sorted by size",
+        "A knight in full armor, asleep since spring",
+        "Love letters from a second dragon",
+        "A bag of holding with another hoard in it",
+        "A bad portrait of the dragon, framed in gold",
+        "A crown nobody alive can place",
+        "Every key to the town gates",
+        "A ledger. The dragon has been lending money",
+        "One very nervous kobold accountant",
+        "A sword that will not stop apologizing",
+        "Your party's wanted posters, pinned up",
+        "The church bell from the next village",
+        "A wedding cake, uneaten, turned to stone",
+        "Seven copies of the same rare book",
+        "A rival adventurer's diary, last page blank",
+        "A cozy blanket. Do not touch the blanket",
+        "An egg. Warm",
+        "A mirror that shows the hoard twice as big",
+        "A map to a bigger dragon's hoard"
+      ],
+      "question": "Roll a d20. What does your party carry out, and does the dragon notice?",
+      "week": 5
+    },
+    {
+      "id": "hireling-quit",
+      "status": "approved",
+      "die": 6,
+      "title": "Why Did the Hireling Quit?",
+      "kicker": "Exit interviews, Brindlemoor Adventurers' Guild",
+      "rows": [
+        "Paid in exposure. Exposure to fire, mostly",
+        "Was asked to check for traps by walking ahead of everyone",
+        "The wizard keeps practicing fireball near the torch",
+        "Learned the last three torchbearers were also called “Torchbearer”",
+        "Was invited to split the bill but never the loot",
+        "Got a better offer. From the dragon"
+      ],
+      "question": "Roll a d6. Then tell us the worst job your party ever gave a hireling.",
+      "week": 6
+    },
+    {
+      "id": "christmas-gift",
+      "status": "approved",
+      "die": 20,
+      "title": "What's in Your Christmas Gift?",
+      "kicker": "The guild's Christmas gift swap. Names from a helmet",
+      "rows": [
+        "Socks. Enchanted. They walk off at night",
+        "A ten-foot pole, wrapped. Badly",
+        "A fruitcake that counts as a weapon",
+        "A party portrait, one face scratched out",
+        "Rope. The giver is not subtle",
+        "A potion labeled only “Trust me”",
+        "A mimic. It's the box",
+        "A candle that won't go out. Ever. Help",
+        "A voucher for a shop that burned down",
+        "Earmuffs, for the banshee job",
+        "A scarf knit by the barbarian. It's a lot",
+        "One gold coin, regifted from last year",
+        "A snow globe with a tiny screaming wizard",
+        "A book on manners, from the bard. Pointed",
+        "A bag of holding. Empty. Probably",
+        "A puppy. An owlbear puppy",
+        "Dice that roll 1s for everyone but you",
+        "The cleric's IOU. For one resurrection",
+        "A cursed ring. Still a very nice ring",
+        "Exactly what you wanted. Nobody knows how"
+      ],
+      "question": "Roll a d20. What did your character unwrap on Christmas morning, and who in the party gave it?",
+      "week": 7
+    },
+    {
+      "id": "new-year-resolution",
+      "status": "approved",
+      "die": 6,
+      "title": "The Party's New Year Resolution",
+      "kicker": "Sworn on a tankard at the Sleeping Mule, midnight",
+      "rows": [
+        "Stop opening every chest. The second one this year bit the rogue",
+        "Pay the hirelings. On time. In actual coin",
+        "Never split the party again, starting after this split",
+        "Let the bard finish one whole song before throwing things",
+        "Keep a list of everyone we promised to come back for",
+        "Learn the innkeeper's name. It has been three years"
+      ],
+      "question": "Roll a d6. Which resolution does your party break first, and how fast?",
+      "week": 8
     }
   ]
 }

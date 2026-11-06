@@ -105,6 +105,69 @@
       "price": "9 gp",
       "priceNote": "a month",
       "question": "Your crystal ball shows one free vision a month. What does your character ask it?"
+    },
+    {
+      "id": "hopwell-christmas-express",
+      "status": "approved",
+      "week": 6,
+      "frame": "outfitter",
+      "business": "Hopwell Transit Company",
+      "kicker": "Brindlemoor's circle line · Holiday timetable",
+      "art": "woodcut/weather-vane.webp",
+      "artAlt": "a woodcut of a dragon weather vane above an arrow pointing the way",
+      "headline": "Home for Christmas in No Time",
+      "pitch": [
+        "Every circle open through the holidays.",
+        "Arrive before you leave, or ride free.",
+        "One of you guaranteed. Extras no charge."
+      ],
+      "tagline": "Hopwell Transit. You're already there. Mostly.",
+      "finePrint": "Duplicate passengers share one seat and one name. Luggage arrives separately, sometimes in a different year. Hopwell is not responsible for whoever meets you at the far circle.",
+      "price": "5 sp",
+      "priceNote": "each way",
+      "question": "Hopwell delivers two of your character home for Christmas. Which one does the family keep?"
+    },
+    {
+      "id": "sleeping-mule-christmas-eve-feast",
+      "status": "approved",
+      "week": 7,
+      "frame": "tavern",
+      "business": "The Sleeping Mule",
+      "kicker": "Tanner's Row · Christmas Eve, all night",
+      "art": "woodcut/npc-of-the-day.webp",
+      "artAlt": "a woodcut of a smiling innkeeper with a big mustache and an apron",
+      "headline": "The Christmas Eve Feast",
+      "pitch": [
+        "Roast goose for the table.",
+        "Mulled cider for the cellar.",
+        "The cube has been invited."
+      ],
+      "tagline": "Keeper Harrowgate pours. Nobody leaves hungry.",
+      "finePrint": "Seats by the fire for paying guests. Seats in the cellar for whatever was already down there. Carolers welcome until the second verse.",
+      "price": "3 sp",
+      "priceNote": "a plate",
+      "question": "Your party spends Christmas Eve at the Mule. Who carves the goose, and what's inside it?"
+    },
+    {
+      "id": "shieldwall-new-year-policy",
+      "status": "approved",
+      "week": 8,
+      "frame": "royal",
+      "business": "Shieldwall Mutual Assurance",
+      "kicker": "Insuring Brindlemoor's adventurers, mostly",
+      "art": "woodcut/campaign-seal.webp",
+      "artAlt": "a woodcut of a wax seal stamped with a d20, a quill, and a sword",
+      "headline": "New Year, New Policy",
+      "pitch": [
+        "Death, dismemberment, and curses.",
+        "Resurrection now a covered expense.",
+        "Renew by the first. We'll know if you don't."
+      ],
+      "tagline": "Shieldwall Mutual. We've already read your file.",
+      "finePrint": "Excludes dragons, liches, the Undermaw below level five, and anything the party was warned about. After the second, a resurrection is a pre-existing condition.",
+      "price": "40 gp",
+      "priceNote": "a year",
+      "question": "Shieldwall wants your party's year in writing for the renewal. Which claim gets denied?"
     }
   ]
 }

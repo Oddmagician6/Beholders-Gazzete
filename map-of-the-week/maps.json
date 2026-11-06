@@ -6,7 +6,10 @@
       "status": "approved",
       "seed": "13yq6yh",
       "poi": 6,
-      "expect": { "name": "The Valreth Reach", "site": "The Black Peak" },
+      "expect": {
+        "name": "The Valreth Reach",
+        "site": "The Black Peak"
+      },
       "question": "What's the first demand on the dragon's list?",
       "week": 1
     },
@@ -15,7 +18,10 @@
       "status": "approved",
       "seed": "1ao9b5g",
       "poi": 0,
-      "expect": { "name": "Arorund", "site": "The Arania Mine" },
+      "expect": {
+        "name": "Arorund",
+        "site": "The Arania Mine"
+      },
       "question": "What song are the canaries singing?",
       "week": 2
     },
@@ -24,7 +30,10 @@
       "status": "approved",
       "seed": "109c55y",
       "poi": 5,
-      "expect": { "name": "The Sarorford Reach", "site": "Belois's Dance" },
+      "expect": {
+        "name": "The Sarorford Reach",
+        "site": "Belois's Dance"
+      },
       "question": "What happens when the stones strike the hour?",
       "week": 3
     },
@@ -33,9 +42,60 @@
       "status": "approved",
       "seed": "tfcvom",
       "poi": 2,
-      "expect": { "name": "The Roseford Expanse", "site": "The Smoking Brazier" },
+      "expect": {
+        "name": "The Roseford Expanse",
+        "site": "The Smoking Brazier"
+      },
       "question": "What did they see in the smoke?",
       "week": 4
+    },
+    {
+      "id": "ardor-lighthouse-elyormere",
+      "status": "approved",
+      "seed": "1ori280",
+      "poi": 5,
+      "expect": {
+        "name": "Ardor",
+        "site": "The Lighthouse at Elyormere"
+      },
+      "question": "Why did the keeper stop answering?",
+      "week": 5
+    },
+    {
+      "id": "ceddal-walking-hovel",
+      "status": "approved",
+      "seed": "cstrv7",
+      "poi": 3,
+      "expect": {
+        "name": "Ceddal",
+        "site": "The Walking Hovel"
+      },
+      "question": "Who in your party volunteers, and who gets volunteered?",
+      "week": 6
+    },
+    {
+      "id": "arorheim-reach-hut-on-hens-legs",
+      "status": "approved",
+      "seed": "vu6ox6",
+      "poi": 1,
+      "expect": {
+        "name": "The Arorheim Reach",
+        "site": "The Hut on Hen's Legs"
+      },
+      "question": "It's Christmas morning, and a house has turned up on the doorstep. Who knocks first?",
+      "week": 7
+    },
+    {
+      "id": "sarilane-lightning-struck-tower",
+      "status": "approved",
+      "seed": "sdiqz2",
+      "poi": 2,
+      "expect": {
+        "name": "Sarilane",
+        "site": "The Lightning-Struck Tower"
+      },
+      "question": "What color are the lights on New Year's night, and what do they mean?",
+      "week": 8
     }
   ]
 }

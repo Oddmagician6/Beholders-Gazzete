@@ -34,4 +34,4 @@ gh release create <tag> --target main --latest=false --notes-file .loot-output/p
 gh workflow run publish-loot-cards-monthNN.yml -f operation=verify   # then operation=arm
 ```
 
-Month 1 (approved November 5, 2026): The Sunken Crucible Nov 12, Coin & Candle Emporium Nov 19, Stirrup & Warhorse Nov 26, Donella's Treasures Dec 3. Spare for month 2: `gross-margins` (re-date and re-render it first). Never recreate a Release's state after arming.
+Month 1 (approved and armed November 5, 2026): The Sunken Crucible Nov 12, Coin & Candle Emporium Nov 19, Stirrup & Warhorse Nov 26, Donella's Treasures Dec 3. Spare for month 2: `gross-margins` (re-date and re-render it first). Record: `.loot-output/publishing/activation-month01.json`. Never recreate a Release's state after arming.
