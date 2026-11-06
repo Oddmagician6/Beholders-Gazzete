@@ -1,0 +1,110 @@
+{
+  "_note": "Ad bank. Every business, place, and person is invented (see newsroom/lore.json); nothing here stands for anything real. status: draft until the owner approves an ad; week is its slot in the posting order.",
+  "ads": [
+    {
+      "id": "pettibone-vail-trailmaster",
+      "status": "approved",
+      "frame": "outfitter",
+      "business": "Pettibone & Vail Outfitters",
+      "kicker": "Tanner's Row · Est. before the last cave-in",
+      "art": "woodcut/ad-for-sale.webp",
+      "artAlt": "a woodcut of a handcart piled with barrels, bedrolls, and a sword",
+      "headline": "The Trailmaster Pack",
+      "pitch": [
+        "Forty pockets.",
+        "Thirty-nine of them open.",
+        "Now with a strap that holds."
+      ],
+      "tagline": "Outfitting the Undermaw's finest, and its most recent.",
+      "finePrint": "Not rated for the Undermaw below level three. Pocket forty is the manufacturer's. Recalled Trailmaster bags may be returned, if found.",
+      "price": "12 gp",
+      "priceNote": "rope extra",
+      "question": "What does your party keep in pocket forty?",
+      "week": 1
+    },
+    {
+      "id": "vaultmere-holdings-afterlife",
+      "status": "approved",
+      "frame": "royal",
+      "business": "Vaultmere Holdings",
+      "kicker": "By appointment to nobody who complained",
+      "art": "woodcut/sponsor.webp",
+      "artAlt": "a woodcut of a town crier ringing a hand bell",
+      "headline": "Invest in Your Afterlife",
+      "pitch": [
+        "Your savings, managed forever.",
+        "Our founder certainly plans to be.",
+        "Ask about our phylactery-backed bonds."
+      ],
+      "tagline": "Now merged with Ledgerhall. The skeletons are staying.",
+      "finePrint": "Past returns are no guarantee of future unlife. Withdrawals processed in the order the clerks remember them. Vaultmere Holdings is not a cult. Please stop asking.",
+      "price": "1 soul",
+      "priceNote": "",
+      "question": "Would you trust a lich with your gold? Asking for a counting house.",
+      "week": 2
+    },
+    {
+      "id": "sleeping-mule-cellar-night",
+      "status": "approved",
+      "frame": "tavern",
+      "business": "The Sleeping Mule",
+      "kicker": "Tanner's Row · Doors open at dusk",
+      "art": "woodcut/ad-display.webp",
+      "artAlt": "a woodcut of an empty hanging shop sign with a bell",
+      "headline": "Cellar Night Is Back",
+      "pitch": [
+        "Half-price ale.",
+        "Whole-price ale for anything that climbs out.",
+        "Bards perform at their own risk."
+      ],
+      "tagline": "The deepest cellar in Brindlemoor. We checked. Mostly.",
+      "finePrint": "No responsibility taken for sounds below the third barrel. Walk-in cooler under new management. Adventurers drink free if they come back up.",
+      "price": "2 cp",
+      "priceNote": "a pint",
+      "question": "Your party is drinking at the Mule when the cellar door starts knocking. Who opens it?",
+      "week": 3
+    },
+    {
+      "id": "hootline-same-day-owlbear",
+      "status": "approved",
+      "week": 4,
+      "frame": "outfitter",
+      "business": "Hootline Couriers",
+      "kicker": "Delivering Brindlemoor, in whole or in part",
+      "art": "woodcut/paperboy.webp",
+      "artAlt": "a woodcut of a goblin courier shouting, arms full of papers",
+      "headline": "Same-Day Owlbear Delivery",
+      "pitch": [
+        "Your parcel, guaranteed by dusk.",
+        "Your parcel, mostly guaranteed.",
+        "Now hiring couriers. Again."
+      ],
+      "tagline": "Proudly listed on the Brindlemoor exchange.",
+      "finePrint": "Parcels that smell of fish, honey, or the previous courier travel at the sender's risk. Hootline is not liable for any parcel the owlbear decides is his.",
+      "price": "4 sp",
+      "priceNote": "per pound",
+      "question": "An owlbear delivers your party a parcel that has clearly been opened. What's missing?"
+    },
+    {
+      "id": "lumenwick-future-subscription",
+      "status": "approved",
+      "week": 5,
+      "frame": "royal",
+      "business": "Lumenwick Glassworks",
+      "kicker": "Seers to the discerning since last Tuesday",
+      "art": "woodcut/magic-item.webp",
+      "artAlt": "a woodcut of an open chest blazing with light",
+      "headline": "Your Future, Monthly",
+      "pitch": [
+        "Basic tier: the next five minutes.",
+        "Premium: next week, with fewer ads.",
+        "Cancel anytime. We'll know."
+      ],
+      "tagline": "Lumenwick. You knew we would say that.",
+      "finePrint": "Futures shown are illustrative. Prophecies may contain advertising. Cancellations take effect on a date the crystal has already foreseen.",
+      "price": "9 gp",
+      "priceNote": "a month",
+      "question": "Your crystal ball shows one free vision a month. What does your character ask it?"
+    }
+  ]
+}

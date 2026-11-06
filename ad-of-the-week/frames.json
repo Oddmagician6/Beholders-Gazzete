@@ -1,0 +1,90 @@
+{
+  "_note": "Slot boxes are in the frame PNG's own pixels (1092 x 1440). The card scales the frame to 1350 tall and fills the sides with edge.",
+  "outfitter": {
+    "file": "outfitter.png",
+    "edge": "#020100",
+    "ribbon": {
+      "x": 170,
+      "y": 175,
+      "w": 750,
+      "h": 100
+    },
+    "body": {
+      "x": 255,
+      "y": 398,
+      "w": 750,
+      "h": 590
+    },
+    "fine": {
+      "x": 350,
+      "y": 1082,
+      "w": 420,
+      "h": 215
+    },
+    "price": {
+      "x": 806,
+      "y": 1108,
+      "w": 228,
+      "h": 168,
+      "color": "#2a1a0c"
+    }
+  },
+  "royal": {
+    "file": "royal.png",
+    "edge": "#1b0a09",
+    "ribbon": {
+      "x": 160,
+      "y": 160,
+      "w": 770,
+      "h": 112
+    },
+    "body": {
+      "x": 165,
+      "y": 400,
+      "w": 765,
+      "h": 592
+    },
+    "fine": {
+      "x": 95,
+      "y": 1100,
+      "w": 700,
+      "h": 210
+    },
+    "price": {
+      "x": 889,
+      "y": 1090,
+      "w": 100,
+      "h": 88,
+      "color": "#f6dfa0"
+    }
+  },
+  "tavern": {
+    "file": "tavern.png",
+    "edge": "#040404",
+    "ribbon": {
+      "x": 175,
+      "y": 148,
+      "w": 780,
+      "h": 112
+    },
+    "body": {
+      "x": 285,
+      "y": 398,
+      "w": 722,
+      "h": 585
+    },
+    "fine": {
+      "x": 272,
+      "y": 1078,
+      "w": 518,
+      "h": 222
+    },
+    "price": {
+      "x": 842,
+      "y": 1068,
+      "w": 186,
+      "h": 150,
+      "color": "#2a1a0c"
+    }
+  }
+}
