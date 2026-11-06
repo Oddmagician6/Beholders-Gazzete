@@ -6810,6 +6810,307 @@
         "rumor": "They say the pond-water vial wasn't pond water at all, just a potion of invisibility that got shy."
       },
       "fiction": true
+    },
+    {
+      "id": "treasure-map-sixth-adventuring-party-40-gp",
+      "title": "Sixth Party Buys Same 'One-of-a-Kind' Treasure Map",
+      "category": "Economy",
+      "author": "Barnaby Tallowmere",
+      "date": "2026-11-06",
+      "excerpt": "The Merry Kettles paid 40 gp for a one-of-a-kind treasure map, the sixth adventuring party to buy it this week. Barnaby has done the sums. Four times.",
+      "social": "Six adventuring parties each paid 40 gp for the same one-of-a-kind treasure map this week. The Merry Kettles found the other five camped around the X, and the seller has left town with 240 gp. Would you have bought the map, or asked to see the other copies?",
+      "content": "<p>The Merry Kettles, a four-member adventuring party from Brindlemoor, paid 40 gp on Monday for a \"one-of-a-kind\" treasure map sold by a stranger at a tavern table. By Thursday they had learned they were the sixth party to buy it that week. The stranger, who gave his name as \"Honest Dabbs,\" has taken 240 gp in total and left on a cart.</p>\n\n<p>The map shows a cellar on the third level of the Undermaw with a large red X and the words \"DO NOT TELL ANYONE.\" The Merry Kettles reached the X on Wednesday and found five other parties already camped around it, sharing a kettle and comparing maps. The maps matched down to the coffee ring. (I have checked this against all six. Four times.)</p>\n\n<p>The economics are plain, and I find them upsetting. At the current Loaf Index, 40 gp is 133 loaves, which is a family's bread for most of a season. Six buyers means Dabbs collected 800 loaves for one afternoon of ink, and he did it without a shop, a guild license, or a single honest measure of flour. A true one-of-a-kind item, like a good sourdough starter, is worth what it costs to make. A copy sold as one-of-a-kind is worth the copy price, which is about a copper and the price of ink.</p>\n\n<p>\"We should have known when he said 'exclusive,' and then said it again,\" said Hob Thornwick, the Kettles' halfling rogue. \"He also had a stack of them under his hat.\"</p>\n\n<p>The parties have done the sensible thing and formed a partnership. They have agreed to split whatever is under the X six ways, to dig in shifts, and to share the kettle. The treasure, once found, turned out to be one chest, which holds 62 gp and a note reading \"SEVENTH PARTY ARRIVES FRIDAY.\" That is about 10 gp each, or 34 loaves, against the 133 each paid. Nobody has done that subtraction aloud. I did it twice and had to lie down.</p>\n\n<p>Chapter 9 of the Brindlemoor Adventurers' Guild says its own maps are accurate and sold at a fixed price, and it reminds adventurers that it sells them. Reeve Fennick has asked the town to \"stop buying things from men called Honest.\" Dabbs was last seen heading toward Waterdeep with, by my count, six empty ink bottles and one very full purse.</p>\n\n<p>My aunt Marigold, who keeps her savings in a boot, was told the story over tea. \"A boot has never once sold me a map,\" she said. She is right, and I have underlined it.</p>\n\n<p>What this means for your pantry: if a seller says a thing is one of a kind, ask for the receipt of the other five, and keep your 40 gp for flour.</p>\n\n<p><em>— B.T. (Loaf Index: see sidebar)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Seventh Copy",
+          "text": "A mapseller has sold the same \"secret\" map to every party in the region, and six rival crews are camped at the X. The party's patron wants the forger found before a seventh party arrives and the camp turns to a brawl."
+        },
+        "npc": {
+          "name": "Dabbert Quillfeather",
+          "role": "Traveling map forger",
+          "want": "To sell one more copy to a rich party before he reaches the next town.",
+          "secret": "He draws the maps from a real one he stole, and the real treasure is still somewhere he never marked.",
+          "race": "human",
+          "gender": "male",
+          "kind": "criminal"
+        },
+        "location": {
+          "name": "The Crowded X",
+          "text": "A third-level cellar with a red X chalked on the floor, crowded with six camps, three kettles, and a single trapdoor under the chalk. The floor sounds hollow in exactly one corner nobody has dug.",
+          "tavern": false
+        },
+        "rumor": "They say Honest Dabbs sold a seventh map to a gnome who paid in coin that turned to bread by dawn."
+      },
+      "fiction": true
+    },
+    {
+      "id": "otyugh-sewer-night-soil-haulers-strike-brindlemoor",
+      "title": "Otyugh in the Sewer: 12 Night-Soil Haulers Strike",
+      "category": "Labor",
+      "author": "Brakka Stonesweat",
+      "date": "2026-11-06",
+      "excerpt": "Twelve night-soil haulers in Brindlemoor stopped work Thursday after an otyugh moved into the Tanner's Row sewer. They want hazard pay and a longer pole.",
+      "social": "Twelve night-soil haulers in Brindlemoor walked off the job after an otyugh moved into the Tanner's Row sewer. They want hazard pay and a pole longer than 10 feet. The Reeve says the otyugh is 'a resident, not a hazard.' Whose side are you on?",
+      "content": "<p>Twelve night-soil haulers quit the Tanner's Row sewer Thursday morning. An otyugh moved in last week.</p>\n\n<p>The haulers have worked the route for years. Now the route has a tenant with three tentacles, a mouth the size of a washtub, and what the haulers call 'a very firm opinion about who gets the buckets.' They want hazard pay, a ten-foot pole upgrade to a fifteen-foot one, and a lunch break that does not happen in the tunnel.</p>\n\n<p>'I've hauled night-soil for twenty-two years,' said Durga Flintpocket, a cart-wheel greaser who joined the picket in solidarity. 'It used to be the worst job in Brindlemoor. Now it's the worst job with teeth.'</p>\n\n<p>The otyugh, a creature that eats refuse and shares a lot of opinions with it, arrived through a collapsed drain from the Undermaw. Chapter 9 calls it 'a soft relocation.' That means it got out.</p>\n\n<p>Haul foreman Tilda Brewfoot told this paper the monster is not even the main problem. 'It's polite enough. It takes what we give it. The trouble is we give it everything, and then it wants to talk about it.' She said the haulers have been asked to fill buckets with one hand and 'engage constructively' with the otyugh with the other. 'That means chat. For free.'</p>\n\n<p>The town's offer so far is a new apron. Brakka has seen the apron. It is a regular apron. The haulers say it does not cover the front, the sides, or the tentacle-facing end.</p>\n\n<p>Reeve Maudrey Fennick, reached outside the Reeve's Hall, said 'We are aware of the otyugh.' She called it a resident of Brindlemoor and asked the haulers 'to remember they have a duty to their neighbors.' Then she asked, quietly, whether anyone knew a bard who could sing to it.</p>\n\n<p>The Sewer Board, a body of three men in good cloaks, issued a notice calling the strike 'a temporary reallocation of labor to the surface.' That means the haulers are standing in the street and the sewer is filling up. By noon the smell had reached the next ward. By two, a milkmaid on Cobbler's Lane was seen carrying her bucket in a sealed jar.</p>\n\n<p>The haulers have not asked for much. Eleven silver more per night, a pole, and a rule that nobody is eaten before lunch. 'That last one's negotiable,' said Brewfoot. 'I'd settle for after lunch.'</p>\n\n<p>A strike meeting is set for Friday at the Sleeping Mule. The tavern keeper has offered the cellar, which the haulers declined. They have been in enough cellars.</p>\n\n<p><em>Solidarity. And stretch your back. — Brakka</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Polite Thing Below",
+          "text": "Night-soil haulers refuse to enter the sewer because an otyugh has moved in, and the town is wading in filth. The haulers' foreman will pay the party to talk the creature out, or quietly move it, before the town turns on the strikers."
+        },
+        "npc": {
+          "name": "Tilda Brewfoot",
+          "role": "Night-soil haul foreman",
+          "want": "Safe working conditions and fair pay for her crew without losing the contract.",
+          "secret": "She has been feeding the otyugh extra scraps for a week because it has started telling her useful gossip.",
+          "race": "dwarf",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Tanner's Row Sewer",
+          "text": "A brick tunnel under the tanneries that smells worse than the tanneries. A collapsed drain at one end leads somewhere deeper and much older.",
+          "tavern": false
+        },
+        "rumor": "They say the otyugh has been counting the haulers by name, and that the one it doesn't mention is the one who's been skimming."
+      },
+      "fiction": true
+    },
+    {
+      "id": "rogue-pickpockets-envoy-whistle-varnholt-pellam-incident",
+      "title": "Rogue Picks Envoy's Pocket, Starts Varnholt-Pellam Incident",
+      "category": "International",
+      "author": "Grashka Ironjaw",
+      "date": "2026-11-06",
+      "excerpt": "A rogue in the Ember Ladle Company lifted a whistle from Pellam's envoy in Varnholt 'to see what he had.' Two realms now call it an act of war.",
+      "social": "A rogue from the Ember Ladle Company picked the pocket of a visiting envoy in Varnholt and got a brass whistle. It calms a ghost ship. Now the ship is loose, two realms are shouting, and the rogue says she was just curious. Would you have kept the whistle or handed it back?",
+      "content": "<p>A rogue from an adventuring party called the Ember Ladle Company picked the pocket of Envoy Dorrin Vask of the Pellam Isles on a Varnholt quay on Fifthday, \"just to see what he had.\" What he had was a brass whistle, and the whistle kept the ghost ship <em>Gannet's Regret</em> quiet. The ship has been loud since noon. Pellam calls the theft an act of war. Varnholt calls it a customs matter and has billed the rogue a berth fee.</p>\n\n<p>The rogue is Wren Tanglewick, a halfling, 26 years old by her own count. She told this correspondent she bumps people for fun. \"I thought it was a coin purse,\" she said. \"It was warm. It hummed.\" She blew it twice before anyone explained.</p>\n\n<p>The ghost ship, still at the center of the <a href=\"/a/ghost-ship-varnholt-harbor-visa-pellam-parley\">Varnholt-Pellam visa dispute</a>, answered the whistle by turning its bow toward the fish market. Witnesses say the lanterns swung on their own. A herring seller named Odo lost a cart and, he says, his composure. I would not mock Odo. Aim at the leaders.</p>\n\n<p>Harbormaster Ilsabet Corvane of Varnholt reached the quay at one bell. She inspected the whistle, the rogue, and the pocket in that order. \"Possession of foreign sacred goods requires a form,\" she said. \"Nobody has a form for this. I will make one.\" She has not yet made one. Tension at the quay stands at about six siege-days and rising with the tide.</p>\n\n<p>Vask arrived in a worse mood than the ship. He demanded the whistle back and a public apology to the Isles. Varnholt's offer was the apology, minus the whistle, plus a receipt. Vask declined the receipt. The handshake with Corvane lasted one second. Cold. Hidden dagger not detected, but I checked twice, and the rogue was standing right there.</p>\n\n<p>The Ember Ladle Company has hired a lawyer, a gnome, whose opening brief argues that the whistle was \"left in a public pocket.\" The party's paladin, who did not know about the theft, has asked to be removed from the story. The party's wizard says she tried to cast <em>detect magic</em> on the pocket and got a headache. Their cleric offered to pay the fine in healing. Corvane said healing is taxed.</p>\n\n<p>Pellam sailors have moved a sloop to the harbor mouth. Varnholt has moved a toll chain across it. The ghost ship is parked between them, humming. Both sides called the arrangement \"a de-escalation.\" Neither side moved.</p>\n\n<p>Tanglewick was released on a promise to give the whistle back. She says she will. She also says it may have gone into a boot, and the boot into a wagon, and the wagon toward Brindlemoor. Corvane has set a deadline of Seventhday. After that the fee doubles. The ship, I am told, is not a patient creature.</p>\n\n<p><em>Ironjaw, filed from the front.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Whistle in the Boot",
+          "text": "A halfling rogue lifted a brass whistle that keeps a ghost ship docile, and a harbor town and an island nation both want it by Seventhday. The party must find the right boot before the ship, or the fine, gets out of hand."
+        },
+        "npc": {
+          "name": "Tamsin Reedwhistle",
+          "role": "Harbor customs clerk",
+          "want": "To process the whistle's paperwork before her supervisor notices the form does not exist.",
+          "secret": "She has quietly sold three ship-calming charms to smugglers and fears the whistle's owner will recognize her work.",
+          "race": "human",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Dripping Berth",
+          "text": "A harbor tavern that bills a berth fee per stool. Its back room has a sign that says 'No Ghosts', which the ghosts ignore.",
+          "tavern": true
+        },
+        "rumor": "They say the whistle was never Pellam's at all, and the ship answers to whoever has the loudest lungs."
+      },
+      "fiction": true
+    },
+    {
+      "id": "ten-foot-pole-recall-one-inch-short",
+      "title": "Ten-Foot Poles Recalled After Coming Up One Inch Short",
+      "category": "Dungeon Report",
+      "author": "Hollis Delvewright",
+      "date": "2026-11-06",
+      "excerpt": "Pettibone & Vail recalled 900 ten-foot pole units that measure nine feet eleven inches. A pressure plate on Level 3 has noticed the difference.",
+      "social": "Pettibone & Vail has recalled 900 ten-foot poles for measuring nine feet eleven inches. On Level 3 of the Undermaw, a pressure plate sat exactly ten feet from the door and noticed. The fighter is at 6 hit points. Would you trust a pole that is one inch short?",
+      "content": "<p>THE UNDERMAW, LEVEL 3, 140 FEET DOWN — A batch of 900 ten-foot pole units has been recalled by <a href=\"/a/bag-of-holding-recall-3000-pettibone-vail\">Pettibone &amp; Vail Outfitters</a> after Chapter 9 found them to measure nine feet eleven inches. The missing inch matters in a dungeon crawl, and I can report that a pressure plate on this level agrees.</p>\n\n<p>The Fourth Attempt went in Tuesday with the new poles, which came in a handsome cedar-scented rack marked 'Trailmaster Reach.' The plate sits exactly ten feet from the door. The party's fighter tapped the floor at full extension, found it clear, and stepped forward the one inch the pole had not covered. Darts followed. He is now at 6 hit points. His boots, I am told, are at full health and at the bottom of a pit.</p>\n\n<p>'It had a look about it,' said the party's bard, who asked to be named. 'The pole, I mean. It looked short. We assumed it was perspective.'</p>\n\n<p>Deputy Registrar Pell Oddingwick of Chapter 9 called the recall 'a soft correction' and said the poles remain 'substantially ten feet in spirit.' He added that permit fees for delves relying on short poles will be refunded, 'less the handling inch.' Asked what the handling inch is, Oddingwick said it is on track.</p>\n\n<p>Pettibone &amp; Vail says the error crept in at the mill, where a journeyman had been trimming each pole to fit a shelf. 'We want to be transparent,' a spokeswoman said. 'The shelf was nine feet eleven inches.' Customers may return any pole for a full refund, or exchange it for a pole of 'equal or greater feeling.' The firm is also offering a free one-inch extension sleeve, sold separately.</p>\n\n<p>Ansel Pottage, steward of the Fourth Attempt's hirelings, read the sales receipt aloud to the party in the pit. 'It says ten feet,' he said. 'It does not say ten feet of pole.' He is owed two wages and an apology for the dart incident, and has asked that the apology be measured.</p>\n\n<p>Shieldwall Mutual says the claim will be reviewed on whether the fighter's inch was 'reasonably his own.' A hearing is set before Examiner Odalys Brackenmoor on Monday. She has been bitten by a mimic and is not expected to be moved by an inch.</p>\n\n<p>For the record, my own count stands at eight ten-foot poles lost this season. Three were the recalled kind. I rolled poorly on checking the receipt and reasonably well on the fourth, which I have kept, and which is now my twelve-foot stick. The mule remains unhurt and says nothing.</p>\n\n<p><em>— H.D., filing from below</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Handling Inch",
+          "text": "A shipment of ten-foot poles from a local outfitter is an inch short, and every trapped plate in the dungeon is calibrated to ten feet exactly. The party is hired to measure the dungeon's plates before someone steps one inch too far."
+        },
+        "npc": {
+          "name": "Odrin Fellwick",
+          "role": "Outfitter's Cedar Mill Journeyman",
+          "want": "To keep his job without admitting the shelf was his idea.",
+          "secret": "He cut the poles to fit a shelf he built himself, and has already trimmed the next batch.",
+          "race": "dwarf",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Cedar Mill on Tanner's Row",
+          "text": "A pole mill that smells of cut cedar and apology. Every shelf in the shop is a different length, and none are labelled.",
+          "tavern": false
+        },
+        "rumor": "They say the new poles are short because the mill ran out of cedar, and that it sold the rest to a mimic as a door."
+      },
+      "fiction": true
+    },
+    {
+      "id": "sending-spell-25-words-greetings-party-reply",
+      "title": "Sending Spell's 25 Words Go to Hellos; Reply Says Thanks",
+      "category": "Technology",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-11-06",
+      "excerpt": "An adventuring party cast Sending to ask a sage one question, then spent all 25 words on pleasantries. The reply answered only the pleasantries.",
+      "social": "A party in the Hollowmere Tombs cast Sending to ask a sage how to open a trapped door. The caster used all 25 words on hellos, the weather, and a gift basket. The sage replied with thanks and a note that the message cut off. Have you ever wasted a Sending, and what did you say instead of the question?",
+      "content": "<p>OKAY. Sending is the best spell in my notebook and I have just watched a party waste it with style. The Copperkettle Company, an adventuring party stuck outside a sealed door in the Hollowmere Tombs, cast Sending to ask a sage one question. Sending gives you 25 words out and 25 words back, and their caster spent every one of them on hellos. I was standing right there with a snack.</p>\n\n<p>Here is the whole message, as recited by the caster, a halfling named Pim Tallowby, who has asked me not to print his face: \"Greetings, dear friend, hope this finds you well, how is the family, lovely weather, did you get the gift basket, also, quick question about the.\" That is exactly 25 words. The runic latency was flawless. The door was not mentioned.</p>\n\n<p>The sage, a retired lore-keeper at Candlekeep, replied within the round. \"Family well, weather fine, basket received, thank you! Which question about the what? Message cut off. Also you forgot to say who this is.\" That is 24 words, and I have to admit it is a very efficient reply. It answers every question that was actually asked.</p>\n\n<p>The party took this badly. The company's rogue, Sable Dunmoor, said she had told Pim to lead with the question in the planning session, \"which lasted forty minutes and covered nothing else.\" Pim said it would have been rude to ask a favor cold. Sable said the door was a pit trap with a door on it and that the sage was not the one who would fall in. They recast the next morning, and Pim, now rattled, opened with \"Door?\" The sage answered \"Which door?\" and that was another 25 words gone.</p>\n\n<p>It gets worse for the Company. Sending can be cast only so often, and a long rest is the price of a retry. By my count, the party has now spent two days of rations on a message that amounts to \"Hello, how are you.\" Their cleric, Odalys Reed, has proposed carving the question into the door's frame as a sign-off sheet. My familiar Byte, who now speaks only in ad copy, said, \"Say more with less. Try Sending Premium today.\" There is no Sending Premium. I checked twice, and I am a little sad about it.</p>\n\n<p>Brother Wendell Tumbleberry, if you are reading, this is what I mean by \"waiting.\" It is also, I will say, a lesson about touching grass, since the sage mentioned the weather was lovely and the party had not looked outside in three days. Four out of five beholder eyes for Sending itself. The Copperkettle Company gets two, and a pen.</p>\n\n<p><em>— Nyx (they/them). Damage Report below.</em></p>\n\n<p><em>Burns sustained: 0. Words wasted: 25, then 25 more. Questions answered: 0. Eyebrows: fine, because I did not cast anything.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Door With No Question",
+          "text": "A party stuck at a trapped tomb door has twice failed to get a clear answer from a distant sage. The sage will help, but only if the party can phrase the question in 25 words or fewer, and a rival group is already sneaking toward the same door."
+        },
+        "npc": {
+          "name": "Ilsabet Fenwright",
+          "role": "Retired lore-keeper, reluctant advisor",
+          "want": "To answer exactly one question per day and then be left alone with her tea.",
+          "secret": "She built the trapped door decades ago and is embarrassed that nobody has simply asked her about it.",
+          "race": "human",
+          "gender": "female",
+          "kind": "magic"
+        },
+        "location": {
+          "name": "The Hollowmere Tomb Door",
+          "text": "A sealed stone door at the end of a tomb corridor, scratched with failed attempts at opening it. Behind it is a pit trap, and the pit has a faint smell of rosemary.",
+          "tavern": false
+        },
+        "rumor": "They say the sage replies faster if you open with 'Who,' and slower if you ask about her cat."
+      },
+      "fiction": true
+    },
+    {
+      "id": "bard-persuasion-gate-guard-appointed-tollwick",
+      "title": "Bard Bluffs Past Town Gate, Council Hires Him as Guard",
+      "category": "Politics",
+      "author": "Ottoline Vex",
+      "date": "2026-11-06",
+      "excerpt": "A bard talked his adventuring party past Tollwick's gate guard, 7-2. The Town Council then appointed him the new gate guard, at 14 silver a week.",
+      "social": "A bard bluffed his adventuring party past Tollwick's gate. The Town Council voted 7-2 to make him the new gate guard at 14 silver a week. His party now has to delve without him. Would you take the post, or run for the hills?",
+      "content": "<p>A bard has talked his adventuring party past the gate of Tollwick, and the Town Council responded by appointing him the new gate guard. The vote was 7-2. Pip Marrowtune, bard of the Gilded Pennywhistles, took the oath Thursday at a salary of 14 silver a week, with a spear he says he \"has never held with intent.\"</p>\n\n<p>The facts, as entered in the minutes: the Pennywhistles arrived at the north gate on Wednesday carrying no papers, a mule, and what Sergeant Odo Brack called \"an unlicensed amount of lute.\" Marrowtune told the sergeant that the party was an advance inspection team from the Silver Marches, that the inspection was confidential, and that Brack had just failed it. Brack, who had stood at that gate for nineteen years, apologized, saluted, and held the portcullis himself.</p>\n\n<p>The sergeant then fetched his superiors to be commended. That was the error. Marrowtune explained to the Town Council, in the same tone, that the gate was understaffed, that the sergeant was overqualified, and that someone of his obvious bearing should be running it. The gentleman from the Cooper's Ward moved the appointment before Marrowtune had finished the sentence. The lady from the Tanners' Ward seconded it while he was still on the verb.</p>\n\n<p>Debate lasted four minutes. The council's last debate, on a goat ordinance, lasted three days. By my count this brings the session's Promises Made to nine and Promises Kept to the one about shorter meetings, which holds only if you ignore the goats.</p>\n\n<p>The Pennywhistles had come to Tollwick to enter a barrow on the eastern road. Their fighter, Marta Gloam, said the party learned of the appointment from a notice nailed to the gate. \"We turned around to ask him something and he was wearing a tabard,\" she said. \"He told us it was a conflict of interest to leave.\" The party now has a fighter, a cleric, and a wizard, and a lute with no one to play it.</p>\n\n<p>Marrowtune has already issued three decrees. Entry is free for \"anyone who looks like they have a good reason.\" The toll is waived for bards. The mule has been made a deputy. Brack, reassigned to the night shift, declined to comment, but was seen offering his old keys to travelers and asking if they could see his papers.</p>\n\n<p>A courtier who asked not to be named because they were not authorized to be awake told me the council meant only to \"avoid the argument.\" Two councilors voted no, citing the principle that one should not hire the man who just lied to the staff. Their motion to revisit the matter was tabled. Nobody remembers by whom.</p>\n\n<p><em>— O.V., from the gallery</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Gate That Believes",
+          "text": "A silver-tongued stranger has talked a town council into making him gate guard, and the town's real guard captain wants him exposed before the barrow cult he fronts for arrives. The party must prove the lie without getting charmed into a uniform themselves."
+        },
+        "npc": {
+          "name": "Odo Brack",
+          "role": "Demoted gate sergeant",
+          "want": "To get his post back without admitting he saluted a liar.",
+          "secret": "He let the bard through on purpose, because he was tired and wanted the night shift.",
+          "race": "dwarf",
+          "gender": "male",
+          "kind": "guard"
+        },
+        "location": {
+          "name": "The North Gate of Tollwick",
+          "text": "A stone gatehouse with a portcullis nobody has lowered in nineteen years. A deputized mule is tied to the winch.",
+          "tavern": false
+        },
+        "rumor": "They say the new gate guard has never once asked anyone for papers, and the toll box is full anyway."
+      },
+      "fiction": true
+    },
+    {
+      "id": "ankheg-sinkhole-fish-street-cheese-stall",
+      "title": "Ankheg Opens Sinkhole Under Fish Street Cheese Stall",
+      "category": "Public Safety",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-11-06",
+      "excerpt": "An ankheg tunneled under a Fish Street cheese stall and dropped it into a 12-foot sinkhole. Skritch has the scoop, and allegedly some of the cheese.",
+      "social": "An ankheg burrowed under a Fish Street cheese stall and dropped the whole thing into a 12-foot sinkhole. Forty wheels of cheese went down, and Reeve Fennick says the town is aware. The stall's owner wants his cheese back, and the ankheg allegedly wants it more. Whose cheese is it now?",
+      "content": "<p>At roughly the second bell past dawn, an ankheg tunneled up beneath a cheese stall on Fish Street and dropped the whole stall into a sinkhole 12 feet across. Forty wheels of cheese went down with it, along with the stall's awning and, allegedly, a very surprised goat.</p>\n\n<p>'I heard a pop, and then the stall was lower,' said Dunstan Pell, the cheesemonger, who was holding a wedge of aged cheddar at the time. 'I'm still holding it. That's the only wedge I've got left.' Pell says the ankheg surfaced once, looked at the hole, looked at him, and went back down with the good brie.</p>\n\n<p>Reeve Fennick of Brindlemoor arrived at the third bell and stood at the edge of the hole for several minutes. 'We are aware of the ankheg,' she said. Asked whether the town would pay for the cheese, she said the town was aware of that too.</p>\n\n<p>The Constabulary roped off the sinkhole with the same rope they used for the <a href=\"/a/owlbear-asleep-laundry-cart-fish-street\">owlbear in the laundry cart</a>, which is allegedly still on the owlbear. Constable Hobb Tarrant said the rope was 'mostly there.' Neighbors report the ankheg has been heard chewing below ground since dawn and that it appears to be a loyal customer.</p>\n\n<p>Deputy Registrar Oddingwick of Chapter 9 called the sinkhole 'a soft opening of Undermaw Level Eight' and said permits for the new level would be available by the end of the week. Chapter 9 later corrected this: it is a sinkhole, and it is Fish Street's.</p>\n\n<p>Also there was a really nice brass cheese knife on the ground by the hole. Anyway. I did not take it. It is in evidence. Allegedly.</p>\n\n<p>Shieldwall Mutual says cheese lost to a burrowing monster is covered only if the cheese was 'properly staked,' which Pell says is not a thing people do with cheese. A claims adjuster was seen at the hole by midmorning measuring it and sighing.</p>\n\n<p>Meanwhile the ankheg has become a Fish Street attraction. By noon, a line of about 300 neighbors had gathered to look in, and a boy named Wick sold tickets for a copper each from a crate. Wick allegedly cleared 11 silver before the Constabulary asked about his permit. The permit was allegedly in the sinkhole.</p>\n\n<p>The ankheg is expected to resurface when the cheese runs out. Pell says that is not soon enough. He has asked the Reeve for a ladder, a net, and a better rope, in that order.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Cheese Beneath the Street",
+          "text": "An ankheg has dug a sinkhole under the market and dragged forty wheels of cheese into its tunnels. The cheesemonger will pay 50 gp to anyone who recovers his stock before the tunnel collapses further."
+        },
+        "npc": {
+          "name": "Dunstan Pell",
+          "role": "Fish Street cheesemonger",
+          "want": "To get his cheese, and his stall's good name, back from the hole.",
+          "secret": "Half the lost wheels were bought on credit from a smuggler, who wants them returned.",
+          "race": "human",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Fish Street Sinkhole",
+          "text": "A 12-foot hole in the middle of a market street, ringed with rope and curious neighbors. The tunnel at the bottom smells strongly of brie.",
+          "tavern": false
+        },
+        "rumor": "They say the ankheg only wanted the cheese, and that there's a second one under the dairy."
+      },
+      "fiction": true
+    },
+    {
+      "id": "unidentified-ring-5-gp-ring-of-protection",
+      "title": "Party Sells Unknown Ring for 5 gp; It's a Ring of Protection",
+      "category": "Consumer",
+      "author": "Sterling Vanmoor",
+      "date": "2026-11-06",
+      "excerpt": "A Brindlemoor party sold an unidentified ring for 5 gp because nobody cast Identify. By morning it was a ring of protection, priced at 4,000 gp.",
+      "social": "A party of four sold a plain-looking ring for 5 gp because nobody had prepared Identify. The next morning it sat in the shop window as a ring of protection for 4,000 gp. The shopkeeper says the customer set the price, and she now sells a 12 gp appraisal subscription. Would you have spent the 100 gp pearl to cast Identify?",
+      "content": "<p>The Lantern Hollow Four, a Brindlemoor adventuring party, sold an unidentified ring to a curio dealer for 5 gp on Tuesday because nobody had prepared the Identify spell. By Wednesday morning the same ring sat in the window of Marrow &amp; Finch Curios as a ring of protection, tagged at 4,000 gp. Let me be the first to say it: this is the most inspiring story of the quarter.</p>\n\n<p>Some people see a party robbed of 3,995 gp. I see a shopkeeper who invested in verification. Proprietor Odalys Marrow spent a single afternoon and one ten-minute ritual to turn a 5 gp trinket into a four-thousand-gold asset. That is an 800x return, and frankly the party should be sending her a thank-you scroll for the learning opportunity.</p>\n\n<p>The party had the chance to disrupt itself. Wizard Tobin Aldermere says Identify costs 100 gp in pearl dust, plus a spell slot, plus a ten-minute rest nobody wanted to take in a corridor that smelled like wet owlbear. \"We voted,\" he told me. \"The vote was three to one, and the one was me, and I was right, and it has not helped.\" The cleric, Brother Tamsin, had a slot but had spent it earlier on Goodberry. He describes the decision as \"a wholesome use of resources.\"</p>\n\n<p>The ring did not go quietly into the 5 gp bin. According to the party's own account, it hummed whenever a goblin was nearby, and the rogue wore it for four rooms without noticing that every arrow she met was a little bit late. Sources close to the rogue confirm she thought the arrows were just being polite.</p>\n\n<p>Marrow, for her part, refused to apologize. \"The customer set the price,\" she said, leaning on a counter built entirely out of other people's unidentified wands. \"They said five. I said sold. I did not say I would not look afterward.\" She also announced a new Appraisal Subscription, 12 gp a month, for adventurers who would like to learn what they own before they sell it. Early adopters get a free glass of cider, which is also unidentified.</p>\n\n<p>I once met a retired guildmaster at a gala, and he told me, \"Sterling, information asymmetry is just a gap in the market with a cover charge.\" I wrote that on a napkin and I still have it. Marrow has clearly read the napkin.</p>\n\n<p>Shieldwall Mutual declined to comment on whether a party that sells its own armor class is covered. The Brindlemoor Public Cellars Board says shop windows are not its department. A rival columnist has already written six hundred words calling this \"theft with a scroll case\", which shows how little some people understand scale.</p>\n\n<p>Key takeaways for the ambitious adventurer:</p>\n<ul>\n<li>Identify every item before you sell it, or become the supplier.</li>\n<li>A 5 gp ring is a 4,000 gp ring that hasn't met its audience yet.</li>\n<li>When the wizard votes no, schedule a long rest.</li>\n</ul>\n\n<p><em>— Sterling Vanmoor, Guild Visionary. Let's connect at the Yawning Portal.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Ring in the Window",
+          "text": "The party sold a ring for pocket change and found it in a shop window priced at a king's ransom. The shopkeeper is within her rights, so the party must either buy it back, steal it, or find out why the ring was in a corridor nobody remembers visiting."
+        },
+        "npc": {
+          "name": "Odalys Marrow",
+          "role": "Proprietor of Marrow and Finch",
+          "want": "To keep the shop's reputation as the only honest appraiser in town.",
+          "secret": "She casts Identify on everything she buys, and has learned the town's richest families once sold her their own stolen heirlooms.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "Marrow and Finch Curios",
+          "text": "A narrow shop with a bell that rings a half second after anyone leaves. Every item has two price tags, and one of them is crossed out in the wrong direction.",
+          "tavern": false
+        },
+        "rumor": "They say the ring was never lost in the first place, and that a certain guild clerk keeps dropping them in dungeon corridors on purpose."
+      },
+      "fiction": true
+    },
+    {
+      "id": "basilisk-eye-exam-clinic-24-petrified-wendell",
+      "title": "Basilisk Eye Exam Clinic Petrifies 24 Patients",
+      "category": "Creature Features",
+      "author": "Brother Wendell Tumbleberry",
+      "date": "2026-11-06",
+      "excerpt": "A free eye clinic in Brindlemoor turned 24 patients to stone on Wednesday after hiring a basilisk to hold the chart. Brother Wendell recommends carrots.",
+      "social": "A free eye clinic in Brindlemoor hired a basilisk to hold the chart, and 24 patients turned to stone before lunch. Reeve Fennick says the town is 'aware of the statues.' The chart was read perfectly, though. Would you let a basilisk hold your eye chart for a free exam?",
+      "content": "<p>Friends, a free eye-screening clinic on Lantern Street in Brindlemoor petrified 24 patients on Wednesday morning, after the clinic hired a basilisk to hold up the eye chart. The creature, a young one named Pebble by the staff, was taken on because it \"works for crickets and never asks for a raise.\"</p>\n\n<p>The clinic's director, Optician Dessa Wrenfield, told this paper the basilisk was meant to stay behind the screen. \"Patients read the letters off the back of its crate,\" she said. \"The crate had a slot. The slot was, in hindsight, a design choice.\" By the time the second row of seated patients had gone grey and stiff, the line outside was still reading the sign aloud, and several joined the waiting room in stone.</p>\n\n<p>Chapter 9 spokesman Deputy Registrar Pell Oddingwick said the incident was \"a soft launch of a statuary service.\" Reeve Maudrey Fennick, who had her own appointment at eleven, was less cheerful. \"We are aware of the statues,\" she said, standing a respectful distance from the door with her eyes on her boots. \"We would like them to stop being aware of us.\"</p>\n\n<p>The temple of the Harvest Mother sent a healer with greater restoration, and by dusk all 24 patients were soft and grumbling again. Each paid a copper for the privilege, which is the first time a Brindlemoor temple has been cheaper than a free clinic. Patient Hobb Lindenfoot, a cobbler, said the worst part was the draught. \"I was a statue by the window. Pigeons have opinions.\"</p>\n\n<p>Now the old herbals, as my grandmother's grandmother wrote them, hold that carrots, leafy greens, and plenty of rest keep the eyes bright, and a recent study agrees that folk who eat vegetables daily keep their sight longer. Neither says a word about basilisks, which I take to mean the herbalists thought it went without saying. If your eyes ache, friends, see a person with eyes of their own and a chart that does not breathe.</p>\n\n<p>Shieldwall Mutual Assurance Society has declined all 24 claims, ruling petrification a \"pre-existing hardness.\" Wrenfield has reopened the clinic on a smaller scale, with a mirror shield and a sign reading ALL VISITORS PLEASE WEAR BLINDFOLDS. Pebble has been reassigned to the cricket department. My friend Nyx tells me there is an app that tests your eyes now. Go outside, Nyx, and look at a tree.</p>\n\n<p>Tonight, make a carrot-and-ginger soup. It is good for the eyes, and nobody has ever been turned to stone by a ladle.</p>\n\n<p><em>Rest well, friends. — Brother Wendell</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Chart Holder",
+          "text": "A free eye clinic in town has gone quiet, and two dozen stone figures stand in its waiting room. The clinic's director offers the party 50 gold to quietly get her basilisk out of the building, and she would rather the temple not hear of it."
+        },
+        "npc": {
+          "name": "Dessa Wrenfield",
+          "role": "Eye clinic director",
+          "want": "To reopen the clinic before the temple finds out how many patients she turned to stone.",
+          "secret": "She did not hire the basilisk by accident; a rival optician sold it to her as a discount trainee.",
+          "race": "human",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "Lantern Street Eye Clinic",
+          "text": "A narrow shopfront with a cheerful painted eye on the sign. Its waiting room holds 24 stone chairs and a warm, humid smell of crickets.",
+          "tavern": false
+        },
+        "rumor": "They say the basilisk only turns folk to stone if they look at it, which is why the stone ones are all the ones who read the sign."
+      },
+      "fiction": true
     }
   ]
 }
