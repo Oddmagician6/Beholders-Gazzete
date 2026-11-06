@@ -1,0 +1,84 @@
+{
+  "_note": "Shop bank. Each shop is a seed for the site's Merchant's Row (random type and wealth) and three item IDs from its stock (loot.mjs roll lists them). expect is the shop's name when it was picked; render fails if the generator has since changed it. date is the posting date: the card is priced at noon Chicago that day. Everything in a shop is generated and fictional. status: draft until the owner approves a shop; week is its slot in the posting order.",
+  "shops": [
+    {
+      "id": "sunken-crucible",
+      "status": "approved",
+      "seed": "ruyrhu",
+      "expect": {
+        "name": "The Sunken Crucible"
+      },
+      "items": [
+        "potion-of-invisibility",
+        "poisoner-s-kit",
+        "potion-of-flying"
+      ],
+      "question": "Which one does your rogue steal?",
+      "date": "2026-11-12",
+      "week": 1
+    },
+    {
+      "id": "coin-and-candle",
+      "status": "approved",
+      "seed": "1jamjdy",
+      "expect": {
+        "name": "Coin & Candle Emporium"
+      },
+      "items": [
+        "bag-of-holding",
+        "cloak-of-protection",
+        "spell-scroll-4th-level"
+      ],
+      "question": "Which one does your wizard \"borrow\"?",
+      "date": "2026-11-19",
+      "week": 2
+    },
+    {
+      "id": "stirrup-and-warhorse",
+      "status": "approved",
+      "seed": "3xb81f",
+      "expect": {
+        "name": "Stirrup & Warhorse"
+      },
+      "items": [
+        "griffon",
+        "elephant",
+        "horse-riding"
+      ],
+      "question": "Which one does your party ride out of town on?",
+      "date": "2026-11-26",
+      "week": 3
+    },
+    {
+      "id": "donellas-treasures",
+      "status": "approved",
+      "seed": "k639a1",
+      "expect": {
+        "name": "Donella's Treasures"
+      },
+      "items": [
+        "disguise-kit",
+        "forgery-kit",
+        "gold-pound"
+      ],
+      "question": "Which one does your rogue steal?",
+      "date": "2026-12-03",
+      "week": 4
+    },
+    {
+      "id": "gross-margins",
+      "status": "approved",
+      "seed": "9sqpw2",
+      "expect": {
+        "name": "Gross Margins"
+      },
+      "items": [
+        "unicorn-horn",
+        "potion-of-animal-friendship",
+        "manacles"
+      ],
+      "question": "Which one does your ranger regret buying?",
+      "note": "spare"
+    }
+  ]
+}

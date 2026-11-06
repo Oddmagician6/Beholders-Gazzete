@@ -112,12 +112,15 @@ class AdPublisherTests(unittest.TestCase):
         self.assertEqual(batch_files('month01'), ('ad-card-queue-month01.json', 'publish-ad-cards-month01.yml'))
         self.assertEqual(batch_files('month01', 'map'), ('map-card-queue-month01.json', 'publish-map-cards-month01.yml'))
         self.assertEqual(batch_files('month01', 'roll'), ('roll-card-queue-month01.json', 'publish-roll-cards-month01.yml'))
+        self.assertEqual(batch_files('month01', 'loot'), ('loot-card-queue-month01.json', 'publish-loot-cards-month01.yml'))
         with self.assertRaises(RuntimeError):
             batch_files('month01', 'poster')
         maps = queue_fixture()
         maps['id'] = 'map-of-the-week-month01'
         self.assertEqual(len(validate_queue(maps)['entries']), 4)
         maps['id'] = 'roll-for-it-month01'
+        self.assertEqual(len(validate_queue(maps)['entries']), 4)
+        maps['id'] = 'loot-drop-month01'
         self.assertEqual(len(validate_queue(maps)['entries']), 4)
         maps['id'] = 'poster-of-the-week-month01'
         with self.assertRaises(RuntimeError):

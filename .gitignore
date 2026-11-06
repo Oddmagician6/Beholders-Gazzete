@@ -29,3 +29,6 @@ AGENTS.md
 
 # Local Roll for It cards and review page
 .roll-output/
+
+# Local Loot Drop cards and review page
+.loot-output/

@@ -1,0 +1,129 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Loot Drop</title><style>
+/* Loot Drop card. loot.mjs serves the repo and opens this page in headless Chrome:
+   ?seed=<seed>&items=<id,id,id>&t=<ms> draws one card; ?roll=<count>&t=<ms> rolls random shops and lists them (no card).
+   The shop comes from the site's own Merchant's Row (shop), loaded in a hidden frame, so the card always
+   matches what a reader gets from the same seed. Prices are the Market Exchange's at time t. */
+@font-face{font-family:Cinzel;font-weight:700;src:url(/ad-of-the-week/fonts/cinzel-latin-700-normal.woff2)}
+@font-face{font-family:Cinzel;font-weight:900;src:url(/ad-of-the-week/fonts/cinzel-latin-900-normal.woff2)}
+@font-face{font-family:Fell;src:url(/ad-of-the-week/fonts/im-fell-english-latin-400-normal.woff2)}
+@font-face{font-family:Fell;font-style:italic;src:url(/ad-of-the-week/fonts/im-fell-english-latin-400-italic.woff2)}
+*{box-sizing:border-box}html,body{margin:0;width:1080px;height:1350px;overflow:hidden}
+body{background:#efe1bf;color:#2a1a0c;font-family:Fell,Georgia,serif}
+iframe{position:absolute;left:-3000px;top:0;width:1200px;height:1000px;border:0}
+.stage{position:absolute;inset:0}
+.slot{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.debug .slot{outline:3px dashed #e0115f}
+.mast{left:0;top:0;width:1080px;height:84px;background:#2a1a0e;color:#f3dfa8;font:900 40px/1 Cinzel,serif;letter-spacing:1px;border-bottom:4px solid #b8892f}
+.art{left:0;top:84px;width:1080px;height:470px;overflow:hidden;background:#3a2614}
+.art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.art:after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 40%,#1d1209e6)}
+.title{left:60px;top:376px;width:960px;height:170px;z-index:1;color:#f6e7c1;text-shadow:0 2px 4px #000c}
+.title .series{font:700 21px/1 Cinzel,serif;letter-spacing:7px;color:#e6bf6a;display:flex;gap:16px;align-items:center;width:62%}
+.title .series:before,.title .series:after{content:'';flex:1;border-top:2px solid #e6bf6a99}
+.title h1{margin:10px 0 6px;font:900 calc(var(--k,1)*56px)/1.05 Cinzel,serif}
+.title p{margin:0;font-style:italic;font-size:25px;color:#ead7aa;white-space:nowrap}
+.greet{left:80px;top:574px;width:920px;height:126px}
+.greet q{font-style:italic;font-size:calc(var(--k,1)*31px);line-height:1.2}
+.greet small{margin-top:8px;font:700 17px/1 Cinzel,serif;letter-spacing:2.5px;color:#6e2a17}
+.items{left:70px;top:716px;width:940px;height:396px;justify-content:space-between}
+.tag{display:flex;align-items:center;gap:22px;width:100%;height:118px;padding:0 30px 0 22px;background:#f8eed4;border:3px solid #7b5a33;border-radius:10px;box-shadow:0 3px 0 #7b5a3355}
+.tag .n{flex:none;width:66px;height:66px;border-radius:50%;background:#6e2a17;color:#f3dfa8;font:900 36px/66px Cinzel,serif}
+.tag .what{flex:1;min-width:0;text-align:left}
+.tag b{display:block;font:900 calc(var(--k,1)*36px)/1.1 Cinzel,serif;white-space:nowrap}
+.tag i{display:block;font-size:22px;color:#5a3a1c;white-space:nowrap}
+.tag .price{flex:none;font:900 34px/1 Cinzel,serif;color:#6e2a17;white-space:nowrap;text-align:right}
+.tag .price s{display:block;font:700 23px/1 Cinzel,serif;color:#8a6a43;margin-bottom:6px}
+.ask{left:60px;top:1128px;width:960px;height:132px}
+.ask h2{margin:0;font:900 calc(var(--k,1)*50px)/1.1 Cinzel,serif;color:#2a1a0c}
+.ask small{margin-top:10px;font:700 16px/1 Cinzel,serif;letter-spacing:3px;color:#7b5a33}
+.foot{left:0;top:1280px;width:1080px;height:70px;flex-direction:row;align-items:center;background:#2a1a0e;white-space:nowrap;font:700 18px/1 Cinzel,serif;letter-spacing:2.5px;color:#e6bf6a;border-top:4px solid #b8892f}
+.foot b{font-family:Fell,serif;font-weight:400;letter-spacing:1px;font-size:23px;text-transform:none;color:#f3dfa8}
+</style></head><body>
+<iframe id="tool" title="Merchant's Row"></iframe>
+<div class="stage">
+<div class="slot mast">The Beholder's Gazette</div>
+<div class="slot art"><img id="art" alt=""></div>
+<div class="slot title"><div class="series">LOOT DROP</div><h1 id="name"></h1><p id="sub"></p></div>
+<div class="slot greet" id="greet"><q id="hello"></q><small id="keeper"></small></div>
+<div class="slot items" id="items"></div>
+<div class="slot ask" id="ask"><h2 id="q">Which one does your rogue steal?</h2><small id="prompt">PRICES FROM THE REALM MARKET EXCHANGE</small></div>
+<div class="slot foot">BROWSE THE SHOP · GAZETTE.ASHFORGESTUDIO.COM · SEED&nbsp;<b id="seed"></b></div>
+</div>
+<script type="application/json" id="out">null</script>
+<script>
+var q = new URLSearchParams(location.search), seed = q.get('seed'), roll = Number(q.get('roll') || 0);
+var t = Number(q.get('t')) || Date.now(), want = (q.get('items') || '').split(',').filter(Boolean);
+if (q.has('debug')) document.body.classList.add('debug');
+var f = document.getElementById('tool');
+f.src = '/shop' + (seed ? '?seed=' + encodeURIComponent(seed) : '');
+function done(state, data) {
+  if (data) document.getElementById('out').textContent = JSON.stringify(data);
+  document.body.dataset.state = state;
+}
+// What the card, captions, and review need, read from the rolled shop.
+function facts(w, s) {
+  var def = w.eval('SHOP_TYPES')[s.type], k = s.keeper;   // consts: not on window
+  return {
+    seed: s.seed, name: s.name, type: s.type, typeLabel: def.label, wealth: w.eval('SHOP_WEALTH')[s.wealth].label,
+    keeper: k.name, keeperIs: w.ruleWord('race', k.race) + ' ' + k.profession.toLowerCase(),
+    greeting: s.greeting, quirk: s.quirk,
+    stock: w.shopPrices(s, t).map(function (p) {
+      return { id: p.id, name: p.name, qty: p.qty, sale: p.sale, price: w.formatCoins(p.price), was: p.sale ? w.formatCoins(p.listPrice) : '' };
+    })
+  };
+}
+f.onload = function () {
+  var w = f.contentWindow, tries = 0;
+  (function wait() {
+    var ready = w.eval('typeof shop !== "undefined" && shop && typeof shopPrices === "function"');
+    if (!ready) { if (++tries > 150) return done('no-shop'); return setTimeout(wait, 100); }
+    if (roll) {
+      var list = [];
+      for (var i = 0; i < roll; i++) {
+        var sd = w.newSeed(), s = w.withSeed(sd, function () { return w.rollShop({ type: 'random', wealth: 'random', seed: sd }); });
+        s.seed = sd;
+        list.push(facts(w, s));
+      }
+      return done('ok', list);
+    }
+    var d = facts(w, w.eval('shop'));
+    if (d.seed !== seed) return done('wrong-shop');
+    var picks = want.map(function (id) { return d.stock.find(function (p) { return p.id === id; }); });
+    if (picks.length !== 3 || picks.some(function (p) { return !p; })) return done('not-in-stock', d);
+    d.picks = picks;
+    var art = document.getElementById('art');
+    art.src = '/img/shop/' + d.type + '.webp';
+    document.getElementById('name').textContent = d.name;
+    document.getElementById('sub').textContent = d.typeLabel + ' · ' + d.wealth;
+    document.getElementById('hello').textContent = d.greeting;
+    document.getElementById('keeper').textContent = '— ' + d.keeper.toUpperCase() + ', ' + d.keeperIs.toUpperCase();
+    document.getElementById('seed').textContent = seed;
+    if (q.get('question')) document.getElementById('q').textContent = q.get('question');
+    if (q.get('prompt')) document.getElementById('prompt').textContent = q.get('prompt').toUpperCase();
+    document.getElementById('items').innerHTML = picks.map(function (p, i) {
+      return '<div class="tag"><div class="n">' + (i + 1) + '</div><div class="what"><b></b><i></i></div><div class="price">' + (p.sale ? '<s></s>' : '') + '<span></span></div></div>';
+    }).join('');
+    Array.prototype.forEach.call(document.querySelectorAll('.tag'), function (el, i) {
+      var p = picks[i];
+      el.querySelector('b').textContent = p.name;
+      el.querySelector('i').textContent = (p.qty > 1 ? p.qty + ' on the shelf' : 'the only one') + (p.sale ? ' · on sale' : '');
+      el.querySelector('.price span').textContent = p.price;
+      if (p.sale) el.querySelector('s').textContent = p.was;
+    });
+    Promise.all([document.fonts.ready, new Promise(function (ok) { art.onload = art.onerror = ok; if (art.complete) ok(); })]).then(function () {
+      // Long names and lines shrink a little (down to data-min of their size); anything still too big fails the card.
+      function fit(el, min) { var k = 1; while ((el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1) && k > min) { k -= 0.01; el.style.setProperty('--k', k.toFixed(2)); } }
+      fit(document.querySelector('.title'), 0.7);
+      fit(document.getElementById('greet'), 0.75);
+      fit(document.getElementById('ask'), 0.75);
+      Array.prototype.forEach.call(document.querySelectorAll('.tag .what'), function (el) { fit(el, 0.7); });
+      var over = Array.prototype.filter.call(document.querySelectorAll('.slot, .tag .what'), function (el) {
+        return el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1 ||
+          Array.prototype.some.call(el.querySelectorAll('h1,p,b,i'), function (x) { return x.scrollWidth > x.clientWidth + 1; });
+      }).map(function (el) { return el.className.split(' ').pop(); });
+      var imgs = Array.from(document.images).every(function (img) { return img.complete && img.naturalWidth > 0; });
+      setTimeout(function () { done(!imgs ? 'missing-image' : over.length ? 'overflow:' + over.join(',') : 'ok', d); }, 300);
+    });
+  })();
+};
+</script></body></html>
