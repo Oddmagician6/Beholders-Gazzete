@@ -1,5 +1,5 @@
 {
-    "generated":  "2026-11-06",
+    "generated":  "2026-11-07",
     "writers":  [
                     {
                         "id":  "ottoline-vex",
@@ -30,8 +30,13 @@
                                            "name":  "Grashka Ironjaw"
                                        }
                                    ],
-                        "article_count":  29,
+                        "article_count":  30,
                         "articles":  [
+                                         {
+                                             "id":  "hydra-head-tax-nine-bills-brindlemoor-appeal",
+                                             "title":  "Hydra Billed Nine Head Taxes in Brindlemoor; Appeal Filed",
+                                             "date":  "2026-11-07"
+                                         },
                                          {
                                              "id":  "bard-persuasion-gate-guard-appointed-tollwick",
                                              "title":  "Bard Bluffs Past Town Gate, Council Hires Him as Guard",
@@ -51,11 +56,6 @@
                                              "id":  "mimic-ballot-box-eats-31-votes-brindlemoor",
                                              "title":  "Mimic Ballot Box Eats 31 Votes in Brindlemoor By-Election",
                                              "date":  "2026-11-03"
-                                         },
-                                         {
-                                             "id":  "adventuring-party-two-doors-vote-torches-out",
-                                             "title":  "Adventuring Party Votes Six Hours on Two Dungeon Doors",
-                                             "date":  "2026-11-02"
                                          }
                                      ]
                     },
@@ -85,8 +85,13 @@
                                            "name":  "Sterling Vanmoor"
                                        }
                                    ],
-                        "article_count":  30,
+                        "article_count":  31,
                         "articles":  [
+                                         {
+                                             "id":  "rope-trick-room-rent-8-gp-brindlemoor",
+                                             "title":  "Rope Trick Rooms Rent at 8 gp a Night; Tenants Fall Out",
+                                             "date":  "2026-11-07"
+                                         },
                                          {
                                              "id":  "treasure-map-sixth-adventuring-party-40-gp",
                                              "title":  "Sixth Party Buys Same \u0027One-of-a-Kind\u0027 Treasure Map",
@@ -106,11 +111,6 @@
                                              "id":  "ring-of-protection-identify-spell-shop-markup",
                                              "title":  "Unidentified Ring Sold for 40 gp, Resold at 1,800 gp",
                                              "date":  "2026-11-03"
-                                         },
-                                         {
-                                             "id":  "potion-of-healing-price-up-12-brindlemoor",
-                                             "title":  "Healing Potion Price Up 12% to 56 gp as Delves Surge",
-                                             "date":  "2026-11-02"
                                          }
                                      ]
                     },
@@ -144,8 +144,13 @@
                                            "name":  "Barnaby Tallowmere"
                                        }
                                    ],
-                        "article_count":  29,
+                        "article_count":  30,
                         "articles":  [
+                                         {
+                                             "id":  "bard-haggle-2-copper-misses-bounty",
+                                             "title":  "Bard Haggles 2 Copper in an Hour, Party Misses 600 gp Bounty",
+                                             "date":  "2026-11-07"
+                                         },
                                          {
                                              "id":  "unidentified-ring-5-gp-ring-of-protection",
                                              "title":  "Party Sells Unknown Ring for 5 gp; It\u0027s a Ring of Protection",
@@ -165,11 +170,6 @@
                                              "id":  "owlbear-union-vote-hootline-couriers-38-2",
                                              "title":  "Owlbear Union Vote at Hootline Ends 38 to 2, Sterling Rattled",
                                              "date":  "2026-11-03"
-                                         },
-                                         {
-                                             "id":  "adventuring-party-haggle-potion-healing-sticker",
-                                             "title":  "Adventuring Party Haggles an Hour, Pays 8 gp Over Sticker",
-                                             "date":  "2026-11-02"
                                          }
                                      ]
                     },
@@ -199,8 +199,13 @@
                                            "name":  "Sterling Vanmoor"
                                        }
                                    ],
-                        "article_count":  29,
+                        "article_count":  30,
                         "articles":  [
+                                         {
+                                             "id":  "pack-mule-grievance-adventuring-party-door-chairs",
+                                             "title":  "Pack Mule Files Grievance After Party Hauls a Door",
+                                             "date":  "2026-11-07"
+                                         },
                                          {
                                              "id":  "otyugh-sewer-night-soil-haulers-strike-brindlemoor",
                                              "title":  "Otyugh in the Sewer: 12 Night-Soil Haulers Strike",
@@ -220,11 +225,6 @@
                                              "id":  "potion-testers-strike-polymorph-batch-newts-brindlemoor",
                                              "title":  "Potion Testers Strike After Polymorph Batch Makes Newts of 9",
                                              "date":  "2026-11-03"
-                                         },
-                                         {
-                                             "id":  "loot-split-torchbearer-paid-exposure-grievance",
-                                             "title":  "Loot Split Dispute: Torchbearer Paid in \u0027Exposure\u0027",
-                                             "date":  "2026-11-02"
                                          }
                                      ]
                     },
@@ -253,8 +253,13 @@
                                            "name":  "Brother Wendell Tumbleberry"
                                        }
                                    ],
-                        "article_count":  29,
+                        "article_count":  30,
                         "articles":  [
+                                         {
+                                             "id":  "gelatinous-cube-floor-cleaner-sweepwick-review",
+                                             "title":  "Gelatinous Cube Floor Cleaner Launches at 45 gp; Eats Rug",
+                                             "date":  "2026-11-07"
+                                         },
                                          {
                                              "id":  "sending-spell-25-words-greetings-party-reply",
                                              "title":  "Sending Spell\u0027s 25 Words Go to Hellos; Reply Says Thanks",
@@ -274,11 +279,6 @@
                                              "id":  "rope-trick-pod-cinderlatch-review-extradimensional",
                                              "title":  "Rope Trick Pod Launches at 90 gp; Exit Costs Extra",
                                              "date":  "2026-11-03"
-                                         },
-                                         {
-                                             "id":  "alarm-spell-ruins-long-rest-mudsock-vanguard",
-                                             "title":  "Alarm Spell Wakes Party 14 Times During One Long Rest",
-                                             "date":  "2026-11-02"
                                          }
                                      ]
                     },
@@ -307,8 +307,13 @@
                                            "name":  "Ottoline Vex"
                                        }
                                    ],
-                        "article_count":  29,
+                        "article_count":  30,
                         "articles":  [
+                                         {
+                                             "id":  "potion-of-invisibility-envoy-parley-three-days",
+                                             "title":  "Potion of Invisibility Envoy Sits Through 3-Day Parley",
+                                             "date":  "2026-11-07"
+                                         },
                                          {
                                              "id":  "rogue-pickpockets-envoy-whistle-varnholt-pellam-incident",
                                              "title":  "Rogue Picks Envoy\u0027s Pocket, Starts Varnholt-Pellam Incident",
@@ -328,11 +333,6 @@
                                              "id":  "adventuring-party-ambushes-envoy-carrying-quest-reward",
                                              "title":  "Adventuring Party Ambushes Envoy Carrying Their Reward",
                                              "date":  "2026-11-03"
-                                         },
-                                         {
-                                             "id":  "bard-lie-border-checkpoint-adventuring-party-toll",
-                                             "title":  "Bard\u0027s Lie at Border Checkpoint Costs Party Far Over 2 Copper",
-                                             "date":  "2026-11-02"
                                          }
                                      ]
                     },
@@ -363,8 +363,13 @@
                                            "name":  "Nyx Spindlecoil"
                                        }
                                    ],
-                        "article_count":  30,
+                        "article_count":  31,
                         "articles":  [
+                                         {
+                                             "id":  "adventuring-party-glowing-mushrooms-no-rations-wendell",
+                                             "title":  "Adventuring Party Eats Glowing Mushrooms, Forgot Rations",
+                                             "date":  "2026-11-07"
+                                         },
                                          {
                                              "id":  "basilisk-eye-exam-clinic-24-petrified-wendell",
                                              "title":  "Basilisk Eye Exam Clinic Petrifies 24 Patients",
@@ -384,11 +389,6 @@
                                              "id":  "glowing-ooze-rogue-licks-adventuring-party-wendell",
                                              "title":  "Rogue Licks Glowing Ooze; Adventuring Party Now Lit Up",
                                              "date":  "2026-11-03"
-                                         },
-                                         {
-                                             "id":  "sleep-spell-extra-hour-57-brindlemoor-wendell",
-                                             "title":  "Sleep Spell Drops 57 Brindlemoor Folk in the Extra Hour",
-                                             "date":  "2026-11-02"
                                          }
                                      ]
                     },
@@ -423,8 +423,13 @@
                                            "name":  "Hollis Delvewright"
                                        }
                                    ],
-                        "article_count":  30,
+                        "article_count":  31,
                         "articles":  [
+                                         {
+                                             "id":  "fireball-burns-inn-innkeepers-damage-deposit",
+                                             "title":  "Wizard\u0027s Fireball Burns Down Inn; Innkeepers Want Deposits",
+                                             "date":  "2026-11-07"
+                                         },
                                          {
                                              "id":  "ankheg-sinkhole-fish-street-cheese-stall",
                                              "title":  "Ankheg Opens Sinkhole Under Fish Street Cheese Stall",
@@ -444,11 +449,6 @@
                                              "id":  "wizard-fireball-tavern-back-room-party-singed",
                                              "title":  "Wizard Casts Fireball in Tavern Back Room, Burns Own Party",
                                              "date":  "2026-11-03"
-                                         },
-                                         {
-                                             "id":  "owlbear-asleep-laundry-cart-fish-street",
-                                             "title":  "Owlbear Naps in Laundry Cart; Fish Street Waits 2 Days",
-                                             "date":  "2026-11-02"
                                          }
                                      ]
                     },
@@ -481,8 +481,13 @@
                                            "name":  "Skritch Mudwhistle"
                                        }
                                    ],
-                        "article_count":  27,
+                        "article_count":  28,
                         "articles":  [
+                                         {
+                                             "id":  "secret-door-search-empty-room-fourth-attempt",
+                                             "title":  "Secret Door Hunt Eats Six Hours in Empty Undermaw Room",
+                                             "date":  "2026-11-07"
+                                         },
                                          {
                                              "id":  "ten-foot-pole-recall-one-inch-short",
                                              "title":  "Ten-Foot Poles Recalled After Coming Up One Inch Short",
@@ -502,11 +507,6 @@
                                              "id":  "mimic-chest-party-splits-up-level-six",
                                              "title":  "Mimic Chest Opened Four Times After Party Splits Up",
                                              "date":  "2026-11-03"
-                                         },
-                                         {
-                                             "id":  "rust-monster-lured-level-seven-nail-trail",
-                                             "title":  "Rust Monster Lured Off Level Seven Step With Nail Trail",
-                                             "date":  "2026-11-02"
                                          }
                                      ]
                     },
@@ -598,8 +598,13 @@
                       "short":  "the Guild",
                       "type":  "institution",
                       "blurb":  "A guild of heritage keepers who sue to protect old buildings and groves in the capital.",
-                      "appearances":  83,
+                      "appearances":  84,
                       "articles":  [
+                                       {
+                                           "id":  "bard-haggle-2-copper-misses-bounty",
+                                           "title":  "Bard Haggles 2 Copper in an Hour, Party Misses 600 gp Bounty",
+                                           "date":  "2026-11-07"
+                                       },
                                        {
                                            "id":  "treasure-map-sixth-adventuring-party-40-gp",
                                            "title":  "Sixth Party Buys Same \u0027One-of-a-Kind\u0027 Treasure Map",
@@ -619,11 +624,40 @@
                                            "id":  "adventuring-party-ruined-keep-4800-gp-upkeep",
                                            "title":  "Adventuring Party Spends 4,800 gp Reward on Ruined Keep",
                                            "date":  "2026-11-04"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Brindlemoor",
+                      "short":  "Brindlemoor",
+                      "type":  "place",
+                      "blurb":  "A frontier market town built on top of the entrance to the Undermaw. Its economy runs on adventurers, and so does its hospital.",
+                      "appearances":  78,
+                      "articles":  [
+                                       {
+                                           "id":  "adventuring-party-glowing-mushrooms-no-rations-wendell",
+                                           "title":  "Adventuring Party Eats Glowing Mushrooms, Forgot Rations",
+                                           "date":  "2026-11-07"
                                        },
                                        {
-                                           "id":  "familiar-grievance-trap-hazard-pay-weasel",
-                                           "title":  "Wizard\u0027s Familiar Files Grievance Over Trap Duty, Wants Pay",
-                                           "date":  "2026-11-04"
+                                           "id":  "bard-haggle-2-copper-misses-bounty",
+                                           "title":  "Bard Haggles 2 Copper in an Hour, Party Misses 600 gp Bounty",
+                                           "date":  "2026-11-07"
+                                       },
+                                       {
+                                           "id":  "fireball-burns-inn-innkeepers-damage-deposit",
+                                           "title":  "Wizard\u0027s Fireball Burns Down Inn; Innkeepers Want Deposits",
+                                           "date":  "2026-11-07"
+                                       },
+                                       {
+                                           "id":  "gelatinous-cube-floor-cleaner-sweepwick-review",
+                                           "title":  "Gelatinous Cube Floor Cleaner Launches at 45 gp; Eats Rug",
+                                           "date":  "2026-11-07"
+                                       },
+                                       {
+                                           "id":  "hydra-head-tax-nine-bills-brindlemoor-appeal",
+                                           "title":  "Hydra Billed Nine Head Taxes in Brindlemoor; Appeal Filed",
+                                           "date":  "2026-11-07"
                                        }
                                    ]
                   },
@@ -662,46 +696,22 @@
                                    ]
                   },
                   {
-                      "name":  "Brindlemoor",
-                      "short":  "Brindlemoor",
-                      "type":  "place",
-                      "blurb":  "A frontier market town built on top of the entrance to the Undermaw. Its economy runs on adventurers, and so does its hospital.",
-                      "appearances":  71,
-                      "articles":  [
-                                       {
-                                           "id":  "ankheg-sinkhole-fish-street-cheese-stall",
-                                           "title":  "Ankheg Opens Sinkhole Under Fish Street Cheese Stall",
-                                           "date":  "2026-11-06"
-                                       },
-                                       {
-                                           "id":  "basilisk-eye-exam-clinic-24-petrified-wendell",
-                                           "title":  "Basilisk Eye Exam Clinic Petrifies 24 Patients",
-                                           "date":  "2026-11-06"
-                                       },
-                                       {
-                                           "id":  "otyugh-sewer-night-soil-haulers-strike-brindlemoor",
-                                           "title":  "Otyugh in the Sewer: 12 Night-Soil Haulers Strike",
-                                           "date":  "2026-11-06"
-                                       },
-                                       {
-                                           "id":  "rogue-pickpockets-envoy-whistle-varnholt-pellam-incident",
-                                           "title":  "Rogue Picks Envoy\u0027s Pocket, Starts Varnholt-Pellam Incident",
-                                           "date":  "2026-11-06"
-                                       },
-                                       {
-                                           "id":  "treasure-map-sixth-adventuring-party-40-gp",
-                                           "title":  "Sixth Party Buys Same \u0027One-of-a-Kind\u0027 Treasure Map",
-                                           "date":  "2026-11-06"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Brindlemoor Adventurers\u0027 Guild, Chapter 9",
                       "short":  "Chapter 9",
                       "type":  "organization",
                       "blurb":  "The guild chapter that licenses parties to enter the Undermaw, sells the maps, and insists the maps are accurate.",
-                      "appearances":  59,
+                      "appearances":  61,
                       "articles":  [
+                                       {
+                                           "id":  "adventuring-party-glowing-mushrooms-no-rations-wendell",
+                                           "title":  "Adventuring Party Eats Glowing Mushrooms, Forgot Rations",
+                                           "date":  "2026-11-07"
+                                       },
+                                       {
+                                           "id":  "secret-door-search-empty-room-fourth-attempt",
+                                           "title":  "Secret Door Hunt Eats Six Hours in Empty Undermaw Room",
+                                           "date":  "2026-11-07"
+                                       },
                                        {
                                            "id":  "ankheg-sinkhole-fish-street-cheese-stall",
                                            "title":  "Ankheg Opens Sinkhole Under Fish Street Cheese Stall",
@@ -715,16 +725,6 @@
                                        {
                                            "id":  "otyugh-sewer-night-soil-haulers-strike-brindlemoor",
                                            "title":  "Otyugh in the Sewer: 12 Night-Soil Haulers Strike",
-                                           "date":  "2026-11-06"
-                                       },
-                                       {
-                                           "id":  "ten-foot-pole-recall-one-inch-short",
-                                           "title":  "Ten-Foot Poles Recalled After Coming Up One Inch Short",
-                                           "date":  "2026-11-06"
-                                       },
-                                       {
-                                           "id":  "treasure-map-sixth-adventuring-party-40-gp",
-                                           "title":  "Sixth Party Buys Same \u0027One-of-a-Kind\u0027 Treasure Map",
                                            "date":  "2026-11-06"
                                        }
                                    ]
@@ -734,8 +734,13 @@
                       "short":  "Oddingwick",
                       "type":  "person",
                       "blurb":  "Chapter 9\u0027s spokesman on permits, openings and corrections. He has announced the opening of Level Seven more times than he has seen it.",
-                      "appearances":  47,
+                      "appearances":  48,
                       "articles":  [
+                                       {
+                                           "id":  "adventuring-party-glowing-mushrooms-no-rations-wendell",
+                                           "title":  "Adventuring Party Eats Glowing Mushrooms, Forgot Rations",
+                                           "date":  "2026-11-07"
+                                       },
                                        {
                                            "id":  "ankheg-sinkhole-fish-street-cheese-stall",
                                            "title":  "Ankheg Opens Sinkhole Under Fish Street Cheese Stall",
@@ -754,11 +759,6 @@
                                        {
                                            "id":  "long-rest-interrupted-watch-rotation-fourth-attempt",
                                            "title":  "Long Rest Interrupted Four Times Over Watch Rotation",
-                                           "date":  "2026-11-05"
-                                       },
-                                       {
-                                           "id":  "loot-split-equal-share-torchbearer-20-gold",
-                                           "title":  "Loot Split: Torchbearer\u0027s \u0027Equal Share\u0027 Is 20 of 3,000 Gold",
                                            "date":  "2026-11-05"
                                        }
                                    ]
@@ -802,8 +802,18 @@
                       "short":  "Reeve Fennick",
                       "type":  "person",
                       "blurb":  "Brindlemoor\u0027s chief magistrate. Signs every dungeon permit, every bounty, and every apology to the farmers downwind.",
-                      "appearances":  39,
+                      "appearances":  41,
                       "articles":  [
+                                       {
+                                           "id":  "hydra-head-tax-nine-bills-brindlemoor-appeal",
+                                           "title":  "Hydra Billed Nine Head Taxes in Brindlemoor; Appeal Filed",
+                                           "date":  "2026-11-07"
+                                       },
+                                       {
+                                           "id":  "rope-trick-room-rent-8-gp-brindlemoor",
+                                           "title":  "Rope Trick Rooms Rent at 8 gp a Night; Tenants Fall Out",
+                                           "date":  "2026-11-07"
+                                       },
                                        {
                                            "id":  "ankheg-sinkhole-fish-street-cheese-stall",
                                            "title":  "Ankheg Opens Sinkhole Under Fish Street Cheese Stall",
@@ -818,16 +828,6 @@
                                            "id":  "wish-spell-unanimous-vote-brindlemoor-council",
                                            "title":  "Wish Spell Makes Brindlemoor Vote Unanimous, 9-0, Forever",
                                            "date":  "2026-11-05"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-tips-bard-500-gp-pearl",
-                                           "title":  "Party Tips Bard 500 gp Pearl, Mistaking It for 1 sp",
-                                           "date":  "2026-11-04"
-                                       },
-                                       {
-                                           "id":  "bag-of-holding-recall-hireling-wages-missing",
-                                           "title":  "Bag of Holding Recalled After Hirelings\u0027 Wages Go Missing",
-                                           "date":  "2026-11-04"
                                        }
                                    ]
                   },
@@ -836,8 +836,18 @@
                       "short":  "the Undermaw",
                       "type":  "place",
                       "blurb":  "The dungeon under Brindlemoor. Its levels are numbered, its bottom has never been found, and the Guild calls it mostly cleared.",
-                      "appearances":  37,
+                      "appearances":  39,
                       "articles":  [
+                                       {
+                                           "id":  "adventuring-party-glowing-mushrooms-no-rations-wendell",
+                                           "title":  "Adventuring Party Eats Glowing Mushrooms, Forgot Rations",
+                                           "date":  "2026-11-07"
+                                       },
+                                       {
+                                           "id":  "secret-door-search-empty-room-fourth-attempt",
+                                           "title":  "Secret Door Hunt Eats Six Hours in Empty Undermaw Room",
+                                           "date":  "2026-11-07"
+                                       },
                                        {
                                            "id":  "ankheg-sinkhole-fish-street-cheese-stall",
                                            "title":  "Ankheg Opens Sinkhole Under Fish Street Cheese Stall",
@@ -852,16 +862,6 @@
                                            "id":  "treasure-map-sixth-adventuring-party-40-gp",
                                            "title":  "Sixth Party Buys Same \u0027One-of-a-Kind\u0027 Treasure Map",
                                            "date":  "2026-11-06"
-                                       },
-                                       {
-                                           "id":  "loot-split-equal-share-torchbearer-20-gold",
-                                           "title":  "Loot Split: Torchbearer\u0027s \u0027Equal Share\u0027 Is 20 of 3,000 Gold",
-                                           "date":  "2026-11-05"
-                                       },
-                                       {
-                                           "id":  "unidentified-potions-brass-kettle-healing-last-vial",
-                                           "title":  "Potion of Healing Was Vial 11: Party Drinks Whole Satchel",
-                                           "date":  "2026-11-05"
                                        }
                                    ]
                   },
@@ -870,8 +870,18 @@
                       "short":  "the Fourth Attempt",
                       "type":  "organization",
                       "blurb":  "An adventuring party named in honor of the first three. Licensed by Chapter 9, popular with bards, unpopular with insurers.",
-                      "appearances":  33,
+                      "appearances":  35,
                       "articles":  [
+                                       {
+                                           "id":  "hydra-head-tax-nine-bills-brindlemoor-appeal",
+                                           "title":  "Hydra Billed Nine Head Taxes in Brindlemoor; Appeal Filed",
+                                           "date":  "2026-11-07"
+                                       },
+                                       {
+                                           "id":  "secret-door-search-empty-room-fourth-attempt",
+                                           "title":  "Secret Door Hunt Eats Six Hours in Empty Undermaw Room",
+                                           "date":  "2026-11-07"
+                                       },
                                        {
                                            "id":  "ten-foot-pole-recall-one-inch-short",
                                            "title":  "Ten-Foot Poles Recalled After Coming Up One Inch Short",
@@ -886,16 +896,6 @@
                                            "id":  "unidentified-potions-brass-kettle-healing-last-vial",
                                            "title":  "Potion of Healing Was Vial 11: Party Drinks Whole Satchel",
                                            "date":  "2026-11-05"
-                                       },
-                                       {
-                                           "id":  "bag-of-holding-recall-hireling-wages-missing",
-                                           "title":  "Bag of Holding Recalled After Hirelings\u0027 Wages Go Missing",
-                                           "date":  "2026-11-04"
-                                       },
-                                       {
-                                           "id":  "glowing-ooze-rogue-licks-adventuring-party-wendell",
-                                           "title":  "Rogue Licks Glowing Ooze; Adventuring Party Now Lit Up",
-                                           "date":  "2026-11-03"
                                        }
                                    ]
                   },
@@ -904,8 +904,18 @@
                       "short":  "Shieldwall Mutual",
                       "type":  "organization",
                       "blurb":  "Brindlemoor\u0027s adventurer insurer. Covers death, dismemberment, and curses, except the ones that are your own fault, which is most of them.",
-                      "appearances":  26,
+                      "appearances":  28,
                       "articles":  [
+                                       {
+                                           "id":  "adventuring-party-glowing-mushrooms-no-rations-wendell",
+                                           "title":  "Adventuring Party Eats Glowing Mushrooms, Forgot Rations",
+                                           "date":  "2026-11-07"
+                                       },
+                                       {
+                                           "id":  "fireball-burns-inn-innkeepers-damage-deposit",
+                                           "title":  "Wizard\u0027s Fireball Burns Down Inn; Innkeepers Want Deposits",
+                                           "date":  "2026-11-07"
+                                       },
                                        {
                                            "id":  "ankheg-sinkhole-fish-street-cheese-stall",
                                            "title":  "Ankheg Opens Sinkhole Under Fish Street Cheese Stall",
@@ -920,16 +930,6 @@
                                            "id":  "ten-foot-pole-recall-one-inch-short",
                                            "title":  "Ten-Foot Poles Recalled After Coming Up One Inch Short",
                                            "date":  "2026-11-06"
-                                       },
-                                       {
-                                           "id":  "unidentified-ring-5-gp-ring-of-protection",
-                                           "title":  "Party Sells Unknown Ring for 5 gp; It\u0027s a Ring of Protection",
-                                           "date":  "2026-11-06"
-                                       },
-                                       {
-                                           "id":  "bag-of-holding-recall-hireling-wages-missing",
-                                           "title":  "Bag of Holding Recalled After Hirelings\u0027 Wages Go Missing",
-                                           "date":  "2026-11-04"
                                        }
                                    ]
                   },
@@ -938,8 +938,13 @@
                       "short":  "Pottage",
                       "type":  "person",
                       "blurb":  "Steward of the Fourth Attempt\u0027s hirelings. Reads contracts all the way to the end, which is more than the party can say.",
-                      "appearances":  25,
+                      "appearances":  26,
                       "articles":  [
+                                       {
+                                           "id":  "secret-door-search-empty-room-fourth-attempt",
+                                           "title":  "Secret Door Hunt Eats Six Hours in Empty Undermaw Room",
+                                           "date":  "2026-11-07"
+                                       },
                                        {
                                            "id":  "ten-foot-pole-recall-one-inch-short",
                                            "title":  "Ten-Foot Poles Recalled After Coming Up One Inch Short",
@@ -959,11 +964,6 @@
                                            "id":  "unidentified-potions-brass-kettle-healing-last-vial",
                                            "title":  "Potion of Healing Was Vial 11: Party Drinks Whole Satchel",
                                            "date":  "2026-11-05"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-fealty-dropped-coins-lord-hask",
-                                           "title":  "Adventuring Party Sworn to Lord After Coin Pickup Mishap",
-                                           "date":  "2026-11-04"
                                        }
                                    ]
                   },
@@ -972,8 +972,13 @@
                       "short":  "the Watch",
                       "type":  "agency",
                       "blurb":  "Underpaid, overworked, and frequently outmatched by griffins.",
-                      "appearances":  25,
+                      "appearances":  26,
                       "articles":  [
+                                       {
+                                           "id":  "bard-haggle-2-copper-misses-bounty",
+                                           "title":  "Bard Haggles 2 Copper in an Hour, Party Misses 600 gp Bounty",
+                                           "date":  "2026-11-07"
+                                       },
                                        {
                                            "id":  "gelatinous-cube-storage-rent-brindlemoor-warehouse",
                                            "title":  "Gelatinous Cube Storage Rents at 2 gp, Eats 11 Crates",
@@ -993,11 +998,6 @@
                                            "id":  "pumpkin-smash-harvest-festival-stillwarder-crowd",
                                            "title":  "Giant Pumpkin Smash Draws Crowd in Stillwarder; Pieces Looted",
                                            "date":  "2026-10-26"
-                                       },
-                                       {
-                                           "id":  "escaped-caiman-months-creek-county-watch",
-                                           "title":  "Escaped Caiman Seized by Watch After Months in the Reeds",
-                                           "date":  "2026-10-25"
                                        }
                                    ]
                   },
@@ -1006,8 +1006,13 @@
                       "short":  "the Chamber",
                       "type":  "institution",
                       "blurb":  "Upper house of Waterdeep, where Councilors debate, filibuster, and occasionally stop time.",
-                      "appearances":  25,
+                      "appearances":  26,
                       "articles":  [
+                                       {
+                                           "id":  "hydra-head-tax-nine-bills-brindlemoor-appeal",
+                                           "title":  "Hydra Billed Nine Head Taxes in Brindlemoor; Appeal Filed",
+                                           "date":  "2026-11-07"
+                                       },
                                        {
                                            "id":  "wish-spell-unanimous-vote-brindlemoor-council",
                                            "title":  "Wish Spell Makes Brindlemoor Vote Unanimous, 9-0, Forever",
@@ -1027,11 +1032,6 @@
                                            "id":  "ghost-filibuster-day-eleven-brindlemoor-council",
                                            "title":  "Ghost Filibuster Reaches Day 11 in Brindlemoor Council",
                                            "date":  "2026-10-31"
-                                       },
-                                       {
-                                           "id":  "doppelganger-two-council-seats-quorum-brindlemoor",
-                                           "title":  "Doppelganger Held Two Council Seats; Quorum Void",
-                                           "date":  "2026-10-28"
                                        }
                                    ]
                   },
@@ -1066,6 +1066,40 @@
                                            "id":  "mail-ballots-20000-golden-coast-inquisitors",
                                            "title":  "Golden Coast: 20,000 Mail Ballots Face Inquisitor Purge",
                                            "date":  "2026-10-26"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "The Sleeping Mule Tavern",
+                      "short":  "the Sleeping Mule",
+                      "type":  "place",
+                      "blurb":  "A Tanner\u0027s Row tavern in Brindlemoor with a deep cellar, a loyal clientele of adventurers, and until recently a very clean walk-in cooler.",
+                      "appearances":  17,
+                      "articles":  [
+                                       {
+                                           "id":  "adventuring-party-glowing-mushrooms-no-rations-wendell",
+                                           "title":  "Adventuring Party Eats Glowing Mushrooms, Forgot Rations",
+                                           "date":  "2026-11-07"
+                                       },
+                                       {
+                                           "id":  "otyugh-sewer-night-soil-haulers-strike-brindlemoor",
+                                           "title":  "Otyugh in the Sewer: 12 Night-Soil Haulers Strike",
+                                           "date":  "2026-11-06"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-tips-bard-500-gp-pearl",
+                                           "title":  "Party Tips Bard 500 gp Pearl, Mistaking It for 1 sp",
+                                           "date":  "2026-11-04"
+                                       },
+                                       {
+                                           "id":  "sleep-spell-extra-hour-57-brindlemoor-wendell",
+                                           "title":  "Sleep Spell Drops 57 Brindlemoor Folk in the Extra Hour",
+                                           "date":  "2026-11-02"
+                                       },
+                                       {
+                                           "id":  "displacer-beast-undermaw-level-four-map-error",
+                                           "title":  "Displacer Beast Found Three Feet Off Chapter 9 Map",
+                                           "date":  "2026-10-31"
                                        }
                                    ]
                   },
@@ -1134,40 +1168,6 @@
                                            "id":  "foldable-phone-launch-walk-in-stock-duet",
                                            "title":  "Foldable Phone Launch Day: Duet Walk-In Stock \u0027Limited\u0027",
                                            "date":  "2026-10-24"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "The Sleeping Mule Tavern",
-                      "short":  "the Sleeping Mule",
-                      "type":  "place",
-                      "blurb":  "A Tanner\u0027s Row tavern in Brindlemoor with a deep cellar, a loyal clientele of adventurers, and until recently a very clean walk-in cooler.",
-                      "appearances":  16,
-                      "articles":  [
-                                       {
-                                           "id":  "otyugh-sewer-night-soil-haulers-strike-brindlemoor",
-                                           "title":  "Otyugh in the Sewer: 12 Night-Soil Haulers Strike",
-                                           "date":  "2026-11-06"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-tips-bard-500-gp-pearl",
-                                           "title":  "Party Tips Bard 500 gp Pearl, Mistaking It for 1 sp",
-                                           "date":  "2026-11-04"
-                                       },
-                                       {
-                                           "id":  "sleep-spell-extra-hour-57-brindlemoor-wendell",
-                                           "title":  "Sleep Spell Drops 57 Brindlemoor Folk in the Extra Hour",
-                                           "date":  "2026-11-02"
-                                       },
-                                       {
-                                           "id":  "displacer-beast-undermaw-level-four-map-error",
-                                           "title":  "Displacer Beast Found Three Feet Off Chapter 9 Map",
-                                           "date":  "2026-10-31"
-                                       },
-                                       {
-                                           "id":  "ghost-lamplighters-strike-hallows-eve-brindlemoor",
-                                           "title":  "Ghost Lamplighters Strike on Hallow\u0027s Eve Over Haunt Pay",
-                                           "date":  "2026-10-31"
                                        }
                                    ]
                   },
@@ -1784,6 +1784,74 @@
                                    ]
                   },
                   {
+                      "name":  "Ashenfold",
+                      "short":  "Ashenfold",
+                      "type":  "place",
+                      "blurb":  "A barony on the near side of the Quillmarch Bridge, forever in talks with its neighbor Brackwater.",
+                      "appearances":  8,
+                      "articles":  [
+                                       {
+                                           "id":  "potion-of-invisibility-envoy-parley-three-days",
+                                           "title":  "Potion of Invisibility Envoy Sits Through 3-Day Parley",
+                                           "date":  "2026-11-07"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-shortcut-border-nine-hours-incident",
+                                           "title":  "Adventuring Party\u0027s Shortcut Turns 2-Hour Road Into 9",
+                                           "date":  "2026-11-05"
+                                       },
+                                       {
+                                           "id":  "bard-lie-border-checkpoint-adventuring-party-toll",
+                                           "title":  "Bard\u0027s Lie at Border Checkpoint Costs Party Far Over 2 Copper",
+                                           "date":  "2026-11-02"
+                                       },
+                                       {
+                                           "id":  "bridge-troll-toll-212-turnips-armed-company",
+                                           "title":  "Bridge Troll Bills 212 Turnips as Armed Company",
+                                           "date":  "2026-11-01"
+                                       },
+                                       {
+                                           "id":  "wish-spell-turnips-tariff-brackwater-ashenfold",
+                                           "title":  "Brackwater Slaps Tariff on 212 Wish Spell Turnips",
+                                           "date":  "2026-10-31"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Brackwater",
+                      "short":  "Brackwater",
+                      "type":  "place",
+                      "blurb":  "A barony across the Quillmarch Bridge from Ashenfold. The two have been negotiating a lasting peace for longer than anyone remembers.",
+                      "appearances":  8,
+                      "articles":  [
+                                       {
+                                           "id":  "potion-of-invisibility-envoy-parley-three-days",
+                                           "title":  "Potion of Invisibility Envoy Sits Through 3-Day Parley",
+                                           "date":  "2026-11-07"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-shortcut-border-nine-hours-incident",
+                                           "title":  "Adventuring Party\u0027s Shortcut Turns 2-Hour Road Into 9",
+                                           "date":  "2026-11-05"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-ambushes-envoy-carrying-quest-reward",
+                                           "title":  "Adventuring Party Ambushes Envoy Carrying Their Reward",
+                                           "date":  "2026-11-03"
+                                       },
+                                       {
+                                           "id":  "bard-lie-border-checkpoint-adventuring-party-toll",
+                                           "title":  "Bard\u0027s Lie at Border Checkpoint Costs Party Far Over 2 Copper",
+                                           "date":  "2026-11-02"
+                                       },
+                                       {
+                                           "id":  "bridge-troll-toll-212-turnips-armed-company",
+                                           "title":  "Bridge Troll Bills 212 Turnips as Armed Company",
+                                           "date":  "2026-11-01"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Gargoogle",
                       "short":  "Gargoogle",
                       "type":  "company",
@@ -1920,74 +1988,6 @@
                                    ]
                   },
                   {
-                      "name":  "Ashenfold",
-                      "short":  "Ashenfold",
-                      "type":  "place",
-                      "blurb":  "A barony on the near side of the Quillmarch Bridge, forever in talks with its neighbor Brackwater.",
-                      "appearances":  7,
-                      "articles":  [
-                                       {
-                                           "id":  "adventuring-party-shortcut-border-nine-hours-incident",
-                                           "title":  "Adventuring Party\u0027s Shortcut Turns 2-Hour Road Into 9",
-                                           "date":  "2026-11-05"
-                                       },
-                                       {
-                                           "id":  "bard-lie-border-checkpoint-adventuring-party-toll",
-                                           "title":  "Bard\u0027s Lie at Border Checkpoint Costs Party Far Over 2 Copper",
-                                           "date":  "2026-11-02"
-                                       },
-                                       {
-                                           "id":  "bridge-troll-toll-212-turnips-armed-company",
-                                           "title":  "Bridge Troll Bills 212 Turnips as Armed Company",
-                                           "date":  "2026-11-01"
-                                       },
-                                       {
-                                           "id":  "wish-spell-turnips-tariff-brackwater-ashenfold",
-                                           "title":  "Brackwater Slaps Tariff on 212 Wish Spell Turnips",
-                                           "date":  "2026-10-31"
-                                       },
-                                       {
-                                           "id":  "teleportation-circle-commuter-line-hopwell-transit-review",
-                                           "title":  "Teleportation Circle Commuter Line Opens; Nyx Arrives Twice",
-                                           "date":  "2026-10-30"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Brackwater",
-                      "short":  "Brackwater",
-                      "type":  "place",
-                      "blurb":  "A barony across the Quillmarch Bridge from Ashenfold. The two have been negotiating a lasting peace for longer than anyone remembers.",
-                      "appearances":  7,
-                      "articles":  [
-                                       {
-                                           "id":  "adventuring-party-shortcut-border-nine-hours-incident",
-                                           "title":  "Adventuring Party\u0027s Shortcut Turns 2-Hour Road Into 9",
-                                           "date":  "2026-11-05"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-ambushes-envoy-carrying-quest-reward",
-                                           "title":  "Adventuring Party Ambushes Envoy Carrying Their Reward",
-                                           "date":  "2026-11-03"
-                                       },
-                                       {
-                                           "id":  "bard-lie-border-checkpoint-adventuring-party-toll",
-                                           "title":  "Bard\u0027s Lie at Border Checkpoint Costs Party Far Over 2 Copper",
-                                           "date":  "2026-11-02"
-                                       },
-                                       {
-                                           "id":  "bridge-troll-toll-212-turnips-armed-company",
-                                           "title":  "Bridge Troll Bills 212 Turnips as Armed Company",
-                                           "date":  "2026-11-01"
-                                       },
-                                       {
-                                           "id":  "wish-spell-turnips-tariff-brackwater-ashenfold",
-                                           "title":  "Brackwater Slaps Tariff on 212 Wish Spell Turnips",
-                                           "date":  "2026-10-31"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Cormyr",
                       "short":  "Cormyr",
                       "type":  "country",
@@ -2052,6 +2052,40 @@
                                            "id":  "concord-kara-tur-trade-deal-rare-earth",
                                            "title":  "Trade Deal Reached After Two-Day Parley; Hybrid Carriages Cut",
                                            "date":  "2026-10-14"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Quillmarch Bridge",
+                      "short":  "Quillmarch Bridge",
+                      "type":  "place",
+                      "blurb":  "The only river crossing for forty miles between the baronies of Ashenfold and Brackwater.",
+                      "appearances":  7,
+                      "articles":  [
+                                       {
+                                           "id":  "potion-of-invisibility-envoy-parley-three-days",
+                                           "title":  "Potion of Invisibility Envoy Sits Through 3-Day Parley",
+                                           "date":  "2026-11-07"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-shortcut-border-nine-hours-incident",
+                                           "title":  "Adventuring Party\u0027s Shortcut Turns 2-Hour Road Into 9",
+                                           "date":  "2026-11-05"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-ambushes-envoy-carrying-quest-reward",
+                                           "title":  "Adventuring Party Ambushes Envoy Carrying Their Reward",
+                                           "date":  "2026-11-03"
+                                       },
+                                       {
+                                           "id":  "bridge-troll-toll-212-turnips-armed-company",
+                                           "title":  "Bridge Troll Bills 212 Turnips as Armed Company",
+                                           "date":  "2026-11-01"
+                                       },
+                                       {
+                                           "id":  "wish-spell-turnips-tariff-brackwater-ashenfold",
+                                           "title":  "Brackwater Slaps Tariff on 212 Wish Spell Turnips",
+                                           "date":  "2026-10-31"
                                        }
                                    ]
                   },
@@ -2294,6 +2328,40 @@
                                    ]
                   },
                   {
+                      "name":  "Envoy Halric Dunmere",
+                      "short":  "Dunmere",
+                      "type":  "person",
+                      "blurb":  "Ashenfold\u0027s envoy at the border parleys. Careful with words in theory, and careless with them in practice.",
+                      "appearances":  6,
+                      "articles":  [
+                                       {
+                                           "id":  "gelatinous-cube-floor-cleaner-sweepwick-review",
+                                           "title":  "Gelatinous Cube Floor Cleaner Launches at 45 gp; Eats Rug",
+                                           "date":  "2026-11-07"
+                                       },
+                                       {
+                                           "id":  "potion-of-invisibility-envoy-parley-three-days",
+                                           "title":  "Potion of Invisibility Envoy Sits Through 3-Day Parley",
+                                           "date":  "2026-11-07"
+                                       },
+                                       {
+                                           "id":  "bard-lie-border-checkpoint-adventuring-party-toll",
+                                           "title":  "Bard\u0027s Lie at Border Checkpoint Costs Party Far Over 2 Copper",
+                                           "date":  "2026-11-02"
+                                       },
+                                       {
+                                           "id":  "bridge-troll-toll-212-turnips-armed-company",
+                                           "title":  "Bridge Troll Bills 212 Turnips as Armed Company",
+                                           "date":  "2026-11-01"
+                                       },
+                                       {
+                                           "id":  "wish-spell-turnips-tariff-brackwater-ashenfold",
+                                           "title":  "Brackwater Slaps Tariff on 212 Wish Spell Turnips",
+                                           "date":  "2026-10-31"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Envydia",
                       "short":  "Envydia",
                       "type":  "company",
@@ -2358,40 +2426,6 @@
                                            "id":  "tarpon-catch-and-release-arrest-cays-watch",
                                            "title":  "Dead Tarpon in Truck Bed Lands Angler in Cays Dungeon",
                                            "date":  "2026-10-19"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Quillmarch Bridge",
-                      "short":  "Quillmarch Bridge",
-                      "type":  "place",
-                      "blurb":  "The only river crossing for forty miles between the baronies of Ashenfold and Brackwater.",
-                      "appearances":  6,
-                      "articles":  [
-                                       {
-                                           "id":  "adventuring-party-shortcut-border-nine-hours-incident",
-                                           "title":  "Adventuring Party\u0027s Shortcut Turns 2-Hour Road Into 9",
-                                           "date":  "2026-11-05"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-ambushes-envoy-carrying-quest-reward",
-                                           "title":  "Adventuring Party Ambushes Envoy Carrying Their Reward",
-                                           "date":  "2026-11-03"
-                                       },
-                                       {
-                                           "id":  "bridge-troll-toll-212-turnips-armed-company",
-                                           "title":  "Bridge Troll Bills 212 Turnips as Armed Company",
-                                           "date":  "2026-11-01"
-                                       },
-                                       {
-                                           "id":  "wish-spell-turnips-tariff-brackwater-ashenfold",
-                                           "title":  "Brackwater Slaps Tariff on 212 Wish Spell Turnips",
-                                           "date":  "2026-10-31"
-                                       },
-                                       {
-                                           "id":  "wish-spell-border-parley-swords-turnips-ashenfold",
-                                           "title":  "Wish Spell Turns Border Swords Into Turnips at Parley",
-                                           "date":  "2026-10-30"
                                        }
                                    ]
                   },
@@ -2664,6 +2698,40 @@
                                            "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
                                            "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
                                            "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Envoy Teodra Hallowmere",
+                      "short":  "Hallowmere",
+                      "type":  "person",
+                      "blurb":  "Brackwater\u0027s envoy at the border parleys. She taxes intent rather than goods.",
+                      "appearances":  5,
+                      "articles":  [
+                                       {
+                                           "id":  "potion-of-invisibility-envoy-parley-three-days",
+                                           "title":  "Potion of Invisibility Envoy Sits Through 3-Day Parley",
+                                           "date":  "2026-11-07"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-shortcut-border-nine-hours-incident",
+                                           "title":  "Adventuring Party\u0027s Shortcut Turns 2-Hour Road Into 9",
+                                           "date":  "2026-11-05"
+                                       },
+                                       {
+                                           "id":  "bard-lie-border-checkpoint-adventuring-party-toll",
+                                           "title":  "Bard\u0027s Lie at Border Checkpoint Costs Party Far Over 2 Copper",
+                                           "date":  "2026-11-02"
+                                       },
+                                       {
+                                           "id":  "bridge-troll-toll-212-turnips-armed-company",
+                                           "title":  "Bridge Troll Bills 212 Turnips as Armed Company",
+                                           "date":  "2026-11-01"
+                                       },
+                                       {
+                                           "id":  "wish-spell-turnips-tariff-brackwater-ashenfold",
+                                           "title":  "Brackwater Slaps Tariff on 212 Wish Spell Turnips",
+                                           "date":  "2026-10-31"
                                        }
                                    ]
                   },
@@ -3193,64 +3261,6 @@
                                            "id":  "central-bank-chief-snowhold-conclave-laguard",
                                            "title":  "Central Bank Chief Eyed for Snowhold Conclave Chair",
                                            "date":  "2026-10-15"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Envoy Halric Dunmere",
-                      "short":  "Dunmere",
-                      "type":  "person",
-                      "blurb":  "Ashenfold\u0027s envoy at the border parleys. Careful with words in theory, and careless with them in practice.",
-                      "appearances":  4,
-                      "articles":  [
-                                       {
-                                           "id":  "bard-lie-border-checkpoint-adventuring-party-toll",
-                                           "title":  "Bard\u0027s Lie at Border Checkpoint Costs Party Far Over 2 Copper",
-                                           "date":  "2026-11-02"
-                                       },
-                                       {
-                                           "id":  "bridge-troll-toll-212-turnips-armed-company",
-                                           "title":  "Bridge Troll Bills 212 Turnips as Armed Company",
-                                           "date":  "2026-11-01"
-                                       },
-                                       {
-                                           "id":  "wish-spell-turnips-tariff-brackwater-ashenfold",
-                                           "title":  "Brackwater Slaps Tariff on 212 Wish Spell Turnips",
-                                           "date":  "2026-10-31"
-                                       },
-                                       {
-                                           "id":  "wish-spell-border-parley-swords-turnips-ashenfold",
-                                           "title":  "Wish Spell Turns Border Swords Into Turnips at Parley",
-                                           "date":  "2026-10-30"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Envoy Teodra Hallowmere",
-                      "short":  "Hallowmere",
-                      "type":  "person",
-                      "blurb":  "Brackwater\u0027s envoy at the border parleys. She taxes intent rather than goods.",
-                      "appearances":  4,
-                      "articles":  [
-                                       {
-                                           "id":  "adventuring-party-shortcut-border-nine-hours-incident",
-                                           "title":  "Adventuring Party\u0027s Shortcut Turns 2-Hour Road Into 9",
-                                           "date":  "2026-11-05"
-                                       },
-                                       {
-                                           "id":  "bard-lie-border-checkpoint-adventuring-party-toll",
-                                           "title":  "Bard\u0027s Lie at Border Checkpoint Costs Party Far Over 2 Copper",
-                                           "date":  "2026-11-02"
-                                       },
-                                       {
-                                           "id":  "bridge-troll-toll-212-turnips-armed-company",
-                                           "title":  "Bridge Troll Bills 212 Turnips as Armed Company",
-                                           "date":  "2026-11-01"
-                                       },
-                                       {
-                                           "id":  "wish-spell-turnips-tariff-brackwater-ashenfold",
-                                           "title":  "Brackwater Slaps Tariff on 212 Wish Spell Turnips",
-                                           "date":  "2026-10-31"
                                        }
                                    ]
                   },
@@ -5846,6 +5856,25 @@
                                            "id":  "donwald-no-siege-of-calimshan-until-ballots-counted",
                                            "title":  "Donwald Declares No Siege of Calimshan Until the Ballots Are Counted",
                                            "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Pink Heron Fellowship",
+                      "short":  "the Fellowship",
+                      "type":  "institution",
+                      "blurb":  "A student-led movement that began opposing a luxury resort and now demands the Chancellor\u0027s removal.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "pack-mule-grievance-adventuring-party-door-chairs",
+                                           "title":  "Pack Mule Files Grievance After Party Hauls a Door",
+                                           "date":  "2026-11-07"
+                                       },
+                                       {
+                                           "id":  "albarn-protests-rubber-bullets-167-arrested-ramah",
+                                           "title":  "Albarn Protests Hit Day Five; Chancellor Ramah Won\u0027t Resign",
+                                           "date":  "2026-10-24"
                                        }
                                    ]
                   },
@@ -8868,6 +8897,20 @@
                                    ]
                   },
                   {
+                      "name":  "Slick",
+                      "short":  "Slick",
+                      "type":  "item",
+                      "blurb":  "Sweepwick\u0027s 45 gp household gelatinous cube that cleans floors, fed weekly on Nutrient Cakes.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "gelatinous-cube-floor-cleaner-sweepwick-review",
+                                           "title":  "Gelatinous Cube Floor Cleaner Launches at 45 gp; Eats Rug",
+                                           "date":  "2026-11-07"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Snowhold",
                       "short":  "Snowhold",
                       "type":  "city",
@@ -9060,6 +9103,20 @@
                                            "id":  "pumpkin-smash-harvest-festival-stillwarder-crowd",
                                            "title":  "Giant Pumpkin Smash Draws Crowd in Stillwarder; Pieces Looted",
                                            "date":  "2026-10-26"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Sweepwick Home Goods",
+                      "short":  "Sweepwick",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor maker of household cleaning gear, best known for the Slick, a domesticated gelatinous cube.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "gelatinous-cube-floor-cleaner-sweepwick-review",
+                                           "title":  "Gelatinous Cube Floor Cleaner Launches at 45 gp; Eats Rug",
+                                           "date":  "2026-11-07"
                                        }
                                    ]
                   },
@@ -9900,20 +9957,6 @@
                                            "id":  "retail-sales-lamp-oil-merchant-ministry",
                                            "title":  "Retail Sales Rise 0.8%, Mostly Lamp Oil Costs",
                                            "date":  "2026-10-16"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "the Pink Heron Fellowship",
-                      "short":  "the Fellowship",
-                      "type":  "institution",
-                      "blurb":  "A student-led movement that began opposing a luxury resort and now demands the Chancellor\u0027s removal.",
-                      "appearances":  1,
-                      "articles":  [
-                                       {
-                                           "id":  "albarn-protests-rubber-bullets-167-arrested-ramah",
-                                           "title":  "Albarn Protests Hit Day Five; Chancellor Ramah Won\u0027t Resign",
-                                           "date":  "2026-10-24"
                                        }
                                    ]
                   },

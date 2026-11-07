@@ -7111,6 +7111,307 @@
         "rumor": "They say the basilisk only turns folk to stone if they look at it, which is why the stone ones are all the ones who read the sign."
       },
       "fiction": true
+    },
+    {
+      "id": "rope-trick-room-rent-8-gp-brindlemoor",
+      "title": "Rope Trick Rooms Rent at 8 gp a Night; Tenants Fall Out",
+      "category": "Real Estate",
+      "author": "Barnaby Tallowmere",
+      "date": "2026-11-07",
+      "excerpt": "A Brindlemoor landlord rents rope trick rooms for 8 gp a night, a third of inn rates. Tenants say the spell ends at the hour. Barnaby did the sums.",
+      "social": "A Brindlemoor landlord is renting rope trick rooms for 8 gp a night, a third of the usual inn rate. The catch is that the spell lasts one hour. Forty tenants have already landed in the street, one with a stew. Would you sleep up the rope for 8 gp?",
+      "content": "<p>A Brindlemoor landlord is renting rope trick rooms, the little hidden chambers up a magic rope, for 8 gp a night. That is about a third of the 24 gp the Tanner's Row inns charge, and it has filled every room on the rope in two days. There is one problem, which is that a rope trick lasts an hour, and nobody has told the tenants the hour is up until they land in the street.</p>\n\n<p>Landlord Corwin Prouse, a retired wizard's apprentice, casts the spell at nightfall and sells eight beds per rope. By his own count, 40 tenants have been dropped onto the cobbles since Wednesday. One was holding a bowl of stew. (I have checked this number four times, and the stew number three.)</p>\n\n<p>Here is the economics, and it is not complicated. A cheap bed is cheap because the landlord has cut a cost, and here the cost cut is the second hour. At 8 gp for one hour, the true price is 8 gp per hour of sleep. The inn charges 24 gp for eight hours, or 3 gp an hour. In Loaf Index terms, 8 gp buys about 267 loaves, and you may sleep on all 267 of them for exactly sixty minutes. (My aunt Marigold says this is why she sleeps in a bed that has a floor.)</p>\n\n<p>Prouse says the rooms are a fair deal. \"The rope is a bargain. The hour is a feature,\" he told this paper, adding that tenants who wish to stay longer may buy a second casting at 8 gp, which brings the price to 16 gp and still leaves one hour of sleep short of a night. Seven tenants have paid for the second casting. Three of them fell out during it anyway, because the cast was on a different rope.</p>\n\n<p>Reeve Fennick of Brindlemoor, who signs the lodging permits, said the town was aware of the rope. \"We are aware of the rope,\" she said. \"We are also aware of the stew.\" The Reeve confirmed that an extradimensional room is not a licensed inn, a licensed cellar, or a licensed anything, and that a notice has been sent. The notice was delivered up the rope, and nobody has yet reported whether it arrived.</p>\n\n<p>The Tanner's Row innkeepers have, quietly, raised their rates. A bed in a real room is now 26 gp, up 2 gp, which is the price of the rope's competition plus a small fee for existing. That is 87 more loaves a night for a bed that stays where you left it. What this means for your pantry: if the rent is cheap, ask what happens at the hour, and keep a spare loaf in your coat for the landing.</p>\n\n<p><em>— B.T. (Loaf Index: see sidebar)</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Hour Ends at Midnight",
+          "text": "A landlord rents rope trick rooms cheaply, and tenants keep disappearing from the rope early. The innkeepers want the rope stopped, but the party learns a missing guest is stuck in a room that never closed."
+        },
+        "npc": {
+          "name": "Corwin Prouse",
+          "role": "Rope-room landlord",
+          "want": "To keep filling the rooms before the inns lower their rates.",
+          "secret": "He cannot cast the spell himself and pays a mage's apprentice by the hour.",
+          "race": "human",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Hanging Rope on Tanner's Row",
+          "text": "A rope that hangs from nothing in a yard behind a cooper's shop. Its door is open at dusk and gone by moonrise.",
+          "tavern": false
+        },
+        "rumor": "They say a tenant who never fell out is still up there, and that he has painted the walls."
+      },
+      "fiction": true
+    },
+    {
+      "id": "pack-mule-grievance-adventuring-party-door-chairs",
+      "title": "Pack Mule Files Grievance After Party Hauls a Door",
+      "category": "Labor",
+      "author": "Brakka Stonesweat",
+      "date": "2026-11-07",
+      "excerpt": "A pack mule named Biscuit filed a grievance after her adventuring party loaded rusty armor, a door, and three chairs onto her back.",
+      "social": "Biscuit the pack mule carried a door, three chairs, and eleven suits of rusty armor out of a dungeon. Then she filed a grievance. The party's rogue says the chairs were 'structurally promising.' Would you have left the door behind?",
+      "content": "<p>A pack mule has filed a grievance.</p>\n\n<p>Biscuit, a pack mule of nine years' service, lodged the complaint Tuesday with the Brindlemoor Haulers' Fellowship after her adventuring party, the Seven Boots Company, loaded her with every item they found in a crypt. That was eleven suits of rusty armor, one oak door still on its hinges, and three chairs, only two of which matched.</p>\n\n<p>The Fellowship's filing calls it 'a load beyond what any reasonable mule, or unreasonable one, can be asked to carry.' In plain speech: she was a shelf with legs.</p>\n\n<p>'I told them at the crypt mouth,' said Orsolya Tinwhistle, a hauler-steward who took Biscuit's statement. 'She said nothing. She's a mule. But she looked at the door, then at me, then at the door again. I've been a steward twenty years. I know a grievance when I see one.'</p>\n\n<p>The party's rogue, Pim Calloway, defended the haul. 'Chairs sell,' he said. 'Doors sell. The armor is, admittedly, mostly rust. We were going to sell the rust.' He added that the second chair was 'structurally promising.'</p>\n\n<p>Witnesses on the road back to Brindlemoor say Biscuit stopped four times. The first stop was to rest. The second was to sit down. The third and fourth were to let the party's wizard try a feather fall spell on her, which he says was a kindness and she says nothing about, being a mule.</p>\n\n<p>The Fellowship wants three things: a hard cap of two hundred pounds of loot per animal, a proper lunch break at midday with oats, and a ban on 'architectural salvage' unless the party carries it themselves. 'You want the door,' said Tinwhistle, 'you wear the door.'</p>\n\n<p>The Seven Boots Company has agreed to the oats. On the cap, their paladin, Dessa Hollowmere, said the party 'would be open to a conversation.' That means no.</p>\n\n<p>Meanwhile the door is leaning against the Fellowship hall, where it has been declared evidence. Two of the chairs are being used by the grievance panel. Nobody has claimed the third.</p>\n\n<p>Biscuit is on paid rest until the hearing. She spent Wednesday in a field. Her statement to the panel is expected to be short.</p>\n\n<p><em>Solidarity. And stretch your back. — Brakka</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Mule Who Said No",
+          "text": "A pack mule's guild has called a work stoppage over an overloaded loot haul, and the party's gear is stuck in a roadside barn. The hauler-steward will release it if the party hears the grievance and promises to carry their own door."
+        },
+        "npc": {
+          "name": "Orsolya Tinwhistle",
+          "role": "Hauler-steward of the Fellowship",
+          "want": "Fair loads, proper oats, and a rule that adventurers carry their own architecture.",
+          "secret": "She has been quietly selling surplus loot the animals carried to pay for the animals' retirement barn.",
+          "race": "dwarf",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Leaning Stable",
+          "text": "A roadside stable where striking pack animals wait out disputes. Every stall has a small brass plaque listing the owner's debts to the animal.",
+          "tavern": false
+        },
+        "rumor": "Somebody said the mule can count and knows exactly how many silver pieces that door is worth."
+      },
+      "fiction": true
+    },
+    {
+      "id": "potion-of-invisibility-envoy-parley-three-days",
+      "title": "Potion of Invisibility Envoy Sits Through 3-Day Parley",
+      "category": "International",
+      "author": "Grashka Ironjaw",
+      "date": "2026-11-07",
+      "excerpt": "An Ashenfold aide drank a potion of invisibility and sat unseen through three days of border talks with Brackwater. Tension holds at six siege-days.",
+      "social": "An Ashenfold aide drank a potion of invisibility and sat through three days of border talks with Brackwater. Nobody noticed. He ate eleven rations and signed the treaty as 'the draft'. Would you have caught him?",
+      "content": "<p>An Ashenfold aide drank a potion of invisibility before the border parley with Brackwater and sat unseen at the table for three days. The talks, the latest in the long dispute over Quillmarch Bridge, ended Thursday. Both baronies signed a treaty with one more seat in it than anyone can account for.</p>\n\n<p>The aide, Tamsin Wrenholt, says she meant to listen. She drank the potion in a hallway, took the empty chair beside <a href=\"/a/wish-spell-border-parley-swords-turnips-ashenfold\">the envoy who turned the swords into turnips</a>, and stayed. No one asked her to leave. No one asked her anything.</p>\n\n<p>I attended the parley. I counted eleven chairs and ten delegates. I wrote it down and moved on. That is a failure of the field, and I own it.</p>\n\n<p>Envoy Halric Dunmere of Ashenfold said he felt \"supported.\" Envoy Teodra Hallowmere of Brackwater said she had noticed a draft, a faint smell of boiled cabbage, and a ham sandwich that shrank by half on day two. She taxed the sandwich as an unregistered import.</p>\n\n<p>The ration count is the clue. Eleven field rations vanished from the sideboard over three days. I respect the appetite. Honest hunger is the best thing in this business.</p>\n\n<p>By day three the invisible aide had voted twice, corrected a clause on grazing rights, and been thanked by name in the minutes as \"the draft.\" Hallowmere says the clause is excellent and she will not be reopening it.</p>\n\n<p>The potion wore off at 4:10 on Thursday afternoon, mid-signature. Wrenholt appeared above the final page, holding the pen. Brackwater's guards drew steel. Ashenfold's guards drew steel and then, looking at each other, put it back. \"We thought she was ours,\" said one. \"We assumed she was theirs,\" said a Brackwater captain. Both sides are now claiming her.</p>\n\n<p>Handshake with Dunmere: firm, two seconds, no hidden dagger detected, though I will be checking the room for a tenth delegate from now on. Hallowmere declined to shake. She said she did not trust a hand she could not see until further notice.</p>\n\n<p>Brackwater says the treaty is void because an unregistered party signed it. Ashenfold says the treaty is valid because the party was present, which no one can dispute. The chair of the parley has asked for a ruling and a ruler. Tension holds at six siege-days. Nobody won. Somebody will lose tomorrow, and I would like to see them first.</p>\n\n<p><em>Ironjaw, filed from the front.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Eleventh Chair",
+          "text": "A treaty between two baronies is being thrown out because one signatory was invisible and unregistered. The party is hired to find out who the other unseen guest at the table was, since the minutes list two."
+        },
+        "npc": {
+          "name": "Corwin Tamsley",
+          "role": "Parley minute-taker",
+          "want": "To avoid blame for the extra chair in the minutes.",
+          "secret": "He saw the second invisible guest leave, and was paid in silver not to write it down.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Long Table Hall",
+          "text": "A neutral hall on the border with a table that seats ten and a strange extra chair nobody will admit to carrying in. Floury footprints appear on the floor each morning.",
+          "tavern": false
+        },
+        "rumor": "They say the potion was bought from a hedge-wizard who sells it by the half bottle, and the other half is still out there."
+      },
+      "fiction": true
+    },
+    {
+      "id": "secret-door-search-empty-room-fourth-attempt",
+      "title": "Secret Door Hunt Eats Six Hours in Empty Undermaw Room",
+      "category": "Adventurers",
+      "author": "Hollis Delvewright",
+      "date": "2026-11-07",
+      "excerpt": "The Fourth Attempt, an adventuring party, re-checked every flagstone of an empty Level 5 room for six hours. There was no secret door in it.",
+      "social": "The Fourth Attempt spent six hours tapping every flagstone of an empty room on Level 5 for a secret door. The wizard's Knock spell opened nothing, and the mule lay down on the one stone nobody had checked. Chapter 9's map said 'empty.' Would you have called it at hour two, or hour five?",
+      "content": "<p>THE UNDERMAW, LEVEL 5 — The Fourth Attempt, an adventuring party licensed by Chapter 9, spent six hours Thursday searching a bare stone room for a secret door. The room has no secret door. It has four walls, a floor, and a ceiling that the party also checked, twice, standing on the fighter.</p>\n\n<p>I was there for all of it. I rolled poorly on my own stamina check around hour four and sat down against the east wall, which the party then asked me to stand up from so they could check behind me.</p>\n\n<p>The room is eleven paces by eleven paces, with nothing in it. That is exactly what the <a href=\"/a/displacer-beast-undermaw-level-four-map-error\">Chapter 9 map</a> says, in the surveyor's own hand: 'Empty room. Nothing here.' The fighter says that is what a map would say if there were something here. This is a fair point and I have lost the argument to it twice.</p>\n\n<p>The box score: the fighter finished at 14 hit points, down 3 from a flagstone he dropped on his own foot. The wizard cast Detect Magic, which found nothing, and Find Traps, which found nothing, and then Knock on a section of wall, which also found nothing but used up her last second-level slot. The rogue tapped 212 flagstones, by his count, and 212 more on the second pass, by mine. The party's bard, who asked to be named, says the room 'has too much nothing in it.' I lost one ten-foot pole, my seventh of the season, when it wedged between two stones and the party voted to leave it as a marker.</p>\n\n<p>Hirelings were not consulted. Ansel Pottage, the party's hireling steward, stood by the entrance with the mule and two torch-bearers, all of them on the clock. He asked politely at hour two whether the contract's 'reasonable search' clause had a ceiling. He then read the clause aloud, in full. It does not. 'It says reasonable,' Pottage said. 'It does not say who decides.'</p>\n\n<p>The turn came when the mule, unprompted, lay down. The party had checked every stone but one, the flagstone directly under the lantern hook, because the lantern was on it. The rogue moved the lantern. Beneath it was a chalk mark and three words from the same surveyor: 'Still nothing. Go home.'</p>\n\n<p>The party left by the door it came in through, which, I am obliged to note, was the only door in the room and had been standing open the whole time.</p>\n\n<p>A Chapter 9 spokesperson confirmed Friday that the room is 'a room' and has been reclassified from 'Empty' to 'Verified Empty.' The guild asks parties to stop at one hour, or at the first mention of a draft. Pottage has filed for six hours of search pay at the standard rate, plus a lantern surcharge. The party has said it will 'look into' the north wall again next week.</p>\n\n<p><em>— H.D., filing from below</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Room With Nothing",
+          "text": "A surveyor's map marks a chamber as 'Empty,' but a nervous merchant swears her stolen ledger was last seen carried inside. The party must decide whether the room is truly bare, or whether the thief simply walked out the same door they walked in."
+        },
+        "npc": {
+          "name": "Orla Pennywick",
+          "role": "Retired dungeon surveyor",
+          "want": "To keep her maps trusted, and to stop being asked if she missed a secret door.",
+          "secret": "She did find a hidden alcove in that room years ago and marked it 'Empty' so no one would look there again.",
+          "race": "gnome",
+          "gender": "female",
+          "kind": "adventurer"
+        },
+        "location": {
+          "name": "The Verified Empty Chamber",
+          "text": "A bare eleven-pace room of grey flagstones with one door and one chalk mark under a lantern hook. Sounds carry strangely here, as if the floor were hollow in a single spot.",
+          "tavern": false
+        },
+        "rumor": "They say the surveyor who mapped that room still gets letters from parties begging her to admit there's a secret door."
+      },
+      "fiction": true
+    },
+    {
+      "id": "gelatinous-cube-floor-cleaner-sweepwick-review",
+      "title": "Gelatinous Cube Floor Cleaner Launches at 45 gp; Eats Rug",
+      "category": "Technology",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-11-07",
+      "excerpt": "Sweepwick's new Slick home gelatinous cube cleans floors for 45 gp and a weekly feeding. Nyx ran it for three days. The rug did not make it. Four eyes.",
+      "social": "Sweepwick launched a 45 gp household gelatinous cube that cleans your floors. Nyx ran it for three days and it dissolved a rug, a doormat, and one sandal. The app still reports 'Cleaning complete!' Would you let a cube loose in your parlor?",
+      "content": "<p>Sweepwick Home Goods has launched the Slick, a household gelatinous cube that cleans your floors for 45 gp, and I have been using one for three days straight. It glides! It hums! It is, by the box's own count, \"ten feet of silent, self-guided floor care.\" The runic latency on the Sweepwick app is incredible: you tap Clean Now and the cube starts moving before your thumb lifts.</p>\n\n<p>Setup took four minutes. You place the Slick in the parlor, speak the firmware glyph (\"Tidy\"), and it absorbs crumbs, dust, spilled ale, and, in the first hour, a rug. The app has a tab for this. It is called Surface Preferences. I did not find it until the rug was gone.</p>\n\n<p>Sweepwick's launch event, held in a very clean tent in Brindlemoor, promised a \"gentle\" cube, bred over six generations to prefer dirt. Marketing lead Orsolya Pennywhistle told the crowd the Slick \"only dissolves what you'd throw away anyway.\" A woman in row two asked about the doormat. Pennywhistle said the doormat was a \"learning opportunity.\"</p>\n\n<p>On day two I let the Slick run overnight on Eco Mode. By morning it had cleaned the kitchen, the hall, and one sandal, which was visible inside it, turning slowly, like a tiny glass-case exhibit. The app reported \"Cleaning complete!\" with a green checkmark. Byte, my pseudodragon familiar, who now speaks only in ad copy, landed on the cube, looked at the sandal, and said, \"Sweepwick Slick: leave no trace.\" Then he left the room, which he never does.</p>\n\n<p>There are annoyances. The Slick must be fed a weekly Sweepwick Nutrient Cake, 6 sp each, and the app sends a push notification if you skip one. The notification says \"Slick is getting restless.\" It was not wrong. On day three the cube had grown a full foot and begun to leave the parlor. Fortunately it only ate the stairs' carpet runner on the way.</p>\n\n<p>Neighbors are mixed. Halvard Dunmere, a cooper two doors down, said his own Slick \"gave up one wall of the pantry but did the floor beautifully.\" He is, he told me, very happy. The Pantry Wall Replacement Plan is 20 gp a month. I will not be subscribing; I hate subscription fees, and Brother Tumbleberry can write whatever he likes about my floors. They are clean. They are the cleanest floors in Brindlemoor, mostly because there is less floor.</p>\n\n<p>Sweepwick says a firmware update next month will add a Furniture Lock. Until then it suggests owners \"keep valuables off the ground and, if possible, off the first floor.\" Four out of five beholder eyes. It cleans better than anything I've owned, and I'm told it does not eat people, which is in the manual in bold.</p>\n\n<p><em>— Nyx (they/them). Damage Report below.</em></p>\n\n<p><em>Burns sustained: 0. Rugs: 1 (gone). Sandals: 1 (visible). Eyebrows: fine, for once.</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Cube That Wouldn't Stop",
+          "text": "A merchant's rented household gelatinous cube has outgrown her shop and now wanders the lanes, dissolving doorsteps. She will pay the party to herd it to a pit before the town guard fines her out of business."
+        },
+        "npc": {
+          "name": "Tilda Brannock",
+          "role": "Anxious shop owner",
+          "want": "To get the cube out of town before her landlord finds out it ate the stairs.",
+          "secret": "She fed it a ledger of unpaid debts on purpose, and the cube is now carrying the only copy inside it.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "Brannock's Notions and Needles",
+          "text": "A tidy sewing shop with spotless floors and no stairs. A faint trail of shiny, dissolved cobblestone leads out the back door.",
+          "tavern": false
+        },
+        "rumor": "They say the cubes get bigger every time you skip the cake, and that Sweepwick quietly wants it that way."
+      },
+      "fiction": true
+    },
+    {
+      "id": "hydra-head-tax-nine-bills-brindlemoor-appeal",
+      "title": "Hydra Billed Nine Head Taxes in Brindlemoor; Appeal Filed",
+      "category": "Legislation",
+      "author": "Ottoline Vex",
+      "date": "2026-11-07",
+      "excerpt": "Brindlemoor billed a hydra nine poll taxes, one per head, 27 silver in all. The hydra has appealed, though its heads split 6-3 on the wording.",
+      "social": "Brindlemoor's tax assessor billed a hydra one poll tax per head, nine bills for 27 silver. The hydra appealed, but its heads voted 6-3 on the wording. The Council has not decided whether a regrown head is a new resident. Would you pay three silver for every head you own?",
+      "content": "<p>Brindlemoor's tax assessor has billed a hydra nine poll taxes, one for each head, for a total of 27 silver. The hydra, a resident of the old quarry road, filed an appeal on Thursday. Under the town's head tax, which the Burgess Council has never amended, the levy is three silver per head. The ordinance does not say whose.</p>\n\n<p>I attended the hearing, as I attend everything. Assessor Dunmer Tolliver explained to the Chamber that the tax was written in the reign of a Reeve who had, in his words, \"a reasonable number of heads to plan for.\" He called the hydra's position \"an interpretation, not a loophole.\" The gentleman from the Quarry Ward added that the hydra eats like nine, sleeps like nine, and should be taxed like nine.</p>\n\n<p>The hydra's counsel, a clerk named Odette Marrow, argued that a hydra is one citizen with several mouths. She cited the town charter, which grants every resident one vote and one bill. \"My client has one hearth, one cave, and one grievance,\" she said. Then the middle head said it had no grievance at all and would pay its own three silver gladly. The record notes this as a dissent.</p>\n\n<p>The appeal was filed by a 6-3 vote of the heads, so it carries two wordings. The majority asks that the tax be set aside as a double levy. The minority asks that the three silver be returned to heads one, two, and three, who say they are the only ones who ever went to market. The Clerk accepted both and stamped them with the same stamp.</p>\n\n<p>The deeper question is regrowth. When a head is removed, two grow back. Assessor Tolliver conceded that the ordinance is silent on whether a regrown head is a new taxable resident, a continuation of the old one, or a dependent. \"We have not, as a town, had to bill a hydra by the head,\" he said. A courtier who asked not to be named because they were not authorized to be awake told me this is a matter of weeks, not years, because the Fourth Attempt has been seen in the quarry.</p>\n\n<p>Reeve Fennick, asked for comment on her way to another hearing, said only: \"We are aware of the heads.\"</p>\n\n<p>The Council has referred the matter to a committee of five. The hydra has asked to sit on it. The committee has asked how many seats that would be. By my count the session's Promises Made now stand at nine, and Promises Kept at the one about reviewing the ordinance, which was reviewed. It was not changed.</p>\n\n<p>The motion to table carried 5-4. Nobody read it. The hydra's heads voted too, and were not counted, which is the only point on which all nine agreed.</p>\n\n<p><em>— O.V., from the gallery</em></p>",
+      "featured": false,
+      "campaign": {
+        "hook": {
+          "title": "The Nine-Headed Tax Bill",
+          "text": "A town assessor has billed a hydra nine times and the heads are squabbling over who pays. The assessor will give the party a cut if they escort the bills to the quarry cave without upsetting the heads. Whichever head signs for the bill decides the outcome."
+        },
+        "npc": {
+          "name": "Dunmer Tolliver",
+          "role": "Town Tax Assessor",
+          "want": "To collect the full 27 silver without a precedent that ruins next year's rolls.",
+          "secret": "He has quietly billed the hydra's regrown heads in advance, and the rolls already list fourteen.",
+          "race": "human",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Quarry Road Cave",
+          "text": "A damp cave the hydra rents from a dwarf landlord. Each head has labeled its own corner and its own mailbox.",
+          "tavern": false
+        },
+        "rumor": "They say the middle head already paid in secret and that is why the others will not speak to it."
+      },
+      "fiction": true
+    },
+    {
+      "id": "fireball-burns-inn-innkeepers-damage-deposit",
+      "title": "Wizard's Fireball Burns Down Inn; Innkeepers Want Deposits",
+      "category": "Tavern Tales",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-11-07",
+      "excerpt": "A wizard cast fireball into a crowded tavern brawl and burned a Fish Street inn flat. Innkeepers want 40 gold from each adventuring party. Allegedly.",
+      "social": "A wizard cast fireball into a bar brawl on Fish Street and the whole inn burned flat by the second bell. Now innkeepers want a 40 gold damage deposit from every adventuring party. One cook says the deposit is refundable if the party leaves behind \"a roof.\" Would your party pay 40 gold, or sleep in the stables?",
+      "content": "<p>At roughly the second bell after midnight, a wizard allegedly cast <strong>fireball</strong> into a crowded tavern brawl at the Leaky Tankard on Fish Street, and the inn burned to its foundations by sunrise. Eleven patrons, one cook, and a very surprised goat were removed from the ashes with only singed eyebrows. The Brindlemoor Innkeepers' Association has since announced that every <strong>adventuring party</strong> must post a 40 gold damage deposit before renting a room. Allegedly it is refundable.</p>\n\n<p>The party in question, a four-member crew calling itself the Gilded Pockets, says the fight was not their fault. 'A dwarf threw a chair,' said the wizard, Orvel Thistledown, whose beard is now allegedly shorter on one side. 'Someone threw another chair back. By the fifth chair I felt I had to do something.' Thistledown told this reporter that he aimed for the far corner. The far corner, it turns out, was also where the kegs were.</p>\n\n<p>'I have run the Tankard for nineteen years,' said innkeeper Marga Bellowby, who was holding a charred ladle at the time. 'I have survived mimics, a bard's lute solo, and a rust monster in the cellar. I have never survived a wizard who says 'stand back, I've got this.'' The fire spread to the stables, the laundry, and the sign, which was found two streets over still reading 'Free Soup.'</p>\n\n<p>The Constabulary arrived to find the blaze already out, mostly because there was nothing left to burn. Constable Dobb Pickering said officers took statements from all eleven patrons. 'Nine said it was the wizard. Two said it was the dwarf. One said it was the goat.' The goat was not charged.</p>\n\n<p>By midmorning the Innkeepers' Association had met, in a different tavern, in the cold, and voted 14 to 0 on the deposit. Forty gold secures one room and one adventuring party, with no spellcasting above third level on the premises unless the deposit is doubled. A second clause bars 'any wizard who has said the word 'fireball' aloud since breakfast.' <a href=\"/a/wizard-fireball-tavern-back-room-party-singed\">Fish Street's earlier fireball in a back room</a> was cited as a pattern. Innkeepers are not calling it a pattern. They are calling it a Tuesday.</p>\n\n<p>Adventurers lined up outside the Association hall to protest. The line stretched past the tannery. Hilde Marsh, a rogue who was eating a meat pie at the time, said 40 gold is a month's ransom money. 'I do not have 40 gold. I have a very nice spoon.' She was allegedly told the spoon would be held as collateral. It was a really nice spoon, silver with a little dragon on the handle. Anyway.</p>\n\n<p>Shieldwall Mutual says fire damage caused by one's own spell is 'not covered, not now, not ever.' The Gilded Pockets are working off the damage by rebuilding the Tankard's roof. Thistledown is mixing the mortar. The party has asked that nobody hand him a torch.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Deposit Collectors",
+          "text": "The innkeepers of a river town have hired the party to collect damage deposits at the town gates, because the last three adventuring parties burned down a stable, a bathhouse, and an inn. One of the three parties never actually did it."
+        },
+        "npc": {
+          "name": "Marga Bellowby",
+          "role": "Innkeeper of the burned Tankard",
+          "want": "To rebuild her inn with the parties' deposits and never serve a wizard again.",
+          "secret": "She set the first fire herself to collect on the Shieldwall policy, and the wizard's fireball only finished the job.",
+          "race": "human",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Leaky Tankard Ruins",
+          "text": "A burned inn whose cellar still holds forty unbroken kegs and a locked door nobody remembers building. The sign still reads Free Soup.",
+          "tavern": true
+        },
+        "rumor": "They say the goat started it, and the wizard is just taking the blame because the goat can't pay the deposit."
+      },
+      "fiction": true
+    },
+    {
+      "id": "bard-haggle-2-copper-misses-bounty",
+      "title": "Bard Haggles 2 Copper in an Hour, Party Misses 600 gp Bounty",
+      "category": "Consumer",
+      "author": "Sterling Vanmoor",
+      "date": "2026-11-07",
+      "excerpt": "A Brindlemoor adventuring party's bard haggled an hour to save 2 copper on rope. A rival party took the 600 gp goblin bounty. Sterling sees upside.",
+      "social": "A bard in Brindlemoor spent one full hour talking a rope seller down 2 copper on 50 feet of hempen rope. The 600 gp goblin bounty his adventuring party came for went to a rival crew at the second bell. The rope is excellent, by the way. Would you let your bard haggle, or tie him to the cart?",
+      "content": "<p>An adventuring party in Brindlemoor lost a 600 gp goblin-warren bounty on Thursday because its bard spent an hour haggling a rope seller down 2 copper. The Ember Crows, a four-member party, had come to the market square to buy supplies and then walk to the notice board, which was a fifty-step stroll. By the time bard Jory Orrowick finished, the board was empty and the bounty was in the pocket of a rival crew.</p>\n\n<p>Let me be clear, because the gossip pages won't be: this is a negotiation success story. Rope seller Odo Pennywick opened at 12 copper for 50 feet of hempen rope. Orrowick closed at 10. That is a 16.7 percent discount, and I have seen guildmasters celebrate less. Pennywick himself confirmed the numbers, though he did so from behind a counter he had slid in front of his face.</p>\n\n<p>Witnesses say the session went through five phases. Orrowick began with a ballad about the rope. He moved to a disappointed silence, then to what Pennywick calls \"the third verse of the ballad.\" At the forty-minute mark he offered to be paid in exposure, and Pennywick's apprentice quietly left to find a Watch officer. \"I only wanted to sell rope,\" said Pennywick. \"By the end I wanted to give it away, but he'd have haggled that too.\"</p>\n\n<p>Meanwhile the party waited. Rogue Tamsin Vell checked the sundial four times. The party's cleric, Brother Hobb, was reported to be \"praying for a faster death for the conversation.\" Their fighter, Garrick Stonebrook, stood by a barrel with his arms folded and, in his words, \"aged.\" At the second bell a different party, the Marrowgate Six, strolled up to the board, took the 600 gp bounty notice, and left with it, according to a stable boy who sells apples near the board and saw all of it.</p>\n\n<p>Orrowick defends the deal. \"Two copper is two copper,\" he said, tucking the saved coins into a purse so small it wore a hat. \"Compounded over a forty-year career, that is a tavern round. Maybe half a round.\" He added that the party would have lost the bounty anyway, because goblins \"are a volatile asset class.\" The party disagrees. Vell says the bounty was 600 gp, or 150 gp per Crow, which is 30,000 times the saving. Orrowick says that math is not how haggling works.</p>\n\n<p>This is disruption at the retail level. Last week we saw <a href=\"/a/adventuring-party-haggle-potion-healing-sticker\">another party haggle an hour over a potion of healing</a>, and the trend line is obvious: the adventuring consumer is pivoting from questing to price discovery. When I met Guildmaster Orsolo Vance at a gala last spring, he told me, \"Sterling, never pay the sticker. Never reach the board either, it ruins the leverage.\" I have thought about that for months.</p>\n\n<p>The Ember Crows now hold one excellent rope, a pending dispute with Pennywick over the ballad, and a sudden opening in their calendar. They plan to use it to find another bounty. Orrowick will buy the supplies.</p>\n\n<p>Key takeaways for the ambitious adventurer:</p>\n\n<ul>\n<li>Every copper saved is a copper you hold, so hold them loudly.</li>\n<li>A bounty board is a suggestion, not a deadline.</li>\n<li>Seek a bard who can close, then seek one who will stop.</li>\n</ul>\n\n<p><em>— Sterling Vanmoor, Guild Visionary. Let's connect at the guildhall.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Bounty at the Second Bell",
+          "text": "A party's bard is haggling away the morning while a rival crew heads for the notice board. The players can step in, drag him off, or race the rivals to the goblin warren, which the board's last notice says pays 600 gp to whoever clears it first."
+        },
+        "npc": {
+          "name": "Odo Pennywick",
+          "role": "Exhausted market rope seller",
+          "want": "To sell one rope without hearing another verse.",
+          "secret": "He cuts his prices every time a haggler sings, because the rope is stolen and he wants customers gone fast.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Notice Board of Fiddler's Square",
+          "text": "A weathered oak board where bounties are pinned and lost by the second bell. The nails are all very old, and one notice has been pinned over for a decade and is somehow always renewed.",
+          "tavern": false
+        },
+        "rumor": "They say the Marrowgate Six only beat the Crows because their own bard was gagged by his own party at dawn."
+      },
+      "fiction": true
+    },
+    {
+      "id": "adventuring-party-glowing-mushrooms-no-rations-wendell",
+      "title": "Adventuring Party Eats Glowing Mushrooms, Forgot Rations",
+      "category": "Health",
+      "author": "Brother Wendell Tumbleberry",
+      "date": "2026-11-07",
+      "excerpt": "The Late Supper Company ate glowing dungeon mushrooms on Undermaw Level Six after forgetting to buy rations. Brother Wendell prescribes soup, and a list.",
+      "social": "Four delvers went into the Undermaw with no rations and came out glowing. The Late Supper Company ate the pale blue mushrooms on Level Six and all agreed they tasted 'fine, actually.' The healers say the glow fades in nine days. Would you have eaten the mushrooms, or turned around at the first rumble of your stomach?",
+      "content": "<p>Friends, an adventuring party called the Late Supper Company climbed out of the Undermaw on Thursday glowing a soft blue, after eating the mushrooms they found on Level Six because nobody had packed rations. Four delvers went in. Four glowing delvers came out, and the porters at the Chapter 9 gate say they could be seen from the Sleeping Mule.</p>\n\n<p>Their cleric, Sister Odo Brambleweed, told the infirmary that the party had planned to buy supplies at the market on the way down. 'Then there was a sale on rope,' she said. By midday on Level Six they had divided the last biscuit four ways and were studying a patch of pale mushrooms that, in her words, 'looked friendly.'</p>\n\n<p>Here the old herbals and the new studies agree, and they say the same thing: do not eat a mushroom that lights up. The herbals call it a warning. The Brindlemoor infirmary, which has now treated a <a href=\"/a/glowing-ooze-rogue-licks-adventuring-party-wendell\">second glowing party in a week</a>, calls it 'a Tuesday.' Healer Thaddeus Quill, who examined the party, reports the glow is harmless, fades in about nine days, and is brightest in the dark, which he admits is the worst place for it.</p>\n\n<p>The mushrooms have other effects. All four members hum in the same low note. All four agree with whatever the others say. The party's rogue, who had volunteered to taste the first cap, now says he 'sort of remembers being the mushroom.' The barbarian has reportedly been asking whether anyone else can hear the floor.</p>\n\n<p>Deputy Registrar Pell Oddingwick of Chapter 9 said the incident is 'on track' and that Level Six mushrooms are 'a pilot meal program.' He confirmed that Chapter 9 does sell a ration pack at the permit window, for eleven silver, but the line was long and the party left. Reeve Maudrey Fennick said only that the town is aware of the mushrooms.</p>\n\n<p>Shieldwall Mutual has opened a file. An adjuster said glowing counts as a curse, but a curse you ate on purpose is 'your own fault, which is the usual finding.'</p>\n\n<p>Now, friends, a plain word. A day's rations cost about four coppers, and a hungry delver makes bad choices, so pack the food before the rope. If you must eat in a dungeon, eat only what you carried in. I will say it once more for the back of the room: stop eating the dungeon. My friend Nyx tells me there is an app that identifies mushrooms from a picture. Go outside, Nyx, and look at a real one in daylight.</p>\n\n<p>For a delver recovering from a fungal feast, I prescribe plain chicken-and-rice soup, thin and salty, three bowls a day, taken in a lit room.</p>\n\n<p><em>Rest well, friends. — Brother Wendell</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Glow Down Below",
+          "text": "A party that ate glowing mushrooms on a lower dungeon level now hums in unison and keeps drifting back toward the patch. A local healer will pay the players to harvest a sample and find out what the mushrooms want before the whole town goes blue."
+        },
+        "npc": {
+          "name": "Thaddeus Quill",
+          "role": "Infirmary mushroom healer",
+          "want": "A clean sample of the pale blue mushrooms so he can write the antidote.",
+          "secret": "He ate a cap himself last week and has been humming at night.",
+          "race": "gnome",
+          "gender": "male",
+          "kind": "magic"
+        },
+        "location": {
+          "name": "The Pale Patch",
+          "text": "A damp cavern on a lower level where the floor is carpeted in pale blue mushrooms that brighten whenever someone hungry walks in. Rations left near the patch go missing by morning.",
+          "tavern": false
+        },
+        "rumor": "They say the mushrooms only glow for folk who forgot to pack lunch, and that they are polite about it."
+      },
+      "fiction": true
     }
   ]
 }
