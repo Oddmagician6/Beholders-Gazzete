@@ -10,7 +10,7 @@ Work in this repository's `reel-factory/` tools. This is a local downstream work
 ## Create and tune drafts
 
 - Use `node reel-factory/score.mjs <article-id>` to score one eligible article, or `node reel-factory/batch.mjs` to preview the top candidates. Review the preview before running `node reel-factory/batch.mjs --run`.
-- Render an individual article with `node reel-factory/reel.mjs <article-id>`. Real-news articles are excluded unless the user asks to include them with `--include-real`.
+- Use the visual story format below for requested final Reel renders. `node reel-factory/reel.mjs <article-id>` currently produces the older single-image layout; use it only for exploratory drafts or when requested, then compose the final storyboard with FFmpeg. Real-news articles are excluded unless the user asks to include them with `--include-real`.
 - Generated article-specific artwork belongs at `.reel-output/artwork/<article-id>.png` (WebP/JPG/JPEG also work). Keep it local; do not edit published article image fields for a Reel. When asked to generate artwork, depict the headline/body in the Gazette's established fantasy-news satire style and avoid adding factual details absent from the article.
 - Shared category artwork is acceptable for exploratory drafts. Before a Reel is marked ready or sent to the publishing workflow, generate a custom Gazette-style image for that article, save it to `.reel-output/artwork/<article-id>.png`, rerender, and confirm `metadata.json` points to that generated image and the rendered video visibly uses it. Do not publish a Reel that still uses category art or lacks custom artwork.
 - Draft output is `.reel-output/drafts/<article-id>/`. Review `score.json`, `script.json`, `metadata.json`, and `render.mp4`. Scripts are editable and reused on reruns. Respect edits; only replace them with `--refresh-script` when the user requests a rebuild or edits to the source require it.
@@ -18,6 +18,18 @@ Work in this repository's `reel-factory/` tools. This is a local downstream work
 - Narration must be a complete, continuous voiceover for the Reel, as in the standard Gazette renders. Captions must track the spoken narration throughout the video, using the narration's actual words and timing them to the corresponding speech. Do not reduce captions to a few isolated sentences, leave long silent caption gaps while narration continues, or show text that does not match the voiceover. Break captions into readable short phrases and keep sentence/phrase boundaries natural.
 - Never use em dashes (—) in spoken scripts or signoffs. Rewrite with a comma, period, or conjunction; normalize em dashes in source text before narration too.
 - Scripts and videos are human-review drafts. Do not mark metadata approved, publish, or post to Facebook without the user's explicit approval for the relevant Reel.
+
+## Default visual story format
+
+Use a short illustrated story as the default, following the dragon-and-bard reference: three distinct full-screen portrait scenes showing setup, consequence, and payoff, with cuts tied to the corresponding narration. Aim for roughly 20–30 seconds; let the article determine the beats. Keep the rotating Gazette signoff over the final scene.
+
+- Generate separate article-specific illustrations for each beat. Use the Gazette's antique hand-colored woodcut style: engraved linework, parchment texture, muted gold, rust, and moss green. Reuse the first scene as a character/style reference so faces, clothing, creatures, props, and locations stay consistent. Keep imagery grounded in the published article.
+- Fill the 1080 × 1920 frame with each scene, using gentle push-ins or pull-backs and clean cuts. Stage readable action and reactions; leave room for captions near the lower quarter. Avoid making the final Reel a single illustration in the older square-frame layout.
+- Save images under the draft's `scenes/scene-01.png`, `scene-02.png`, and `scene-03.png`. Also save the opening image at `.reel-output/artwork/<article-id>.png`. Keep `metadata.json.artwork` pointed at that override, list all scene files in `sceneArtwork`, and save scene boundaries and narration in `storyboard.json`.
+- Use actual narration token/word timings for every caption phrase and align scene changes to the story beats. Keep amounts, percentages, and natural phrases together. The dragon reference has approximate captions; follow its visual storytelling, and improve caption timing with the Kokoro model timings. Do not infer speech timing by distributing words evenly across a segment.
+- Review a contact sheet containing every rendered scene at phone width. Check character continuity, focal points, caption readability and complete word coverage, then verify the final MP4's video/audio format and full decoding. Keep scripts, timings, captions, and render local for human review.
+
+Local examples, when available: `.reel-output/drafts/dragon-sues-bard-harassment-50-gp-damages/render.mp4` for the visual reference; `.reel-output/scans/render-nov05-stories.mjs` and `.reel-output/scans/align-nov03.py` for the three-scene renderer and Kokoro word timing. These are ignored working artifacts, so inspect before adapting; if absent, implement the format above using the repository's FFmpeg and narration providers.
 
 ## Facebook publishing context
 
