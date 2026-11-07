@@ -83,6 +83,27 @@
       "hashtags": "#Bard #Tollwick #GateGuard #MuleDeputy",
       "publishAt": "2026-11-07T00:00:00Z",
       "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "gelatinous-cube-floor-cleaner-sweepwick-review",
+      "release_tag": "reel-stage-nov07-cube-ig-20261107",
+      "hashtags": "#GelatinousCube #FloorCleaner #Brindlemoor",
+      "publishAt": "2026-11-07T19:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "hydra-head-tax-nine-bills-brindlemoor-appeal",
+      "release_tag": "reel-stage-nov07-hydra-ig-20261107",
+      "hashtags": "#Hydra #HeadTax #Brindlemoor",
+      "publishAt": "2026-11-07T21:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "rope-trick-room-rent-8-gp-brindlemoor",
+      "release_tag": "reel-stage-nov07-rope-ig-20261107",
+      "hashtags": "#RopeTrick #Brindlemoor #WizardLandlord",
+      "publishAt": "2026-11-08T00:00:00Z",
+      "custom_artwork_confirmed": true
     }
   ]
 }
