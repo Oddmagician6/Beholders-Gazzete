@@ -104,6 +104,41 @@
       "hashtags": "#RopeTrick #Brindlemoor #WizardLandlord",
       "publishAt": "2026-11-08T00:00:00Z",
       "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "alarm-spell-raccoon-brass-kettle-long-rest",
+      "release_tag": "reel-stage-nov08-raccoon-ig-20261108",
+      "hashtags": "#AlarmSpell #Raccoon #LongRest #BrassKettle",
+      "publishAt": "2026-11-08T19:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "rust-monster-eats-214-horseshoes-fish-street",
+      "release_tag": "reel-stage-nov08-rust-ig-20261108",
+      "hashtags": "#RustMonster #FishStreet #Horseshoes #Constabulary",
+      "publishAt": "2026-11-08T21:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "skeleton-guards-walk-off-undermaw-level-two",
+      "release_tag": "reel-stage-nov08-skeleton-ig-20261108",
+      "hashtags": "#SkeletonGuards #Undermaw #Dungeon #Walkout",
+      "publishAt": "2026-11-09T00:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "doppelganger-temp-agency-14-firms-one-clerk",
+      "release_tag": "reel-stage-nov08-doppel-ig-20261108",
+      "hashtags": "#Doppelganger #MirrorwickStaffing #Clerks #Brindlemoor",
+      "publishAt": "2026-11-09T19:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "fourth-attempt-copper-pieces-59-percent-changers",
+      "release_tag": "reel-stage-nov08-copper-ig-20261108",
+      "hashtags": "#CopperPieces #FourthAttempt #Undermaw #Treasure",
+      "publishAt": "2026-11-09T21:00:00Z",
+      "custom_artwork_confirmed": true
     }
   ]
 }
