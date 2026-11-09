@@ -139,6 +139,27 @@
       "hashtags": "#CopperPieces #FourthAttempt #Undermaw #Treasure",
       "publishAt": "2026-11-09T21:00:00Z",
       "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "kenku-witness-robbery-adventuring-party-suspects",
+      "release_tag": "reel-stage-nov09-kenku-ig-20261109",
+      "hashtags": "#Kenku #TallowMarket #VoiceAudit #Brindlemoor",
+      "publishAt": "2026-11-09T17:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "halfling-feastwarden-feast-2000-brindlemoor",
+      "release_tag": "reel-stage-nov09-feast-ig-20261109",
+      "hashtags": "#Feastwarden #Halfling #GrandFeast #Brindlemoor",
+      "publishAt": "2026-11-09T23:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "shrieker-mushrooms-tanners-row-sleepless-wendell",
+      "release_tag": "reel-stage-nov09-shrieker-ig-20261109",
+      "hashtags": "#Shriekers #TannersRow #Skorvath #Undermaw",
+      "publishAt": "2026-11-10T01:00:00Z",
+      "custom_artwork_confirmed": true
     }
   ]
 }
