@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "note": "Weekly tavern-review Reels. Renders live in .reel-output/drafts/<id>/render.mp4. Edit captions here, then restage with stage-tavern-reels.py. Facebook links are clickable; Instagram captions point to the link in bio.",
+  "reviews": [
+    {
+      "id": "tavern-review-crooked-lantern",
+      "title": "Tavern Review: The Crooked Lantern",
+      "captions": {
+        "facebook": "Tavern Review: The Crooked Lantern. One star.\n\nClean room. Excellent stew. The complimentary wake-up call summoned the reviewer's ancestors, who critiqued his posture in three dead languages and then ate the entire breakfast.\n\nNeed an inn for your next session that won't haunt your party? Roll one up with our free tavern generator: https://gazette.ashforgestudio.com/dnd-tavern-generator\n\n#DnD #DungeonsAndDragons #TTRPG #FantasyHumor #TavernReview",
+        "instagram": "The Crooked Lantern. One star. Breakfast ends at nine, and the ancestors got there first.\n\nWhat's the worst wake-up call your party has ever had?\n\nRoll up a tavern of your own with our free generator. Link in bio.\n\n#DnD #DungeonsAndDragons #TTRPG #FantasyHumor #TavernReview #DnDMemes #DungeonMaster"
+      }
+    },
+    {
+      "id": "tavern-review-dented-flagon",
+      "title": "Tavern Review: The Dented Flagon",
+      "captions": {
+        "facebook": "Tavern Review: The Dented Flagon. Four stars.\n\nWatered-down ale, fleas in the mattress, and a landlord who lifted six silver from a coat pocket. All three were clearly listed on the booking notice. One star off, though: the notice also promised a ghost.\n\nBuild an inn with exactly the problems you want: https://gazette.ashforgestudio.com/dnd-tavern-generator\n\n#DnD #DungeonsAndDragons #TTRPG #FantasyHumor #TavernReview",
+        "instagram": "The Dented Flagon. Four stars. Honest about the fleas. Lied about the ghost.\n\nWould you stay here?\n\nRoll up a tavern of your own with our free generator. Link in bio.\n\n#DnD #DungeonsAndDragons #TTRPG #FantasyHumor #TavernReview #DnDMemes #DungeonMaster"
+      }
+    },
+    {
+      "id": "tavern-review-gilded-goose",
+      "title": "Tavern Review: The Gilded Goose",
+      "captions": {
+        "facebook": "Tavern Review: The Gilded Goose. One star.\n\nA couple paid extra for a room with a view. The painting across from the bed had a view too, and by morning it had painted them into the frame. The reviewer would still like his trousers back.\n\nRoll up an inn with stranger decor: https://gazette.ashforgestudio.com/dnd-tavern-generator\n\n#DnD #DungeonsAndDragons #TTRPG #FantasyHumor #TavernReview",
+        "instagram": "The Gilded Goose. One star. Paid extra for the view. So did the painting.\n\nHas a portrait ever stared back at your party?\n\nRoll up a tavern of your own with our free generator. Link in bio.\n\n#DnD #DungeonsAndDragons #TTRPG #FantasyHumor #TavernReview #DnDMemes #DungeonMaster"
+      }
+    },
+    {
+      "id": "tavern-review-sleeping-giant",
+      "title": "Tavern Review: The Sleeping Giant",
+      "captions": {
+        "facebook": "Tavern Review: The Sleeping Giant. Two stars.\n\nA whole evening of whispering, and nobody would say why. Then someone dropped a fork at breakfast and the east wing was lost. Management now takes complaints in writing only. Quietly.\n\nRoll up a quieter inn for your players: https://gazette.ashforgestudio.com/dnd-tavern-generator\n\n#DnD #DungeonsAndDragons #TTRPG #FantasyHumor #TavernReview",
+        "instagram": "The Sleeping Giant. Two stars. One dropped fork. One lost east wing.\n\nTag the party member who would drop the fork.\n\nRoll up a tavern of your own with our free generator. Link in bio.\n\n#DnD #DungeonsAndDragons #TTRPG #FantasyHumor #TavernReview #DnDMemes #DungeonMaster"
+      }
+    },
+    {
+      "id": "tavern-review-last-hearth",
+      "title": "Tavern Review: The Last Hearth",
+      "captions": {
+        "facebook": "Tavern Review: The Last Hearth. One star.\n\nThe bottomless stew is exactly as advertised. A dropped spoon took several seconds to land, something down there asked for salt, and the landlord billed the table for a second guest.\n\nRoll up an inn with a better menu: https://gazette.ashforgestudio.com/dnd-tavern-generator\n\n#DnD #DungeonsAndDragons #TTRPG #FantasyHumor #TavernReview",
+        "instagram": "The Last Hearth. One star. The stew really is bottomless. Something lives at the bottom.\n\nWould you go back for seconds?\n\nRoll up a tavern of your own with our free generator. Link in bio.\n\n#DnD #DungeonsAndDragons #TTRPG #FantasyHumor #TavernReview #DnDMemes #DungeonMaster"
+      }
+    }
+  ]
+}

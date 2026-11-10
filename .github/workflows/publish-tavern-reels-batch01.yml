@@ -1,0 +1,52 @@
+name: Publish approved tavern-review Reels - batch 1
+run-name: Tavern Reels batch 1 - ${{ inputs.operation || 'run_due' }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: Verify without posting, arm this approved batch, or publish due Instagram Reels
+        type: choice
+        options: [verify, arm, run_due]
+        default: verify
+        required: true
+  schedule:
+    # Tavern reviews post Saturdays at 12:00 Chicago (CST: 18:00 UTC). GitHub starts scheduled runs late
+    # or drops them, so retries run every half hour through the 12-hour window; state prevents duplicates.
+    # Each Saturday run also schedules the next Facebook Reel once it is within Meta's 29-day limit.
+    - cron: '7,37 18-23 * * 6'
+    - cron: '7,37 0-5 * * 0'
+
+concurrency:
+  group: tavern-reel-publisher
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+      - name: Check publisher behavior
+        run: |
+          python3 -m unittest discover -s .github/scripts -p 'test_npc_carousels.py'
+          python3 -m unittest discover -s .github/scripts -p 'test_tavern_reels.py' -v
+      - name: Verify, arm, or publish approved tavern Reels
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+          OPERATION: ${{ inputs.operation || 'run_due' }}
+          REEL_BATCH: batch01
+        run: python3 .github/scripts/publish_tavern_reels.py
+      - name: Upload publishing report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tavern-reels-batch01-report-${{ github.run_id }}
+          path: ${{ runner.temp }}/tavern-reel-report.json
+          if-no-files-found: ignore

@@ -8,7 +8,7 @@ The Reel Factory is a downstream consumer of the published `articles.json` and `
 - Kokoro Python dependencies in `reel-factory/.venv-kokoro` and the eSpeak NG Windows installer. Kokoro narration runs locally; no account or paid TTS service is used.
 - FFmpeg on `PATH`, with the `libx264` encoder and `libass` subtitle filter enabled.
 
-If FFmpeg is installed outside `PATH`, copy `config.example.json` to `config.local.json` and set `ffmpegPath` to its executable. Set `pythonPath` to your Python launcher if `py` is unavailable. The default Kokoro voice is `am_fenrir`; change `kokoroVoice` to another available Kokoro voice if desired. Set `ttsProvider` to `sapi` to use the older built-in Windows voice. `config.local.json`, the local Python environment, and rendered drafts are ignored by Git.
+If FFmpeg is installed outside `PATH`, copy `config.example.json` to `config.local.json` and set `ffmpegPath` to its executable. Set `pythonPath` to your Python launcher if `py` is unavailable. The default Kokoro voice is Heart (`af_heart`); change `kokoroVoice` to another available Kokoro voice if desired. Set `ttsProvider` to `sapi` to use the older built-in Windows voice. `config.local.json`, the local Python environment, and rendered drafts are ignored by Git.
 
 Install the Kokoro dependencies in the project-local environment with PowerShell:
 
@@ -79,3 +79,17 @@ Generated drafts remain local until approved. Facebook and Instagram Reel publis
 To stage a video from PowerShell, create a `reel-stage-...` release with the approved file named `render.mp4`, then run **Publish approved Facebook Reel** or **Publish approved Instagram Reel** from the Actions tab with the article ID, release tag, custom-artwork confirmation, and story hashtags (for example `#MooseRescue #SkatePark`). Do not retry a failed or timed-out publish until checking the destination account; Meta may have accepted the publish request even if confirmation timed out.
 
 This does not change the existing automatic article-link publishing workflow. Reel publication never runs on article pushes.
+
+## Weekly tavern reviews
+
+Tavern-review Reels are standalone (no article), so they skip the article Reel workflows and post through `.github/scripts/publish_tavern_reels.py`: one a week, Saturdays at 12:00 America/Chicago, with separate Facebook and Instagram captions kept in `reel-factory/tavern-reviews.json`. It follows the card series' rules (see `persons-of-interest/PUBLISHING.md`): the queue is staged in a public Release pinned by SHA-256 in `.github/tavern-reel-queue-batchNN.json`, state lives in the Release body, and the workflow runs `verify`, `arm`, then `run_due` on schedule. Facebook Page Reels are scheduled at most 29 days ahead, so `arm` schedules what fits and each Saturday run schedules the rest. Instagram publishes on the Saturday runs. The workflow disables itself once every post is confirmed.
+
+```
+py reel-factory/stage-tavern-reels.py --batch=01 --start=YYYY-MM-DD --ids=id1,id2,...
+py .github/scripts/publish_tavern_reels.py --validate-queue .reel-output/publishing/<tag>/queue.json
+gh release create <tag> --target main --latest=false --title <tag> --notes-file .reel-output/publishing/<tag>/release-notes.json <the MP4s and queue.json>
+# commit and push the batch config and workflow (copy batch01's for a new batch: REEL_BATCH, name, report name), then:
+gh workflow run publish-tavern-reels-batchNN.yml -f operation=verify   # then operation=arm
+```
+
+Arm within 29 days of the first Reel. Never recreate a Release's state after arming.
