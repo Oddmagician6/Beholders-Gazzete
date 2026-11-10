@@ -160,6 +160,27 @@
       "hashtags": "#Shriekers #TannersRow #Skorvath #Undermaw",
       "publishAt": "2026-11-10T01:00:00Z",
       "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "reincarnate-spell-upgrade-fighter-badger-second-spring",
+      "release_tag": "reel-stage-nov10-badger-heart-ig-20261110",
+      "hashtags": "#Reincarnate #Badger #SecondSpring #FinePrint",
+      "publishAt": "2026-11-10T17:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "ettin-porter-loot-split-two-shares",
+      "release_tag": "reel-stage-nov10-ettin-heart-ig-20261110",
+      "hashtags": "#Ettin #LootSplit #Hirelings #TwoHeads",
+      "publishAt": "2026-11-10T21:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "sending-stones-heist-plan-village-gravelpenny",
+      "release_tag": "reel-stage-nov10-stones-heart-ig-20261110",
+      "hashtags": "#SendingStones #Heist #Gorsewick #GravelpennyCrew",
+      "publishAt": "2026-11-11T01:00:00Z",
+      "custom_artwork_confirmed": true
     }
   ]
 }
