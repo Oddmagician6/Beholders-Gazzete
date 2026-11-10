@@ -7849,6 +7849,142 @@
         "rumor": "My cousin says the mushrooms only scream at honest folk, which is why the alchemist can walk right past them."
       },
       "fiction": true
+    },
+    {
+      "id": "feast-budget-900-gp-goose-600-plumbrook",
+      "title": "Feast Menu Costs 4,300 gp on a 900 gp Budget; Goose Is 600",
+      "category": "Economy",
+      "author": "Barnaby Tallowmere",
+      "date": "2026-11-10",
+      "excerpt": "The Grand Feast's budget is 900 gp. The Feastwarden's menu costs 4,300 gp, and the goose alone is 600. Barnaby has done the sums. He needs to sit.",
+      "social": "Brindlemoor's Grand Feast has a budget of 900 gp. The Feastwarden's menu costs 4,300 gp. One goose on it was quoted at 600 gp, and the poulterer says most of that price is for looking, because no such goose exists. What would you cut first, the goose or the ale fountain?",
+      "content": "<p>Brindlemoor's Grand Feast has a budget of 900 gp. On Monday, Feastwarden Odo Plumbrook presented the committee with a menu that costs 4,300 gp, and the goose alone was quoted at 600 gp. For anyone just arriving: Reeve Maudrey Fennick of Brindlemoor appointed Plumbrook last week, and he has <a href=\"/a/halfling-feastwarden-feast-2000-brindlemoor\">promised a feast for 2,000</a> on the Town Green on the 26th.</p>\n\n<p>The gap between the feast budget and the menu is 3,400 gp. (I have checked this four times. I checked it a fifth time out of hope, and hope did not change the answer.) A loaf at market runs about 4 cp, so on the Loaf Index the budget buys 22,500 loaves and the menu would cost 107,500. Spread across 2,000 guests, that comes to 45 cp a head, or about eleven loaves each. The Feastwarden is planning to spend 215 cp a head, which is nearly fifty-four loaves per guest, and some of the guests are halflings, so honestly it may get eaten.</p>\n\n<p>I have the menu in front of me. It reads, in Plumbrook's hand: one goose, 600 gp. Twelve roast boars, 960 gp. A fountain of ale, 1,200 gp. Cheese, 400 gp. Two thousand honey cakes, 200 gp. Tables and lanterns, 380 gp. Bread, 160 gp. A deposit on the dessert table \"longer than the Undermaw is deep,\" 400 gp. The bread is the cheapest line and the only one I would sign.</p>\n\n<p>About the goose. Wennet Abbeyfield, a poulterer on Tanner's Row, wrote the quote and confirmed it to me over her fence. \"He asked for one goose that feeds two thousand people,\" she said. \"There is no such goose. Most of the 600 is for looking.\" The price covers two nets, a guide into the marshes past Ashenfold, and a hireling to stand at the back \"in case it turns out to be a cockatrice.\" If the goose is never found, the looking is not refundable.</p>\n\n<p>Plumbrook answered from a chair. \"Eleven loaves a head is a strong start,\" he said. The other 3,400 gp, he explained, will come from \"goodwill, and the fun part.\" He also proposed that the temple cast create food and water for the side dishes. Sister Ottilie Brannoch said from the back that she would not be blamed for the side dishes, and sat down.</p>\n\n<p>Reeve Fennick, asked for comment at the door, said, \"We are aware of the goose.\" The menu has been sent to the Seating Subcommittee, by mistake, and it has sent back a note asking for chairs.</p>\n\n<p>My colleague Sterling Vanmoor tells me the gap will close by itself once the feast \"builds buzz.\" The feast is free, Sterling. It builds crumbs. My aunt Marigold, who keeps her savings in a boot, has offered the committee everything in it. The boot holds 14 gp, which covers the goose's nets and nothing else.</p>\n\n<p>What this means for your pantry: eat a large lunch on the 26th, and bring your own bread.</p>\n\n<p><em>— B.T. (Loaf Index: see sidebar)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Six Hundred Gold Goose",
+          "text": "A town's harvest-feast committee has paid a poulterer 600 gp to find a goose big enough to feed a crowd, and the poulterer swears one nests in the reed marsh outside town. The committee treasurer will pay the party a share of whatever they save if they find the bird before the feast, or prove it doesn't exist and get the deposit back."
+        },
+        "npc": {
+          "name": "Corla Fenwright",
+          "role": "Feast Committee Treasurer",
+          "want": "She wants the menu cut to fit the budget without breaking the cheerful Feastwarden's heart.",
+          "secret": "She has already spent 200 gp of the budget on bunting and hasn't told anyone.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Reedmouth Marsh",
+          "text": "A wide reed marsh where the poulterer's guide leads parties in circles at a silver a day. Something large really does honk out there at dusk, and it sounds bigger than a goose; run it with the giant eagle's stats.",
+          "tavern": false
+        },
+        "rumor": "My cousin says the giant goose is real and the poulterer has been feeding it the committee's honey cakes to keep it fat for the feast."
+      },
+      "fiction": true
+    },
+    {
+      "id": "ettin-porter-loot-split-two-shares",
+      "title": "Loot Split: Ettin Porter's Two Heads Each Want a Share",
+      "category": "Labor",
+      "author": "Brakka Stonesweat",
+      "date": "2026-11-10",
+      "excerpt": "An ettin porter hired for one share wants two at the loot split, one per head. His contract says 'per head.' The party wrote it. I'd pay up.",
+      "social": "A party hired an ettin porter for one share of the loot. Then somebody read the contract: one full share per head. Both heads read it too. The party offered a pie. Your party hired the ettin. How many shares do you pay him?",
+      "content": "<p>The ettin wants two shares of the loot split.</p>\n\n<p>The Copper Lantern Company, a party of four out of Brindlemoor, hired an ettin porter for one share of whatever they found in the Undermaw. On Tuesday they found 2,400 gold in a crypt. At the split Wednesday night the party counted five shares of 480 gold. The porter counted six. Both of his heads say they signed on.</p>\n\n<p>The contract is the problem. The party's wizard, Osric Vell, wrote it on the back of a tavern menu, and it gives the porter \"one full share per head.\" Vell says that means per hireling. \"It's an expression,\" he said. \"Like a head of cattle.\" Ettins are not cattle. I checked.</p>\n\n<p>\"I carried the chest,\" said Grub, the left head, a porter for eleven years. \"He carried the chest,\" said Mollo, the right head, also a porter for eleven years. \"I watched the road for ogres. Somebody had to. The wizard was asleep.\"</p>\n\n<p>Here's where it gets good. I've seen the party's ledger. They docked the porter 8 gold for two helmets. They docked him two rations a day. And they put him down for two night watches every night, because an ettin always keeps one head awake. That's both shifts on one wage. In my old mine we called that a double, and you paid a double or you hauled your own ore.</p>\n\n<p>So the party billed him per head. Now they want to pay him per body. Pick one.</p>\n\n<p>The party's cleric, Hessa Marlow, called the claim \"an unfortunate reading of a friendly agreement\" and offered \"a meaningful one-time gesture of goodwill.\" That means a pie. They offered him a pie. Grub took the pie. Mollo refused it on principle. They share a stomach, so nobody can tell who won.</p>\n\n<p>If this sounds familiar, it should. Last week a party promised its torchbearer <a href=\"/a/loot-split-equal-share-torchbearer-20-gold\">an equal share of 3,000 gold and paid 20</a>. Adventurers love the word \"share\" right up until it's time to count.</p>\n\n<p>Tamsin Gorrow runs the hireling board at the Brindlemoor porters' hall and has coiled rope for thirty years. She has started writing \"per body\" on every new contract. \"Then some fool will hire a hydra,\" she said. \"I'll cross that bridge when it eats the bridge.\"</p>\n\n<p>The Copper Lantern Company goes back down Friday. They need a porter. The ettin is free. His rate is two shares, and both heads say it's firm.</p>\n\n<p><em>Solidarity. And stretch your back. — Brakka</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "Two Heads, One Wage",
+          "text": "A merchant caravan's ettin guard has stopped walking halfway through a mountain pass because his two heads can't agree whether he's been paid. The paymaster hires the party to settle it before the ettin wanders back to the hills, with the caravan's strongbox still on his shoulder."
+        },
+        "npc": {
+          "name": "Wenna Graspley",
+          "role": "Caravan Paymaster",
+          "want": "She wants the caravan moving again without paying the ettin a second wage.",
+          "secret": "She has docked the ettin two rations a day for a month and pocketed the difference, and the left head has noticed.",
+          "race": "human",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Split Purse",
+          "text": "A tavern where parties divide their loot on one long table with a groove carved down the middle. The barkeep takes a copper from every pile as a counting fee and has never once been asked to show his math.",
+          "tavern": true
+        },
+        "rumor": "My cousin says if you buy an ettin one ale, the other head starts a tab in your name."
+      },
+      "fiction": true
+    },
+    {
+      "id": "sending-stones-heist-plan-village-gravelpenny",
+      "title": "Discount Sending Stones Broadcast Heist Plan to Whole Village",
+      "category": "Technology",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-11-10",
+      "excerpt": "A party bought 40 discount Sending Stones to plan a heist and sold the spares. The whole village heard the plan, and the rogue's apology to the fishmonger.",
+      "social": "A party bought 40 linked Sending Stones for 6 gp to plan one quiet heist, then sold the 36 spares at the village fair. On the night, half of Gorsewick was waiting at the strongroom with stools and a jug of cider. The rogue's apology to the fishmonger went out on all forty. What would your character have said into that stone?",
+      "content": "<p>Okay. OKAY. The Gravelpenny Crew, a four-member adventuring party out of Brindlemoor, bought a discount set of Sending Stones to plan a heist in the village of Gorsewick, and all 40 linked stones in the set heard the plan. One of them was mine. I bought it at the Gorsewick harvest fair for 2 silver, and before anything else I need you to know the mana throughput on this thing is incredible.</p>\n\n<p>So, the deal. A normal pair of Sending Stones costs about as much as a small horse. Chattercourt Stoneworks sells the Chatterbox 40 for 6 gp: forty stones in one circle, so whatever goes into one comes out of all the others. Runic latency is basically zero! The Crew needed four. Their rogue, Tamsin Reedly, sold the other 36 at the fair to \"make the money back\" and cleared 7 gp 2 sp. Profit, for about one evening!</p>\n\n<p>On Tuesday night the plan went out to every kitchen in Gorsewick and one goat pen. Break into the moneylender Ormand Vetch's strongroom at the ninth bell, take back a silver locket the party's fighter swears was his grandmother's, and leave by the cellar window \"nobody watches.\" Vetch heard it on the stone he bought from Reedly that afternoon. So did the village constable, the miller, both priests, and a goat farmer named Hollin, who keeps his stone in the pen \"for company.\"</p>\n\n<p>Then the stones went quiet. Then Reedly came back on, much softer. \"Marta. It's me. I'm sorry about the eels, and about leaving before the dance. I think about the dock a lot.\" Marta Sallowby, Gorsewick's fishmonger, owns stone number 22. Her reply came out of all forty at once: \"You still owe me for the eels, Tamsin.\" Byte, my pseudodragon familiar, who has spoken only in ad copy since the last Sending Stone incident, sighed and said, \"Stay close to the ones you love, now in every room of the house.\"</p>\n\n<p>At the ninth bell the Crew crept up to Vetch's strongroom and found about half the village already there with stools and a jug of cider. Vetch had moved the locket, changed the lock, and put out cups. Constable Brenna Ostrey asked the party to \"please pick another night, the ninth bell is choir,\" and charged nobody. The fighter got his locket anyway, once Vetch admitted, with forty neighbors staring at him, that it really was the grandmother's.</p>\n\n<p>Chattercourt spokesman Wim Larrowby told me privacy is available. Private Mode costs 1 sp a month, per stone. \"The free tier is a community product,\" he said. That's four gold a month so your stones don't shout, and I hate subscription fees, and I hate this one most. Chattercourt also pushed a firmware glyph Wednesday that plays a little chime before anyone talks. It is a lovely chime. I'm keeping my stone.</p>\n\n<p>Brother Tumbleberry sent a note saying I should try talking to my neighbors in person. Wendell, I did. They already knew about the eels.</p>\n\n<p>Four out of five beholder eyes. Damage Report: Heists foiled: 1. Pies eaten: 1. Apologies heard by an entire village: 1. Eyebrows: fine. Marta: thinking about it.</p>\n\n<p><em>— Nyx (they/them). Damage Report below.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "Forty Stones, One Secret",
+          "text": "A peddler has sold a village dozens of cheap linked message stones, and a bandit crew is using one to plan a raid without knowing everyone can hear. The village elder wants the party to set an ambush using the overheard plan before the bandits notice the chime. Run the bandits as a bandit captain and bandits, with one spy listening on the stones from the other side."
+        },
+        "npc": {
+          "name": "Corra Mapplethwaite",
+          "role": "Traveling trinket peddler",
+          "want": "She wants to sell her last crate of linked stones before anyone works out that they all talk to each other.",
+          "secret": "She keeps stone number one and has been selling what she overhears to the highest bidder.",
+          "race": "gnome",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Chiming Eel",
+          "text": "A riverside tavern where a basket of linked stones sits on the bar so regulars can listen to the whole village at once. Every so often the room goes silent because someone's secret just came out of the basket.",
+          "tavern": true
+        },
+        "rumor": "My cousin says if you whisper into those cheap stones at midnight, a voice from somewhere that isn't the village whispers back."
+      },
+      "fiction": true
+    },
+    {
+      "id": "reincarnate-spell-upgrade-fighter-badger-second-spring",
+      "title": "Party Pays 450 gp Reincarnate Upgrade; Fighter Is a Badger",
+      "category": "Consumer",
+      "author": "Sterling Vanmoor",
+      "date": "2026-11-10",
+      "excerpt": "An adventuring party paid 450 gp extra so its fallen fighter could pick his form under the Reincarnate spell. He picked half-elf. He is a badger. Bold.",
+      "social": "The Thornbury Irregulars paid 450 gp extra so their fighter could pick his new body. He asked for half-elf, a bit taller. The grove brought him back as a badger, and clause 14(c) says that counts. He still wants his old sword back. Would your character take the badger deal or stay dead?",
+      "content": "<p>An adventuring party in Brindlemoor paid 450 gp on top of the standard Reincarnate spell to let its fallen fighter choose his new body, and on Monday the fighter came back a badger anyway. The Thornbury Irregulars bought the Form Selection Premium package at Second Spring Groves, a druid grove franchise with six locations, and they have not stopped talking about the fine print since.</p>\n\n<p>Some people see a botched resurrection. I see the most exciting product launch on Tanner's Row this quarter.</p>\n\n<p>Here are the facts. The fighter, Hobb Greaveson, fell on Level Five of the Undermaw to what his party describes as \"a door with opinions.\" The Irregulars carried him to the Second Spring branch on Mill Lane, paid the 1,000 gp base rite in rare oils and unguents, and then took the upsell. Greaveson's form preference, written on the intake scroll in his cleric's neat hand, read: \"Half-elf. A bit taller. Good hair.\"</p>\n\n<p>He woke up on the altar at 38 pounds, striped, and digging.</p>\n\n<p>\"We paid for the premium,\" said the party's wizard, Pell Rookfeld, holding the receipt in one hand and a gnawed boot in the other. \"There was a velvet rope. They gave us tea.\"</p>\n\n<p>Elder Wynn Fernway, who owns the Mill Lane franchise, pointed me to clause 14(c), which reads in full: \"Form Selection Premium guarantees that a form will be selected.\" The customer's preference, the clause adds, \"is recorded with gratitude.\" Fernway called the outcome \"a clean delivery.\" I call it disruption. That is a vertically integrated rebirth pipeline, and frankly the badger has never looked more motivated.</p>\n\n<p>Shieldwall Mutual, the party's insurer, has declined the claim. Its adjuster filed the badger under \"voluntary lifestyle change,\" which strikes me as exactly the kind of red tape that keeps small adventuring parties from scaling. The Irregulars have since rightsized the adventuring party from five to four and a half, and Greaveson now holds the rear rank, where he has already dug two escape tunnels and eaten a rogue's lunch.</p>\n\n<p>When I met Guildmaster Tobrin Ashgrove at a balloon gala last spring, he told me, \"Sterling, the customer chooses the box. The vendor chooses what goes in it.\" I wrote that on my sword-routine mirror. Second Spring understands this. Its new Platinum Form tier, at 900 gp, lets the customer choose the badger's color.</p>\n\n<p>Greaveson, through Rookfeld, says he wants a refund and his old sword. The sword is now taller than he is. Fernway has offered a 10 percent discount on his next death.</p>\n\n<p>Key takeaways for the ambitious adventurer:</p>\n\n<p>Read clause 14(c). Then read it again, slower.<br>A customer who asks for good hair and gets claws has been upgraded. He just hasn't run the numbers.<br>Never let a fighter die before the loyalty card is stamped.</p>\n\n<p><em>— Sterling Vanmoor, Guild Visionary. Let's connect at the Yawning Portal.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Clause Beneath the Altar",
+          "text": "A druid grove franchise sells a premium Reincarnate upgrade that promises customers their chosen form, and every premium customer this month has come back a badger. A grieving family whose son is now a giant badger hires the party to find out whether the grove's elder is rigging the rite, and to get the boy a second casting before the grove's lawyers bury the complaint."
+        },
+        "npc": {
+          "name": "Brannoch Weald",
+          "role": "Grove Elder and Franchisee",
+          "want": "He wants to hit his monthly premium sales target before the franchise's regional inspector arrives.",
+          "secret": "He never learned the Reincarnate spell properly and has been paying a wandering druid in a back room to cast it, and she only knows badgers.",
+          "race": "human",
+          "gender": "male",
+          "kind": "religious"
+        },
+        "location": {
+          "name": "The Mill Lane Grove",
+          "text": "A druid grove behind a shopfront, with a velvet rope, free tea, and an altar whose roots have dug a suspicious number of tunnels under the street.",
+          "tavern": false
+        },
+        "rumor": "My cousin paid for the premium rebirth and came back with a lovely snout, and the grove says the snout was his idea."
+      },
+      "fiction": true
     }
   ]
 }
