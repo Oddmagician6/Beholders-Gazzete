@@ -1,5 +1,5 @@
 {
-    "generated":  "2026-11-10",
+    "generated":  "2026-11-11",
     "writers":  [
                     {
                         "id":  "ottoline-vex",
@@ -307,8 +307,13 @@
                                            "name":  "Ottoline Vex"
                                        }
                                    ],
-                        "article_count":  31,
+                        "article_count":  32,
                         "articles":  [
+                                         {
+                                             "id":  "sahuagin-underwater-trade-parley-varnholt-water-breathing",
+                                             "title":  "Sahuagin Demand Underwater Trade Talks; Envoys Hold Breath",
+                                             "date":  "2026-11-11"
+                                         },
                                          {
                                              "id":  "hooded-stranger-same-quest-14-adventuring-parties",
                                              "title":  "Hooded Stranger Gave Same Quest to 14 Adventuring Parties",
@@ -328,11 +333,6 @@
                                              "id":  "adventuring-party-shortcut-border-nine-hours-incident",
                                              "title":  "Adventuring Party\u0027s Shortcut Turns 2-Hour Road Into 9",
                                              "date":  "2026-11-05"
-                                         },
-                                         {
-                                             "id":  "gelatinous-cube-conference-room-varnholt-pellam-parley",
-                                             "title":  "Gelatinous Cube Hosted Varnholt-Pellam Parley as \u0027Glass Room\u0027",
-                                             "date":  "2026-11-04"
                                          }
                                      ]
                     },
@@ -363,8 +363,13 @@
                                            "name":  "Nyx Spindlecoil"
                                        }
                                    ],
-                        "article_count":  33,
+                        "article_count":  34,
                         "articles":  [
+                                         {
+                                             "id":  "wisp-party-loses-9-patients-glimmerfen",
+                                             "title":  "Party Follows Helpful Will-o\u0027-Wisp, Loses 9 Patients",
+                                             "date":  "2026-11-11"
+                                         },
                                          {
                                              "id":  "shrieker-mushrooms-tanners-row-sleepless-wendell",
                                              "title":  "Adventurers Bring Home Shriekers; Tanner\u0027s Row Can\u0027t Sleep",
@@ -384,11 +389,6 @@
                                              "id":  "basilisk-eye-exam-clinic-24-petrified-wendell",
                                              "title":  "Basilisk Eye Exam Clinic Petrifies 24 Patients",
                                              "date":  "2026-11-06"
-                                         },
-                                         {
-                                             "id":  "unidentified-potions-brass-kettle-healing-last-vial",
-                                             "title":  "Potion of Healing Was Vial 11: Party Drinks Whole Satchel",
-                                             "date":  "2026-11-05"
                                          }
                                      ]
                     },
@@ -423,8 +423,13 @@
                                            "name":  "Hollis Delvewright"
                                        }
                                    ],
-                        "article_count":  33,
+                        "article_count":  34,
                         "articles":  [
+                                         {
+                                             "id":  "retired-adventurers-veterans-parade-12-stalls",
+                                             "title":  "Retired Adventurers at Veterans Parade Kick In 12 Market Stalls",
+                                             "date":  "2026-11-11"
+                                         },
                                          {
                                              "id":  "kenku-witness-robbery-adventuring-party-suspects",
                                              "title":  "Kenku Witness Reenacts Robbery, Frames Adventuring Party",
@@ -444,11 +449,6 @@
                                              "id":  "ankheg-sinkhole-fish-street-cheese-stall",
                                              "title":  "Ankheg Opens Sinkhole Under Fish Street Cheese Stall",
                                              "date":  "2026-11-06"
-                                         },
-                                         {
-                                             "id":  "adventuring-party-unlocked-bakery-door-9-gp",
-                                             "title":  "Adventuring Party Kicks Open Unlocked Bakery Door, Pays 9 gp",
-                                             "date":  "2026-11-05"
                                          }
                                      ]
                     },
@@ -481,8 +481,13 @@
                                            "name":  "Skritch Mudwhistle"
                                        }
                                    ],
-                        "article_count":  29,
+                        "article_count":  30,
                         "articles":  [
+                                         {
+                                             "id":  "giant-boar-feast-alive-fourth-attempt",
+                                             "title":  "Giant Boar Brought Back Alive for Feast. Nobody Said Dead.",
+                                             "date":  "2026-11-11"
+                                         },
                                          {
                                              "id":  "skeleton-guards-walk-off-undermaw-level-two",
                                              "title":  "Skeleton Guards Walk Off Level Two After 400 Years on Post",
@@ -502,11 +507,6 @@
                                              "id":  "long-rest-interrupted-watch-rotation-fourth-attempt",
                                              "title":  "Long Rest Interrupted Four Times Over Watch Rotation",
                                              "date":  "2026-11-05"
-                                         },
-                                         {
-                                             "id":  "bag-of-holding-recall-hireling-wages-missing",
-                                             "title":  "Bag of Holding Recalled After Hirelings\u0027 Wages Go Missing",
-                                             "date":  "2026-11-04"
                                          }
                                      ]
                     },
@@ -594,6 +594,40 @@
                ],
     "realm":  [
                   {
+                      "name":  "Brindlemoor",
+                      "short":  "Brindlemoor",
+                      "type":  "place",
+                      "blurb":  "A frontier market town built on top of the entrance to the Undermaw. Its economy runs on adventurers, and so does its hospital.",
+                      "appearances":  92,
+                      "articles":  [
+                                       {
+                                           "id":  "giant-boar-feast-alive-fourth-attempt",
+                                           "title":  "Giant Boar Brought Back Alive for Feast. Nobody Said Dead.",
+                                           "date":  "2026-11-11"
+                                       },
+                                       {
+                                           "id":  "retired-adventurers-veterans-parade-12-stalls",
+                                           "title":  "Retired Adventurers at Veterans Parade Kick In 12 Market Stalls",
+                                           "date":  "2026-11-11"
+                                       },
+                                       {
+                                           "id":  "wisp-party-loses-9-patients-glimmerfen",
+                                           "title":  "Party Follows Helpful Will-o\u0027-Wisp, Loses 9 Patients",
+                                           "date":  "2026-11-11"
+                                       },
+                                       {
+                                           "id":  "ettin-porter-loot-split-two-shares",
+                                           "title":  "Loot Split: Ettin Porter\u0027s Two Heads Each Want a Share",
+                                           "date":  "2026-11-10"
+                                       },
+                                       {
+                                           "id":  "feast-budget-900-gp-goose-600-plumbrook",
+                                           "title":  "Feast Menu Costs 4,300 gp on a 900 gp Budget; Goose Is 600",
+                                           "date":  "2026-11-10"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Capital Preservation Guild",
                       "short":  "the Guild",
                       "type":  "institution",
@@ -624,40 +658,6 @@
                                            "id":  "hooded-stranger-same-quest-14-adventuring-parties",
                                            "title":  "Hooded Stranger Gave Same Quest to 14 Adventuring Parties",
                                            "date":  "2026-11-08"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Brindlemoor",
-                      "short":  "Brindlemoor",
-                      "type":  "place",
-                      "blurb":  "A frontier market town built on top of the entrance to the Undermaw. Its economy runs on adventurers, and so does its hospital.",
-                      "appearances":  89,
-                      "articles":  [
-                                       {
-                                           "id":  "ettin-porter-loot-split-two-shares",
-                                           "title":  "Loot Split: Ettin Porter\u0027s Two Heads Each Want a Share",
-                                           "date":  "2026-11-10"
-                                       },
-                                       {
-                                           "id":  "feast-budget-900-gp-goose-600-plumbrook",
-                                           "title":  "Feast Menu Costs 4,300 gp on a 900 gp Budget; Goose Is 600",
-                                           "date":  "2026-11-10"
-                                       },
-                                       {
-                                           "id":  "reincarnate-spell-upgrade-fighter-badger-second-spring",
-                                           "title":  "Party Pays 450 gp Reincarnate Upgrade; Fighter Is a Badger",
-                                           "date":  "2026-11-10"
-                                       },
-                                       {
-                                           "id":  "sending-stones-heist-plan-village-gravelpenny",
-                                           "title":  "Discount Sending Stones Broadcast Heist Plan to Whole Village",
-                                           "date":  "2026-11-10"
-                                       },
-                                       {
-                                           "id":  "druid-goodberry-3-cp-farmers-bread-tax",
-                                           "title":  "Druid Sells Goodberries for 3 cp; Farmers Demand Bread Tax",
-                                           "date":  "2026-11-09"
                                        }
                                    ]
                   },
@@ -802,8 +802,18 @@
                       "short":  "Reeve Fennick",
                       "type":  "person",
                       "blurb":  "Brindlemoor\u0027s chief magistrate. Signs every dungeon permit, every bounty, and every apology to the farmers downwind.",
-                      "appearances":  45,
+                      "appearances":  47,
                       "articles":  [
+                                       {
+                                           "id":  "giant-boar-feast-alive-fourth-attempt",
+                                           "title":  "Giant Boar Brought Back Alive for Feast. Nobody Said Dead.",
+                                           "date":  "2026-11-11"
+                                       },
+                                       {
+                                           "id":  "retired-adventurers-veterans-parade-12-stalls",
+                                           "title":  "Retired Adventurers at Veterans Parade Kick In 12 Market Stalls",
+                                           "date":  "2026-11-11"
+                                       },
                                        {
                                            "id":  "feast-budget-900-gp-goose-600-plumbrook",
                                            "title":  "Feast Menu Costs 4,300 gp on a 900 gp Budget; Goose Is 600",
@@ -818,16 +828,6 @@
                                            "id":  "halfling-feastwarden-feast-2000-brindlemoor",
                                            "title":  "Halfling Feastwarden Promises Feast for 2,000, Has No Menu",
                                            "date":  "2026-11-09"
-                                       },
-                                       {
-                                           "id":  "doppelganger-temp-agency-14-firms-one-clerk",
-                                           "title":  "Doppelganger Temp Agency Bills 14 Firms for One Clerk",
-                                           "date":  "2026-11-08"
-                                       },
-                                       {
-                                           "id":  "hydra-head-tax-nine-bills-brindlemoor-appeal",
-                                           "title":  "Hydra Billed Nine Head Taxes in Brindlemoor; Appeal Filed",
-                                           "date":  "2026-11-07"
                                        }
                                    ]
                   },
@@ -870,8 +870,13 @@
                       "short":  "the Fourth Attempt",
                       "type":  "organization",
                       "blurb":  "An adventuring party named in honor of the first three. Licensed by Chapter 9, popular with bards, unpopular with insurers.",
-                      "appearances":  36,
+                      "appearances":  37,
                       "articles":  [
+                                       {
+                                           "id":  "giant-boar-feast-alive-fourth-attempt",
+                                           "title":  "Giant Boar Brought Back Alive for Feast. Nobody Said Dead.",
+                                           "date":  "2026-11-11"
+                                       },
                                        {
                                            "id":  "fourth-attempt-copper-pieces-59-percent-changers",
                                            "title":  "Fourth Attempt Sells Last Copper Pieces at 59% of Value",
@@ -891,11 +896,6 @@
                                            "id":  "ten-foot-pole-recall-one-inch-short",
                                            "title":  "Ten-Foot Poles Recalled After Coming Up One Inch Short",
                                            "date":  "2026-11-06"
-                                       },
-                                       {
-                                           "id":  "long-rest-interrupted-watch-rotation-fourth-attempt",
-                                           "title":  "Long Rest Interrupted Four Times Over Watch Rotation",
-                                           "date":  "2026-11-05"
                                        }
                                    ]
                   },
@@ -938,8 +938,13 @@
                       "short":  "Pottage",
                       "type":  "person",
                       "blurb":  "Steward of the Fourth Attempt\u0027s hirelings. Reads contracts all the way to the end, which is more than the party can say.",
-                      "appearances":  27,
+                      "appearances":  28,
                       "articles":  [
+                                       {
+                                           "id":  "giant-boar-feast-alive-fourth-attempt",
+                                           "title":  "Giant Boar Brought Back Alive for Feast. Nobody Said Dead.",
+                                           "date":  "2026-11-11"
+                                       },
                                        {
                                            "id":  "skeleton-guards-walk-off-undermaw-level-two",
                                            "title":  "Skeleton Guards Walk Off Level Two After 400 Years on Post",
@@ -958,11 +963,6 @@
                                        {
                                            "id":  "long-rest-interrupted-watch-rotation-fourth-attempt",
                                            "title":  "Long Rest Interrupted Four Times Over Watch Rotation",
-                                           "date":  "2026-11-05"
-                                       },
-                                       {
-                                           "id":  "loot-split-equal-share-torchbearer-20-gold",
-                                           "title":  "Loot Split: Torchbearer\u0027s \u0027Equal Share\u0027 Is 20 of 3,000 Gold",
                                            "date":  "2026-11-05"
                                        }
                                    ]
@@ -1040,8 +1040,18 @@
                       "short":  "the Company",
                       "type":  "organization",
                       "blurb":  "A Brindlemoor adventuring party that brought a sack of shrieker mushrooms home from the Undermaw to sell, and kept Tanner\u0027s Row awake for four nights.",
-                      "appearances":  22,
+                      "appearances":  24,
                       "articles":  [
+                                       {
+                                           "id":  "retired-adventurers-veterans-parade-12-stalls",
+                                           "title":  "Retired Adventurers at Veterans Parade Kick In 12 Market Stalls",
+                                           "date":  "2026-11-11"
+                                       },
+                                       {
+                                           "id":  "wisp-party-loses-9-patients-glimmerfen",
+                                           "title":  "Party Follows Helpful Will-o\u0027-Wisp, Loses 9 Patients",
+                                           "date":  "2026-11-11"
+                                       },
                                        {
                                            "id":  "ettin-porter-loot-split-two-shares",
                                            "title":  "Loot Split: Ettin Porter\u0027s Two Heads Each Want a Share",
@@ -1056,16 +1066,6 @@
                                            "id":  "shrieker-mushrooms-tanners-row-sleepless-wendell",
                                            "title":  "Adventurers Bring Home Shriekers; Tanner\u0027s Row Can\u0027t Sleep",
                                            "date":  "2026-11-09"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-corridor-vote-40-minutes-torches",
-                                           "title":  "Adventuring Party Votes 40 Minutes on Corridor as Torches Die",
-                                           "date":  "2026-11-08"
-                                       },
-                                       {
-                                           "id":  "alarm-spell-raccoon-brass-kettle-long-rest",
-                                           "title":  "Alarm Spell Goes Off 31 Times; Culprit Is One Raccoon",
-                                           "date":  "2026-11-08"
                                        }
                                    ]
                   },
@@ -2124,6 +2124,40 @@
                                    ]
                   },
                   {
+                      "name":  "Candlekeep",
+                      "short":  "Candlekeep",
+                      "type":  "institution",
+                      "blurb":  "Fortress-library and seat of learning, run by the stern Head Librarian.",
+                      "appearances":  7,
+                      "articles":  [
+                                       {
+                                           "id":  "wisp-party-loses-9-patients-glimmerfen",
+                                           "title":  "Party Follows Helpful Will-o\u0027-Wisp, Loses 9 Patients",
+                                           "date":  "2026-11-11"
+                                       },
+                                       {
+                                           "id":  "sending-spell-25-words-greetings-party-reply",
+                                           "title":  "Sending Spell\u0027s 25 Words Go to Hellos; Reply Says Thanks",
+                                           "date":  "2026-11-06"
+                                       },
+                                       {
+                                           "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
+                                           "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
+                                           "date":  "2026-10-10"
+                                       },
+                                       {
+                                           "id":  "candlekeep-ai-scribe-controversy",
+                                           "title":  "Candlekeep Librarians Reject AI-Generated Spellbooks",
+                                           "date":  "2026-04-21"
+                                       },
+                                       {
+                                           "id":  "bard-college-plagiarism-scandal",
+                                           "title":  "College of Valor Accused of Song Plagiarism",
+                                           "date":  "2026-04-18"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Kara-Tur",
                       "short":  "Kara-Tur",
                       "type":  "country",
@@ -2256,40 +2290,6 @@
                                            "id":  "embassy-election-interference-silver-marches-tariffs",
                                            "title":  "Embassy Accuses Silver Marches of Election Interference",
                                            "date":  "2026-10-22"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Candlekeep",
-                      "short":  "Candlekeep",
-                      "type":  "institution",
-                      "blurb":  "Fortress-library and seat of learning, run by the stern Head Librarian.",
-                      "appearances":  6,
-                      "articles":  [
-                                       {
-                                           "id":  "sending-spell-25-words-greetings-party-reply",
-                                           "title":  "Sending Spell\u0027s 25 Words Go to Hellos; Reply Says Thanks",
-                                           "date":  "2026-11-06"
-                                       },
-                                       {
-                                           "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
-                                           "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
-                                           "date":  "2026-10-10"
-                                       },
-                                       {
-                                           "id":  "candlekeep-ai-scribe-controversy",
-                                           "title":  "Candlekeep Librarians Reject AI-Generated Spellbooks",
-                                           "date":  "2026-04-21"
-                                       },
-                                       {
-                                           "id":  "bard-college-plagiarism-scandal",
-                                           "title":  "College of Valor Accused of Song Plagiarism",
-                                           "date":  "2026-04-18"
-                                       },
-                                       {
-                                           "id":  "candlekeep-ink-imp-riot",
-                                           "title":  "Candlekeep Librarians Battle Ink Imp Rebellion",
-                                           "date":  "2026-04-17"
                                        }
                                    ]
                   },
@@ -3178,6 +3178,40 @@
                                    ]
                   },
                   {
+                      "name":  "the Pellam Isles",
+                      "short":  "Pellam",
+                      "type":  "place",
+                      "blurb":  "A scatter of fishing islands whose sailors have a long habit of staying with their ships.",
+                      "appearances":  5,
+                      "articles":  [
+                                       {
+                                           "id":  "sahuagin-underwater-trade-parley-varnholt-water-breathing",
+                                           "title":  "Sahuagin Demand Underwater Trade Talks; Envoys Hold Breath",
+                                           "date":  "2026-11-11"
+                                       },
+                                       {
+                                           "id":  "rogue-pickpockets-envoy-whistle-varnholt-pellam-incident",
+                                           "title":  "Rogue Picks Envoy\u0027s Pocket, Starts Varnholt-Pellam Incident",
+                                           "date":  "2026-11-06"
+                                       },
+                                       {
+                                           "id":  "gelatinous-cube-conference-room-varnholt-pellam-parley",
+                                           "title":  "Gelatinous Cube Hosted Varnholt-Pellam Parley as \u0027Glass Room\u0027",
+                                           "date":  "2026-11-04"
+                                       },
+                                       {
+                                           "id":  "ring-of-protection-identify-spell-shop-markup",
+                                           "title":  "Unidentified Ring Sold for 40 gp, Resold at 1,800 gp",
+                                           "date":  "2026-11-03"
+                                       },
+                                       {
+                                           "id":  "ghost-ship-varnholt-harbor-visa-pellam-parley",
+                                           "title":  "Ghost Ship Docks in Varnholt; Customs Demands a Visa",
+                                           "date":  "2026-10-27"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Royal Bureau of Labor Tallies",
                       "short":  "the Bureau",
                       "type":  "agency",
@@ -3618,35 +3652,6 @@
                                    ]
                   },
                   {
-                      "name":  "the Pellam Isles",
-                      "short":  "Pellam",
-                      "type":  "place",
-                      "blurb":  "A scatter of fishing islands whose sailors have a long habit of staying with their ships.",
-                      "appearances":  4,
-                      "articles":  [
-                                       {
-                                           "id":  "rogue-pickpockets-envoy-whistle-varnholt-pellam-incident",
-                                           "title":  "Rogue Picks Envoy\u0027s Pocket, Starts Varnholt-Pellam Incident",
-                                           "date":  "2026-11-06"
-                                       },
-                                       {
-                                           "id":  "gelatinous-cube-conference-room-varnholt-pellam-parley",
-                                           "title":  "Gelatinous Cube Hosted Varnholt-Pellam Parley as \u0027Glass Room\u0027",
-                                           "date":  "2026-11-04"
-                                       },
-                                       {
-                                           "id":  "ring-of-protection-identify-spell-shop-markup",
-                                           "title":  "Unidentified Ring Sold for 40 gp, Resold at 1,800 gp",
-                                           "date":  "2026-11-03"
-                                       },
-                                       {
-                                           "id":  "ghost-ship-varnholt-harbor-visa-pellam-parley",
-                                           "title":  "Ghost Ship Docks in Varnholt; Customs Demands a Visa",
-                                           "date":  "2026-10-27"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "the Wagonmasters\u0027 Brotherhood",
                       "short":  "the Brotherhood",
                       "type":  "institution",
@@ -3672,6 +3677,35 @@
                                            "id":  "orcrange-county-wagonmasters-down-tools-bosses-raises",
                                            "title":  "Orcrange County Wagonmasters Set to Down Tools Over Supervisors\u0027 Fat Raises",
                                            "date":  "2026-10-11"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Varnholt",
+                      "short":  "Varnholt",
+                      "type":  "place",
+                      "blurb":  "A harbor kingdom with strict customs rules and a berth fee for everything that floats, including some things that should not.",
+                      "appearances":  4,
+                      "articles":  [
+                                       {
+                                           "id":  "sahuagin-underwater-trade-parley-varnholt-water-breathing",
+                                           "title":  "Sahuagin Demand Underwater Trade Talks; Envoys Hold Breath",
+                                           "date":  "2026-11-11"
+                                       },
+                                       {
+                                           "id":  "rogue-pickpockets-envoy-whistle-varnholt-pellam-incident",
+                                           "title":  "Rogue Picks Envoy\u0027s Pocket, Starts Varnholt-Pellam Incident",
+                                           "date":  "2026-11-06"
+                                       },
+                                       {
+                                           "id":  "gelatinous-cube-conference-room-varnholt-pellam-parley",
+                                           "title":  "Gelatinous Cube Hosted Varnholt-Pellam Parley as \u0027Glass Room\u0027",
+                                           "date":  "2026-11-04"
+                                       },
+                                       {
+                                           "id":  "ghost-ship-varnholt-harbor-visa-pellam-parley",
+                                           "title":  "Ghost Ship Docks in Varnholt; Customs Demands a Visa",
+                                           "date":  "2026-10-27"
                                        }
                                    ]
                   },
@@ -3845,6 +3879,30 @@
                                            "id":  "state-visit-red-carpet-emperor-shi-donwald-senators",
                                            "title":  "Red-Carpet State Visit Leaves Red Oliphants Fuming",
                                            "date":  "2026-10-18"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Feastwarden Odo Plumbrook",
+                      "short":  "Plumbrook",
+                      "type":  "person",
+                      "blurb":  "A Brindlemoor halfling appointed Feastwarden of the Grand Feast. He has promised to feed 2,000 people and has never once doubted it.",
+                      "appearances":  3,
+                      "articles":  [
+                                       {
+                                           "id":  "giant-boar-feast-alive-fourth-attempt",
+                                           "title":  "Giant Boar Brought Back Alive for Feast. Nobody Said Dead.",
+                                           "date":  "2026-11-11"
+                                       },
+                                       {
+                                           "id":  "feast-budget-900-gp-goose-600-plumbrook",
+                                           "title":  "Feast Menu Costs 4,300 gp on a 900 gp Budget; Goose Is 600",
+                                           "date":  "2026-11-10"
+                                       },
+                                       {
+                                           "id":  "halfling-feastwarden-feast-2000-brindlemoor",
+                                           "title":  "Halfling Feastwarden Promises Feast for 2,000, Has No Menu",
+                                           "date":  "2026-11-09"
                                        }
                                    ]
                   },
@@ -4569,30 +4627,6 @@
                                    ]
                   },
                   {
-                      "name":  "Varnholt",
-                      "short":  "Varnholt",
-                      "type":  "place",
-                      "blurb":  "A harbor kingdom with strict customs rules and a berth fee for everything that floats, including some things that should not.",
-                      "appearances":  3,
-                      "articles":  [
-                                       {
-                                           "id":  "rogue-pickpockets-envoy-whistle-varnholt-pellam-incident",
-                                           "title":  "Rogue Picks Envoy\u0027s Pocket, Starts Varnholt-Pellam Incident",
-                                           "date":  "2026-11-06"
-                                       },
-                                       {
-                                           "id":  "gelatinous-cube-conference-room-varnholt-pellam-parley",
-                                           "title":  "Gelatinous Cube Hosted Varnholt-Pellam Parley as \u0027Glass Room\u0027",
-                                           "date":  "2026-11-04"
-                                       },
-                                       {
-                                           "id":  "ghost-ship-varnholt-harbor-visa-pellam-parley",
-                                           "title":  "Ghost Ship Docks in Varnholt; Customs Demands a Visa",
-                                           "date":  "2026-10-27"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Warlord Jairo Bolsonare",
                       "short":  "the Warlord",
                       "type":  "person",
@@ -4955,25 +4989,6 @@
                                            "id":  "mimic-furniture-recall",
                                            "title":  "Eyekea Furniture Store Recalls Mimic-Infested Chairs",
                                            "date":  "2026-04-23"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Feastwarden Odo Plumbrook",
-                      "short":  "Plumbrook",
-                      "type":  "person",
-                      "blurb":  "A Brindlemoor halfling appointed Feastwarden of the Grand Feast. He has promised to feed 2,000 people and has never once doubted it.",
-                      "appearances":  2,
-                      "articles":  [
-                                       {
-                                           "id":  "feast-budget-900-gp-goose-600-plumbrook",
-                                           "title":  "Feast Menu Costs 4,300 gp on a 900 gp Budget; Goose Is 600",
-                                           "date":  "2026-11-10"
-                                       },
-                                       {
-                                           "id":  "halfling-feastwarden-feast-2000-brindlemoor",
-                                           "title":  "Halfling Feastwarden Promises Feast for 2,000, Has No Menu",
-                                           "date":  "2026-11-09"
                                        }
                                    ]
                   },
@@ -7318,6 +7333,20 @@
                                    ]
                   },
                   {
+                      "name":  "Glimmerfen Lantern Rest",
+                      "short":  "the Lantern Rest",
+                      "type":  "place",
+                      "blurb":  "A clinic in the Glimmerfen where nervous patients sit and look at a steady lamp for 4 silver a sitting. Its lamp hangs on a post and does not bob.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "wisp-party-loses-9-patients-glimmerfen",
+                                           "title":  "Party Follows Helpful Will-o\u0027-Wisp, Loses 9 Patients",
+                                           "date":  "2026-11-11"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Good Morrow, Waterdeep",
                       "short":  "Good Morrow",
                       "type":  "ip",
@@ -7580,6 +7609,20 @@
                                            "id":  "attack-ads-fact-check-ohyo-vale-governor",
                                            "title":  "Ohyo Vale Governor Race: Attack Ads Fact-Checked, Both Fail",
                                            "date":  "2026-10-22"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Healer Hesper Vashby",
+                      "short":  "Healer Vashby",
+                      "type":  "person",
+                      "blurb":  "Keeper of Glimmerfen Lantern Rest. She underlines the important parts of her letters, and nobody reads them.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "wisp-party-loses-9-patients-glimmerfen",
+                                           "title":  "Party Follows Helpful Will-o\u0027-Wisp, Loses 9 Patients",
+                                           "date":  "2026-11-11"
                                        }
                                    ]
                   },
@@ -8788,6 +8831,20 @@
                                    ]
                   },
                   {
+                      "name":  "Priestess Ksshara of the Coldtooth Reef",
+                      "short":  "Ksshara",
+                      "type":  "person",
+                      "blurb":  "The sahuagin priestess who speaks for the Coldtooth Reef in trade talks with the surface.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "sahuagin-underwater-trade-parley-varnholt-water-breathing",
+                                           "title":  "Sahuagin Demand Underwater Trade Talks; Envoys Hold Breath",
+                                           "date":  "2026-11-11"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Proofparchment",
                       "short":  "Proofparchment",
                       "type":  "company",
@@ -9558,6 +9615,20 @@
                                    ]
                   },
                   {
+                      "name":  "the Coldtooth Reef",
+                      "short":  "the Coldtooth",
+                      "type":  "place",
+                      "blurb":  "A sahuagin reef-city off the Varnholt breakwater, roofed in coral and, lately, in other people\u0027s anchors.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "sahuagin-underwater-trade-parley-varnholt-water-breathing",
+                                           "title":  "Sahuagin Demand Underwater Trade Talks; Envoys Hold Breath",
+                                           "date":  "2026-11-11"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Collegium of Michigloom",
                       "short":  "Michigloom",
                       "type":  "institution",
@@ -9624,6 +9695,20 @@
                                            "id":  "opioid-settlement-315m-gp-curse-vial",
                                            "title":  "Pharmacy Chain Pays 315M gp Opioid Settlement, Admits Nothing",
                                            "date":  "2026-10-15"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Day of Old Shields",
+                      "short":  "the Day of Old Shields",
+                      "type":  "event",
+                      "blurb":  "Brindlemoor\u0027s yearly day for its retired adventurers, with a parade down Fish Street and a great many medals.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "retired-adventurers-veterans-parade-12-stalls",
+                                           "title":  "Retired Adventurers at Veterans Parade Kick In 12 Market Stalls",
+                                           "date":  "2026-11-11"
                                        }
                                    ]
                   },
@@ -9736,6 +9821,20 @@
                                            "id":  "live-birds-underwear-mirage-bay-skyport-smuggling",
                                            "title":  "10 Live Birds in His Smalls: Skyport Wardens Cry Fowl",
                                            "date":  "2026-10-17"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Glimmerfen",
+                      "short":  "the Glimmerfen",
+                      "type":  "place",
+                      "blurb":  "A foggy marsh an hour\u0027s walk out of Brindlemoor, crossed by one road and visited by more floating lights than it has lamps.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "wisp-party-loses-9-patients-glimmerfen",
+                                           "title":  "Party Follows Helpful Will-o\u0027-Wisp, Loses 9 Patients",
+                                           "date":  "2026-11-11"
                                        }
                                    ]
                   },
@@ -10370,6 +10469,34 @@
                                    ]
                   },
                   {
+                      "name":  "The Steady Hand Company",
+                      "short":  "the Steady Hands",
+                      "type":  "organization",
+                      "blurb":  "A four-member adventuring party out of Brindlemoor that escorts travelers for hire, and once followed a will-o\u0027-wisp into the Glimmerfen with nine clinic patients.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "wisp-party-loses-9-patients-glimmerfen",
+                                           "title":  "Party Follows Helpful Will-o\u0027-Wisp, Loses 9 Patients",
+                                           "date":  "2026-11-11"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Stiff Hinge Company",
+                      "short":  "the Stiff Hinge Company",
+                      "type":  "organization",
+                      "blurb":  "A party of five retired adventurers with a combined age of 362, who led the Day of Old Shields parade off its route and into 12 market stalls.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "retired-adventurers-veterans-parade-12-stalls",
+                                           "title":  "Retired Adventurers at Veterans Parade Kick In 12 Market Stalls",
+                                           "date":  "2026-11-11"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Storm-Seers\u0027 Conclave",
                       "short":  "the Storm-Seers",
                       "type":  "agency",
@@ -10464,6 +10591,20 @@
                                            "id":  "reincarnate-spell-upgrade-fighter-badger-second-spring",
                                            "title":  "Party Pays 450 gp Reincarnate Upgrade; Fighter Is a Badger",
                                            "date":  "2026-11-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Thornwood",
+                      "short":  "the Thornwood",
+                      "type":  "place",
+                      "blurb":  "An old forest a two-day walk from Brindlemoor, home to giant boars and oaks with hollows big enough to sleep in.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "giant-boar-feast-alive-fourth-attempt",
+                                           "title":  "Giant Boar Brought Back Alive for Feast. Nobody Said Dead.",
+                                           "date":  "2026-11-11"
                                        }
                                    ]
                   },
@@ -10716,6 +10857,20 @@
                                            "id":  "concord-kara-tur-trade-deal-rare-earth",
                                            "title":  "Trade Deal Reached After Two-Day Parley; Hybrid Carriages Cut",
                                            "date":  "2026-10-14"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Trade Envoy Osric Fallowmede of Varnholt",
+                      "short":  "Fallowmede",
+                      "type":  "person",
+                      "blurb":  "Varnholt\u0027s trade envoy, who believes a berth fee applies to every surface, including the bottom of the sea.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "sahuagin-underwater-trade-parley-varnholt-water-breathing",
+                                           "title":  "Sahuagin Demand Underwater Trade Talks; Envoys Hold Breath",
+                                           "date":  "2026-11-11"
                                        }
                                    ]
                   },
