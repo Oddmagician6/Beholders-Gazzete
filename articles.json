@@ -8121,6 +8121,142 @@
         "rumor": "My cousin followed a nice little light into the fen and came out a week later so relaxed he sold his house."
       },
       "fiction": true
+    },
+    {
+      "id": "adventuring-party-gems-winter-inn-bill-pretty",
+      "title": "Party Pays Winter Inn Bill in Gems; Keeper Rates Them 'Pretty'",
+      "category": "Economy",
+      "author": "Barnaby Tallowmere",
+      "date": "2026-11-12",
+      "excerpt": "An adventuring party offered 61 dungeon gems, valued at 6,000 gp, for a 412 gp inn bill. The keeper said 'pretty.' A gem cutter said 210 gp.",
+      "social": "The Gallant Spoons tried to pay a 412 gp winter bill at the Sleeping Mule with a sack of 61 gems from their last dungeon. The keeper held each one up to the window and said \"pretty.\" A gem cutter then priced the whole sack at 210 gp. Which job is your character taking to work off the other 202 gp?",
+      "content": "<p>An adventuring party called the Gallant Spoons tried to settle a 412 gp winter bill at the Sleeping Mule Tavern in Brindlemoor on Tuesday with a sack of 61 gems from its last dungeon, a hoard the party had valued at 6,000 gp. Keeper Bess Harrowgate held each stone up to the front window, said \"pretty,\" and sent for a gem cutter. The cutter priced the whole sack at 210 gp.</p>\n\n<p>Let me put that on the Loaf Index, because the Spoons did not. At 2 cp a loaf, the party believed it was carrying 300,000 loaves. It was carrying 10,500. The winter bill alone comes to 20,600 loaves, which covers five adventurers in two rooms since the first frost and, by Harrowgate's ledger, 1,140 mulled ciders. (I asked to see the ledger. She showed me. I have counted the cider column twice and it is correct both times.)</p>\n\n<p>Harrowgate extends credit to adventurers as a matter of house policy, and she took the sack without complaint. \"They're very pretty,\" she told the Gazette. \"I didn't say they were worth anything. Pretty is a separate column.\"</p>\n\n<p>The appraisal came from Ivo Clatterwell, who cuts stones two doors down on Tanner's Row and charged the party 5 gp for the privilege. By his count, 48 of the 61 gems are coloured glass, the sort a dungeon builder scatters in a chest to keep visitors cheerful. Eleven are blue quartz and azurite at 10 gp apiece. Two are bloodstones at 50 gp each. \"The big red one is a boiled sweet,\" Clatterwell added. \"Somebody licked it. I'd rather not say who.\"</p>\n\n<p>The economics underneath are simple, and I wish somebody had explained them to the Spoons in autumn. A gem has no price until somebody wants to buy it. The Spoons valued their hoard by how much it sparkled in torchlight, which is roughly how my colleague Sterling Vanmoor values everything, including a horse he bought last spring that turned out to be two ponies. An innkeeper is not a gem buyer. She wants silver she can hand to the brewer on Thursday. Even a real ruby is a poor way to pay for soup, because whoever takes it has to find a jeweller, wait for an offer and pay the cutter's fee. Bankers call this liquidity. My aunt Marigold calls it \"why you keep coin in a boot.\" (I have stopped laughing at her. I may buy a boot.)</p>\n\n<p>The Spoons now owe the Sleeping Mule 202 gp, and they are working it off. The party's fighter is washing tankards. The wizard is on the door, where he casts light for patrons at a copper a time and has so far earned 9 sp. As for the rogue who picked up the boiled sweet in the first place, he has been asked to stay in the cellar until spring.</p>\n\n<p>What this means for your pantry: before you buy anything with a dungeon gem, have a cutter look at it first, and pay him in coin.</p>\n\n<p><em>— B.T. (Loaf Index: see sidebar)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Sack Behind the Bar",
+          "text": "A snowed-in inn is holding a broke party's sack of 'pretty' gems against their bill, and the keeper has just learned that one stone in the sack is real and worth more than the inn. Two guests are already bidding on the sack, the party wants it back, and the keeper only wants her rent paid before anyone draws a blade in her common room."
+        },
+        "npc": {
+          "name": "Osric Marchbank",
+          "role": "Itinerant gem cutter",
+          "want": "He wants to buy the whole sack at the glass price before anyone else looks closely at it.",
+          "secret": "He planted the real stone in a dungeon chest years ago to smuggle it past a toll, and has been following the gem ever since.",
+          "race": "gnome",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Frostlamp Inn",
+          "text": "A roadside inn snowed in until thaw, where the keeper takes payment in anything that sparkles and keeps it all in a locked crate behind the bar. The crate is heavier every morning than it was the night before.",
+          "tavern": true
+        },
+        "rumor": "They say the keeper at the Frostlamp has a crate of glass gems behind the bar, and one of them glows on its own when the fire goes out."
+      },
+      "fiction": true
+    },
+    {
+      "id": "carpet-of-flying-surge-pricing-rain-hailrug",
+      "title": "Carpet of Flying Surge Pricing Hits 40x as the Rain Worsens",
+      "category": "Transport",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-11-12",
+      "excerpt": "A soaked party hired a carpet of flying to beat the rain. Surge pricing climbed with every drop, and a 9 sp ride landed at 42 gp. I still love the app.",
+      "social": "The Copperkettle Four were late, soaked, and out of options, so they hailed a carpet of flying. The quote was 9 silver. By the time they landed, surge pricing had hit 40 times the fare and the bill read 42 gold. The job they were rushing to paid 30. Do you pay the carpet, or jump?",
+      "content": "<p>A carpet of flying hired through Hailrug, Brindlemoor's ride-hire app, charged an adventuring party 42 gold pieces for a three-mile hop on Tuesday night after surge pricing climbed to forty times the quoted fare in mid-air. The Copperkettle Four booked the ride at a quoted 9 silver. Then the rain got heavier, and the price went up right along with it.</p>\n\n<p>Okay. I need everyone to understand that the tech here is GORGEOUS. Hailrug carpets have no pilot. A fare glyph is stitched right into the fringe and reads the weather in real time, with runic latency under a heartbeat. It is the most responsive pricing weave I have ever seen, and on Tuesday it responded to a storm.</p>\n\n<p>\"It was drizzling when we got on,\" said Odda Brask, the party's fighter, who was still wringing out her gambeson when I found her. \"The fringe went from 9 silver to 1.5 times. Fine. Over the tannery it started properly raining and the glyph said 3 times. Over the river it said 7. Then it hailed.\" At hail, the fringe switched to a tier Hailrug calls Act of Gods Pricing, which tops out at 40 times the fare.</p>\n\n<p>The party's wizard, Tamsin Reedle, tried to help by casting Prestidigitation to dry everyone off. The carpet logged the spell as an in-ride weather event and surged again. \"I made it worse with a cantrip,\" Reedle told me. \"I've been casting that cantrip since I was nine.\"</p>\n\n<p>Could they have just landed? The fringe offers a Mid-Sky Disembark option for 5 gp, plus a 6 gp Wet Upholstery Fee that applies whether or not you get off. The rogue suggested jumping. The cleric pointed out they were over the river. They stayed on.</p>\n\n<p>For the record, the job they were rushing to, escorting a wool merchant to Gorsewick, paid 30 gp. The party arrived on time and 12 gp in the hole, so the merchant now technically owes them a loan.</p>\n\n<p>Hailrug spokeswoman Pell Ashgrove defended the system. \"Dynamic weave pricing makes sure a carpet is there when you need one most,\" she said. \"You need one most when it's raining. We simply charge for that need.\" Asked whether a carpet should cost more because the sky is wet, she said the carpet also gets wet and has feelings about it.</p>\n\n<p>My familiar Byte, a pseudodragon who now speaks only in ad copy, has been shouting \"Hailrug: Get there, whatever the weather costs!\" since I came in, so he has already signed on. I'm close. I rode one home myself in a light mist and paid 2 times the fare, which I am calling a fair price for the mana throughput alone. Brother Tumbleberry will say we should have walked. Brother Tumbleberry has never been late to anything, because he has never been invited.</p>\n\n<p>Rating: three out of five beholder eyes. The fringe is beautiful and I want one as a bedspread.</p>\n\n<p>Damage Report: Gold lost: 42 (theirs), 1.8 (mine). Cantrips that cost money: 1. Eyebrows: damp.</p>\n\n<p><em>— Nyx (they/them). Damage Report below.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Cloud Over the Stand",
+          "text": "Every evening a single rain cloud parks over the town's carpet-hire stand, and fares triple the moment it opens. A soaked tavern keeper wants the party to find out who keeps ordering the weather before his regulars go broke getting home."
+        },
+        "npc": {
+          "name": "Dunstan Mirelow",
+          "role": "Carpet Stand Depot Keeper",
+          "want": "He wants to hit the season's ride quota so his carpet of flying franchise isn't handed to a rival.",
+          "secret": "He pays a hedge druid two gold a night to cast create or destroy water over the stand at the evening rush.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Wet Post",
+          "text": "A carpet-hire stand of six rolled rugs on a post by the market well. It is dry everywhere in town except one square yard right in front of it.",
+          "tavern": false
+        },
+        "rumor": "My cousin swears the carpets go up in price if you so much as sneeze on one, so he flies holding his breath."
+      },
+      "fiction": true
+    },
+    {
+      "id": "zone-of-truth-council-hearing-party-confesses",
+      "title": "Party Casts Zone of Truth to Prove Innocence, Confesses All",
+      "category": "Scandal",
+      "author": "Ottoline Vex",
+      "date": "2026-11-12",
+      "excerpt": "An adventuring party's cleric cast Zone of Truth at its own town council hearing. It confessed everything in 11 minutes, and three Burgesses resigned.",
+      "social": "An adventuring party was hauled before the town council over a burned fish market. Their cleric cast Zone of Truth to prove they were innocent. The hearing was scheduled for four hours and lasted eleven minutes. Three councilors resigned before the spell wore off. What would your character blurt out first?",
+      "content": "<p>An adventuring party called before Brindlemoor's Burgess Council on Tuesday to answer for damage in town asked its own cleric to cast Zone of Truth over the Chamber, \"to prove our innocence.\" The hearing was set down for four hours. It ended in eleven minutes, with the party confessing to everything and three Burgesses resigning over what they said inside the spell.</p>\n\n<p>The party, which registers itself as the Honest Mistake Company, had been summoned over a burned fish market, a bell tower now leaning eight degrees east, and a goat that the charge sheet lists only as \"elsewhere.\" Its spokesman, a half-elf ranger named Coll Varrow, opened by telling the Council that the company had \"nothing to hide and a cleric to prove it.\" Sister Aldith Crane, the cleric, then stood, raised her holy symbol, and covered the room in Zone of Truth before the clerk could object. The clerk did object. He was told, truthfully, that he was late.</p>\n\n<p>Rules of the Chamber permit any witness to offer proof of good faith. They do not require the Council to stand outside the proof while it is offered. It should. I have written to the Committee on Rules about it. The Committee on Rules, as of Tuesday, is one man short.</p>\n\n<p>Varrow went first. \"The fireball was mine,\" he said. \"I aimed it at the fishmonger. I would like to stop talking now.\" The wizard confessed to the bell tower. The rogue confessed to the goat, and then to a second goat the Council had not known about. Sister Crane, asked by Reeve Maudrey Fennick of Brindlemoor whether the party had acted in self-defense, said, \"No, we were bored,\" and sat down.</p>\n\n<p>The trouble began when the gentleman from the Tanners' Ward rose to call the party a disgrace and found himself adding that he had voted for the <a href=\"/a/owlbear-leash-ordinance-brindlemoor-council-vote\">owlbear leash ordinance</a> to settle a bet, which he lost. The lady from Upper Mill then admitted she has lived in Gorsewick since spring and attends by cart. The third, the gentleman from the Riverside, confessed he has not read a bill in two years and \"mostly votes by the mood of the room.\" All three resigned before the spell wore off, which the Reeve called \"efficient, in its way.\"</p>\n\n<p>Reeve Fennick fined the Honest Mistake Company 340 gold, a new bell tower, and two goats. \"We are aware of the goats,\" she told me afterward. A courtier who asked not to be named because they were not authorized to be awake said the remaining Burgesses have proposed a ban on truth magic in the Chamber, to be debated next week, outside the radius.</p>\n\n<p>For the record: this session's Promises Made stand at four. Promises Kept also stand at four, a Chamber first, and the Council has asked that it never happen again. The motion carried. Everyone meant it.</p>\n\n<p><em>— O.V., from the gallery</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "Nothing But the Truth",
+          "text": "A town magistrate wants the party to sit as witnesses at a hearing where a cleric plans to cast zone of truth, and someone is paying good coin to make sure one councilor never enters the radius. The party must work out which councilor is being shielded, and what that councilor knows, before the spell goes up at noon."
+        },
+        "npc": {
+          "name": "Edric Hollowell",
+          "role": "Clerk of the Town Council",
+          "want": "He wants the hearing to run its full four hours so he can bill for the overtime.",
+          "secret": "He has quietly moved the witness bench three paces so the councilor who pays him sits just outside the spell's edge.",
+          "race": "human",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Leaning Bell Tower",
+          "text": "A town bell tower that now tilts eight degrees after a fireball, and rings on its own whenever someone beneath it tells a lie.",
+          "tavern": false
+        },
+        "rumor": "They say half the council has paid a hedge wizard for a charm against truth magic, and the charm is just a painted pebble."
+      },
+      "fiction": true
+    },
+    {
+      "id": "giant-boar-tavern-stable-duchess-harrowgate",
+      "title": "Giant Boar Rents Tavern Stable; Innkeeper Names Her Duchess",
+      "category": "Tavern Tales",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-11-12",
+      "excerpt": "The giant boar bought for Brindlemoor's Grand Feast now rents a stall at the Sleeping Mule. The keeper named her Duchess and took a week's rent. Allegedly.",
+      "social": "The giant boar meant to be dinner at Brindlemoor's Grand Feast now has a landlady. Bess Harrowgate rented her the best stall at the Sleeping Mule for 4 silver a night and named her Duchess. The tavern's actual mule got moved to the woodshed. Would you rent a room to the main course?",
+      "content": "<p>At roughly the second bell after midnight on Wednesday, a giant boar walked down Tanner's Row and moved into the stable behind the Sleeping Mule Tavern. Keeper Bess Harrowgate signed her in as a paying tenant and named her Duchess. The first week's rent was allegedly paid up front. Duchess is the centerpiece of the Grand Feast of Brindlemoor, where Feastwarden Odo Plumbrook, a halfling, has promised 2,000 people dinner on the Town Green on the 26th with a 900 gp budget. She is allegedly still alive.</p>\n\n<p>Catching up: the Fourth Attempt <a href=\"/a/giant-boar-feast-alive-fourth-attempt\">brought her back from the Thornwood alive</a> last week, because the contract said \"bring back\" and never said dead. Since then she has been tied to the bandstand on the Town Green, which now allegedly leans about a foot to the east. Plumbrook said he was \"taking offers on a stable.\" Harrowgate made the only one.</p>\n\n<p>\"Four silver a night, two bushels of turnips a day, and she wipes her feet,\" Harrowgate told me, wiping the bar. \"Same terms as anybody.\" The tenancy ledger has a hoof print in the signature box and Plumbrook's name on the guarantor line. Fourteen nights to the feast comes to 5 gp 6 sp in rent, before turnips. I went through the feast budget again. Still no line for turnips. Now there's no line for rent either.</p>\n\n<p>The Sleeping Mule's actual mule, an old gray named Mortimer, has been moved to the woodshed. \"She took the big stall and the mule's blanket,\" said Wat Huckaby, who was oiling a saddle at the time. \"The mule just stood there and let her. I'd have done the same. She's the size of a hay wagon.\" Harrowgate says Mortimer is sleeping fine. Mortimer allegedly disagrees.</p>\n\n<p>Duchess also allegedly chased every pigeon off the stable roof before breakfast, which makes her the best neighbor Tanner's Row has had in years, and I want that on the record. Also the stable door has a brass latch shaped like a fish. A really good fish. I stood on a bucket to look at it and Duchess looked at me, so I got down. Anyway.</p>\n\n<p>Here's the trouble. Harrowgate keeps her house rules nailed up by the tap, and rule six reads \"No eating the guests.\" I asked whether that covers a feast on the 26th. \"She's paid through Tuesday,\" Harrowgate said. \"After that we'll talk.\" Plumbrook stood on a chair in the stable yard and called it \"a centerpiece with a good address, which is a strong start.\" I asked who was going to tell Duchess about the 26th. He said that was the fun part.</p>\n\n<p>Reeve Fennick's office says it is \"aware of the boar.\" Duchess was last seen asleep on the mule's blanket, snoring hard enough to rattle the tap glasses. The Constabulary has logged two noise complaints since midnight. Both came from the woodshed.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Tenant in Stall One",
+          "text": "A town's feast committee hires the party to collect a giant boar for the roasting spit, but the boar is a paid-up tenant at the local inn and the innkeeper will not break a lease. The party has two days to get her out legally, buy out her rent, or find the committee a new centerpiece before the guests arrive hungry."
+        },
+        "npc": {
+          "name": "Tobin Larkspur",
+          "role": "Stablehand at the inn",
+          "want": "He wants the boar to stay, because she is the first tenant who ever kept the pigeons off his roof.",
+          "secret": "He has been feeding her the feast committee's own turnip delivery and plans to walk her out the back gate to the forest the night before the feast.",
+          "race": "human",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Big Stall",
+          "text": "The largest stall in an inn's stable yard, now home to a giant boar with a signed lease nailed to the door. The inn's old mule sulks in the woodshed next door and brays at anyone who goes near it.",
+          "tavern": false
+        },
+        "rumor": "They say the boar at the inn has paid her rent through Tuesday, and the keeper swears she'll set the Constabulary on anyone who lays a skewer on a tenant in good standing."
+      },
+      "fiction": true
     }
   ]
 }
