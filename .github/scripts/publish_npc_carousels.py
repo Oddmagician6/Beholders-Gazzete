@@ -24,7 +24,7 @@ class StateError(RuntimeError):
 
 
 def batch_files(batch=''):
-    if batch and not re.fullmatch(r'week0[2-5]', batch):
+    if batch and not re.fullmatch(r'week(?:0[2-9]|10)', batch):
         raise RuntimeError('Unexpected NPC publishing batch.')
     suffix = '-' + batch if batch else ''
     return 'npc-carousel-queue' + suffix + '.json', 'publish-npc-carousels' + suffix + '.yml'
@@ -55,11 +55,12 @@ def validate_queue(queue):
     if queue.get('timezone') != 'America/Chicago' or queue.get('expectedInstagramUsername') != 'beholdersgazette':
         raise RuntimeError('Unexpected queue time zone or Instagram destination.')
     entries = queue.get('entries', [])
-    final_batch = queue.get('id') == 'persons-of-interest-week05'
-    if len(entries) != (2 if final_batch else 7):
-        raise RuntimeError('Expected seven approved posts, or the final two-post batch.')
-    if final_batch and [entry.get('sourceDay') for entry in entries] != [29, 30]:
-        raise RuntimeError('The final batch must contain reviewed days 29 and 30.')
+    # Each 30-post batch ends with a two-post week: week05 (days 29-30), week10 (days 59-60).
+    final_days = {'persons-of-interest-week05': [29, 30], 'persons-of-interest-week10': [59, 60]}.get(queue.get('id'))
+    if len(entries) != (2 if final_days else 7):
+        raise RuntimeError('Expected seven approved posts, or a final two-post batch.')
+    if final_days and [entry.get('sourceDay') for entry in entries] != final_days:
+        raise RuntimeError('A final batch must contain its reviewed last two days.')
     ids, dates, filenames = set(), set(), set()
     previous = None
     for index, entry in enumerate(entries):

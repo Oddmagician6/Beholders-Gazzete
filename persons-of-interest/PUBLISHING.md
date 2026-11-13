@@ -103,3 +103,26 @@ After automatic shutdown, a future approved queue requires its own staged releas
 No site exporters are needed. The local review gallery is not a live schedule ledger; the GitHub run report and Release state are authoritative for publishing.
 
 API references: [Meta Instagram content publishing](https://developers.facebook.com/docs/instagram-platform/instagram-api-with-facebook-login/content-publishing/), [Meta Page photos](https://developers.facebook.com/docs/graph-api/reference/page/photos/), [Meta Page feed](https://developers.facebook.com/docs/graph-api/reference/page/feed/), and [GitHub scheduled workflows](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule). Meta's reference pages returned rate limits during implementation; live preflight and schedule confirmation are required before claiming activation.
+
+## Batch 2: days 31-60 (December 2026)
+
+On November 13, 2026 the owner asked to stage batch 2 (`.poi-output/batches/month-02/complete-batch`) on the same daily 09:00 America/Chicago schedule, continuing after Sable Quill on December 1. It runs as five more weekly batches, `week06`-`week10`, each with its own workflow, queue config, and Release:
+
+| Batch | Dates | Days | Release | Arm window (29-day limit, before first post) |
+|---|---|---|---|---|
+| week06 | Dec 2-8 | 31-37 | `poi-stage-week06-20261202` | now - Dec 2 08:50 |
+| week07 | Dec 9-15 | 38-44 | `poi-stage-week07-20261209` | Nov 16 - Dec 9 08:50 |
+| week08 | Dec 16-22 | 45-51 | `poi-stage-week08-20261216` | Nov 23 - Dec 16 08:50 |
+| week09 | Dec 23-29 | 52-58 | `poi-stage-week09-20261223` | Nov 30 - Dec 23 08:50 |
+| week10 | Dec 30-31 | 59-60 | `poi-stage-week10-20261230` | Dec 2 09:00 - Dec 30 08:50 |
+
+`week10` is batch 2's two-post final week; the publisher accepts a two-post queue only as `week05` (days 29-30) or `week10` (days 59-60). `stage-publishing.mjs --week=6..10` reads the complete batch-2 package and checks its reviewed checksums.
+
+```powershell
+node persons-of-interest/stage-publishing.mjs --week=6 --start=2026-12-02   # and 7/12-09, 8/12-16, 9/12-23, 10/12-30
+gh release create poi-stage-week06-20261202 --target main --prerelease --notes-file .poi-output/publishing/poi-stage-week06-20261202/release-notes.json <21 jpgs> queue.json
+gh workflow run publish-npc-carousels-week06.yml --repo Oddmagician6/Beholders-Gazzete --ref main -f operation=verify
+gh workflow run publish-npc-carousels-week06.yml --repo Oddmagician6/Beholders-Gazzete --ref main -f operation=arm
+```
+
+Save confirmed activation as `.poi-output/publishing/activation-week06.json` through `activation-week10.json`.

@@ -12,7 +12,7 @@ const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const json = value => JSON.stringify(value, null, 2) + '\n';
 
 async function main(args) {
-  if (args.some(arg => !/^--week=[1-5]$/.test(arg) && !/^--start=\d{4}-\d{2}-\d{2}$/.test(arg)) || args.filter(arg => arg.startsWith('--week=')).length > 1 || args.filter(arg => arg.startsWith('--start=')).length > 1) throw new Error('Usage: node persons-of-interest/stage-publishing.mjs [--week=1..5] [--start=YYYY-MM-DD]');
+  if (args.some(arg => !/^--week=(?:[1-9]|10)$/.test(arg) && !/^--start=\d{4}-\d{2}-\d{2}$/.test(arg)) || args.filter(arg => arg.startsWith('--week=')).length > 1 || args.filter(arg => arg.startsWith('--start=')).length > 1) throw new Error('Usage: node persons-of-interest/stage-publishing.mjs [--week=1..10] [--start=YYYY-MM-DD]');
   const week = Number(args.find(arg => arg.startsWith('--week='))?.split('=')[1] || 1);
   const weekId = `week${String(week).padStart(2,'0')}`;
   const start = args.find(arg => arg.startsWith('--start='))?.split('=')[1] || (week === 1 ? '2026-11-02' : null);
@@ -20,16 +20,25 @@ async function main(args) {
   const firstDate = new Date(start + 'T15:00:00Z');
   if (!Number.isFinite(firstDate.getTime()) || firstDate.toISOString().slice(0,10) !== start) throw new Error('Invalid start date.');
   const releaseTag = `poi-stage-${weekId}-${start.replaceAll('-','')}`;
-  const source = path.join(root, '.poi-output', 'batches', 'month-01', `week-${String(week).padStart(2,'0')}`);
+  // Weeks 1-5 are batch 1 (days 1-30, one package per week); weeks 6-10 are batch 2 (days 31-60, one complete package).
+  const secondBatch = week >= 6;
+  const source = secondBatch
+    ? path.join(root, '.poi-output', 'batches', 'month-02', 'complete-batch')
+    : path.join(root, '.poi-output', 'batches', 'month-01', `week-${String(week).padStart(2,'0')}`);
   const output = path.join(root, '.poi-output', 'publishing', releaseTag);
   const manifest = JSON.parse(await readFile(path.join(source, 'manifest.json'), 'utf8'));
-  const count = week === 5 ? 2 : 7;
-  if (manifest.entries.length !== count || manifest.cardCount !== count * 3 || manifest.id !== `month-01-week-${String(week).padStart(2,'0')}`) throw new Error('Expected the selected reviewed package.');
+  const count = week === 5 || week === 10 ? 2 : 7;
+  const firstDay = (week-1)*7 + 1 - (secondBatch ? 5 : 0);
+  if (secondBatch) {
+    if (manifest.id !== 'month-02-complete-batch' || manifest.entries.length !== 30 || manifest.cardCount !== 90) throw new Error('Expected the reviewed batch 2 package.');
+    manifest.entries = manifest.entries.filter(entry => entry.day >= firstDay && entry.day < firstDay + count);
+  } else if (manifest.cardCount !== count * 3 || manifest.id !== `month-01-week-${String(week).padStart(2,'0')}`) throw new Error('Expected the selected reviewed package.');
+  if (manifest.entries.length !== count) throw new Error('Expected the selected reviewed package.');
   await mkdir(output, { recursive: true });
   const entries = [];
   for (const [index, entry] of manifest.entries.entries()) {
     const folder = path.join(source, entry.folder);
-    if (entry.day !== (week-1)*7 + index + 1 || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(entry.characterId) || entry.folder !== `${String(entry.day).padStart(2,'0')}-${entry.characterId}`) throw new Error('Unexpected character order or review folder.');
+    if (entry.day !== firstDay + index || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(entry.characterId) || entry.folder !== `${String(entry.day).padStart(2,'0')}-${entry.characterId}`) throw new Error('Unexpected character order or review folder.');
     const images = [];
     const alt = JSON.parse(await readFile(path.join(folder, 'alt-text.json'), 'utf8'));
     if (entry.cards.join(',') !== '01-meet.png,02-play.png,03-hook.png' || alt.length !== 3) throw new Error('Card order or alt text is incomplete.');

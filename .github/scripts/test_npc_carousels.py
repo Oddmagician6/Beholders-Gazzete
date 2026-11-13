@@ -165,6 +165,13 @@ class PublisherTests(unittest.TestCase):
         bad['entries'].pop()
         with self.assertRaises(RuntimeError): validate_queue(bad)
 
+    def test_second_batch_final_week_requires_days_59_and_60(self):
+        bad = copy.deepcopy(self.queue); bad['entries'] = bad['entries'][:2]; bad['id'] = 'persons-of-interest-week10'
+        for index, entry in enumerate(bad['entries']): entry['sourceDay'] = index + 29
+        with self.assertRaises(RuntimeError): validate_queue(bad)
+        for index, entry in enumerate(bad['entries']): entry['sourceDay'] = index + 59
+        validate_queue(bad)
+
     def test_rearming_does_not_create_duplicate_facebook_posts(self):
         self.arm();self.arm()
         self.assertEqual(len(self.api.scheduled),7)
@@ -261,7 +268,9 @@ class BatchRoutingTests(unittest.TestCase):
 
     def test_final_batch_routes_and_disables_only_itself(self):
         self.assertEqual(batch_files('week05'), ('npc-carousel-queue-week05.json', 'publish-npc-carousels-week05.yml'))
-        with self.assertRaises(RuntimeError): batch_files('week06')
+        self.assertEqual(batch_files('week10'), ('npc-carousel-queue-week10.json', 'publish-npc-carousels-week10.yml'))
+        for invalid in ('week11', 'week1', 'week010'):
+            with self.assertRaises(RuntimeError): batch_files(invalid)
         store = ReleaseStore.__new__(ReleaseStore)
         store.repo = 'Oddmagician6/Beholders-Gazzete'; store.github = Mock()
         with patch.dict(os.environ, {'NPC_BATCH':'week05'}): store.disable_workflow()
