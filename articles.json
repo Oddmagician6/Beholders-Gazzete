@@ -8257,6 +8257,142 @@
         "rumor": "They say the boar at the inn has paid her rent through Tuesday, and the keeper swears she'll set the Constabulary on anyone who lays a skewer on a tenant in good standing."
       },
       "fiction": true
+    },
+    {
+      "id": "kobolds-strike-trapped-picket-line-adventuring-party",
+      "title": "Party Hired to Clear Out Kobolds Finds Trapped Picket Line",
+      "category": "Labor",
+      "author": "Brakka Stonesweat",
+      "date": "2026-11-13",
+      "excerpt": "A mine owner paid an adventuring party 200 gold to clear out his kobolds. The kobolds are on strike. Their picket line is trapped. Nobody mentioned that.",
+      "social": "A mine owner paid an adventuring party 200 gold to clear out the kobolds. Nobody told the party the kobolds were on strike. They found 19 traps on the mine road, and every one held a picket sign. Their fighter is still in the net. Does your character cross that line for 200 gold?",
+      "content": "<p>The kobolds have a picket line. It's trapped.</p>\n\n<p>Forty-seven kobold miners at the Gullet copper mine, two hours' walk north of Brindlemoor, have been on strike since Moonday. They want one thing: the right to set traps on their breaks. Mine-Master Corwin Haddleby answered by hiring an adventuring party, the Dawnhollow Blades, for 200 gold to \"clear out the kobolds.\" Nobody told the Blades about the strike. They found out at the gate.</p>\n\n<p>Some background for the tall folk. A kobold relaxes by building a trap. \"Some people whittle. I rig a deadfall,\" said Tibbet Snarewhistle, a tunnel-shorer at the Gullet for eleven years. \"Fifteen minutes, a bit of string, a bucket. It settles the nerves.\" Haddleby banned what his notice calls \"recreational trapping\" after his foreman stepped in a snare behind the privy. The kobolds say that snare was clearly marked. It had a little flag.</p>\n\n<p>Haddleby's contract with the Blades calls the job \"an external pest-remediation engagement to restore operational continuity.\" That means he hired swords to break a strike. I asked him if he knew the kobolds were striking. He said he knew they were \"in the tunnels, being difficult.\" Same thing, said by a man in a nicer cloak.</p>\n\n<p>The Blades arrived Tuesday at dawn. There are four of them. Their fighter, Osk Varrow, made it eleven steps up the mine road before a net dropped on him. Tied to the net was a bell and a sign: RING IF YOU SUPPORT TRAP BREAKS. He rang it. He had no choice, he was in a net.</p>\n\n<p>Their rogue, Lissa Fenwright, spent three hours disarming the road. She counted 19 traps. A pit, two tripwire bells, a swinging sack of gravel, and fifteen more she called \"honestly lovely work.\" Every one held a picket sign. The last pit had a cheese sandwich at the bottom and a note: \"Lunch break. You'd know if you had one.\"</p>\n\n<p>Then the party argued, on the road, in front of the strikers. Their cleric, Brother Amlin Dask, sat down with the kobolds and asked about their pensions. Their wizard, Ferrabel Quint, kept pointing at the 200 gold. \"We're adventurers. Clearing out kobolds is practically on the license,\" she said. Snarewhistle told her the license doesn't say a word about scabbing. Varrow, still in the net, asked if somebody would cut him out. A kobold explained that cutting nets is union work, and the union was on break.</p>\n\n<p>As of last night the Blades had not crossed the line. They hadn't left either. They're camped by the road, eating the kobolds' mushroom stew and debating whether \"clear out\" could mean \"help clear out the paperwork.\" Haddleby wants his deposit back. The Blades say the deposit went on rope.</p>\n\n<p>The strikers aren't asking for much. Fifteen minutes, a bench, and one patch of ground where a pit bothers nobody. The kobolds who <a href=\"/a/kobold-trap-resetters-union-vote-scrip\">voted to unionize in the Undermaw</a> last month sent a letter of support and a very small bear trap, gift-wrapped. Snarewhistle has not opened it. He says that's the point.</p>\n\n<p>So, to every adventuring party with a \"clear out\" job on the board: before you draw steel, ask at the gate whether they're monsters or just on break.</p>\n\n<p><em>Solidarity. And stretch your back. — Brakka</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Picket at the Pithead",
+          "text": "A mine owner offers the party 200 gold to clear the kobolds out of his copper mine, and the kobolds turn out to be striking workers who have trapped every approach. The party can break the strike, broker a deal between the kobolds and the owner, or find out why the owner wants the mine empty this week of all weeks."
+        },
+        "npc": {
+          "name": "Wendra Coalby",
+          "role": "Mine paymaster",
+          "want": "She wants the strike settled before the owner hires someone meaner than the party.",
+          "secret": "The owner has already sold the mine's next season of copper and must show an empty, working mine to the buyer in six days.",
+          "race": "human",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Gullet Mine Road",
+          "text": "A steep switchback up to a copper mine, where every rock, rut, and fence post may hide a kobold trap. Each trap is tagged with a hand-painted picket sign, and some are rigged to ring a bell rather than hurt anyone.",
+          "tavern": false
+        },
+        "rumor": "They say the kobolds up at the mine trap the road so well that the last party sent to clear them out has been sitting in a net for three days, eating their stew and asking about union dues."
+      },
+      "fiction": true
+    },
+    {
+      "id": "prophecies-contradict-all-come-true-fourth-attempt",
+      "title": "13 Prophecies Contradict Each Other. All 13 Come True.",
+      "category": "Omens & Prophecy",
+      "author": "Hollis Delvewright",
+      "date": "2026-11-13",
+      "excerpt": "The adventuring party took 13 prophecies into the Undermaw on Omen Day. Six said the opposite of the other seven. By supper, every one had come true.",
+      "social": "The Seers' Hall gave one adventuring party 13 prophecies before today's delve. Prophecy 2 said they would find great treasure. Prophecy 7 said they would come home with nothing. Both came true, and the gate surcharge was exactly 340 gold. Your seer says you will fall today. Do you still take the stairs?",
+      "content": "<p>THE UNDERMAW, LEVEL 3, AND BACK UP IN TIME FOR SUPPER — The Brindlemoor Seers' Hall handed the Fourth Attempt thirteen prophecies at dawn on Friday, before the adventuring party went down to Level 3. Six of them said the opposite of the other seven. By supper, all thirteen had come true, and the Seers' Hall says it has never had a better Omen Day.</p>\n\n<p>Omen Day falls whenever the thirteenth of the month lands on a Friday, and by town custom any party delving that day collects a reading first. Seer-Warden Ysmay Coldharrow says her thirteen seers each gave one, as is traditional, and did not compare notes, as is also traditional. \"We don't confer,\" she told me. \"Conferring is how you get vague.\"</p>\n\n<p>For the record, every prophecy came with a date, and the date was today. After the <a href=\"/a/purple-worm-prophecy-typo-brindlemoor-cellars\">purple worm prophecy with the typo</a> last month, I nearly wept.</p>\n\n<p>Prophecy 2, \"You will find great treasure,\" came true at the second bell, when the rogue opened a chest holding 340 gold. Prophecy 7, \"You will come home with nothing,\" came true at the fifth bell, when Brindlemoor Adventurers' Guild, Chapter 9 took its Omen Day surcharge at the gate. That surcharge was 340 gold. Chapter 9 calls it a coincidence.</p>\n\n<p>Prophecy 4 said the fighter would fall, and Prophecy 9 said he would not. He dropped thirty feet into a pit and landed on his feet at 3 hit points, so the Seers' Hall has counted both. Prophecy 5, \"Beware the door,\" and Prophecy 11, \"The door is your friend,\" were about the same door. It was a mimic. It is always a mimic. The cleric fed it a wedge of hard cheese, and it spent the afternoon holding the corridor shut against whatever was breathing on the other side.</p>\n\n<p>Prophecy 12 said one of them would not return. That was the mule. The mule is fine. It took a better offer from a party camped on Level 3, and Ansel Pottage, steward of the Fourth Attempt's hirelings, says it read the contract first, and asked for its feed bag in advance.</p>\n\n<p>Box score at supper: fighter 3 hit points, wizard 9, cleric 11, ranger 14, rogue 8, bard untouched and insufferable. I lost one ten-foot pole, my eleventh of the season, to Prophecy 3, \"Something will be taken from you.\" I rolled poorly on that one and I knew it at the time.</p>\n\n<p>The party's bard, who asked to be named, copied all thirteen prophecies onto his sleeve. He says the thirteenth, \"All of the above,\" is the only one he would have paid for. The Hall charges two silver a prophecy. Coldharrow says the thirteenth seer has given that same reading every Omen Day for nine years and has not been wrong once.</p>\n\n<p>Shieldwall Mutual Assurance Society has denied the party's claim on the 340 gold, because the loss was foreseen in writing. The Fourth Attempt has appealed. I asked Coldharrow how the appeal would go. She said she had a feeling about it, and that the feeling was two silver.</p>\n\n<p><em>— H.D., filing from below</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "Thirteen Readings, One Delve",
+          "text": "On an unlucky day, the town's seers hand the party thirteen sealed prophecies before they enter a dungeon, and a local insurer refuses to cover any loss that one of them predicts. The party must make the bad readings come true in the most harmless way possible, before the dungeon makes them come true in its own way."
+        },
+        "npc": {
+          "name": "Ysolda Marrick",
+          "role": "Thirteenth Seer of the Hall",
+          "want": "She wants the party to come back alive so her reading, which is always 'all of the above', keeps its perfect record.",
+          "secret": "She has never had a vision in her life; she just reads the other twelve seers' cards before handing hers over.",
+          "race": "gnome",
+          "gender": "female",
+          "kind": "religious"
+        },
+        "location": {
+          "name": "The Hall of Thirteen Chairs",
+          "text": "A round reading room where thirteen seers sit facing the wall so they cannot see each other's cards. One chair has been worn smooth by a seer who never seems to leave it.",
+          "tavern": false
+        },
+        "rumor": "My cousin got told he'd be rich and broke on the same morning, and by dinner the toll keeper had his whole purse, so you tell me those seers are frauds."
+      },
+      "fiction": true
+    },
+    {
+      "id": "salamander-oven-30-gp-heat-subscription-feast",
+      "title": "Salamander Oven Rents for 30 gp a Day; Heat Costs Extra",
+      "category": "Technology",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-11-13",
+      "excerpt": "The Grand Feast rented a salamander oven at 30 gp a day, and the heat is sold as a subscription. The Seers' Hall foresees a table of fire. Nyx is thrilled.",
+      "social": "Brindlemoor's Grand Feast just rented a salamander oven for 30 gp a day. The heat is a separate subscription. On the free tier, a turnip came out slightly warmer than it went in. Fourteen days of rental eats 420 gp of a 900 gp budget. Would you pay extra for the heat?",
+      "content": "<p>Okay. OKAY. The Grand Feast committee has rented a salamander oven from Cinderlatch Works at 30 gp a day, plus a \"heat subscription,\" and I was there for the unboxing! Then, this Friday the 13th, the Seers' Hall looked at the whole arrangement and foresaw \"a table of fire.\" For anyone just tuning in: <a href=\"/a/halfling-feastwarden-feast-2000-brindlemoor\">Feastwarden Odo Plumbrook promised a feast for 2,000</a> on the Town Green on the 26th, and he has 900 gp to do it with.</p>\n\n<p>The hardware first, because the hardware is gorgeous. It's a black iron box the size of a hay cart, with a live salamander coiled inside on firebrick, glaring out through a little mica window like it knows what you earn. Mana throughput is off the charts. Runic latency between \"light\" and \"lit\" is under a second. I held my hand near the vent and lost the hair on my knuckles, which I am choosing to count as a feature.</p>\n\n<p>Then Dobb Wrenfield, Cinderlatch's spokesman, walked us through the subscription. The 30 gp a day rents the box and the salamander. Heat is billed on top. The free tier, Ember, keeps the oven \"pleasantly warm,\" and in this morning's test a turnip came out slightly warmer than it went in and otherwise unchanged. Blaze tier, at 12 gp a day, roasts. Inferno+, at 25 gp a day, will roast a goose for 2,000 guests, should anybody ever find that goose. \"Heat is an experience,\" Wrenfield told me. \"Experiences come in tiers.\" (Yes, this is the same company whose <a href=\"/a/rope-trick-pod-cinderlatch-review-extradimensional\">Rope Trick Pod charged me to leave</a>. I still love them. I can't help it.)</p>\n\n<p>I ran the numbers on my slate. The committee signed for 14 days, today through Feast Day: 420 gp before one ember of actual heat. Upgrade to Inferno+ and the salamander oven costs 770 gp, which leaves the feast 130 gp for food, plates, and somewhere for 2,000 people to sit. Plumbrook, up on a borrowed chair, called it \"a hot start.\"</p>\n\n<p>Reeve Maudrey Fennick of Brindlemoor read the contract, asked who had signed it, learned it was Plumbrook, and said, \"We are aware of the salamander.\" Then she went and sat down somewhere quiet.</p>\n\n<p>The Seers' Hall saves its gloomiest readings for any 13th that lands on a Friday, and at dawn it posted the feast's: \"a table of fire.\" Plumbrook read that as a promise of hot food end to end. Seer Hester Vole, who had the vision, was less sure. \"I saw a table. It was on fire. I don't know what else people want from me.\"</p>\n\n<p>My familiar Byte, a pseudodragon who now speaks only in ad copy, sniffed the vent and said, \"Heat you can feel. Terms apply.\" Then he sneezed a spark onto the committee's bunting. Nobody has brought it up. Brother Tumbleberry has already written in to suggest a bonfire on the Green \"like our grandparents had,\" which would be free, and also on the Green, where the tables are.</p>\n\n<p>Rating: four out of five beholder eyes. It's the most beautiful oven I have ever seen, and I resent it with my entire purse.</p>\n\n<p>Damage Report: Knuckle hair: gone. Turnips warmed: 1, slightly. Days left on the rental: 13. Bunting: smoldering, unofficially.</p>\n\n<p><em>— Nyx (they/them). Damage Report below.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Oven Stopped Paying",
+          "text": "A rented salamander oven at the village inn has dropped to its free tier the night before a wedding feast, and the salamander inside has started working its way out through the iron. The innkeeper wants the oven running by noon, the maker's agent wants the beast back, and the inn's thatch is one bad mood from catching."
+        },
+        "npc": {
+          "name": "Tamsin Gorrel",
+          "role": "Oven rental collections agent",
+          "want": "She wants the late heat fees paid or the salamander repossessed before her quota closes at the month's end.",
+          "secret": "She has quietly been letting overdue ovens run on full heat for poor families, and the company is about to audit her ledger.",
+          "race": "gnome",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Banked Coal",
+          "text": "A roadside inn built around a rented salamander oven so large the kitchen is the oven. The common room is warm or freezing depending on whether the last invoice cleared.",
+          "tavern": true
+        },
+        "rumor": "My cousin says the salamander in that oven reads every invoice through the little window and remembers who didn't pay."
+      },
+      "fiction": true
+    },
+    {
+      "id": "cursed-ring-fighter-invests-party-loot",
+      "title": "Cursed Ring Bought As-Is Makes Fighter Invest Party's Loot",
+      "category": "Consumer",
+      "author": "Sterling Vanmoor",
+      "date": "2026-11-13",
+      "excerpt": "A fighter put on a cursed ring sold as-is before anyone cast Identify, and invested all 3,140 gp of his party's loot by sundown. Sterling is buying in.",
+      "social": "The Cinderfell Company bought a ring tagged as is, no refunds, for 25 gp on Friday the 13th. Their fighter put it on before the wizard cast Identify. By sundown he had invested all 3,140 gp of the party's loot, and the cleric's Remove Curse money too. Who in your party puts the ring on first?",
+      "content": "<p>A Brindlemoor adventuring party, the Cinderfell Company, bought a cursed ring sold \"as-is, no refunds\" for 25 gp at Marrow &amp; Finch Curios on Friday the 13th, and its fighter slipped it on before anyone cast Identify. By sundown he had invested all 3,140 gp of the party's loot. I have not been this excited about a fighter since I took up my early-morning sword routine.</p>\n\n<p>The fighter, Bram Hallowell, says he only stepped out for rations. \"I came back with a nine percent stake in a goblin-run toll bridge,\" he told me, while his right hand kept reaching for my quill. He also bought 900 gp of Hootline Couriers shares, put 1,200 gp into a gelatinous cube cleaning franchise, and spent 400 gp on futures in a dragon hoard nobody has looted yet. Nobody bought the rations, so the party ate the prospectus for supper.</p>\n\n<p>Wizard Ilsa Penwhistle would like it known that she had Identify prepared. \"I had the pearl. I had the slot. He had it on his finger before I found the page,\" she said. The ring is a band of dull brass, and the inscription inside, the party now agrees, reads \"Compound Daily.\" Their cleric, Sister Mabry Coyle, scraped together 300 gp for a Remove Curse at the temple. Bram moved it into a mushroom farm's seed round before she reached the door.</p>\n\n<p>Proprietor Odalys Marrow, whom readers may remember from the <a href=\"/a/unidentified-ring-5-gp-ring-of-protection\">5 gp ring of protection sale</a>, is not offering refunds. \"The tag said as-is. As it is, it is cursed,\" she said. Fortune-tellers on the market square call Friday the 13th an omen day, and Marrow sold thirteen cursed items before lunch, a shop record. Shieldwall Mutual Assurance Society has declined the party's claim, calling the curse \"self-inflicted, by finger.\"</p>\n\n<p>Some people see a cursed adventuring party. I see the first party in Brindlemoor with a diversified portfolio. Most crews pour every copper into a single asset, usually <a href=\"/a/adventuring-party-ruined-keep-4800-gp-upkeep\">a ruined keep with a leaky roof</a>. Bram spread his across seven ventures in one afternoon. That is synergy. The party has even rightsized its rogue, Nim Tatterby, who left at supper to \"find a party that eats.\"</p>\n\n<p>When I met Guildmaster Tobrin Ashgrove at a balloon gala, he told me, \"Sterling, an idle hand is an unsigned contract.\" I think about that every day. So this evening I bought 40 shares in the Cinderfell Company itself, at 2 sp each, issued by Bram on the back of a menu. He invested my 8 gp within the minute. Brakka Stonesweat will write that this is a curse. Brakka also thinks owlbears deserve a union.</p>\n\n<p>Key takeaways for the ambitious adventurer:</p>\n\n<p>• Wear first, identify later.<br>• Read the tag. Then ignore it.<br>• If your fighter starts compounding, buy in early.</p>\n\n<p><em>— Sterling Vanmoor, Guild Visionary. Let's connect at the Yawning Portal.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Ring That Compounds",
+          "text": "A cooper in a market town put on a brass ring bought as-is and has since signed his workshop, his mule, and the village grain store into a string of strange ventures. His sister will pay the party to get the ring off his finger with Remove Curse before he signs over the mill on market day, but someone keeps buying his shares and wants the ring to stay right where it is."
+        },
+        "npc": {
+          "name": "Pell Varrow",
+          "role": "Moneylender and share broker",
+          "want": "She wants the cursed cooper to keep investing until she owns half the village on paper.",
+          "secret": "She sold him the ring herself through a curio stall, and her bookkeeper is an imp who wrote every contract he signed.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Ledger Stump",
+          "text": "A hollow oak stump in the market square where shares are traded at a folding table. Every contract signed there smells faintly of brimstone.",
+          "tavern": false
+        },
+        "rumor": "My cousin says the brass ring whispers interest rates at night, and anyone who takes it off has to pay back every copper it ever spent."
+      },
+      "fiction": true
     }
   ]
 }

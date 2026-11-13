@@ -1,5 +1,5 @@
 {
-    "generated":  "2026-11-12",
+    "generated":  "2026-11-13",
     "writers":  [
                     {
                         "id":  "ottoline-vex",
@@ -144,8 +144,13 @@
                                            "name":  "Barnaby Tallowmere"
                                        }
                                    ],
-                        "article_count":  32,
+                        "article_count":  33,
                         "articles":  [
+                                         {
+                                             "id":  "cursed-ring-fighter-invests-party-loot",
+                                             "title":  "Cursed Ring Bought As-Is Makes Fighter Invest Party\u0027s Loot",
+                                             "date":  "2026-11-13"
+                                         },
                                          {
                                              "id":  "reincarnate-spell-upgrade-fighter-badger-second-spring",
                                              "title":  "Party Pays 450 gp Reincarnate Upgrade; Fighter Is a Badger",
@@ -165,11 +170,6 @@
                                              "id":  "unidentified-ring-5-gp-ring-of-protection",
                                              "title":  "Party Sells Unknown Ring for 5 gp; It\u0027s a Ring of Protection",
                                              "date":  "2026-11-06"
-                                         },
-                                         {
-                                             "id":  "banshee-call-center-service-award-wailwell-support",
-                                             "title":  "Banshee Call Center Wins Service Award; Teacups Do Not",
-                                             "date":  "2026-11-05"
                                          }
                                      ]
                     },
@@ -199,8 +199,13 @@
                                            "name":  "Sterling Vanmoor"
                                        }
                                    ],
-                        "article_count":  32,
+                        "article_count":  33,
                         "articles":  [
+                                         {
+                                             "id":  "kobolds-strike-trapped-picket-line-adventuring-party",
+                                             "title":  "Party Hired to Clear Out Kobolds Finds Trapped Picket Line",
+                                             "date":  "2026-11-13"
+                                         },
                                          {
                                              "id":  "ettin-porter-loot-split-two-shares",
                                              "title":  "Loot Split: Ettin Porter\u0027s Two Heads Each Want a Share",
@@ -220,11 +225,6 @@
                                              "id":  "otyugh-sewer-night-soil-haulers-strike-brindlemoor",
                                              "title":  "Otyugh in the Sewer: 12 Night-Soil Haulers Strike",
                                              "date":  "2026-11-06"
-                                         },
-                                         {
-                                             "id":  "loot-split-equal-share-torchbearer-20-gold",
-                                             "title":  "Loot Split: Torchbearer\u0027s \u0027Equal Share\u0027 Is 20 of 3,000 Gold",
-                                             "date":  "2026-11-05"
                                          }
                                      ]
                     },
@@ -253,8 +253,13 @@
                                            "name":  "Brother Wendell Tumbleberry"
                                        }
                                    ],
-                        "article_count":  33,
+                        "article_count":  34,
                         "articles":  [
+                                         {
+                                             "id":  "salamander-oven-30-gp-heat-subscription-feast",
+                                             "title":  "Salamander Oven Rents for 30 gp a Day; Heat Costs Extra",
+                                             "date":  "2026-11-13"
+                                         },
                                          {
                                              "id":  "carpet-of-flying-surge-pricing-rain-hailrug",
                                              "title":  "Carpet of Flying Surge Pricing Hits 40x as the Rain Worsens",
@@ -274,11 +279,6 @@
                                              "id":  "gelatinous-cube-floor-cleaner-sweepwick-review",
                                              "title":  "Gelatinous Cube Floor Cleaner Launches at 45 gp; Eats Rug",
                                              "date":  "2026-11-07"
-                                         },
-                                         {
-                                             "id":  "sending-spell-25-words-greetings-party-reply",
-                                             "title":  "Sending Spell\u0027s 25 Words Go to Hellos; Reply Says Thanks",
-                                             "date":  "2026-11-06"
                                          }
                                      ]
                     },
@@ -481,8 +481,13 @@
                                            "name":  "Skritch Mudwhistle"
                                        }
                                    ],
-                        "article_count":  30,
+                        "article_count":  31,
                         "articles":  [
+                                         {
+                                             "id":  "prophecies-contradict-all-come-true-fourth-attempt",
+                                             "title":  "13 Prophecies Contradict Each Other. All 13 Come True.",
+                                             "date":  "2026-11-13"
+                                         },
                                          {
                                              "id":  "giant-boar-feast-alive-fourth-attempt",
                                              "title":  "Giant Boar Brought Back Alive for Feast. Nobody Said Dead.",
@@ -502,11 +507,6 @@
                                              "id":  "ten-foot-pole-recall-one-inch-short",
                                              "title":  "Ten-Foot Poles Recalled After Coming Up One Inch Short",
                                              "date":  "2026-11-06"
-                                         },
-                                         {
-                                             "id":  "long-rest-interrupted-watch-rotation-fourth-attempt",
-                                             "title":  "Long Rest Interrupted Four Times Over Watch Rotation",
-                                             "date":  "2026-11-05"
                                          }
                                      ]
                     },
@@ -598,32 +598,32 @@
                       "short":  "Brindlemoor",
                       "type":  "place",
                       "blurb":  "A frontier market town built on top of the entrance to the Undermaw. Its economy runs on adventurers, and so does its hospital.",
-                      "appearances":  96,
+                      "appearances":  100,
                       "articles":  [
+                                       {
+                                           "id":  "cursed-ring-fighter-invests-party-loot",
+                                           "title":  "Cursed Ring Bought As-Is Makes Fighter Invest Party\u0027s Loot",
+                                           "date":  "2026-11-13"
+                                       },
+                                       {
+                                           "id":  "kobolds-strike-trapped-picket-line-adventuring-party",
+                                           "title":  "Party Hired to Clear Out Kobolds Finds Trapped Picket Line",
+                                           "date":  "2026-11-13"
+                                       },
+                                       {
+                                           "id":  "prophecies-contradict-all-come-true-fourth-attempt",
+                                           "title":  "13 Prophecies Contradict Each Other. All 13 Come True.",
+                                           "date":  "2026-11-13"
+                                       },
+                                       {
+                                           "id":  "salamander-oven-30-gp-heat-subscription-feast",
+                                           "title":  "Salamander Oven Rents for 30 gp a Day; Heat Costs Extra",
+                                           "date":  "2026-11-13"
+                                       },
                                        {
                                            "id":  "adventuring-party-gems-winter-inn-bill-pretty",
                                            "title":  "Party Pays Winter Inn Bill in Gems; Keeper Rates Them \u0027Pretty\u0027",
                                            "date":  "2026-11-12"
-                                       },
-                                       {
-                                           "id":  "carpet-of-flying-surge-pricing-rain-hailrug",
-                                           "title":  "Carpet of Flying Surge Pricing Hits 40x as the Rain Worsens",
-                                           "date":  "2026-11-12"
-                                       },
-                                       {
-                                           "id":  "giant-boar-tavern-stable-duchess-harrowgate",
-                                           "title":  "Giant Boar Rents Tavern Stable; Innkeeper Names Her Duchess",
-                                           "date":  "2026-11-12"
-                                       },
-                                       {
-                                           "id":  "zone-of-truth-council-hearing-party-confesses",
-                                           "title":  "Party Casts Zone of Truth to Prove Innocence, Confesses All",
-                                           "date":  "2026-11-12"
-                                       },
-                                       {
-                                           "id":  "giant-boar-feast-alive-fourth-attempt",
-                                           "title":  "Giant Boar Brought Back Alive for Feast. Nobody Said Dead.",
-                                           "date":  "2026-11-11"
                                        }
                                    ]
                   },
@@ -632,8 +632,18 @@
                       "short":  "the Guild",
                       "type":  "institution",
                       "blurb":  "A guild of heritage keepers who sue to protect old buildings and groves in the capital.",
-                      "appearances":  90,
+                      "appearances":  92,
                       "articles":  [
+                                       {
+                                           "id":  "cursed-ring-fighter-invests-party-loot",
+                                           "title":  "Cursed Ring Bought As-Is Makes Fighter Invest Party\u0027s Loot",
+                                           "date":  "2026-11-13"
+                                       },
+                                       {
+                                           "id":  "prophecies-contradict-all-come-true-fourth-attempt",
+                                           "title":  "13 Prophecies Contradict Each Other. All 13 Come True.",
+                                           "date":  "2026-11-13"
+                                       },
                                        {
                                            "id":  "reincarnate-spell-upgrade-fighter-badger-second-spring",
                                            "title":  "Party Pays 450 gp Reincarnate Upgrade; Fighter Is a Badger",
@@ -647,16 +657,6 @@
                                        {
                                            "id":  "doppelganger-temp-agency-14-firms-one-clerk",
                                            "title":  "Doppelganger Temp Agency Bills 14 Firms for One Clerk",
-                                           "date":  "2026-11-08"
-                                       },
-                                       {
-                                           "id":  "dryad-leaf-drop-87-sneezing-brindlemoor-wendell",
-                                           "title":  "Dryad Leaf Drop Leaves 87 Brindlemoor Folk Sneezing",
-                                           "date":  "2026-11-08"
-                                       },
-                                       {
-                                           "id":  "hooded-stranger-same-quest-14-adventuring-parties",
-                                           "title":  "Hooded Stranger Gave Same Quest to 14 Adventuring Parties",
                                            "date":  "2026-11-08"
                                        }
                                    ]
@@ -700,8 +700,13 @@
                       "short":  "Chapter 9",
                       "type":  "organization",
                       "blurb":  "The guild chapter that licenses parties to enter the Undermaw, sells the maps, and insists the maps are accurate.",
-                      "appearances":  67,
+                      "appearances":  68,
                       "articles":  [
+                                       {
+                                           "id":  "prophecies-contradict-all-come-true-fourth-attempt",
+                                           "title":  "13 Prophecies Contradict Each Other. All 13 Come True.",
+                                           "date":  "2026-11-13"
+                                       },
                                        {
                                            "id":  "kenku-witness-robbery-adventuring-party-suspects",
                                            "title":  "Kenku Witness Reenacts Robbery, Frames Adventuring Party",
@@ -720,11 +725,6 @@
                                        {
                                            "id":  "fourth-attempt-copper-pieces-59-percent-changers",
                                            "title":  "Fourth Attempt Sells Last Copper Pieces at 59% of Value",
-                                           "date":  "2026-11-08"
-                                       },
-                                       {
-                                           "id":  "paladin-frees-41-prisoners-party-pays",
-                                           "title":  "Paladin Frees 41 Prisoners; Party Pays Road Home",
                                            "date":  "2026-11-08"
                                        }
                                    ]
@@ -768,8 +768,13 @@
                       "short":  "Reeve Fennick",
                       "type":  "person",
                       "blurb":  "Brindlemoor\u0027s chief magistrate. Signs every dungeon permit, every bounty, and every apology to the farmers downwind.",
-                      "appearances":  49,
+                      "appearances":  50,
                       "articles":  [
+                                       {
+                                           "id":  "salamander-oven-30-gp-heat-subscription-feast",
+                                           "title":  "Salamander Oven Rents for 30 gp a Day; Heat Costs Extra",
+                                           "date":  "2026-11-13"
+                                       },
                                        {
                                            "id":  "giant-boar-tavern-stable-duchess-harrowgate",
                                            "title":  "Giant Boar Rents Tavern Stable; Innkeeper Names Her Duchess",
@@ -789,11 +794,6 @@
                                            "id":  "retired-adventurers-veterans-parade-12-stalls",
                                            "title":  "Retired Adventurers at Veterans Parade Kick In 12 Market Stalls",
                                            "date":  "2026-11-11"
-                                       },
-                                       {
-                                           "id":  "feast-budget-900-gp-goose-600-plumbrook",
-                                           "title":  "Feast Menu Costs 4,300 gp on a 900 gp Budget; Goose Is 600",
-                                           "date":  "2026-11-10"
                                        }
                                    ]
                   },
@@ -802,8 +802,18 @@
                       "short":  "the Undermaw",
                       "type":  "place",
                       "blurb":  "The dungeon under Brindlemoor. Its levels are numbered, its bottom has never been found, and the Guild calls it mostly cleared.",
-                      "appearances":  48,
+                      "appearances":  50,
                       "articles":  [
+                                       {
+                                           "id":  "kobolds-strike-trapped-picket-line-adventuring-party",
+                                           "title":  "Party Hired to Clear Out Kobolds Finds Trapped Picket Line",
+                                           "date":  "2026-11-13"
+                                       },
+                                       {
+                                           "id":  "prophecies-contradict-all-come-true-fourth-attempt",
+                                           "title":  "13 Prophecies Contradict Each Other. All 13 Come True.",
+                                           "date":  "2026-11-13"
+                                       },
                                        {
                                            "id":  "ettin-porter-loot-split-two-shares",
                                            "title":  "Loot Split: Ettin Porter\u0027s Two Heads Each Want a Share",
@@ -818,16 +828,6 @@
                                            "id":  "reincarnate-spell-upgrade-fighter-badger-second-spring",
                                            "title":  "Party Pays 450 gp Reincarnate Upgrade; Fighter Is a Badger",
                                            "date":  "2026-11-10"
-                                       },
-                                       {
-                                           "id":  "halfling-feastwarden-feast-2000-brindlemoor",
-                                           "title":  "Halfling Feastwarden Promises Feast for 2,000, Has No Menu",
-                                           "date":  "2026-11-09"
-                                       },
-                                       {
-                                           "id":  "kenku-witness-robbery-adventuring-party-suspects",
-                                           "title":  "Kenku Witness Reenacts Robbery, Frames Adventuring Party",
-                                           "date":  "2026-11-09"
                                        }
                                    ]
                   },
@@ -870,8 +870,13 @@
                       "short":  "the Fourth Attempt",
                       "type":  "organization",
                       "blurb":  "An adventuring party named in honor of the first three. Licensed by Chapter 9, popular with bards, unpopular with insurers.",
-                      "appearances":  38,
+                      "appearances":  39,
                       "articles":  [
+                                       {
+                                           "id":  "prophecies-contradict-all-come-true-fourth-attempt",
+                                           "title":  "13 Prophecies Contradict Each Other. All 13 Come True.",
+                                           "date":  "2026-11-13"
+                                       },
                                        {
                                            "id":  "giant-boar-tavern-stable-duchess-harrowgate",
                                            "title":  "Giant Boar Rents Tavern Stable; Innkeeper Names Her Duchess",
@@ -891,11 +896,6 @@
                                            "id":  "hydra-head-tax-nine-bills-brindlemoor-appeal",
                                            "title":  "Hydra Billed Nine Head Taxes in Brindlemoor; Appeal Filed",
                                            "date":  "2026-11-07"
-                                       },
-                                       {
-                                           "id":  "secret-door-search-empty-room-fourth-attempt",
-                                           "title":  "Secret Door Hunt Eats Six Hours in Empty Undermaw Room",
-                                           "date":  "2026-11-07"
                                        }
                                    ]
                   },
@@ -904,8 +904,18 @@
                       "short":  "Shieldwall Mutual",
                       "type":  "organization",
                       "blurb":  "Brindlemoor\u0027s adventurer insurer. Covers death, dismemberment, and curses, except the ones that are your own fault, which is most of them.",
-                      "appearances":  31,
+                      "appearances":  33,
                       "articles":  [
+                                       {
+                                           "id":  "cursed-ring-fighter-invests-party-loot",
+                                           "title":  "Cursed Ring Bought As-Is Makes Fighter Invest Party\u0027s Loot",
+                                           "date":  "2026-11-13"
+                                       },
+                                       {
+                                           "id":  "prophecies-contradict-all-come-true-fourth-attempt",
+                                           "title":  "13 Prophecies Contradict Each Other. All 13 Come True.",
+                                           "date":  "2026-11-13"
+                                       },
                                        {
                                            "id":  "reincarnate-spell-upgrade-fighter-badger-second-spring",
                                            "title":  "Party Pays 450 gp Reincarnate Upgrade; Fighter Is a Badger",
@@ -920,16 +930,6 @@
                                            "id":  "paladin-frees-41-prisoners-party-pays",
                                            "title":  "Paladin Frees 41 Prisoners; Party Pays Road Home",
                                            "date":  "2026-11-08"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-glowing-mushrooms-no-rations-wendell",
-                                           "title":  "Adventuring Party Eats Glowing Mushrooms, Forgot Rations",
-                                           "date":  "2026-11-07"
-                                       },
-                                       {
-                                           "id":  "fireball-burns-inn-innkeepers-damage-deposit",
-                                           "title":  "Wizard\u0027s Fireball Burns Down Inn; Innkeepers Want Deposits",
-                                           "date":  "2026-11-07"
                                        }
                                    ]
                   },
@@ -938,8 +938,13 @@
                       "short":  "Pottage",
                       "type":  "person",
                       "blurb":  "Steward of the Fourth Attempt\u0027s hirelings. Reads contracts all the way to the end, which is more than the party can say.",
-                      "appearances":  28,
+                      "appearances":  29,
                       "articles":  [
+                                       {
+                                           "id":  "prophecies-contradict-all-come-true-fourth-attempt",
+                                           "title":  "13 Prophecies Contradict Each Other. All 13 Come True.",
+                                           "date":  "2026-11-13"
+                                       },
                                        {
                                            "id":  "giant-boar-feast-alive-fourth-attempt",
                                            "title":  "Giant Boar Brought Back Alive for Feast. Nobody Said Dead.",
@@ -959,11 +964,6 @@
                                            "id":  "ten-foot-pole-recall-one-inch-short",
                                            "title":  "Ten-Foot Poles Recalled After Coming Up One Inch Short",
                                            "date":  "2026-11-06"
-                                       },
-                                       {
-                                           "id":  "long-rest-interrupted-watch-rotation-fourth-attempt",
-                                           "title":  "Long Rest Interrupted Four Times Over Watch Rotation",
-                                           "date":  "2026-11-05"
                                        }
                                    ]
                   },
@@ -1040,8 +1040,13 @@
                       "short":  "the Company",
                       "type":  "organization",
                       "blurb":  "A Brindlemoor adventuring party that brought a sack of shrieker mushrooms home from the Undermaw to sell, and kept Tanner\u0027s Row awake for four nights.",
-                      "appearances":  25,
+                      "appearances":  26,
                       "articles":  [
+                                       {
+                                           "id":  "cursed-ring-fighter-invests-party-loot",
+                                           "title":  "Cursed Ring Bought As-Is Makes Fighter Invest Party\u0027s Loot",
+                                           "date":  "2026-11-13"
+                                       },
                                        {
                                            "id":  "zone-of-truth-council-hearing-party-confesses",
                                            "title":  "Party Casts Zone of Truth to Prove Innocence, Confesses All",
@@ -1061,11 +1066,6 @@
                                            "id":  "ettin-porter-loot-split-two-shares",
                                            "title":  "Loot Split: Ettin Porter\u0027s Two Heads Each Want a Share",
                                            "date":  "2026-11-10"
-                                       },
-                                       {
-                                           "id":  "druid-goodberry-3-cp-farmers-bread-tax",
-                                           "title":  "Druid Sells Goodberries for 3 cp; Farmers Demand Bread Tax",
-                                           "date":  "2026-11-09"
                                        }
                                    ]
                   },
@@ -1474,6 +1474,40 @@
                                            "id":  "hepatitis-b-newborn-vial-delay-fennedy",
                                            "title":  "Hepatitis B Could Jump 19% If Fennedy Delays Newborn Vial",
                                            "date":  "2026-10-20"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Compound Daily ring",
+                      "short":  "the ring",
+                      "type":  "item",
+                      "blurb":  "A dull brass ring inscribed Compound Daily. Its wearer cannot stop investing whatever coin is nearby.",
+                      "appearances":  11,
+                      "articles":  [
+                                       {
+                                           "id":  "cursed-ring-fighter-invests-party-loot",
+                                           "title":  "Cursed Ring Bought As-Is Makes Fighter Invest Party\u0027s Loot",
+                                           "date":  "2026-11-13"
+                                       },
+                                       {
+                                           "id":  "sahuagin-underwater-trade-parley-varnholt-water-breathing",
+                                           "title":  "Sahuagin Demand Underwater Trade Talks; Envoys Hold Breath",
+                                           "date":  "2026-11-11"
+                                       },
+                                       {
+                                           "id":  "treasure-map-sixth-adventuring-party-40-gp",
+                                           "title":  "Sixth Party Buys Same \u0027One-of-a-Kind\u0027 Treasure Map",
+                                           "date":  "2026-11-06"
+                                       },
+                                       {
+                                           "id":  "unidentified-ring-5-gp-ring-of-protection",
+                                           "title":  "Party Sells Unknown Ring for 5 gp; It\u0027s a Ring of Protection",
+                                           "date":  "2026-11-06"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-tips-bard-500-gp-pearl",
+                                           "title":  "Party Tips Bard 500 gp Pearl, Mistaking It for 1 sp",
+                                           "date":  "2026-11-04"
                                        }
                                    ]
                   },
@@ -1988,6 +2022,40 @@
                                    ]
                   },
                   {
+                      "name":  "Guildmaster Tobrin Ashgrove",
+                      "short":  "Ashgrove",
+                      "type":  "person",
+                      "blurb":  "A famed guildmaster of the merchant circuit, known for gala speeches and hot-air balloons.",
+                      "appearances":  8,
+                      "articles":  [
+                                       {
+                                           "id":  "cursed-ring-fighter-invests-party-loot",
+                                           "title":  "Cursed Ring Bought As-Is Makes Fighter Invest Party\u0027s Loot",
+                                           "date":  "2026-11-13"
+                                       },
+                                       {
+                                           "id":  "carpet-of-flying-surge-pricing-rain-hailrug",
+                                           "title":  "Carpet of Flying Surge Pricing Hits 40x as the Rain Worsens",
+                                           "date":  "2026-11-12"
+                                       },
+                                       {
+                                           "id":  "reincarnate-spell-upgrade-fighter-badger-second-spring",
+                                           "title":  "Party Pays 450 gp Reincarnate Upgrade; Fighter Is a Badger",
+                                           "date":  "2026-11-10"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-shortcut-border-nine-hours-incident",
+                                           "title":  "Adventuring Party\u0027s Shortcut Turns 2-Hour Road Into 9",
+                                           "date":  "2026-11-05"
+                                       },
+                                       {
+                                           "id":  "owlbear-union-vote-hootline-couriers-38-2",
+                                           "title":  "Owlbear Union Vote at Hootline Ends 38 to 2, Sterling Rattled",
+                                           "date":  "2026-11-03"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "OpenEye (makers of ChattyGolem)",
                       "short":  "OpenEye",
                       "type":  "company",
@@ -2154,40 +2222,6 @@
                                            "id":  "bard-college-plagiarism-scandal",
                                            "title":  "College of Valor Accused of Song Plagiarism",
                                            "date":  "2026-04-18"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Guildmaster Tobrin Ashgrove",
-                      "short":  "Ashgrove",
-                      "type":  "person",
-                      "blurb":  "A famed guildmaster of the merchant circuit, known for gala speeches and hot-air balloons.",
-                      "appearances":  7,
-                      "articles":  [
-                                       {
-                                           "id":  "carpet-of-flying-surge-pricing-rain-hailrug",
-                                           "title":  "Carpet of Flying Surge Pricing Hits 40x as the Rain Worsens",
-                                           "date":  "2026-11-12"
-                                       },
-                                       {
-                                           "id":  "reincarnate-spell-upgrade-fighter-badger-second-spring",
-                                           "title":  "Party Pays 450 gp Reincarnate Upgrade; Fighter Is a Badger",
-                                           "date":  "2026-11-10"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-shortcut-border-nine-hours-incident",
-                                           "title":  "Adventuring Party\u0027s Shortcut Turns 2-Hour Road Into 9",
-                                           "date":  "2026-11-05"
-                                       },
-                                       {
-                                           "id":  "owlbear-union-vote-hootline-couriers-38-2",
-                                           "title":  "Owlbear Union Vote at Hootline Ends 38 to 2, Sterling Rattled",
-                                           "date":  "2026-11-03"
-                                       },
-                                       {
-                                           "id":  "lich-merger-400-skeleton-layoffs-desks",
-                                           "title":  "Lich Merger Rightsizes 400 Skeletons, Who Keep Coming In",
-                                           "date":  "2026-10-31"
                                        }
                                    ]
                   },
@@ -2838,6 +2872,40 @@
                                    ]
                   },
                   {
+                      "name":  "Feastwarden Odo Plumbrook",
+                      "short":  "Plumbrook",
+                      "type":  "person",
+                      "blurb":  "A Brindlemoor halfling appointed Feastwarden of the Grand Feast. He has promised to feed 2,000 people and has never once doubted it.",
+                      "appearances":  5,
+                      "articles":  [
+                                       {
+                                           "id":  "salamander-oven-30-gp-heat-subscription-feast",
+                                           "title":  "Salamander Oven Rents for 30 gp a Day; Heat Costs Extra",
+                                           "date":  "2026-11-13"
+                                       },
+                                       {
+                                           "id":  "giant-boar-tavern-stable-duchess-harrowgate",
+                                           "title":  "Giant Boar Rents Tavern Stable; Innkeeper Names Her Duchess",
+                                           "date":  "2026-11-12"
+                                       },
+                                       {
+                                           "id":  "giant-boar-feast-alive-fourth-attempt",
+                                           "title":  "Giant Boar Brought Back Alive for Feast. Nobody Said Dead.",
+                                           "date":  "2026-11-11"
+                                       },
+                                       {
+                                           "id":  "feast-budget-900-gp-goose-600-plumbrook",
+                                           "title":  "Feast Menu Costs 4,300 gp on a 900 gp Budget; Goose Is 600",
+                                           "date":  "2026-11-10"
+                                       },
+                                       {
+                                           "id":  "halfling-feastwarden-feast-2000-brindlemoor",
+                                           "title":  "Halfling Feastwarden Promises Feast for 2,000, Has No Menu",
+                                           "date":  "2026-11-09"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Flavio Bolsonare the Younger",
                       "short":  "the Younger",
                       "type":  "person",
@@ -3304,6 +3372,35 @@
                                    ]
                   },
                   {
+                      "name":  "Dobb Wrenfield",
+                      "short":  "Wrenfield",
+                      "type":  "person",
+                      "blurb":  "Spokesman for Cinderlatch Works, who can explain any fee as a feature.",
+                      "appearances":  4,
+                      "articles":  [
+                                       {
+                                           "id":  "salamander-oven-30-gp-heat-subscription-feast",
+                                           "title":  "Salamander Oven Rents for 30 gp a Day; Heat Costs Extra",
+                                           "date":  "2026-11-13"
+                                       },
+                                       {
+                                           "id":  "basilisk-eye-exam-clinic-24-petrified-wendell",
+                                           "title":  "Basilisk Eye Exam Clinic Petrifies 24 Patients",
+                                           "date":  "2026-11-06"
+                                       },
+                                       {
+                                           "id":  "rope-trick-pod-cinderlatch-review-extradimensional",
+                                           "title":  "Rope Trick Pod Launches at 90 gp; Exit Costs Extra",
+                                           "date":  "2026-11-03"
+                                       },
+                                       {
+                                           "id":  "displacer-beast-property-tax-brindlemoor-reassessment",
+                                           "title":  "Displacer Beast Skews Property Tax Roll on 38 Cottages",
+                                           "date":  "2026-10-30"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Dolmen",
                       "short":  "Dolmen",
                       "type":  "country",
@@ -3329,35 +3426,6 @@
                                            "id":  "central-bank-chief-snowhold-conclave-laguard",
                                            "title":  "Central Bank Chief Eyed for Snowhold Conclave Chair",
                                            "date":  "2026-10-15"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Feastwarden Odo Plumbrook",
-                      "short":  "Plumbrook",
-                      "type":  "person",
-                      "blurb":  "A Brindlemoor halfling appointed Feastwarden of the Grand Feast. He has promised to feed 2,000 people and has never once doubted it.",
-                      "appearances":  4,
-                      "articles":  [
-                                       {
-                                           "id":  "giant-boar-tavern-stable-duchess-harrowgate",
-                                           "title":  "Giant Boar Rents Tavern Stable; Innkeeper Names Her Duchess",
-                                           "date":  "2026-11-12"
-                                       },
-                                       {
-                                           "id":  "giant-boar-feast-alive-fourth-attempt",
-                                           "title":  "Giant Boar Brought Back Alive for Feast. Nobody Said Dead.",
-                                           "date":  "2026-11-11"
-                                       },
-                                       {
-                                           "id":  "feast-budget-900-gp-goose-600-plumbrook",
-                                           "title":  "Feast Menu Costs 4,300 gp on a 900 gp Budget; Goose Is 600",
-                                           "date":  "2026-11-10"
-                                       },
-                                       {
-                                           "id":  "halfling-feastwarden-feast-2000-brindlemoor",
-                                           "title":  "Halfling Feastwarden Promises Feast for 2,000, Has No Menu",
-                                           "date":  "2026-11-09"
                                        }
                                    ]
                   },
@@ -4104,6 +4172,30 @@
                                    ]
                   },
                   {
+                      "name":  "Hootline Couriers",
+                      "short":  "Hootline",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor parcel firm that delivers by owlbear, in whole or in part. Newly listed on the Brindlemoor exchange.",
+                      "appearances":  3,
+                      "articles":  [
+                                       {
+                                           "id":  "cursed-ring-fighter-invests-party-loot",
+                                           "title":  "Cursed Ring Bought As-Is Makes Fighter Invest Party\u0027s Loot",
+                                           "date":  "2026-11-13"
+                                       },
+                                       {
+                                           "id":  "owlbear-union-vote-hootline-couriers-38-2",
+                                           "title":  "Owlbear Union Vote at Hootline Ends 38 to 2, Sterling Rattled",
+                                           "date":  "2026-11-03"
+                                       },
+                                       {
+                                           "id":  "owlbear-courier-startup-hootline-ipo-jumps-60",
+                                           "title":  "Owlbear Courier Startup Hootline Jumps 60% in Debut",
+                                           "date":  "2026-10-29"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Kanzar",
                       "short":  "Kanzar",
                       "type":  "place",
@@ -4268,6 +4360,30 @@
                                            "id":  "streaming-layoffs-netherflix-cuts-1000-jobs",
                                            "title":  "Streaming Layoffs: Netherflix Cuts 1,000 Jobs",
                                            "date":  "2026-10-15"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Odalys Marrow",
+                      "short":  "Marrow",
+                      "type":  "person",
+                      "blurb":  "Proprietor of Marrow \u0026 Finch Curios. Does not offer refunds and does not apologize.",
+                      "appearances":  3,
+                      "articles":  [
+                                       {
+                                           "id":  "cursed-ring-fighter-invests-party-loot",
+                                           "title":  "Cursed Ring Bought As-Is Makes Fighter Invest Party\u0027s Loot",
+                                           "date":  "2026-11-13"
+                                       },
+                                       {
+                                           "id":  "hydra-head-tax-nine-bills-brindlemoor-appeal",
+                                           "title":  "Hydra Billed Nine Head Taxes in Brindlemoor; Appeal Filed",
+                                           "date":  "2026-11-07"
+                                       },
+                                       {
+                                           "id":  "unidentified-ring-5-gp-ring-of-protection",
+                                           "title":  "Party Sells Unknown Ring for 5 gp; It\u0027s a Ring of Protection",
+                                           "date":  "2026-11-06"
                                        }
                                    ]
                   },
@@ -4851,6 +4967,25 @@
                                    ]
                   },
                   {
+                      "name":  "Cinderlatch Works",
+                      "short":  "Cinderlatch",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor maker of pocket-dimension gadgets. Its rooms are lovely and its exits are billed separately.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "salamander-oven-30-gp-heat-subscription-feast",
+                                           "title":  "Salamander Oven Rents for 30 gp a Day; Heat Costs Extra",
+                                           "date":  "2026-11-13"
+                                       },
+                                       {
+                                           "id":  "rope-trick-pod-cinderlatch-review-extradimensional",
+                                           "title":  "Rope Trick Pod Launches at 90 gp; Exit Costs Extra",
+                                           "date":  "2026-11-03"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Clawde Opera-5",
                       "short":  "Opera-5",
                       "type":  "product",
@@ -5227,25 +5362,6 @@
                                            "id":  "skytrance-megamerger-rightsizes-hollowood",
                                            "title":  "Skytrance Megamerger Closes, Bravely Rightsizes Hollowood\u0027s Adventuring Party",
                                            "date":  "2026-10-10"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Hootline Couriers",
-                      "short":  "Hootline",
-                      "type":  "organization",
-                      "blurb":  "A Brindlemoor parcel firm that delivers by owlbear, in whole or in part. Newly listed on the Brindlemoor exchange.",
-                      "appearances":  2,
-                      "articles":  [
-                                       {
-                                           "id":  "owlbear-union-vote-hootline-couriers-38-2",
-                                           "title":  "Owlbear Union Vote at Hootline Ends 38 to 2, Sterling Rattled",
-                                           "date":  "2026-11-03"
-                                       },
-                                       {
-                                           "id":  "owlbear-courier-startup-hootline-ipo-jumps-60",
-                                           "title":  "Owlbear Courier Startup Hootline Jumps 60% in Debut",
-                                           "date":  "2026-10-29"
                                        }
                                    ]
                   },
@@ -5721,6 +5837,25 @@
                                            "id":  "energy-ceasefire-donwald-damara-vaasa-shelling",
                                            "title":  "Donwald Declares Energy Ceasefire; Damara Skips the Memo",
                                            "date":  "2026-10-12"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Brindlemoor Seers\u0027 Hall",
+                      "short":  "the Seers\u0027 Hall",
+                      "type":  "organization",
+                      "blurb":  "Brindlemoor\u0027s house of thirteen seers, who read for any party delving on Omen Day at two silver a prophecy.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "prophecies-contradict-all-come-true-fourth-attempt",
+                                           "title":  "13 Prophecies Contradict Each Other. All 13 Come True.",
+                                           "date":  "2026-11-13"
+                                       },
+                                       {
+                                           "id":  "salamander-oven-30-gp-heat-subscription-feast",
+                                           "title":  "Salamander Oven Rents for 30 gp a Day; Heat Costs Extra",
+                                           "date":  "2026-11-13"
                                        }
                                    ]
                   },
@@ -6799,20 +6934,6 @@
                                            "id":  "layoffs-krogger-3000-corporate-jobs-forhand-ai",
                                            "title":  "Layoffs: Krogger Cuts 3,000 Desk Jobs for Thinking-Engines",
                                            "date":  "2026-10-21"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Cinderlatch Works",
-                      "short":  "Cinderlatch",
-                      "type":  "organization",
-                      "blurb":  "A Brindlemoor maker of pocket-dimension gadgets. Its rooms are lovely and its exits are billed separately.",
-                      "appearances":  1,
-                      "articles":  [
-                                       {
-                                           "id":  "rope-trick-pod-cinderlatch-review-extradimensional",
-                                           "title":  "Rope Trick Pod Launches at 90 gp; Exit Costs Extra",
-                                           "date":  "2026-11-03"
                                        }
                                    ]
                   },
@@ -8679,6 +8800,20 @@
                                    ]
                   },
                   {
+                      "name":  "Mine-Master Corwin Haddleby",
+                      "short":  "Haddleby",
+                      "type":  "person",
+                      "blurb":  "Owner of the Gullet copper mine, who hired an adventuring party to end a kobold strike and now wants his deposit back.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "kobolds-strike-trapped-picket-line-adventuring-party",
+                                           "title":  "Party Hired to Clear Out Kobolds Finds Trapped Picket Line",
+                                           "date":  "2026-11-13"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Minister of Commerce Wan Wentoe of Kara-Tur",
                       "short":  "Wan Wentoe",
                       "type":  "person",
@@ -8829,6 +8964,20 @@
                                            "id":  "golden-coast-clerks-call-first-strike-margrave-rolls-initiative",
                                            "title":  "Golden Coast Clerks Call First Strike; Margrave Rolls for Initiative",
                                            "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Omen Day",
+                      "short":  "Omen Day",
+                      "type":  "event",
+                      "blurb":  "Brindlemoor\u0027s unlucky day, kept whenever the thirteenth of a month falls on a Friday. Any party delving that day must collect a reading first.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "prophecies-contradict-all-come-true-fourth-attempt",
+                                           "title":  "13 Prophecies Contradict Each Other. All 13 Come True.",
+                                           "date":  "2026-11-13"
                                        }
                                    ]
                   },
@@ -9137,6 +9286,34 @@
                                            "id":  "reincarnate-spell-upgrade-fighter-badger-second-spring",
                                            "title":  "Party Pays 450 gp Reincarnate Upgrade; Fighter Is a Badger",
                                            "date":  "2026-11-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Seer Hester Vole",
+                      "short":  "Seer Vole",
+                      "type":  "person",
+                      "blurb":  "A seer of the Brindlemoor Seers\u0027 Hall who reports exactly what she saw and nothing more.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "salamander-oven-30-gp-heat-subscription-feast",
+                                           "title":  "Salamander Oven Rents for 30 gp a Day; Heat Costs Extra",
+                                           "date":  "2026-11-13"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Seer-Warden Ysmay Coldharrow",
+                      "short":  "Coldharrow",
+                      "type":  "person",
+                      "blurb":  "Head of the Brindlemoor Seers\u0027 Hall. Believes vagueness is a failure of discipline.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "prophecies-contradict-all-come-true-fourth-attempt",
+                                           "title":  "13 Prophecies Contradict Each Other. All 13 Come True.",
+                                           "date":  "2026-11-13"
                                        }
                                    ]
                   },
@@ -9687,6 +9864,20 @@
                                    ]
                   },
                   {
+                      "name":  "the Cinderfell Company",
+                      "short":  "the Cinderfell Company",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor adventuring party whose fighter put on a cursed ring before it was identified and now cannot stop investing the party\u0027s loot. Shares available, 2 sp.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "cursed-ring-fighter-invests-party-loot",
+                                           "title":  "Cursed Ring Bought As-Is Makes Fighter Invest Party\u0027s Loot",
+                                           "date":  "2026-11-13"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Coalshire Reeve\u0027s Office",
                       "short":  "the Reeve\u0027s Office",
                       "type":  "agency",
@@ -9781,6 +9972,20 @@
                                            "id":  "opioid-settlement-315m-gp-curse-vial",
                                            "title":  "Pharmacy Chain Pays 315M gp Opioid Settlement, Admits Nothing",
                                            "date":  "2026-10-15"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Dawnhollow Blades",
+                      "short":  "the Blades",
+                      "type":  "organization",
+                      "blurb":  "A four-member adventuring party hired to clear the kobolds out of the Gullet, who found a trapped picket line and stopped to argue about it.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "kobolds-strike-trapped-picket-line-adventuring-party",
+                                           "title":  "Party Hired to Clear Out Kobolds Finds Trapped Picket Line",
+                                           "date":  "2026-11-13"
                                        }
                                    ]
                   },
@@ -10019,6 +10224,20 @@
                                            "id":  "sanctions-waiver-damara-oil-tariffs-donwald",
                                            "title":  "Donwald\u0027s Sanctions Waiver Spares Damara Oil Tariffs",
                                            "date":  "2026-10-18"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Gullet copper mine",
+                      "short":  "the Gullet",
+                      "type":  "place",
+                      "blurb":  "A copper mine two hours\u0027 walk north of Brindlemoor, worked by kobold miners who are currently on strike.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "kobolds-strike-trapped-picket-line-adventuring-party",
+                                           "title":  "Party Hired to Clear Out Kobolds Finds Trapped Picket Line",
+                                           "date":  "2026-11-13"
                                        }
                                    ]
                   },
@@ -10863,6 +11082,20 @@
                                    ]
                   },
                   {
+                      "name":  "Tibbet Snarewhistle",
+                      "short":  "Snarewhistle",
+                      "type":  "person",
+                      "blurb":  "A kobold tunnel-shorer at the Gullet for eleven years and the strikers\u0027 spokesman. Relaxes by rigging deadfalls.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "kobolds-strike-trapped-picket-line-adventuring-party",
+                                           "title":  "Party Hired to Clear Out Kobolds Finds Trapped Picket Line",
+                                           "date":  "2026-11-13"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Timon Cookfire",
                       "short":  "Cookfire",
                       "type":  "person",
@@ -11255,6 +11488,16 @@
                       "short":  "Jackarta",
                       "type":  "city",
                       "blurb":  "The crowded capital of the Indonessar Isles, home to the Assembly and Marble Square.",
+                      "appearances":  0,
+                      "articles":  [
+
+                                   ]
+                  },
+                  {
+                      "name":  "Marrow \u0026 Finch Curios",
+                      "short":  "Marrow \u0026 Finch",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor curio shop that buys unidentified loot cheap and sells cursed goods as-is, no refunds.",
                       "appearances":  0,
                       "articles":  [
 
