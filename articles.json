@@ -8393,6 +8393,142 @@
         "rumor": "My cousin says the brass ring whispers interest rates at night, and anyone who takes it off has to pay back every copper it ever spent."
       },
       "fiction": true
+    },
+    {
+      "id": "adventuring-party-3000-potatoes-exposure-plumbrook",
+      "title": "Adventuring Party Peels 3,000 Potatoes, Paid in Exposure",
+      "category": "Labor",
+      "author": "Brakka Stonesweat",
+      "date": "2026-11-14",
+      "excerpt": "An adventuring party peeling 3,000 potatoes for Brindlemoor's Grand Feast asked for wages. The committee offered exposure and a plate. One plate.",
+      "social": "Five adventurers volunteered to peel 3,000 potatoes for the Grand Feast of Brindlemoor. When they asked to be paid, the committee offered exposure and a plate. One plate, to share. The rogue was gone before the second sack. Would your character keep peeling?",
+      "content": "<p>An adventuring party peeled 3,000 potatoes for Brindlemoor's Grand Feast this week, asked to be paid, and was offered exposure and a plate.</p>\n\n<p>The party calls itself the Lantern Oath. Five of them signed up Wednesday at the feast committee's table on the Town Green. Four are still peeling. The rogue left before the second sack.</p>\n\n<p>Been down a mine all month? Here's the short of it. <a href=\"/a/halfling-feastwarden-feast-2000-brindlemoor\">Feastwarden Odo Plumbrook</a>, the halfling that Reeve Maudrey Fennick of Brindlemoor put in charge, promised a feast for 2,000 on the Green on the 26th. He has <a href=\"/a/feast-budget-900-gp-goose-600-plumbrook\">900 gold to do it with</a>. That buys a goose and some change.</p>\n\n<p>The sign-up notice called it \"a volunteer opportunity with generous recognition.\" That means they're not paying.</p>\n\n<p>\"I've got blisters on my blisters,\" said Thessaly Brune, the party's fighter. She started with her greatsword and lost the potato along with most of the table. Now she uses a dagger. \"Last month we cleared a crypt for 40 gold. The crypt had a ghoul in it. This pile has more eyes.\"</p>\n\n<p>Corwin Ashgrove, a wizard, tried Prestidigitation on the first sack. \"It cleans them,\" he said. \"Beautifully. They are the cleanest unpeeled potatoes in the realm.\" Sister Amabel Thorne, the party cleric, cast Purify Food and Drink over the whole pile and asked if the committee would cover her holy water. She was told that was \"not in the spirit of the thing.\"</p>\n\n<p>Plumbrook answered the wage request standing on a chair. \"Exposure is worth more than coin,\" he said. \"Two thousand people will eat these potatoes. Two thousand people will know who peeled them.\"</p>\n\n<p>They won't. Nobody in history has looked at a potato and asked who peeled it.</p>\n\n<p>He later clarified the plate. It's one plate, for the party, to share. \"It's a big plate,\" he said. \"That's the fun part.\"</p>\n\n<p>The rogue, whom the party asked me not to name because \"he'd enjoy it,\" left a note pinned to sack two: \"Exposure is what kills you in the Thornwood. Gone to find paying work.\" He took the good peeler with him. Nobody blames him.</p>\n\n<p>Here's the part that gets my beard up. The committee found money for bunting. Duchess, the boar, ate the bunting. They bought more bunting. The salamander oven they rented costs 30 gold a day, and it isn't even lit yet. It gets paid. It has never peeled a thing.</p>\n\n<p>The Lantern Oath wants one copper a potato. Do the sums. That's 30 gold for the lot, same as one day of a cold oven. They'd also like a lunch break, and somebody else on the last sack. Ashgrove swears it moved.</p>\n\n<p>Plumbrook called the demands \"a strong start.\" He didn't say yes. \"A strong start to what?\" said Brune. Nobody answered her. She picked up another potato.</p>\n\n<p><em>Solidarity. And stretch your back. — Brakka</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Unpaid Kitchen",
+          "text": "Two days before the harvest festival, the volunteer kitchen crew walks out over wages, and the festival steward hires the party to get them back peeling without spending a copper. Meanwhile the abandoned potato cellar has drawn a swarm of rats, and if it isn't cleared by morning there's no feast at all."
+        },
+        "npc": {
+          "name": "Merrin Tullock",
+          "role": "Festival Steward",
+          "want": "He wants the feast to go off on time so the town council keeps him on as steward next year.",
+          "secret": "He has 40 gp of the kitchen wage fund hidden in a flour sack, set aside for a bronze plaque with his own name on it.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "noble"
+        },
+        "location": {
+          "name": "The Peeling Cellar",
+          "text": "A stone cellar under the market hall stacked to the rafters with potato sacks and one long bench. Something has been chewing through the sacks from the inside, and the scratching gets louder after dark.",
+          "tavern": false
+        },
+        "rumor": "Word is the steward's paying the kitchen crew in exposure, and the last lot who took that deal never came back up from the cellar."
+      },
+      "fiction": true
+    },
+    {
+      "id": "griffon-air-route-teleportation-circle-hopwell",
+      "title": "Griffon Air Route Runs Straight Into a Teleportation Circle",
+      "category": "Travel",
+      "author": "Grashka Ironjaw",
+      "date": "2026-11-14",
+      "excerpt": "The griffon riders got their first air corridor over Brindlemoor. It runs through the Hopwell teleportation circle. 23 collisions on the fair's first day.",
+      "social": "The griffon riders finally got their own air corridor over Brindlemoor. The first approved route runs straight through the Hopwell teleportation circle. By the end of the fair's first day the constables had logged 23 collisions and one griffon that teleported to Ashenfold by mistake. Who has right of way: the thing that flew in, or the thing that appeared?",
+      "content": "<p>The griffon riders of Brindlemoor won their first approved air corridor this morning, as Harvest Fair weekend opened. The route runs straight through the Hopwell Transit teleportation circle. By the time the fair's lanterns went out on its first night, the city constables had logged 23 collisions between griffons and arriving passengers, and nobody had agreed who was supposed to yield.</p>\n\n<p>I have covered border wars with fewer casualties. To be fair, the casualties here are mostly hats.</p>\n\n<p>The Highcrest Griffon Riders' Lodge petitioned for the corridor for three years. Wing-Marshal Corra Thistlebane, who commands the lodge, called the approval a great day for the sky. Then she unrolled the map at the ceremony and went quiet. The corridor is a ribbon of approved air, forty feet wide, drawn by a clerk with a ruler and no window. It crosses the circle at exactly the height of a tall man stepping out of nowhere.</p>\n\n<p>Hopwell Transit has run its commuter line from that circle <a href=\"/a/teleportation-circle-commuter-line-hopwell-transit-review\">for some months now</a>, promising arrival in no time at all. Spokesman Dunstan Pellwether says that promise still holds. \"Our passengers arrive instantly,\" he told me. \"What arrives on top of them is not a Hopwell matter.\"</p>\n\n<p>Thistlebane disagrees. \"A griffon is committed at sixty miles an hour,\" she said. \"A commuter appears with a sound like a cork. My riders get no warning and no time to bank. The thing that was already there has right of way. That is how the air works.\"</p>\n\n<p>Pellwether's reply: the circle was there first, by about forty years. Thistlebane's reply to the reply: the sky was there first, by about forever. Tension holds at sixty siege-days and climbing.</p>\n\n<p>The fair made it worse. Harvest weekend brings triple traffic through the circle, mostly aunts carrying pies. Griffons like pies. Witnesses at the gourd tent counted eleven pies taken in midair, four of them still in the aunt's hands at the time. One griffon flew through the circle at the moment of activation and arrived in Ashenfold, where it ate a show pony's ribbon and was returned by cart on Thirdday, sulking. Its rider has filed for a fare refund. Hopwell has billed him for the trip.</p>\n\n<p>Both commanders met at the circle on Thirdday evening to parley. The handshake was firm, two seconds, no hidden dagger detected. Then a cork sound. A wool merchant appeared between them holding a pumpkin, and the parley ended there. I respect a clean objective, and neither side has one. Hopwell wants the griffons moved. The lodge wants a bell rung before every arrival. The clerk with the ruler has gone on leave.</p>\n\n<p>Expect a lot of sky-pageant coverage from Ottoline Vex this week, filed from a balcony with a cushion. I filed this from under a hay cart. A griffon landed on the cart twice. I ate my rations there. They were the best meal of the fair.</p>\n\n<p><em>Ironjaw, filed from the front.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "Clear the Skyway",
+          "text": "A town's new griffon flight lane crosses its teleportation circle, and riders and arrivals keep colliding. The circle's operator and the riders' lodge each hire the party to prove the other side is at fault before the town council votes on right of way in three days. Someone is quietly moving the lane markers at night."
+        },
+        "npc": {
+          "name": "Wendel Sharrow",
+          "role": "Junior Clerk of Airways",
+          "want": "He wants the party to find a fix before anyone learns he drew the griffon lane without looking out a window.",
+          "secret": "The circle operator paid him ten gold to draw the lane through the circle so the riders would look reckless and lose their charter.",
+          "race": "gnome",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Corkpop Circle",
+          "text": "A teleportation circle in a cobbled square, ringed with dented signposts and a heap of confiscated pie tins. A painted line on the rooftops above marks the griffon lane, and it crosses the circle at head height.",
+          "tavern": false
+        },
+        "rumor": "My cousin says a griffon went through the circle at the wrong moment and now there are two of it, and only one of them answers to its rider."
+      },
+      "fiction": true
+    },
+    {
+      "id": "druid-giant-frog-jumping-contest-judges-hat",
+      "title": "Druid Wild Shapes Into Giant Frog, Wins Fair, Eats Judge's Hat",
+      "category": "Events",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-11-14",
+      "excerpt": "A druid used Wild Shape to become a giant frog and win the Gorsewick Harvest Fair's jumping contest. Then she ate the judge's hat. Allegedly twice.",
+      "social": "A druid at the Gorsewick Harvest Fair turned into a giant frog to win the frog jumping contest. She jumped 31 feet. Then she ate the judge's hat. When she turned back, the farmer who came second filed a protest, because the sign says FROGS. Does a druid in frog shape count as a frog?",
+      "content": "<p>At roughly the second bell after noon on the first day of the Gorsewick Harvest Fair, a druid allegedly used Wild Shape to turn into a giant frog, won the fair's frog jumping contest by 27 feet, and then ate the judge's hat. The druid, Fenna Rookmoss of the Muddy Hem Company, has since turned back into a person, which is allegedly the whole problem.</p>\n\n<p>The contest has run every autumn for forty years. Entry costs a copper, the purse is 30 gold and a blue ribbon, and the only rule is painted on the sign: FROGS. The Muddy Hem Company, four adventurers passing through on their way to a dungeon they called \"basically cleared,\" allegedly read the sign twice and went behind the pie tent for a short meeting.</p>\n\n<p>\"They came out carrying a frog the size of a pony,\" said Orla Pennick, who was eating a candied turnip at the time. \"The fighter held it like a bride. Nobody asked. It's a fair.\"</p>\n\n<p>The frog jumped 31 feet. The old record belonged to Big Ennis, a bullfrog owned by turnip farmer Hamm Tully, who managed four feet and a bit in the drought year and has talked about it ever since. Tully says he knew something was off when the challenger landed in the cider line and waited its turn.</p>\n\n<p>Fair judge Alder Gimble stepped up to pin the ribbon. The frog allegedly looked at the ribbon, then at Gimble's hat, a tall felt number with a pheasant feather, and swallowed the hat in one go. \"Clean off my head,\" Gimble said. \"I felt the tongue. I expect I'll be feeling the tongue for a while.\"</p>\n\n<p>Also, the ribbon has real gold foil on the edge. I held it for a second while everyone was shouting. Very good foil. It catches the light when you tilt it. Anyway.</p>\n\n<p>Then the hour ran out. Witnesses say the frog sat in the winner's circle for fifty minutes, then turned into a damp half-elf woman holding a wet hat. Tully filed a protest on the spot. His argument: the winner is a person, and the sign says FROGS.</p>\n\n<p>The party argued she was a frog at the time of the jump. \"Read the rules,\" said the company's bard, Wystan Brae, who allegedly has not read the rules. To settle it, Rookmoss turned into a giant frog again right there at the judging table, and ate Gimble's replacement hat, which he had borrowed from his brother-in-law twenty minutes earlier.</p>\n\n<p>Gimble ruled at sundown. Big Ennis gets the ribbon and the 30 gold. The Muddy Hem Company owes 6 gold for two hats and a pheasant feather, and is barred from the frog contest and, out of caution, the goat show. Rookmoss has no Wild Shape left until morning, so the party allegedly cannot prove anything else today.</p>\n\n<p>The pumpkin weigh-in is tomorrow. Gimble says he will judge it in a helmet. Big Ennis declined to comment but did blink. A pigeon on the pie tent watched the whole thing, and I don't trust it either.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Frog Who Wasn't",
+          "text": "Three years running, the same enormous frog has won a village fair's jumping contest and its 50 gp purse, and nobody has ever seen its owner arrive with it. The contest steward pays the party to find out before tomorrow's final whether the champion is a real giant frog, a shapechanged cheat, or something worse that likes hats."
+        },
+        "npc": {
+          "name": "Mabry Tullock",
+          "role": "Frog Contest Steward",
+          "want": "He wants the contest kept honest so his own bullfrog can finally win the ribbon his father never did.",
+          "secret": "He entered a druid cousin as a frog himself ten years ago and has been terrified of being found out ever since.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Leaping Green",
+          "text": "A roped-off meadow behind the pie tent where the jumping contest is held, marked in chalk lines out to 40 feet. Every chalk line past 20 feet was added in the last three years.",
+          "tavern": false
+        },
+        "rumor": "I heard the champion frog speaks Common when it thinks nobody's listening, and it asked my aunt where she bought her bonnet."
+      },
+      "fiction": true
+    },
+    {
+      "id": "owlbear-cub-future-mount-copper-saddle",
+      "title": "Party Adopts Owlbear Cub as 'Future Mount'; Clinic Visits: 11",
+      "category": "Creature Features",
+      "author": "Brother Wendell Tumbleberry",
+      "date": "2026-11-14",
+      "excerpt": "An adventuring party adopted an owlbear cub at a Tanner's Row adoption day to raise as a mount. Nine days on, they've visited my clinic eleven times.",
+      "social": "An adventuring party adopted an owlbear cub at the Tanner's Row adoption day because 'it'll make a great mount once it's grown.' Nine days later they have been to Brother Wendell's clinic eleven times. The cub, Crumpet, has eaten two bedrolls and sat on their paladin. Be honest: would your character still try the saddle?",
+      "content": "<p>Friends, an adventuring party adopted an owlbear cub at the Tanner's Row adoption day on the fifth of the month, on the stated grounds that \"it'll make a great mount once it's grown.\" The cub is one of the <a href=\"/a/owlbear-cubs-undermaw-chapter-9-visitors\">three found shivering on Undermaw Level Four</a> last month. The party, the Copper Saddle Company, has been in my clinic eleven times in the nine days since.</p>\n\n<p>The adoption stall sat between the pumpkin judging and the pie tent under a hand-lettered sign that read GOOD HOMES ONLY. Two cubs went to a sheep farmer from Gorsewick who owns a stone barn and more patience than I do. The third went to the Copper Saddles, a party of four. Their fighter, Tamsin Burrowhill, signed the form. Under \"reason for adoption\" she wrote one word: \"transport.\" They named the cub Crumpet.</p>\n\n<p>Here is my clinic log, lightly trimmed. Day one, the wizard came in with a nipped thumb and a chewed bootlace. Day three, their paladin tried a saddle; Crumpet sat on him, and he left with two bruised ribs and a look of deep betrayal. Day five, the rogue was hugged. I want to be clear that an owlbear hug, even a small one, is a medical event. Day seven, Crumpet ate both bedrolls, the tent, and Tamsin's left boot, which she was wearing at the time. The foot is fine. The boot is in Crumpet.</p>\n\n<p>Now the useful part. The old herbals say an owlbear reaches full size in two summers and \"bideth no bridle.\" A study out of Silverymoon followed forty-one stable-raised owlbears and found that three of them ever accepted a saddle, and all three used the rider mainly as a way to reach the top shelf of the pantry. A grown owlbear weighs about as much as a cart of turnips. It is a bear with a beak and the opinions of an owl, friends, and it does not want you on its back.</p>\n\n<p>Tamsin tells me the party is \"fully committed\" and has ordered a bigger saddle, since Crumpet already outgrew the first one, which was a wagon cover. The Shieldwall Mutual Assurance Society has declined their claim. A Shieldwall Mutual adjuster told me injuries from a pet you have named count as your own fault, and that a pet you have named Crumpet counts double.</p>\n\n<p>If you take home an owlbear cub, please feed it goat milk, give it a barn, let it sleep, and plan on becoming its furniture. The Gorsewick farmer reports her two are napping in the hayloft and have eaten only one fence. My friend Nyx Spindlecoil asked whether a harness charm could steer one. Go outside, Nyx, and meet Crumpet. Tonight I recommend roasted pumpkin soup, which Crumpet has already tried to eat through the pot.</p>\n\n<p><em>Rest well, friends. — Brother Wendell</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Mount That Wasn't",
+          "text": "A party of would-be riders raised an owlbear cub to carry them, and the grown owlbear has broken out of their rented barn and moved into the town granary. The miller will pay to have it moved without harm before the harvest rots, and the original owners want it back, saddle and all."
+        },
+        "npc": {
+          "name": "Hesper Wollencott",
+          "role": "Tanner's Row adoption-day stall keeper",
+          "want": "She wants every creature she placed checked on, and the granary owlbear returned to the wild rather than to its owners.",
+          "secret": "She knew the party meant to ride it and signed the form anyway, because no one else had bid on the loudest cub.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Hollow Granary",
+          "text": "A stone granary at the edge of the Tanner's Row stables whose doors now bulge outward. Grain trickles from cracks at owlbear height, and a chewed saddle hangs from the weathervane.",
+          "tavern": false
+        },
+        "rumor": "They say the party that raised it can't ride it, but if you feed it pumpkin it'll carry you anywhere, as long as anywhere is the pantry."
+      },
+      "fiction": true
     }
   ]
 }
