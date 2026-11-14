@@ -11,7 +11,10 @@
        langs, tele, cr: 'auto' | an SRD CR, dpr/atk/dc: numbers that replace the estimate's
        own reading of the actions (null = read them),
        tr, ac2, ba, re, le: features, legN (legendary actions a round),
-       book: its page in the 2014 Monster Manual (0 = none; book-monsters.js) }
+       book: its page in the 2014 Monster Manual (0 = none; book-monsters.js),
+       style: '2014' | '2024', the stat block's layout and wording (L1T T4): 2024 writes
+       "Melee Attack Roll: +5, reach 5 ft." attacks, the 2024 property labels, and an `init`, so
+       toolbox-statblock.js draws it in the 2024 layout }
    A book monster with no features of its own has a short block: the DM's numbers and the page.
    A feature is { name, text } or an attack { name, text, atk: { kind, abil, reach, range,
    target, dice, type, dice2, type2 } } whose line is written from the current scores.
@@ -50,6 +53,7 @@ const HB_SENSES = [['blind', 'blindsight'], ['dark', 'darkvision'], ['tremor', '
 const HB_SECTIONS = [['tr', 'Traits'], ['ac2', 'Actions'], ['ba', 'Bonus Actions'], ['re', 'Reactions'], ['le', 'Legendary Actions']];
 const HB_DAMAGE = ['acid', 'bludgeoning', 'cold', 'fire', 'force', 'lightning', 'necrotic', 'piercing', 'poison', 'psychic', 'radiant', 'slashing', 'thunder'];
 // kind: [label in the line, melee?, ranged?, spell?]
+const MM_CONDS_2024 = ['blinded', 'charmed', 'deafened', 'exhaustion', 'frightened', 'grappled', 'incapacitated', 'invisible', 'paralyzed', 'petrified', 'poisoned', 'prone', 'restrained', 'stunned', 'unconscious'];
 const HB_ATTACKS = {
     mw: ['Melee Weapon Attack', true, false, false],
     rw: ['Ranged Weapon Attack', false, true, false],
@@ -159,7 +163,7 @@ const HB_EMPTY = {
     ab: [10, 10, 10, 10, 10, 10], saves: [false, false, false, false, false, false], skills: {},
     vuln: '', resist: '', immune: '', condImm: '', senses: { blind: 0, blindBeyond: false, dark: 0, tremor: 0, truesight: 0 },
     langs: '', tele: 0, cr: 'auto', dpr: null, atk: null, dc: null,
-    tr: [], ac2: [], ba: [], re: [], le: [], legN: 3, book: 0
+    tr: [], ac2: [], ba: [], re: [], le: [], legN: 3, book: 0, style: '2014'
 };
 
 function hbBlank() {
@@ -229,7 +233,8 @@ function hbClean(raw) {
         dc: hbOpt(raw.dc, 0, 40),
         ...Object.fromEntries(HB_SECTIONS.map(([k]) => [k, hbCleanFeats(raw[k])])),
         legN: hbInt(raw.legN, 1, 5, 3),
-        book: hbInt(raw.book, 0, 999, 0)
+        book: hbInt(raw.book, 0, 999, 0),
+        style: raw.style === '2024' ? '2024' : '2014'
     };
 }
 
@@ -251,10 +256,22 @@ function hbAtkAbil(mon, a) {
     return a.abil === -1 ? (mon.ab[1] > mon.ab[0] ? 1 : 0) : a.abil;
 }
 
+// kind -> the 2024 label (weapon and spell attacks read the same).
+const HB_ATTACKS_2024 = { mw: 'Melee Attack Roll', ms: 'Melee Attack Roll', rw: 'Ranged Attack Roll', rs: 'Ranged Attack Roll', mrw: 'Melee or Ranged Attack Roll' };
+const hbCapWords = t => String(t).replace(/\b[a-z]/g, c => c.toUpperCase());
+
 // An attack's line, written from the monster's current scores.
 function hbAttackText(mon, f, pb) {
     const a = f.atk;
     const [label, melee, ranged, spell] = HB_ATTACKS[a.kind];
+    if (mon.style === '2024') {
+        const mod = hbMod(mon.ab[hbAtkAbil(mon, a)]);
+        const reach = [melee && `reach ${a.reach} ft.`, ranged && `range ${a.range || '30'} ft.`].filter(Boolean).join(' or ');
+        const d1 = hbDamage(hbDice(a.dice) || { n: 1, d: 6, k: 0 }, spell ? 0 : mod);
+        const d2 = a.dice2 && hbDice(a.dice2) ? hbDamage(hbDice(a.dice2), 0) : null;
+        const extra = f.text ? ` ${hbTokens(mon, f.text, pb)}` : '';
+        return `${HB_ATTACKS_2024[a.kind]}: ${hbSigned(mod + pb).replace('−', '-')}, ${reach} Hit: ${d1.text} ${hbCapWords(a.type)} damage${d2 ? ` plus ${d2.text}${a.type2 ? ` ${hbCapWords(a.type2)}` : ''} damage` : ''}.${extra}`;
+    }
     const mod = hbMod(mon.ab[hbAtkAbil(mon, a)]);
     const reach = [melee && `reach ${a.reach} ft.`, ranged && `range ${a.range || '30'} ft.`].filter(Boolean).join(' or ');
     const d1 = hbDamage(hbDice(a.dice) || { n: 1, d: 6, k: 0 }, spell ? 0 : mod);
@@ -296,6 +313,7 @@ function hbSpeedLine(mon) {
 }
 
 function hbProps(mon, pb) {
+    if (mon.style === '2024') return hbProps2024(mon, pb);
     const saves = HB_ABILS.map((_, i) => i).filter(i => mon.saves[i]).map(i => `${HB_ABIL_NAMES[i]} ${hbSigned(hbSaveBonus(mon, i, pb)).replace('−', '-')}`);
     const skills = Object.keys(HB_SKILLS).filter(k => mon.skills[k]).map(k => `${HB_SKILLS[k][0]} ${hbSigned(hbSkillBonus(mon, k, pb)).replace('−', '-')}`);
     const senses = HB_SENSES.filter(([k]) => mon.senses[k]).map(([k, label]) => `${label} ${mon.senses[k]} ft.${k === 'blind' && mon.senses.blindBeyond ? ' (blind beyond this radius)' : ''}`);
@@ -309,6 +327,25 @@ function hbProps(mon, pb) {
         mon.immune && ['Damage Immunities', mon.immune],
         mon.condImm && ['Condition Immunities', mon.condImm],
         ['Senses', senses.join(', ')],
+        ['Languages', langs]
+    ].filter(Boolean);
+}
+
+// The 2024 lines: Immunities holds damage and conditions ("Poison; Poisoned"), senses end in
+// "; Passive Perception 12", and labels and senses are capitalized.
+function hbProps2024(mon, pb) {
+    const saves = HB_ABILS.map((_, i) => i).filter(i => mon.saves[i]).map(i => `${HB_ABIL_NAMES[i]} ${hbSigned(hbSaveBonus(mon, i, pb)).replace('−', '-')}`);
+    const skills = Object.keys(HB_SKILLS).filter(k => mon.skills[k]).map(k => `${HB_SKILLS[k][0]} ${hbSigned(hbSkillBonus(mon, k, pb)).replace('−', '-')}`);
+    const senses = HB_SENSES.filter(([k]) => mon.senses[k]).map(([k, label]) => `${hbCapWords(label)} ${mon.senses[k]} ft.${k === 'blind' && mon.senses.blindBeyond ? ' (blind beyond this radius)' : ''}`);
+    const immune = [mon.immune && hbCapWords(mon.immune), mon.condImm && hbCapWords(mon.condImm)].filter(Boolean).join('; ');
+    const langs = [mon.langs, mon.tele && `telepathy ${mon.tele} ft.`].filter(Boolean).join('; ') || 'None';
+    return [
+        saves.length && ['Saving Throws', saves.join(', ')],
+        skills.length && ['Skills', skills.join(', ')],
+        mon.vuln && ['Vulnerabilities', hbCapWords(mon.vuln)],
+        mon.resist && ['Resistances', hbCapWords(mon.resist)],
+        immune && ['Immunities', immune],
+        ['Senses', [senses.join(', '), `Passive Perception ${hbPassive(mon, pb)}`].filter(Boolean).join('; ')],
         ['Languages', langs]
     ].filter(Boolean);
 }
@@ -336,7 +373,11 @@ function hbBlock(mon, cr = hbCr(mon)) {
         b.book = `Monster Manual (2014), page ${mon.book}`;
         b.init = hbMod(mon.ab[1]);
     }
-    if (b.le) {
+    if (mon.style === '2024' && !b.book) b.init = hbMod(mon.ab[1]);
+    if (b.le && mon.style === '2024') {
+        const n = hbShortName(mon);
+        b.li = `Legendary Action Uses: ${mon.legN}. Immediately after another creature's turn, ${n} can expend a use to take one of the following actions. ${n.charAt(0).toUpperCase() + n.slice(1)} regains all expended uses at the start of each of its turns.`;
+    } else if (b.le) {
         const n = hbShortName(mon);
         b.li = `${n.charAt(0).toUpperCase() + n.slice(1)} can take ${mon.legN} legendary action${mon.legN === 1 ? '' : 's'}, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. ${n.charAt(0).toUpperCase() + n.slice(1)} regains spent legendary actions at the start of its turn.`;
     }
@@ -528,14 +569,18 @@ function hbEstimateCr(mon) {
 }
 
 // ── From an SRD monster ───────────────────────────────────
-// The SRD stat block of monsters-data.js id `id` as a homebrew monster (needs MONSTER_BLOCKS).
+// The SRD stat block of monsters-data.js id `id` as a homebrew monster (needs MONSTER_BLOCKS, or
+// a 2024 row's own block from srd52.js, which starts it in the 2024 style).
 function hbFromSrd(id) {
-    const b = MONSTER_BLOCKS[id], row = MONSTER_BY_ID[id];
+    const row = MONSTER_BY_ID[id];
+    const b = row && row.block ? row.block : typeof MONSTER_BLOCKS !== 'undefined' ? MONSTER_BLOCKS[id] : null;
     if (!b || !row) return null;
     const mon = hbBlank();
+    const v24 = b.init !== undefined;
+    if (v24) mon.style = '2024';
     mon.name = row.name;
     mon.size = row.size;
-    const t = b.t.match(/^\w+ (.+?)(?: \(([^)]*)\))?, (.*)$/);
+    const t = b.t.match(/^\w+(?: or \w+)? (.+?)(?: \(([^)]*)\))?, (.*)$/);
     if (t) { mon.type = t[1]; mon.tags = t[2] || ''; mon.align = t[3]; }
     const ac = b.ac.match(/^(\d+)(?: \((.*)\))?/);
     if (ac) { mon.ac = Number(ac[1]); mon.acNote = ac[2] || ''; }
@@ -550,8 +595,8 @@ function hbFromSrd(id) {
     }
     mon.speed = { walk: 0, burrow: 0, climb: 0, fly: 0, swim: 0, hover: /\(hover\)/.test(b.sp) };
     b.sp.split(',').forEach((part, i) => {
-        const m = part.trim().match(/^(?:(burrow|climb|fly|swim) )?(\d+) ft\./);
-        if (m) mon.speed[m[1] || (i === 0 ? 'walk' : '')] = Number(m[2]);
+        const m = part.trim().match(/^(?:(burrow|climb|fly|swim) )?(\d+) ft\./i);
+        if (m) mon.speed[m[1] ? m[1].toLowerCase() : (i === 0 ? 'walk' : '')] = Number(m[2]);
     });
     delete mon.speed[''];
     const crName = b.cr.split(' ')[0];
@@ -569,19 +614,27 @@ function hbFromSrd(id) {
         else if (k === 'Damage Resistances') mon.resist = v;
         else if (k === 'Damage Immunities') mon.immune = v;
         else if (k === 'Condition Immunities') mon.condImm = v;
+        else if (k === 'Vulnerabilities') mon.vuln = v.toLowerCase();
+        else if (k === 'Resistances') mon.resist = v.toLowerCase();
+        else if (k === 'Immunities') {
+            // 2024: "Fire, Poison; Charmed, Poisoned", or just one of the two.
+            const parts = v.split(';').map(x => x.trim().toLowerCase());
+            const isCond = x => x.split(/,\s*/).every(w => MM_CONDS_2024.includes(w));
+            parts.forEach(x => { if (isCond(x)) mon.condImm = x; else mon.immune = x; });
+        }
         else if (k === 'Senses') HB_SENSES.forEach(([key, label]) => {
-            const m = v.match(new RegExp(`${label} (\\d+) ft\\.( \\(blind beyond)?`));
+            const m = v.match(new RegExp(`${label} (\\d+) ft\\.( \\(blind beyond)?`, 'i'));
             if (m) { mon.senses[key] = Number(m[1]); if (key === 'blind' && m[2]) mon.senses.blindBeyond = true; }
         });
         else if (k === 'Languages') {
-            const tele = v.match(/,? ?telepathy (\d+) ft\./);
+            const tele = v.match(/[,;]? ?telepathy (\d+) ft\./i);
             if (tele) mon.tele = Number(tele[1]);
-            mon.langs = v.replace(/,? ?telepathy \d+ ft\./, '').trim().replace(/^—$/, '');
+            mon.langs = v.replace(/[,;]? ?telepathy \d+ ft\./i, '').trim().replace(/^(?:—|None)$/, '');
         }
     });
     HB_SECTIONS.forEach(([k]) => { mon[k] = (b[k] || []).slice(0, HB_LIMITS.feats).map(([name, text]) => ({ name, text })); });
-    const legN = b.li && b.li.match(/can take (\d+) legendary/);
-    if (legN) mon.legN = Math.min(5, Number(legN[1]));
+    const legN = b.li && b.li.match(/can take (\d+) legendary|Legendary Action Uses: (\d+)/);
+    if (legN) mon.legN = Math.min(5, Number(legN[1] || legN[2]));
     return hbClean(mon);
 }
 

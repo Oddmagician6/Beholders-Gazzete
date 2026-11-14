@@ -15,6 +15,9 @@
      saved setting (setUrlParams in rng.js adds it to every address the page writes while in 2024).
    - rulesVersion(): the version this page shows. rulesSet(v): save and switch. rulesUse(v): switch
      this page only (a saved character's own version). rulesRename(kind, name): a 5.1 name's 5.2 one.
+   - rulesOldId(id): the SRD 5.1 monster id a 2024 one stands for (its own page is the 5.1 one), or null.
+   - Habitats (encounter-engine.js ENC_MONSTER_HABITATS) are keyed by 5.1 ids; the 2024 ids get
+     their 5.1 twins' habitats, and the 18 monsters new in 5.2 borrow a kin's (RULES_HAB_KIN).
    - srd52On(): 5.2 rows are in the lists (2024, or 2014 with the additions). srd52Set(on): the
      additions. srd52OnChange(fn): runs after any change (also from another tab), fn(srd52On()).
    - srd52Monsters(): the additions' monster rows in 2014 (in 2024 they're already in MONSTERS).
@@ -73,13 +76,45 @@ function rulesRename(kind, name) {
 }
 
 // ---------- the data swap ----------
+// Each list is kept the first time it's seen, so one that loads late (spells-data.js, which the
+// stat blocks fetch on demand) is still kept as 5.1 before the swap touches it.
 function rulesSnapshot() {
-    if (RULES51.done) return;
-    RULES51.done = true;
-    if (typeof SPELLS_DATA !== 'undefined') RULES51.spells = SPELLS_DATA.filter(s => !s.hb && !s.v52);
-    if (typeof MAGIC_ITEM_TEXT !== 'undefined') RULES51.items = Object.fromEntries(Object.entries(MAGIC_ITEM_TEXT).filter(([n, v]) => SRD52_ITEMS[n] !== v));
-    if (typeof MONSTERS !== 'undefined') RULES51.monsters = MONSTERS.filter(m => !m.v52);
-    if (typeof MONSTER_BY_ID !== 'undefined') RULES51.byId = Object.fromEntries(Object.entries(MONSTER_BY_ID).filter(([, m]) => !m.v52));
+    if (!RULES51.spells && typeof SPELLS_DATA !== 'undefined') RULES51.spells = SPELLS_DATA.filter(s => !s.hb && !s.v52);
+    if (!RULES51.items && typeof MAGIC_ITEM_TEXT !== 'undefined') {
+        const full = typeof SRD52_FULL !== 'undefined' ? SRD52_FULL.items : {};
+        RULES51.items = Object.fromEntries(Object.entries(MAGIC_ITEM_TEXT).filter(([n, v]) => SRD52_ITEMS[n] !== v && full[n] !== v));
+    }
+    if (!RULES51.monsters && typeof MONSTERS !== 'undefined') RULES51.monsters = MONSTERS.filter(m => !m.v52);
+    if (!RULES51.byId && typeof MONSTER_BY_ID !== 'undefined') RULES51.byId = Object.fromEntries(Object.entries(MONSTER_BY_ID).filter(([, m]) => !m.v52));
+}
+
+// The monsters new in SRD 5.2 -> a 5.1 kin whose habitats they share.
+const RULES_HAB_KIN = {
+    'bugbear-stalker': 'bugbear', 'swarm-of-crawling-claws': 'zombie', 'goblin-minion': 'goblin', 'goblin-boss': 'goblin',
+    'guard-captain': 'guard', 'hobgoblin-captain': 'hobgoblin', incubus: 'succubus-incubus', pirate: 'bandit',
+    'pirate-captain': 'bandit-captain', 'sphinx-of-wonder': 'gynosphinx', 'tough-boss': 'thug', 'troll-limb': 'troll',
+    'vampire-familiar': 'vampire-spawn', allosaurus: 'tyrannosaurus-rex', ankylosaurus: 'triceratops', archelon: 'plesiosaurus',
+    hippopotamus: 'crocodile', pteranodon: 'triceratops'
+};
+
+function rulesHabitats() {
+    if (typeof ENC_MONSTER_HABITATS === 'undefined' || rulesHabitats.done) return;
+    const H = ENC_MONSTER_HABITATS;
+    const add = (id, from) => {
+        (H[from] || []).forEach(h => { if (!(H[id] = H[id] || []).includes(h)) H[id].push(h); });
+    };
+    if (typeof SRD52_FULL !== 'undefined') {
+        Object.entries(SRD52_FULL.renames.monsters).forEach(([old, id]) => add(id, old));
+        rulesHabitats.done = true;
+    }
+    Object.entries(RULES_HAB_KIN).forEach(([id, kin]) => { if (!H[id]) add(id, kin); });
+}
+
+function rulesOldId(id) {
+    if (RULES51.byId && RULES51.byId[id]) return id;
+    if (typeof SRD52_FULL === 'undefined') return null;
+    return Object.keys(SRD52_FULL.renames.monsters).find(old => SRD52_FULL.renames.monsters[old] === id && !/-(?:human|hybrid|bat|mist|bear|boar|rat|tiger|wolf)$/.test(old))
+        || Object.keys(SRD52_FULL.renames.monsters).find(old => SRD52_FULL.renames.monsters[old] === id) || null;
 }
 
 function rulesSwap(v) {
@@ -130,6 +165,7 @@ function rulesSwap(v) {
     }
     rulesShown = full ? '2024' : '2014';
     srd52Added = adds;
+    rulesHabitats();
     return true;
 }
 

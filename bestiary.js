@@ -9,7 +9,8 @@
    ?tab=init&add=<id>.<n> (joins the saved fight; see applyInitAdds in toolbox-table.js).
    Each stat block also opens in the Monster Maker (monster-maker.html?from=<id>) to tweak.
    With the SRD 5.2 additions on (srd52.js), their 17 monsters join the list, tagged 📗, with no
-   page of their own and no Monster Maker button.
+   page of their own. In 2024 rules mode (srd52.js) MONSTERS holds the 330 SRD 5.2 monsters, drawn
+   in the 2024 layout; a monster's own page is its SRD 5.1 twin's (rulesOldId), labelled 2014.
    ============================================ */
 
 const PICKS_KEY = 'gazette-bestiary-picks';
@@ -23,7 +24,6 @@ const BST_SORTS = {
     hp: (a, b) => b.hp - a.hp || a.name.localeCompare(b.name),
     ac: (a, b) => b.ac - a.ac || a.name.localeCompare(b.name)
 };
-const BST_CRS = [...new Set(MONSTERS.map(m => m.cr))].sort((a, b) => crValue(a) - crValue(b));
 
 let open = new Set();   // ids whose stat block is open
 let picks = [];         // [{ id, count }]
@@ -49,13 +49,23 @@ function habsOf(m) {
 }
 
 // ── Filters ───────────────────────────────────────────────
+// The CR and type options come from the list shown (2014 and 2024 differ a little), keeping
+// the first "any" option and whatever was picked.
+function fillListFilters() {
+    const crs = [...new Set(allMonsters().map(m => m.cr))].sort((a, b) => crValue(a) - crValue(b));
+    const fill = (id, values, label) => {
+        const el = document.getElementById(id), keep = el.value;
+        [...el.options].slice(1).forEach(o => o.remove());
+        el.insertAdjacentHTML('beforeend', values.map(v => `<option value="${v}">${label(v)}</option>`).join(''));
+        if ([...el.options].some(o => o.value === keep)) el.value = keep;
+    };
+    fill('bst-cr-min', crs, c => `CR ${c}`);
+    fill('bst-cr-max', crs, c => `CR ${c}`);
+    fill('bst-type', [...new Set(allMonsters().map(m => m.type))].sort(), cap);
+}
+
 function setupFilters() {
-    const crOpts = BST_CRS.map(c => `<option value="${c}">CR ${c}</option>`).join('');
-    document.getElementById('bst-cr-min').insertAdjacentHTML('beforeend', crOpts);
-    document.getElementById('bst-cr-max').insertAdjacentHTML('beforeend', crOpts);
-    const types = [...new Set(MONSTERS.map(m => m.type))].sort();
-    document.getElementById('bst-type').insertAdjacentHTML('beforeend',
-        types.map(t => `<option value="${t}">${cap(t)}</option>`).join(''));
+    fillListFilters();
     document.getElementById('bst-size').insertAdjacentHTML('beforeend',
         Object.entries(BST_SIZES).map(([k, v]) => `<option value="${k}">${v}</option>`).join(''));
     document.getElementById('bst-hab').insertAdjacentHTML('beforeend',
@@ -113,13 +123,24 @@ function blockHtml(m) {
         ${body}
         <div class="bst-acts">
             <button type="button" class="btn btn-gold" data-act="pick">➕ Add to Encounter List</button>
-            <a class="btn" href="toolbox?${paramsQuery({ tab: 'init', add: `${m.id}.1` })}">🎲 Add to Initiative</a>
-            ${m.v52 ? '' : `<a class="btn" href="monster-maker?${paramsQuery({ from: m.id })}">🐲 Tweak in the Monster Maker</a>
-            <a class="btn" href="monster/${m.id}">📄 Its Own Page</a>`}
+            <a class="btn" href="toolbox?${paramsQuery(bstLinkParams({ tab: 'init', add: `${m.id}.1` }))}">🎲 Add to Initiative</a>
+            <a class="btn" href="monster-maker?${paramsQuery(bstLinkParams({ from: m.id }))}">🐲 Tweak in the Monster Maker</a>
+            ${ownPageLink(m)}
             <button type="button" class="btn" data-act="copy">📋 Copy Stat Block</button>
             <button type="button" class="btn" data-act="link">🔗 Copy Link</button>
         </div>
     </div>`;
+}
+
+// Its page in the compendium: always the SRD 5.1 text (L1T T0b), so a 2024 monster links its 5.1 twin.
+function ownPageLink(m) {
+    if (!m.v52) return `<a class="btn" href="monster/${m.id}">📄 Its Own Page</a>`;
+    const old = typeof rulesOldId === 'function' && rulesVersion() === '2024' ? rulesOldId(m.id) : null;
+    return old ? `<a class="btn" href="monster/${old}" title="The SRD 5.1 (2014) stat block">📄 2014 Page</a>` : '';
+}
+
+function bstLinkParams(params) {
+    return typeof rulesLinkParams === 'function' ? rulesLinkParams(params) : params;
 }
 
 function render() {
@@ -232,8 +253,8 @@ function renderPicks() {
             <button type="button" data-act="drop" aria-label="Remove ${esc(MONSTER_BY_ID[p.id].name)}">✕</button>
         </li>`).join('');
     const ms = picks.map(p => `${p.id}.${p.count}`);
-    document.getElementById('bst-to-enc').href = `toolbox?${paramsQuery({ tab: 'enc', m: ms })}`;
-    document.getElementById('bst-to-init').href = `toolbox?${paramsQuery({ tab: 'init', add: ms })}`;
+    document.getElementById('bst-to-enc').href = `toolbox?${paramsQuery(bstLinkParams({ tab: 'enc', m: ms }))}`;
+    document.getElementById('bst-to-init').href = `toolbox?${paramsQuery(bstLinkParams({ tab: 'init', add: ms }))}`;
 }
 
 function onPicksClick(e) {
@@ -278,6 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('bst-v52').innerHTML = srd52Toggle();
         srd52OnChange(() => {
             open = new Set([...open].filter(id => Object.hasOwn(MONSTER_BY_ID, id)));
+            fillListFilters();
             loadPicks();
             renderPicks();
             render();

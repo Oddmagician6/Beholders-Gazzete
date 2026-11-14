@@ -4,6 +4,10 @@
    monster-statblocks.js. That file and the spell text (spells-data.js) load the first
    time a stat block is needed: call loadMonsterBlocks(), then draw again.
    A homebrew monster (homebrew.js) carries its own block in m.block, in the same shape.
+   2024 blocks (ROADMAP L1T T4): a block with an `init` (SRD 5.2 rows from srd52.js, or a homebrew
+   monster set to the 2024 style) is drawn in the 2024 layout: AC and Initiative up top, each
+   ability's save beside it, "CR 5 (XP 1,800; PB +3)", and its spell lists split into lines with
+   spell buttons.
    Used by the Encounter tab (toolbox-encounter.js) and the Initiative tab
    (toolbox-table.js). Spell buttons open cards through spell-detail.js.
    On a Pathfinder page (ENC_PF2E) the blocks are Pathfinder's instead: pf2e-creature-blocks.js,
@@ -44,7 +48,10 @@ function loadMonsterBlocks() {
         ] : [
             blocksReady() ? null : loadScript('monster-statblocks.js'),
             typeof SPELLS_DATA !== 'undefined' ? null : loadScript('spells-data.js')
-        ]).catch(err => { sbLoading = null; throw err; });
+        ]).then(() => {
+            // spells-data.js came late: in 2024 mode, swap its 5.2 text in (srd52.js).
+            if (typeof srd52Register === 'function') srd52Register();
+        }).catch(err => { sbLoading = null; throw err; });
     }
     return sbLoading;
 }
@@ -58,8 +65,8 @@ function sbMod(score) {
 function sbInline(text) {
     return esc(text)
         .replace(/\[\[(.+?)\]\]/g, (_, n) => `<button type="button" class="sb-spell" data-spell="${n}" aria-expanded="false">${n}</button>`)
-        .replace(/^((?:Melee or Ranged|Melee|Ranged) (?:Weapon|Spell) Attack:)/, '<em>$1</em>')
-        .replace(/ (Hit:)/g, ' <em>$1</em>');
+        .replace(/^((?:Melee or Ranged|Melee|Ranged) (?:(?:Weapon|Spell) Attack|Attack Roll):|(?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) Saving Throw:|Trigger:)/, '<em>$1</em>')
+        .replace(/ (Failure or Success:|Hit or Miss:|Hit:|Failure:|Success:|Response:|(?:First|Second) Failure:)/g, ' <em>$1</em>');
 }
 
 // A feature: the bold name and first paragraph, more paragraphs ("Fire Breath. ..." run-ins
@@ -85,6 +92,107 @@ function sbFeatureHtml([name, text]) {
     return `<div class="sb-feature">${out.join('')}</div>`;
 }
 
+/* ---------- 2024 (SRD 5.2) stat blocks ---------- */
+const SB_ABIL_SHORT = ['Str', 'Dex', 'Con', 'Int', 'Wis', 'Cha'];
+
+function sb2024(b) {
+    return !!b && b.init !== undefined && b.init !== null && !b.book;
+}
+
+// Each ability's save: the Saving Throws line's bonus, else its modifier. [bonus, proficient]
+function sbSaves(b) {
+    const line = ((b.pr || []).find(([k]) => k === 'Saving Throws') || [])[1] || '';
+    return b.ab.map((v, i) => {
+        const m = line.match(new RegExp(`${SB_ABIL_SHORT[i]} ([+−-]\\d+)`));
+        return m ? [Number(m[1].replace('−', '-')), true] : [Math.floor((v - 10) / 2), false];
+    });
+}
+
+// "10 (5,900 XP)" -> "10 (XP 5,900; PB +4)"
+function sbCr2024(b) {
+    const m = String(b.cr).match(/^(\S+) \((.+?) XP(.*)\)$/);
+    return m ? `${m[1]} (XP ${m[2]}${m[3]}; PB +${b.pb})` : `${b.cr} (PB +${b.pb})`;
+}
+
+function sbInit(b) {
+    return `${b.init >= 0 ? '+' : '−'}${Math.abs(b.init)} (${10 + b.init})`;
+}
+
+// A list of spells ("Detect Magic, Fireball (level 4 version)") with [[ ]] round the ones the
+// spell list knows, so they get buttons.
+function sbMarkSpells(list) {
+    if (typeof spellByName !== 'function') return list;
+    const names = [];
+    let depth = 0, cur = '';
+    for (const ch of list) {
+        depth += ch === '(' ? 1 : ch === ')' ? -1 : 0;
+        if (ch === ',' && !depth) { names.push(cur.trim()); cur = ''; } else cur += ch;
+    }
+    names.push(cur.trim());
+    return names.map(n => {
+        const bare = spellBareName(n);
+        return bare && spellByName(bare) ? `[[${bare}]]${n.slice(bare.length)}` : n;
+    }).join(', ');
+}
+
+// A 2024 Spellcasting feature runs its lists together ("... DC 14): At Will: A, B 2/Day Each: C");
+// this splits them into "- At Will: ..." lines, which sbFeatureHtml draws as a spell list.
+const SB_USES_SPLIT = /(?:^|\s)(At Will|\d+\/Day(?: Each)?): /;
+function sbSpellLines(text) {
+    if (text.includes('[[') || !SB_USES_SPLIT.test(text)) return text;
+    const parts = text.split(new RegExp(SB_USES_SPLIT.source));
+    let out = parts[0].trim();
+    for (let i = 1; i < parts.length; i += 2) out += `\n- ${parts[i]}: ${sbMarkSpells((parts[i + 1] || '').trim())}`;
+    return out;
+}
+
+function sbFeatures2024(list) {
+    return list.map(([name, text]) => [name, sbSpellLines(text)]);
+}
+
+// The spells a block's features name (for the Spellbook link).
+function sbBlockSpells(b, sections) {
+    return [...new Set(sections.flatMap(k => (b[k] || []).flatMap(([, t]) => [...t.matchAll(/\[\[(.+?)\]\]/g)].map(x => x[1]))))];
+}
+
+function sb2024Html(m, b) {
+    const sec = Object.fromEntries(SB_SECTIONS.filter(([k]) => b[k]).map(([k]) => [k, sbFeatures2024(b[k])]));
+    const spells = sbBlockSpells(sec, Object.keys(sec));
+    const book = spells.length && `spellbook?${paramsQuery({ spells: spells.map(spellSlug).join('.'), list: `${m.name} spells`.slice(0, 40) })}`;
+    const saves = sbSaves(b);
+    return `
+        <p class="sb-type">${esc(b.t)}</p>
+        <div class="sb-core">
+            <span><strong>AC</strong> ${esc(b.ac)}</span>
+            <span><strong>Initiative</strong> ${sbInit(b)}</span>
+            <span><strong>HP</strong> ${esc(b.hp)}</span>
+            <span><strong>Speed</strong> ${esc(b.sp)}</span>
+        </div>
+        <div class="sb-abil sb-abil-2024">${b.ab.map((v, i) => `<div><b>${SB_ABILITIES[i]}</b> ${v} (${sbMod(v)})<br><small title="Saving throw${saves[i][1] ? ' (proficient)' : ''}">save ${saves[i][1] ? `<strong>${sbSigned(saves[i][0])}</strong>` : sbSigned(saves[i][0])}</small></div>`).join('')}</div>
+        <div class="sb-props">
+            ${b.pr.filter(([k]) => k !== 'Saving Throws').map(([k, v]) => `<p><strong>${esc(k)}</strong> ${esc(v)}</p>`).join('')}
+            <p><strong>CR</strong> ${esc(sbCr2024(b))}</p>
+        </div>
+        ${SB_SECTIONS.filter(([k]) => sec[k]).map(([k, title]) => `<div class="sb-section"><h4>${title}</h4>
+            ${k === 'le' && b.li ? `<p class="sb-feat">${esc(b.li)}</p>` : ''}${sec[k].map(sbFeatureHtml).join('')}</div>`).join('')}
+        ${book ? `<a class="sb-book" href="${esc(book)}">📖 Open these spells in the Spellbook</a>` : ''}`;
+}
+
+function sb2024Text(m, b) {
+    const saves = sbSaves(b);
+    const lines = [m.name.toUpperCase(), b.t,
+        `AC ${b.ac} | Initiative ${sbInit(b)} | HP ${b.hp} | Speed ${b.sp}`,
+        b.ab.map((v, i) => `${SB_ABILITIES[i]} ${v} (${sbMod(v)}, save ${sbSigned(saves[i][0])})`).join(' | '),
+        ...b.pr.filter(([k]) => k !== 'Saving Throws').map(([k, v]) => `${k} ${v}`),
+        `CR ${sbCr2024(b)}`];
+    SB_SECTIONS.filter(([k]) => b[k]).forEach(([k, title]) => {
+        lines.push(title.toUpperCase());
+        if (k === 'le' && b.li) lines.push(b.li);
+        b[k].forEach(([name, text]) => lines.push(`${name}. ${text.replace(/\[\[(.+?)\]\]/g, '$1').replace(/\n+/g, '\n')}`));
+    });
+    return lines.join('\n');
+}
+
 // The block to draw: a homebrew monster's own, else the SRD one (undefined until loaded).
 function sbBlockOf(m) {
     return m.block || (blocksReady() ? MONSTER_BLOCKS[m.id] : undefined);
@@ -96,7 +204,8 @@ function monsterBlockHtml(m) {
     if (!m.block && !blocksReady()) return '<p class="sb-note">Loading the stat block…</p>';
     const b = sbBlockOf(m);
     if (!b) return '<p class="sb-note">No stat block for this monster.</p>';
-    const spells = [...new Set((b.tr || []).flatMap(([, t]) => [...t.matchAll(/\[\[(.+?)\]\]/g)].map(x => x[1])))];
+    if (sb2024(b)) return sb2024Html(m, b);
+    const spells = sbBlockSpells(b, ['tr', 'ac2', 'ba', 're', 'le']);
     const book = spells.length && `spellbook?${paramsQuery({ spells: spells.map(spellSlug).join('.'), list: `${m.name} spells`.slice(0, 40) })}`;
     if (b.book) return `
         <p class="sb-type">${esc(b.t)}</p>
@@ -129,6 +238,7 @@ function monsterBlockText(m) {
     if (sbPf2e()) return sbPf2eText(m);
     const b = sbBlockOf(m);
     if (!b) return '';
+    if (sb2024(b)) return sb2024Text(m, b);
     if (b.book) return [m.name.toUpperCase(), b.t, `Armor Class ${b.ac} | Hit Points ${b.hp} | Initiative ${b.init >= 0 ? '+' : ''}${b.init}`,
         `Challenge ${b.cr}`, `Full stat block: ${b.book}`].join('\n');
     const lines = [m.name.toUpperCase(), b.t,

@@ -8,7 +8,8 @@
    brought back. 💾 saves to the campaign notebook (notebook.js) as a 'monster' entry, which
    is how the Toolbox's Encounter and Initiative tabs find it (ids 'hb-<entry id>').
    URL (read once, then cleared so a reload keeps your edits):
-     ?from=<SRD monster id>  start from that SRD stat block (the Bestiary's 🐲 button)
+     ?from=<SRD monster id>  start from that SRD stat block (the Bestiary's 🐲 button; with
+                             rules=2024, srd52.js has the 2024 one, which starts in the 2024 style)
      ?nb=<entry id>          open a saved monster from the notebook
      ?mon=<share code>       a monster someone sent (🔗 Copy Link)
    ============================================ */
@@ -53,7 +54,14 @@ const MM_PRESETS = {
     ]
 };
 
-let draft = { mon: hbBlank(), nb: null, dirty: false };
+let draft = { mon: mmBlank(), nb: null, dirty: false };
+
+// A new monster takes the site's rules version as its style (srd52.js).
+function mmBlank() {
+    const mon = hbBlank();
+    if (typeof rulesVersion === 'function') mon.style = rulesVersion();
+    return mon;
+}
 let prev = null;
 let storeTimer = null;
 
@@ -578,7 +586,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('mm-load').addEventListener('click', loadByName);
     document.getElementById('mm-from').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); loadByName(); } });
     document.getElementById('mm-blank').addEventListener('click', e => {
-        const go = () => replaceDraft(hbBlank(), null, '🆕 A blank monster. Name it, then fill in what you need.');
+        const go = () => replaceDraft(mmBlank(), null, '🆕 A blank monster. Name it, then fill in what you need.');
         if (draft.dirty && hasWork(draft.mon)) armed(e.currentTarget, '⚠️ Click again to start over', go);
         else go();
     });
