@@ -265,6 +265,34 @@
       "hashtags": "#SalamanderOven #HeatSubscription #CinderlatchWorks #GrandFeast",
       "publishAt": "2026-11-14T02:00:00Z",
       "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "druid-giant-frog-jumping-contest-judges-hat",
+      "release_tag": "reel-stage-nov14-frog-ig-20261114",
+      "hashtags": "#GiantFrog #WildShape #HarvestFair #MissingHats",
+      "publishAt": "2026-11-14T20:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "owlbear-cub-future-mount-copper-saddle",
+      "release_tag": "reel-stage-nov14-owlbear-ig-20261114",
+      "hashtags": "#OwlbearCub #Crumpet #CopperSaddleCompany #Adventurers",
+      "publishAt": "2026-11-14T22:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "adventuring-party-3000-potatoes-exposure-plumbrook",
+      "release_tag": "reel-stage-nov14-potatoes-ig-20261114",
+      "hashtags": "#PaidInExposure #GrandFeast #LanternOath #PotatoDuty",
+      "publishAt": "2026-11-15T00:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "griffon-air-route-teleportation-circle-hopwell",
+      "release_tag": "reel-stage-nov14-griffon-ig-20261114",
+      "hashtags": "#GriffonRiders #TeleportationCircle #HopwellTransit #PieHeist",
+      "publishAt": "2026-11-15T02:00:00Z",
+      "custom_artwork_confirmed": true
     }
   ]
 }
