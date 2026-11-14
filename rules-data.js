@@ -5,6 +5,10 @@
    SRD_CONDITION_TEXT is also the Initiative tab's condition list (toolbox-table.js),
    so the two always agree. rulesCardHtml() needs no page, so the DM screen (F57)
    can show any card. Lifestyle costs go through formatCoins() (coins.js).
+   2024 rules (ROADMAP L1T T3): where SRD 5.2 changed a rule, the card carries a v2024 block
+   list and the condition list a 2024 twin, again in our own wording. rulesTextVersion() is the
+   page's rules version (srd52.js's rulesVersion(), else 2014), and rulesCardHtml(),
+   srdConditionText(), and srdExhaustionText() follow it. The prerendered Rules page stays 2014.
    ============================================ */
 
 const SRD_CONDITION_TEXT = {
@@ -25,6 +29,46 @@ const SRD_CONDITION_TEXT = {
     Unconscious: ['Incapacitated, can\'t move or speak, and unaware of its surroundings.', 'Drops what it holds and falls prone.', 'Fails Strength and Dexterity saves.', 'Attacks against it have advantage, and a hit from within 5 feet is a critical hit.']
 };
 
+// The same 15 conditions under the 2024 rules (SRD 5.2.1 Rules Glossary), summarized.
+const SRD_CONDITION_TEXT_2024 = {
+    Blinded: SRD_CONDITION_TEXT.Blinded,
+    Charmed: SRD_CONDITION_TEXT.Charmed,
+    Deafened: SRD_CONDITION_TEXT.Deafened,
+    Exhaustion: ['Up to 6 levels; each new dose adds one, and level 6 is death.', 'Every d20 Test takes −2 per level, and Speed drops 5 feet per level. See the Exhaustion card.'],
+    Frightened: SRD_CONDITION_TEXT.Frightened,
+    Grappled: ['Speed 0, and it can\'t go up.', 'Disadvantage on attacks against anyone but the grappler.', 'The grappler can drag or carry it, paying 1 extra foot for each foot moved unless it\'s Tiny or two or more sizes smaller.'],
+    Incapacitated: ['No actions, bonus actions, or reactions, and it can\'t speak.', 'Its concentration breaks.', 'Disadvantage on initiative if it\'s incapacitated when initiative is rolled.'],
+    Invisible: ['Not affected by anything that needs to see its target, unless the source can somehow see it. Its gear is hidden too.', 'Attacks against it have disadvantage and its own attacks have advantage, except against a creature that can see it.', 'Advantage on initiative if it\'s invisible when initiative is rolled.'],
+    Paralyzed: ['Incapacitated; Speed 0, and it can\'t go up.', 'Fails Strength and Dexterity saves.', 'Attacks against it have advantage, and a hit from within 5 feet is a critical hit.'],
+    Petrified: ['Turned to stone (or similar) with its nonmagical gear; weighs ten times as much and stops aging.', 'Incapacitated; Speed 0, and it can\'t go up.', 'Fails Strength and Dexterity saves; attacks against it have advantage.', 'Resistant to all damage, and immune to the poisoned condition.'],
+    Poisoned: SRD_CONDITION_TEXT.Poisoned,
+    Prone: ['Can only crawl, or spend half its Speed to stand up, which ends the condition (it can\'t stand with Speed 0).', 'Its attacks have disadvantage.', 'Attacks against it have advantage from within 5 feet, and disadvantage from farther away.'],
+    Restrained: ['Speed 0, and it can\'t go up.', 'Attacks against it have advantage; its own attacks have disadvantage.', 'Disadvantage on Dexterity saves.'],
+    Stunned: ['Incapacitated, so it can\'t act or speak.', 'Fails Strength and Dexterity saves; attacks against it have advantage.'],
+    Unconscious: ['Incapacitated and prone, and drops what it holds; still prone when it comes to.', 'Speed 0, and unaware of its surroundings.', 'Fails Strength and Dexterity saves.', 'Attacks against it have advantage, and a hit from within 5 feet is a critical hit.']
+};
+
+// 2014: each level's own effect (they stack). 2024 works it out from the level.
+const SRD_EXHAUSTION_2014 = ['', 'Disadvantage on ability checks', 'Speed halved', 'Disadvantage on attack rolls and saving throws', 'Hit point maximum halved', 'Speed reduced to 0', 'Death'];
+
+// The rules version this page's rules text follows: srd52.js decides on 5e pages that load it.
+function rulesTextVersion() {
+    return typeof rulesVersion === 'function' ? rulesVersion() : '2014';
+}
+
+function srdConditionText(v = rulesTextVersion()) {
+    return v === '2024' ? SRD_CONDITION_TEXT_2024 : SRD_CONDITION_TEXT;
+}
+
+// What exhaustion level n (1-6) does to a creature, every level counted, in one line.
+function srdExhaustionText(n, v = rulesTextVersion()) {
+    n = Math.max(0, Math.min(6, Math.floor(Number(n) || 0)));
+    if (!n) return '';
+    if (n === 6) return 'Death.';
+    if (v === '2024') return `−${2 * n} to every d20 Test (checks, attacks, saves); Speed −${5 * n} ft.`;
+    return SRD_EXHAUSTION_2014.slice(1, n + 1).join('; ') + '.';
+}
+
 // Lifestyle costs per day (SRD 5.1 Lifestyle Expenses); null = free.
 const RULES_LIFESTYLES = [
     ['Wretched', null, 'Sleeping rough, with nothing to call your own.'],
@@ -40,7 +84,8 @@ const RULES_LIFESTYLES = [
 const RULES_CARDS = [
     {
         id: 'conditions', icon: '🩸', title: 'Conditions', keys: 'status effect',
-        blocks: [{ defs: Object.entries(SRD_CONDITION_TEXT) }]
+        blocks: [{ defs: Object.entries(SRD_CONDITION_TEXT) }],
+        v2024: [{ defs: Object.entries(SRD_CONDITION_TEXT_2024) }]
     },
     {
         id: 'exhaustion', icon: '😩', title: 'Exhaustion', keys: 'tired fatigue starvation forced march levels',
@@ -58,6 +103,22 @@ const RULES_CARDS = [
                 'A new source of exhaustion raises the level by the amount it says.',
                 'A long rest with food and drink lowers the level by 1.',
                 'All effects end once the level drops below 1.'
+            ] }
+        ],
+        v2024: [
+            { p: 'Exhaustion comes in levels. Each new dose adds 1 level, and the penalties grow with the level.' },
+            { table: { head: ['Level', 'd20 Tests', 'Speed'], rows: [
+                ['1', '−2', '−5 ft'],
+                ['2', '−4', '−10 ft'],
+                ['3', '−6', '−15 ft'],
+                ['4', '−8', '−20 ft'],
+                ['5', '−10', '−25 ft'],
+                ['6', 'Death', '—']
+            ] } },
+            { list: [
+                'A d20 Test is any ability check, attack roll, or saving throw.',
+                'A long rest removes 1 level.',
+                'The condition ends when the level reaches 0.'
             ] }
         ]
     },
@@ -105,6 +166,19 @@ const RULES_CARDS = [
             { defs: [
                 ['Forced march', 'A day is 8 hours of travel. Each extra hour covers an hour\'s distance, then every traveler makes a Constitution save, DC 10 + 1 per hour past 8, or gains a level of exhaustion.'],
                 ['Mounts', 'A mount can gallop at twice the fast pace for about an hour.'],
+                ['Difficult terrain', 'Half speed: every foot of movement costs 2 feet.']
+            ] }
+        ],
+        v2024: [
+            { table: { head: ['Pace', 'Minute', 'Hour', 'Day', 'Effect'], rows: [
+                ['Fast', '400 ft', '4 miles', '30 miles', 'Disadvantage on Perception, Survival, and Stealth checks'],
+                ['Normal', '300 ft', '3 miles', '24 miles', 'Disadvantage on Stealth checks'],
+                ['Slow', '200 ft', '2 miles', '18 miles', 'Advantage on Perception and Survival checks']
+            ] } },
+            { defs: [
+                ['Extended travel', 'A day is 8 hours of travel. After each extra hour, every traveler makes a Constitution save, DC 10 + 1 per hour past 8, or gains a level of exhaustion.'],
+                ['Terrain and roads', 'The ground sets the fastest pace a group can take; a good road raises it one step. A traveler at half Speed or less holds the group to Slow.'],
+                ['Mounts', 'Mounted travelers cover twice the distance for 1 hour; then the mounts need a short or long rest before they can do it again.'],
                 ['Difficult terrain', 'Half speed: every foot of movement costs 2 feet.']
             ] }
         ]
@@ -160,7 +234,8 @@ function rulesCardHtml(card, q = '') {
     q = q.trim().toLowerCase();
     const all = !q || rulesHit(q, card.title, card.keys);
     const m = t => rulesMark(t, q);
-    const body = card.blocks.map(b => {
+    const blocks = card.v2024 && rulesTextVersion() === '2024' ? card.v2024 : card.blocks;
+    const body = blocks.map(b => {
         if (b.p) return all || rulesHit(q, b.p) ? `<p>${m(b.p)}</p>` : '';
         if (b.note) return all ? `<p class="rules-note">${m(b.note)}</p>` : '';
         if (b.list) {

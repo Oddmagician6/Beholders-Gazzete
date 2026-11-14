@@ -69,6 +69,7 @@ function paramsQuery(params) {
 // On the Toolbox and the Worldbuilder, a tab's roll goes on that tab's own page (tab-pages.js).
 function setUrlParams(params, push = true, state = null) {
     let path = location.pathname;
+    if (typeof rulesLinkParams === 'function') params = rulesLinkParams(params);   // ?rules=2024 (srd52.js)
     if (typeof TAB_PAGES !== 'undefined' && TAB_PAGES) [path, params] = tabPageAddress(params);
     const qs = paramsQuery(params);
     const url = path + (qs ? '?' + qs : '') + (path === location.pathname ? location.hash : '');

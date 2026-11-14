@@ -1028,6 +1028,11 @@ body:has(.nav-open) .dice-fab, body:has(.nav-open) .dice-pop { display: none; }
 .v52-switch input { margin: 0; accent-color: var(--gold-mid); }
 label.v52-switch, .bst-controls label.v52-switch { display: inline-flex; width: auto; margin-bottom: 0; font-family: var(--font-ui); font-size: 0.78rem; letter-spacing: normal; color: var(--text-dim); }
 label.v52-switch input[data-srd52] { display: inline-block; width: auto; margin: 0; padding: 0; }
+label.v52-switch[hidden] { display: none; }
+.rules-switch { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; margin-top: 6px; }
+label.rules-pick, .bst-controls label.rules-pick { display: inline-flex; align-items: center; gap: 6px; width: auto; margin: 0; font-family: var(--font-ui); font-size: 0.78rem; letter-spacing: normal; color: var(--text-dim); white-space: nowrap; }
+label.rules-pick select[data-rules] { width: auto; margin: 0; padding: 2px 6px; font-size: 0.78rem; }
+.rules-loading .rules-switch { opacity: 0.6; cursor: progress; }
 #bst-v52 { align-self: end; padding-bottom: 8px; }
 #en-v52 { grid-column: 1 / -1; }
 @media (max-width: 600px) { .hbm-form { padding: 16px; } .hbm-grid { grid-template-columns: 1fr 1fr; } }

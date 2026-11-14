@@ -34,7 +34,8 @@ const INIT_MAX = 40;
 // page, Pathfinder's (rules-pf2e.js): some carry a value, stored with it ("Frightened 2").
 const INIT_PF2E = ruleSystemId() === 'pf2e' && typeof PF2E_CONDITIONS !== 'undefined';
 const SRD_CONDITIONS = INIT_PF2E ? Object.keys(PF2E_CONDITIONS) : Object.keys(SRD_CONDITION_TEXT);
-const condTip = k => INIT_PF2E ? PF2E_CONDITIONS[k].text : SRD_CONDITION_TEXT[k].join(' ');
+// The text follows the rules version (2014/2024, rules-data.js srdConditionText); the names don't change.
+const condTip = k => INIT_PF2E ? PF2E_CONDITIONS[k].text : srdConditionText()[k].join(' ');
 const condMax = k => INIT_PF2E ? PF2E_CONDITIONS[k].max : 0;
 const condBase = s => s.replace(/ \d+$/, '');
 const condValue = s => Number((s.match(/ (\d+)$/) || [0, 0])[1]);
@@ -635,7 +636,7 @@ function renderFight(scroll = false) {
                     ${c.monster && INIT_BLOCKS ? `<button type="button" class="sb-toggle" data-act="sb" data-id="${c.id}" aria-expanded="${openBlocks.has(c.id)}" title="Show or hide the stat block"><span class="init-who sb-name">${esc(c.name)}</span> <span class="sb-hint" aria-hidden="true">📜</span></button>`
                         : `<span class="init-who">${esc(c.name)}</span>`}
                     ${c.pc ? '' : `<button type="button" class="init-reveal${c.shown ? ' on' : ''}" data-act="reveal" data-id="${c.id}" aria-pressed="${c.shown}" title="${c.shown ? 'The player view shows this name. Click to hide it again.' : 'The player view calls this one an unknown creature. Click to show its name.'}">${c.shown ? '👁️ Name shown' : '🙈 Name hidden'}</button>`}
-                    <span class="init-meta">${c.pc ? '👤 PC · ' : ''}${c.party ? '<span title="Follows this character&#39;s Play Sheet in this browser">🔗 sheet</span> · ' : ''}${c.ac !== null ? `🛡️ AC ${c.ac} · ` : ''}bonus ${c.mod >= 0 ? '+' + c.mod : '−' + -c.mod}${c.pp !== null ? ` · 👁️ passive ${c.pp}` : ''}${c.exh ? ` · 😩 exhaustion ${c.exh}` : ''}${c.conc ? ` · 🧠 ${esc(c.conc)}` : ''}${down ? (c.pc ? ` · ${deathSaveText(c)}` : ' · 💀 down') : ''}</span>
+                    <span class="init-meta">${c.pc ? '👤 PC · ' : ''}${c.party ? '<span title="Follows this character&#39;s Play Sheet in this browser">🔗 sheet</span> · ' : ''}${c.ac !== null ? `🛡️ AC ${c.ac} · ` : ''}bonus ${c.mod >= 0 ? '+' + c.mod : '−' + -c.mod}${c.pp !== null ? ` · 👁️ passive ${c.pp}` : ''}${c.exh ? ` · <span title="${esc(srdExhaustionText(c.exh))}">😩 exhaustion ${c.exh}</span>` : ''}${c.conc ? ` · 🧠 ${esc(c.conc)}` : ''}${down ? (c.pc ? ` · ${deathSaveText(c)}` : ' · 💀 down') : ''}</span>
                 </div>
                 <div class="init-conds">
                     ${c.conds.map(s => {
@@ -703,7 +704,7 @@ function setupInitiative() {
     partyChip(document.getElementById('init-party'), { label: '➕ Add the Party', title: 'Add every character not already in the fight, rolling d20 + their initiative bonus', act: addPartyToFight });
     fillMonsterNames();
     nbOnChange(fillMonsterNames);
-    if (typeof srd52OnChange === 'function') srd52OnChange(fillMonsterNames);
+    if (typeof srd52OnChange === 'function') srd52OnChange(() => { fillMonsterNames(); renderFight(); });
     const follow = document.getElementById('init-follow');
     if (!INIT_BLOCKS) follow.closest('label').style.display = 'none';
     if (INIT_PF2E) document.getElementById('ia-mod').max = 40;

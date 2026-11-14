@@ -210,6 +210,7 @@
       <input type="search" id="rules-q" maxlength="40" autocomplete="off" spellcheck="false" placeholder="Search: prone, darkvision, forced march…">
       <button type="button" class="btn btn-gold" id="rules-print">🖨️ Print</button>
       <button type="button" class="btn" id="rules-link">🔗 Copy Link</button>
+      <span id="rules-version"></span>
     </div>
     <ul class="rules-jump" id="rules-jump"><!-- prerender:jump (written by export-rules.ps1; rules.js redraws it) -->
     <li><a href="#conditions">🩸 Conditions</a></li>
@@ -237,7 +238,7 @@
                 <tbody><tr><td>Wretched</td><td>—</td><td>Sleeping rough, with nothing to call your own.</td></tr><tr><td>Squalid</td><td>1 sp</td><td>A leaky room or a flophouse cot, among the desperate.</td></tr><tr><td>Poor</td><td>2 sp</td><td>Plain food and a shared room; little comfort, but safe enough.</td></tr><tr><td>Modest</td><td>1 gp</td><td>A clean room or a small home, and decent food.</td></tr><tr><td>Comfortable</td><td>2 gp</td><td>A private room in a good inn, and good meals.</td></tr><tr><td>Wealthy</td><td>4 gp</td><td>Fine lodgings, servants, and a seat at the best tables.</td></tr><tr><td>Aristocratic</td><td>10 gp</td><td>A mansion, a household staff, and the company of the powerful (10 gp a day at least).</td></tr></tbody></table></div><p class="rules-note">The short descriptions are the Gazette's.</p></section>
     <!-- /prerender:cards --></div>
     <p class="rules-empty" id="rules-empty" hidden>Nothing here matches. Try a shorter word.</p>
-    <p class="tool-note">These are short summaries of rules from the System Reference Document 5.1 by Wizards of the Coast LLC, licensed under the <a href="https://creativecommons.org/licenses/by/4.0/legalcode" target="_blank" rel="noopener">Creative Commons Attribution 4.0 International License</a>. The wording is the Gazette's; when a summary and the SRD disagree, the SRD wins.<br>Search filters the cards and highlights the matches, and the address bar keeps the search, so 🔗 Copy Link shares it. 🖨️ Print prints the cards on screen as a two-column cheat sheet. The conditions are the same list as the Toolbox's <a href="dnd-initiative-tracker">Initiative tracker</a>.</p>
+    <p class="tool-note">These are short summaries of rules from the System Reference Document 5.1 by Wizards of the Coast LLC, licensed under the <a href="https://creativecommons.org/licenses/by/4.0/legalcode" target="_blank" rel="noopener">Creative Commons Attribution 4.0 International License</a>. The wording is the Gazette's; when a summary and the SRD disagree, the SRD wins.<br>Search filters the cards and highlights the matches, and the address bar keeps the search, so 🔗 Copy Link shares it. 🖨️ Print prints the cards on screen as a two-column cheat sheet. The conditions are the same list as the Toolbox's <a href="dnd-initiative-tracker">Initiative tracker</a>. The Rules picker switches the conditions, exhaustion, and travel pace cards to the 2024 rules (SRD 5.2); it's the same setting as the Spellbook's and Bestiary's.</p>
 
     <section class="tool-guide" aria-labelledby="guide-h">
       <h2 id="guide-h">How to use the rules reference</h2>
@@ -282,6 +283,7 @@
   <script src="rng.js"></script>
   <script src="coins.js"></script>
   <script src="rules-data.js"></script>
+  <script src="srd52.js" data-text-only></script>
   <script src="rules.js"></script>
   <script src="dice-engine.js"></script>
   <script src="dice-fab.js"></script>

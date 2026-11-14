@@ -2,6 +2,7 @@
    RULES QUICK-REFERENCE PAGE (F42)
    Draws RULES_CARDS (rules-data.js), filters them as you type, and keeps the
    search in the address bar (?q=) so a link shares it. Print prints what's on screen.
+   The Rules picker (srd52.js, text-only) redraws the cards in 2014 or 2024 wording.
    ============================================ */
 
 function renderRules(q) {
@@ -26,6 +27,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('year').textContent = new Date().getFullYear();
     const box = document.getElementById('rules-q');
     box.value = (urlParams().get('q') || '').slice(0, 40);
+    // The 2014/2024 picker (srd52.js): three cards have 2024 versions.
+    if (typeof srd52Toggle === 'function') {
+        document.getElementById('rules-version').innerHTML = srd52Toggle();
+        srd52OnChange(() => renderRules(box.value));
+    }
     renderRules(box.value);
     // A link to a card (#cover) lands on it once the cards exist.
     if (location.hash && document.getElementById(location.hash.slice(1))) document.getElementById(location.hash.slice(1)).scrollIntoView();

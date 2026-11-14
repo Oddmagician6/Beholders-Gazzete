@@ -26,7 +26,8 @@ function spellByName(name) {
     }
     if (typeof SPELLS_DATA === 'undefined') return null;
     const key = name.toLowerCase();
-    return SPELLS_DATA.find(s => s.name.toLowerCase() === key) || null;
+    const renamed = typeof rulesRename === 'function' && rulesRename('spells', name);   // Feeblemind -> Befuddlement in 2024
+    return SPELLS_DATA.find(s => s.name.toLowerCase() === key || (renamed && s.name === renamed)) || null;
 }
 
 // Spell text: paragraphs, ***bold*** run-ins, and "| a | b |" tables (same format as the Spellbook).
