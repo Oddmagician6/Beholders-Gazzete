@@ -60,12 +60,14 @@ function bonusText(b) {
 }
 
 function raceLabel(c) {
-    const sub = cbSubrace(c), race = cbRace(c.race);
-    return sub ? sub.name : race ? race.name : '';
+    return cbRaceLabel(c);
 }
 
+const stepLabel = id => (id === 'race' && cur && cbIs24(cur) ? 'Species' : (CB_STEPS.find(s => s[0] === id) || [id, id])[1]);
+const rulesName = c => (cbIs24(c) ? '2024 rules (SRD 5.2)' : '2014 rules (SRD 5.1)');
+
 function charLabel(c) {
-    const k = cbClass(c.cls);
+    const k = cbClass(c.cls, c);
     const what = [raceLabel(c), k ? k.name : ''].filter(Boolean).join(' ');
     return `${c.name || 'Unnamed character'} · level ${c.level}${what ? ' ' + what : ''}`;
 }
@@ -92,8 +94,8 @@ function select(path, options, value, label, cls = 'cb-field') {
 function nextButtons() {
     const i = CB_STEPS.findIndex(s => s[0] === step);
     const prev = CB_STEPS[i - 1], next = CB_STEPS[i + 1];
-    return `<div class="cb-next">${prev ? `<button type="button" class="cb-btn" data-act="goto" data-v="${prev[0]}">← ${esc(prev[1])}</button>` : '<span></span>'}
-        ${next ? `<button type="button" class="cb-btn cb-gold" data-act="goto" data-v="${next[0]}">${esc(next[1])} →</button>` : ''}</div>`;
+    return `<div class="cb-next">${prev ? `<button type="button" class="cb-btn" data-act="goto" data-v="${prev[0]}">← ${esc(stepLabel(prev[0]))}</button>` : '<span></span>'}
+        ${next ? `<button type="button" class="cb-btn cb-gold" data-act="goto" data-v="${next[0]}">${esc(stepLabel(next[0]))} →</button>` : ''}</div>`;
 }
 
 function stepTodo(id) {
@@ -105,13 +107,20 @@ function stepTodo(id) {
 function spellLink(name) {
     if (typeof hbmIsHomebrew === 'function' && hbmIsHomebrew(name)) return `${esc(name)} <span title="Homebrew, from your campaign notebook">🧪</span>`;
     if (typeof srd52IsSpell === 'function' && srd52IsSpell(name)) return `${esc(name)} <span title="From the SRD 5.2 additions">📗</span>`;
-    return `<a href="spell/${spellSlug(name)}" target="_blank" rel="noopener" title="Open ${esc(name)} in a new tab">${esc(name)}</a>`;
+    return `<a href="${spellHref(name)}" target="_blank" rel="noopener" title="Open ${esc(name)} in a new tab">${esc(name)}</a>`;
+}
+
+// The spell's page (SRD 5.1), or for a 2024 character the Spellbook showing its SRD 5.2 text.
+function spellHref(name) {
+    if (cur && cbIs24(cur)) return `spellbook?spells=${spellSlug(name)}&list=${encodeURIComponent(name)}&rules=2024`;
+    return `spell/${spellSlug(name)}`;
 }
 
 // ── Steps ────────────────────────────────────────────────
 function renderRace() {
-    const c = cur, race = cbRace(c.race), sub = cbSubrace(c), d = cbDerive(c);
-    let h = `<h2>Race</h2><p class="cb-lead">Your race sets your size, speed, some ability score bonuses, and a few traits.</p>
+    if (cbIs24(cur)) return renderSpecies24();
+    const c = cur, race = cbRace(c.race, c), sub = cbSubrace(c), d = cbDerive(c);
+    let h = `<h2>Race</h2><p class="cb-lead">Your race sets your size, speed, some ability score bonuses, and a few traits.</p>${rulesPickHtml(c)}
         <div class="cb-cards">${CB_RACES.map(r => {
             const s = r.subraces ? r.subraces[0] : null;
             const b = { ...r.abil };
@@ -146,9 +155,9 @@ function renderRace() {
 }
 
 function renderClass() {
-    const c = cur, k = cbClass(c.cls), d = cbDerive(c);
+    const c = cur, k = cbClass(c.cls, c), d = cbDerive(c);
     let h = `<h2>Class</h2><p class="cb-lead">Your class is what you do: it sets your hit points, proficiencies, and features at every level.</p>
-        <div class="cb-cards">${CB_CLASSES.map(x => `<button type="button" class="cb-card cb-class-card" data-act="class" data-v="${x.id}" aria-pressed="${c.cls === x.id}"><img class="cb-class-art" src="img/class/${x.id}-sm.webp" srcset="img/class/${x.id}-sm.webp 160w, img/class/${x.id}.webp 480w" sizes="200px" alt="" width="160" height="160" loading="lazy" decoding="async"><b>${x.icon} ${esc(x.name)}</b>d${x.hd} · ${x.primary.map(a => a.toUpperCase()).join(', ')}${x.cast ? ' · spells' : ''}</button>`).join('')}</div>`;
+        <div class="cb-cards">${cbClassList(c).map(x => `<button type="button" class="cb-card cb-class-card" data-act="class" data-v="${x.id}" aria-pressed="${c.cls === x.id}"><img class="cb-class-art" src="img/class/${x.id}-sm.webp" srcset="img/class/${x.id}-sm.webp 160w, img/class/${x.id}.webp 480w" sizes="200px" alt="" width="160" height="160" loading="lazy" decoding="async"><b>${x.icon} ${esc(x.name)}</b>d${x.hd} · ${x.primary.map(a => a.toUpperCase()).join(', ')}${x.cast ? ' · spells' : ''}</button>`).join('')}</div>`;
     if (!k) return h + stepTodo('class') + nextButtons();
     const lv = Array.from({ length: 20 }, (_, i) => [i + 1, `Level ${i + 1}`]);
     h += `<h3>${k.icon} ${esc(k.name)}: ${esc(k.sub.name)}</h3>
@@ -173,7 +182,7 @@ function renderClass() {
         h += `<h4>${esc(ch.label)} ${countTag(have.length, ch.n)}</h4>`;
         if (ch.skills) {
             const src = cbSkillSources({ ...c, opts: { ...c.opts, loreSkills: [] } });
-            h += chips('opts.loreSkills', Object.entries(CB_SKILLS).map(([id, s]) => [id, s[0]]), c.opts.loreSkills, 3, src);
+            h += chips('opts.loreSkills', Object.entries(ch.options).map(([id, o]) => [id, o[0]]), c.opts.loreSkills, ch.n, src);
             return;
         }
         const full = have.length >= ch.n;
@@ -182,24 +191,25 @@ function renderClass() {
             return `<button type="button" class="cb-chip" data-act="choice" data-key="${esc(ch.key)}" data-v="${esc(id)}" data-n="${ch.n}" data-single="${ch.single ? 1 : ''}" aria-pressed="${on}"${!on && full && !ch.single && ch.n > 1 ? ' disabled' : ''}>${esc(o[0])}${o[1] ? `<small>${esc(o[1])}</small>` : ''}</button>`;
         }).join('')}</div>`;
         if (ch.key === 'invocations') {
-            const locked = Object.entries(CB_INVOCATIONS).filter(([id]) => !ch.options[id]).length;
-            if (locked) h += `<p class="cb-faint">${locked} more unlock with level, a pact boon, or the eldritch blast cantrip.</p>`;
+            const locked = Object.entries(cbIs24(c) ? CB24_INVOCATIONS : CB_INVOCATIONS).filter(([id]) => !ch.options[id]).length;
+            if (locked) h += `<p class="cb-faint">${locked} more unlock with level, ${cbIs24(c) ? 'a Pact invocation, or a damaging warlock cantrip' : 'a pact boon, or the eldritch blast cantrip'}.</p>`;
         }
     });
-    const asi = ((k.asi) || CB_ASI_LEVELS);
+    const asi = cbIs24(c) ? ((k.asi) || [4, 8, 12, 16]) : ((k.asi) || CB_ASI_LEVELS);
     h += `<h3>Features by level</h3><ul class="cb-list">` +
         k.features.map(([lv, n, t]) => {
             const text = typeof t === 'function' ? t(d.x) : t;
             return `<li${lv > c.level ? ' class="cb-later"' : ''}><span class="cb-lv">Lv ${lv}</span><b>${esc(n)}.</b> ${esc(text)}</li>`;
         }).join('') +
-        `<li${asi[0] > c.level ? ' class="cb-later"' : ''}><span class="cb-lv">Lv ${asi.join(', ')}</span><b>Ability Score Improvement.</b> +2 to one score, +1 to two, or a feat (set on the Abilities step).</li></ul>`;
+        `<li${asi[0] > c.level ? ' class="cb-later"' : ''}><span class="cb-lv">Lv ${asi.join(', ')}</span><b>Ability Score Improvement.</b> ${cbIs24(c) ? 'The Ability Score Improvement feat (+2 to one score or +1 to two) or another feat' : '+2 to one score, +1 to two, or a feat'} (set on the Abilities step).</li></ul>`;
     return h + stepTodo('class') + nextButtons();
 }
 
 function renderAbilities() {
-    const c = cur, k = cbClass(c.cls), d = cbDerive(c), race = cbRacialBonus(c);
+    const c = cur, k = cbClass(c.cls, c), d = cbDerive(c), race = cbRacialBonus(c);
     const methods = [['array', 'Standard array'], ['point', 'Point buy'], ['roll', 'Roll 4d6'], ['manual', 'Enter my own']];
-    let h = `<h2>Ability Scores</h2><p class="cb-lead">${k ? `${esc(k.name)}s lean on ${k.primary.map(a => CB_ABILITY_NAMES[a]).join(' and ')}.` : 'Pick a class first to see which scores matter most.'} Race bonuses and improvements are added for you.</p>
+    const fromWord = cbIs24(c) ? 'background' : 'race';
+    let h = `<h2>Ability Scores</h2><p class="cb-lead">${k ? `${esc(k.name)}s lean on ${k.primary.map(a => CB_ABILITY_NAMES[a]).join(' and ')}.` : 'Pick a class first to see which scores matter most.'} ${cbIs24(c) ? 'Your background\'s increases (set on the Background step) and your feats' : 'Race bonuses and improvements'} are added for you.</p>
         <div class="cb-btns" role="group" aria-label="How to set scores">${methods.map(([m, t]) => `<button type="button" class="cb-btn" data-act="method" data-v="${m}" aria-pressed="${c.assigned && c.method === m}">${t}</button>`).join('')}</div>`;
     if (!c.assigned && c.method !== 'roll') return h + `<p class="cb-faint" style="margin-top:14px">Choose a method to start.</p>` + stepTodo('abilities') + nextButtons();
     let pool = null;
@@ -221,11 +231,14 @@ function renderAbilities() {
         else if (c.method === 'point') ctl = `<div class="cb-pm"><button type="button" class="cb-btn" data-act="pt" data-v="${a}" data-d="-1" aria-label="Lower ${CB_ABILITY_NAMES[a]}"${c.base[a] <= 8 ? ' disabled' : ''}>−</button><span>${c.base[a]}</span><button type="button" class="cb-btn" data-act="pt" data-v="${a}" data-d="1" aria-label="Raise ${CB_ABILITY_NAMES[a]}"${c.base[a] >= 15 || cbPointSpent({ ...c.base, [a]: c.base[a] + 1 }) > CB_POINT_BUDGET ? ' disabled' : ''}>+</button></div>`;
         else ctl = `<input type="number" min="3" max="20" data-manual="${a}" value="${c.base[a]}" aria-label="${CB_ABILITY_NAMES[a]} base score">`;
         const extra = d.s[a] - c.base[a] - race[a];
-        const from = [race[a] ? `${cbSign(race[a])} race` : '', extra ? `${cbSign(extra)} ASI` : ''].filter(Boolean).join(', ');
+        const from = [race[a] ? `${cbSign(race[a])} ${fromWord}` : '', extra ? `${cbSign(extra)} ${cbIs24(c) ? 'feats' : 'ASI'}` : ''].filter(Boolean).join(', ');
         return `<div class="cb-abil"><b title="${CB_ABILITY_NAMES[a]}">${a.toUpperCase()}${k && k.primary[0] === a ? ' ★' : ''}</b>${ctl}<span class="cb-from">${esc(from)}</span><div class="cb-total">${d.s[a]}</div><span class="cb-mod">${cbSign(d.m[a])}</span></div>`;
     }).join('')}</div>`;
     const lvls = cbAsiLevels(c);
-    if (k && lvls.length) {
+    if (k && lvls.length && cbIs24(c)) {
+        h += `<h3>Feats</h3><p class="cb-lead">At each of these levels take the Ability Score Improvement feat (+2 to one score or +1 to two, 20 at most) or another feat you qualify for. Level 19 is for an Epic Boon (or any feat).</p>`;
+        cbFeatSlots(c).filter(s => s.lv).forEach(s => { h += featSlotHtml(c, s); });
+    } else if (k && lvls.length) {
         h += `<h3>Ability Score Improvements</h3><p class="cb-lead">At each of these levels: +2 to one score, +1 to two, or the Grappler feat. Scores stop at 20.</p>`;
         lvls.forEach(lv => {
             const p = c.asi[lv] || {};
@@ -240,6 +253,7 @@ function renderAbilities() {
 }
 
 function renderBackground() {
+    if (cbIs24(cur)) return renderBackground24();
     const c = cur;
     let h = `<h2>Background</h2><p class="cb-lead">Where you came from: two skills, a couple of languages or tools, and a little gear. The SRD has one background, the Acolyte; or make up your own.</p>
         <div class="cb-cards">
@@ -272,7 +286,7 @@ function renderBackground() {
 }
 
 function renderSkills() {
-    const c = cur, k = cbClass(c.cls), d = cbDerive(c);
+    const c = cur, k = cbClass(c.cls, c), d = cbDerive(c);
     let h = `<h2>Skills &amp; Tools</h2>`;
     if (!k) return h + '<p class="cb-faint">Pick a class first.</p>' + nextButtons();
     const others = cbSkillSources({ ...c, skills: [] });
@@ -287,9 +301,8 @@ function renderSkills() {
     }
     const ex = cbExpertiseCount(c);
     if (ex) {
-        const profs = d.skills.filter(s => s.prof).map(s => [s.id, s.name]);
-        if (c.cls === 'rogue') profs.push(["Thieves' tools", "Thieves' tools"]);
-        h += `<h4>Expertise: double proficiency ${countTag(c.expertise.length, ex)}</h4>` + chips('expertise', profs, c.expertise, ex);
+        const profs = cbExpertiseChoices(c).map(id => [id, CB_SKILLS[id] ? CB_SKILLS[id][0] : id]);
+        h += `<h4>Expertise: double proficiency${cbIs24(c) && c.cls === 'wizard' ? ' (Scholar)' : ''} ${countTag(c.expertise.length, ex)}</h4>` + chips('expertise', profs, c.expertise, ex);
     }
     h += `<h3>All skills</h3><div class="cb-scroll"><table class="cb-table"><thead><tr><th>Skill</th><th>Ability</th><th class="cb-num">Bonus</th><th>From</th></tr></thead><tbody>` +
         d.skills.map(s => `<tr><td>${s.prof ? (s.expert ? '◆ ' : '● ') : '○ '}${esc(s.name)}</td><td>${s.a.toUpperCase()}</td><td class="cb-num">${cbSign(s.total)}</td><td>${esc(s.from)}${s.expert ? ' (expertise)' : ''}</td></tr>`).join('') +
@@ -309,9 +322,10 @@ function tokenLabel(t) {
 }
 
 function renderEquipment() {
-    const c = cur, k = cbClass(c.cls), d = cbDerive(c);
+    const c = cur, k = cbClass(c.cls, c), d = cbDerive(c);
     let h = `<h2>Equipment</h2>`;
     if (!k) return h + '<p class="cb-faint">Pick a class first.</p>' + nextButtons();
+    if (cbIs24(c)) return renderEquipment24() + yourGearHtml(c, d) + stepTodo('equipment') + nextButtons();
     const [dice, mult] = k.gold;
     h += `<p class="cb-lead">Take your class's starting gear, or roll for gold and shop. Your background's gear comes either way.</p>
         <div class="cb-btns" role="group" aria-label="Starting equipment"><button type="button" class="cb-btn" data-act="equip-mode" data-v="class" aria-pressed="${c.equipMode === 'class'}">🎒 Class gear</button><button type="button" class="cb-btn" data-act="equip-mode" data-v="gold" aria-pressed="${c.equipMode === 'gold'}">💰 Starting gold</button></div>`;
@@ -334,6 +348,11 @@ function renderEquipment() {
     } else {
         h += `<p style="margin-top:12px"><button type="button" class="cb-btn cb-gold" data-act="roll-gold">🎲 ${c.gearSet ? 'Start Over: ' : ''}Roll ${dice}d4${mult > 1 ? ' × ' + mult : ''} gp</button> <span class="cb-tag">plus ${cbBackgroundGear(c).gold} gp from your background</span></p>`;
     }
+    return h + yourGearHtml(c, d) + stepTodo('equipment') + nextButtons();
+}
+
+function yourGearHtml(c, d) {
+    let h = '';
     if (c.gearSet || c.gear.length) {
         const armors = c.gear.filter(g => g.a);
         const hasShield = c.gear.some(g => g.name === 'Shield');
@@ -356,7 +375,7 @@ function renderEquipment() {
               <p style="margin:0 0 8px">AC <b>${d.ac}</b> <span class="cb-tag">(${esc(d.acHow)})</span></p></div>` +
             d.notes.map(n => `<p class="cb-warn">⚠️ ${esc(n)}</p>`).join('');
     }
-    return h + stepTodo('equipment') + nextButtons();
+    return h;
 }
 
 function buyOptions(c) {
@@ -382,7 +401,7 @@ function renderSpells() {
     const racial = cbRaceSpells(c);
     const racialHtml = racial.length ? `<h4>From your race</h4><ul class="cb-list">${racial.map(s => `<li>${spellLink(s.name)} <span class="cb-tag">${esc(s.note)}</span></li>`).join('')}</ul>` : '';
     if (!r || (!r.cantrips && !r.list && !r.slots.length && !r.pact)) {
-        const k = cbClass(c.cls);
+        const k = cbClass(c.cls, c);
         h += `<p class="cb-lead">${k && k.cast ? `${esc(k.name)}s start casting at level 2.` : k ? `${esc(k.name)}s don't cast spells.` : 'Pick a class first.'}</p>`;
         return h + racialHtml + nextButtons();
     }
@@ -390,33 +409,36 @@ function renderSpells() {
     h += `<div class="cb-spell-head"><span><b>${CB_ABILITY_NAMES[r.ability]}</b> casting</span><span>Save DC <b>${d.magic.dc}</b></span><span>Spell attack <b>${cbSign(d.magic.attack)}</b></span><span>Slots: ${esc(slotText)}</span></div>
         <p style="margin-top:10px"><input type="search" class="cb-filter" id="cb-spell-filter" placeholder="Filter spells…" aria-label="Filter spells" autocomplete="off"></p>`;
     if (r.offList || r.offCantrips) {
-        h += `<p><label class="cb-opt"><input type="checkbox" data-act="show-all"${showAllSpells ? ' checked' : ''}> Show every class's spells (${r.offList ? `${r.offList} spells` : ''}${r.offList && r.offCantrips ? ' and ' : ''}${r.offCantrips ? `${r.offCantrips} cantrips` : ''} may come from any list)</label></p>`;
+        const lists = [...new Set([...(r.offList ? r.offFrom || [] : []), ...(r.offCantrips ? r.cantripFrom || [] : [])])];
+        const any = (r.offList && !r.offFrom) || (r.offCantrips && !r.cantripFrom);
+        h += `<p><label class="cb-opt"><input type="checkbox" data-act="show-all"${showAllSpells ? ' checked' : ''}> Show ${any ? "every class's" : lists.join(', ').toLowerCase()} spells too (${r.offList ? `${r.offList} spells` : ''}${r.offList && r.offCantrips ? ' and ' : ''}${r.offCantrips ? `${r.offCantrips} cantrips` : ''} may come from ${any ? 'any list' : 'those lists'})</label></p>`;
     }
     h += racialHtml;
     const always = d.magic.always;
-    if (always.length) h += `<h4>Always prepared (${esc(cbClass(c.cls).sub.name)}${c.cls === 'druid' ? ', ' + esc(c.opts.land) : ''})</h4><p>${always.map(spellLink).join(', ')}</p>`;
-    const k = cbClass(c.cls);
+    if (always.length) h += `<h4>Always prepared (${cbIs24(c) ? 'class features' + (c.level >= 3 ? ', ' + esc(cbClass(c.cls, c).sub.name) : '') : esc(cbClass(c.cls, c).sub.name)}${c.cls === 'druid' && c.opts.land ? ', ' + esc(c.opts.land) : ''})</h4><p>${always.map(spellLink).join(', ')}</p>`;
+    const k = cbClass(c.cls, c);
     const alwaysLow = always.map(n => n.toLowerCase());
     const listSpells = (level, kind, chosen, max, offOk) => {
         let pool = cbClassSpells(c, level);
         if (offOk && showAllSpells) {
             const names = new Set(pool.map(s => s.name));
-            pool = [...pool, ...SPELLS_DATA.filter(s => s.level === level && !names.has(s.name))];
+            const from = level === 0 ? r.cantripFrom : r.offFrom;
+            pool = [...pool, ...SPELLS_DATA.filter(s => s.level === level && !names.has(s.name) && (!from || from.some(n => s.classes.includes(n))))];
         }
         pool = pool.filter(s => !alwaysLow.includes(s.name.toLowerCase()));
         const full = chosen.length >= max;
         return `<div class="cb-spells">${pool.map(s => {
             const on = chosen.includes(s.name);
-            const off = !s.classes.includes(k.name) && !(k.sub.expanded && Object.values(k.sub.expanded).flat().includes(s.name));
+            const off = !s.classes.includes(k.name) && !(!cbIs24(c) && k.sub.expanded && Object.values(k.sub.expanded).flat().includes(s.name));
             const tags = [s.school, s.concentration ? 'conc.' : '', s.ritual ? 'ritual' : '', off ? 'other class' : ''].filter(Boolean).join(' · ');
-            return `<label class="cb-spell${on ? ' on' : ''}${!on && full ? ' cb-dim' : ''}" data-name="${esc(s.name.toLowerCase())}"><input type="checkbox" data-sk="${kind}" value="${esc(s.name)}"${on ? ' checked' : ''}${!on && full ? ' disabled' : ''}><span>${esc(s.name)}${s.hb ? ' <span class="hb-tag">🧪 Homebrew</span>' : s.v52 ? ' ' + srd52Tag() : `<a href="spell/${spellSlug(s.name)}" target="_blank" rel="noopener" aria-label="Open ${esc(s.name)} in a new tab">↗</a>`}<small>${esc(tags)}</small></span></label>`;
+            return `<label class="cb-spell${on ? ' on' : ''}${!on && full ? ' cb-dim' : ''}" data-name="${esc(s.name.toLowerCase())}"><input type="checkbox" data-sk="${kind}" value="${esc(s.name)}"${on ? ' checked' : ''}${!on && full ? ' disabled' : ''}><span>${esc(s.name)}${s.hb ? ' <span class="hb-tag">🧪 Homebrew</span>' : s.v52 && !cbIs24(c) ? ' ' + srd52Tag() : `<a href="${spellHref(s.name)}" target="_blank" rel="noopener" aria-label="Open ${esc(s.name)} in a new tab">↗</a>`}<small>${esc(tags)}</small></span></label>`;
         }).join('')}</div>`;
     };
     if (r.cantrips) h += `<h3>Cantrips ${countTag(c.spells.cantrips.length, r.cantrips)}</h3>` + listSpells(0, 'cantrips', c.spells.cantrips, r.cantrips, r.offCantrips > 0);
     const word = r.type === 'prepared' ? 'Prepared spells' : r.type === 'book' ? 'Spellbook' : 'Spells known';
     if (r.list) {
         h += `<h3>${word} ${countTag(c.spells.list.length, r.list)}</h3>`;
-        if (r.type === 'prepared') h += `<p class="cb-lead">You can change these after each long rest.</p>`;
+        if (r.type === 'prepared') h += `<p class="cb-lead">${cbIs24(c) ? (['cleric', 'druid'].includes(c.cls) ? 'You can change these after each long rest.' : ['paladin', 'ranger'].includes(c.cls) ? 'You can swap one after each long rest.' : 'You can swap one each time you gain a level.') : 'You can change these after each long rest.'}</p>`;
         if (r.type === 'book') h += `<p class="cb-lead">Six at 1st level and two more each level; you can also copy spells you find into it.</p>`;
         for (let lv = 1; lv <= r.maxLevel; lv++) {
             h += `<h4>${cbOrd(lv)} level</h4>` + listSpells(lv, 'list', c.spells.list, r.list, r.offList > 0);
@@ -465,7 +487,7 @@ function renderDetails() {
 function renderSheet() {
     const c = cur, d = cbDerive(c);
     const todo = cbTodo(c);
-    const stepName = id => (CB_STEPS.find(s => s[0] === id) || [id, id])[1];
+    const stepName = stepLabel;
     let h = '';
     if (todo.length) h += `<ul class="cb-todo"><li><b>Still to pick:</b></li>${todo.map(t => `<li>• ${esc(t.text)} <button type="button" data-act="goto" data-v="${t.step}">${esc(stepName(t.step))} →</button></li>`).join('')}</ul>`;
     if (lastLevelUp && lastLevelUp.id === c.id) {
@@ -473,10 +495,10 @@ function renderSheet() {
     }
     const pic = portraitSrc(c);
     const k = d.k;
-    const bgName = c.bg === 'custom' ? (c.bgOpt.name || 'Custom background') : c.bg ? CB_BACKGROUNDS[c.bg].name : '';
+    const bgName = c.bg === 'custom' ? (c.bgOpt.name || 'Custom background') : c.bg ? cbBg(c).name : '';
     h += `<div class="cb-sheet-head">${pic ? `<img class="cb-portrait" src="${pic}" alt="" width="76" height="76">` : ''}
         <div class="cb-sheet-title"><h2>${esc(c.name || 'Unnamed character')}</h2>
-        <p>Level ${c.level} ${esc(raceLabel(c))} ${k ? esc(k.name) + ' (' + esc(k.sub.name) + ')' : ''}${bgName ? ' · ' + esc(bgName) : ''}${c.alignment ? ' · ' + esc(c.alignment) : ''}${c.player ? ' · played by ' + esc(c.player) : ''}</p></div></div>
+        <p>Level ${c.level} ${esc(raceLabel(c))} ${k ? esc(k.name) + ' (' + esc(k.sub.name) + ')' : ''}${bgName ? ' · ' + esc(bgName) : ''}${c.alignment ? ' · ' + esc(c.alignment) : ''}${c.player ? ' · played by ' + esc(c.player) : ''}${cbIs24(c) ? ' · <span class="cb-tag">2024 rules</span>' : ''}</p></div></div>
         <div class="cb-sheet-btns">
           <button type="button" class="cb-btn cb-gold" data-act="levelup"${c.level >= 20 || !k ? ' disabled' : ''}>⬆️ Level Up to ${Math.min(20, c.level + 1)}</button>
           ${k ? `<a class="cb-btn cb-gold" href="dnd-character-sheet?char=${encodeURIComponent(c.id)}">▶️ Play</a>` : ''}
@@ -520,12 +542,12 @@ function renderSheet() {
           <h3>Features &amp; Traits</h3><ul class="cb-list">
           ${d.classFeatures.map(f => `<li><b>${esc(f.name)}</b> <span class="cb-tag">${esc(k.name)} ${f.level}</span><br>${esc(f.text)}</li>`).join('')}
           ${d.picked.map(f => `<li><b>${esc(f.name)}.</b> ${esc(f.text)}</li>`).join('')}
-          ${d.feats.map(f => `<li><b>${esc(f.name)}</b> <span class="cb-tag">feat</span><br>${esc(f.text)}</li>`).join('')}
+          ${d.feats.map(f => `<li><b>${esc(f.name)}</b> <span class="cb-tag">feat${f.from ? ', ' + esc(f.from) : ''}</span><br>${esc(f.text)}</li>`).join('')}
           ${d.raceTraits.map(f => `<li><b>${esc(f.name)}</b> <span class="cb-tag">${esc(raceLabel(c))}</span><br>${esc(f.text)}</li>`).join('')}
           ${d.bgFeature ? `<li><b>${esc(d.bgFeature.name)}</b> <span class="cb-tag">${esc(bgName)}</span><br>${esc(d.bgFeature.text)}</li>` : ''}
           </ul>
         </div></div>
-        <p class="print-only cb-tag" style="margin-top:8pt">The Beholder's Gazette Character Builder · gazette.ashforgestudio.com/character-builder · SRD 5.1, CC BY 4.0</p>`;
+        <p class="print-only cb-tag" style="margin-top:8pt">The Beholder's Gazette Character Builder · gazette.ashforgestudio.com/character-builder · ${cbIs24(c) ? 'SRD 5.2.1' : 'SRD 5.1'}, CC BY 4.0</p>`;
     return h;
 }
 
@@ -550,6 +572,173 @@ function sheetSpells(c, d) {
     return h;
 }
 
+// ── 2024 rules (ROADMAP L1T T5) ──────────────────────────
+// The rules picker: open while the character is blank, fixed once it has a race/species or class.
+function rulesPickHtml(c) {
+    if (!CB24_OK()) return '';
+    if (!c.race && !c.cls) {
+        return `<div class="cb-row cb-rules-pick"><label class="cb-field">Rules<select data-rules-char aria-label="Rules for this character">
+            <option value="2014"${cbIs24(c) ? '' : ' selected'}>2014 (SRD 5.1)</option><option value="2024"${cbIs24(c) ? ' selected' : ''}>2024 (SRD 5.2)</option></select></label>
+            <p class="cb-faint" style="margin:0 0 8px">Pick before you start: a character keeps its rules once it has a ${cbIs24(c) ? 'species' : 'race'} or a class.</p></div>`;
+    }
+    return `<p class="cb-faint">📘 Built with the ${esc(rulesName(c))}. A character keeps its rules; start a new one for the other version.</p>`;
+}
+
+// One feat slot (background, Versatile, or an ASI level): the feat and whatever it asks for.
+function featSlotHtml(c, slot) {
+    const isAsi = slot.key.startsWith('asi.');
+    const optPath = isAsi ? `asi.${slot.lv}.opt` : slot.key === 'bg' ? 'bgOpt.featOpt' : 'raceOpt.featOpt';
+    let h = `<div class="cb-feat-slot"><div class="cb-opt"><span class="cb-lv">${esc(slot.label)}</span>`;
+    if (slot.fixed) h += `<b>${esc(CB24_FEATS[slot.feat].name)}</b>`;
+    else {
+        const groups = slot.cats.map(cat => {
+            const opts = Object.entries(CB24_FEATS).filter(([id, f]) => f.cat === cat && (id === slot.feat || !cbFeatWhyNot(c, id, slot)));
+            return opts.length ? `<optgroup label="${esc(CB24_FEAT_CATS[cat])}">${opts.map(([id, f]) => `<option value="${id}"${id === slot.feat ? ' selected' : ''}>${esc(f.name)}</option>`).join('')}</optgroup>` : '';
+        }).join('');
+        h += `<select data-feat-slot="${esc(slot.key)}" aria-label="${esc(slot.label)}"><option value="">Choose a feat…</option>${groups}</select>`;
+    }
+    const f = slot.feat ? CB24_FEATS[slot.feat] : null;
+    if (f && isAsi) {
+        const abilSel = (part, val, ok) => `<select data-f="asi.${slot.lv}.${part}" aria-label="Level ${slot.lv} ability">${ok.map(a => `<option value="${a}"${a === val ? ' selected' : ''}>${CB_ABILITY_NAMES[a]}</option>`).join('')}</select>`;
+        if (slot.feat === 'asi') h += abilSel('a', slot.plus, CB_ABILITIES) + abilSel('b', slot.plusB, CB_ABILITIES) + '<span class="cb-tag">+1 each; the same score twice is +2</span>';
+        else if (f.plus) h += abilSel('a', slot.plus, f.plus === 'any' ? CB_ABILITIES : f.plus) + `<span class="cb-tag">+1 (to ${f.max} at most)</span>`;
+    }
+    h += '</div>';
+    if (f) {
+        const text = typeof f.text === 'function' ? f.text(cbDerive(c).x) : f.text;
+        h += `<p class="cb-tag cb-feat-text">${esc(text)}</p>`;
+        if (f.opt === 'spells') {
+            const list = cbFeatSpellList(slot), cls = list ? CB24_MAGIC_LISTS[list] : '';
+            const o = slot.opt;
+            h += '<div class="cb-row">';
+            if (!slot.list) h += select(optPath + '.list', [['', 'Pick a list…'], ...Object.entries(CB24_MAGIC_LISTS).map(([id, n]) => [id, n])], o.list, 'Spell list');
+            else h += `<p style="margin:0 0 8px">${esc(cls)} spells</p>`;
+            h += select(optPath + '.abil', [['', 'Pick…'], ['int', 'Intelligence'], ['wis', 'Wisdom'], ['cha', 'Charisma']], o.abil, 'Casting ability');
+            if (cls) h += select(optPath + '.spell', [['', 'Pick a 1st-level spell…'], ...cbSpellsFor(cls, 1).map(s => [s.name, s.name])], o.spell, '1st-level spell');
+            h += '</div>';
+            if (cls) h += `<h4>Two ${esc(cls.toLowerCase())} cantrips ${countTag(o.cantrips.length, 2)}</h4>` + chips(optPath + '.cantrips', cbSpellsFor(cls, 0).map(s => [s.name, s.name]), o.cantrips, 2);
+        }
+        if (f.opt === 'picks') {
+            h += `<h4>Three skills or tools ${countTag(slot.opt.picks.length, 3)}</h4>` +
+                chips(optPath + '.picks', Object.entries(CB_SKILLS).map(([id, s]) => [id, s[0]]), slot.opt.picks, 3) +
+                chips(optPath + '.picks', CB_TOOLS.filter(t => !cbTools(c).includes(t) || slot.opt.picks.includes(t)).map(t => [t, t]), slot.opt.picks, 3);
+        }
+    }
+    const todo = cbFeatTodo(c, slot);
+    if (todo.length && slot.feat) h += `<ul class="cb-todo">${todo.map(t => `<li>• ${esc(t)}</li>`).join('')}</ul>`;
+    return h + '</div>';
+}
+
+function renderSpecies24() {
+    const c = cur, race = cbRace(c.race, c), sub = cbSubrace(c), d = cbDerive(c);
+    let h = `<h2>Species</h2><p class="cb-lead">Your species sets your size, speed, senses, and a few traits. In the 2024 rules your ability score increases come from your background.</p>${rulesPickHtml(c)}
+        <div class="cb-cards">${CB24_SPECIES.map(r => `<button type="button" class="cb-card" data-act="race" data-v="${r.id}" aria-pressed="${c.race === r.id}"><b>${r.icon} ${esc(r.name)}</b>${esc(r.sizes ? r.sizes.join(' or ') : r.size)} · ${r.speed} ft.${r.dark ? ` · darkvision ${r.dark} ft.` : ''}</button>`).join('')}</div>`;
+    if (!race) return h + stepTodo('race') + nextButtons();
+    const ch = race.choose || {};
+    h += `<h3>${race.icon} ${esc(cbRaceLabel(c))}</h3>
+        <p>${esc(c.raceOpt.size || race.size)}, speed ${(sub && sub.speed) || race.speed} ft.${d.x.dark ? `, darkvision ${d.x.dark} ft.` : ''}. Languages come from your background step (Common plus two).</p>`;
+    if (race.subraces) {
+        const word = race.id === 'goliath' ? 'Giant ancestry' : race.id === 'tiefling' ? 'Fiendish legacy' : 'Lineage';
+        h += `<h4>${word}</h4><div class="cb-chips">${race.subraces.map(s => `<button type="button" class="cb-chip" data-act="subrace" data-v="${s.id}" aria-pressed="${sub && sub.id === s.id}">${esc(s.name)}</button>`).join('')}</div>`;
+    }
+    h += `<ul class="cb-list">${d.raceTraits.map(t => `<li><b>${esc(t.name)}.</b> ${esc(t.text)}</li>`).join('')}</ul>`;
+    const row = [];
+    if (race.sizes) row.push(select('raceOpt.size', race.sizes.map(s => [s, s]), c.raceOpt.size || race.size, 'Size'));
+    if (race.castAbil) row.push(select('raceOpt.castAbil', [['', 'Pick…'], ['int', 'Intelligence'], ['wis', 'Wisdom'], ['cha', 'Charisma']], c.raceOpt.castAbil, `${race.name} spellcasting ability`));
+    if (ch.ancestry) row.push(select('raceOpt.ancestry', [['', 'Pick a dragon…'], ...Object.entries(CB_DRAGONS).map(([id, x]) => [id, `${x.name}: ${x.dmg}`])], c.raceOpt.ancestry, 'Draconic ancestry'));
+    if (row.length) h += `<div class="cb-row">${row.join('')}</div>`;
+    const spells = cbRaceSpells(c).filter(s => !s.note.startsWith('Magic Initiate'));
+    if (spells.length) h += `<p><b>Spells:</b> ${spells.map(s => spellLink(s.name)).join(', ')}</p>`;
+    if (ch.skill) {
+        const from = ch.skillFrom || Object.keys(CB_SKILLS);
+        const have = c.raceOpt.skills.filter(s => from.includes(s));
+        h += `<h4>${race.id === 'elf' ? 'Keen Senses' : 'Skillful'} ${countTag(have.length, ch.skill)}</h4>` +
+            chips('raceOpt.skills', from.map(id => [id, CB_SKILLS[id][0]]), c.raceOpt.skills, ch.skill);
+    }
+    cbFeatSlots(c).filter(s => s.key === 'race').forEach(s => { h += `<h4>Versatile</h4>` + featSlotHtml(c, s); });
+    return h + stepTodo('race') + nextButtons();
+}
+
+function renderBackground24() {
+    const c = cur, bg = cbBg(c);
+    let h = `<h2>Background</h2><p class="cb-lead">Where you came from: it raises three ability scores, gives you an Origin feat, two skills, a tool, and some gear. The SRD has four backgrounds; or make up your own.</p>
+        <div class="cb-cards">${Object.entries(CB24_BACKGROUNDS).map(([id, b]) => `<button type="button" class="cb-card" data-act="bg" data-v="${id}" aria-pressed="${c.bg === id}"><b>${b.icon} ${esc(id === 'custom' ? 'Your own' : b.name)}</b>${id === 'custom' ? 'Any 3 scores · any Origin feat' : `${b.abil.map(a => a.toUpperCase()).join(', ')} · ${esc(CB24_FEATS[b.feat].name)}${b.featList ? ' (' + CB24_MAGIC_LISTS[b.featList] + ')' : ''}`}</button>`).join('')}</div>`;
+    if (bg) {
+        const allowed = bg.abil || CB_ABILITIES;
+        const b = c.bgOpt.boost;
+        const three = b.length === 3;
+        h += `<h3>${bg.icon} ${esc(c.bg === 'custom' ? 'Your own background' : bg.name)}</h3>`;
+        if (c.bg === 'custom') h += `<div class="cb-row"><label class="cb-field">Name it<input type="text" data-f="bgOpt.name" maxlength="40" value="${esc(c.bgOpt.name)}" placeholder="Caravan guard, hedge scholar, ferry pilot…" autocomplete="off"></label></div>`;
+        h += `<h4>Ability scores${bg.abil ? ': ' + bg.abil.map(a => CB_ABILITY_NAMES[a]).join(', ') : ''}</h4>
+            <div class="cb-btns" role="group" aria-label="How to raise them"><button type="button" class="cb-btn" data-act="boost-mode" data-v="21" aria-pressed="${!three && b.length === 2}">+2 and +1</button><button type="button" class="cb-btn" data-act="boost-mode" data-v="111" aria-pressed="${three}">+1 to three</button></div>`;
+        if (three && c.bg === 'custom') {
+            h += `<div class="cb-row" style="margin-top:8px">${[0, 1, 2].map(i => `<label class="cb-field cb-narrow">+1<select data-boost3="${i}">${CB_ABILITIES.map(a => `<option value="${a}"${b[i] === a ? ' selected' : ''}>${CB_ABILITY_NAMES[a]}</option>`).join('')}</select></label>`).join('')}</div>`;
+        } else if (three) {
+            h += `<p style="margin-top:8px">+1 to ${bg.abil.map(a => CB_ABILITY_NAMES[a]).join(', ')}.</p>`;
+        } else if (b.length === 2) {
+            h += `<div class="cb-row" style="margin-top:8px">${[0, 1].map(i => `<label class="cb-field cb-narrow">${i ? '+1' : '+2'}<select data-boost="${i}">${allowed.map(a => `<option value="${a}"${b[i] === a ? ' selected' : ''}>${CB_ABILITY_NAMES[a]}</option>`).join('')}</select></label>`).join('')}</div>`;
+        }
+        h += `<p class="cb-faint">No score goes above 20 this way.</p>`;
+        // Skills and tool
+        if (bg.skills) h += `<ul class="cb-list"><li><b>Skills:</b> ${bg.skills.map(s => CB_SKILLS[s][0]).join(', ')}.</li>${bg.tool ? `<li><b>Tool:</b> ${esc(bg.tool)}.</li>` : ''}</ul>`;
+        else {
+            const fromRace = {};
+            Object.entries(cbSkillSources({ ...c, bg: '', skills: [] })).forEach(([s, f]) => { fromRace[s] = f; });
+            h += `<h4>Two skills ${countTag(c.bgOpt.skills.length, 2)}</h4>` + chips('bgOpt.skills', Object.entries(CB_SKILLS).map(([id, s]) => [id, s[0]]), c.bgOpt.skills, 2, fromRace);
+        }
+        const tools = cbBgToolChoices(c);
+        if (tools.length) h += `<div class="cb-row">${select('bgOpt.tool', [['', bg.toolPick === 'gaming' ? 'Pick a gaming set…' : 'Pick a tool…'], ...tools.map(x => [x, x])], c.bgOpt.tool, 'Tool proficiency')}</div>`;
+        // Feat
+        h += `<h4>Origin feat</h4>`;
+        if (c.bg === 'custom') {
+            h += `<div class="cb-row"><label class="cb-field">Feat<select data-f="bgOpt.feat"><option value="">Choose a feat…</option>${Object.entries(CB24_FEATS).filter(([, f]) => f.cat === 'origin').map(([id, f]) => `<option value="${id}"${c.bgOpt.feat === id ? ' selected' : ''}>${esc(f.name)}</option>`).join('')}</select></label></div>`;
+        }
+        cbFeatSlots(c).filter(s => s.key === 'bg' && s.feat).forEach(s => { h += featSlotHtml(c, s); });
+        // Gear
+        h += `<p><b>Gear:</b> ${bg.kit.length ? esc(bg.kit.map(t => t === 'tool:bg' ? (c.bgOpt.tool || 'the gaming set') : tokenLabel(t)).join(', ')) + `, and ${bg.gold} gp; or 50 gp instead (on the Equipment step).` : '50 gp.'}</p>`;
+    }
+    // Languages
+    const langN = cbLanguageSlots(c).bg;
+    h += `<h4>Languages: Common plus ${langN} ${countTag(c.bgOpt.langs.length, langN)}</h4>` +
+        (langN > 2 ? `<p class="cb-faint">${c.cls === 'rogue' ? 'One extra for your Thieves\' Cant' : 'Two extra from Deft Explorer'}.</p>` : '') +
+        chips('bgOpt.langs', CB24_LANGUAGES.map(l => [l, l]), c.bgOpt.langs, langN);
+    return h + stepTodo('background') + nextButtons();
+}
+
+function renderEquipment24() {
+    const c = cur, k = cbClass(c.cls, c), bg = cbBg(c);
+    const kits = cbKits(k), ki = Math.min(kits.length - 1, c.equip.choice[0] || 0);
+    const label = (t, key, i, on) => {
+        if (t === 'tool:class') return c.tools[0] ? esc(c.tools[0]) : '<i>the tool you pick on the Skills step</i>';
+        if (t === 'tool:bg') return c.bgOpt.tool ? esc(c.bgOpt.tool) : '<i>the gaming set you pick on the Background step</i>';
+        if (!t.startsWith('pick:')) return esc(tokenLabel(t));
+        const pk = `${key}-${i}`;
+        const list = cbPickList(t.slice(5), c);
+        return `<select data-pick="${pk}" aria-label="${esc(tokenLabel(t))}"${on ? '' : ' disabled'}><option value="">${esc(tokenLabel(t))}…</option>${list.map(w => `<option value="${esc(w)}"${c.equip.picks[pk] === w ? ' selected' : ''}>${esc(CB_WEAPONS[w] ? CB_WEAPONS[w][0] : w)}</option>`).join('')}</select>`;
+    };
+    let h = `<p class="cb-lead">Take your class's starting kit, or ${k.gold} gp to shop with instead. Your background adds its own package, or 50 gp.</p>
+        <div class="cb-btns" role="group" aria-label="Starting equipment"><button type="button" class="cb-btn" data-act="equip-mode" data-v="class" aria-pressed="${c.equipMode === 'class'}">🎒 Class kit</button><button type="button" class="cb-btn" data-act="equip-mode" data-v="gold" aria-pressed="${c.equipMode === 'gold'}">💰 ${k.gold} gp instead</button></div>
+        <div class="cb-opts" style="margin-top:12px">`;
+    if (c.equipMode === 'class') {
+        h += `<div class="cb-opt-group">${kits.map((kit, i) => {
+            const parts = kit.gear.map((t, j) => label(t, `0-${i}`, j, i === ki)).join(', ') + `, and ${kit.gold} gp`;
+            return kits.length > 1
+                ? `<label class="cb-opt"><input type="radio" name="eq-0" data-eq="0" value="${i}"${i === ki ? ' checked' : ''}> <b>${esc(kit.label)}:</b> ${parts}</label>`
+                : `<div class="cb-opt">✓ ${parts}</div>`;
+        }).join('')}</div>`;
+    }
+    if (bg && bg.kit.length) {
+        const bi = c.equip.choice[1] === 1 ? 1 : 0;
+        h += `<div class="cb-opt-group"><label class="cb-opt"><input type="radio" name="eq-1" data-eq="1" value="0"${bi === 0 ? ' checked' : ''}> <b>${esc(bg.name)}:</b> ${bg.kit.map((t, j) => label(t, '1-0', j, true)).join(', ')}, and ${bg.gold} gp</label>
+            <label class="cb-opt"><input type="radio" name="eq-1" data-eq="1" value="1"${bi === 1 ? ' checked' : ''}> <b>${esc(bg.name)}:</b> 50 gp instead</label></div>`;
+    } else if (bg) h += `<div class="cb-opt-group"><div class="cb-opt">✓ <b>${esc(c.bg === 'custom' ? (c.bgOpt.name || 'Your background') : bg.name)}:</b> 50 gp</div></div>`;
+    h += '</div>';
+    h += c.equipMode === 'class'
+        ? `<p style="margin-top:12px"><button type="button" class="cb-btn cb-gold" data-act="use-gear">🎒 ${c.gearSet ? 'Replace My Gear With This' : 'Take This Gear'}</button></p>`
+        : `<p style="margin-top:12px"><button type="button" class="cb-btn cb-gold" data-act="take-gold">💰 ${c.gearSet ? 'Start Over: ' : ''}Take ${k.gold} gp</button> <span class="cb-tag">plus ${cbBackgroundGear(c).gold} gp${cbBackgroundGear(c).gear.length ? ' and the gear' : ''} from your background</span></p>`;
+    return '<h2>Equipment</h2>' + h;
+}
+
 // ── Render ───────────────────────────────────────────────
 function renderBar() {
     const pick = document.getElementById('cb-pick');
@@ -568,7 +757,7 @@ function renderSteps() {
     el.innerHTML = CB_STEPS.map(([id, label], i) => {
         const n = todo.filter(t => t.step === id).length;
         const badge = id === 'sheet' ? '' : n ? `<span class="cb-badge" aria-label="${n} to do">${n}</span>` : '<span class="cb-badge ok" aria-label="done">✓</span>';
-        return `<button type="button" class="cb-step" role="tab" id="cb-tab-${id}" data-step="${id}" aria-selected="${step === id}" aria-controls="cb-panel">${id === 'sheet' ? '' : `<span class="cb-n">${i + 1}</span>`}${esc(label)}${badge}</button>`;
+        return `<button type="button" class="cb-step" role="tab" id="cb-tab-${id}" data-step="${id}" aria-selected="${step === id}" aria-controls="cb-panel">${id === 'sheet' ? '' : `<span class="cb-n">${i + 1}</span>`}${esc(stepLabel(id))}${badge}</button>`;
     }).join('');
 }
 
@@ -577,7 +766,7 @@ const RENDER = { race: renderRace, class: renderClass, abilities: renderAbilitie
 function focusKey(el) {
     if (!el || !el.dataset) return '';
     const d = el.dataset;
-    return [d.act, d.f, d.v, d.key, d.assign, d.manual, d.asi, d.part, d.pick, d.eq, d.sk, d.arcanum, d.gearQty, el.type === 'radio' || el.type === 'checkbox' ? el.value : ''].join('|');
+    return [d.act, d.f, d.v, d.key, d.assign, d.manual, d.asi, d.part, d.pick, d.eq, d.sk, d.arcanum, d.gearQty, d.featSlot, d.boost, d.boost3, el.type === 'radio' || el.type === 'checkbox' ? el.value : ''].join('|');
 }
 
 function renderPanel() {
@@ -625,6 +814,20 @@ function openChar(c, toStep) {
     showAllSpells = false;
     step = toStep || (c && cbTodo(c).length ? (cbTodo(c)[0].step) : 'sheet');
     render();
+    useCharRules(c);
+}
+
+// The page's spell lists follow the open character's rules (srd52.js rulesUse, this page only).
+function useCharRules(c) {
+    if (!c || typeof rulesUse !== 'function' || cbPageRules() === (cbIs24(c) ? '2024' : '2014')) return Promise.resolve();
+    return rulesUse(cbIs24(c) ? '2024' : '2014').then(() => {
+        if (cur !== c) return;
+        // Names the other version's list didn't have were kept loosely; check them again now.
+        const fresh = cbClean(JSON.parse(JSON.stringify(c)));
+        if (fresh) Object.assign(c, fresh);
+        if (step === 'race' && !c.race && !c.cls) step = 'race';
+        render();
+    });
 }
 
 function filterSpells(text) {
@@ -635,21 +838,25 @@ function filterSpells(text) {
 // ── Actions ──────────────────────────────────────────────
 function newChar() {
     if (chars.length >= CB_MAX) { flash(`You have ${CB_MAX} characters saved; delete one first.`, true); return; }
-    cur = cbBlank();
+    cur = cbBlank(cbDefaultRules());
     save();
     openChar(cur, 'race');
 }
 
 function quickBuild(opts) {
     if (chars.length >= CB_MAX) { flash(`You have ${CB_MAX} characters saved; delete one first.`, true); return; }
-    cur = cbQuickBuild(opts);
-    save();
-    openChar(cur, 'sheet');
-    flash(`⚡ Rolled ${cur.name}.`);
+    const go = () => {
+        cur = cbQuickBuild(opts);
+        save();
+        openChar(cur, 'sheet');
+        flash(`⚡ Rolled ${cur.name}.`);
+    };
+    if (typeof rulesUse === 'function' && cbPageRules() !== opts.rules) rulesUse(opts.rules).then(go);
+    else go();
 }
 
 function rollHp(c, i) {
-    const k = cbClass(c.cls);
+    const k = cbClass(c.cls, c);
     c.hpRolls[i] = cbRollDie(k.hd);
 }
 
@@ -663,9 +870,24 @@ function onClick(e) {
         case 'goto': return goStep(v);
         case 'race': return change(c => {
             if (c.race === v) return;
-            const r = cbRace(v);
+            const r = cbRace(v, c);
             c.race = v; c.subrace = r.subraces ? r.subraces[0].id : '';
-            c.raceOpt = { langs: [], skills: [], abil: [], tool: '', cantrip: '', ancestry: '' };
+            c.raceOpt = cbBlank().raceOpt;
+        });
+        case 'subrace': return change(c => { c.subrace = v; });
+        case 'boost-mode': return change(c => {
+            const bg = cbBg(c);
+            if (!bg) return;
+            if (v === '111') c.bgOpt.boost = bg.abil ? bg.abil.slice() : [...new Set([...c.bgOpt.boost, ...CB_ABILITIES])].slice(0, 3);
+            else c.bgOpt.boost = c.bgOpt.boost.length >= 2 ? c.bgOpt.boost.slice(0, 2) : (bg.abil || CB_ABILITIES).slice(0, 2);
+        });
+        case 'take-gold': return change(c => {
+            const k = cbClass(c.cls, c);
+            const bg = cbBackgroundGear(c);
+            c.coins = k.gold + bg.gold;
+            c.gear = bg.gear; c.gearSet = true; c.wear = { armor: '', shield: false };
+            cbAutoWear(c);
+            flash(`💰 ${k.gold} gp${bg.gold ? `, plus ${bg.gold} gp from your background` : ''}.`);
         });
         case 'class': return change(c => {
             if (c.cls === v) return;
@@ -719,14 +941,20 @@ function onClick(e) {
         case 'bg': return change(c => {
             if (c.bg === v) return;
             c.bg = v;
-            c.bgOpt = { name: c.bgOpt.name, skills: [], extras: [], langs: [] };
+            c.bgOpt = { ...cbBlank().bgOpt, name: c.bgOpt.name, langs: cbIs24(c) ? c.bgOpt.langs : [] };
+            if (cbIs24(c)) {
+                const bg = cbBg(c), k = cbClass(c.cls, c);
+                const prio = [...new Set([...(k ? k.primary : []), 'con', 'dex', 'wis', 'str', 'int', 'cha'])];
+                if (bg.abil) { const fits = prio.filter(a => bg.abil.includes(a)); c.bgOpt.boost = fits.slice(0, 2); }
+                if (bg.featList) c.bgOpt.featOpt.list = bg.featList;
+            }
         });
         case 'hp-roll': return change(c => rollHp(c, Number(v)));
         case 'hp-roll-all': return change(c => { for (let i = 0; i < c.level - 1; i++) if (!c.hpRolls[i]) rollHp(c, i); });
         case 'equip-mode': return change(c => { c.equipMode = v; });
         case 'use-gear': {
             const missing = cbMissingPicks(cur);
-            if (missing.length) { flash('Pick the weapon or instrument in each chosen option first.', true); return; }
+            if (missing.length) { flash(missing.some(m => m.startsWith('tool:')) ? 'Pick your tool first (the class\'s on the Skills step, the background\'s on the Background step).' : 'Pick the weapon or instrument in each chosen option first.', true); return; }
             return change(c => {
                 const start = cbClassGear(c);
                 c.gear = start.gear; c.coins = start.coins; c.gearSet = true;
@@ -735,7 +963,7 @@ function onClick(e) {
             });
         }
         case 'roll-gold': return change(c => {
-            const k = cbClass(c.cls);
+            const k = cbClass(c.cls, c);
             const r = rollDice(`${k.gold[0]}d4`);
             const bg = cbBackgroundGear(c);
             c.coins = r.total * k.gold[1] + bg.gold;
@@ -793,7 +1021,7 @@ function onClick(e) {
 }
 
 function assignByClass(c, pool) {
-    const k = cbClass(c.cls);
+    const k = cbClass(c.cls, c);
     const prio = [...new Set([...(k ? k.primary : []), 'con', 'dex', 'wis', 'str', 'int', 'cha'])];
     const sorted = pool.slice().sort((a, b) => b - a);
     prio.forEach((a, i) => { c.base[a] = sorted[i]; });
@@ -804,8 +1032,31 @@ function onChange(e) {
     if (!cur) return;
     const d = el.dataset;
     if (d.act === 'show-all') { showAllSpells = el.checked; renderPanel(); return; }
+    if (d.rulesChar !== undefined) {
+        if (cur.race || cur.cls) return;
+        change(c => { c.rules = el.value === '2024' && CB24_OK() ? '2024' : '2014'; c.bg = ''; c.bgOpt = cbBlank().bgOpt; c.asi = {}; });
+        useCharRules(cur);
+        return;
+    }
+    if (d.featSlot) return change(c => cbSetFeat(c, d.featSlot, el.value));
+    if (d.boost !== undefined) return change(c => {
+        const bg = cbBg(c), allowed = (bg && bg.abil) || CB_ABILITIES;
+        const b = c.bgOpt.boost.length === 2 ? c.bgOpt.boost.slice() : [allowed[0], allowed[1]];
+        const i = Number(d.boost);
+        b[i] = el.value;
+        if (b[1 - i] === el.value) b[1 - i] = allowed.find(a => a !== el.value);
+        c.bgOpt.boost = b;
+    });
+    if (d.boost3 !== undefined) return change(c => {
+        const b = c.bgOpt.boost.length === 3 ? c.bgOpt.boost.slice() : ['str', 'dex', 'con'];
+        const i = Number(d.boost3), j = b.indexOf(el.value);
+        if (j >= 0 && j !== i) b[j] = b[i];
+        b[i] = el.value;
+        c.bgOpt.boost = b;
+    });
     if (d.f) {
         const path = d.f;
+        if (/\.(featOpt|opt)\.list$/.test(path)) return change(c => { const o = getPath(c, path.replace(/\.list$/, '')); o.list = el.value; o.cantrips = []; o.spell = ''; });
         if (el.type === 'checkbox') return change(c => setPath(c, path, el.checked));
         if (path === 'level') return change(c => { c.level = Number(el.value); cbFitToLevel(c); });
         if (path === 'coins') return change(c => { c.coins = Math.max(0, Math.round(Number(el.value) * 100) / 100 || 0); });
@@ -825,7 +1076,7 @@ function onChange(e) {
     if (d.asi) return change(c => {
         const lv = d.asi, p = c.asi[lv] || {};
         if (d.part === 'mode') {
-            const k = cbClass(c.cls);
+            const k = cbClass(c.cls, c);
             const first = k ? k.primary[0] : 'str';
             const second = k ? k.primary[1] : 'con';
             if (!el.value) delete c.asi[lv];
@@ -924,8 +1175,19 @@ function toggleQuick(open) {
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('year').textContent = new Date().getFullYear();
     document.getElementById('cb-q-level').innerHTML = Array.from({ length: 20 }, (_, i) => `<option value="${i + 1}">${i + 1}</option>`).join('');
-    document.getElementById('cb-q-class').innerHTML = '<option value="">Any class</option>' + CB_CLASSES.map(k => `<option value="${k.id}">${k.icon} ${esc(k.name)}</option>`).join('');
-    document.getElementById('cb-q-race').innerHTML = '<option value="">Any race</option>' + CB_RACES.map(r => `<option value="${r.id}">${r.icon} ${esc(r.subraces ? r.subraces[0].name : r.name)}</option>`).join('');
+    const qRules = document.getElementById('cb-q-rules');
+    const fillQuick = () => {
+        const v = qRules && qRules.value === '2024' ? '2024' : '2014';
+        document.getElementById('cb-q-class').innerHTML = '<option value="">Any class</option>' + cbClassList(v).map(k => `<option value="${k.id}">${k.icon} ${esc(k.name)}</option>`).join('');
+        document.getElementById('cb-q-race').innerHTML = `<option value="">Any ${v === '2024' ? 'species' : 'race'}</option>` + cbRaceList(v).map(r => `<option value="${r.id}">${r.icon} ${esc(v === '2014' && r.subraces ? r.subraces[0].name : r.name)}</option>`).join('');
+        document.querySelector('label[for="cb-q-race"]').firstChild.textContent = v === '2024' ? 'Species' : 'Race';
+    };
+    if (qRules) {
+        if (!CB24_OK()) qRules.closest('label').hidden = true;
+        qRules.value = cbDefaultRules();
+        qRules.addEventListener('change', fillQuick);
+    }
+    fillQuick();
 
     chars = cbLoadAll();
     const asked = new URLSearchParams(location.search).get('char'); // from the Spell Planner or the Cards page
@@ -956,7 +1218,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('cb-quick-open').addEventListener('click', () => toggleQuick(document.getElementById('cb-quick').hidden));
     document.getElementById('cb-quick').addEventListener('submit', e => {
         e.preventDefault();
-        quickBuild({ level: document.getElementById('cb-q-level').value, cls: document.getElementById('cb-q-class').value, race: document.getElementById('cb-q-race').value });
+        quickBuild({ level: document.getElementById('cb-q-level').value, cls: document.getElementById('cb-q-class').value, race: document.getElementById('cb-q-race').value, rules: qRules && qRules.value === '2024' ? '2024' : '2014' });
     });
     document.getElementById('cb-dup').addEventListener('click', () => {
         if (!cur) return;

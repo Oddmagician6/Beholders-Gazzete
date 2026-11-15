@@ -3,7 +3,9 @@
    A character's session state is c.play (shape in cbPlayBlank, cleaned by
    cbPlayClean in character-engine.js), so it saves, exports, and backs up
    with the character. cbResources lists the class and race resources the
-   character has at its level (SRD 5.1); cbPlayFit trims the state to what the
+   character has at its level (SRD 5.1, or SRD 5.2 for a 2024 character: cbResources24, where
+   recharge 'one' means one use back on a short rest and all on a long rest; 2024 exhaustion is
+   −2 to d20 Tests and −5 ft. speed a level, and a long rest gives back every hit die); cbPlayFit trims the state to what the
    level allows after a level change; the rest of this file is hit points,
    death saves, hit dice, the two rests, and (F60) what the character carries:
    weight, encumbrance, packs, magic items and attunement, and the coin purse.
@@ -18,6 +20,7 @@ const CB_EXHAUSTION = ['', 'Disadvantage on ability checks.', 'Speed halved.', '
 // heal: a formula the resource heals the character by when used.
 // dc: counts uses that raise a DC (Relentless Rage) rather than spending a charge.
 function cbResources(c, d = cbDerive(c)) {
+    if (cbIs24(c)) return cbResources24(c, d);
     const L = c.level, m = d.m, out = [];
     const add = (id, name, max, recharge, note = '', more = {}) => { if (max > 0) out.push({ id, name, max, recharge, note, ...more }); };
     const at = (cls, lv) => c.cls === cls && L >= lv;
@@ -55,9 +58,78 @@ function cbResources(c, d = cbDerive(c)) {
     return out;
 }
 
-// Hit point maximum after exhaustion (level 4 halves it).
+// 2024 rules (SRD 5.2): the same idea, with the 2024 classes' resources and their recharges.
+function cbResources24(c, d) {
+    const L = c.level, m = d.m, out = [];
+    const add = (id, name, max, recharge, note = '', more = {}) => { if (max > 0) out.push({ id, name, max, recharge, note, ...more }); };
+    const at = (cls, lv) => c.cls === cls && L >= lv;
+    const pb = d.prof;
+
+    if (at('barbarian', 1)) add('rage', 'Rage', d.x.rages, 'one', `+${d.x.rageDmg} damage on STR attacks${L >= 15 ? '; all back once per long rest when you roll initiative' : ''}`);
+    if (at('barbarian', 11)) add('relentless', 'Relentless Rage', 6, 'short', 'CON save at 0 hit points while raging', { dc: true });
+    if (at('barbarian', 14)) add('presence', 'Intimidating Presence', 1, 'long', `Frighten foes within 30 ft. (DC ${d.x.dc('str')}); a rage buys it back`);
+    if (at('bard', 1)) add('inspiration', 'Bardic Inspiration', Math.max(1, m.cha), L >= 5 ? 'short' : 'long', `d${L >= 15 ? 12 : L >= 10 ? 10 : L >= 5 ? 8 : 6}`);
+    if (at('cleric', 2)) add('channel', 'Channel Divinity', L >= 18 ? 4 : L >= 6 ? 3 : 2, 'one', `Divine Spark, Turn Undead${L >= 3 ? ', or Preserve Life' : ''} (DC ${d.x.dc('wis')})`);
+    if (at('cleric', 10)) add('intervention', 'Divine Intervention', 1, L >= 20 ? 'none' : 'long', L >= 20 ? 'Wish takes 2d4 long rests to come back' : 'A cleric spell of 5th level or lower, no slot');
+    if (at('druid', 2)) add('wild-shape', 'Wild Shape', L >= 17 ? 4 : L >= 6 ? 3 : 2, 'one', `CR ${L >= 8 ? 1 : L >= 4 ? '1/2' : '1/4'}, ${Math.floor(L / 2)} hours, ${L} temporary HP`);
+    if (at('druid', 5)) add('resurgence', 'Wild Resurgence slot', 1, 'long', 'Turn a Wild Shape use into a 1st-level slot');
+    if (at('druid', 6)) add('natural-recovery', 'Natural Recovery', 1, 'long', `On a short rest: regain spent slots totaling up to ${Math.ceil(L / 2)} levels (none 6th+). Tap the used slots to get them back.`);
+    if (at('druid', 6)) add('circle-cast', 'Circle spell without a slot', 1, 'long', 'One of your circle spells');
+    if (at('fighter', 1)) add('second-wind', 'Second Wind', L >= 10 ? 4 : L >= 4 ? 3 : 2, 'one', `Bonus action: regain 1d10 + ${L} HP`, { heal: `1d10+${L}` });
+    if (at('fighter', 2)) add('action-surge', 'Action Surge', L >= 17 ? 2 : 1, 'short', L >= 17 ? 'Once per turn' : 'One more action');
+    if (at('fighter', 9)) add('indomitable', 'Indomitable', L >= 17 ? 3 : L >= 13 ? 2 : 1, 'long', `Reroll a failed save with +${L}`);
+    if (at('monk', 2)) add('ki', 'Focus Points', L, 'short', `Save DC ${d.x.dc('wis')}`, { pool: true });
+    if (at('monk', 2)) add('metabolism', 'Uncanny Metabolism', 1, 'long', `On initiative: all focus back and 1d${d.x.martial} + ${L} HP`, { heal: `1d${d.x.martial}+${L}` });
+    if (at('monk', 6)) add('wholeness', 'Wholeness of Body', Math.max(1, m.wis), 'long', `Bonus action: regain 1d${d.x.martial} + ${Math.max(1, m.wis)} HP`, { heal: `1d${d.x.martial}+${Math.max(1, m.wis)}` });
+    if (at('paladin', 1)) add('lay-on-hands', 'Lay On Hands', 5 * L, 'long', 'Heal by touch; 5 points end poisoned', { pool: true });
+    if (at('paladin', 2)) add('free-smite', "Paladin's Smite", 1, 'long', 'Divine smite without a slot');
+    if (at('paladin', 3)) add('channel', 'Channel Divinity', L >= 11 ? 3 : 2, 'one', `Divine Sense, Sacred Weapon${L >= 9 ? ', or Abjure Foes' : ''} (DC ${d.x.dc('cha')})`);
+    if (at('paladin', 5)) add('free-steed', 'Faithful Steed', 1, 'long', 'Find steed without a slot');
+    if (at('paladin', 20)) add('nimbus', 'Holy Nimbus', 1, 'long', '10 minutes of sunlight; a 5th-level slot buys it back');
+    if (at('ranger', 1)) add('favored-enemy', "Hunter's Mark (free)", L >= 17 ? 6 : L >= 13 ? 5 : L >= 9 ? 4 : L >= 5 ? 3 : 2, 'long', 'Cast it without a slot');
+    if (at('ranger', 10)) add('tireless', 'Tireless', Math.max(1, m.wis), 'long', `Gain 1d8 + ${Math.max(1, m.wis)} temporary HP`);
+    if (at('ranger', 14)) add('natures-veil', "Nature's Veil", Math.max(1, m.wis), 'long', 'Invisible until the end of your next turn');
+    if (at('rogue', 20)) add('stroke-of-luck', 'Stroke of Luck', 1, 'short', 'A failed D20 Test becomes a 20');
+    if (at('sorcerer', 1)) add('innate', 'Innate Sorcery', 2, 'long', `1 minute: spell DC ${d.x.dc('cha') + 1}, advantage on spell attacks`);
+    if (at('sorcerer', 2)) add('sorcery', 'Sorcery Points', L, 'long', 'Font of Magic: trade for slots', { pool: true });
+    if (at('sorcerer', 5)) add('restoration', 'Sorcerous Restoration', 1, 'long', `On a short rest: up to ${Math.floor(L / 2)} sorcery points back (tap them off the pool)`);
+    if (at('sorcerer', 14)) add('wings', 'Dragon Wings', 1, 'long', '60 ft. flying for 1 hour; 3 sorcery points buy it back');
+    if (at('sorcerer', 18)) add('dragon-companion', 'Dragon Companion', 1, 'long', 'Summon dragon without a slot');
+    if (at('warlock', 2)) add('cunning', 'Magical Cunning', 1, 'long', L >= 20 ? 'A 1-minute rite: all pact slots back' : 'A 1-minute rite: half your pact slots back (round up)');
+    if (at('warlock', 6)) add('own-luck', "Dark One's Own Luck", Math.max(1, m.cha), 'long', 'Add a d10 to a check or save');
+    if (at('warlock', 9)) add('contact', 'Contact Patron', 1, 'long', 'Contact other plane without a slot');
+    if (at('warlock', 14)) add('hurl', 'Hurl Through Hell', 1, 'long', '8d10 psychic; a pact slot buys it back');
+    if (d.magic && d.magic.rules.arcanum.length) d.magic.rules.arcanum.forEach(lv => add('arcanum-' + lv, `Mystic Arcanum (${cbOrd(lv)})`, 1, 'long', c.spells.arcanum[lv] || 'No spell picked yet'));
+    if (at('wizard', 1)) add('arcane-recovery', 'Arcane Recovery', 1, 'long', `On a short rest: regain spent slots totaling up to ${Math.ceil(L / 2)} levels (none 6th+). Tap the used slots to get them back.`);
+    if (at('wizard', 20)) add('signature', 'Signature Spells', 2, 'short', 'Each 3rd-level signature spell once, without a slot');
+
+    const sub = cbSubrace(c);
+    if (c.race === 'dragonborn' && d.breath) add('breath', 'Breath Weapon', pb, 'long', `${d.breath.dice} ${d.breath.dmg}, DC ${d.x.dc('con')} DEX`);
+    if (c.race === 'dragonborn' && L >= 5) add('flight', 'Draconic Flight', 1, 'long', 'Fly at your speed for 10 minutes');
+    if (c.race === 'dwarf') add('stonecunning', 'Stonecunning', pb, 'long', 'Tremorsense 60 ft. on stone for 10 minutes');
+    if (c.race === 'goliath' && sub) add('giant', sub.name, pb, 'long', sub.traits[0] ? '' : '');
+    if (c.race === 'goliath' && L >= 5) add('large-form', 'Large Form', 1, 'long', 'Large for 10 minutes: advantage on STR checks, +10 ft.');
+    if (c.race === 'orc') add('adrenaline', 'Adrenaline Rush', pb, 'short', `Dash as a bonus action, gain ${pb} temporary HP`);
+    if (c.race === 'orc') add('relentless-endurance', 'Relentless Endurance', 1, 'long', 'Drop to 1 hit point instead of 0');
+    if (c.race === 'gnome' && c.subrace === 'forest-gnome') add('animals', 'Speak with Animals', pb, 'long', 'Without a slot');
+    ((sub && sub.spells) || []).forEach(([lv, n]) => {
+        const s = cbSpell(n);
+        if (L >= lv && lv > 1 && s && s.level) add('lineage-' + lv, n, 1, 'long', 'Once without a slot');
+    });
+    cbFeatSlots(c).forEach(slot => { if (slot.feat === 'magic-initiate' && slot.opt.spell) add('mi-' + slot.key.replace('.', '-'), slot.opt.spell, 1, 'long', 'Magic Initiate: once without a slot'); });
+    return out;
+}
+
+// Hit point maximum after exhaustion (level 4 halves it; not in the 2024 rules).
 function cbPlayMax(c, d) {
-    return c.play.exh >= 4 ? Math.max(1, Math.floor(d.hp / 2)) : d.hp;
+    return c.play.exh >= 4 && !cbIs24(c) ? Math.max(1, Math.floor(d.hp / 2)) : d.hp;
+}
+
+// What exhaustion level n does, in the character's rules (rules-data.js has the text when the page loads it).
+function cbExhaustionText(c, n) {
+    if (typeof srdExhaustionText === 'function') return srdExhaustionText(n, cbIs24(c) ? '2024' : '2014');
+    if (cbIs24(c)) return n >= 6 ? 'Death.' : `−${2 * n} to every d20 Test; Speed −${5 * n} ft.`;
+    return CB_EXHAUSTION.slice(1, n + 1).join(' ');
 }
 
 function cbPlayHp(c, d) {
@@ -74,9 +146,11 @@ function cbPartyLive(c, d = cbDerive(c)) {
 // Speed after what's carried, exhaustion, and conditions that stop movement.
 function cbPlaySpeed(c, d) {
     const p = c.play;
-    if (p.exh >= 5 || ['Grappled', 'Restrained', 'Paralyzed', 'Petrified', 'Stunned', 'Unconscious'].some(n => p.cond.includes(n))) return 0;
+    const v24 = cbIs24(c);
+    if ((p.exh >= 5 && !v24) || p.exh >= 6 || ['Grappled', 'Restrained', 'Paralyzed', 'Petrified', 'Stunned', 'Unconscious'].some(n => p.cond.includes(n))) return 0;
     const load = cbLoad(c, d).state;
     const speed = load === 'over' ? Math.min(5, d.speed) : Math.max(0, d.speed - (load === 'heavy' ? 20 : load === 'encumbered' ? 10 : 0));
+    if (v24) return Math.max(0, speed - 5 * p.exh);
     return p.exh >= 2 ? Math.floor(speed / 2) : speed;
 }
 
@@ -89,13 +163,14 @@ function cbItemWeight(g) {
     return CB_WEIGHTS[g.name] || 0;
 }
 
-// Carrying capacity is STR × 15 lb (every SRD race is Small or Medium, so no size change).
+// Carrying capacity is STR × 15 lb (every SRD race is Small or Medium, so no size change; a 2024
+// goliath's Powerful Build carries as Large, twice that).
 // The variant rule (c.play.enc): over STR × 5 is encumbered (−10 ft.), over STR × 10 heavily (−20 ft.
 // and disadvantage on STR, DEX, and CON rolls and on attacks). Past capacity you can only push or drag it.
 // → { lb, cap, state: '' | 'encumbered' | 'heavy' | 'over' }
 function cbLoad(c, d) {
     const lb = Math.round(c.gear.reduce((t, g) => t + cbItemWeight(g) * g.qty, 0) * 100) / 100;
-    const str = d.s.str, cap = str * 15;
+    const str = d.s.str, cap = str * 15 * (d.race && d.race.carryAs ? 2 : 1);
     const state = lb > cap ? 'over' : c.play.enc && lb > str * 10 ? 'heavy' : c.play.enc && lb > str * 5 ? 'encumbered' : '';
     return { lb, cap, state };
 }
@@ -247,14 +322,16 @@ function cbShortRest(c, d = cbDerive(c)) {
     cbResources(c, d).forEach(r => {
         if (!p.res[r.id]) return;
         if (r.recharge === 'short') { delete p.res[r.id]; back.push(r.name); }
-        else if (r.id === 'sorcery' && c.level >= 20) { p.res[r.id] = Math.max(0, p.res[r.id] - 4); back.push('4 sorcery points'); }
+        else if (r.recharge === 'one') { p.res[r.id] -= 1; if (!p.res[r.id]) delete p.res[r.id]; back.push(`one ${r.name}`); }
+        else if (r.id === 'sorcery' && c.level >= 20 && !cbIs24(c)) { p.res[r.id] = Math.max(0, p.res[r.id] - 4); back.push('4 sorcery points'); }
     });
+    if (cbIs24(c) && c.cls === 'ranger' && c.level >= 10 && p.exh) { p.exh -= 1; back.push('one level of exhaustion (Tireless)'); }
     return back;
 }
 
 function cbLongRest(c, d = cbDerive(c)) {
     const p = c.play, back = [];
-    const hdBack = Math.min(p.hd, Math.max(1, Math.floor(c.level / 2)));
+    const hdBack = cbIs24(c) ? p.hd : Math.min(p.hd, Math.max(1, Math.floor(c.level / 2)));
     if (p.exh) { p.exh -= 1; back.push('one level of exhaustion'); }
     if (cbPlayHp(c, d) < cbPlayMax(c, d) || p.hp !== null) back.push('hit points');
     p.hp = null;

@@ -40,12 +40,11 @@ const plus = n => (n ? (n > 0 ? '+' : '') + n : '');
 const who = () => (cur && cur.name) || 'Unnamed character';
 
 function raceLabel(c) {
-    const sub = cbSubrace(c), race = cbRace(c.race);
-    return sub ? sub.name : race ? race.name : '';
+    return cbRaceLabel(c);
 }
 
 function charLabel(c) {
-    const k = cbClass(c.cls);
+    const k = cbClass(c.cls, c);
     const what = [raceLabel(c), k ? k.name : ''].filter(Boolean).join(' ');
     return `${c.name || 'Unnamed character'} · level ${c.level}${what ? ' ' + what : ''}`;
 }
@@ -61,8 +60,12 @@ function portraitSrc(c) {
 function spellLink(name) {
     if (typeof hbmIsHomebrew === 'function' && hbmIsHomebrew(name)) return `${esc(name)} <span title="Homebrew, from your campaign notebook">🧪</span>`;
     if (typeof srd52IsSpell === 'function' && srd52IsSpell(name)) return `${esc(name)} <span title="From the SRD 5.2 additions">📗</span>`;
-    return `<a href="spell/${spellSlug(name)}" target="_blank" rel="noopener" title="Open ${esc(name)} in a new tab">${esc(name)}</a>`;
+    const href = cur && cbIs24(cur) ? `spellbook?spells=${spellSlug(name)}&list=${encodeURIComponent(name)}&rules=2024` : `spell/${spellSlug(name)}`;
+    return `<a href="${href}" target="_blank" rel="noopener" title="Open ${esc(name)} in a new tab">${esc(name)}</a>`;
 }
+
+// The condition text in the character's rules (rules-data.js).
+const csConditions = c => (typeof srdConditionText === 'function' ? srdConditionText(cbIs24(c) ? '2024' : '2014') : SRD_CONDITION_TEXT);
 
 function save() {
     const list = cbSave(cur);
@@ -130,7 +133,7 @@ function pips(n, on, act, extra = '', cls = '') {
 }
 
 function rechargeTag(r) {
-    return `<span class="cs-recharge">${r === 'short' ? 'short rest' : r === 'long' ? 'long rest' : 'by hand'}</span>`;
+    return `<span class="cs-recharge">${r === 'short' ? 'short rest' : r === 'one' ? 'one per short rest, all per long' : r === 'long' ? 'long rest' : 'by hand'}</span>`;
 }
 
 function renderRollbar() {
@@ -186,7 +189,7 @@ function hpPanel(c, d) {
           <button type="button" class="cs-btn" data-act="short" aria-expanded="${restOpen}">☕ Short Rest</button>
           <button type="button" class="cs-btn" data-act="long">${Date.now() - longArmed < 3000 ? '🛌 Really? Tap again' : '🛌 Long Rest'}</button></div>`;
     if (restOpen) {
-        const back = ['pact slots', ...cbResources(c, d).filter(r => r.recharge === 'short').map(r => r.name)];
+        const back = ['pact slots', ...cbResources(c, d).filter(r => r.recharge === 'short').map(r => r.name), ...cbResources(c, d).filter(r => r.recharge === 'one').map(r => 'one ' + r.name)];
         if (!(d.magic && d.magic.pact)) back.shift();
         if (c.cls === 'sorcerer' && L >= 20) back.push('4 sorcery points');
         h += `<div class="cs-rest"><p><b>☕ Short rest</b> (at least an hour). Spend hit dice to heal, one at a time, then finish the rest.</p>
@@ -207,14 +210,15 @@ function concSpells(c, d) {
 function statusPanel(c, d) {
     const p = c.play;
     const conc = concSpells(c, d);
-    const conds = Object.keys(SRD_CONDITION_TEXT).filter(n => n !== 'Exhaustion');
-    const effects = p.cond.map(n => `<li><b>${esc(n)}:</b> ${esc(SRD_CONDITION_TEXT[n].join(' '))}</li>`);
-    if (p.exh) effects.unshift(`<li><b>Exhaustion ${p.exh}:</b> ${esc(CB_EXHAUSTION.slice(1, p.exh + 1).join(' '))}</li>`);
+    const condText = csConditions(c);
+    const conds = Object.keys(condText).filter(n => n !== 'Exhaustion');
+    const effects = p.cond.map(n => `<li><b>${esc(n)}:</b> ${esc((condText[n] || SRD_CONDITION_TEXT[n] || []).join(' '))}</li>`);
+    if (p.exh) effects.unshift(`<li><b>Exhaustion ${p.exh}:</b> ${esc(cbExhaustionText(c, p.exh))}</li>`);
     return `<section class="cs-panel" aria-labelledby="cs-st-h"><h2 id="cs-st-h">✨ Status</h2>
         <ul class="cs-rows">
           <li><span class="cs-name">Inspiration<small>From the DM; spend it for advantage on one roll.</small></span>
             <button type="button" class="cs-btn" data-act="insp" aria-pressed="${p.insp}">${p.insp ? '⭐ Inspired' : '☆ None'}</button></li>
-          <li><span class="cs-name">Exhaustion<small>${p.exh ? esc(CB_EXHAUSTION[p.exh]) : 'None. A long rest takes off one level.'}</small></span>
+          <li><span class="cs-name">Exhaustion<small>${p.exh ? esc(cbIs24(c) ? cbExhaustionText(c, p.exh) : CB_EXHAUSTION[p.exh]) : 'None. A long rest takes off one level.'}</small></span>
             <span class="cs-step"><button type="button" class="cs-btn" data-act="exh" data-n="-1" aria-label="One level less"${p.exh ? '' : ' disabled'}>−</button><span aria-label="Exhaustion level">${p.exh}</span><button type="button" class="cs-btn" data-act="exh" data-n="1" aria-label="One level more"${p.exh >= 6 ? ' disabled' : ''}>＋</button></span></li>
           <li><label class="cs-field">Concentrating on<select id="cs-conc" data-f="conc"${conc.length ? '' : ' disabled'}><option value="">${conc.length ? 'Nothing' : 'No concentration spells'}</option>${conc.map(n => `<option${n === p.conc ? ' selected' : ''}>${esc(n)}</option>`).join('')}</select></label></li>
         </ul>
@@ -390,7 +394,7 @@ function render() {
     }
     const focus = focusKey(document.activeElement);
     const pic = portraitSrc(c);
-    const bgName = c.bg === 'custom' ? (c.bgOpt.name || 'Custom background') : c.bg ? CB_BACKGROUNDS[c.bg].name : '';
+    const bgName = c.bg === 'custom' ? (c.bgOpt.name || 'Custom background') : c.bg ? cbBg(c).name : '';
     const todo = cbTodo(c);
     sheet.innerHTML = `<div class="cs-head">${pic ? `<img class="cs-portrait" src="${pic}" alt="" width="64" height="64">` : ''}
         <div class="cs-title"><h2>${esc(who())}</h2><p>Level ${c.level} ${esc(raceLabel(c))} ${esc(d.k.name)} (${esc(d.k.sub.name)})${bgName ? ' · ' + esc(bgName) : ''}${c.player ? ' · played by ' + esc(c.player) : ''}</p>
@@ -423,7 +427,7 @@ function renderBar() {
     document.getElementById('cs-links').innerHTML = cur ? `<a class="cs-btn" href="character-builder?char=${id}">✏️ Edit in Builder</a>
         <a class="cs-btn" href="dnd-character-cards?char=${id}${items ? '&amp;items=' + items : ''}">🎴 Cards</a>
         <a class="cs-btn" href="dnd-player-journal?char=${id}">📓 Journal</a>
-        ${!cbClass(cur.cls) ? '' : loadParty().some(m => m.id === cur.id)
+        ${!cbClass(cur.cls, cur) ? '' : loadParty().some(m => m.id === cur.id)
             ? `<span class="cs-linked" title="Hit points, conditions, exhaustion, concentration, and death saves show on the Toolbox's Party tab and in the Initiative tracker when they're open in this browser">👥 In the party: the DM's tools follow this sheet</span>`
             : `<button type="button" class="cs-btn" data-act="party" title="Put this character on the Toolbox's Party tab, where the DM's tools follow this sheet">👥 Add to Party</button>`}` : '';
 }
@@ -442,6 +446,11 @@ function openChar(c) {
         try { history.replaceState(null, '', location.pathname + '?char=' + encodeURIComponent(cur.id)); } catch (e) {}
     }
     render();
+    // The page's spell and item lists follow the character's rules (srd52.js, this page only).
+    if (cur && typeof rulesUse === 'function' && cbPageRules() !== (cbIs24(cur) ? '2024' : '2014')) {
+        const c = cur;
+        rulesUse(cbIs24(c) ? '2024' : '2014').then(() => { if (cur === c) render(); });
+    }
 }
 
 function readAmount() {

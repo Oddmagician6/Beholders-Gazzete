@@ -34,7 +34,7 @@ function flash(msg, bad = false) {
     flashTimer = setTimeout(() => { el.textContent = ''; }, 5000);
 }
 
-const ccChars = () => cbLoadAll().filter(c => cbClass(c.cls));
+const ccChars = () => cbLoadAll().filter(c => cbClass(c.cls, c));
 
 function ccFromUrl() {
     const q = urlParams();
@@ -42,6 +42,14 @@ function ccFromUrl() {
     cc.c = (id && ccChars().find(c => c.id === id)) || null;
     cc.charId = cc.c ? id : '';
     cc.items = [...new Set((q.get('items') || '').split(',').map(s => CC_ITEM_SLUG[s]).filter(Boolean))].slice(0, CC_MAX_ITEMS);
+    ccUseRules();
+}
+
+// A character's cards (and its magic items' text) follow its rules (srd52.js rulesUse, this page only).
+function ccUseRules() {
+    const c = cc.c;
+    if (!c || typeof rulesUse !== 'function' || cbPageRules() === (cbIs24(c) ? '2024' : '2014')) return;
+    rulesUse(cbIs24(c) ? '2024' : '2014').then(() => { if (cc.c === c) { ccCache.clear(); render(); } });
 }
 
 function ccWriteUrl(push = false) {
@@ -51,7 +59,7 @@ function ccWriteUrl(push = false) {
 // ── What goes on the cards ───────────────────────────────
 
 function ccTag(c) {
-    const k = cbClass(c.cls);
+    const k = cbClass(c.cls, c);
     return `${c.name || 'Unnamed'} · ${k.name} ${c.level}`;
 }
 
@@ -110,10 +118,10 @@ function ccFeatures(c, d) {
         vals.filter(o => o[1]).forEach(o => cls.push({ name: o[0], text: o[1], sub: `${k.name} · ${ch.label}`, kind: 'option' }));
         if (bare.length) cls.push({ name: ch.label, text: bare.map(o => o[0]).join(', ') + '.', sub: `${k.name} · your choice`, kind: 'option' });
     });
-    d.feats.forEach(f => cls.push({ name: f.name, text: f.text, sub: 'Feat', kind: 'feat' }));
-    const raceName = d.sub ? d.sub.name : d.race ? d.race.name : '';
+    d.feats.forEach(f => cls.push({ name: f.name, text: f.text, sub: f.from ? `Feat · ${f.from}` : 'Feat', kind: 'feat' }));
+    const raceName = cbRaceLabel(c);
     const race = d.raceTraits.map(f => ({ name: f.name, text: f.text, sub: `${raceName} trait`, kind: 'race' }));
-    const bgName = c.bg === 'custom' ? (c.bgOpt.name || 'Custom background') : c.bg ? CB_BACKGROUNDS[c.bg].name : '';
+    const bgName = c.bg === 'custom' ? (c.bgOpt.name || 'Custom background') : c.bg ? cbBg(c).name : '';
     const bg = d.bgFeature ? [{ name: d.bgFeature.name, text: d.bgFeature.text, sub: `${bgName} background feature`, kind: 'background' }] : [];
     return { class: cls, race, background: bg };
 }
@@ -162,14 +170,14 @@ function renderChars() {
     const sel = document.getElementById('cc-char');
     const list = ccChars();
     sel.innerHTML = `<option value="">No character (magic items only)</option>`
-        + list.map(c => `<option value="${esc(c.id)}"${c.id === cc.charId ? ' selected' : ''}>🧝 ${esc(c.name || 'Unnamed')} (${esc(cbClass(c.cls).name)} ${c.level})</option>`).join('');
+        + list.map(c => `<option value="${esc(c.id)}"${c.id === cc.charId ? ' selected' : ''}>🧝 ${esc(c.name || 'Unnamed')} (${esc(cbClass(c.cls, c).name)} ${c.level})</option>`).join('');
     sel.title = list.length ? 'Pick a saved Character Builder character' : 'Characters you save in the Character Builder show up here';
 }
 
 function renderSets() {
     const counts = ccCounts();
     const sets = CC_SETS.filter(([id]) => id === 'items' || cc.c);
-    let h = `<div class="cc-sets">${sets.map(([id, label]) => `<label class="cc-check"><input type="checkbox" data-set="${id}"${cc.off.has(id) ? '' : ' checked'}> ${label} <span class="cc-n">${counts[id] || 0}</span></label>`).join('')}</div>`;
+    let h = `<div class="cc-sets">${sets.map(([id, label]) => `<label class="cc-check"><input type="checkbox" data-set="${id}"${cc.off.has(id) ? '' : ' checked'}> ${id === 'race' && cc.c && cbIs24(cc.c) ? '🧬 Species traits' : label} <span class="cc-n">${counts[id] || 0}</span></label>`).join('')}</div>`;
     if (!cc.c) {
         h += `<p class="cc-hint">${ccChars().length ? 'Pick a character for its attack, feature, and trait cards, or' : 'Save a character in the <a href="character-builder">Character Builder</a> for its attack, feature, and trait cards, or'} add magic items below.</p>`;
     } else {
