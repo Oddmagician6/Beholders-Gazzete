@@ -45,6 +45,8 @@
     .cmp-acts { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--gold-dim); }
     .cmp-acts .btn { font-size: 0.82rem; text-decoration: none; }
     .cmp-more { margin: 30px 0 0; }
+    .cmp-ver { font-family: var(--font-ui); font-size: 0.85rem; color: var(--text-dim); margin: 14px 0 0; padding: 10px 14px; border-left: 3px solid var(--gold-dim); background: rgba(212, 175, 55, 0.06); }
+    .cmp-ver a { color: var(--gold-bright); }
     .cmp-more h2 { font-family: var(--font-head); font-size: 1.15rem; color: var(--gold-bright); border-bottom: 1px solid var(--gold-dim); padding-bottom: 6px; margin: 0 0 10px; }
     .cmp-more p { color: var(--text-mid); margin: 0 0 10px; line-height: 1.6; }
     .cmp-more a { color: var(--gold-bright); }
@@ -106,7 +108,7 @@
       .sb-box .sb-abil { grid-template-columns: repeat(3, 1fr); }
     }
     @media print {
-      body > :not(main), .cmp-crumbs, .cmp-acts, .cmp-more { display: none !important; }
+      body > :not(main), .cmp-crumbs, .cmp-acts, .cmp-more, .cmp-ver { display: none !important; }
     }
   </style>
 </head>
@@ -222,6 +224,7 @@
         <a class="btn" href="dnd-dice-roller">🎲 Roll the Dice</a>
       </div>
     </article>
+    <p class="cmp-ver"><strong>📘 2024 rules:</strong> this page has the 2014 text (SRD 5.1). <a href="spellbook?spells=programmed-illusion&amp;list=Programmed+Illusion&amp;rules=2024">Read the 2024 version in the Spellbook →</a></p>
     <section class="cmp-more">
       <h2>More 6th-level spells</h2>
       <ul class="cmp-links"><li><a href="spell/blade-barrier">Blade Barrier</a></li><li><a href="spell/chain-lightning">Chain Lightning</a></li><li><a href="spell/circle-of-death">Circle of Death</a></li><li><a href="spell/conjure-fey">Conjure Fey</a></li><li><a href="spell/contingency">Contingency</a></li><li><a href="spell/create-undead">Create Undead</a></li><li><a href="spell/disintegrate">Disintegrate</a></li><li><a href="spell/eyebite">Eyebite</a></li><li><a href="spell/find-the-path">Find the Path</a></li><li><a href="spell/flesh-to-stone">Flesh to Stone</a></li><li><a href="spell/forbiddance">Forbiddance</a></li><li><a href="spell/freezing-sphere">Freezing Sphere</a></li><li><a href="spell/globe-of-invulnerability">Globe of Invulnerability</a></li><li><a href="spell/guards-and-wards">Guards and Wards</a></li><li><a href="spell/harm">Harm</a></li><li><a href="spell/heal">Heal</a></li><li><a href="spell/heroes-feast">Heroes&#39; Feast</a></li><li><a href="spell/instant-summons">Instant Summons</a></li><li><a href="spell/irresistible-dance">Irresistible Dance</a></li><li><a href="spell/magic-jar">Magic Jar</a></li><li><a href="spell/mass-suggestion">Mass Suggestion</a></li><li><a href="spell/move-earth">Move Earth</a></li><li><a href="spell/planar-ally">Planar Ally</a></li><li><a href="spell/sunbeam">Sunbeam</a></li><li><a href="spell/transport-via-plants">Transport via Plants</a></li><li><a href="spell/true-seeing">True Seeing</a></li><li><a href="spell/wall-of-ice">Wall of Ice</a></li><li><a href="spell/wall-of-thorns">Wall of Thorns</a></li><li><a href="spell/wind-walk">Wind Walk</a></li><li><a href="spell/word-of-recall">Word of Recall</a></li></ul>

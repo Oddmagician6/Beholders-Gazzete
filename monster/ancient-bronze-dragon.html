@@ -45,6 +45,8 @@
     .cmp-acts { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--gold-dim); }
     .cmp-acts .btn { font-size: 0.82rem; text-decoration: none; }
     .cmp-more { margin: 30px 0 0; }
+    .cmp-ver { font-family: var(--font-ui); font-size: 0.85rem; color: var(--text-dim); margin: 14px 0 0; padding: 10px 14px; border-left: 3px solid var(--gold-dim); background: rgba(212, 175, 55, 0.06); }
+    .cmp-ver a { color: var(--gold-bright); }
     .cmp-more h2 { font-family: var(--font-head); font-size: 1.15rem; color: var(--gold-bright); border-bottom: 1px solid var(--gold-dim); padding-bottom: 6px; margin: 0 0 10px; }
     .cmp-more p { color: var(--text-mid); margin: 0 0 10px; line-height: 1.6; }
     .cmp-more a { color: var(--gold-bright); }
@@ -106,7 +108,7 @@
       .sb-box .sb-abil { grid-template-columns: repeat(3, 1fr); }
     }
     @media print {
-      body > :not(main), .cmp-crumbs, .cmp-acts, .cmp-more { display: none !important; }
+      body > :not(main), .cmp-crumbs, .cmp-acts, .cmp-more, .cmp-ver { display: none !important; }
     }
   </style>
 </head>
@@ -237,6 +239,7 @@
         <a class="btn" href="bestiary?m=ancient-bronze-dragon">🐉 Open in the Bestiary</a>
       </div>
     </article>
+    <p class="cmp-ver"><strong>📘 2024 rules:</strong> this page has the 2014 text (SRD 5.1). <a href="bestiary?m=ancient-bronze-dragon&amp;rules=2024">Read the 2024 version in the Bestiary →</a></p>
     <section class="cmp-more">
       <h2>Where to meet one</h2>
       <p>The encounter builder rolls the ancient bronze dragon for fights in <a href="bestiary?hab=coast">🏖️ coast</a>.</p>

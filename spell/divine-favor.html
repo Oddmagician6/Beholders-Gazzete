@@ -45,6 +45,8 @@
     .cmp-acts { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--gold-dim); }
     .cmp-acts .btn { font-size: 0.82rem; text-decoration: none; }
     .cmp-more { margin: 30px 0 0; }
+    .cmp-ver { font-family: var(--font-ui); font-size: 0.85rem; color: var(--text-dim); margin: 14px 0 0; padding: 10px 14px; border-left: 3px solid var(--gold-dim); background: rgba(212, 175, 55, 0.06); }
+    .cmp-ver a { color: var(--gold-bright); }
     .cmp-more h2 { font-family: var(--font-head); font-size: 1.15rem; color: var(--gold-bright); border-bottom: 1px solid var(--gold-dim); padding-bottom: 6px; margin: 0 0 10px; }
     .cmp-more p { color: var(--text-mid); margin: 0 0 10px; line-height: 1.6; }
     .cmp-more a { color: var(--gold-bright); }
@@ -106,7 +108,7 @@
       .sb-box .sb-abil { grid-template-columns: repeat(3, 1fr); }
     }
     @media print {
-      body > :not(main), .cmp-crumbs, .cmp-acts, .cmp-more { display: none !important; }
+      body > :not(main), .cmp-crumbs, .cmp-acts, .cmp-more, .cmp-ver { display: none !important; }
     }
   </style>
 </head>
@@ -222,6 +224,7 @@
         <a class="btn" href="dnd-dice-roller">🎲 Roll the Dice</a>
       </div>
     </article>
+    <p class="cmp-ver"><strong>📘 2024 rules:</strong> this page has the 2014 text (SRD 5.1). <a href="spellbook?spells=divine-favor&amp;list=Divine+Favor&amp;rules=2024">Read the 2024 version in the Spellbook →</a></p>
     <section class="cmp-more">
       <h2>More 1st-level spells</h2>
       <ul class="cmp-links"><li><a href="spell/alarm">Alarm</a></li><li><a href="spell/animal-friendship">Animal Friendship</a></li><li><a href="spell/bane">Bane</a></li><li><a href="spell/bless">Bless</a></li><li><a href="spell/burning-hands">Burning Hands</a></li><li><a href="spell/charm-person">Charm Person</a></li><li><a href="spell/color-spray">Color Spray</a></li><li><a href="spell/command">Command</a></li><li><a href="spell/comprehend-languages">Comprehend Languages</a></li><li><a href="spell/create-or-destroy-water">Create or Destroy Water</a></li><li><a href="spell/cure-wounds">Cure Wounds</a></li><li><a href="spell/detect-evil-and-good">Detect Evil and Good</a></li><li><a href="spell/detect-magic">Detect Magic</a></li><li><a href="spell/detect-poison-and-disease">Detect Poison and Disease</a></li><li><a href="spell/disguise-self">Disguise Self</a></li><li><a href="spell/entangle">Entangle</a></li><li><a href="spell/expeditious-retreat">Expeditious Retreat</a></li><li><a href="spell/faerie-fire">Faerie Fire</a></li><li><a href="spell/false-life">False Life</a></li><li><a href="spell/feather-fall">Feather Fall</a></li><li><a href="spell/find-familiar">Find Familiar</a></li><li><a href="spell/floating-disk">Floating Disk</a></li><li><a href="spell/fog-cloud">Fog Cloud</a></li><li><a href="spell/goodberry">Goodberry</a></li><li><a href="spell/grease">Grease</a></li><li><a href="spell/guiding-bolt">Guiding Bolt</a></li><li><a href="spell/healing-word">Healing Word</a></li><li><a href="spell/hellish-rebuke">Hellish Rebuke</a></li><li><a href="spell/heroism">Heroism</a></li><li><a href="spell/hideous-laughter">Hideous Laughter</a></li><li><a href="spell/hunter-s-mark">Hunter&#39;s Mark</a></li><li><a href="spell/identify">Identify</a></li><li><a href="spell/illusory-script">Illusory Script</a></li><li><a href="spell/inflict-wounds">Inflict Wounds</a></li><li><a href="spell/jump">Jump</a></li><li><a href="spell/longstrider">Longstrider</a></li><li><a href="spell/mage-armor">Mage Armor</a></li><li><a href="spell/magic-missile">Magic Missile</a></li><li><a href="spell/protection-from-evil-and-good">Protection from Evil and Good</a></li><li><a href="spell/purify-food-and-drink">Purify Food and Drink</a></li><li><a href="spell/sanctuary">Sanctuary</a></li><li><a href="spell/shield">Shield</a></li><li><a href="spell/shield-of-faith">Shield of Faith</a></li><li><a href="spell/silent-image">Silent Image</a></li><li><a href="spell/sleep">Sleep</a></li><li><a href="spell/speak-with-animals">Speak with Animals</a></li><li><a href="spell/thunderwave">Thunderwave</a></li><li><a href="spell/unseen-servant">Unseen Servant</a></li></ul>

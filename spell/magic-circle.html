@@ -45,6 +45,8 @@
     .cmp-acts { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--gold-dim); }
     .cmp-acts .btn { font-size: 0.82rem; text-decoration: none; }
     .cmp-more { margin: 30px 0 0; }
+    .cmp-ver { font-family: var(--font-ui); font-size: 0.85rem; color: var(--text-dim); margin: 14px 0 0; padding: 10px 14px; border-left: 3px solid var(--gold-dim); background: rgba(212, 175, 55, 0.06); }
+    .cmp-ver a { color: var(--gold-bright); }
     .cmp-more h2 { font-family: var(--font-head); font-size: 1.15rem; color: var(--gold-bright); border-bottom: 1px solid var(--gold-dim); padding-bottom: 6px; margin: 0 0 10px; }
     .cmp-more p { color: var(--text-mid); margin: 0 0 10px; line-height: 1.6; }
     .cmp-more a { color: var(--gold-bright); }
@@ -106,7 +108,7 @@
       .sb-box .sb-abil { grid-template-columns: repeat(3, 1fr); }
     }
     @media print {
-      body > :not(main), .cmp-crumbs, .cmp-acts, .cmp-more { display: none !important; }
+      body > :not(main), .cmp-crumbs, .cmp-acts, .cmp-more, .cmp-ver { display: none !important; }
     }
   </style>
 </head>
@@ -222,6 +224,7 @@
         <a class="btn" href="dnd-dice-roller">🎲 Roll the Dice</a>
       </div>
     </article>
+    <p class="cmp-ver"><strong>📘 2024 rules:</strong> this page has the 2014 text (SRD 5.1). <a href="spellbook?spells=magic-circle&amp;list=Magic+Circle&amp;rules=2024">Read the 2024 version in the Spellbook →</a></p>
     <section class="cmp-more">
       <h2>More 3rd-level spells</h2>
       <ul class="cmp-links"><li><a href="spell/animate-dead">Animate Dead</a></li><li><a href="spell/beacon-of-hope">Beacon of Hope</a></li><li><a href="spell/bestow-curse">Bestow Curse</a></li><li><a href="spell/blink">Blink</a></li><li><a href="spell/call-lightning">Call Lightning</a></li><li><a href="spell/clairvoyance">Clairvoyance</a></li><li><a href="spell/conjure-animals">Conjure Animals</a></li><li><a href="spell/counterspell">Counterspell</a></li><li><a href="spell/create-food-and-water">Create Food and Water</a></li><li><a href="spell/daylight">Daylight</a></li><li><a href="spell/dispel-magic">Dispel Magic</a></li><li><a href="spell/fear">Fear</a></li><li><a href="spell/fireball">Fireball</a></li><li><a href="spell/fly">Fly</a></li><li><a href="spell/gaseous-form">Gaseous Form</a></li><li><a href="spell/glyph-of-warding">Glyph of Warding</a></li><li><a href="spell/haste">Haste</a></li><li><a href="spell/hypnotic-pattern">Hypnotic Pattern</a></li><li><a href="spell/lightning-bolt">Lightning Bolt</a></li><li><a href="spell/major-image">Major Image</a></li><li><a href="spell/mass-healing-word">Mass Healing Word</a></li><li><a href="spell/meld-into-stone">Meld Into Stone</a></li><li><a href="spell/nondetection">Nondetection</a></li><li><a href="spell/phantom-steed">Phantom Steed</a></li><li><a href="spell/plant-growth">Plant Growth</a></li><li><a href="spell/protection-from-energy">Protection From Energy</a></li><li><a href="spell/remove-curse">Remove Curse</a></li><li><a href="spell/revivify">Revivify</a></li><li><a href="spell/sending">Sending</a></li><li><a href="spell/sleet-storm">Sleet Storm</a></li><li><a href="spell/slow">Slow</a></li><li><a href="spell/speak-with-dead">Speak with Dead</a></li><li><a href="spell/speak-with-plants">Speak with Plants</a></li><li><a href="spell/spirit-guardians">Spirit Guardians</a></li><li><a href="spell/stinking-cloud">Stinking Cloud</a></li><li><a href="spell/tiny-hut">Tiny Hut</a></li><li><a href="spell/tongues">Tongues</a></li><li><a href="spell/vampiric-touch">Vampiric Touch</a></li><li><a href="spell/water-breathing">Water Breathing</a></li><li><a href="spell/water-walk">Water Walk</a></li><li><a href="spell/wind-wall">Wind Wall</a></li></ul>

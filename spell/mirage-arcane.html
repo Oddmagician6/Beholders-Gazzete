@@ -45,6 +45,8 @@
     .cmp-acts { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--gold-dim); }
     .cmp-acts .btn { font-size: 0.82rem; text-decoration: none; }
     .cmp-more { margin: 30px 0 0; }
+    .cmp-ver { font-family: var(--font-ui); font-size: 0.85rem; color: var(--text-dim); margin: 14px 0 0; padding: 10px 14px; border-left: 3px solid var(--gold-dim); background: rgba(212, 175, 55, 0.06); }
+    .cmp-ver a { color: var(--gold-bright); }
     .cmp-more h2 { font-family: var(--font-head); font-size: 1.15rem; color: var(--gold-bright); border-bottom: 1px solid var(--gold-dim); padding-bottom: 6px; margin: 0 0 10px; }
     .cmp-more p { color: var(--text-mid); margin: 0 0 10px; line-height: 1.6; }
     .cmp-more a { color: var(--gold-bright); }
@@ -106,7 +108,7 @@
       .sb-box .sb-abil { grid-template-columns: repeat(3, 1fr); }
     }
     @media print {
-      body > :not(main), .cmp-crumbs, .cmp-acts, .cmp-more { display: none !important; }
+      body > :not(main), .cmp-crumbs, .cmp-acts, .cmp-more, .cmp-ver { display: none !important; }
     }
   </style>
 </head>
@@ -222,6 +224,7 @@
         <a class="btn" href="dnd-dice-roller">🎲 Roll the Dice</a>
       </div>
     </article>
+    <p class="cmp-ver"><strong>📘 2024 rules:</strong> this page has the 2014 text (SRD 5.1). <a href="spellbook?spells=mirage-arcane&amp;list=Mirage+Arcane&amp;rules=2024">Read the 2024 version in the Spellbook →</a></p>
     <section class="cmp-more">
       <h2>More 7th-level spells</h2>
       <ul class="cmp-links"><li><a href="spell/arcane-sword">Arcane Sword</a></li><li><a href="spell/conjure-celestial">Conjure Celestial</a></li><li><a href="spell/delayed-blast-fireball">Delayed Blast Fireball</a></li><li><a href="spell/divine-word">Divine Word</a></li><li><a href="spell/etherealness">Etherealness</a></li><li><a href="spell/finger-of-death">Finger of Death</a></li><li><a href="spell/fire-storm">Fire Storm</a></li><li><a href="spell/forcecage">Forcecage</a></li><li><a href="spell/magnificent-mansion">Magnificent Mansion</a></li><li><a href="spell/plane-shift">Plane Shift</a></li><li><a href="spell/prismatic-spray">Prismatic Spray</a></li><li><a href="spell/project-image">Project Image</a></li><li><a href="spell/regenerate">Regenerate</a></li><li><a href="spell/resurrection">Resurrection</a></li><li><a href="spell/reverse-gravity">Reverse Gravity</a></li><li><a href="spell/sequester">Sequester</a></li><li><a href="spell/simulacrum">Simulacrum</a></li><li><a href="spell/symbol">Symbol</a></li><li><a href="spell/teleport">Teleport</a></li></ul>
