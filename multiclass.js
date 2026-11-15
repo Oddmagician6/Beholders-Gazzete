@@ -6,10 +6,12 @@
    (c = class.level,… with the starting class first; s = six scores), so a
    reload or a shared link brings it back; nothing goes in localStorage.
    Loading a saved Character Builder character only reads CB_KEY.
-   Needs rng.js, character-data.js, and character-engine.js.
+   Needs rng.js, character-data.js, and character-engine.js. With character-data-2024.js and
+   srd52.js (text only) it follows the site's rules version (ROADMAP L1T T7): 2024 classes,
+   features, and multiclass proficiencies; loading a saved character switches to its version.
    ============================================ */
 
-// SRD 5.1 multiclassing prerequisites: every group must be met; a group of two is either/or.
+// Multiclassing prerequisites (the same in SRD 5.1 and 5.2.1): every group must be met; a group of two is either/or.
 const MC_PREREQ = {
     barbarian: [['str']], bard: [['cha']], cleric: [['wis']], druid: [['wis']],
     fighter: [['str', 'dex']], monk: [['dex'], ['wis']], paladin: [['str'], ['cha']], ranger: [['dex'], ['wis']],
@@ -30,6 +32,24 @@ const MC_PROFS = {
     sorcerer: {}, warlock: { armor: ['light'], weapons: ['simple'] }, wizard: {}
 };
 
+// SRD 5.2.1: every class already has simple weapons, so they aren't listed.
+const MC_PROFS_2024 = {
+    barbarian: { armor: ['shield'], weapons: ['martial'] },
+    bard: { armor: ['light'], skills: 'any', tools: ['one musical instrument'] },
+    cleric: { armor: ['light', 'medium', 'shield'] },
+    druid: { armor: ['light', 'shield'] },
+    fighter: { armor: ['light', 'medium', 'shield'], weapons: ['martial'] },
+    monk: {},
+    paladin: { armor: ['light', 'medium', 'shield'], weapons: ['martial'] },
+    ranger: { armor: ['light', 'medium', 'shield'], weapons: ['martial'], skills: 'class' },
+    rogue: { armor: ['light'], skills: 'class', tools: ["Thieves' tools"] },
+    sorcerer: {}, warlock: { armor: ['light'] }, wizard: {}
+};
+
+// The rules version this page shows: srd52.js's (a link's ?rules=, a loaded character's, or the saved setting).
+const mcR = () => (CB24_OK() && typeof rulesVersion === 'function' && rulesVersion() === '2024' ? '2024' : '2014');
+const mc24 = () => mcR() === '2024';
+
 const MC_ARMOR_NAMES = { light: 'light armor', medium: 'medium armor', heavy: 'heavy armor', shield: 'shields' };
 const MC_LEVEL_NAMES = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th'];
 
@@ -49,13 +69,13 @@ function flash(msg, bad = false) {
     flashTimer = setTimeout(() => { el.textContent = ''; }, 4000);
 }
 
-const mcPicked = () => mc.rows.filter(r => cbClass(r.cls));
+const mcPicked = () => mc.rows.filter(r => cbClass(r.cls, mcR()));
 const mcTotal = () => mcPicked().reduce((t, r) => t + r.lv, 0);
 const mcMods = () => { const m = {}; CB_ABILITIES.forEach(a => { m[a] = cbMod(mc.s[a]); }); return m; };
 
 // Just enough of a builder character for cbSpellRules and cbAsiLevels.
 function mcChar(r) {
-    const c = cbBlank();
+    const c = cbBlank(mcR());
     c.cls = r.cls;
     c.level = r.lv;
     CB_ABILITIES.forEach(a => { c.base[a] = mc.s[a]; });
@@ -85,7 +105,7 @@ const mcSkillName = id => (CB_SKILLS[id] ? CB_SKILLS[id][0] : id);
 // What each picked class brings: { k, lv, first, saves, armor, weapons, tools, skills }.
 function mcProfs() {
     return mcPicked().map((r, i) => {
-        const k = cbClass(r.cls), first = i === 0;
+        const k = cbClass(r.cls, mcR()), first = i === 0;
         const subArmor = k.sub && k.sub.armor && r.lv >= k.sub.at ? k.sub.armor : [];
         if (first) {
             const tools = [...(k.tools || [])];
@@ -93,7 +113,7 @@ function mcProfs() {
             const skills = k.skills.from === 'any' ? `${k.skills.n} skills of your choice` : `${k.skills.n} from ${k.skills.from.map(mcSkillName).join(', ')}`;
             return { k, lv: r.lv, first, saves: k.saves, armor: [...k.armor, ...subArmor], weapons: k.weapons, tools, skills };
         }
-        const p = MC_PROFS[r.cls];
+        const p = (mc24() ? MC_PROFS_2024 : MC_PROFS)[r.cls];
         const skills = p.skills === 'any' ? 'one skill of your choice' : p.skills === 'class' ? `one from ${k.skills.from.map(mcSkillName).join(', ')}` : '';
         return { k, lv: r.lv, first, saves: [], armor: [...(p.armor || []), ...subArmor], weapons: p.weapons || [], tools: p.tools || [], skills };
     });
@@ -102,7 +122,7 @@ function mcProfs() {
 // Classes with the Spellcasting feature at their level (Pact Magic is apart).
 function mcCasters() {
     return mcPicked().filter(r => {
-        const k = cbClass(r.cls);
+        const k = cbClass(r.cls, mcR());
         return k.cast && (k.cast.prog === 'full' || (k.cast.prog === 'half' && r.lv >= 2));
     });
 }
@@ -113,9 +133,9 @@ function mcSlots() {
     if (!casters.length) return { slots: [], casterLevel: 0, one: null };
     if (casters.length === 1) {
         const r = casters[0];
-        return { slots: cbSlots(cbClass(r.cls), r.lv), casterLevel: 0, one: r };
+        return { slots: cbSlots(cbClass(r.cls, mcR()), r.lv), casterLevel: 0, one: r };
     }
-    const L = casters.reduce((t, r) => t + (cbClass(r.cls).cast.prog === 'full' ? r.lv : Math.floor(r.lv / 2)), 0);
+    const L = casters.reduce((t, r) => t + (cbClass(r.cls, mcR()).cast.prog === 'full' ? r.lv : Math.floor(r.lv / 2)), 0);
     return { slots: L ? CB_FULL_SLOTS[L - 1] : [], casterLevel: L, one: null };
 }
 
@@ -125,7 +145,7 @@ function mcHitPoints() {
     const con = cbMod(mc.s.con);
     let hp = 0;
     rows.forEach((r, i) => {
-        const k = cbClass(r.cls);
+        const k = cbClass(r.cls, mcR());
         for (let lv = 1; lv <= r.lv; lv++) hp += Math.max(1, (i === 0 && lv === 1 ? k.hd : k.hd / 2 + 1) + con);
         if (r.cls === 'sorcerer') hp += r.lv;   // Draconic Resilience
     });
@@ -134,16 +154,21 @@ function mcHitPoints() {
 
 function mcHitDice() {
     const by = {};
-    mcPicked().forEach(r => { const d = cbClass(r.cls).hd; by[d] = (by[d] || 0) + r.lv; });
+    mcPicked().forEach(r => { const d = cbClass(r.cls, mcR()).hd; by[d] = (by[d] || 0) + r.lv; });
     return Object.keys(by).map(Number).sort((a, b) => b - a).map(d => `${by[d]}d${d}`).join(' + ');
 }
 
 // Feature lines for one class at its level, worded for that class level.
 function mcFeatures(r) {
-    const k = cbClass(r.cls), L = r.lv, prof = cbProf(mcTotal()), m = mcMods();
+    const k = cbClass(r.cls, mcR()), L = r.lv, prof = cbProf(mcTotal()), m = mcMods(), v24 = mc24();
+    const rules = cbSpellRules(mcChar(r));
     const x = { L, prof, m, dc: a => 8 + prof + m[a], ord: cbOrd, breath: {}, dragon: null,
-        rages: [2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 99][L - 1], rageDmg: L >= 16 ? 4 : L >= 9 ? 3 : 2,
-        martial: L >= 17 ? 10 : L >= 11 ? 8 : L >= 5 ? 6 : 4, pact: CB_PACT_SLOTS[L - 1] };
+        rages: (v24 ? [2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 6] : [2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 99])[L - 1],
+        rageDmg: L >= 16 ? 4 : L >= 9 ? 3 : 2,
+        martial: v24 ? (L >= 17 ? 12 : L >= 11 ? 10 : L >= 5 ? 8 : 6) : (L >= 17 ? 10 : L >= 11 ? 8 : L >= 5 ? 6 : 4), pact: CB_PACT_SLOTS[L - 1],
+        prepared: rules ? (rules.type === 'book' ? rules.prepared : rules.list) : 0,
+        mastery: k.mastery ? k.mastery[L - 1] : 0,
+        invocations: v24 ? CB24_INVOCATIONS_KNOWN[L - 1] : 0, affinity: '', dark: 0 };
     return k.features.filter(f => f[0] <= L).map(([lv, name, t]) => {
         let text = '';
         try { text = typeof t === 'function' ? t(x) : t; } catch (e) { text = ''; }
@@ -157,7 +182,7 @@ function mcNotes() {
     const lvOf = id => (has(id) ? has(id).lv : 0);
     const out = [];
     const extra = rows.filter(r => ['barbarian', 'fighter', 'monk', 'paladin', 'ranger'].includes(r.cls) && r.lv >= 5);
-    if (extra.length > 1) out.push(`<b>Extra Attack</b> doesn't add up: ${extra.map(r => cbClass(r.cls).name).join(' and ')} each give it, but they don't add up: you attack ${lvOf('fighter') >= 20 ? 'four times' : lvOf('fighter') >= 11 ? 'three times' : 'twice'} when you take the Attack action.`);
+    if (extra.length > 1) out.push(`<b>Extra Attack</b> doesn't add up: ${extra.map(r => cbClass(r.cls, mcR()).name).join(' and ')} each give it, but they don't add up: you attack ${lvOf('fighter') >= 20 ? 'four times' : lvOf('fighter') >= 11 ? 'three times' : 'twice'} when you take the Attack action.`);
     if (lvOf('barbarian') && lvOf('monk')) out.push('<b>Unarmored Defense</b>: barbarian and monk each have one, and you can only use one of them. Once you have it, you can\'t gain it again from the other class.');
     if (lvOf('cleric') >= 2 && lvOf('paladin') >= 3) out.push('<b>Channel Divinity</b>: the cleric and paladin options are all yours, but taking the feature a second time doesn\'t give you more uses.');
     const casters = mcCasters();
@@ -184,7 +209,7 @@ function mcFromUrl() {
     (q.get('c') || '').split(',').forEach(part => {
         const [cls, lvText] = part.split('.');
         const lv = Math.round(Number(lvText));
-        if (!cbClass(cls) || rows.some(r => r.cls === cls) || !(lv >= 1)) return;
+        if (!cbClass(cls, mcR()) || rows.some(r => r.cls === cls) || !(lv >= 1)) return;
         const fit = Math.min(lv, 20 - total);
         if (fit < 1) return;
         rows.push({ cls, lv: fit });
@@ -215,9 +240,9 @@ function renderRows() {
     const total = mcTotal();
     const used = mc.rows.map(r => r.cls);
     document.getElementById('mc-rows').innerHTML = mc.rows.map((r, i) => {
-        const others = total - (cbClass(r.cls) ? r.lv : 0);
+        const others = total - (cbClass(r.cls, mcR()) ? r.lv : 0);
         const max = Math.max(1, 20 - others);
-        const opts = CB_CLASSES.filter(k => k.id === r.cls || !used.includes(k.id))
+        const opts = cbClassList(mcR()).filter(k => k.id === r.cls || !used.includes(k.id))
             .map(k => `<option value="${k.id}"${k.id === r.cls ? ' selected' : ''}>${k.icon} ${esc(k.name)}</option>`).join('');
         const lvs = Array.from({ length: max }, (_, n) => `<option${n + 1 === r.lv ? ' selected' : ''}>${n + 1}</option>`).join('');
         const tag = i === 0 ? '<span class="mc-tag">Starting class</span>' : `<button type="button" class="mc-btn mc-small" data-first="${i}" title="Make this the class you took at 1st level">⭡ Started Here</button>`;
@@ -227,7 +252,7 @@ function renderRows() {
             <div class="mc-row-end">${tag}${mc.rows.length > 1 ? `<button type="button" class="mc-btn mc-small" data-del="${i}" aria-label="Remove class ${i + 1}">✕</button>` : ''}</div>
         </div>`;
     }).join('');
-    const canAdd = total < 20 && mc.rows.length < CB_CLASSES.length && mc.rows.every(r => cbClass(r.cls));
+    const canAdd = total < 20 && mc.rows.length < cbClassList(mcR()).length && mc.rows.every(r => cbClass(r.cls, mcR()));
     document.getElementById('mc-add').disabled = !canAdd;
 }
 
@@ -242,10 +267,10 @@ function renderSummary() {
         ['Proficiency bonus', cbSign(cbProf(L))],
         ['Hit dice', mcHitDice()],
         ['Hit points', `${mcHitPoints()} <span class="mc-dim">(average${mc.tough ? ', with Dwarven Toughness' : ''})</span>`],
-        ['Ability Score Improvements', `${nAsi}${nAsi ? ` <span class="mc-dim">(${asi.map(x => `${esc(cbClass(x.r.cls).name)} ${x.lv.join(', ')}`).join('; ')})</span>` : ''}`]
+        ['Ability Score Improvements', `${nAsi}${nAsi ? ` <span class="mc-dim">(${asi.map(x => `${esc(cbClass(x.r.cls, mcR()).name)} ${x.lv.join(', ')}`).join('; ')})</span>` : ''}`]
     ];
     el.innerHTML = `<div class="mc-stats">${stats.map(([k, v]) => `<div class="mc-stat"><span>${k}</span><b>${v}</b></div>`).join('')}</div>`
-        + `<p class="mc-dim mc-small-text">${esc(rows.map(r => `${cbClass(r.cls).name} ${r.lv}`).join(' / '))}. Hit points take the full die at 1st level of the starting class and the average after that, plus Constitution${rows.some(r => r.cls === 'sorcerer') ? ' and the Draconic Bloodline\'s +1 per sorcerer level' : ''}; a hill dwarf adds 1 more per level.</p>`;
+        + `<p class="mc-dim mc-small-text">${esc(rows.map(r => `${cbClass(r.cls, mcR()).name} ${r.lv}`).join(' / '))}. Hit points take the full die at 1st level of the starting class and the average after that, plus Constitution${rows.some(r => r.cls === 'sorcerer') ? ' and the Draconic Bloodline\'s +1 per sorcerer level' : ''}; a hill dwarf adds 1 more per level.</p>`;
 }
 
 function renderPrereq() {
@@ -253,7 +278,7 @@ function renderPrereq() {
     const el = document.getElementById('mc-prereq');
     if (!rows.length) { el.innerHTML = ''; return; }
     const line = (cls, why) => {
-        const k = cbClass(cls), p = mcPrereq(cls), ok = p.every(x => x.ok);
+        const k = cbClass(cls, mcR()), p = mcPrereq(cls), ok = p.every(x => x.ok);
         return `<li class="${ok ? 'mc-ok' : 'mc-no'}"><span class="mc-mark">${ok ? '✓' : '✗'}</span> <b>${k.icon} ${esc(k.name)}</b> needs ${p.map(x => `<span class="${x.ok ? '' : 'mc-miss'}">${x.text}</span>`).join(' and ')}${why ? ` <span class="mc-dim">${why}</span>` : ''}</li>`;
     };
     let h = '<h2 class="mc-h">Prerequisites</h2>';
@@ -262,13 +287,13 @@ function renderPrereq() {
     } else {
         const bad = rows.filter(r => !mcQualifies(r.cls));
         h += bad.length
-            ? `<p class="mc-warn">This build doesn't qualify: ${bad.map(r => cbClass(r.cls).name).join(' and ')} ${bad.length > 1 ? 'are' : 'is'} short. You need the scores for your current classes and the new one each time you add a class.</p>`
+            ? `<p class="mc-warn">This build doesn't qualify: ${bad.map(r => cbClass(r.cls, mcR()).name).join(' and ')} ${bad.length > 1 ? 'are' : 'is'} short. You need the scores for your current classes and the new one each time you add a class.</p>`
             : '<p class="mc-good">✓ This build qualifies: the scores meet every class\'s prerequisite.</p>';
         h += `<ul class="mc-list">${rows.map(r => line(r.cls)).join('')}</ul>`;
     }
     const total = mcTotal();
-    const free = CB_CLASSES.filter(k => !mc.rows.some(r => r.cls === k.id));
-    if (total < 20 && free.length && mc.rows.every(r => cbClass(r.cls))) {
+    const free = cbClassList(mcR()).filter(k => !mc.rows.some(r => r.cls === k.id));
+    if (total < 20 && free.length && mc.rows.every(r => cbClass(r.cls, mcR()))) {
         h += `<p class="mc-label">Add a level of:</p><div class="mc-chips">${free.map(k => {
             const ok = mcQualifies(k.id) && rows.every(r => mcQualifies(r.cls));
             return `<button type="button" class="mc-chip${ok ? ' mc-chip-ok' : ''}" data-addcls="${k.id}" title="${esc(mcPrereq(k.id).map(x => x.text).join(' and '))}">${ok ? '✓' : '✗'} ${k.icon} ${esc(k.name)}</button>`;
@@ -301,12 +326,12 @@ function renderProfs() {
 
 function renderMagic() {
     const el = document.getElementById('mc-magic');
-    const rows = mcPicked().filter(r => cbClass(r.cls).cast);
+    const rows = mcPicked().filter(r => cbClass(r.cls, mcR()).cast);
     if (!rows.length) { el.innerHTML = ''; return; }
     const { slots, casterLevel, one } = mcSlots();
     const m = mcMods(), prof = cbProf(mcTotal());
     const lines = rows.map(r => {
-        const k = cbClass(r.cls), rules = cbSpellRules(mcChar(r));
+        const k = cbClass(r.cls, mcR()), rules = cbSpellRules(mcChar(r));
         const a = k.cast.ability;
         if (!rules || (k.cast.prog === 'half' && r.lv < 2)) return `<li><b>${k.icon} ${esc(k.name)} ${r.lv}</b>: no spells until ${k.name.toLowerCase()} level 2.</li>`;
         const bits = [`${a.toUpperCase()} (save DC ${8 + prof + m[a]}, attack ${cbSign(prof + m[a])})`];
@@ -321,8 +346,8 @@ function renderMagic() {
     let h = '<h2 class="mc-h">Spellcasting</h2>' + `<ul class="mc-list">${lines.join('')}</ul>`;
     if (slots.length) {
         const how = one
-            ? `${cbClass(one.cls).name} is your only class with the Spellcasting feature, so its own table applies.`
-            : `Spellcaster level <b>${casterLevel}</b>: ${mcCasters().map(r => { const k = cbClass(r.cls); return k.cast.prog === 'full' ? `${k.name} ${r.lv}` : `half of ${k.name} ${r.lv} (rounded down) = ${Math.floor(r.lv / 2)}`; }).join(' + ')}.`;
+            ? `${cbClass(one.cls, mcR()).name} is your only class with the Spellcasting feature, so its own table applies.`
+            : `Spellcaster level <b>${casterLevel}</b>: ${mcCasters().map(r => { const k = cbClass(r.cls, mcR()); return k.cast.prog === 'full' ? `${k.name} ${r.lv}` : `half of ${k.name} ${r.lv} (rounded down) = ${Math.floor(r.lv / 2)}`; }).join(' + ')}.`;
         h += `<p class="mc-all">${how}</p>`
             + `<div class="mc-slots-wrap"><table class="mc-slots"><caption>Spell slots</caption><thead><tr>${MC_LEVEL_NAMES.map(n => `<th scope="col">${n}</th>`).join('')}</tr></thead>`
             + `<tbody><tr>${MC_LEVEL_NAMES.map((n, i) => `<td>${slots[i] || '—'}</td>`).join('')}</tr></tbody></table></div>`;
@@ -345,7 +370,7 @@ function renderFeatures() {
     const rows = mcPicked();
     if (!rows.length) { el.innerHTML = ''; return; }
     el.innerHTML = '<h2 class="mc-h">Class features</h2>' + rows.map((r, i) => {
-        const k = cbClass(r.cls), sub = k.sub && r.lv >= k.sub.at ? `, ${esc(k.sub.name)}` : '';
+        const k = cbClass(r.cls, mcR()), sub = k.sub && r.lv >= k.sub.at ? `, ${esc(k.sub.name)}` : '';
         return `<details class="mc-feat"${i === 0 && rows.length === 1 ? ' open' : ''}><summary>${k.icon} ${esc(k.name)} ${r.lv}${sub} <span class="mc-dim">(d${k.hd} hit die)</span></summary><ul>${mcFeatures(r).map(f => `<li><span class="mc-lvl">${cbOrd(f.lv)}</span> <b>${esc(f.name)}</b>${f.text ? `: ${esc(f.text)}` : ''}</li>`).join('')}</ul></details>`;
     }).join('');
 }
@@ -366,10 +391,10 @@ function mcText() {
     const rows = mcPicked();
     if (!rows.length) return '';
     const L = mcTotal(), { slots, casterLevel } = mcSlots();
-    const out = [rows.map(r => `${cbClass(r.cls).name} ${r.lv}`).join(' / ') + ` (level ${L})`,
+    const out = [rows.map(r => `${cbClass(r.cls, mcR()).name} ${r.lv}`).join(' / ') + ` (level ${L})`,
         CB_ABILITIES.map(a => `${a.toUpperCase()} ${mc.s[a]}`).join(', '),
         `Proficiency ${cbSign(cbProf(L))} · Hit dice ${mcHitDice()} · HP ${mcHitPoints()}`,
-        `Prerequisites: ${rows.every(r => mcQualifies(r.cls)) ? 'met' : 'NOT met (' + rows.filter(r => !mcQualifies(r.cls)).map(r => cbClass(r.cls).name).join(', ') + ')'}`];
+        `Prerequisites: ${rows.every(r => mcQualifies(r.cls)) ? 'met' : 'NOT met (' + rows.filter(r => !mcQualifies(r.cls)).map(r => cbClass(r.cls, mcR()).name).join(', ') + ')'}`];
     if (slots.length) out.push(`Spell slots${casterLevel ? ` (caster level ${casterLevel})` : ''}: ${slots.map((n, i) => `${MC_LEVEL_NAMES[i]} ${n}`).join(', ')}`);
     const wl = rows.find(r => r.cls === 'warlock');
     if (wl) { const [n, lv] = CB_PACT_SLOTS[wl.lv - 1]; out.push(`Pact slots: ${n} × ${MC_LEVEL_NAMES[lv - 1]}`); }
@@ -379,7 +404,7 @@ function mcText() {
 function mcAddClass(cls) {
     const total = mcTotal();
     if (total >= 20) return flash('Twenty levels is the most a character can have.', true);
-    const blank = mc.rows.findIndex(r => !cbClass(r.cls));
+    const blank = mc.rows.findIndex(r => !cbClass(r.cls, mcR()));
     if (blank >= 0) mc.rows[blank] = { cls, lv: 1 };
     else mc.rows.push({ cls, lv: 1 });
     mcChanged();
@@ -393,7 +418,7 @@ function onClick(e) {
         const [r] = mc.rows.splice(Number(b.dataset.first), 1);
         mc.rows.unshift(r);
         mcChanged();
-        return flash(`⭡ ${cbClass(r.cls) ? cbClass(r.cls).name : 'That class'} is now the starting class.`);
+        return flash(`⭡ ${cbClass(r.cls, mcR()) ? cbClass(r.cls, mcR()).name : 'That class'} is now the starting class.`);
     }
     if (b.dataset.addcls) return mcAddClass(b.dataset.addcls);
 }
@@ -409,16 +434,16 @@ function onChange(e) {
         const r = mc.rows[Number(el.dataset.row)];
         if (el.dataset.k === 'cls') r.cls = el.value;
         else r.lv = Number(el.value) || 1;
-        if (cbClass(r.cls)) r.lv = Math.min(r.lv, 20 - (mcTotal() - r.lv));
+        if (cbClass(r.cls, mcR())) r.lv = Math.min(r.lv, 20 - (mcTotal() - r.lv));
         return mcChanged();
     }
 }
 
 function fillCharacters() {
     const sel = document.getElementById('mc-load');
-    const list = cbLoadAll().filter(c => cbClass(c.cls));
+    const list = cbLoadAll().filter(c => cbClass(c.cls, c));
     sel.innerHTML = `<option value="">${list.length ? 'Load scores from a saved character…' : 'No saved characters yet'}</option>`
-        + list.map(c => `<option value="${esc(c.id)}">${esc(c.name || 'Unnamed')} (${esc(cbClass(c.cls).name)} ${c.level})</option>`).join('');
+        + list.map(c => `<option value="${esc(c.id)}">${esc(c.name || 'Unnamed')} (${esc(cbClass(c.cls, c).name)} ${c.level}${cbIs24(c) ? ', 2024' : ''})</option>`).join('');
     sel.disabled = !list.length;
 }
 
@@ -428,6 +453,10 @@ document.addEventListener('DOMContentLoaded', () => {
     setUrlParams(mcParams(), false);
     render();
     fillCharacters();
+    // The rules picker (srd52.js) and any switch, here or in another tab
+    const rulesBox = document.getElementById('mc-rules');
+    if (rulesBox && typeof srd52Toggle === 'function') rulesBox.innerHTML = srd52Toggle();
+    if (typeof srd52OnChange === 'function') srd52OnChange(() => { setUrlParams(mcParams(), false); render(); });
 
     const tool = document.getElementById('mc-tool');
     tool.addEventListener('click', onClick);
@@ -442,10 +471,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const c = cbLoadAll().find(x => x.id === e.target.value);
         e.target.value = '';
         if (!c) return;
+        // The character's own rules version rules this page view (srd52.js rulesUse).
+        if (typeof rulesUse === 'function' && (c.rules || '2014') !== mcR()) rulesUse(c.rules || '2014');
         const s = cbScores(c);
         CB_ABILITIES.forEach(a => { mc.s[a] = s[a]; });
-        const sub = cbSubrace(c);
-        mc.tough = sub && sub.hpPerLevel ? 1 : 0;
+        const sub = cbSubrace(c), race = cbRace(c.race, c);
+        mc.tough = (sub && sub.hpPerLevel) || (race && race.hpPerLevel) ? 1 : 0;
         mc.rows = [{ cls: c.cls, lv: c.level }];
         mcChanged();
         flash(`🧝 Loaded ${c.name || 'the character'}'s scores and class. Add a class to see where it could go.`);

@@ -62,6 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('storage', e => {
         if (e.key === null || SV_KEYS.includes(e.key)) queueRender();
     });
+    // The rules version (srd52.js, text only): the rules cards follow it.
+    if (typeof srd52OnChange === 'function') srd52OnChange(queueRender);
     keepAwake();
     document.addEventListener('visibilitychange', () => {
         keepAwake();

@@ -11,11 +11,31 @@
    arc = Mystic Arcanum, f = favorites), so nothing new goes in localStorage.
    Needs rng.js, character-data.js, character-engine.js, spells-data.js,
    spell-detail.js (spellSlug), spell-summaries.js, and cards.js.
+   2024 rules (ROADMAP L1T T7; character-data-2024.js + srd52.js): a saved character switches the
+   page to its own version (rulesUse) and redraws once that spell list is in; a caster in the
+   address bar takes the page's version (a 2024 link carries rules=2024).
    ============================================ */
 
 const SP_LEVELS = ['Cantrips', '1st level', '2nd level', '3rd level', '4th level', '5th level', '6th level', '7th level', '8th level', '9th level'];
 const SP_SLUG = {};
-SPELLS_DATA.forEach(s => { SP_SLUG[spellSlug(s.name)] = s; });
+// SPELLS_DATA swaps in place with the rules version, so the slug index is rebuilt after a switch.
+function spIndex() {
+    Object.keys(SP_SLUG).forEach(k => { delete SP_SLUG[k]; });
+    SPELLS_DATA.forEach(s => { SP_SLUG[spellSlug(s.name)] = s; });
+}
+spIndex();
+const spPageR = () => (CB24_OK() && typeof rulesVersion === 'function' && rulesVersion() === '2024' ? '2024' : '2014');
+const spLands = c => (cbIs24(c) ? Object.keys(CB24_LANDS) : CB_TERRAINS);
+const spLandAt = c => (cbIs24(c) ? 3 : 2);
+
+// A saved character in the other version: switch the page to it, then draw again with its spells.
+function spFollow() {
+    const c = sp.c;
+    if (!sp.charId || !c || typeof rulesUse !== 'function') return;
+    const want = cbIs24(c) ? '2024' : '2014';
+    if (spPageR() === want) return;
+    rulesUse(want).then(() => { if (sp.c === c) { spIndex(); render(); } });
+}
 
 // edit: '' | 'prep' | 'known' | 'cantrips'; before: the spells when editing began (for Cancel and the swap note).
 const sp = { charId: '', c: null, edit: '', before: null, filter: '', favOnly: false, cards: 'today', paper: 'letter', backs: false };
@@ -34,8 +54,8 @@ function flash(msg, bad = false) {
 }
 
 const spRules = () => cbSpellRules(sp.c);
-const spClass = () => cbClass(sp.c.cls);
-const spCasterChars = () => cbLoadAll().filter(c => cbClass(c.cls) && cbClass(c.cls).cast);
+const spClass = () => cbClass(sp.c.cls, sp.c);
+const spCasterChars = () => cbLoadAll().filter(c => cbClass(c.cls, c) && cbClass(c.cls, c).cast);
 const spBySpell = (a, b) => a.level - b.level || a.name.localeCompare(b.name);
 const spCopy = spells => JSON.parse(JSON.stringify(spells));
 const spFavs = () => sp.c.spells.fav || (sp.c.spells.fav = []);
@@ -66,7 +86,7 @@ function spFit(c) {
 // ── Address bar ──────────────────────────────────────────
 // A caster as link params (also how a saved character is shared).
 function spParams(c) {
-    const k = cbClass(c.cls);
+    const k = cbClass(c.cls, c);
     if (!k || !k.cast) return {};
     const slugs = list => list.map(spellSlug).join(',');
     return {
@@ -82,16 +102,16 @@ function spFromUrl() {
     const saved = id && spCasterChars().find(c => c.id === id);
     sp.edit = '';
     sp.before = null;
-    if (saved) { sp.charId = id; sp.c = saved; return; }
+    if (saved) { sp.charId = id; sp.c = saved; spFollow(); return; }
     sp.charId = '';
-    const c = cbBlank();
-    const k = cbClass(q.get('cls'));
+    const c = cbBlank(spPageR());
+    const k = cbClass(q.get('cls'), c);
     c.cls = k && k.cast ? k.id : '';
     c.level = Math.min(20, Math.max(1, Math.round(Number(q.get('lv'))) || 1));
     CB_ABILITIES.forEach(a => { c.base[a] = 10; });
     const score = Math.round(Number(q.get('sc')));
     if (c.cls) c.base[k.cast.ability] = score >= 1 && score <= 30 ? score : 16;
-    if (CB_TERRAINS.includes(q.get('land'))) c.opts.land = q.get('land');
+    if (spLands(c).includes(q.get('land'))) c.opts.land = q.get('land');
     const names = key => [...new Set((q.get(key) || '').split(',').map(x => SP_SLUG[x]).filter(Boolean).map(s => s.name))];
     c.spells = { cantrips: names('ct'), list: names('p'), prepared: names('w'), arcanum: {}, fav: names('f').slice(0, 80) };
     names('arc').forEach(n => { const lv = cbSpell(n).level; if (lv >= 6) c.spells.arcanum[lv] = n; });
@@ -196,7 +216,7 @@ function renderChars() {
     const sel = document.getElementById('sp-char');
     const list = spCasterChars();
     sel.innerHTML = `<option value="">📝 A caster of my own (not saved)</option>`
-        + list.map(c => `<option value="${esc(c.id)}"${c.id === sp.charId ? ' selected' : ''}>🧝 ${esc(c.name || 'Unnamed')} (${esc(cbClass(c.cls).name)} ${c.level})</option>`).join('');
+        + list.map(c => `<option value="${esc(c.id)}"${c.id === sp.charId ? ' selected' : ''}>🧝 ${esc(c.name || 'Unnamed')} (${esc(cbClass(c.cls, c).name)} ${c.level}${cbIs24(c) ? ', 2024' : ''})</option>`).join('');
     sel.title = list.length ? 'Pick a saved Character Builder character' : 'Spellcasters you save in the Character Builder show up here';
 }
 
@@ -208,13 +228,13 @@ function renderSetup() {
             <button type="button" class="sp-btn sp-small" id="sp-open-builder">🧝 Open in the Builder</button></p>`;
         return;
     }
-    const casters = CB_CLASSES.filter(x => x.cast);
+    const casters = cbClassList(c).filter(x => x.cast);
     const a = k ? k.cast.ability : '';
     el.innerHTML = `<div class="sp-fields">
         <label class="sp-field">Class<select data-set="cls"><option value="">Pick a spellcasting class</option>${casters.map(x => `<option value="${x.id}"${x.id === c.cls ? ' selected' : ''}>${x.icon} ${esc(x.name)}</option>`).join('')}</select></label>
         <label class="sp-field sp-narrow">Level<select data-set="lv">${Array.from({ length: 20 }, (_, i) => `<option${i + 1 === c.level ? ' selected' : ''}>${i + 1}</option>`).join('')}</select></label>
         ${k ? `<label class="sp-field sp-narrow">${esc(CB_ABILITY_NAMES[a])}<input type="number" min="1" max="30" inputmode="numeric" data-set="sc" value="${cbScores(c)[a]}" aria-label="${esc(CB_ABILITY_NAMES[a])} score"></label>` : ''}
-        ${c.cls === 'druid' && c.level >= 2 ? `<label class="sp-field">Circle land<select data-set="land"><option value="">Pick the land</option>${CB_TERRAINS.map(t => `<option${t === c.opts.land ? ' selected' : ''}>${t}</option>`).join('')}</select></label>` : ''}
+        ${c.cls === 'druid' && c.level >= spLandAt(c) ? `<label class="sp-field">Circle land<select data-set="land"><option value="">Pick the land</option>${spLands(c).map(t => `<option${t === c.opts.land ? ' selected' : ''}>${t}</option>`).join('')}</select></label>` : ''}
     </div>${k ? `<p class="sp-dim sp-small-text">With the SRD subclass: ${esc(k.sub.name)}${k.sub.at > 1 ? ` from level ${k.sub.at}` : ''}. Changing the class or level drops any picks that no longer fit.</p>` : ''}`;
 }
 
@@ -421,7 +441,7 @@ async function spPrint() {
 function spSetStandalone(field, value) {
     const c = sp.c;
     if (field === 'cls') {
-        const k = cbClass(value);
+        const k = cbClass(value, c);
         c.cls = k && k.cast ? k.id : '';
         CB_ABILITIES.forEach(a => { c.base[a] = 10; });
         if (c.cls) c.base[k.cast.ability] = 16;
@@ -432,7 +452,7 @@ function spSetStandalone(field, value) {
         const n = Math.round(Number(value));
         c.base[spClass().cast.ability] = Number.isFinite(n) ? Math.min(30, Math.max(1, n)) : 10;
     }
-    if (field === 'land') c.opts.land = CB_TERRAINS.includes(value) ? value : '';
+    if (field === 'land') c.opts.land = spLands(c).includes(value) ? value : '';
     spFit(c);
     spWriteUrl();
     render();
@@ -519,6 +539,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('sp-backs').addEventListener('change', e => { sp.backs = e.target.checked; });
     document.getElementById('sp-print-btn').addEventListener('click', spPrint);
     window.addEventListener('popstate', () => { spFromUrl(); render(); });
+    // A rules switch (the picker, a character's version, or another tab): new spell list, new index.
+    if (typeof srd52OnChange === 'function') srd52OnChange(() => {
+        spIndex();
+        if (!sp.edit) spFromUrl();
+        render();
+    });
     window.addEventListener('storage', e => {
         if (e.key !== CB_KEY) return;
         if (sp.charId && !sp.edit) spFromUrl();

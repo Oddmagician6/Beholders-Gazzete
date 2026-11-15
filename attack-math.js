@@ -77,8 +77,16 @@ function amParse(text) {
     return out;
 }
 
-// Average of one die; Great Weapon Fighting rerolls a 1 or 2 once and keeps the new roll.
-const amDieAvg = (z, gwf) => (z < 2 || !gwf ? (z + 1) / 2 : (z * (z + 1) / 2 - 3 + (z + 1)) / z);
+// The 5e rules version this page shows (srd52.js, text only; ROADMAP L1T T7). Pathfinder: never 2024.
+const amR = () => (!AM_PF2E && typeof rulesVersion === 'function' && rulesVersion() === '2024' ? '2024' : '2014');
+const am24 = () => amR() === '2024';
+
+// Average of one die. Great Weapon Fighting: 2014 rerolls a 1 or 2 once and keeps the new roll;
+// 2024 treats a 1 or 2 as a 3.
+const amDieAvg = (z, gwf) => (z < 2 || !gwf ? (z + 1) / 2
+    : am24() ? (z * (z + 1) / 2 + 3) / z
+        : (z * (z + 1) / 2 - 3 + (z + 1)) / z);
+const amGwfTitle = () => (am24() ? "Treat a 1 or 2 on the weapon's damage dice as a 3" : "Reroll a 1 or 2 on the weapon's damage dice");
 
 // Average damage on a hit and on a crit: a crit doubles the dice (not the flat bonus)
 // and adds xcrit more of the first weapon die (Brutal Critical, Savage Attacks; melee rows only).
@@ -294,10 +302,14 @@ function amFromUrl() {
 // ── A builder character ──────────────────────────────────
 // Fills the attacks and the rules they bring from a saved character. Returns what it set.
 function amFromCharacter(c) {
-    const d = cbDerive(c), L = c.level;
+    // The character's own rules version rules this page view (srd52.js rulesUse).
+    if (!AM_PF2E && typeof rulesUse === 'function' && (c.rules || '2014') !== amR()) rulesUse(c.rules || '2014');
+    const d = cbDerive(c), L = c.level, v24 = cbIs24(c);
     const extra = c.cls === 'fighter' ? (L >= 20 ? 4 : L >= 11 ? 3 : L >= 5 ? 2 : 1)
         : ['barbarian', 'monk', 'paladin', 'ranger'].includes(c.cls) && L >= 5 ? 2 : 1;
-    const gwf = !!CB_CLASS_STYLES[c.cls] && c.opts.styles.includes('great-weapon');
+    // 2024: a Fighting Style feat, from the class (opts.styles) or any feat slot.
+    const gwf = v24 ? c.opts.styles.includes('great-weapon') || cbFeatSlots(c).some(s => s.feat === 'great-weapon')
+        : !!CB_CLASS_STYLES[c.cls] && c.opts.styles.includes('great-weapon');
     const smite = c.cls === 'paladin' && L >= 11;
     const said = [];
     am.rows = d.attacks.slice(0, AM_MAX_ROWS).map((a, i) => {
@@ -314,8 +326,9 @@ function amFromCharacter(c) {
     if (am.crit < 20) said.push(`Improved Critical (${am.crit}–20)`);
     am.lucky = c.race === 'halfling';
     if (am.lucky) said.push('Lucky');
-    const brutal = c.cls === 'barbarian' ? (L >= 17 ? 3 : L >= 13 ? 2 : L >= 9 ? 1 : 0) : 0;
-    am.xcrit = brutal + (c.race === 'half-orc' ? 1 : 0);
+    // 2024 has no Brutal Critical (Brutal Strike instead) and no half-orc.
+    const brutal = c.cls === 'barbarian' && !v24 ? (L >= 17 ? 3 : L >= 13 ? 2 : L >= 9 ? 1 : 0) : 0;
+    am.xcrit = brutal + (c.race === 'half-orc' && !v24 ? 1 : 0);
     if (am.xcrit) said.push(`${am.xcrit} extra crit ${am.xcrit > 1 ? 'dice' : 'die'}`);
     am.once = c.cls === 'rogue' ? `${Math.ceil(L / 2)}d6` : '';
     if (am.once) said.push(`Sneak Attack ${am.once}`);
@@ -323,6 +336,7 @@ function amFromCharacter(c) {
     if (am.rows.some(r => r.gwf)) said.push('Great Weapon Fighting');
     const tips = [];
     if (c.cls === 'barbarian') tips.push(`Raging? Add + ${L >= 16 ? 4 : L >= 9 ? 3 : 2} to a Strength melee row's damage.`);
+    if (c.cls === 'barbarian' && v24 && L >= 9) tips.push(`Brutal Strike: give up a Reckless Attack's advantage on one Strength attack for + ${L >= 17 ? 2 : 1}d10 damage on a hit (add it to that row).`);
     if (c.cls === 'monk' && L >= 2) tips.push('Flurry of Blows: set the Unarmed strike row to 2 more times.');
     if (c.cls === 'rogue') tips.push('Sneak Attack needs advantage or an ally next to the target, and a finesse or ranged weapon.');
     return { said, tips };
@@ -360,7 +374,7 @@ function renderRows() {
     const end = (r, i) => (AM_PF2E ? `
           <label class="am-field am-f-map" title="The multiple attack penalty this weapon's Strike takes as your second, then third or later, attack in the turn">Attack penalty<select data-i="${i}" data-k="map">${opts(Object.keys(AM_MAP_LABELS), v => AM_MAP_LABELS[v], r.map || '')}</select></label>
           <label class="am-field am-f-trait" title="Deadly and fatal add damage on a critical hit">Crit trait<select data-i="${i}" data-k="trait">${opts(AM_TRAITS, amTraitLabel, amTraitKey(r))}</select></label>` : `
-          <label class="am-check" title="Reroll a 1 or 2 on the weapon's damage dice"><input type="checkbox" data-i="${i}" data-k="gwf"${r.gwf ? ' checked' : ''}> Great Weapon Fighting</label>
+          <label class="am-check" title="${amGwfTitle()}"><input type="checkbox" data-i="${i}" data-k="gwf"${r.gwf ? ' checked' : ''}> Great Weapon Fighting</label>
           <label class="am-check" title="Take the penalty to hit for the extra damage"><input type="checkbox" data-i="${i}" data-k="trade"${r.trade ? ' checked' : ''}> ${trade}</label>
           <label class="am-check" title="Brutal Critical and Savage Attacks add no dice to a ranged attack"><input type="checkbox" data-i="${i}" data-k="ranged"${r.ranged ? ' checked' : ''}> Ranged</label>`);
     document.getElementById('am-rows').innerHTML = am.rows.map((r, i) => `<div class="am-row">
@@ -520,9 +534,9 @@ function loadCharacter(c) {
 function fillCharacters() {
     const sel = document.getElementById('am-load');
     if (!sel) return;
-    const list = cbLoadAll().filter(c => cbClass(c.cls));
+    const list = cbLoadAll().filter(c => cbClass(c.cls, c));
     sel.innerHTML = `<option value="">${list.length ? 'Load attacks from a saved character…' : 'No saved characters yet'}</option>`
-        + list.map(c => `<option value="${esc(c.id)}">${esc(c.name || 'Unnamed')} (${esc(cbClass(c.cls).name)} ${c.level})</option>`).join('');
+        + list.map(c => `<option value="${esc(c.id)}">${esc(c.name || 'Unnamed')} (${esc(cbClass(c.cls, c).name)} ${c.level}${cbIs24(c) ? ', 2024' : ''})</option>`).join('');
     sel.disabled = !list.length;
 }
 
@@ -538,6 +552,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (charId) flash('That character isn\'t saved in this browser.', true);
     }
     fillCharacters();
+    // The rules picker (srd52.js; 5e only) and any switch: Great Weapon Fighting's math follows it.
+    const rulesBox = document.getElementById('am-rules');
+    if (rulesBox && !AM_PF2E && typeof srd52Toggle === 'function') rulesBox.innerHTML = srd52Toggle();
+    if (!AM_PF2E && typeof srd52OnChange === 'function') srd52OnChange(() => { setUrlParams(amParams(), false); render(); });
 
     const tool = document.getElementById('am-tool');
     tool.addEventListener('input', onInput);

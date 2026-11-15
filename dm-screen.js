@@ -773,6 +773,8 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (e.key === PARTY_KEY) renderTypes('party');
         else if (e.key === INIT_VIEW_KEY) renderTypes('init');
     });
+    // The rules version (srd52.js): rules cards and stat blocks follow it.
+    if (typeof srd52OnChange === 'function') srd52OnChange(() => renderBoardKeepingFocus());
     // The notebook (entries and homebrew monsters) has its own listener; homebrew.js's runs first.
     nbOnChange(() => {
         renderMonsterList();

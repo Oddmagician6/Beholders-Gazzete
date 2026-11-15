@@ -163,6 +163,16 @@ const BACKUP_KEYS = [
         count: v => v === 'off' ? 'Hidden' : 'Shown'
     },
     {
+        key: 'gazette_rules_version', raw: true, tool: '📖 Rules version', href: 'rules', what: 'D&D rules: 2014 or 2024',
+        clean: v => { if (v !== '2014' && v !== '2024') throw new Error('is not 2014 or 2024'); return { value: v, dropped: 0 }; },
+        count: v => v === '2024' ? '2024 (SRD 5.2.1)' : '2014 (SRD 5.1)'
+    },
+    {
+        key: 'gazette_srd52', raw: true, tool: '📖 Rules version', href: 'spellbook', what: 'SRD 5.2 additions in 2014 mode',
+        clean: v => { if (v !== '1' && v !== '0') throw new Error('is not on or off'); return { value: v, dropped: 0 }; },
+        count: v => v === '1' ? 'On' : 'Off'
+    },
+    {
         key: 'gazette-session-kit', tool: '🎲 Session Kit', href: 'session-kit', what: 'Current kit',
         clean: v => bkWhole(v, bkObj),
         count: () => '1 kit'

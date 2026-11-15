@@ -5,13 +5,22 @@
    shared link brings them back; nothing goes in localStorage except a
    character sent to the Character Builder (CB_KEY, through cbSave).
    Needs rng.js, dice-engine.js, character-data.js, and character-engine.js.
+   2024 rules (ROADMAP L1T T7; character-data-2024.js + srd52.js text only): species give no
+   scores, so the race list becomes the background list, with its +2/+1 or +1/+1/+1 (bg=, plus=:
+   two abilities = +2 then +1, three = +1 each). The address carries rules=2024 (setUrlParams).
    ============================================ */
 
 const PB_METHODS = [['point', '🧮 Point Buy'], ['array', '📊 Standard Array'], ['roll', '🎲 Roll 4d6'], ['manual', '✍️ Your Own Numbers']];
 const PB_METHOD_NAMES = { point: 'Point buy', array: 'Standard array', roll: '4d6 drop lowest', manual: 'Own numbers' };
 const PB_ORDER = ['con', 'dex', 'wis', 'str', 'int', 'cha'];   // after the class's key abilities, like the builder
 
-const pb = { method: 'point', base: {}, pool: [], dice: null, race: '', abil: [], cls: '' };
+const pb = { method: 'point', base: {}, pool: [], dice: null, race: '', abil: [], cls: '', bg: '', split: 2 };
+
+// The rules version this page shows (srd52.js), and the 2024 background's allowed abilities.
+const pbR = () => (CB24_OK() && typeof rulesVersion === 'function' && rulesVersion() === '2024' ? '2024' : '2014');
+const pb24 = () => pbR() === '2024';
+const pbBg = () => (pb24() && pb.bg ? CB24_BACKGROUNDS[pb.bg] || null : null);
+const pbBgAllowed = bg => (bg && bg.abil) || CB_ABILITIES;
 
 function esc(s) {
     return String(s === undefined || s === null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -27,7 +36,9 @@ function flash(msg, bad = false) {
 }
 
 // The builder's rules want a character; this is just enough of one.
-const pbChar = () => ({ race: pb.race, subrace: '', raceOpt: { abil: pb.abil } });
+const pbChar = () => (pb24() ? { rules: '2024', bg: pb.bg, bgOpt: { boost: pb.abil } } : { race: pb.race, subrace: '', raceOpt: { abil: pb.abil } });
+// What the bonus is from, for the grid: the race's name, or the background's.
+const pbFromName = () => (pb24() ? (pbBg() ? pbBg().name : '') : (cbRace(pb.race) ? cbRace(pb.race).name : ''));
 const pbRaceName = r => (r.subraces ? r.subraces[0].name : r.name);
 const pbBonusText = b => CB_ABILITIES.filter(a => b[a]).map(a => `+${b[a]} ${a.toUpperCase()}`).join(', ');
 
@@ -76,7 +87,8 @@ function pbParams() {
     if (pb.method !== 'point') p.m = pb.method;
     if (CB_ABILITIES.some(a => pb.base[a] !== 8)) p.s = CB_ABILITIES.map(a => pb.base[a]).join('.');
     if (pb.method === 'roll' && pb.pool.length === 6) p.pool = pb.pool.join('.');
-    if (pb.race) p.race = pb.race;
+    if (pb.race && !pb24()) p.race = pb.race;
+    if (pb.bg && pb24()) p.bg = pb.bg;
     if (pb.abil.length) p.plus = pb.abil.join('.');
     if (pb.cls) p.cls = pb.cls;
     return p;
@@ -88,9 +100,18 @@ function pbFromUrl() {
     pb.method = PB_METHODS.some(x => x[0] === m) ? m : 'point';
     pb.race = cbRace(q.get('race')) ? q.get('race') : '';
     pb.cls = cbClass(q.get('cls')) ? q.get('cls') : '';
-    const r = cbRace(pb.race);
-    const ch = r && r.choose && r.choose.abil;
-    pb.abil = ch ? [...new Set((q.get('plus') || '').split('.').filter(a => CB_ABILITIES.includes(a) && a !== r.choose.abilNot))].slice(0, ch) : [];
+    pb.bg = CB24_OK() && Object.hasOwn(CB24_BACKGROUNDS, q.get('bg') || '') ? q.get('bg') : '';
+    const plus = [...new Set((q.get('plus') || '').split('.'))];
+    if (pb24()) {
+        const bg = pbBg();
+        pb.abil = bg ? plus.filter(a => pbBgAllowed(bg).includes(a)).slice(0, 3) : [];
+        pb.split = pb.abil.length === 3 ? 3 : 2;
+        if (pb.split === 2) pb.abil = pb.abil.slice(0, 2);
+    } else {
+        const r = cbRace(pb.race);
+        const ch = r && r.choose && r.choose.abil;
+        pb.abil = ch ? plus.filter(a => CB_ABILITIES.includes(a) && a !== r.choose.abilNot).slice(0, ch) : [];
+    }
     const pool = (q.get('pool') || '').split('.').map(Number).filter(n => Number.isInteger(n) && n >= 3 && n <= 18);
     pb.pool = pool.length === 6 ? pool : [];
     pb.dice = null;
@@ -116,10 +137,19 @@ function pbChanged() {
 // ── Drawing ──────────────────────────────────────────────
 function renderBar() {
     document.querySelectorAll('#pb-methods [data-m]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.m === pb.method)));
-    document.getElementById('pb-race').value = pb.race;
+    document.getElementById('pb-race').value = pb24() ? pb.bg : pb.race;
     document.getElementById('pb-class').value = pb.cls;
-    const r = cbRace(pb.race), ch = r && r.choose && r.choose.abil;
     const pick = document.getElementById('pb-plus');
+    if (pb24()) {
+        const bg = pbBg();
+        pick.hidden = !bg;
+        if (!bg) return;
+        const need = pb.split, tag = a => { const i = pb.abil.indexOf(a); return i < 0 ? '' : pb.split === 3 ? ' +1' : i === 0 ? ' +2' : ' +1'; };
+        pick.innerHTML = `<span class="pb-label">${esc(bg.name)}: <button type="button" class="pb-chip" data-split="2" aria-pressed="${pb.split === 2}">+2 / +1</button> <button type="button" class="pb-chip" data-split="3" aria-pressed="${pb.split === 3}">+1 / +1 / +1</button> <span class="pb-count${pb.abil.length === need ? ' full' : ''}">${pb.abil.length}/${need}</span></span>`
+            + pbBgAllowed(bg).map(a => `<button type="button" class="pb-chip" data-plus="${a}" aria-pressed="${pb.abil.includes(a)}">${CB_ABILITY_NAMES[a]}${tag(a)}</button>`).join('');
+        return;
+    }
+    const r = cbRace(pb.race), ch = r && r.choose && r.choose.abil;
     pick.hidden = !ch;
     if (ch) {
         pick.innerHTML = `<span class="pb-label">${esc(r.name)}: +1 to two abilities <span class="pb-count${pb.abil.length === ch ? ' full' : ''}">${pb.abil.length}/${ch}</span></span>`
@@ -166,7 +196,7 @@ function renderGrid() {
         } else {
             ctl = `<div class="pb-pm"><span>—</span></div><span class="pb-from">roll first</span>`;
         }
-        const from = bonus[a] ? `+${bonus[a]} ${esc(r ? r.name : '')}` : '';
+        const from = bonus[a] ? `+${bonus[a]} ${esc(pbFromName())}` : '';
         return `<div class="pb-abil${key.includes(a) ? ' pb-key' : ''}">
             <b>${a.toUpperCase()}${key.includes(a) ? ' <span title="A key ability for this class">★</span>' : ''}</b>
             <span class="pb-name">${CB_ABILITY_NAMES[a]}</span>
@@ -193,8 +223,14 @@ function renderSummary() {
     const over = CB_ABILITIES.filter(a => pb.base[a] + bonus[a] > 20);
     let h = `<p>${bits.join(' · ')}.</p>`;
     if (over.length) h += `<p class="pb-warn">${over.map(a => a.toUpperCase()).join(', ')} goes over 20, the most a score can be without magic.</p>`;
-    const r = cbRace(pb.race), ch = r && r.choose && r.choose.abil;
-    if (ch && pb.abil.length < ch) h += `<p class="pb-warn">Pick ${ch - pb.abil.length} more ${ch - pb.abil.length === 1 ? 'ability' : 'abilities'} for ${esc(r.name)}'s +1.</p>`;
+    if (pb24()) {
+        const bg = pbBg();
+        if (bg && pb.abil.length < pb.split) h += `<p class="pb-warn">Pick ${pb.split - pb.abil.length} more ${pb.split - pb.abil.length === 1 ? 'ability' : 'abilities'} for ${esc(bg.name)}'s ${pb.split === 3 ? '+1 / +1 / +1' : '+2 / +1'}.</p>`;
+        if (!bg) h += '<p>2024 rules: your species gives no ability scores. Pick a background for its +2 / +1 or +1 / +1 / +1.</p>';
+    } else {
+        const r = cbRace(pb.race), ch = r && r.choose && r.choose.abil;
+        if (ch && pb.abil.length < ch) h += `<p class="pb-warn">Pick ${ch - pb.abil.length} more ${ch - pb.abil.length === 1 ? 'ability' : 'abilities'} for ${esc(r.name)}'s +1.</p>`;
+    }
     el.innerHTML = h;
 }
 
@@ -209,8 +245,8 @@ function render() {
 // ── Actions ──────────────────────────────────────────────
 function pbText() {
     const bonus = cbRacialBonus(pbChar());
-    const r = cbRace(pb.race), k = cbClass(pb.cls);
-    const head = [r ? pbRaceName(r) : '', k ? k.name : ''].filter(Boolean).join(' ');
+    const r = pb24() ? null : cbRace(pb.race), k = cbClass(pb.cls), bg = pbBg();
+    const head = [r ? pbRaceName(r) : '', k ? k.name : '', bg ? `(${bg.name})` : ''].filter(Boolean).join(' ');
     const how = PB_METHOD_NAMES[pb.method] + (pb.method === 'point' ? ` (${cbPointSpent(pb.base)}/${CB_POINT_BUDGET})` : '');
     const lines = CB_ABILITIES.map(a => {
         const t = pb.base[a] + bonus[a];
@@ -250,11 +286,16 @@ async function sendToBuilder() {
         btn.disabled = false;
         return;
     }
-    const c = cbBlank();
-    const r = cbRace(pb.race);
-    c.race = pb.race;
-    c.subrace = r && r.subraces ? r.subraces[0].id : '';
-    c.raceOpt.abil = pb.abil.slice();
+    const c = cbBlank(pbR());
+    if (pb24()) {
+        c.bg = pb.bg;
+        c.bgOpt.boost = pb.abil.slice();
+    } else {
+        const r = cbRace(pb.race);
+        c.race = pb.race;
+        c.subrace = r && r.subraces ? r.subraces[0].id : '';
+        c.raceOpt.abil = pb.abil.slice();
+    }
     c.cls = pb.cls;
     c.method = pb.method;
     CB_ABILITIES.forEach(a => { c.base[a] = pb.base[a]; });
@@ -266,6 +307,24 @@ async function sendToBuilder() {
         return;
     }
     location.href = 'character-builder';
+}
+
+// The race (2014) or background (2024) list, and the class list, for the page's rules version.
+function fillLists() {
+    const sel = document.getElementById('pb-race');
+    document.getElementById('pb-race-label').textContent = pb24() ? 'Background' : 'Race';
+    document.getElementById('pb-plus').setAttribute('aria-label', pb24() ? 'Background ability score choices' : 'Racial +1 choices');
+    if (pb24()) {
+        sel.innerHTML = '<option value="">No background yet</option>' + Object.entries(CB24_BACKGROUNDS).map(([id, bg]) =>
+            `<option value="${id}">${bg.icon} ${esc(bg.name)} (${bg.abil ? bg.abil.map(a => a.toUpperCase()).join(', ') : 'any three'})</option>`).join('');
+    } else {
+        sel.innerHTML = '<option value="">No race yet</option>' + CB_RACES.map(r => {
+            const b = pbBonusText(pbRaceBonusFixed(r));
+            const extra = r.choose && r.choose.abil ? `${b ? ', ' : ''}+1 to two others` : '';
+            return `<option value="${r.id}">${r.icon} ${esc(pbRaceName(r))} (${b}${extra})</option>`;
+        }).join('');
+    }
+    document.getElementById('pb-class').innerHTML = '<option value="">Any class</option>' + cbClassList(pbR()).map(k => `<option value="${k.id}">${k.icon} ${esc(k.name)} (${k.primary.map(a => a.toUpperCase()).join(', ')})</option>`).join('');
 }
 
 function onClick(e) {
@@ -285,8 +344,13 @@ function onClick(e) {
         if (cbPointSpent(pb.base) > CB_POINT_BUDGET) { pb.base[a] = was; return; }
         return pbChanged();
     }
+    if (b.dataset.split) {
+        pb.split = Number(b.dataset.split);
+        pb.abil = pb.abil.slice(0, pb.split);
+        return pbChanged();
+    }
     if (b.dataset.plus) {
-        const r = cbRace(pb.race), max = r.choose.abil, a = b.dataset.plus;
+        const a = b.dataset.plus, max = pb24() ? pb.split : cbRace(pb.race).choose.abil;
         if (pb.abil.includes(a)) pb.abil = pb.abil.filter(x => x !== a);
         else if (pb.abil.length < max) pb.abil.push(a);
         else pb.abil = [...pb.abil.slice(1), a];
@@ -314,23 +378,22 @@ function onChange(e) {
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('year').textContent = new Date().getFullYear();
     document.getElementById('pb-methods').innerHTML = PB_METHODS.map(([m, t]) => `<button type="button" class="pb-btn" data-m="${m}" aria-pressed="false">${t}</button>`).join('');
-    document.getElementById('pb-race').innerHTML = '<option value="">No race yet</option>' + CB_RACES.map(r => {
-        const b = pbBonusText(pbRaceBonusFixed(r));
-        const extra = r.choose && r.choose.abil ? `${b ? ', ' : ''}+1 to two others` : '';
-        return `<option value="${r.id}">${r.icon} ${esc(pbRaceName(r))} (${b}${extra})</option>`;
-    }).join('');
-    document.getElementById('pb-class').innerHTML = '<option value="">Any class</option>' + CB_CLASSES.map(k => `<option value="${k.id}">${k.icon} ${esc(k.name)} (${k.primary.map(a => a.toUpperCase()).join(', ')})</option>`).join('');
+    fillLists();
     document.getElementById('pb-cost').innerHTML = `<tr><th scope="row">Score</th>${Object.keys(CB_POINT_COST).map(s => `<td>${s}</td>`).join('')}</tr><tr><th scope="row">Cost</th>${Object.values(CB_POINT_COST).map(c => `<td>${c}</td>`).join('')}</tr>`;
 
     pbFromUrl();
     setUrlParams(pbParams(), false);
     render();
+    // The rules picker (srd52.js) and any switch, here or in another tab: the list and bonuses change.
+    const rulesBox = document.getElementById('pb-rules');
+    if (rulesBox && typeof srd52Toggle === 'function') rulesBox.innerHTML = srd52Toggle();
+    if (typeof srd52OnChange === 'function') srd52OnChange(() => { pb.abil = []; pb.split = 2; fillLists(); pbChanged(); });
 
     const main = document.getElementById('pb-tool');
     main.addEventListener('click', onClick);
     main.addEventListener('change', onChange);
     document.getElementById('pb-race').addEventListener('change', e => {
-        pb.race = e.target.value;
+        if (pb24()) pb.bg = e.target.value; else pb.race = e.target.value;
         pb.abil = [];
         pbChanged();
     });

@@ -30,13 +30,17 @@ const BS_BACKGROUNDS = [
     ['swindler', '🃏 Swindler'], ['urchin', '🐀 Urchin']
 ];
 // The age each builder race comes of age (SRD 5.1 race notes), for Turning points.
-const BS_ADULT = { dwarf: 50, elf: 100, halfling: 20, human: 18, dragonborn: 15, gnome: 40, 'half-elf': 20, 'half-orc': 14, tiefling: 18 };
+const BS_ADULT = { dwarf: 50, elf: 100, halfling: 20, human: 18, dragonborn: 15, gnome: 40, 'half-elf': 20, 'half-orc': 14, tiefling: 18, goliath: 18, orc: 14 };
 
 // The NPC name tables a builder race borrows; a half-elf or half-orc picks one of two.
 const BS_NAME_RACES = {
     dwarf: ['dwarf'], elf: ['elf'], halfling: ['halfling'], human: ['human'], dragonborn: ['dragonborn'],
-    gnome: ['gnome'], 'half-elf': ['human', 'elf'], 'half-orc': ['orc', 'human'], tiefling: ['tiefling']
+    gnome: ['gnome'], 'half-elf': ['human', 'elf'], 'half-orc': ['orc', 'human'], tiefling: ['tiefling'],
+    orc: ['orc'], goliath: ['human', 'dwarf']
 };
+
+// The 5e rules version this page shows (srd52.js, text only; ROADMAP L1T T7): 2024 lists its species.
+const bsR = () => (!BS_PF2E && CB24_OK() && typeof rulesVersion === 'function' && rulesVersion() === '2024' ? '2024' : '2014');
 
 const BS_UPBRINGING = [
     "In a fishing village where everyone could read the weather and nobody could read a book",
@@ -65,6 +69,8 @@ const BS_UPBRINGING = [
     "In a city under siege for most of my childhood"
 ];
 const BS_UPBRINGING_RACE = {
+    goliath: ["In a mountain camp above the tree line, where every child is measured against the peaks", "With a herding clan that moved with the snows and kept score of everything", "In a lowland village, where I outgrew the doorframes before I was ten"],
+    orc: ["In a stronghold that kept its gates open to anyone willing to work", "With a roving war band that had long since turned to guarding caravans", "In a river town where my family ran the ferry and settled every quarrel on it"],
     dwarf: ["In a mountain hold where my clan's name is carved over the gate", "In a forge town where the hammers never stopped", "In a hold that fell when I was young; we live as guests in another"],
     elf: ["In a forest city where a century counts as a short memory", "Among humans, the one elf child in a market town", "In a quiet elven enclave that hasn't welcomed a stranger in two hundred years"],
     halfling: ["In a hillside village of round doors and long lunches", "With a wandering halfling family that sets up wherever the weather is good", "In a human city's halfling quarter, where everyone knows everyone's business"],
@@ -223,6 +229,8 @@ const BS_UPBRINGING_MORE = [
     "In a wizard's tower, as the cook's child, which is not the same as an apprentice"
 ];
 const BS_UPBRINGING_RACE_MORE = {
+    goliath: ["Among stone carvers who cut our clan's deeds into the cliff face", "On a high pass where my family guided travelers through the storms"],
+    orc: ["In a smithing clan whose blades were traded far beyond our hills", "With a grandmother who led the hunts and expected me to keep up"],
     dwarf: ["In a trading post at the mouth of the mines, between the surface folk and my own", "In a brewing family whose ale is known three holds over"],
     elf: ["In a treetop village where the young were taught to wait", "With a wandering elven company that sings the old roads back into memory"],
     halfling: ["Above a halfling bakery, where the ovens woke before the roosters", "On a riverboat crewed by three generations of my family"],
@@ -635,9 +643,9 @@ function bsFill(text, mine = false) {
 const bs = { seed: '', race: '', cls: '', bg: '', gender: '', set: {}, lock: [] };
 
 // The page's builder: races and classes for the pickers ({ id, name, icon }), and its saved characters.
-const BS_RACES = () => (BS_PF2E ? Object.entries(PF2E_ANCESTRIES).map(([id, a]) => ({ id, name: a.n, icon: '' })) : CB_RACES);
+const BS_RACES = () => (BS_PF2E ? Object.entries(PF2E_ANCESTRIES).map(([id, a]) => ({ id, name: a.n, icon: '' })) : cbRaceList(bsR()));
 const BS_CLASSES = () => (BS_PF2E ? Object.entries(PF2E_CLASSES).map(([id, k]) => ({ id, name: k.n, icon: '' })) : CB_CLASSES);
-const bsRaceOk = id => (BS_PF2E ? Object.hasOwn(PF2E_ANCESTRIES, id || '') : !!cbRace(id));
+const bsRaceOk = id => (BS_PF2E ? Object.hasOwn(PF2E_ANCESTRIES, id || '') : !!cbRace(id, bsR()));
 const bsClassOk = id => (BS_PF2E ? Object.hasOwn(PF2E_CLASSES, id || '') : !!cbClass(id));
 const BS_CB_KEY = BS_PF2E ? PC_KEY : CB_KEY;
 const BS_BUILDER = BS_PF2E ? 'pathfinder-character-builder' : 'character-builder';
@@ -647,7 +655,7 @@ const BS_BUILDER = BS_PF2E ? 'pathfinder-character-builder' : 'character-builder
 function bsCharList() {
     if (!BS_PF2E) {
         return cbLoadAll().map(c => {
-            const k = cbClass(c.cls), r = cbRace(c.race);
+            const k = cbClass(c.cls, c), r = cbRace(c.race, c);
             return { id: c.id, name: c.name, about: [r && r.name, k && `${k.name} ${c.level}`].filter(Boolean).join(' ') };
         });
     }
@@ -784,8 +792,8 @@ async function useForCharacter() {
         if (list.length >= max) return fail(`You have ${max} characters saved; delete one in the Character Builder first.`);
         if (BS_PF2E) c = pcBlank();
         else {
-            c = cbBlank();
-            const r = cbRace(bs.race);
+            c = cbBlank(bsR());
+            const r = cbRace(bs.race, c);
             c.subrace = r && r.subraces ? r.subraces[0].id : '';
         }
         c.race = bs.race;
@@ -800,6 +808,10 @@ async function useForCharacter() {
     location.href = BS_BUILDER;
 }
 
+function fillRaces() {
+    document.getElementById('bs-race').innerHTML = `<option value="">Any ${BS_PF2E ? 'ancestry' : bsR() === '2024' ? 'species' : 'race'}</option>` + BS_RACES().map(r => `<option value="${r.id}">${r.icon ? r.icon + ' ' : ''}${esc(r.name)}</option>`).join('');
+}
+
 function rollNew() {
     bs.seed = newSeed();
     BS_IDS.forEach(id => { if (!bs.lock.includes(id)) delete bs.set[id]; });
@@ -808,7 +820,13 @@ function rollNew() {
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('year').textContent = new Date().getFullYear();
-    document.getElementById('bs-race').innerHTML = `<option value="">Any ${BS_PF2E ? 'ancestry' : 'race'}</option>` + BS_RACES().map(r => `<option value="${r.id}">${r.icon ? r.icon + ' ' : ''}${esc(r.name)}</option>`).join('');
+    fillRaces();
+    // A rules switch (srd52.js, here or in another tab) swaps the race list for the 2024 species.
+    if (!BS_PF2E && typeof srd52OnChange === 'function') srd52OnChange(() => {
+        fillRaces();
+        if (!bsRaceOk(bs.race)) bs.race = '';
+        bsChanged();
+    });
     document.getElementById('bs-class').innerHTML = '<option value="">Any class</option>' + BS_CLASSES().map(k => `<option value="${k.id}">${k.icon ? k.icon + ' ' : ''}${esc(k.name)}</option>`).join('');
     document.getElementById('bs-bg').innerHTML = BS_BACKGROUNDS.map(([v, t]) => `<option value="${v}">${esc(t)}</option>`).join('');
     document.getElementById('bs-gender').innerHTML = BS_GENDERS.map(([v, t]) => `<option value="${v}">${t}</option>`).join('');
