@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://gazette.ashforgestudio.com/</loc><lastmod>2026-11-15</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/</loc><lastmod>2026-11-16</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/about</loc><lastmod>2026-11-14</lastmod></url>
-  <url><loc>https://gazette.ashforgestudio.com/archive</loc><lastmod>2026-11-15</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/archive</loc><lastmod>2026-11-16</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/bestiary</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/character-builder</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/dm-screen</loc><lastmod>2026-11-14</lastmod></url>
@@ -38,7 +38,7 @@
   <url><loc>https://gazette.ashforgestudio.com/fantasy-history-generator</loc><lastmod>2026-11-02</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/fantasy-map-generator</loc><lastmod>2026-11-02</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/fantasy-world-map-maker</loc><lastmod>2026-11-02</lastmod></url>
-  <url><loc>https://gazette.ashforgestudio.com/glossary</loc><lastmod>2026-11-15</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/glossary</loc><lastmod>2026-11-16</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/handouts</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/loot-generator</loc><lastmod>2026-11-02</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/monster-maker</loc><lastmod>2026-11-14</lastmod></url>
@@ -99,12 +99,12 @@
   <url><loc>https://gazette.ashforgestudio.com/worldbuilder</loc><lastmod>2026-11-02</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/desk/barnaby-tallowmere</loc><lastmod>2026-11-15</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/desk/brakka-stonesweat</loc><lastmod>2026-11-14</lastmod></url>
-  <url><loc>https://gazette.ashforgestudio.com/desk/grashka-ironjaw</loc><lastmod>2026-11-14</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/desk/grashka-ironjaw</loc><lastmod>2026-11-16</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/desk/hollis-delvewright</loc><lastmod>2026-11-15</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/desk/matthias-ashmoor</loc><lastmod>2026-10-17</lastmod></url>
-  <url><loc>https://gazette.ashforgestudio.com/desk/nyx-spindlecoil</loc><lastmod>2026-11-13</lastmod></url>
-  <url><loc>https://gazette.ashforgestudio.com/desk/ottoline-vex</loc><lastmod>2026-11-15</lastmod></url>
-  <url><loc>https://gazette.ashforgestudio.com/desk/skritch-mudwhistle</loc><lastmod>2026-11-14</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/desk/nyx-spindlecoil</loc><lastmod>2026-11-16</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/desk/ottoline-vex</loc><lastmod>2026-11-16</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/desk/skritch-mudwhistle</loc><lastmod>2026-11-16</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/desk/sterling-vanmoor</loc><lastmod>2026-11-15</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/desk/wendell-tumbleberry</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/spell/acid-arrow</loc><lastmod>2026-10-10</lastmod></url>
@@ -2669,6 +2669,10 @@
   <url><loc>https://gazette.ashforgestudio.com/pf2e/hazard/titanic-flytrap</loc><lastmod>2026-10-29</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/pf2e/hazard/vorpal-executioner</loc><lastmod>2026-10-29</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/pf2e/hazard/wheel-of-misery</loc><lastmod>2026-10-29</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/a/snowball-fight-ice-knife-watch-9-wands</loc><lastmod>2026-11-16</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/a/red-dragon-lich-feast-invites-fire-marshal</loc><lastmod>2026-11-16</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/a/magic-mouth-doorbell-recall-snowlatch-password</loc><lastmod>2026-11-16</lastmod></url>
+  <url><loc>https://gazette.ashforgestudio.com/a/winter-wolves-baronies-hire-same-party</loc><lastmod>2026-11-16</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/a/feast-2000-tiered-seating-heroes-feast-bid</loc><lastmod>2026-11-15</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/a/hold-person-heckler-spellcasting-ban-brindlemoor</loc><lastmod>2026-11-15</lastmod></url>
   <url><loc>https://gazette.ashforgestudio.com/a/roper-stalagmite-ranger-fourth-attempt</loc><lastmod>2026-11-15</lastmod></url>

@@ -8665,6 +8665,142 @@
         "rumor": "The twelve rich folk in the good seats are getting a magic supper, and my cousin swears they'll be glowing by morning."
       },
       "fiction": true
+    },
+    {
+      "id": "winter-wolves-baronies-hire-same-party",
+      "title": "Winter Wolves Block Road; Both Baronies Hire Same Party",
+      "category": "International",
+      "author": "Grashka Ironjaw",
+      "date": "2026-11-16",
+      "excerpt": "Ashenfold and Brackwater each hired one adventuring party to remove the winter wolves on the shared road. It was the same party, and the wolves have views.",
+      "social": "Seven winter wolves sat down on the road between Ashenfold and Brackwater with the first snow. Both baronies hired the Copper Wick Company to remove them, for 300 gold each, on the same afternoon. Then the wolves started talking. Your party just took both contracts. Who do you tell first?",
+      "content": "<p>Seven winter wolves have blocked the road north of Quillmarch Bridge since the first snow fell on Firstday, and the baronies of Ashenfold and Brackwater each say the wolves belong to the other. Both hired an adventuring party to remove them. It was the same adventuring party.</p>\n\n<p>Ashenfold moved first. Envoy Halric Dunmere signed the Copper Wick Company at noon for 300 gold to clear \"Brackwater's wolves\" off the road. At a quarter past two, Envoy Teodra Hallowmere signed the same five people for 300 gold to clear \"Ashenfold's wolves.\" The company's fighter, a woman named Brisa Toll, accepted both purses. \"Nobody asked if we were booked,\" she told this reporter. \"That's on them.\"</p>\n\n<p>I asked how she planned to tell the envoys. She said she planned not to.</p>\n\n<p>The company reached the wolves at dusk. The plan was to kill wolves, collect 600 gold, and leave before either baron compared receipts. Then the largest wolf sat up in the snow and said, in clear Common, \"Whose are we supposed to be?\"</p>\n\n<p>Her name is Rimetooth, and she speaks for the pack. She does not belong to Ashenfold, she says, and she does not belong to Brackwater, and she would like both baronies to stop putting it in writing. \"We were on this road before either of your borders,\" she said. \"We are the road's wolves. The road has not complained.\"</p>\n\n<p>Then she asked the party what they were being paid. Brisa told her. Rimetooth asked who was paying. Brisa told her that too. The wolf laughed for some time.</p>\n\n<p>The company's cleric tried to open terms. Rimetooth offered her paw. Firm, two seconds, no hidden dagger detected. Considerable claw. Her demands: the road stays shut each winter, both baronies route travelers over Quillmarch Bridge instead, and the troll there sends the pack one goat a week. Gorvash Pennyfist, the troll, has already refused. He blames goat prices.</p>\n\n<p>Back in Ashenfold, Dunmere learned at breakfast that his hired swords also work for Brackwater. Hallowmere learned at the same breakfast, across the same table, because the two envoys still share a parley tent from <a href=\"/a/potion-of-invisibility-envoy-parley-three-days\">the last round of border talks</a>. Each now wants the other's 300 gold refunded to them. Neither wants the wolves. Both, according to the parley clerk who serves them breakfast, would accept the wolves if the paperwork named them as the other side's.</p>\n\n<p>The Copper Wick Company has done nothing for two days. Brisa calls this \"holding the line.\" She is eating field rations by a fire in sight of the pack, which I respect. The rations are terrible. I had two.</p>\n\n<p>So the count stands at seven winter wolves, five adventurers, two contracts, and zero baronies willing to own a wolf. Tension sits at fourteen siege-days. The wolves, for the record, are sleeping fine.</p>\n\n<p><em>Ironjaw, filed from the front.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "Nobody's Wolves",
+          "text": "Two rival towns each hire the party to drive off the winter wolves blocking the only road between them, and each insists the pack belongs to the other. The wolves can talk, they want a weekly toll in goats to reopen the road, and whoever the party sides with will call the other contract void."
+        },
+        "npc": {
+          "name": "Brisa Toll",
+          "role": "Fighter, double-booked sellsword",
+          "want": "She wants to collect both purses before either employer finds out about the other.",
+          "secret": "She already spent half of the first purse on a wager that the wolves would win.",
+          "race": "human",
+          "gender": "female",
+          "kind": "adventurer"
+        },
+        "location": {
+          "name": "The Snowbound Mile",
+          "text": "A stretch of road between two border towns where the snow never melts while the pack is in residence. Mile markers on it are carved with both towns' names, each scratched out by the other.",
+          "tavern": false
+        },
+        "rumor": "My cousin says the big white wolf on the north road keeps a ledger, and both barons are in it."
+      },
+      "fiction": true
+    },
+    {
+      "id": "magic-mouth-doorbell-recall-snowlatch-password",
+      "title": "Magic Mouth Doorbell Recalled for Reciting Party's Password",
+      "category": "Technology",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-11-16",
+      "excerpt": "Gablecall's 25 gp Magic Mouth doorbell was meant to screen visitors. It read one party's password and heist plan to carol singers. Now it's recalled.",
+      "social": "The Snowlatch Company put a Magic Mouth doorbell on their winter quarters to keep strangers out. It greeted the carol singers with the party's password. Then the tax collector got the heist plan. Gablecall has recalled all 2,400 units. What secret would your party least want the doorbell to repeat?",
+      "content": "<p>Okay. OKAY. Gablecall Wardworks has recalled all 2,400 of its Porchmouth doorbells, a 25 gp Magic Mouth enchantment that bolts beside your door and screens visitors for you. The Snowlatch Company, a four-member adventuring party wintering in a rented mill house outside Brindlemoor, found the problem last Tuesday, when the doorbell greeted a troupe of carol singers by reciting the party's password.</p>\n\n<p>The password is \"Turnip Forty.\" I can print it now because roughly half of Brindlemoor already knows it.</p>\n\n<p>I need you to understand how good this thing looked on paper. The Porchmouth runs on a firmware glyph Gablecall calls Smart Recall. Instead of one fixed message, the magic mouth listens to everything said within thirty feet of the door and \"learns your household.\" The runic latency is zero. It speaks the moment a stranger steps on the mat. I preordered two!</p>\n\n<p>Here is what the Snowlatch doorbell learned, according to the party's fighter, Agna Stoutbarrow. The password, obviously. The plan to rob the Thursday barrow on the Gorsewick road, including the bit where the rogue hides in the hay cart. And, worst of all, the bard's letter to his mother, which he had practiced aloud on the porch, and which apologized for the lute.</p>\n\n<p>Then it told people. The carol singers got the password and the barrow plan, in verse, because the mouth matches the visitor's tone. The tax collector got the barrow plan and an itemized list of loot the party had described on the porch as \"not technically income.\" A cultist handing out pamphlets got the bard's letter and left in tears.</p>\n\n<p>\"We bought it to guard our secrets,\" Stoutbarrow said, standing well away from her own door. \"It is the only thing in this house that has never kept one.\"</p>\n\n<p>Gablecall spokesman Fennet Oakhallow told me the Porchmouth \"performed exactly as a very welcoming doorbell should\" and that the recall is \"a precaution against oversharing.\" Owners are asked to return units to the Gablecall shop on Fish Street. I went down there. The returned doorbells are stacked on a shelf, and every time a customer walks in, all of them recite their households' passwords at once. The shop now sounds like a choir that knows where you keep your coin.</p>\n\n<p>The Snowlatch Company has changed its password and cancelled the barrow job. The tax collector has not cancelled anything. My familiar, Byte, a pseudodragon who now speaks only in ad copy, watched the whole thing and said, \"Porchmouth: let your door do the talking.\" Byte has been asked to leave the mill house.</p>\n\n<p>Still, the voice is gorgeous, and it never once mispronounced \"Stoutbarrow.\" After <a href=\"/a/smart-door-mimic-recall-doorwell-review\">last month's mimic door</a>, a door that only talks feels like progress. Four out of five beholder eyes. Brother Tumbleberry will say I should simply knock and talk to my neighbors myself. Brother Tumbleberry has never heard a doorbell sing a heist plan in three-part harmony. I have. It was beautiful. I would like to hear it again.</p>\n\n<p>Damage Report: Passwords leaked: 2 (theirs, and mine, since my preorder arrived this morning). Heists cancelled: 1. Bards consoled: 1. Eyebrows: fine.</p>\n\n<p><em>— Nyx (they/them). Damage Report below.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Doorbell Knows Everything",
+          "text": "A returned magic mouth doorbell has gone missing from a shop's recall shelf, and it memorized a merchant guild's vault password before it was boxed. The guildmaster will pay well to get it back before a thief stands on a doorstep and asks it nicely."
+        },
+        "npc": {
+          "name": "Ottilie Brassmere",
+          "role": "Recall Desk Clerk",
+          "want": "She wants every recalled doorbell counted and crated before her employer notices one is gone.",
+          "secret": "She sold the missing doorbell herself to a fence who promised it would be destroyed.",
+          "race": "gnome",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Returns Shelf",
+          "text": "A back room in a gadget shop where dozens of enchanted doorbells sit in crates. They all start reciting their old households' secrets whenever anyone opens the door.",
+          "tavern": false
+        },
+        "rumor": "My cousin says if you knock three times on one of those recalled doorbells it'll tell you the last thing its owners whispered, and he's already got a list of houses."
+      },
+      "fiction": true
+    },
+    {
+      "id": "red-dragon-lich-feast-invites-fire-marshal",
+      "title": "Red Dragon and Lich Demand Feast Invites; Fire Marshal Says No",
+      "category": "Regulations",
+      "author": "Ottoline Vex",
+      "date": "2026-11-16",
+      "excerpt": "A red dragon says its rates paid for 311 of the Grand Feast's dinners. A lich wants a seat for his phylactery. The fire marshal wants neither one there.",
+      "social": "A young red dragon wants a seat at Brindlemoor's Grand Feast because it pays its rates, which by its own math bought 311 of the 2,000 dinners. A lich councilor wants a seat too, plus one for his phylactery and sixty candles. The fire marshal has counted exactly one bucket on the Green. Who gets the invitation: the dragon, the lich, or neither?",
+      "content": "<p>A young red dragon and a lich have each demanded a seat at the Grand Feast of Brindlemoor, and the town's fire marshal has asked that neither of them come. The feast, for those joining late, is the one the halfling Feastwarden Odo Plumbrook <a href=\"/a/halfling-feastwarden-feast-2000-brindlemoor\">promised would feed 2,000 people</a> on the Town Green on the 26th, on a budget of 900 gold pieces. Reeve Maudrey Fennick of Brindlemoor appointed him. She now refers to the appointment as \"a decision I made.\"</p>\n\n<p>The dragon's claim came first, by letter, on time. Skorvath keeps an 11,400-gold hoard under the old tannery on Tanner's Row and paid 140 gold pieces in hoard rates this year. The feast comes out of the town purse. By the dragon's arithmetic, set out over four pages with a summary, it has bought about 311 of the 2,000 dinners and would like to eat one of them. \"I am a ratepayer,\" the gentleman from Tanner's Row wrote. \"I ask what any ratepayer asks. A chair would be nice. I can also stand.\"</p>\n\n<p>The lich's claim came second and ran longer. Councilor Maldrith Quennel, who sits for the Chandler Ward and has lived in a crypt on Chandler Lane for some three hundred years, argued that a sitting Burgess is invited to civic feasts by custom. He asked for one seat for himself and another for his phylactery, \"which goes where I go, and is also, legally, me.\" He does not eat, he noted, so he would cost the committee nothing. He then requested sixty candles for ambience.</p>\n\n<p>Fire Marshal Tamsin Coalhurst read both letters into the minutes at Sunday's committee meeting and objected to each. On the dragon: \"The Green is permitted for cooking fires no larger than a cart. A young red dragon is a cooking fire that can walk.\" On the lich: \"Sixty candles is sixty candles.\" She added that the committee already rents a <a href=\"/a/salamander-oven-30-gp-heat-subscription-feast\">salamander oven at 30 gold a day</a>, and that the Green has, by her count, one bucket.</p>\n\n<p>Feastwarden Plumbrook then stood on a chair and invited both. \"Everyone is welcome at the Grand Feast,\" he said. \"The dragon can sit by the oven. The oven will love it.\" My tally now puts the Feastwarden's Promises Made at fourteen and Promises Kept at none. The feast is ten days off, so in fairness none have come due.</p>\n\n<p>Under the committee's rules, which I have read so you don't have to, seating belongs to the Subcommittee on Seating and fire belongs to the Marshal. Where the two overlap, \"the Feastwarden shall decide, with regard to safety.\" The Feastwarden decided. The Marshal cited the town fire code, which outranks committee rules, and the question went up to the Reeve. \"We are aware of the dragon,\" Reeve Fennick said. \"We are also aware of the lich. I would like to be aware of fewer things.\"</p>\n\n<p>A courtier who asked not to be named because they were not authorized to be awake said a compromise is forming: the dragon at the far end of the Green, downwind, beside the bucket, and the lich allowed twelve candles and the jar. Skorvath has written back accepting, and says it will bring its own bucket. Quennel has asked for the ruling in writing, along with forty-eight more candles, also in writing.</p>\n\n<p>The Subcommittee on Seating meets Thursday to decide where everyone sits. It has not yet decided where to sit itself.</p>\n\n<p><em>— O.V., from the gallery</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "Seats for the Uninvited",
+          "text": "A market town's harvest feast has two guests nobody can refuse: a young red dragon who pays its taxes and a lich who sits on the council. The fire marshal will cancel the whole feast unless someone draws up a seating plan all three will sign by sundown, and four hundred hungry townsfolk are waiting on it."
+        },
+        "npc": {
+          "name": "Odette Brask",
+          "role": "Keeper of the Guest List",
+          "want": "She wants one seating chart that the dragon, the lich, and the fire marshal all sign before the cooks light the ovens.",
+          "secret": "She sent both invitations herself, because the dragon tipped her well and the lich promised to do her tax returns for eternity.",
+          "race": "gnome",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Long Green",
+          "text": "The town's feasting lawn, with long trestle tables and a single well. The grass is scorched in a perfect ring at the far end, and nobody will say from what.",
+          "tavern": false
+        },
+        "rumor": "The dragon's bringing its own bucket to the feast, and a creature that brings its own bucket knows something the rest of us don't."
+      },
+      "fiction": true
+    },
+    {
+      "id": "snowball-fight-ice-knife-watch-9-wands",
+      "title": "Snowball Fight Turns to Ice Knife; Watch Takes 9 Wands",
+      "category": "Local Chaos",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-11-16",
+      "excerpt": "A Fish Street snowball fight went sideways when an adventuring party's wizard cast Ice Knife. The City Watch took 9 wands off the street. Allegedly.",
+      "social": "The first snow hit Brindlemoor and lasted about two bells before an adventuring party's wizard cast Ice Knife in a snowball fight. A herring barrel exploded. Then the neighbors got their wands out, and the City Watch took 9 of them off Fish Street. What does your character bring to a snowball fight?",
+      "content": "<p>At roughly the second bell after noon, the first snow of the season came down on Brindlemoor, and by the fourth bell a friendly snowball fight on Fish Street had turned into Ice Knife. The City Watch allegedly confiscated nine wands before it was over. Nine. I counted them myself, from under a cart.</p>\n\n<p>The trouble started with the Tin Whistle Company, a four-member adventuring party that rents rooms above the cooper's and had, by every account, a lovely morning. \"It was snowballs. Normal snowballs,\" said Bryn Coldmarsh, the party's fighter, who was holding a bag of ice to her ear at the time. \"Then Ottwin said he had a better snowball.\"</p>\n\n<p>Ottwin Haverlee, the Company's wizard, allegedly cast Ice Knife at the party rogue, who was hiding behind a fishmonger's barrel. The shard missed the rogue. It did not miss the barrel, which went off like a frost bomb and covered half a block in sleet and herring. The rogue answered with a wand of magic missiles, \"for fairness.\" The cleric then pulled a wand of web, allegedly to end the fighting, and glued six neighbors and one pigeon to a turnip cart. I have no sympathy for the pigeon.</p>\n\n<p>Then the street joined in. The baker on the corner came out with a wand of fear. A retired sell-sword on the second floor produced a wand of wonder, and nobody can say what it did, except that it was purple and the snowman by the well now has opinions. \"I came out to shovel my step,\" said Odile Fenn, who was holding a shovel at the time and still is, because it's frozen to her mitten.</p>\n\n<p>Watch Sergeant Dorrick Plume arrived with eleven constables and a sack. \"We collected nine wands, two scrolls, and one snowman we were told was a wizard in disguise,\" he said. \"It was a snowman. It's still a snowman. Mostly.\" The wands sit in the Watch lockup until the thaw, or until somebody proves which one belongs to the baker.</p>\n\n<p>The ninth wand, by the way, had a silver cap with a tiny garnet set in the end, and it caught the light off the snow in a way I can only describe as excellent. I held it for a minute. Anyway. I gave it back. Allegedly.</p>\n\n<p>This is the second wizard in a month to get creative on Fish Street, after <a href=\"/a/wizard-fireball-tavern-back-room-party-singed\">the fireball in the tavern back room</a>, and the Watch has nailed a new notice to the well: snowballs only, made of snow, thrown by hand. Someone hit the notice with a snowball within the hour. My rival over at the dungeon desk would call the whole thing a tactical engagement. I call it a Monday with weather.</p>\n\n<p>Haverlee says he'll pay for the barrel and most of the herring. \"In my defense, it was a snowball,\" he told me. \"It was just very fast and very pointy.\" The Tin Whistle Company is barred from snowball fights on Fish Street for the rest of the winter. The pigeon has not been charged.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Loaded Snowballs",
+          "text": "The town's first-snow snowball tournament is two days off, and last year's ended with three people frozen to the fountain. The marshal hires the party to find out who is slipping cantrips into the snowballs before the crowd shows up, because the mayor has already sold the seats."
+        },
+        "npc": {
+          "name": "Maren Holloway",
+          "role": "Snow Day Marshal",
+          "want": "She wants one tournament that ends with nobody frozen to anything.",
+          "secret": "She runs the betting book on the finals and quietly paid a hedge wizard with a wand of magic missiles to make sure the favorite loses.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Frozen Herring",
+          "text": "A fishmongers' tavern by the town well where the snowball teams sign up. A barrel by the door has been frosted solid since last winter and nobody will say why.",
+          "tavern": true
+        },
+        "rumor": "My cousin says the baker on the square keeps a wand of fear under the counter, and that's why nobody ever argues about the price of rye."
+      },
+      "fiction": true
     }
   ]
 }
