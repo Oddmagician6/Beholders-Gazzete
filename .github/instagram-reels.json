@@ -349,6 +349,34 @@
       "hashtags": "#IceKnife #SnowballFight #NineWands #FishStreet",
       "publishAt": "2026-11-17T02:00:00Z",
       "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "griffon-egg-feast-geese-adventuring-party",
+      "release_tag": "reel-stage-nov17-geese-ig-20261117",
+      "hashtags": "#GriffonEgg #Gilbert #BrassSpoonCompany #GrandFeast",
+      "publishAt": "2026-11-17T17:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "frost-giant-wages-rimeback-pass-ninefathom",
+      "release_tag": "reel-stage-nov17-giant-ig-20261117",
+      "hashtags": "#FrostGiant #GiantSizedWages #RimebackPass #WorkingToRule",
+      "publishAt": "2026-11-17T20:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "nothic-sells-party-heist-plan-rivals",
+      "release_tag": "reel-stage-nov17-nothic-ig-20261117",
+      "hashtags": "#Nothic #LongBriefing #EarlyDoorCompany #HeistPlan",
+      "publishAt": "2026-11-17T23:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "cockatrice-henhouse-party-grabs-212-chickens",
+      "release_tag": "reel-stage-nov17-cockatrice-ig-20261117",
+      "hashtags": "#Cockatrice #PluckwiseCompany #ChickenInspection #Gorsewick",
+      "publishAt": "2026-11-18T02:00:00Z",
+      "custom_artwork_confirmed": true
     }
   ]
 }
