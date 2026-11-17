@@ -1,5 +1,5 @@
 {
-    "generated":  "2026-11-16",
+    "generated":  "2026-11-17",
     "writers":  [
                     {
                         "id":  "ottoline-vex",
@@ -85,8 +85,13 @@
                                            "name":  "Sterling Vanmoor"
                                        }
                                    ],
-                        "article_count":  36,
+                        "article_count":  37,
                         "articles":  [
+                                         {
+                                             "id":  "griffon-egg-feast-geese-adventuring-party",
+                                             "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
+                                             "date":  "2026-11-17"
+                                         },
                                          {
                                              "id":  "identify-spell-fees-party-drinks-loot",
                                              "title":  "Identify Fees Jump 60%, So Party Tests Its Loot by Drinking It",
@@ -106,11 +111,6 @@
                                              "id":  "druid-goodberry-3-cp-farmers-bread-tax",
                                              "title":  "Druid Sells Goodberries for 3 cp; Farmers Demand Bread Tax",
                                              "date":  "2026-11-09"
-                                         },
-                                         {
-                                             "id":  "fourth-attempt-copper-pieces-59-percent-changers",
-                                             "title":  "Fourth Attempt Sells Last Copper Pieces at 59% of Value",
-                                             "date":  "2026-11-08"
                                          }
                                      ]
                     },
@@ -199,8 +199,13 @@
                                            "name":  "Sterling Vanmoor"
                                        }
                                    ],
-                        "article_count":  34,
+                        "article_count":  35,
                         "articles":  [
+                                         {
+                                             "id":  "frost-giant-wages-rimeback-pass-ninefathom",
+                                             "title":  "Frost Giant Clearing Snowed-In Pass Wants Giant-Sized Wages",
+                                             "date":  "2026-11-17"
+                                         },
                                          {
                                              "id":  "adventuring-party-3000-potatoes-exposure-plumbrook",
                                              "title":  "Adventuring Party Peels 3,000 Potatoes, Paid in Exposure",
@@ -220,11 +225,6 @@
                                              "id":  "paladin-frees-41-prisoners-party-pays",
                                              "title":  "Paladin Frees 41 Prisoners; Party Pays Road Home",
                                              "date":  "2026-11-08"
-                                         },
-                                         {
-                                             "id":  "pack-mule-grievance-adventuring-party-door-chairs",
-                                             "title":  "Pack Mule Files Grievance After Party Hauls a Door",
-                                             "date":  "2026-11-07"
                                          }
                                      ]
                     },
@@ -363,8 +363,13 @@
                                            "name":  "Nyx Spindlecoil"
                                        }
                                    ],
-                        "article_count":  35,
+                        "article_count":  36,
                         "articles":  [
+                                         {
+                                             "id":  "cockatrice-henhouse-party-grabs-212-chickens",
+                                             "title":  "Cockatrice in Henhouse: Party Grabs 212 Chickens Bare-Handed",
+                                             "date":  "2026-11-17"
+                                         },
                                          {
                                              "id":  "owlbear-cub-future-mount-copper-saddle",
                                              "title":  "Party Adopts Owlbear Cub as \u0027Future Mount\u0027; Clinic Visits: 11",
@@ -384,11 +389,6 @@
                                              "id":  "dryad-leaf-drop-87-sneezing-brindlemoor-wendell",
                                              "title":  "Dryad Leaf Drop Leaves 87 Brindlemoor Folk Sneezing",
                                              "date":  "2026-11-08"
-                                         },
-                                         {
-                                             "id":  "adventuring-party-glowing-mushrooms-no-rations-wendell",
-                                             "title":  "Adventuring Party Eats Glowing Mushrooms, Forgot Rations",
-                                             "date":  "2026-11-07"
                                          }
                                      ]
                     },
@@ -481,8 +481,13 @@
                                            "name":  "Skritch Mudwhistle"
                                        }
                                    ],
-                        "article_count":  32,
+                        "article_count":  33,
                         "articles":  [
+                                         {
+                                             "id":  "nothic-sells-party-heist-plan-rivals",
+                                             "title":  "Nothic Sells Party\u0027s Heist Plan to Rivals for 5 Gold",
+                                             "date":  "2026-11-17"
+                                         },
                                          {
                                              "id":  "roper-stalagmite-ranger-fourth-attempt",
                                              "title":  "Roper Was the Stalagmite the Ranger Leaned On",
@@ -502,11 +507,6 @@
                                              "id":  "skeleton-guards-walk-off-undermaw-level-two",
                                              "title":  "Skeleton Guards Walk Off Level Two After 400 Years on Post",
                                              "date":  "2026-11-08"
-                                         },
-                                         {
-                                             "id":  "secret-door-search-empty-room-fourth-attempt",
-                                             "title":  "Secret Door Hunt Eats Six Hours in Empty Undermaw Room",
-                                             "date":  "2026-11-07"
                                          }
                                      ]
                     },
@@ -598,32 +598,32 @@
                       "short":  "Brindlemoor",
                       "type":  "place",
                       "blurb":  "A frontier market town built on top of the entrance to the Undermaw. Its economy runs on adventurers, and so does its hospital.",
-                      "appearances":  108,
+                      "appearances":  112,
                       "articles":  [
+                                       {
+                                           "id":  "cockatrice-henhouse-party-grabs-212-chickens",
+                                           "title":  "Cockatrice in Henhouse: Party Grabs 212 Chickens Bare-Handed",
+                                           "date":  "2026-11-17"
+                                       },
+                                       {
+                                           "id":  "frost-giant-wages-rimeback-pass-ninefathom",
+                                           "title":  "Frost Giant Clearing Snowed-In Pass Wants Giant-Sized Wages",
+                                           "date":  "2026-11-17"
+                                       },
+                                       {
+                                           "id":  "griffon-egg-feast-geese-adventuring-party",
+                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
+                                           "date":  "2026-11-17"
+                                       },
+                                       {
+                                           "id":  "nothic-sells-party-heist-plan-rivals",
+                                           "title":  "Nothic Sells Party\u0027s Heist Plan to Rivals for 5 Gold",
+                                           "date":  "2026-11-17"
+                                       },
                                        {
                                            "id":  "magic-mouth-doorbell-recall-snowlatch-password",
                                            "title":  "Magic Mouth Doorbell Recalled for Reciting Party\u0027s Password",
                                            "date":  "2026-11-16"
-                                       },
-                                       {
-                                           "id":  "red-dragon-lich-feast-invites-fire-marshal",
-                                           "title":  "Red Dragon and Lich Demand Feast Invites; Fire Marshal Says No",
-                                           "date":  "2026-11-16"
-                                       },
-                                       {
-                                           "id":  "snowball-fight-ice-knife-watch-9-wands",
-                                           "title":  "Snowball Fight Turns to Ice Knife; Watch Takes 9 Wands",
-                                           "date":  "2026-11-16"
-                                       },
-                                       {
-                                           "id":  "feast-2000-tiered-seating-heroes-feast-bid",
-                                           "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
-                                           "date":  "2026-11-15"
-                                       },
-                                       {
-                                           "id":  "hold-person-heckler-spellcasting-ban-brindlemoor",
-                                           "title":  "Hold Person Freezes Heckler Mid-Sneer; Spell Ban Takes 3 Hours",
-                                           "date":  "2026-11-15"
                                        }
                                    ]
                   },
@@ -632,8 +632,13 @@
                       "short":  "the Guild",
                       "type":  "institution",
                       "blurb":  "A guild of heritage keepers who sue to protect old buildings and groves in the capital.",
-                      "appearances":  94,
+                      "appearances":  95,
                       "articles":  [
+                                       {
+                                           "id":  "nothic-sells-party-heist-plan-rivals",
+                                           "title":  "Nothic Sells Party\u0027s Heist Plan to Rivals for 5 Gold",
+                                           "date":  "2026-11-17"
+                                       },
                                        {
                                            "id":  "feast-2000-tiered-seating-heroes-feast-bid",
                                            "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
@@ -653,11 +658,6 @@
                                            "id":  "prophecies-contradict-all-come-true-fourth-attempt",
                                            "title":  "13 Prophecies Contradict Each Other. All 13 Come True.",
                                            "date":  "2026-11-13"
-                                       },
-                                       {
-                                           "id":  "reincarnate-spell-upgrade-fighter-badger-second-spring",
-                                           "title":  "Party Pays 450 gp Reincarnate Upgrade; Fighter Is a Badger",
-                                           "date":  "2026-11-10"
                                        }
                                    ]
                   },
@@ -700,8 +700,13 @@
                       "short":  "Chapter 9",
                       "type":  "organization",
                       "blurb":  "The guild chapter that licenses parties to enter the Undermaw, sells the maps, and insists the maps are accurate.",
-                      "appearances":  70,
+                      "appearances":  71,
                       "articles":  [
+                                       {
+                                           "id":  "nothic-sells-party-heist-plan-rivals",
+                                           "title":  "Nothic Sells Party\u0027s Heist Plan to Rivals for 5 Gold",
+                                           "date":  "2026-11-17"
+                                       },
                                        {
                                            "id":  "identify-spell-fees-party-drinks-loot",
                                            "title":  "Identify Fees Jump 60%, So Party Tests Its Loot by Drinking It",
@@ -721,11 +726,6 @@
                                            "id":  "kenku-witness-robbery-adventuring-party-suspects",
                                            "title":  "Kenku Witness Reenacts Robbery, Frames Adventuring Party",
                                            "date":  "2026-11-09"
-                                       },
-                                       {
-                                           "id":  "doppelganger-temp-agency-14-firms-one-clerk",
-                                           "title":  "Doppelganger Temp Agency Bills 14 Firms for One Clerk",
-                                           "date":  "2026-11-08"
                                        }
                                    ]
                   },
@@ -734,8 +734,13 @@
                       "short":  "Reeve Fennick",
                       "type":  "person",
                       "blurb":  "Brindlemoor\u0027s chief magistrate. Signs every dungeon permit, every bounty, and every apology to the farmers downwind.",
-                      "appearances":  53,
+                      "appearances":  54,
                       "articles":  [
+                                       {
+                                           "id":  "frost-giant-wages-rimeback-pass-ninefathom",
+                                           "title":  "Frost Giant Clearing Snowed-In Pass Wants Giant-Sized Wages",
+                                           "date":  "2026-11-17"
+                                       },
                                        {
                                            "id":  "red-dragon-lich-feast-invites-fire-marshal",
                                            "title":  "Red Dragon and Lich Demand Feast Invites; Fire Marshal Says No",
@@ -755,11 +760,6 @@
                                            "id":  "salamander-oven-30-gp-heat-subscription-feast",
                                            "title":  "Salamander Oven Rents for 30 gp a Day; Heat Costs Extra",
                                            "date":  "2026-11-13"
-                                       },
-                                       {
-                                           "id":  "giant-boar-tavern-stable-duchess-harrowgate",
-                                           "title":  "Giant Boar Rents Tavern Stable; Innkeeper Names Her Duchess",
-                                           "date":  "2026-11-12"
                                        }
                                    ]
                   },
@@ -900,6 +900,40 @@
                                    ]
                   },
                   {
+                      "name":  "The Copper Bucket Company",
+                      "short":  "the Company",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor adventuring party that brought a sack of shrieker mushrooms home from the Undermaw to sell, and kept Tanner\u0027s Row awake for four nights.",
+                      "appearances":  35,
+                      "articles":  [
+                                       {
+                                           "id":  "cockatrice-henhouse-party-grabs-212-chickens",
+                                           "title":  "Cockatrice in Henhouse: Party Grabs 212 Chickens Bare-Handed",
+                                           "date":  "2026-11-17"
+                                       },
+                                       {
+                                           "id":  "griffon-egg-feast-geese-adventuring-party",
+                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
+                                           "date":  "2026-11-17"
+                                       },
+                                       {
+                                           "id":  "nothic-sells-party-heist-plan-rivals",
+                                           "title":  "Nothic Sells Party\u0027s Heist Plan to Rivals for 5 Gold",
+                                           "date":  "2026-11-17"
+                                       },
+                                       {
+                                           "id":  "magic-mouth-doorbell-recall-snowlatch-password",
+                                           "title":  "Magic Mouth Doorbell Recalled for Reciting Party\u0027s Password",
+                                           "date":  "2026-11-16"
+                                       },
+                                       {
+                                           "id":  "snowball-fight-ice-knife-watch-9-wands",
+                                           "title":  "Snowball Fight Turns to Ice Knife; Watch Takes 9 Wands",
+                                           "date":  "2026-11-16"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Shieldwall Mutual Assurance Society",
                       "short":  "Shieldwall Mutual",
                       "type":  "organization",
@@ -930,40 +964,6 @@
                                            "id":  "doppelganger-temp-agency-14-firms-one-clerk",
                                            "title":  "Doppelganger Temp Agency Bills 14 Firms for One Clerk",
                                            "date":  "2026-11-08"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "The Copper Bucket Company",
-                      "short":  "the Company",
-                      "type":  "organization",
-                      "blurb":  "A Brindlemoor adventuring party that brought a sack of shrieker mushrooms home from the Undermaw to sell, and kept Tanner\u0027s Row awake for four nights.",
-                      "appearances":  32,
-                      "articles":  [
-                                       {
-                                           "id":  "magic-mouth-doorbell-recall-snowlatch-password",
-                                           "title":  "Magic Mouth Doorbell Recalled for Reciting Party\u0027s Password",
-                                           "date":  "2026-11-16"
-                                       },
-                                       {
-                                           "id":  "snowball-fight-ice-knife-watch-9-wands",
-                                           "title":  "Snowball Fight Turns to Ice Knife; Watch Takes 9 Wands",
-                                           "date":  "2026-11-16"
-                                       },
-                                       {
-                                           "id":  "winter-wolves-baronies-hire-same-party",
-                                           "title":  "Winter Wolves Block Road; Both Baronies Hire Same Party",
-                                           "date":  "2026-11-16"
-                                       },
-                                       {
-                                           "id":  "hold-person-heckler-spellcasting-ban-brindlemoor",
-                                           "title":  "Hold Person Freezes Heckler Mid-Sneer; Spell Ban Takes 3 Hours",
-                                           "date":  "2026-11-15"
-                                       },
-                                       {
-                                           "id":  "druid-giant-frog-jumping-contest-judges-hat",
-                                           "title":  "Druid Wild Shapes Into Giant Frog, Wins Fair, Eats Judge\u0027s Hat",
-                                           "date":  "2026-11-14"
                                        }
                                    ]
                   },
@@ -1074,8 +1074,13 @@
                       "short":  "the Sleeping Mule",
                       "type":  "place",
                       "blurb":  "A Tanner\u0027s Row tavern in Brindlemoor with a deep cellar, a loyal clientele of adventurers, and until recently a very clean walk-in cooler.",
-                      "appearances":  23,
+                      "appearances":  24,
                       "articles":  [
+                                       {
+                                           "id":  "griffon-egg-feast-geese-adventuring-party",
+                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
+                                           "date":  "2026-11-17"
+                                       },
                                        {
                                            "id":  "feast-2000-tiered-seating-heroes-feast-bid",
                                            "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
@@ -1095,11 +1100,6 @@
                                            "id":  "kenku-witness-robbery-adventuring-party-suspects",
                                            "title":  "Kenku Witness Reenacts Robbery, Frames Adventuring Party",
                                            "date":  "2026-11-09"
-                                       },
-                                       {
-                                           "id":  "shrieker-mushrooms-tanners-row-sleepless-wendell",
-                                           "title":  "Adventurers Bring Home Shriekers; Tanner\u0027s Row Can\u0027t Sleep",
-                                           "date":  "2026-11-09"
                                        }
                                    ]
                   },
@@ -1108,8 +1108,13 @@
                       "short":  "the Keep",
                       "type":  "place",
                       "blurb":  "The official white seat of the High Council. The High Lord visits it between stays at the Golden Tower.",
-                      "appearances":  20,
+                      "appearances":  21,
                       "articles":  [
+                                       {
+                                           "id":  "nothic-sells-party-heist-plan-rivals",
+                                           "title":  "Nothic Sells Party\u0027s Heist Plan to Rivals for 5 Gold",
+                                           "date":  "2026-11-17"
+                                       },
                                        {
                                            "id":  "adventuring-party-ruined-keep-4800-gp-upkeep",
                                            "title":  "Adventuring Party Spends 4,800 gp Reward on Ruined Keep",
@@ -1129,11 +1134,6 @@
                                            "id":  "reserve-meeting-opens-stocks-rise-hold-priced",
                                            "title":  "Stocks Rise as Reserve Meeting Opens, Hold Priced at 90%",
                                            "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "mail-ballots-20000-golden-coast-inquisitors",
-                                           "title":  "Golden Coast: 20,000 Mail Ballots Face Inquisitor Purge",
-                                           "date":  "2026-10-26"
                                        }
                                    ]
                   },
@@ -1444,6 +1444,40 @@
                                    ]
                   },
                   {
+                      "name":  "the Apprentice Scholars\u0027 Lodge",
+                      "short":  "the Lodge",
+                      "type":  "institution",
+                      "blurb":  "The union lodge of Harrowmoor\u0027s apprentice scholars, over 4,000 strong and affiliated with the United Axlewrights.",
+                      "appearances":  12,
+                      "articles":  [
+                                       {
+                                           "id":  "griffon-egg-feast-geese-adventuring-party",
+                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
+                                           "date":  "2026-11-17"
+                                       },
+                                       {
+                                           "id":  "griffon-air-route-teleportation-circle-hopwell",
+                                           "title":  "Griffon Air Route Runs Straight Into a Teleportation Circle",
+                                           "date":  "2026-11-14"
+                                       },
+                                       {
+                                           "id":  "banshee-call-center-service-award-wailwell-support",
+                                           "title":  "Banshee Call Center Wins Service Award; Teacups Do Not",
+                                           "date":  "2026-11-05"
+                                       },
+                                       {
+                                           "id":  "ghost-lamplighters-strike-hallows-eve-brindlemoor",
+                                           "title":  "Ghost Lamplighters Strike on Hallow\u0027s Eve Over Haunt Pay",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "gelatinous-cube-dishwasher-layoff-40-tankard-crumb",
+                                           "title":  "Gelatinous Cube Replaces 40 Dishwashers at Tavern Chain",
+                                           "date":  "2026-10-27"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Compound Daily ring",
                       "short":  "the ring",
                       "type":  "item",
@@ -1508,40 +1542,6 @@
                                            "id":  "doppelganger-two-council-seats-quorum-brindlemoor",
                                            "title":  "Doppelganger Held Two Council Seats; Quorum Void",
                                            "date":  "2026-10-28"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "the Apprentice Scholars\u0027 Lodge",
-                      "short":  "the Lodge",
-                      "type":  "institution",
-                      "blurb":  "The union lodge of Harrowmoor\u0027s apprentice scholars, over 4,000 strong and affiliated with the United Axlewrights.",
-                      "appearances":  11,
-                      "articles":  [
-                                       {
-                                           "id":  "griffon-air-route-teleportation-circle-hopwell",
-                                           "title":  "Griffon Air Route Runs Straight Into a Teleportation Circle",
-                                           "date":  "2026-11-14"
-                                       },
-                                       {
-                                           "id":  "banshee-call-center-service-award-wailwell-support",
-                                           "title":  "Banshee Call Center Wins Service Award; Teacups Do Not",
-                                           "date":  "2026-11-05"
-                                       },
-                                       {
-                                           "id":  "ghost-lamplighters-strike-hallows-eve-brindlemoor",
-                                           "title":  "Ghost Lamplighters Strike on Hallow\u0027s Eve Over Haunt Pay",
-                                           "date":  "2026-10-31"
-                                       },
-                                       {
-                                           "id":  "gelatinous-cube-dishwasher-layoff-40-tankard-crumb",
-                                           "title":  "Gelatinous Cube Replaces 40 Dishwashers at Tavern Chain",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "nurses-strike-looms-final-offer-rejected-brigand",
-                                           "title":  "Nurses Reject \u0027Final\u0027 Offer; Strike Looms at Brigand Infirmary",
-                                           "date":  "2026-10-27"
                                        }
                                    ]
                   },
@@ -1886,6 +1886,40 @@
                                    ]
                   },
                   {
+                      "name":  "Feastwarden Odo Plumbrook",
+                      "short":  "Plumbrook",
+                      "type":  "person",
+                      "blurb":  "A Brindlemoor halfling appointed Feastwarden of the Grand Feast. He has promised to feed 2,000 people and has never once doubted it.",
+                      "appearances":  9,
+                      "articles":  [
+                                       {
+                                           "id":  "griffon-egg-feast-geese-adventuring-party",
+                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
+                                           "date":  "2026-11-17"
+                                       },
+                                       {
+                                           "id":  "red-dragon-lich-feast-invites-fire-marshal",
+                                           "title":  "Red Dragon and Lich Demand Feast Invites; Fire Marshal Says No",
+                                           "date":  "2026-11-16"
+                                       },
+                                       {
+                                           "id":  "feast-2000-tiered-seating-heroes-feast-bid",
+                                           "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
+                                           "date":  "2026-11-15"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-3000-potatoes-exposure-plumbrook",
+                                           "title":  "Adventuring Party Peels 3,000 Potatoes, Paid in Exposure",
+                                           "date":  "2026-11-14"
+                                       },
+                                       {
+                                           "id":  "salamander-oven-30-gp-heat-subscription-feast",
+                                           "title":  "Salamander Oven Rents for 30 gp a Day; Heat Costs Extra",
+                                           "date":  "2026-11-13"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Quillmarch Bridge",
                       "short":  "Quillmarch Bridge",
                       "type":  "place",
@@ -2018,40 +2052,6 @@
                                            "id":  "airline-buyout-union-pushback-apollyon-easywyvern",
                                            "title":  "5.7B-Gold Wyvern Airline Buyout Hits Union Turbulence",
                                            "date":  "2026-10-16"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Feastwarden Odo Plumbrook",
-                      "short":  "Plumbrook",
-                      "type":  "person",
-                      "blurb":  "A Brindlemoor halfling appointed Feastwarden of the Grand Feast. He has promised to feed 2,000 people and has never once doubted it.",
-                      "appearances":  8,
-                      "articles":  [
-                                       {
-                                           "id":  "red-dragon-lich-feast-invites-fire-marshal",
-                                           "title":  "Red Dragon and Lich Demand Feast Invites; Fire Marshal Says No",
-                                           "date":  "2026-11-16"
-                                       },
-                                       {
-                                           "id":  "feast-2000-tiered-seating-heroes-feast-bid",
-                                           "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
-                                           "date":  "2026-11-15"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-3000-potatoes-exposure-plumbrook",
-                                           "title":  "Adventuring Party Peels 3,000 Potatoes, Paid in Exposure",
-                                           "date":  "2026-11-14"
-                                       },
-                                       {
-                                           "id":  "salamander-oven-30-gp-heat-subscription-feast",
-                                           "title":  "Salamander Oven Rents for 30 gp a Day; Heat Costs Extra",
-                                           "date":  "2026-11-13"
-                                       },
-                                       {
-                                           "id":  "giant-boar-tavern-stable-duchess-harrowgate",
-                                           "title":  "Giant Boar Rents Tavern Stable; Innkeeper Names Her Duchess",
-                                           "date":  "2026-11-12"
                                        }
                                    ]
                   },
@@ -2290,6 +2290,40 @@
                                            "id":  "bridge-troll-toll-212-turnips-armed-company",
                                            "title":  "Bridge Troll Bills 212 Turnips as Armed Company",
                                            "date":  "2026-11-01"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Gorsewick",
+                      "short":  "Gorsewick",
+                      "type":  "place",
+                      "blurb":  "A farming village a short ride from Brindlemoor with a harvest fair, a choir that meets at the ninth bell, and forty shared Sending Stones.",
+                      "appearances":  7,
+                      "articles":  [
+                                       {
+                                           "id":  "cockatrice-henhouse-party-grabs-212-chickens",
+                                           "title":  "Cockatrice in Henhouse: Party Grabs 212 Chickens Bare-Handed",
+                                           "date":  "2026-11-17"
+                                       },
+                                       {
+                                           "id":  "magic-mouth-doorbell-recall-snowlatch-password",
+                                           "title":  "Magic Mouth Doorbell Recalled for Reciting Party\u0027s Password",
+                                           "date":  "2026-11-16"
+                                       },
+                                       {
+                                           "id":  "druid-giant-frog-jumping-contest-judges-hat",
+                                           "title":  "Druid Wild Shapes Into Giant Frog, Wins Fair, Eats Judge\u0027s Hat",
+                                           "date":  "2026-11-14"
+                                       },
+                                       {
+                                           "id":  "owlbear-cub-future-mount-copper-saddle",
+                                           "title":  "Party Adopts Owlbear Cub as \u0027Future Mount\u0027; Clinic Visits: 11",
+                                           "date":  "2026-11-14"
+                                       },
+                                       {
+                                           "id":  "carpet-of-flying-surge-pricing-rain-hailrug",
+                                           "title":  "Carpet of Flying Surge Pricing Hits 40x as the Rain Worsens",
+                                           "date":  "2026-11-12"
                                        }
                                    ]
                   },
@@ -2600,40 +2634,6 @@
                                    ]
                   },
                   {
-                      "name":  "Gorsewick",
-                      "short":  "Gorsewick",
-                      "type":  "place",
-                      "blurb":  "A farming village a short ride from Brindlemoor with a harvest fair, a choir that meets at the ninth bell, and forty shared Sending Stones.",
-                      "appearances":  6,
-                      "articles":  [
-                                       {
-                                           "id":  "magic-mouth-doorbell-recall-snowlatch-password",
-                                           "title":  "Magic Mouth Doorbell Recalled for Reciting Party\u0027s Password",
-                                           "date":  "2026-11-16"
-                                       },
-                                       {
-                                           "id":  "druid-giant-frog-jumping-contest-judges-hat",
-                                           "title":  "Druid Wild Shapes Into Giant Frog, Wins Fair, Eats Judge\u0027s Hat",
-                                           "date":  "2026-11-14"
-                                       },
-                                       {
-                                           "id":  "owlbear-cub-future-mount-copper-saddle",
-                                           "title":  "Party Adopts Owlbear Cub as \u0027Future Mount\u0027; Clinic Visits: 11",
-                                           "date":  "2026-11-14"
-                                       },
-                                       {
-                                           "id":  "carpet-of-flying-surge-pricing-rain-hailrug",
-                                           "title":  "Carpet of Flying Surge Pricing Hits 40x as the Rain Worsens",
-                                           "date":  "2026-11-12"
-                                       },
-                                       {
-                                           "id":  "zone-of-truth-council-hearing-party-confesses",
-                                           "title":  "Party Casts Zone of Truth to Prove Innocence, Confesses All",
-                                           "date":  "2026-11-12"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Tethyr",
                       "short":  "Tethyr",
                       "type":  "country",
@@ -2936,6 +2936,40 @@
                                            "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
                                            "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
                                            "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Duchess",
+                      "short":  "Duchess",
+                      "type":  "creature",
+                      "blurb":  "The giant boar brought back alive from the Thornwood to be the Grand Feast\u0027s centerpiece. She now rents the big stall at the Sleeping Mule and keeps the pigeons off the roof.",
+                      "appearances":  5,
+                      "articles":  [
+                                       {
+                                           "id":  "griffon-egg-feast-geese-adventuring-party",
+                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
+                                           "date":  "2026-11-17"
+                                       },
+                                       {
+                                           "id":  "feast-2000-tiered-seating-heroes-feast-bid",
+                                           "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
+                                           "date":  "2026-11-15"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-3000-potatoes-exposure-plumbrook",
+                                           "title":  "Adventuring Party Peels 3,000 Potatoes, Paid in Exposure",
+                                           "date":  "2026-11-14"
+                                       },
+                                       {
+                                           "id":  "giant-boar-tavern-stable-duchess-harrowgate",
+                                           "title":  "Giant Boar Rents Tavern Stable; Innkeeper Names Her Duchess",
+                                           "date":  "2026-11-12"
+                                       },
+                                       {
+                                           "id":  "bard-lie-border-checkpoint-adventuring-party-toll",
+                                           "title":  "Bard\u0027s Lie at Border Checkpoint Costs Party Far Over 2 Copper",
+                                           "date":  "2026-11-02"
                                        }
                                    ]
                   },
@@ -3498,35 +3532,6 @@
                                    ]
                   },
                   {
-                      "name":  "Duchess",
-                      "short":  "Duchess",
-                      "type":  "creature",
-                      "blurb":  "The giant boar brought back alive from the Thornwood to be the Grand Feast\u0027s centerpiece. She now rents the big stall at the Sleeping Mule and keeps the pigeons off the roof.",
-                      "appearances":  4,
-                      "articles":  [
-                                       {
-                                           "id":  "feast-2000-tiered-seating-heroes-feast-bid",
-                                           "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
-                                           "date":  "2026-11-15"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-3000-potatoes-exposure-plumbrook",
-                                           "title":  "Adventuring Party Peels 3,000 Potatoes, Paid in Exposure",
-                                           "date":  "2026-11-14"
-                                       },
-                                       {
-                                           "id":  "giant-boar-tavern-stable-duchess-harrowgate",
-                                           "title":  "Giant Boar Rents Tavern Stable; Innkeeper Names Her Duchess",
-                                           "date":  "2026-11-12"
-                                       },
-                                       {
-                                           "id":  "bard-lie-border-checkpoint-adventuring-party-toll",
-                                           "title":  "Bard\u0027s Lie at Border Checkpoint Costs Party Far Over 2 Copper",
-                                           "date":  "2026-11-02"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Gorvash Pennyfist",
                       "short":  "Gorvash",
                       "type":  "person",
@@ -3871,6 +3876,35 @@
                                            "id":  "donwald-oil-lords-dispute",
                                            "title":  "High Lord Donwald Clashes With Oil Lords Over Drilling Rights",
                                            "date":  "2026-04-23"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Pink Heron Fellowship",
+                      "short":  "the Fellowship",
+                      "type":  "institution",
+                      "blurb":  "A student-led movement that began opposing a luxury resort and now demands the Chancellor\u0027s removal.",
+                      "appearances":  4,
+                      "articles":  [
+                                       {
+                                           "id":  "cockatrice-henhouse-party-grabs-212-chickens",
+                                           "title":  "Cockatrice in Henhouse: Party Grabs 212 Chickens Bare-Handed",
+                                           "date":  "2026-11-17"
+                                       },
+                                       {
+                                           "id":  "druid-goodberry-3-cp-farmers-bread-tax",
+                                           "title":  "Druid Sells Goodberries for 3 cp; Farmers Demand Bread Tax",
+                                           "date":  "2026-11-09"
+                                       },
+                                       {
+                                           "id":  "pack-mule-grievance-adventuring-party-door-chairs",
+                                           "title":  "Pack Mule Files Grievance After Party Hauls a Door",
+                                           "date":  "2026-11-07"
+                                       },
+                                       {
+                                           "id":  "albarn-protests-rubber-bullets-167-arrested-ramah",
+                                           "title":  "Albarn Protests Hit Day Five; Chancellor Ramah Won\u0027t Resign",
+                                           "date":  "2026-10-24"
                                        }
                                    ]
                   },
@@ -4735,30 +4769,6 @@
                                    ]
                   },
                   {
-                      "name":  "the Pink Heron Fellowship",
-                      "short":  "the Fellowship",
-                      "type":  "institution",
-                      "blurb":  "A student-led movement that began opposing a luxury resort and now demands the Chancellor\u0027s removal.",
-                      "appearances":  3,
-                      "articles":  [
-                                       {
-                                           "id":  "druid-goodberry-3-cp-farmers-bread-tax",
-                                           "title":  "Druid Sells Goodberries for 3 cp; Farmers Demand Bread Tax",
-                                           "date":  "2026-11-09"
-                                       },
-                                       {
-                                           "id":  "pack-mule-grievance-adventuring-party-door-chairs",
-                                           "title":  "Pack Mule Files Grievance After Party Hauls a Door",
-                                           "date":  "2026-11-07"
-                                       },
-                                       {
-                                           "id":  "albarn-protests-rubber-bullets-167-arrested-ramah",
-                                           "title":  "Albarn Protests Hit Day Five; Chancellor Ramah Won\u0027t Resign",
-                                           "date":  "2026-10-24"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "the Pocketstone Duet",
                       "short":  "the Duet",
                       "type":  "product",
@@ -4975,6 +4985,25 @@
                                            "id":  "coin-piles-record-heights-realm-mood-sinks",
                                            "title":  "Coin Piles Hit Record Heights as Realm\u0027s Mood Sinks Below Dungeon Level",
                                            "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Brindlemoor Grangers\u0027 Fellowship",
+                      "short":  "the Grangers\u0027 Fellowship",
+                      "type":  "organization",
+                      "blurb":  "The guild of Brindlemoor\u0027s grain farmers. It petitions the Reeve whenever anything cheaper than wheat appears.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "cockatrice-henhouse-party-grabs-212-chickens",
+                                           "title":  "Cockatrice in Henhouse: Party Grabs 212 Chickens Bare-Handed",
+                                           "date":  "2026-11-17"
+                                       },
+                                       {
+                                           "id":  "druid-goodberry-3-cp-farmers-bread-tax",
+                                           "title":  "Druid Sells Goodberries for 3 cp; Farmers Demand Bread Tax",
+                                           "date":  "2026-11-09"
                                        }
                                    ]
                   },
@@ -5412,6 +5441,25 @@
                                            "id":  "court-vacancy-blue-donkeys-schemer-midterms",
                                            "title":  "Blue Donkeys Vow to Stall High Courts Vacancy Past Midterms",
                                            "date":  "2026-10-12"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Highcrest Griffon Riders\u0027 Lodge",
+                      "short":  "the Highcrest Lodge",
+                      "type":  "organization",
+                      "blurb":  "Brindlemoor\u0027s griffon riders\u0027 lodge. Won the city\u0027s first approved air corridor, which runs straight through the Hopwell teleportation circle.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "griffon-egg-feast-geese-adventuring-party",
+                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
+                                           "date":  "2026-11-17"
+                                       },
+                                       {
+                                           "id":  "griffon-air-route-teleportation-circle-hopwell",
+                                           "title":  "Griffon Air Route Runs Straight Into a Teleportation Circle",
+                                           "date":  "2026-11-14"
                                        }
                                    ]
                   },
@@ -6480,6 +6528,44 @@
                                    ]
                   },
                   {
+                      "name":  "Wennet Abbeyfield",
+                      "short":  "Abbeyfield",
+                      "type":  "person",
+                      "blurb":  "A Brindlemoor poulterer on Tanner\u0027s Row who quoted the Grand Feast 600 gp for one goose that feeds two thousand, most of it for looking.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "griffon-egg-feast-geese-adventuring-party",
+                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
+                                           "date":  "2026-11-17"
+                                       },
+                                       {
+                                           "id":  "feast-budget-900-gp-goose-600-plumbrook",
+                                           "title":  "Feast Menu Costs 4,300 gp on a 900 gp Budget; Goose Is 600",
+                                           "date":  "2026-11-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Wing-Marshal Corra Thistlebane",
+                      "short":  "Thistlebane",
+                      "type":  "person",
+                      "blurb":  "Commander of the Highcrest Griffon Riders\u0027 Lodge. Holds that whatever was already in the air has right of way.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "griffon-egg-feast-geese-adventuring-party",
+                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
+                                           "date":  "2026-11-17"
+                                       },
+                                       {
+                                           "id":  "griffon-air-route-teleportation-circle-hopwell",
+                                           "title":  "Griffon Air Route Runs Straight Into a Teleportation Circle",
+                                           "date":  "2026-11-14"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Adept Grill",
                       "short":  "Adept Grill",
                       "type":  "product",
@@ -6746,6 +6832,20 @@
                                    ]
                   },
                   {
+                      "name":  "Bram Hollyweather",
+                      "short":  "Hollyweather",
+                      "type":  "person",
+                      "blurb":  "A Gorsewick hen farmer with 340 hens who sells stone eggs as doorstops at 2 silver apiece. His nine-year-old daughter caught the cockatrice in a bucket.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "cockatrice-henhouse-party-grabs-212-chickens",
+                                           "title":  "Cockatrice in Henhouse: Party Grabs 212 Chickens Bare-Handed",
+                                           "date":  "2026-11-17"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Brightlid Eye-Dew",
                       "short":  "Brightlid",
                       "type":  "product",
@@ -6756,20 +6856,6 @@
                                            "id":  "eye-redness-drops-nonprescription-alchon-wendell",
                                            "title":  "Eye Redness Drops Go Nonprescription; Beholders Squint",
                                            "date":  "2026-10-17"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Brindlemoor Grangers\u0027 Fellowship",
-                      "short":  "the Grangers\u0027 Fellowship",
-                      "type":  "organization",
-                      "blurb":  "The guild of Brindlemoor\u0027s grain farmers. It petitions the Reeve whenever anything cheaper than wheat appears.",
-                      "appearances":  1,
-                      "articles":  [
-                                       {
-                                           "id":  "druid-goodberry-3-cp-farmers-bread-tax",
-                                           "title":  "Druid Sells Goodberries for 3 cp; Farmers Demand Bread Tax",
-                                           "date":  "2026-11-09"
                                        }
                                    ]
                   },
@@ -7670,6 +7756,20 @@
                                    ]
                   },
                   {
+                      "name":  "Gilbert",
+                      "short":  "Gilbert",
+                      "type":  "creature",
+                      "blurb":  "A griffon egg bought for the Grand Feast for 591 gp. Probably real. Not yet hatched.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "griffon-egg-feast-geese-adventuring-party",
+                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
+                                           "date":  "2026-11-17"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Glimmerfen Lantern Rest",
                       "short":  "the Lantern Rest",
                       "type":  "place",
@@ -8146,20 +8246,6 @@
                                    ]
                   },
                   {
-                      "name":  "Highcrest Griffon Riders\u0027 Lodge",
-                      "short":  "the Highcrest Lodge",
-                      "type":  "organization",
-                      "blurb":  "Brindlemoor\u0027s griffon riders\u0027 lodge. Won the city\u0027s first approved air corridor, which runs straight through the Hopwell teleportation circle.",
-                      "appearances":  1,
-                      "articles":  [
-                                       {
-                                           "id":  "griffon-air-route-teleportation-circle-hopwell",
-                                           "title":  "Griffon Air Route Runs Straight Into a Teleportation Circle",
-                                           "date":  "2026-11-14"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Hob Furrowgate",
                       "short":  "Furrowgate",
                       "type":  "person",
@@ -8184,6 +8270,20 @@
                                            "id":  "tarpon-catch-and-release-arrest-cays-watch",
                                            "title":  "Dead Tarpon in Truck Bed Lands Angler in Cays Dungeon",
                                            "date":  "2026-10-19"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Hrolgar Ninefathom",
+                      "short":  "Ninefathom",
+                      "type":  "person",
+                      "blurb":  "A twenty-one-foot frost giant hired by Brindlemoor to clear the Rimeback Pass, who wants forty men\u0027s wages for forty men\u0027s work.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "frost-giant-wages-rimeback-pass-ninefathom",
+                                           "title":  "Frost Giant Clearing Snowed-In Pass Wants Giant-Sized Wages",
+                                           "date":  "2026-11-17"
                                        }
                                    ]
                   },
@@ -9980,6 +10080,20 @@
                                    ]
                   },
                   {
+                      "name":  "the Brass Spoon Company",
+                      "short":  "the Brass Spoon Company",
+                      "type":  "organization",
+                      "blurb":  "A four-member Brindlemoor adventuring party with one cart, sent to market for 200 feast geese. It came back with three geese and a griffon egg.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "griffon-egg-feast-geese-adventuring-party",
+                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
+                                           "date":  "2026-11-17"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Bureau of Mounts \u0026 Wagons",
                       "short":  "the Mounts Bureau",
                       "type":  "agency",
@@ -10792,6 +10906,20 @@
                                    ]
                   },
                   {
+                      "name":  "the Pluckwise Company",
+                      "short":  "the Pluckwise",
+                      "type":  "organization",
+                      "blurb":  "A four-member adventuring party out of Brindlemoor hired to remove a cockatrice from a Gorsewick hen farm. They picked up 212 chickens bare-handed looking for it.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "cockatrice-henhouse-party-grabs-212-chickens",
+                                           "title":  "Cockatrice in Henhouse: Party Grabs 212 Chickens Bare-Handed",
+                                           "date":  "2026-11-17"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Portmantle Professional Scribes\u0027 Union",
                       "short":  "the Scribes\u0027 Union",
                       "type":  "institution",
@@ -10830,6 +10958,20 @@
                                            "id":  "drought-floridia-25-percent-isleias-rains-wendell",
                                            "title":  "Floridia Drought Falls to 25% After Isleias Rains",
                                            "date":  "2026-10-19"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Rimeback Pass",
+                      "short":  "the Rimeback",
+                      "type":  "place",
+                      "blurb":  "The mountain pass north of Brindlemoor that carries the town\u0027s winter salt, lamp oil, and flour, with a stone toll house at its foot.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "frost-giant-wages-rimeback-pass-ninefathom",
+                                           "title":  "Frost Giant Clearing Snowed-In Pass Wants Giant-Sized Wages",
+                                           "date":  "2026-11-17"
                                        }
                                    ]
                   },
@@ -11632,20 +11774,6 @@
                                    ]
                   },
                   {
-                      "name":  "Wennet Abbeyfield",
-                      "short":  "Abbeyfield",
-                      "type":  "person",
-                      "blurb":  "A Brindlemoor poulterer on Tanner\u0027s Row who quoted the Grand Feast 600 gp for one goose that feeds two thousand, most of it for looking.",
-                      "appearances":  1,
-                      "articles":  [
-                                       {
-                                           "id":  "feast-budget-900-gp-goose-600-plumbrook",
-                                           "title":  "Feast Menu Costs 4,300 gp on a 900 gp Budget; Goose Is 600",
-                                           "date":  "2026-11-10"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Windersor Wagonworks",
                       "short":  "Windersor",
                       "type":  "place",
@@ -11656,20 +11784,6 @@
                                            "id":  "strike-vote-97-percent-stellantern-wagonworks-marches",
                                            "title":  "Strike Vote Passes 97.3% at Stellantern Wagonworks",
                                            "date":  "2026-10-23"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Wing-Marshal Corra Thistlebane",
-                      "short":  "Thistlebane",
-                      "type":  "person",
-                      "blurb":  "Commander of the Highcrest Griffon Riders\u0027 Lodge. Holds that whatever was already in the air has right of way.",
-                      "appearances":  1,
-                      "articles":  [
-                                       {
-                                           "id":  "griffon-air-route-teleportation-circle-hopwell",
-                                           "title":  "Griffon Air Route Runs Straight Into a Teleportation Circle",
-                                           "date":  "2026-11-14"
                                        }
                                    ]
                   },

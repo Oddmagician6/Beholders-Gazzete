@@ -8801,6 +8801,142 @@
         "rumor": "My cousin says the baker on the square keeps a wand of fear under the counter, and that's why nobody ever argues about the price of rye."
       },
       "fiction": true
+    },
+    {
+      "id": "griffon-egg-feast-geese-adventuring-party",
+      "title": "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
+      "category": "Economy",
+      "author": "Barnaby Tallowmere",
+      "date": "2026-11-17",
+      "excerpt": "An adventuring party took 600 gp to market for 200 feast geese and came home with three geese and a griffon egg. I have counted the geese. There are three.",
+      "social": "The Grand Feast sent an adventuring party to market with 600 gp and a list for 200 geese. They came home with three geese and a griffon egg. The egg cost 591 gp. The Feastwarden calls it a strong start. Be honest: what would your character have bought instead of the geese?",
+      "content": "<p>Feastwarden Odo Plumbrook sent an adventuring party to the Brindlemoor market on Monday with 600 gp and a list with one word on it: geese, 200 of them, for the Grand Feast on the 26th. The party came back at dusk with three geese and a griffon egg. For anyone just joining us, the feast committee has 900 gp and has promised 2,000 guests dinner on the Town Green, so this was two thirds of the money. (I have counted the geese four times. There are still three.)</p>\n\n<p>The party calls itself the Brass Spoon Company: four members, one cart. By their own account the shopping went well for about eleven minutes. They found Wennet Abbeyfield's pens on Tanner's Row, where 200 ordinary geese waited at 3 gp a bird, which comes to 600 gp exactly. Abbeyfield, who last week <a href=\"/a/feast-budget-900-gp-goose-600-plumbrook\">quoted the feast 600 gp for a single goose</a>, says she had dropped the price out of pity. They bought three. \"Then the bard said, 'Let's just look around first,'\" she told me over her fence. \"Thirty years I've sold geese. Nobody comes back after 'look around.'\"</p>\n\n<p>Around the corner, a stallholder in a very good hat had one egg on a velvet cushion. He told them it was a griffon egg, that grown griffons fetch a fortune, and that the price could only go up, and the market would sort out the rest. The party's wizard cast detect magic on it and reported \"a faint glow, probably,\" which the rogue took as a yes. They paid 591 gp. The man in the hat folded up his cushion and has not been seen since.</p>\n\n<p>Now the Loaf Index. At 4 copper a loaf, 591 gp is 14,775 loaves. The three geese cost 9 gp, or 225 loaves. A goose feeds about ten people, so the feast has thirty dinners covered and 1,970 to go, plus one egg, which feeds nobody until it hatches and then, I am told, wants feeding itself.</p>\n\n<p>Wing-Marshal Corra Thistlebane of the Highcrest Griffon Riders' Lodge looked at the egg for me. Her verdict: probably real. \"A griffon chick eats a horse a week by spring,\" she said. \"Congratulations. You've bought a mouth.\" The Lodge offered 200 gp for it, a loss of 391 gp, or 9,775 loaves. (I did that sum in a stable, leaning on a horse. The horse did not enjoy the conversation either.)</p>\n\n<p>Plumbrook, standing on a chair outside the Sleeping Mule, called the trip \"a strong start.\" \"Three geese is three more than we had this morning,\" he said. \"And who else will have a griffon at their feast?\" Nobody, I told him, since they can't afford one either. He turned down the Lodge's offer and has named the egg Gilbert, which I take as a poor sign for ever selling it.</p>\n\n<p>My colleague Sterling Vanmoor calls Gilbert \"an appreciating asset.\" So was the boar, Sterling, and Duchess is still eating two bushels of turnips a day. My aunt Marigold says her boot has never once come home with an egg in it.</p>\n\n<p>What this means for your pantry: the committee has 300 gp left before the oven bill, nine days to go, and 1,970 dinners unbought. If you hold a feast ticket, eat beforehand.</p>\n\n<p><em>— B.T. (Loaf Index: see sidebar)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Man in the Good Hat",
+          "text": "A smooth egg-seller has worked three market towns this month, selling 'griffon eggs' to anyone with a shopping list and a weak will. The local reeve wants him caught before market day, and one of his buyers' eggs has started to crack, and whatever is pecking out of it has hooves."
+        },
+        "npc": {
+          "name": "Ambrose Tullery",
+          "role": "Traveling egg merchant",
+          "want": "He wants to sell his last four eggs before anyone's first one hatches.",
+          "secret": "Only one of his five eggs was ever a griffon egg; the other four are hippogriff eggs he painted gold.",
+          "race": "human",
+          "gender": "male",
+          "kind": "criminal"
+        },
+        "location": {
+          "name": "The Velvet Cushion Stall",
+          "text": "A folding market stall that appears on a different street every morning and is gone by noon. Its cushion still holds a warm, egg-shaped dent.",
+          "tavern": false
+        },
+        "rumor": "I heard the fellow with the hat swapped the egg for a painted rock at the last second, and the real one's sitting under his bed keeping warm."
+      },
+      "fiction": true
+    },
+    {
+      "id": "frost-giant-wages-rimeback-pass-ninefathom",
+      "title": "Frost Giant Clearing Snowed-In Pass Wants Giant-Sized Wages",
+      "category": "Labor",
+      "author": "Brakka Stonesweat",
+      "date": "2026-11-17",
+      "excerpt": "A frost giant hired to clear Brindlemoor's snowed-in pass wants forty men's wages for forty men's work. The Reeve sent a spoon. A regular one.",
+      "social": "A frost giant hired to dig out the Rimeback Pass did the sums. He shovels like forty men, so he wants forty wages, forty loaves, and a pension for 300 winters. The Reeve sent him a regular spoon. Now the pass is open exactly two feet wide. How many wages would you pay him?",
+      "content": "<p>The frost giant wants wages sized like a giant.</p>\n\n<p>Hrolgar Ninefathom, a frost giant hired Monday by Reeve Maudrey Fennick of Brindlemoor to clear the snowed-in Rimeback Pass, has asked for wages, rations, and a pension scaled to his size. The Reeve's office offered him the standard road-crew rate: 2 silver a day, one loaf, one bowl of stew, and a pension of a copper a year. He is twenty-one feet tall. He did the sums.</p>\n\n<p>\"My shovel is a barn door,\" Ninefathom told the Gazette, sitting down, which still put him level with the upstairs window of the toll house. \"I move as much snow in a day as forty of your men. So pay me forty men. Feed me forty men. And pension me for as long as I live. That's a while.\"</p>\n\n<p>By my count that comes to 8 gold a day, forty loaves, forty bowls of stew, and a pension the town would be paying for about three hundred more winters. The Reeve's treasury calls the request \"a disproportionate compensation framework incompatible with standard scale.\" That means they said no.</p>\n\n<p>Reeve Fennick's counteroffer came up a very tall ladder in a clerk's hand: one and a half wages, a double loaf, and what the scroll calls \"an appropriately sized spoon.\" The spoon arrived Tuesday. I've seen it. It's a spoon.</p>\n\n<p>So Ninefathom is working to rule. He clears what one and a half wages buys and not a shovelful more. By Wednesday morning the Rimeback Pass was open to a width of two feet, which suits a goat. Forty-one wagons of salt, lamp oil, and winter flour sit parked at the bottom. A goat went through at noon. The drivers booed it.</p>\n\n<p>Down in the crew hut, the human shovelers back the giant. \"He's asking to get paid for the work he does,\" said Gilda Ironpan, a road-crew shoveler of fourteen winters. \"I've asked the same thing since I was a girl. If the big lad wins, I want my one wage paid on time. That'd be a first.\"</p>\n\n<p>Osk Thimbleby, a baker on Fish Street, has already sent the Reeve a quote for forty loaves a day. \"I'm not taking sides,\" he said. \"I'm taking orders.\"</p>\n\n<p>The Reeve's office warns that paying by size sets a bad precedent. Maybe. Pip Underbough, a halfling on the pass crew, has asked to have his wage cut to match his height, so long as his hours get cut to match too. The office hasn't answered him.</p>\n\n<p>Big hirelings reading the fine print is a habit this month. An <a href=\"/a/ettin-porter-loot-split-two-shares\">ettin porter asked for two shares</a>, one per head, and got them. Ninefathom's ask is simpler. Forty men's work, forty men's wages. Any shop steward in Brindlemoor could do that sum on her fingers. I did it on mine.</p>\n\n<p>Talks pick up Thursday at the toll house, once somebody fixes the clerk's ladder. The flour's still parked. The giant's still sitting in the snow, and he's in no hurry. He likes the cold.</p>\n\n<p><em>Solidarity. And stretch your back. — Brakka</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Two-Foot Pass",
+          "text": "A mountain pass has been dug out exactly two feet wide by a frost giant working to rule over his wages, and a stranded caravan master will pay the party to get the wagons through before the flour spoils. They can broker a deal between the giant and a stingy town treasury, find out where the road budget really went, or dig the drifts themselves while ice mephits nest in them."
+        },
+        "npc": {
+          "name": "Tamsin Varrow",
+          "role": "Toll House Clerk",
+          "want": "She wants the pass open before she has to climb that ladder to the giant one more time.",
+          "secret": "The treasury budgeted forty wages for the pass crew this winter, and she has the ledger page showing where thirty-eight of them went.",
+          "race": "human",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Rimeback Toll House",
+          "text": "A two-story stone toll house at the foot of a mountain pass where clerks negotiate from the upstairs window. The frost giant on the crew uses its roof as a footstool, and the beams are starting to complain.",
+          "tavern": false
+        },
+        "rumor": "My cousin drives salt and he swears the giant's got a polar bear curled round his feet to keep warm, and the town's paying for that too."
+      },
+      "fiction": true
+    },
+    {
+      "id": "nothic-sells-party-heist-plan-rivals",
+      "title": "Nothic Sells Party's Heist Plan to Rivals for 5 Gold",
+      "category": "Adventurers",
+      "author": "Hollis Delvewright",
+      "date": "2026-11-17",
+      "excerpt": "An adventuring party rehearsed its vault job out loud eleven times. A nothic heard every word and sold it, rogue's real name and all, for 5 gold.",
+      "social": "An adventuring party went over its vault plan out loud eleven times in an Undermaw corridor. A nothic in the side passage heard every word. It sold the plan to a rival party for 5 gold, rogue's real name included: Bertrand. It threw in the trap signal for free. The rivals were waiting at the vault. What's the first thing your character says to them?",
+      "content": "<p>THE UNDERMAW, LEVEL 4, 180 FEET DOWN — An adventuring party that spent three hours planning a vault job out loud in a Level Four corridor got to the vault Tuesday and found a rival party already there, holding a copy of the plan. The rivals say they bought it from a nothic for 5 gold pieces.</p>\n\n<p>The planners, a five-member party called the Long Briefing, stopped in the east corridor outside the old counting vault to \"go over it one more time.\" By their own count they went over it eleven times. They covered the marching order, the trap signal (two coughs), a fallback plan and a fallback for the fallback. At one point, to settle who got to say \"go,\" somebody used the rogue's real name.</p>\n\n<p>The rogue works as Whisper. His real name is Bertrand Fennimore Ottley. I know this because everyone on Level Four knows it now.</p>\n\n<p>The nothic lives in a side passage about forty feet from where the party stood. It has one large eye and a steady trade in whatever drifts down that passage. \"They never once checked the side passage,\" said Marn Esterby, captain of the rival Early Door Company, who was waiting at the vault with the marching order chalked on a slate. \"We checked it. Five gold. It threw in the cough signal for free.\"</p>\n\n<p>Esterby recited the plan back to the Long Briefing in full, both fallbacks included, then wished the rogue luck by his first name. Box score at the vault: fighter 31 hit points, cleric 22, wizard 14, rogue at full health and \"emotionally at 3,\" per the party's bard, who asked to be named. The vault was empty anyway. The Early Door Company cleared it the night before.</p>\n\n<p>The Brindlemoor Adventurers' Guild, Chapter 9 says it has no rule against selling overheard plans and no plans to write one. A clerk confirmed the nothic holds no trading license, then pointed out that the license only covers trade above ground. Chapter 9's posted advice for Level Four, unchanged since spring, reads \"Keep voices down.\" The Long Briefing say they read it aloud during the second run-through.</p>\n\n<p>The party's wizard, Ilsabet Crane, stood by the method. \"Planning is how you survive down here,\" she said. \"We just did it near a nothic.\" Pressed, she admitted the party once held a planning session in a tavern booth next to a door marked \"Nothic Consultations.\" I would call that a pattern. She called it bad luck.</p>\n\n<p>For my part, I rolled poorly on where to stand. I stood in the side passage. The nothic sold my notes too, and I lost my thirteenth ten-foot pole of the season trying to fish them back out of its alcove. It now charges 2 silver to tell you where I keep the spares.</p>\n\n<p>The Long Briefing say they will hit a different vault next week. They declined to say which one. Then they said which one, twice, while I was still in the corridor.</p>\n\n<p><em>— H.D., filing from below</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Plan That Got Sold",
+          "text": "Every job the party plans, a rival crew shows up first, already knowing the marching order and the signals. Someone in the dungeon is listening and selling what they hear, and the party's next payday depends on finding the leak before the rivals reach the next vault."
+        },
+        "npc": {
+          "name": "Pell Harrow",
+          "role": "Underground information broker",
+          "want": "He wants to buy the party's next plan cheap and sell it to their rivals at double.",
+          "secret": "He is only the middleman for a one-eyed thing in a side passage, and he already sold the party's last plan twice.",
+          "race": "human",
+          "gender": "male",
+          "kind": "criminal"
+        },
+        "location": {
+          "name": "The Whispering Corridor",
+          "text": "A long dungeon hallway outside an old counting vault where the stonework carries even a murmur forty feet into a side passage. Chalk marks on the wall tally how many parties have stopped here to talk it over.",
+          "tavern": false
+        },
+        "rumor": "They say if you plan a job in the east corridor, the rival crew gets your marching order before you've finished arguing about it."
+      },
+      "fiction": true
+    },
+    {
+      "id": "cockatrice-henhouse-party-grabs-212-chickens",
+      "title": "Cockatrice in Henhouse: Party Grabs 212 Chickens Bare-Handed",
+      "category": "Creature Features",
+      "author": "Brother Wendell Tumbleberry",
+      "date": "2026-11-17",
+      "excerpt": "A cockatrice hid among 340 hens in Gorsewick. The party hired to catch it couldn't spot it, so they grabbed 212 chickens bare-handed. 17 are part stone.",
+      "social": "A cockatrice hid in a Gorsewick henhouse with 340 hens. The party hired to remove it couldn't tell which bird it was, so they picked up 212 chickens with their bare hands. The temple has treated 17 partial petrifications, and one bard now sings out of half his mouth. Your party is next in the henhouse. What do you do before you touch a single bird?",
+      "content": "<p>Friends, a cockatrice got into a hen farm in Gorsewick last week, and the adventuring party hired to clear it out could not tell which bird it was. So the Pluckwise Company picked up 212 chickens bare-handed, one at a time, and by Sunday evening our temple of healing in Brindlemoor had treated 17 cases of partial petrification.</p>\n\n<p>The farm belongs to Bram Hollyweather, who keeps 340 hens and, as of Tuesday, one cockatrice he never ordered. \"It came in under the fence and stood in the middle of the flock looking like a hen,\" he told me over his gate. \"Well. From the back, anyway.\" He paid the Pluckwise 30 gold to take it away.</p>\n\n<p>Their plan, as the party's fighter Tobin Marsh explained it to me from a cot in our east ward, was thorough. \"Pick up each bird. Check it. Put it down.\" Nobody brought gloves. Nobody looked at the tails first, which is where the old herbals tell you to look, since a cockatrice drags a scaly one like a lizard's. Around the fortieth hen, the ranger's thumb went gray. By the ninetieth, the cleric had two stone fingers and was still volunteering. Tobin calls this resolve. I'd call it a party that never once asked a hen farmer.</p>\n\n<p>Here's what happens, friends, for anyone tempted to try it. A cockatrice's peck stiffens the flesh where it lands, and if nobody treats it, the stiffness sets to stone within a day. We saw fingers, wrists, and a forearm that its owner now uses to hold doors. The party's bard went stone from his left ear down to the collarbone and sings only out of the right side of his mouth. He says his range has improved. It hasn't. Greater restoration fixes all of it, and the temple has cast it eleven times since Sunday, which is more than we cast it during <a href=\"/a/basilisk-eye-exam-clinic-24-petrified-wendell\">the basilisk eye clinic business</a> earlier this month.</p>\n\n<p>The cockatrice was finally caught by Hollyweather's daughter, who is nine. She pointed through the fence and said, \"That one's got a lizard bum.\" It was hen number 213. She caught it in a bucket.</p>\n\n<p>The hens did not come through entirely clean either. Twenty-six eggs laid during the visit came out solid stone, and Hollyweather is selling them as doorstops at 2 silver apiece. He's sold out and keeps a waiting list. \"They'll hold a door in a gale,\" he said, \"and nobody's going to steal one for breakfast.\"</p>\n\n<p>The old herbals claim a cockatrice hatches from a rooster's egg kept warm by a toad, which I doubt. The Brindlemoor Grangers' Fellowship's autumn count is more use: 14 cockatrice sightings near grain stores since harvest, because the pickings are easy. So look before you grab, and buy gloves; they cost 2 coppers. My friend Nyx tells me there's a scrying charm now that names any bird from a sketch. Go outside, Nyx. A nine-year-old did it from a fence.</p>\n\n<p>For the stiff-fingered, I recommend a barley-and-mushroom soup, eaten slowly, with a spoon you can still bend your hand around. I'm leaving the chicken out this week, as a courtesy.</p>\n\n<p><em>Rest well, friends. — Brother Wendell</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "One Bird Too Many",
+          "text": "A cockatrice has slipped into a village's main hen farm and is hiding among three hundred chickens, and the farmer wants it out before the flock and the egg trade turn to stone. Run it with the cockatrice stat block; every hen grabbed blind is a chance it's the wrong one, and the village healer can only cast greater restoration twice before the diamond dust runs out."
+        },
+        "npc": {
+          "name": "Ida Coldharrow",
+          "role": "Egg farmer and coop keeper",
+          "want": "She wants the cockatrice caught alive so she can sell it to a wizard in the next town for more than the whole flock is worth.",
+          "secret": "She left the coop gate open on purpose after a stranger paid her 10 gold to keep the bird fed for a week.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Stoneyolk Coop",
+          "text": "A long, low henhouse where a dozen stone eggs prop open the doors and windows. Half the perches are now gray, and the hens refuse to sit on them.",
+          "tavern": false
+        },
+        "rumor": "My cousin says you can spot the bad one because it's the only chicken that looks you in the eye, but my cousin also has a stone ear."
+      },
+      "fiction": true
     }
   ]
 }
