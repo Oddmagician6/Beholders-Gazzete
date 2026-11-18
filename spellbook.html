@@ -491,9 +491,16 @@
       try { localStorage.setItem(LISTS_KEY, JSON.stringify(book)); return true; } catch (e) { return false; }
     }
     function newListId() { return 'l' + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36); }
+    // A saved list keeps every name, also one this rules version lacks (Feeblemind in 2024, an
+    // SRD 5.2 addition while they're off): it shows again in the version that has it.
     function cleanSpells(arr) {
-      return Array.isArray(arr) ? [...new Set(arr.filter(n => BY_NAME.has(n)))] : [];
+      return Array.isArray(arr) ? [...new Set(arr.filter(n => typeof n === 'string' && /^[^\u0000-\u001f<>]{1,60}$/.test(n)))].slice(0, 1000) : [];
     }
+    // A list's names as this version's spells: a 5.1 name 5.2 renamed (srd52.js) counts as the new one.
+    function listNames(list) {
+      return new Set(list.spells.flatMap(n => [n, typeof rulesRename === 'function' && rulesRename('spells', n)].filter(Boolean)));
+    }
+    function listShown(list) { return [...listNames(list)].filter(n => BY_NAME.has(n)); }
     function loadBook() {
       try {
         const saved = JSON.parse(localStorage.getItem(LISTS_KEY));
@@ -529,8 +536,9 @@
     function toggleFavorite(btn) {
       const name = btn.dataset.name;
       const list = activeList();
-      const on = !list.spells.includes(name);
-      if (on) list.spells.push(name); else list.spells = list.spells.filter(n => n !== name);
+      const on = !listNames(list).has(name);
+      const same = n => n === name || (typeof rulesRename === 'function' && rulesRename('spells', n) === name);
+      if (on) list.spells.push(name); else list.spells = list.spells.filter(n => !same(n));
       saveBook();
       renderBook();
       if (document.getElementById('fav-filter').value === 'yes' && !shared) { applyFilters(); return; }
@@ -609,7 +617,8 @@
 
     function listLink(list) {
       const slugs = list.spells.map(slugOf).join('.');
-      return `${location.origin}${location.pathname}?list=${encodeURIComponent(list.name)}&spells=${slugs}`;
+      const rules = typeof rulesLinkParams === 'function' ? rulesLinkParams({}).rules : '';
+      return `${location.origin}${location.pathname}?list=${encodeURIComponent(list.name)}&spells=${slugs}${rules ? `&rules=${rules}` : ''}`;
     }
     function copyListLink() {
       const list = viewList();
@@ -622,7 +631,7 @@
     function byLevelThenName(a, b) { return a.level - b.level || a.name.localeCompare(b.name); }
     function printCards() {
       const list = viewList();
-      const spells = list.spells.map(n => BY_NAME.get(n)).filter(Boolean).sort(byLevelThenName);
+      const spells = listShown(list).map(n => BY_NAME.get(n)).sort(byLevelThenName);
       if (!spells.length) { bookStatus(`“${list.name}” is empty. Add a spell first.`); return; }
       document.getElementById('print-cards').innerHTML =
         `<h2 class="print-title">📖 ${esc(list.name)}</h2><div class="print-grid">` +
@@ -742,7 +751,7 @@
           : '<p class="no-results"><img class="mascot" src="img/mascot/empty.webp" alt="" width="140" height="140" decoding="async">No spells matched your search. The arcane tomes yield nothing…</p>';
         return;
       }
-      const inList = new Set(activeList().spells);
+      const inList = listNames(activeList());
       grid.innerHTML = filtered.map(s => {
         const fav = inList.has(s.name);
         const label = esc(favLabel(s.name, fav));
@@ -794,7 +803,7 @@
       const ritual = document.getElementById('ritual-filter').value;
       const source = document.getElementById('source-filter').value;
       const favOnly = document.getElementById('fav-filter').value === 'yes';
-      const view = new Set(viewList().spells);
+      const view = listNames(viewList());
 
       filtered = SPELLS.filter(s => {
         if (search && !s.name.toLowerCase().includes(search) && !s.desc.toLowerCase().includes(search)) return false;

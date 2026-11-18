@@ -376,7 +376,11 @@ function renderBoardKeepingFocus() {
 
 // Stat blocks and spell text load the first time a stat block card is on the board.
 function needBlocks() {
-    if (blocksReady() || !dsLayout().cards.some(c => c.type === 'monster' && c.m && !(MONSTER_BY_ID[c.m] || {}).block)) return;
+    // A 2024 card brings its own block but still needs the spell text for its spell buttons.
+    const cards = dsLayout().cards.filter(c => c.type === 'monster' && c.m);
+    const needBlock = !blocksReady() && cards.some(c => !(MONSTER_BY_ID[c.m] || {}).block);
+    const needSpells = typeof SPELLS_DATA === 'undefined' && cards.length;
+    if (!needBlock && !needSpells) return;
     loadMonsterBlocks().then(() => { dsUi.blocksFailed = false; renderTypes('monster'); })
         .catch(() => { dsUi.blocksFailed = true; renderTypes('monster'); });
 }

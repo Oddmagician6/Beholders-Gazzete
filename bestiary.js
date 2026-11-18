@@ -173,7 +173,8 @@ function applyUrl() {
     set('bst-cr-min', min || null);
     set('bst-cr-max', max || null);
     ['type', 'size', 'hab', 'sort'].forEach(k => set('bst-' + k, p.get(k)));
-    open = new Set(p.getAll('m').filter(id => Object.hasOwn(MONSTER_BY_ID, id)).slice(0, 12));
+    // By the row's own id: in 2024 ?m=goblin opens the Goblin Warrior's row.
+    open = new Set(p.getAll('m').filter(id => Object.hasOwn(MONSTER_BY_ID, id)).map(id => MONSTER_BY_ID[id].id).slice(0, 12));
     render();
 }
 
@@ -198,7 +199,7 @@ function onListClick(e) {
     else if (act.dataset.act === 'copy') navigator.clipboard.writeText(monsterBlockText(m))
         .then(() => bstFlash(`📋 Copied the ${m.name} stat block.`))
         .catch(() => bstFlash('⚠️ Copy blocked by the browser.'));
-    else if (act.dataset.act === 'link') navigator.clipboard.writeText(`${location.origin}${location.pathname}?${paramsQuery({ m: m.id })}`)
+    else if (act.dataset.act === 'link') navigator.clipboard.writeText(`${location.origin}${location.pathname}?${paramsQuery(bstLinkParams({ m: m.id }))}`)
         .then(() => bstFlash(`🔗 Copied a link to the ${m.name}.`))
         .catch(() => bstFlash('⚠️ Copy blocked by the browser.'));
 }

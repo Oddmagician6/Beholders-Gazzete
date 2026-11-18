@@ -23,7 +23,11 @@
    - srd52Monsters(): the additions' monster rows in 2014 (in 2024 they're already in MONSTERS).
    - srd52Toggle(): the switch's markup ([data-rules] picker + [data-srd52] additions box).
    - srd52Tag(), srd52IsSpell(), srd52IsItem(): the "📗 SRD 5.2" marks, only for the additions in 2014.
-   Seeded rolls draw from whatever MONSTERS holds, so a 2024 page's links carry rules=2024.
+   Seeded rolls draw from whatever MONSTERS holds, so a 2024 page's links carry rules=2024: the
+     address (setUrlParams), copied links (rulesLinkParams), and any same-site <a> with a query that
+     a script built by hand (stamped when it's clicked). A page pinned to 2014 (?rules=2014 under a
+     2024 setting) carries rules=2014 the same way. Back/Forward re-reads an address's rules=.
+   - rulesFailed: the 2024 data didn't load (offline); the page stays in 2014 and the picker says so.
    - <script src="srd52.js" data-text-only>: a page with rules text but no spell, monster, or item
      lists (the Rules page). It needs no srd52-data.js, never loads the 2024 data file, and shows
      the picker without the additions box; rulesVersion() and the credit line work as usual.
@@ -42,11 +46,13 @@ let srd52Added = false;        // the additions' rows are in (2014 only)
 let rulesShown = '2014';       // the data the page holds now
 let rulesPage = null;          // a page-only version (a ?rules= link, or rulesUse)
 let rulesLoading = null;
+let rulesFailed = false;       // the 2024 data file didn't load
 const RULES51 = {};            // the 5.1 data as the page loaded it
 
+let rulesPinnedByUrl = false;  // rulesPage came from a ?rules= address (not a saved character)
 (function () {
     const v = new URLSearchParams(location.search).get('rules');
-    if (v === '2014' || v === '2024') rulesPage = v;
+    if (v === '2014' || v === '2024') { rulesPage = v; rulesPinnedByUrl = true; }
 })();
 
 function rulesStored() {
@@ -82,10 +88,12 @@ function rulesSnapshot() {
     if (!RULES51.spells && typeof SPELLS_DATA !== 'undefined') RULES51.spells = SPELLS_DATA.filter(s => !s.hb && !s.v52);
     if (!RULES51.items && typeof MAGIC_ITEM_TEXT !== 'undefined') {
         const full = typeof SRD52_FULL !== 'undefined' ? SRD52_FULL.items : {};
-        RULES51.items = Object.fromEntries(Object.entries(MAGIC_ITEM_TEXT).filter(([n, v]) => SRD52_ITEMS[n] !== v && full[n] !== v));
+        const hb = n => typeof hbmIsHomebrew === 'function' && hbmIsHomebrew(n);
+        RULES51.items = Object.fromEntries(Object.entries(MAGIC_ITEM_TEXT).filter(([n, v]) => SRD52_ITEMS[n] !== v && full[n] !== v && !hb(n)));
     }
-    if (!RULES51.monsters && typeof MONSTERS !== 'undefined') RULES51.monsters = MONSTERS.filter(m => !m.v52);
-    if (!RULES51.byId && typeof MONSTER_BY_ID !== 'undefined') RULES51.byId = Object.fromEntries(Object.entries(MONSTER_BY_ID).filter(([, m]) => !m.v52));
+    if (!RULES51.monsters && typeof MONSTERS !== 'undefined') RULES51.monsters = MONSTERS.filter(m => !m.v52 && !m.hb);
+    // Homebrew (homebrew.js, 'hb-' ids; homebrew-magic.js items) stays out: it's kept live, not restored.
+    if (!RULES51.byId && typeof MONSTER_BY_ID !== 'undefined') RULES51.byId = Object.fromEntries(Object.entries(MONSTER_BY_ID).filter(([id, m]) => m && !m.v52 && !m.hb && !id.startsWith('hb-')));
 }
 
 // The monsters new in SRD 5.2 -> a 5.1 kin whose habitats they share.
@@ -166,6 +174,7 @@ function rulesSwap(v) {
     rulesShown = full ? '2024' : '2014';
     srd52Added = adds;
     rulesHabitats();
+    if (typeof hbmRulesChanged === 'function') hbmRulesChanged();
     return true;
 }
 
@@ -192,10 +201,12 @@ function rulesLoadFull() {
 function rulesRefresh() {
     if (!SRD52_OK) return Promise.resolve();
     const want = rulesVersion();
-    const go = () => { rulesSwap(want); srd52Changed(); };
+    // The version asked for when the data is in (a later switch, made while this one loaded, wins).
+    const go = () => { rulesSwap(rulesVersion() === '2024' && typeof SRD52_FULL !== 'undefined' ? '2024' : '2014'); srd52Changed(); };
     if (want === '2024' && !RULES_TEXT_ONLY && typeof SRD52_FULL === 'undefined') {
         document.documentElement.classList.add('rules-loading');
-        return rulesLoadFull().then(go, () => { rulesPage = '2014'; go(); }).finally(() => document.documentElement.classList.remove('rules-loading'));
+        return rulesLoadFull().then(() => { rulesFailed = false; go(); }, () => { rulesFailed = true; rulesPage = '2014'; rulesPinnedByUrl = false; go(); })
+            .finally(() => document.documentElement.classList.remove('rules-loading'));
     }
     go();
     return Promise.resolve();
@@ -205,29 +216,48 @@ function rulesSet(v) {
     v = v === '2024' ? '2024' : '2014';
     try { localStorage.setItem(RULES_KEY, v); } catch (e) {}
     rulesPage = null;
+    rulesPinnedByUrl = false;
     rulesDropUrlParam();
     return rulesRefresh();
 }
 
-function rulesUse(v) {
+function rulesUse(v, fromUrl = false) {
     rulesPage = v === '2024' ? '2024' : v === '2014' ? '2014' : null;
+    rulesPinnedByUrl = !!rulesPage && fromUrl;
     return rulesRefresh();
 }
 
-// The address keeps a ?rules= only while it differs from... nothing: setUrlParams adds it in 2024.
+// After a switch the address says rules=2024 in 2024 and nothing in 2014, as setUrlParams writes it
+// (so Copy Link on the address carries the version).
 function rulesDropUrlParam() {
     const p = new URLSearchParams(location.search);
-    if (!p.has('rules')) return;
+    const was = p.get('rules');
     p.delete('rules');
     if (rulesVersion() === '2024') p.set('rules', '2024');
+    if (p.get('rules') === was) return;
     const qs = p.toString();
     history.replaceState(history.state, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
 }
 
 // setUrlParams (rng.js) runs every address the page writes through this.
+// 2024 pages stamp rules=2024; a page pinned to 2014 by its address under a 2024 setting stamps rules=2014.
 function rulesLinkParams(params) {
     if (!SRD52_OK || params.rules) return params;
-    return rulesShown === '2024' ? { ...params, rules: '2024' } : params;
+    if (rulesShown === '2024') return { ...params, rules: '2024' };
+    return rulesPage === '2014' && rulesStored() === '2024' && rulesPinnedByUrl ? { ...params, rules: '2014' } : params;
+}
+
+// A same-site link with a query that a script built by hand: give it the page's rules= as it's followed.
+function rulesStampLink(e) {
+    const a = e.target.closest && e.target.closest('a[href]');
+    if (!a || a.hasAttribute('download')) return;
+    let u;
+    try { u = new URL(a.getAttribute('href'), location.href); } catch (err) { return; }
+    if (u.origin !== location.origin || !u.search || u.searchParams.has('rules')) return;
+    const r = rulesLinkParams({}).rules;
+    if (!r) return;
+    u.searchParams.set('rules', r);
+    a.setAttribute('href', u.pathname + u.search + u.hash);
 }
 
 // Kept for older callers: re-applies the current version (say, after spells-data.js loads late).
@@ -247,7 +277,19 @@ function srd52Changed() {
 }
 
 function rulesSyncControls() {
-    document.querySelectorAll('[data-rules]').forEach(s => { s.value = rulesShown; });
+    document.querySelectorAll('[data-rules]').forEach(s => {
+        s.value = rulesShown;
+        const lab = s.closest('.rules-pick');
+        let warn = lab && lab.querySelector('.rules-failed');
+        const fail = rulesFailed && rulesShown === '2014';
+        if (fail && lab && !warn) {
+            warn = document.createElement('span');
+            warn.className = 'rules-failed';
+            warn.textContent = ' ⚠️ The 2024 rules didn\'t load (offline?), so this page shows 2014. Pick 2024 again to retry.';
+            lab.appendChild(warn);
+        }
+        if (warn && !fail) warn.remove();
+    });
     document.querySelectorAll('[data-srd52]').forEach(b => {
         b.checked = srd52Added;
         const lab = b.closest('.v52-switch');
@@ -313,7 +355,14 @@ if (SRD52_OK) {
         if (e.target.matches('[data-srd52]')) srd52Set(e.target.checked);
         if (e.target.matches('[data-rules]')) rulesSet(e.target.value);
     });
+    // Another tab's switch: the version only when this page isn't pinned; the additions whenever it shows 2014.
     window.addEventListener('storage', e => {
-        if ((e.key === SRD52_KEY || e.key === RULES_KEY) && !rulesPage) rulesRefresh();
+        if ((e.key === RULES_KEY && !rulesPage) || (e.key === SRD52_KEY && (!rulesPage || rulesVersion() === '2014'))) rulesRefresh();
     });
+    // Back/Forward to an address with its own rules=: that version, before the page redraws the roll.
+    window.addEventListener('popstate', () => {
+        const v = new URLSearchParams(location.search).get('rules');
+        if ((v === '2014' || v === '2024') && v !== rulesVersion()) rulesUse(v, true);
+    });
+    if (!RULES_TEXT_ONLY) ['click', 'auxclick', 'contextmenu'].forEach(t => document.addEventListener(t, rulesStampLink, true));
 }

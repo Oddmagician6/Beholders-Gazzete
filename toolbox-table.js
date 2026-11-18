@@ -242,7 +242,7 @@ function onIaBookSave(e) {
         iaBookForm = false;
         renderIaBook();
         if (m) {
-            document.getElementById('ia-mod').value = m.dex;
+            document.getElementById('ia-mod').value = monsterInit(m);
             document.getElementById('ia-hp').value = m.hp;
             document.getElementById('ia-ac').value = m.ac;
         }
@@ -256,6 +256,12 @@ function followTurns() {
     try { return localStorage.getItem(INIT_FOLLOW_KEY) !== 'off'; } catch (e) { return true; }
 }
 
+// A monster's initiative bonus: a 2024 block's own (it adds proficiency for some), else its Dex
+// modifier (Pathfinder rows keep Perception there).
+function monsterInit(m) {
+    return m.block && Number.isFinite(m.block.init) ? m.block.init : m.dex;
+}
+
 function num(v) {
     return v === '' || v === null || v === undefined || !isFinite(Number(v)) ? null : Math.round(Number(v));
 }
@@ -267,7 +273,8 @@ function loadFight() {
             const list = saved.list.filter(c => c && typeof c.name === 'string' && typeof c.id === 'number').map(c => ({
                 id: c.id, name: c.name.slice(0, 40), init: num(c.init) ?? 0, mod: num(c.mod) ?? 0,
                 hp: num(c.hp), max: num(c.max), ac: num(c.ac),
-                monster: typeof c.monster === 'string' && Object.hasOwn(MONSTER_BY_ID, c.monster) ? c.monster : null,
+                // Kept even when this page's rules version lacks it (a 2024 id in 2014): its block shows again in 2024.
+                monster: typeof c.monster === 'string' && /^[a-z0-9-]{1,80}$/.test(c.monster) ? c.monster : null,
                 pc: c.pc === true, pp: num(c.pp), shown: c.shown === true,
                 conds: Array.isArray(c.conds) ? c.conds.filter(condOk) : [],
                 pd: INIT_PF2E && Array.isArray(c.pd) ? c.pd.filter(pdOk).map(p => ({ dice: p.dice.replace(/\s+/g, ''), type: p.type })).slice(0, PD_MAX) : [],
@@ -347,7 +354,7 @@ function addCombatants(e) {
     const m = monsterNamed(name);
     const mod = num(v('ia-mod')) ?? 0;
     const added = addToFight({
-        name, mod: Math.max(-10, Math.min(INIT_PF2E ? 40 : 20, m && mod === 0 ? m.dex : mod)), fixed: num(v('ia-init')),
+        name, mod: Math.max(-10, Math.min(INIT_PF2E ? 40 : 20, m && mod === 0 ? monsterInit(m) : mod)), fixed: num(v('ia-init')),
         hp: num(v('ia-hp')) ?? (m ? m.hp : null), ac: num(v('ia-ac')) ?? (m ? m.ac : null),
         count: Math.max(1, Math.min(20, num(v('ia-count')) ?? 1)), monster: m ? m.id : null
     });
@@ -660,7 +667,7 @@ function renderFight(scroll = false) {
                 <button type="button" data-act="heal" data-id="${c.id}" title="Heal" aria-label="Heal ${esc(c.name)}">+</button>`}
             </div>
             <button type="button" class="init-x" data-act="remove" data-id="${c.id}" title="Remove" aria-label="Remove ${esc(c.name)}">✕</button>
-            ${c.monster && INIT_BLOCKS && openBlocks.has(c.id) ? `<div class="sb-box">${MONSTER_BY_ID[c.monster] ? monsterBlockHtml(MONSTER_BY_ID[c.monster]) : '<p class="sb-note">This homebrew monster is no longer in the notebook.</p>'}</div>` : ''}
+            ${c.monster && INIT_BLOCKS && openBlocks.has(c.id) ? `<div class="sb-box">${MONSTER_BY_ID[c.monster] ? monsterBlockHtml(MONSTER_BY_ID[c.monster]) : `<p class="sb-note">${c.monster.startsWith('hb-') || INIT_PF2E ? 'This homebrew monster is no longer in the notebook.' : 'This stat block is from the other rules version. Switch the Rules picker to see it.'}</p>`}</div>` : ''}
         </li>`;
     }).join('');
     // Open blocks say "Loading…" until the data arrives, then draw again.
@@ -823,7 +830,7 @@ function applyInitAdds() {
         if (!m) return [];
         const count = Math.max(1, Math.min(INIT_MAX, parseInt(n, 10) || 1));
         want += count;
-        return addToFight({ name: m.name, mod: m.dex, hp: m.hp, ac: m.ac, count, monster: m.id });
+        return addToFight({ name: m.name, mod: monsterInit(m), hp: m.hp, ac: m.ac, count, monster: m.id });
     });
     if (!want) {
         flash('init-status', adds.some(s => s.startsWith(HB_PREFIX))

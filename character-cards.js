@@ -14,11 +14,19 @@ const CC_MAX_ITEMS = 40;
 const CC_SETS = [['attack', '⚔️ Attacks'], ['class', '📘 Class features'], ['race', '🧬 Race traits'], ['background', '🎒 Background'], ['items', '✨ Magic items']];
 const CC_RARITIES = ['common', 'uncommon', 'rare', 'very rare', 'legendary', 'artifact'];
 
+// The item index, rebuilt after a rules switch (srd52.js swaps MAGIC_ITEM_TEXT in place).
 const CC_ITEM_SLUG = {};
-const CC_ITEMS = Object.keys(MAGIC_ITEM_TEXT).sort((a, b) => a.localeCompare(b));
-CC_ITEMS.forEach(n => { CC_ITEM_SLUG[magicItemSlug(n)] = n; });
+let CC_ITEMS = [];
+function ccIndex() {
+    Object.keys(CC_ITEM_SLUG).forEach(k => { delete CC_ITEM_SLUG[k]; });
+    CC_ITEMS = Object.keys(MAGIC_ITEM_TEXT).sort((a, b) => a.localeCompare(b));
+    CC_ITEMS.forEach(n => { CC_ITEM_SLUG[magicItemSlug(n)] = n; });
+}
+ccIndex();
 
-const cc = { charId: '', c: null, items: [], off: new Set(), paper: 'letter', backs: false, q: '', rarity: '' };
+// pend: a link's item slugs this version lacks, kept (and left in the address) while the
+// character's own rules load, then looked up again.
+const cc = { charId: '', c: null, items: [], pend: [], off: new Set(), paper: 'letter', backs: false, q: '', rarity: '' };
 const ccCache = new Map(); // card HTML by what it was made from, so measured cards aren't measured again
 
 function esc(s) {
@@ -41,19 +49,32 @@ function ccFromUrl() {
     const id = q.get('char') || '';
     cc.c = (id && ccChars().find(c => c.id === id)) || null;
     cc.charId = cc.c ? id : '';
-    cc.items = [...new Set((q.get('items') || '').split(',').map(s => CC_ITEM_SLUG[s]).filter(Boolean))].slice(0, CC_MAX_ITEMS);
-    ccUseRules();
+    const slugs = [...new Set((q.get('items') || '').split(',').filter(s => /^[a-z0-9-]{1,80}$/.test(s)))];
+    cc.items = slugs.map(s => CC_ITEM_SLUG[s]).filter(Boolean).slice(0, CC_MAX_ITEMS);
+    cc.pend = ccUseRules() ? slugs.filter(s => !CC_ITEM_SLUG[s]) : [];
+}
+
+// After a rules switch: the new index, the waiting slugs, and no item the version lacks.
+function ccRulesChanged() {
+    ccIndex();
+    const more = cc.pend.map(s => CC_ITEM_SLUG[s]).filter(Boolean);
+    cc.pend = [];
+    cc.items = [...new Set([...cc.items, ...more])].filter(n => MAGIC_ITEM_TEXT[n]).slice(0, CC_MAX_ITEMS);
+    ccCache.clear();
+    ccWriteUrl();
 }
 
 // A character's cards (and its magic items' text) follow its rules (srd52.js rulesUse, this page only).
+// True while a switch is under way.
 function ccUseRules() {
     const c = cc.c;
-    if (!c || typeof rulesUse !== 'function' || cbPageRules() === (cbIs24(c) ? '2024' : '2014')) return;
-    rulesUse(cbIs24(c) ? '2024' : '2014').then(() => { if (cc.c === c) { ccCache.clear(); render(); } });
+    if (!c || typeof rulesUse !== 'function' || cbPageRules() === (cbIs24(c) ? '2024' : '2014')) return false;
+    rulesUse(cbIs24(c) ? '2024' : '2014').then(() => { if (cc.c === c) render(); });
+    return true;
 }
 
 function ccWriteUrl(push = false) {
-    setUrlParams({ char: cc.charId, items: cc.items.map(magicItemSlug).join(',') }, push);
+    setUrlParams({ char: cc.charId, items: [...cc.items.map(magicItemSlug), ...cc.pend].join(',') }, push);
 }
 
 // ── What goes on the cards ───────────────────────────────
@@ -145,7 +166,7 @@ function ccCards() {
             ccCached(JSON.stringify([x, tag]), () => featureCards(host, x, tag)).forEach(html => out.push({ set, html }));
         }));
     }
-    if (on('items')) cc.items.forEach(n => {
+    if (on('items')) cc.items.filter(n => MAGIC_ITEM_TEXT[n]).forEach(n => {
         ccCached('item:' + n, () => itemCards(host, n, MAGIC_ITEM_TEXT[n], typeof hbmIsHomebrew === 'function' && hbmIsHomebrew(n) ? 'Homebrew item' : typeof srd52IsItem === 'function' && srd52IsItem(n) ? 'SRD 5.2 item' : 'Magic item')).forEach(html => out.push({ set: 'items', html }));
     });
     return out;
@@ -255,6 +276,8 @@ function ccCopyLink() {
     const done = () => flash(cc.charId ? 'Link copied. The character part only opens in this browser, where it is saved.' : 'Link copied.');
     navigator.clipboard.writeText(location.href).then(done, () => flash('Couldn\'t copy: copy the address bar instead.', true));
 }
+
+if (typeof srd52OnChange === 'function') srd52OnChange(ccRulesChanged);
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('year').textContent = new Date().getFullYear();

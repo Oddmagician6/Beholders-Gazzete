@@ -836,20 +836,25 @@ function encAn(word) {
 
 // The group a list of monsters belongs to: the band holding the most of them (lead first),
 // ties to the earlier band. Null when no band holds the strongest monster.
+// A band's members are SRD 5.1 ids; a 2024 monster counts as the one it stands for (goblin-warrior: goblin).
+function encInBand(b, id) {
+    return b.members.includes(id) || (typeof rulesOldId === 'function' && b.members.includes(rulesOldId(id)));
+}
+
 function encInferBand(list) {
     if (!list.length) return null;
     const lead = list.reduce((a, b) => (b.m.xp > a.m.xp ? b : a)).m;
     let best = null, bestN = 0;
     ENC_BANDS.forEach(b => {
-        if (!b.members.includes(lead.id)) return;
-        const n = list.filter(e => b.members.includes(e.m.id)).length;
+        if (!encInBand(b, lead.id)) return;
+        const n = list.filter(e => encInBand(b, e.m.id)).length;
         if (n > bestN) { best = b; bestN = n; }
     });
     return best;
 }
 
 function encBandFits(band, list) {
-    return !!band && list.every(e => band.members.includes(e.m.id));
+    return !!band && list.every(e => encInBand(band, e.m.id));
 }
 
 // A rolled fight from one group of foes (and/or one habitat). opts: { type, habitat, band }

@@ -98,9 +98,11 @@ function cbPageRules() {
 // A spell name this character may keep. Checked against SPELLS_DATA only when the page holds the
 // character's own rules version; otherwise any plausible name is kept (it's checked when the
 // character is opened on a page in its own version).
+// In 2014 an SRD 5.2 addition stays while the additions are switched off (it comes back with them).
 function cbSpellOkFor(c) {
     const own = (c && c.rules === '2024' ? '2024' : '2014') === cbPageRules();
-    return n => typeof n === 'string' && (own ? !!cbSpell(n) : /^[^\u0000-\u001f<>]{2,60}$/.test(n));
+    const added = n => cbPageRules() === '2014' && typeof SRD52_SPELLS !== 'undefined' && SRD52_SPELLS.some(s => s.name === n);
+    return n => typeof n === 'string' && (own ? !!cbSpell(n) || added(n) : /^[^\u0000-\u001f<>]{2,60}$/.test(n));
 }
 const cbSpellOk = n => typeof n === 'string' && !!cbSpell(n);
 
@@ -267,18 +269,28 @@ function cbLoadAll() {
     return [];
 }
 
+// The other characters go back as they were saved, not as this page cleaned them: a clean depends
+// on the page (its rules version, the additions switch, the homebrew here), and must not cost a
+// character something it would keep elsewhere.
+function cbRawAll() {
+    try {
+        const saved = JSON.parse(localStorage.getItem(CB_KEY));
+        if (Array.isArray(saved)) return saved.filter(x => x && typeof x === 'object' && typeof x.id === 'string');
+    } catch (e) {}
+    return [];
+}
+
 // Saves one character (put it first) and returns the list.
 function cbSave(c) {
     c.updated = Date.now();
-    const list = [c, ...cbLoadAll().filter(x => x.id !== c.id)].slice(0, CB_MAX);
-    try { localStorage.setItem(CB_KEY, JSON.stringify(list)); } catch (e) { return null; }
-    return list;
+    const raw = [c, ...cbRawAll().filter(x => x.id !== c.id)].slice(0, CB_MAX);
+    try { localStorage.setItem(CB_KEY, JSON.stringify(raw)); } catch (e) { return null; }
+    return [c, ...cbLoadAll().filter(x => x.id !== c.id)];
 }
 
 function cbDelete(id) {
-    const list = cbLoadAll().filter(x => x.id !== id);
-    try { localStorage.setItem(CB_KEY, JSON.stringify(list)); } catch (e) {}
-    return list;
+    try { localStorage.setItem(CB_KEY, JSON.stringify(cbRawAll().filter(x => x.id !== id))); } catch (e) {}
+    return cbLoadAll();
 }
 
 // ── Spells ───────────────────────────────────────────────

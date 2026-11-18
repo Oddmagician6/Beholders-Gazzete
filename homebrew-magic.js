@@ -185,6 +185,18 @@ function hbmItemText(it) {
     return [it.desc || 'No description yet.', it.book ? `Homebrew · ${it.book}` : 'Homebrew'].join('\n');
 }
 
+// After a rules switch (srd52.js rulesSwap calls this): the SRD names are the new version's, so a
+// homebrew spell or item that now shares an SRD name steps aside (and one that no longer does comes back).
+function hbmRulesChanged() {
+    if (!HBM_ON || typeof nbLoad !== 'function') return;
+    const mine = new Set(hbmItems.map(it => it.name));
+    hbmSrd = {
+        spells: new Set(typeof SPELLS_DATA !== 'undefined' ? SPELLS_DATA.filter(s => !s.hb).map(s => s.name.toLowerCase()) : []),
+        items: new Set(typeof MAGIC_ITEM_TEXT !== 'undefined' ? Object.keys(MAGIC_ITEM_TEXT).filter(n => !mine.has(n)).map(n => n.toLowerCase()) : [])
+    };
+    hbmRegister();
+}
+
 function hbmOnChange(fn) {
     hbmListeners.push(fn);
 }

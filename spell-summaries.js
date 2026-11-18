@@ -349,7 +349,7 @@ const SPELL_SUMMARIES = {
 // The line for a card: the summary above, else the spell's first sentence (cut at a word).
 function spellSummary(s) {
     if (!s) return '';
-    if (SPELL_SUMMARIES[s.name]) return SPELL_SUMMARIES[s.name];
+    if (SPELL_SUMMARIES[s.name] && !s.v52) return SPELL_SUMMARIES[s.name];   // 5.2 text changed many (Sleep)
     const first = String(s.desc || '').split('\n')[0].split(/(?<=\.)\s/)[0];
     return first.length > 160 ? first.slice(0, 159).replace(/\s+\S*$/, '') + '…' : first;
 }

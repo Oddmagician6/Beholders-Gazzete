@@ -202,7 +202,7 @@ function renderEncounter() {
         <li data-i="${i}">
             <div class="en-row-main">
                 <button type="button" class="sb-toggle" aria-expanded="${enc.open.has(e.m.id)}" title="Show or hide the stat block"><span class="en-name sb-name">${esc(e.m.name)}</span> <span class="sb-hint" aria-hidden="true">📜</span></button>
-                <span class="en-meta">${encStats(e.m, ' each')}${ENC_PF2E ? '' : ` · Init ${e.m.dex >= 0 ? '+' : ''}${e.m.dex}`}</span>
+                <span class="en-meta">${encStats(e.m, ' each')}${ENC_PF2E ? '' : ` · Init ${monsterInit(e.m) >= 0 ? '+' : ''}${monsterInit(e.m)}`}</span>
             </div>
             <div class="en-count">
                 <button type="button" class="en-minus" aria-label="One fewer ${esc(e.m.name)}">−</button>
@@ -355,7 +355,7 @@ function sendToInitiative() {
     const left = simple ? ` ${simple === 1 ? 'The simple hazard takes' : 'Simple hazards take'} no turns, so ${simple === 1 ? 'it stays' : 'they stay'} off the tracker.` : '';
     if (!list.length) { flash('enc-status', `⚠️ Nothing here takes turns.${left}`); return; }
     const want = list.reduce((t, e) => t + e.count, 0);
-    const added = list.flatMap(e => addToFight({ name: e.m.name, mod: e.m.dex, hp: e.m.hp, ac: e.m.ac, count: e.count, monster: e.m.id }));
+    const added = list.flatMap(e => addToFight({ name: e.m.name, mod: monsterInit(e.m), hp: e.m.hp, ac: e.m.ac, count: e.count, monster: e.m.id }));
     document.querySelector('.tool-tab[data-tab="init"]').click();
     if (!added.length) { flash('init-status', `⚠️ The tracker holds ${INIT_MAX} combatants. Clear some first.`); return; }
     sortFight();
@@ -399,7 +399,11 @@ function applyEncUrl(p) {
     p.getAll('m').forEach(s => {
         const [id, n] = s.split('.');
         const m = Object.hasOwn(MONSTER_BY_ID, id) ? MONSTER_BY_ID[id] : null;
-        if (m && enc.list.length < ENC_MAX_KINDS && !enc.list.some(e => e.m === m)) enc.list.push({ m, count: clampInt(n, 1, ENC_MAX_COUNT, 1) });
+        if (!m) return;
+        // Two ids for one monster (goblin and goblin-warrior in 2024): one row, counts added.
+        const had = enc.list.find(e => e.m === m);
+        if (had) had.count = Math.min(ENC_MAX_COUNT, had.count + clampInt(n, 1, ENC_MAX_COUNT, 1));
+        else if (enc.list.length < ENC_MAX_KINDS) enc.list.push({ m, count: clampInt(n, 1, ENC_MAX_COUNT, 1) });
     });
     const FIELDS = { diff: 'en-diff', type: 'en-roll-type', env: 'en-env', band: 'en-band' };
     Object.entries(FIELDS).forEach(([k, id]) => {
@@ -434,8 +438,18 @@ function setupEncounter() {
     if (!ENC_PF2E && typeof srd52Toggle === 'function') {
         document.getElementById('en-v52').innerHTML = srd52Toggle();
         document.getElementById('en-type').addEventListener('change', e => { if (e.target.value === 'v52' && !srd52On()) srd52Set(true); });
+        // A rules switch: every row becomes that version's monster (goblin <-> goblin-warrior), rows
+        // that land on one monster merge, and one the version doesn't have goes.
         srd52OnChange(() => {
-            enc.list = enc.list.filter(e => !e.m.v52 || MONSTER_BY_ID[e.m.id]);
+            const rows = [];
+            enc.list.forEach(e => {
+                const m = e.m.hb ? e.m : MONSTER_BY_ID[e.m.id] || (typeof rulesOldId === 'function' && MONSTER_BY_ID[rulesOldId(e.m.id)]);
+                if (!m) return;
+                const had = rows.find(r => r.m === m);
+                if (had) had.count = Math.min(ENC_MAX_COUNT, had.count + e.count);
+                else rows.push({ ...e, m });
+            });
+            enc.list = rows;
             renderPicker();
             encChanged(null);
         });

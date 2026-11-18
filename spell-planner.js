@@ -28,12 +28,20 @@ const spPageR = () => (CB24_OK() && typeof rulesVersion === 'function' && rulesV
 const spLands = c => (cbIs24(c) ? Object.keys(CB24_LANDS) : CB_TERRAINS);
 const spLandAt = c => (cbIs24(c) ? 3 : 2);
 
-// A saved character in the other version: switch the page to it, then draw again with its spells.
+// A saved character pins the page to its own version (also when that's the setting already, so a
+// switch in another tab can't change the pool under it), then draws again with its spells. Back to
+// "a caster of my own": the page goes back to the address's version, or the setting.
+// After a failed 2024 load (rulesFailed) it doesn't ask again on its own.
+const SP_URL_RULES = typeof rulesPage !== 'undefined' ? rulesPage : null;
 function spFollow() {
     const c = sp.c;
-    if (!sp.charId || !c || typeof rulesUse !== 'function') return;
+    if (typeof rulesUse !== 'function') return;
+    if (!sp.charId || !c) {
+        if (rulesPage !== SP_URL_RULES && !rulesFailed) rulesUse(SP_URL_RULES, !!SP_URL_RULES);
+        return;
+    }
     const want = cbIs24(c) ? '2024' : '2014';
-    if (spPageR() === want) return;
+    if (rulesPage === want || (want === '2024' && rulesFailed)) return;
     rulesUse(want).then(() => { if (sp.c === c) { spIndex(); render(); } });
 }
 
@@ -104,6 +112,7 @@ function spFromUrl() {
     sp.before = null;
     if (saved) { sp.charId = id; sp.c = saved; spFollow(); return; }
     sp.charId = '';
+    spFollow();
     const c = cbBlank(spPageR());
     const k = cbClass(q.get('cls'), c);
     c.cls = k && k.cast ? k.id : '';
@@ -187,15 +196,15 @@ function spEditInfo() {
     if (sp.edit === 'prep' && r.type === 'book') {
         return { key: 'prepared', title: '🌙 Prepare from your spellbook', limit: r.prepared, cap: true,
             pool: c.spells.list.map(cbSpell).filter(s => s && s.level <= r.maxLevel).sort(spBySpell),
-            note: `Intelligence modifier + wizard level = ${r.prepared}. Only spells in your spellbook can be prepared.` };
+            note: `${cbIs24(c) ? 'The wizard table gives' : 'Intelligence modifier + wizard level ='} ${r.prepared}. Only spells in your spellbook can be prepared.` };
     }
     if (sp.edit === 'prep') {
         const always = new Set(cbAlwaysSpells(c));
         const k = spClass();
-        const how = c.cls === 'paladin' ? 'Charisma modifier + half your paladin level (rounded down)' : `${CB_ABILITY_NAMES[k.cast.ability]} modifier + ${k.name.toLowerCase()} level`;
+        const how = cbIs24(c) ? `The ${k.name.toLowerCase()} table gives` : c.cls === 'paladin' ? 'Charisma modifier + half your paladin level (rounded down) =' : `${CB_ABILITY_NAMES[k.cast.ability]} modifier + ${k.name.toLowerCase()} level =`;
         return { key: 'list', title: '🌙 Prepared spells', limit: r.list, cap: true,
             pool: withCurrent(spClassPool(c, r).filter(s => !always.has(s.name)), 'list'),
-            note: `${how} = ${r.list}, at least 1. ${always.size ? 'Always-prepared spells don\'t count against it.' : ''}` };
+            note: `${how} ${r.list}${cbIs24(c) ? '' : ', at least 1'}. ${always.size ? 'Always-prepared spells don\'t count against it.' : ''}` };
     }
     const book = r.type === 'book';
     return { key: 'list', title: book ? '📜 Your spellbook' : '✏️ Spells known', limit: r.list, cap: !book, pool: withCurrent(spClassPool(c, r), 'list'),
@@ -324,7 +333,8 @@ function renderEditor() {
         }).join('')}</div>`;
     }
     const r = spRules();
-    if (sp.edit === 'known' && r.arcanum.length) {
+    // Mystic Arcanum: under spells known (2014) or prepared spells (the 2024 warlock prepares).
+    if ((sp.edit === 'known' || (sp.edit === 'prep' && r.type !== 'book')) && r.arcanum.length) {
         h += `<h3 class="sp-lvh">Mystic Arcanum</h3><div class="sp-fields">${r.arcanum.map(lv => `<label class="sp-field">${cbOrd(lv)} level<select data-arc="${lv}"><option value="">Pick a spell…</option>${cbClassSpells(sp.c, lv).map(s => `<option${sp.c.spells.arcanum[lv] === s.name ? ' selected' : ''}>${esc(s.name)}</option>`).join('')}</select></label>`).join('')}</div>`;
     }
     h += `<div class="sp-actions sp-sticky"><button type="button" class="sp-btn sp-gold" id="sp-done">✓ Done</button><button type="button" class="sp-btn" id="sp-cancel">✕ Cancel</button></div>`;
@@ -487,7 +497,7 @@ function onClick(e) {
             .then(() => flash('📋 List copied.'), () => flash('Could not copy; select the text and copy it by hand.', true));
     }
     if (b.id === 'sp-link') {
-        const url = location.origin + location.pathname + '?' + paramsQuery(spParams(sp.c));
+        const url = location.origin + location.pathname + '?' + paramsQuery(typeof rulesLinkParams === 'function' ? rulesLinkParams(spParams(sp.c)) : spParams(sp.c));
         return (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject())
             .then(() => flash(sp.charId ? '🔗 Link copied: it opens these spells as a caster of their own, not the saved character.' : '🔗 Link copied.'), () => flash('Could not copy the link.', true));
     }
