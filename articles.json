@@ -8937,6 +8937,142 @@
         "rumor": "My cousin says you can spot the bad one because it's the only chicken that looks you in the eye, but my cousin also has a stone ear."
       },
       "fiction": true
+    },
+    {
+      "id": "feast-seating-chart-treaty-baronies-turnips",
+      "title": "Rival Baronies RSVP to Feast; Seating Chart Is Now a Treaty",
+      "category": "International",
+      "author": "Grashka Ironjaw",
+      "date": "2026-11-18",
+      "excerpt": "Ashenfold and Brackwater both said yes to the Grand Feast. The seating chart took nine hours of parley, and the wish spell turnips nearly sank it.",
+      "social": "Two baronies that cannot share a bridge have agreed to share a dinner. The seating chart took nine hours and eleven clauses to sign. The turnips on the menu used to be Ashenfold's swords. Where would you sit: next to the enemy, or next to the turnips?",
+      "content": "<p>Both baronies said yes. Ashenfold and Brackwater accepted their invitations to Brindlemoor's Grand Feast on Tuesday, and by Wednesday the seating chart had turned into a nine-hour parley. For newcomers: Feastwarden Odo Plumbrook has promised a feast for 2,000 on the Town Green on the 26th, on a budget of 900 gold pieces. Diplomacy was not in the budget. Neither, so far, is the goose.</p>\n\n<p>He invited both baronies because nobody told him not to, and on Tuesday both of them wrote back.</p>\n\n<p>The parley convened in the back room of the feast committee's rented hall. Envoy Halric Dunmere spoke for Ashenfold. Envoy Teodra Hallowmere spoke for Brackwater. Plumbrook stood on a chair between them holding a paper plan of the Green, which is where the trouble started. Handshake at the door: firm, two seconds, no hidden dagger detected. Hallowmere checked her own sleeve afterward anyway.</p>\n\n<p>Ashenfold opened by demanding the table upwind of Brackwater. Brackwater asked for the same table. Both were told there is no wind on the Green in late autumn, and both refused to believe it. By the third hour the two delegations had agreed that neither would sit nearer the gravy than the other, and a committee clerk spent forty minutes measuring with string.</p>\n\n<p>Then someone read the menu aloud. Item six: turnip mash, for 2,000.</p>\n\n<p>Readers will recall the <a href=\"/a/wish-spell-border-parley-swords-turnips-ashenfold\">wish spell that turned 212 Ashenfold swords into turnips</a> at an earlier parley. Brackwater still classes those turnips as weapons. Ashenfold calls them as its swords, temporarily vegetable. Plumbrook bought them at a discount last week because nobody else would, and he says he did not ask where they came from. \"A turnip is a turnip,\" he told the room. Dunmere said this one was a longsword in the second rank. Hallowmere said serving it amounted to arming the guests.</p>\n\n<p>Tension climbed to fourteen siege-days. It held there through two pots of tea.</p>\n\n<p>The treaty signed at dusk runs to eleven clauses. Ashenfold sits on the east edge of the Green. Brackwater sits on the west. Between them runs a demilitarized strip four tables wide, held by the brass band. The salt is neutral. Clause nine creates a third table, the Turnip Table, where all 212 turnips will be served under guard. Neither barony will sit at it. Plumbrook has volunteered to sit there himself and called it \"the best seat in the house.\" He has already asked whether there will be seconds.</p>\n\n<p>Reeve Maudrey Fennick of Brindlemoor witnessed the signing. Asked whether a feast seating chart needed a reeve's seal, Reeve Fennick said, \"It does now,\" and left.</p>\n\n<p>Ottoline Vex has asked for a seat at the head table so she can describe the mood. She will get the Turnip Table. I filled in the request form myself.</p>\n\n<p>Tension now holds at nine siege-days, down from fourteen. Clear objectives on both sides: eat, and be seen eating more. I respect it. I will be at the edge of the Green with field rations.</p>\n\n<p><em>Ironjaw, filed from the front.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Seating Chart War",
+          "text": "Two feuding noble houses have both accepted a town's harvest banquet, and the host hires the party to keep the peace at the tables for one evening. Someone has quietly redrawn the seating chart to put the rivals elbow to elbow, and if a single insult lands, the banquet becomes a brawl that could restart a border war."
+        },
+        "npc": {
+          "name": "Perrin Ashgrove",
+          "role": "Banquet Seating Clerk",
+          "want": "He wants the evening to pass without a single thrown plate so he keeps his post.",
+          "secret": "One of the noble houses paid him to swap two place cards, and he has lost track of which two.",
+          "race": "gnome",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Measured Green",
+          "text": "A town green laid out with long tables and string lines marking exactly equal distances from every gravy boat. A table in the middle holds nothing but guarded turnips, and nobody will sit there.",
+          "tavern": false
+        },
+        "rumor": "My cousin swears one of those turnips at the middle table still clanks when you drop it, so I'm not eating the mash."
+      },
+      "fiction": true
+    },
+    {
+      "id": "levitation-slippers-recall-rogue-vault-ceiling",
+      "title": "Levitation Slippers Recalled; Rogue Stuck on Vault Ceiling",
+      "category": "Technology",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-11-18",
+      "excerpt": "Driftsole recalled its 55 gp levitation slippers after 400 wearers got stuck on ceilings. One rogue found out mid-heist, in the vault. Four eyes.",
+      "social": "A rogue bought brand new levitation slippers for a quiet vault heist. The slippers stuck him to the vault ceiling for five hours, right above the guards' card table. The recall notice showed up while he was still up there. What does your rogue say to the guards first?",
+      "content": "<p>Driftsole Works has recalled its Featherstep levitation slippers, 55 gp a pair, after 400 wearers around Brindlemoor got stuck to their own ceilings. I can personally confirm one of them. Dabney Fenwhistle, rogue of the Seventh Spoon Company, bought a pair on Tuesday for a quiet heist at the Ledgerstone Vault and spent the whole job pressed flat against the vault ceiling, in full view of the guards. I was there as the party's gear consultant. I brought snacks.</p>\n\n<p>Okay. First: these slippers are GORGEOUS. Soft gray felt, a little silver rune on each toe, and a firmware glyph that lets you rise, hover, and come back down with a click of the heels. The mana throughput is unreal. Dabney floated over the pressure plates like a dandelion seed and I actually gasped out loud, which a heist does not want. My pseudodragon Byte, who now speaks only in ad copy, whispered, \"Rise above the competition.\"</p>\n\n<p>Then Dabney clicked his heels to come down. The slippers read the click as \"up, but more.\" Driftsole's notice lists the runic latency on the descend command as \"unbounded,\" which I had assumed was a good thing. He rose, met the ceiling with a sound like a dropped loaf, and stuck there face down, arms out, directly above the guards' card table.</p>\n\n<p>There were two guards. They did not sound the alarm. They dealt him in. Sergeant Orla Brisk tilted her cards up so he could see them, and by the third hand Dabney was down 4 sp, which is the only kind of down he managed all night. The rest of the Seventh Spoon Company watched from the air vent and argued over whether rescuing him counted as part of the job or needed a separate contract.</p>\n\n<p>Around the fifth hour a Driftsole courier owl came in through the vault's mail slot. I didn't know vaults got mail. Sergeant Brisk read the recall notice aloud to the ceiling: owners should not wear Featherstep slippers \"indoors, near ceilings, or while committing crimes,\" and should take them off \"over something soft.\" Driftsole is offering every owner a full refund or a complimentary cushion. A baker on Tanner's Row, also recalled, has been piping icing from his kitchen ceiling since Monday and reports that the cakes have never looked better.</p>\n\n<p>The guards fetched a mattress. Dabney slipped off the slippers, dropped, and was arrested very gently. He asked me to print that the heist \"was going well right up until it wasn't.\" In fairness, this is the town where another party once <a href=\"/a/sending-stones-heist-plan-village-gravelpenny\">broadcast its heist plan to the whole village</a>, so he did better than some.</p>\n\n<p>Still! For the forty seconds the hover worked, it was the smoothest ride I have ever had, and that includes the <a href=\"/a/carpet-of-flying-autopilot-update-skyloom-review\">carpet that parked over the market</a>. Four out of five beholder eyes. I have already preordered version two. Byte tells me it ships with a ceiling subscription, which I hate, and which I will pay.</p>\n\n<p>Damage Report: Rogues on ceilings: 1. Silver lost at cards, upside down: 4. Heists completed: 0. Eyebrows: fine, Dabney's less so.</p>\n\n<p><em>— Nyx (they/them). Damage Report below.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Upside-Down Inside Man",
+          "text": "A faulty pair of boots of levitation has pinned a hired thief to the ceiling of a merchant's strongroom. The merchant wants him down before the tax assessor arrives tomorrow, and the thief's crew wants him down before he starts naming names."
+        },
+        "npc": {
+          "name": "Marga Tunwell",
+          "role": "Recalled-goods collection clerk",
+          "want": "She wants every faulty pair of slippers back in her sack before the maker gets sued.",
+          "secret": "She sold forty of the faulty pairs to a thieves' guild herself, knowing exactly what they do.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Quiet Counting House",
+          "text": "A strongroom with a pressure-plate floor and a ceiling covered in fresh scuff marks shaped like heels. The guards keep a mattress in the corner and won't say why.",
+          "tavern": false
+        },
+        "rumor": "My cousin says if you wear two pairs at once you fall upward forever, and that's where the moon came from."
+      },
+      "fiction": true
+    },
+    {
+      "id": "thunderwave-tavern-brawl-sleeping-mule-wall",
+      "title": "Thunderwave Ends Tavern Brawl; Tavern Gains a Room",
+      "category": "Tavern Tales",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-11-18",
+      "excerpt": "A wizard ended a tavern brawl at the Sleeping Mule with Thunderwave and blew out a wall. His party got the bill. The keeper got a room. Allegedly.",
+      "social": "A wizard ended a bar fight at the Sleeping Mule with one Thunderwave. The brawl stopped. So did the east wall. The keeper billed his party 63 gold and now rents the hole out at 5 silver a night. Your wizard just knocked out a wall: do you pay the bill or blame the bard?",
+      "content": "<p>At roughly the second bell after midnight, a wizard allegedly ended a tavern brawl at the Sleeping Mule on Tanner's Row by casting Thunderwave in the middle of the common room. The brawl stopped at once. So did the east wall, which is now in the alley, and Keeper Bess Harrowgate has billed the wizard's adventuring party, the Rattlepan Company, 63 gold and 4 silver for it.</p>\n\n<p>The fight allegedly started over a game of knucklebones and a disputed pie. By the time I got there, which was fast, because I heard it from two streets over and also felt it in my teeth, there were eleven people on the floor, one on the bar, and a very confused goat in the alley who had not been involved at all.</p>\n\n<p>\"He said 'everybody stop,' and then he made everybody stop,\" said Wim Tallis, a cooper who was holding a tankard at the time and is still holding it, because he cannot open his hand. \"I flew about fifteen feet. The tankard came with me. Good tankard.\"</p>\n\n<p>The wizard, a gnome named Alder Quist, told the City Watch the spell was \"a measured response.\" A Watch sergeant measured the hole. It is fourteen feet across. Quist allegedly said he had aimed it at the floor, then at the ceiling, and then admitted he had not aimed it.</p>\n\n<p>The Rattlepan Company's fighter, Brega Holm, said the party only came in for supper. \"We didn't start it. We did finish it. We finished the wall too, I suppose.\" Their rogue allegedly tried to argue the wall was already loose. Harrowgate allegedly showed him the receipt for the wall.</p>\n\n<p>Also, one of the brass hinges from the old east shutter landed right by my foot and it is a very nice hinge. It has a little lion on it. I am allegedly holding it for evidence. Anyway.</p>\n\n<p>Harrowgate is not upset, which I found upsetting. By breakfast she had hung a curtain across the gap, put a cot in the rubble, and painted a sign that says THE THUNDER ROOM, 5 SILVER A NIGHT, BREEZE INCLUDED. A traveling bard has allegedly booked it through spring because, he says, the acoustics are now \"open.\" Duchess, the giant boar who rents the big stall out back, has been in twice to look at it. Harrowgate says Duchess cannot afford it.</p>\n\n<p>\"House rule four is no spells indoors,\" Harrowgate told me. \"House rule nine is you break it, you bought it. They bought a wall. I'm renting the wall's absence. That's just business.\" She has also added a house rule twelve, which reads \"Thunderwave counts,\" because the wizard allegedly argued it was a sound and not a spell.</p>\n\n<p>The Rattlepan Company has two weeks to pay. Quist allegedly offered to cast Mending on the wall. Harrowgate told him Mending fixes a cup, not a wall, and to go stand somewhere quieter. Innkeepers have wanted <a href=\"/a/fireball-burns-inn-innkeepers-damage-deposit\">damage deposits from adventuring parties</a> ever since that Fish Street inn burned, and this morning three more signed on. Hollis Delvewright will allegedly write it up as a ledger. I was there for the bang.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Hole in the Wall",
+          "text": "A tavern keeper has turned a spell-blasted wall into a rentable room, and someone keeps sneaking through the curtain at night to dig in the rubble. She'll knock the party's own damage bill down by half if they find out who, and why the rubble is worth digging through."
+        },
+        "npc": {
+          "name": "Odrin Tallowmere",
+          "role": "Night Porter at the Tavern",
+          "want": "He wants the new room's rent money to go to him, since he swept up the rubble.",
+          "secret": "The blast cracked open an old smuggler's cubby in the wall, and he pocketed the coins inside before anyone else saw.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Thunder Room",
+          "text": "A former section of tavern wall, now a curtained-off cot in the rubble that rents for 5 silver a night. Guests say the breeze through it whispers like voices, and a thug or two has been seen loitering in the alley outside it.",
+          "tavern": false
+        },
+        "rumor": "That wizard didn't miss, they say; somebody paid him to knock out that exact wall, and nobody's said who."
+      },
+      "fiction": true
+    },
+    {
+      "id": "harpy-jingle-adventuring-party-river-fernsley",
+      "title": "Harpy Jingle Walks Party Into River; Shop Calls It Foot Traffic",
+      "category": "Consumer",
+      "author": "Sterling Vanmoor",
+      "date": "2026-11-18",
+      "excerpt": "A harpy-sung winter sale ad led an adventuring party into the Tumblebrook on Tuesday. The shop owner calls it foot traffic. I call it a funnel.",
+      "social": "A harpy jingle for a winter sale walked a whole adventuring party into the Tumblebrook on Tuesday. They were humming it the entire way. The owner of Fernsley's Outfitters says it was his best foot traffic of the season, and the sale excluded anyone still dripping. Be honest: would your character have kept humming?",
+      "content": "<p>A harpy jingle written for a winter sale marched an adventuring party called the Ninefold Spoons straight into the Tumblebrook on Tuesday morning, all five of them humming. The ad was sung by Shrillwing &amp; Daughters, a harpy jingle troupe hired by Fernsley's Outfitters, which sits on the far bank of the river. The bridge is two hundred feet downstream. The song does not mention the bridge.</p>\n\n<p>Some people see a near-drowning. I see the most frictionless customer journey Brindlemoor has ever produced. The Spoons heard the tune from the shop roof, locked eyes on the sign, and walked in a dead straight line, which is exactly what every merchant wants from a customer. The river was simply not in the plan.</p>\n\n<p>The jingle, for the record, goes: \"Fernsley's, Fernsley's, down by the water, cloaks are half off and the boots are a quarter.\" I have hummed it eleven times while writing this. My editor has asked me to close the window.</p>\n\n<p>\"Great foot traffic,\" said Hobb Fernsley, the owner, while wringing out a wizard's hat on his porch. \"Wet foot traffic, sure. But they arrived, they browsed, and they converted.\" They did convert. The winter sale, it turns out, has a small line of print excluding \"customers who are currently dripping,\" so the Spoons bought five dry cloaks at full price. That's 40 gp of pure upside from one verse. Hobb is a visionary and I would like to be in his mastermind circle.</p>\n\n<p>The party's cleric, Wenna Thorp, had wool stuffed in her ears before the walk. \"I was fine,\" she told me from a bench, still wet to the shins. \"But I was roped to the fighter, and he was really feeling the chorus.\" The rogue reached the far bank first and tried to haggle on arrival. Brindlemoor's river wardens, the original disruption-haters, now want a permit for any harpy singing within a bowshot of water. Classic regulators. They never ask what the river wants.</p>\n\n<p>Mistress Corva Shrillwing, who leads the troupe with her three daughters, told me the harpy jingle performed \"well above projections.\" She has already pitched a spring version for a fishmonger on Quillmarch Bridge. I asked whether it would lead customers off the bridge. She smiled with a great many teeth and said they were \"still workshopping the hook.\" In my world we call that iteration.</p>\n\n<p>I once shared a sauna with a guildmaster at a Waterdeep trade fair, and he told me, \"Sterling, attention is the only currency that doesn't sink.\" He was wrong about the sinking part, as the Spoons can now confirm, but right in spirit. Meanwhile my colleague Brakka Stonesweat is reportedly drafting a column about \"consent.\" Brakka, buddy, nobody asked the river either.</p>\n\n<p>Key takeaways for the ambitious adventurer:</p>\n\n<p>• Meet the customer where they are, even mid-river.<br>• A good jingle closes faster than a good bridge.<br>• Always read the fine print, unless you are the one who wrote it.</p>\n\n<p><em>— Sterling Vanmoor, Guild Visionary. Let's connect at the Yawning Portal.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Song at the Ford",
+          "text": "A harpy troupe sings a shop's sale jingle from a riverside roof, and travelers keep walking into the water to reach it. The town's ferry keeper wants the singing stopped before someone drowns, but the shopkeeper has a signed contract and the harpies want their fee."
+        },
+        "npc": {
+          "name": "Gisela Brandt",
+          "role": "Ferry keeper at the ford",
+          "want": "She wants the harpies gone so travelers go back to paying for her ferry.",
+          "secret": "She hired the same harpies first, and they took the shop's better offer.",
+          "race": "human",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Humming Ford",
+          "text": "A shallow river crossing below a cheerful outfitter's shop. Everyone in town hums the same tune here, and nobody can say where they learned it.",
+          "tavern": false
+        },
+        "rumor": "They say the harpies are writing a new jingle for the temple, and the hook goes off the bell tower."
+      },
+      "fiction": true
     }
   ]
 }
