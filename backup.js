@@ -9,18 +9,20 @@
    their tools and may.
    The notebook goes through notebook.js (nbClean, then nbMerge), so it merges into
    the one here, as the notebook's own import does. Everything else is replaced.
-   Map pictures (F54) live in IndexedDB, not localStorage (map-store.js). Unless the reader
-   unticks them, they go in the file too, as base64 under `maps`:
+   Map pictures (F54) live in IndexedDB, not localStorage (map-store.js), one database per
+   system. Unless the reader unticks them, they go in the file too, as base64 under `maps`
+   (D&D's) and `maps-pf2e` (the Pathfinder Campaign Map's):
      maps: [{ id, name, type, w, h, data }]
    which makes the file big, so the page says how big first. On import each picture's first
    bytes must match its type and the browser must decode it before it is stored; it lands
    under the id its notebook entry got here (nbMerge's ids), and a picture with no entry
-   here gets one, so it shows up on the Maps tab.
+   here gets one, so it shows up on the Maps tab. Each system's pictures follow its own notebook.
    Needs notebook.js, homebrew.js (hbClean, for homebrew monsters), battlemap-engine.js (bmCleanStore,
    for battlemaps), worldmap-engine.js (wmCleanStore, for world maps), and map-store.js on the page.
    ============================================ */
 
-const BK_LIMITS = { file: 5000000, depth: 12, items: 5000, keys: 500, text: 20000 };
+// file: bytes; a browser keeps about 5 million characters, and UTF-8 takes up to 3 bytes for one.
+const BK_LIMITS = { file: 15000000, depth: 12, items: 5000, keys: 500, text: 20000 };
 // A file with map pictures may be bigger by their base64 (4 bytes for every 3).
 const BK_FILE_MAX = BK_LIMITS.file + Math.ceil(MAP_LIMITS.backup * 4 / 3);
 // Over this, the page warns that the backup file will be big.
@@ -47,9 +49,11 @@ function bkSafe(v, strict = true, depth = 0) {
 }
 
 // A list: keep the items that pass, up to max. Returns { value, dropped }.
+// A list with items but none readable throws, so it can't replace a good save with an empty one.
 function bkItems(v, test, max, strict = true) {
     if (!Array.isArray(v)) throw new Error("isn't a list");
     const value = v.filter(x => test(x) && bkSafe(x, strict)).slice(0, max);
+    if (v.length && !value.length) throw new Error('holds nothing this tool can read');
     return { value, dropped: v.length - value.length };
 }
 
@@ -84,7 +88,8 @@ const BACKUP_KEYS = [
     },
     {
         key: 'gazette_loot', tool: '💎 Vault of Wonders', href: 'loot-generator', what: 'Saved treasure',
-        clean: v => bkItems(v, bkHoard, 50),
+        // Every field is escaped by the vault, so typed homebrew names may hold < or >.
+        clean: v => bkItems(v, bkHoard, 50, false),
         count: v => bkN(v.length, 'hoard')
     },
     {
@@ -253,23 +258,26 @@ const BACKUP_KEYS = [
 ];
 
 // The Pathfinder pages (ROADMAP L3) keep their own saves under these keys plus "-pf2e" (ruleKey);
-// each gets the same row as its D&D key. Their map pictures aren't in backups yet.
+// each gets the same row as its D&D key. Their map pictures are BK_MAPS's second row.
 const BK_PF2E = { 'gazette_notebook': 'pathfinder-campaign-notebook', 'gazette-web': 'pathfinder-npc-relationship-web',
     'gazette-kept-names': 'pathfinder-tavern-name-generator', 'saved_npcs': 'pathfinder-npc-generator',
     'gazette-clocks': 'pathfinder-progress-clocks', 'gazette-tables': 'pathfinder-random-table-roller',
     'gazette-party': 'pathfinder-party-tracker', 'gazette-initiative': 'pathfinder-initiative-tracker',
     'gazette_loot': 'pathfinder-loot-generator', 'gazette-shop': 'pathfinder-shop-generator',
     'gazette-downtime': 'pathfinder-downtime-tracker', 'gazette-dm-screen': 'pathfinder-gm-screen',
-    'gazette-characters': 'pathfinder-character-builder', 'gazette-journals': 'pathfinder-player-journal' };
+    'gazette-characters': 'pathfinder-character-builder', 'gazette-journals': 'pathfinder-player-journal',
+    'gazette-init-follow': 'pathfinder-initiative-tracker', 'gazette-rumor-deck': 'pathfinder-tavern-generator' };
 BACKUP_KEYS.push(...BACKUP_KEYS.filter(k => Object.hasOwn(BK_PF2E, k.key)).map(k => ({
     ...k, key: k.key + '-pf2e', tool: '🗡️ Pathfinder Toolkit', href: BK_PF2E[k.key], pf2e: true
 })));
 
-// The map pictures row (not a localStorage key: they're in IndexedDB).
-const BK_MAPS = {
-    key: 'maps', maps: true, tool: '🗺️ Worldbuilder', href: 'worldbuilder?tab=maps', what: 'Map pictures',
-    count: v => `${bkN(v.length, 'picture')}, ${mapMb(v.reduce((n, m) => n + (m.size || 0), 0))}`
-};
+// The map pictures rows (not localStorage keys: they're in IndexedDB), one per system.
+// key: the file's field; db: the database (map-store.js); nb: the notebook key their entries live in.
+const bkMapCount = v => `${bkN(v.length, 'picture')}, ${mapMb(v.reduce((n, m) => n + (m.size || 0), 0))}`;
+const BK_MAPS = [
+    { key: 'maps', maps: true, db: MAP_DBS[0], nb: 'gazette_notebook', tool: '🗺️ Worldbuilder', href: 'worldbuilder?tab=maps', what: 'Map pictures', count: bkMapCount },
+    { key: 'maps-pf2e', maps: true, db: MAP_DBS[1], nb: 'gazette_notebook-pf2e', tool: '🗡️ Pathfinder Toolkit', href: 'pathfinder-campaign-map', what: 'Map pictures', count: bkMapCount, pf2e: true }
+];
 
 // ── Reading this browser ──────────────────────────────────
 // What's saved here for one key: { value } (cleaned), { bad: true } (unreadable), or null (nothing).
@@ -280,18 +288,21 @@ function bkLocal(k) {
     try { return { value: k.clean(k.raw ? text : JSON.parse(text)).value, text }; } catch (e) { return { bad: true, text }; }
 }
 
-// The map pictures here: [records] (map-store.js), or null until read (or when IndexedDB is off).
-let bkMapsHere = null;
+// The map pictures here, by database: [records] (map-store.js), or null until read (or when IndexedDB is off).
+const bkMapsHere = {};
+const bkMapsOf = k => bkMapsHere[k.db] || [];
+const bkAllMaps = () => BK_MAPS.flatMap(k => bkMapsOf(k).map(r => ({ ...r, k })));
 
 function bkLoadMaps() {
-    return mapAll().then(recs => { bkMapsHere = recs; }, () => { bkMapsHere = null; });
+    return Promise.all(BK_MAPS.map(k => mapAll(k.db).then(recs => { bkMapsHere[k.db] = recs; }, () => { bkMapsHere[k.db] = null; })));
 }
 
-// The pictures a backup takes: as many as fit MAP_LIMITS.backup, oldest first. Returns { take, left, total }.
+// The pictures a backup takes, both systems': as many as fit MAP_LIMITS.backup, oldest first.
+// Returns { take, left, total }; each record carries k, its BK_MAPS row.
 function bkMapsToSave() {
     const take = [], left = [];
     let total = 0;
-    (bkMapsHere || []).slice().sort((a, b) => a.added.localeCompare(b.added)).forEach(r => {
+    bkAllMaps().sort((a, b) => a.added.localeCompare(b.added)).forEach(r => {
         if (total + r.size <= MAP_LIMITS.backup) { take.push(r); total += r.size; } else left.push(r);
     });
     return { take, left, total };
@@ -308,16 +319,24 @@ async function bkExportParts(withMaps) {
     const head = JSON.stringify({ gazetteBackup: 1, exported: new Date().toISOString(), data }, null, 2);
     const { take, left } = withMaps ? bkMapsToSave() : { take: [], left: [] };
     if (!take.length) return { count: Object.keys(data).length, parts: [head], left };
-    // Each map under the notebook's name for it, when it has one.
-    const nb = nbLoad();
-    const parts = [head.replace(/\n}$/, ',\n  "maps": [\n')];
-    for (let i = 0; i < take.length; i++) {
-        const r = take[i], e = nbFind(nb, r.id);
-        const meta = JSON.stringify({ id: r.id, name: e && e.kind === 'map' ? e.title : r.name, type: r.type, w: r.w, h: r.h });
-        parts.push(`    ${meta.slice(0, -1)}, "data": "`, await mapB64(r.blob), `"}${i < take.length - 1 ? ',' : ''}\n`);
+    // Each system's pictures under its own field, each map under its notebook's name for it, when it has one.
+    const parts = [head.replace(/\n}$/, '')];
+    let count = Object.keys(data).length;
+    for (const k of BK_MAPS) {
+        const mine = take.filter(r => r.k === k);
+        if (!mine.length) continue;
+        const nb = nbLoad(k.nb);
+        parts.push(`,\n  ${JSON.stringify(k.key)}: [\n`);
+        for (let i = 0; i < mine.length; i++) {
+            const r = mine[i], e = nbFind(nb, r.id);
+            const meta = JSON.stringify({ id: r.id, name: e && e.kind === 'map' ? e.title : r.name, type: r.type, w: r.w, h: r.h });
+            parts.push(`    ${meta.slice(0, -1)}, "data": "`, await mapB64(r.blob), `"}${i < mine.length - 1 ? ',' : ''}\n`);
+        }
+        parts.push('  ]');
+        count++;
     }
-    parts.push('  ]\n}');
-    return { count: Object.keys(data).length + 1, parts, left };
+    parts.push('\n}');
+    return { count, parts, left };
 }
 
 // ── Reading a file ────────────────────────────────────────
@@ -354,36 +373,36 @@ function bkParseFile(text) {
             return { k, error: e.message, here };
         }
     });
-    if (raw.maps !== undefined) {
-        const here = bkMapsHere && bkMapsHere.length ? { value: bkMapsHere } : null;
+    BK_MAPS.filter(k => raw[k.key] !== undefined).forEach(k => {
+        const mine = bkMapsOf(k), here = mine.length ? { value: mine } : null;
         try {
-            const { value, dropped } = bkCleanMaps(raw.maps);
+            const { value, dropped } = bkCleanMaps(raw[k.key]);
             if (!value.length && dropped) throw new Error('holds no picture this site can open');
-            const same = !!here && value.every(m => bkMapsHere.some(r => r.id === m.id && r.size === m.size && r.type === m.type));
-            if (value.length) rows.push({ k: BK_MAPS, value, dropped, here, same });
+            const same = !!here && value.every(m => mine.some(r => r.id === m.id && r.size === m.size && r.type === m.type));
+            if (value.length) rows.push({ k, value, dropped, here, same });
         } catch (e) {
-            rows.push({ k: BK_MAPS, error: e.message, here });
+            rows.push({ k, error: e.message, here });
         }
-    }
+    });
     const ignored = Object.keys(raw.data).filter(key => !BACKUP_KEYS.some(k => k.key === key)).length;
     if (!rows.length) throw new Error('That backup is empty.');
     return { rows, ignored, exported: typeof raw.exported === 'string' ? new Date(raw.exported) : null };
 }
 
-// Store map pictures from a backup. ids: the notebook's ids here for the file's entries (nbMerge),
-// when the notebook was restored too. Each picture is decoded first; one with no map entry here
-// gets one. Returns { put, bad }.
-async function bkRestoreMaps(list, ids) {
+// Store one system's map pictures from a backup (k: its BK_MAPS row). ids: that system's notebook's
+// ids here for the file's entries (nbMerge), when the notebook was restored too. Each picture is
+// decoded first; one with no map entry here gets one. Returns { put, bad }.
+async function bkRestoreMaps(list, ids, k) {
     let put = 0, bad = 0;
     for (const m of list) {
         try {
             const blob = mapUnB64(m.data, m.type);
             if (!blob) throw new Error('not base64');
             const pic = await mapCheck(blob);
-            const nb = nbLoad();
+            const nb = nbLoad(k.nb);
             const id = mapFileEntry(nb, { id: ids[m.id] || m.id, name: m.name, w: pic.w, h: pic.h });
-            if (!id || !nbStore(nb)) throw new Error('notebook');
-            await mapPut({ id, name: m.name, ...pic });
+            if (!id || !nbStore(nb, false, k.nb)) throw new Error('notebook');
+            await mapPut({ id, name: m.name, ...pic }, k.db);
             put++;
         } catch (e) {
             bad++;
@@ -392,19 +411,20 @@ async function bkRestoreMaps(list, ids) {
     return { put, bad };
 }
 
-// Write the chosen rows, the notebook before the map pictures so they follow its ids.
-// Resolves to { done, failed, pics }.
+// Write the chosen rows, the notebooks before the map pictures so they follow their ids.
+// Resolves to { done, failed, pics } (pics: both systems' pictures added up).
 async function bkRestore(rows) {
-    let done = 0, failed = 0, ids = {}, pics = null;
+    let done = 0, failed = 0, pics = null;
+    const ids = {};   // by notebook key: the file's entry ids -> the ids here
     for (const r of rows.slice().sort((a, b) => !!a.k.maps - !!b.k.maps)) {
         try {
             if (r.k.maps) {
-                pics = await bkRestoreMaps(r.value, ids);
-                if (!pics.put) throw new Error('none stored');
+                const got = await bkRestoreMaps(r.value, ids[r.k.nb] || {}, r.k);
+                pics = { put: (pics ? pics.put : 0) + got.put, bad: (pics ? pics.bad : 0) + got.bad };
+                if (!got.put) throw new Error('none stored');
             } else if (r.k.merge) {
                 const nb = nbLoad(r.k.key);
-                const merged = nbMerge(nb, r.value).ids;
-                if (!r.k.pf2e) ids = merged;   // the map pictures are the D&D notebook's
+                ids[r.k.key] = nbMerge(nb, r.value).ids;
                 if (!nbStore(nb, false, r.k.key)) throw new Error('storage');
             } else {
                 localStorage.setItem(r.k.key, r.k.raw ? r.value : JSON.stringify(r.value));
@@ -444,7 +464,7 @@ function bkMapsOptHTML() {
 
 function renderBackupSummary() {
     const rows = BACKUP_KEYS.map(k => ({ k, here: bkLocal(k) })).filter(r => r.here);
-    if (bkMapsHere && bkMapsHere.length) rows.push({ k: BK_MAPS, here: { value: bkMapsHere } });
+    BK_MAPS.forEach(k => { if (bkMapsOf(k).length) rows.push({ k, here: { value: bkMapsOf(k) } }); });
     const box = document.getElementById('bk-summary');
     if (!rows.length) {
         box.innerHTML = '<p class="bk-empty">Nothing is saved in this browser yet.</p>';
@@ -456,6 +476,7 @@ function renderBackupSummary() {
 }
 
 let bkPlan = null;
+let bkReading = 0;   // which file read is the newest (an older one finishing late is ignored)
 
 function renderBackupPlan() {
     const box = document.getElementById('bk-plan');
@@ -493,14 +514,20 @@ function updateRestoreButton() {
 
 function bkImport(file) {
     if (!file) return;
+    // A new file drops the last one's plan, so its Restore can't run by mistake.
+    const reading = ++bkReading;
+    bkPlan = null;
+    renderBackupPlan();
     if (file.size > BK_FILE_MAX) { bkStatus('⚠️ That file is too big to be a Gazette backup.'); return; }
     if (file.size > BK_BIG) bkStatus('📂 Reading the backup…');
     file.text().then(text => {
+        if (reading !== bkReading) return;
         bkPlan = bkParseFile(text);
         bkStatus('');
         renderBackupPlan();
         document.getElementById('bk-plan').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }).catch(err => {
+        if (reading !== bkReading) return;
         bkPlan = null;
         renderBackupPlan();
         bkStatus('⚠️ ' + (err && err.message ? err.message : "That file couldn't be read."));
@@ -511,8 +538,11 @@ function setupBackup() {
     const exp = document.getElementById('bk-export');
     exp.addEventListener('click', async () => {
         if (exp.disabled) return;
-        const withMaps = bkWithMaps && !!(bkMapsHere && bkMapsHere.length);
-        if (withMaps) { exp.disabled = true; bkStatus('💾 Packing the map pictures…'); }
+        // Read the pictures afresh first: a click before the first read finished would leave them out.
+        exp.disabled = true;
+        await bkLoadMaps();
+        const withMaps = bkWithMaps && bkAllMaps().length > 0;
+        if (withMaps) bkStatus('💾 Packing the map pictures…');
         let out = null;
         try { out = await bkExportParts(withMaps); } catch (e) { /* a picture couldn't be read */ }
         exp.disabled = false;

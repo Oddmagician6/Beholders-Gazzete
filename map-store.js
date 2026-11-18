@@ -10,12 +10,16 @@
    only ever drawn as an <image> (never read as text, never put in the page as markup).
      mapCheck(blob)           → Promise<{ blob, type, w, h, size }>, or rejects with a readable Error
      mapAll(), mapGet(id), mapPut(rec), mapDelete(id)   the store (each rejects when IndexedDB is off)
+       Each takes an optional last argument, the database: MAP_DB is this page's system's (ruleKey),
+       and the Privacy page's backup also reads and writes the other one (MAP_DBS).
      mapOnChange(fn)          fn() after a change here or in another tab
      mapB64(blob), mapUnB64(text, type)   backups (backup.js)
      mapFileEntry(nb, rec)    a notebook entry for an image that has none (needs notebook.js)
    ============================================ */
 
 const MAP_DB = ruleKey('gazette-maps');
+// Both systems' databases (D&D's, then Pathfinder's), for backups.
+const MAP_DBS = ['gazette-maps', 'gazette-maps-pf2e'];
 const MAP_STORE = 'images';
 // bytes: one file; side, pixels: one picture; maps: in the notebook; backup: the pictures one backup file holds.
 const MAP_LIMITS = { bytes: 25 * 1024 * 1024, side: 16384, pixels: 100000000, maps: 30, backup: 140 * 1024 * 1024 };
@@ -117,32 +121,34 @@ function mapNameFromFile(name) {
 }
 
 // ── The store ─────────────────────────────────────────────
-let mapDbOpen = null;
+// The open databases, by name.
+const mapDbOpen = {};
 
-function mapDb() {
-    if (!mapDbOpen) {
-        mapDbOpen = new Promise((resolve, reject) => {
+function mapDb(name = MAP_DB) {
+    if (!mapDbOpen[name]) {
+        const open = new Promise((resolve, reject) => {
             if (typeof indexedDB === 'undefined') { reject(new Error('no IndexedDB')); return; }
             let req;
-            try { req = indexedDB.open(MAP_DB, 1); } catch (e) { reject(e); return; }
+            try { req = indexedDB.open(name, 1); } catch (e) { reject(e); return; }
             req.onupgradeneeded = () => { req.result.createObjectStore(MAP_STORE, { keyPath: 'id' }); };
             req.onsuccess = () => {
                 const db = req.result;
                 // Another tab upgrading the database: step aside.
-                db.onversionchange = () => { db.close(); mapDbOpen = null; };
+                db.onversionchange = () => { db.close(); delete mapDbOpen[name]; };
                 resolve(db);
             };
             req.onerror = () => reject(req.error || new Error('IndexedDB is off'));
             req.onblocked = () => reject(new Error('IndexedDB is busy'));
         });
-        mapDbOpen.catch(() => { mapDbOpen = null; });
+        mapDbOpen[name] = open;
+        open.catch(() => { if (mapDbOpen[name] === open) delete mapDbOpen[name]; });
     }
-    return mapDbOpen;
+    return mapDbOpen[name];
 }
 
 // Run one request on the store and resolve to its result once the transaction is done.
-async function mapTx(mode, fn) {
-    const db = await mapDb();
+async function mapTx(mode, fn, name = MAP_DB) {
+    const db = await mapDb(name);
     return new Promise((resolve, reject) => {
         const tx = db.transaction(MAP_STORE, mode);
         const req = fn(tx.objectStore(MAP_STORE));
@@ -162,22 +168,22 @@ function mapRecClean(r) {
     return { id: r.id, name: nbText(r.name, NB_LIMITS.title) || 'My map', type: r.type, w, h, size: r.blob.size, blob: r.blob, added: typeof r.added === 'string' ? r.added : '' };
 }
 
-async function mapAll() {
-    return ((await mapTx('readonly', s => s.getAll())) || []).map(mapRecClean).filter(Boolean);
+async function mapAll(name = MAP_DB) {
+    return ((await mapTx('readonly', s => s.getAll(), name)) || []).map(mapRecClean).filter(Boolean);
 }
 
-async function mapGet(id) {
-    return mapRecClean(await mapTx('readonly', s => s.get(id)));
+async function mapGet(id, name = MAP_DB) {
+    return mapRecClean(await mapTx('readonly', s => s.get(id), name));
 }
 
-async function mapPut(rec) {
-    await mapTx('readwrite', s => s.put({ id: rec.id, name: rec.name, type: rec.type, w: rec.w, h: rec.h, size: rec.blob.size, blob: rec.blob, added: rec.added || new Date().toISOString() }));
-    mapNotify();
+async function mapPut(rec, name = MAP_DB) {
+    await mapTx('readwrite', s => s.put({ id: rec.id, name: rec.name, type: rec.type, w: rec.w, h: rec.h, size: rec.blob.size, blob: rec.blob, added: rec.added || new Date().toISOString() }), name);
+    mapNotify(name);
 }
 
-async function mapDelete(id) {
-    await mapTx('readwrite', s => s.delete(id));
-    mapNotify();
+async function mapDelete(id, name = MAP_DB) {
+    await mapTx('readwrite', s => s.delete(id), name);
+    mapNotify(name);
 }
 
 // ── Changes, here and in other tabs ───────────────────────
@@ -186,9 +192,11 @@ let mapChannel = null;
 try { mapChannel = new BroadcastChannel(MAP_DB); } catch (e) { /* no other tabs to tell */ }
 if (mapChannel) mapChannel.onmessage = () => mapListeners.forEach(fn => fn());
 
-function mapNotify() {
+// name: the database that changed (the other system's tells its own pages through its own channel).
+function mapNotify(name = MAP_DB) {
     mapListeners.forEach(fn => fn());
-    if (mapChannel) mapChannel.postMessage('changed');
+    if (name === MAP_DB) { if (mapChannel) mapChannel.postMessage('changed'); return; }
+    try { const ch = new BroadcastChannel(name); ch.postMessage('changed'); ch.close(); } catch (e) { /* no other tabs to tell */ }
 }
 
 function mapOnChange(fn) {

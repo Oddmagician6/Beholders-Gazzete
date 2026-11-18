@@ -230,7 +230,7 @@ function displayLoot() {
     document.getElementById('gems-grid').innerHTML = loot.gems.map(g =>
       `<div class="item-card">
         <div class="item-header">
-          <span class="item-name">${g.name}</span>
+          <span class="item-name">${esc(g.name)}</span>
           <span class="item-rarity rarity-common">Gem</span>
         </div>
         ${g.look ? `<p class="item-look">${esc(g.look)}</p>` : ''}
@@ -245,7 +245,7 @@ function displayLoot() {
     document.getElementById('art-grid').innerHTML = loot.art.map(a =>
       `<div class="item-card">
         <div class="item-header">
-          <span class="item-name">${a.name}</span>
+          <span class="item-name">${esc(a.name)}</span>
           <span class="item-rarity rarity-uncommon">Art</span>
         </div>
         ${a.note ? `<p class="item-look">${esc(a.note)}</p>` : ''}
@@ -272,27 +272,28 @@ function displayLoot() {
   document.getElementById('magic-section').style.display = loot.magic.length || loot.magicNote ? 'block' : 'none';
   if (!loot.magic.length && loot.magicNote) {
     document.getElementById('magic-grid').innerHTML =
-      `<p style="color:var(--text-dim);font-style:italic;grid-column:1/-1;">${loot.magicNote}</p>`;
+      `<p style="color:var(--text-dim);font-style:italic;grid-column:1/-1;">${esc(loot.magicNote)}</p>`;
   }
   if (loot.magic.length) {
     document.getElementById('magic-grid').innerHTML = loot.magic.map(item => {
-      const rarityClass = item.rarity === 'unique' ? 'legendary' : item.rarity.replace(' ', '-');
+      const rarity = String(item.rarity || ''), rarityClass = rarity === 'unique' ? 'legendary' : rarity.replace(/[^a-z-]/g, c => c === ' ' ? '-' : '');
       const info = item.pf ? pf2eItemInfo(item.pf) : magicItemInfo(item.name);
-      const kind = item.img || (item.type === 'wondrous' ? 'wondrous-item' : item.type);
+      // A saved hoard (or a backup) is untrusted: the art name goes into a path, so letters and dashes only.
+      const kind = String(item.img || (item.type === 'wondrous' ? 'wondrous-item' : item.type) || '').replace(/[^a-z0-9-]/g, '');
       const holds = item.spell && typeof PF2E_SPELLS !== 'undefined' && PF2E_SPELLS[item.spell];
       const etched = item.on && PF2E_ITEMS[item.on] && PF2E_ITEMS[item.pf];
       return `<div class="magic-card">
         <div class="item-header">
           <span class="item-name">${esc(item.name)}${item.hb ? ' <span class="hb-tag">🧪 Homebrew</span>' : ''}</span>
-          <span class="item-rarity rarity-${rarityClass}">${item.rarity}</span>
+          <span class="item-rarity rarity-${rarityClass}">${esc(rarity)}</span>
         </div>
         <img class="magic-art" src="img/item/${kind}.webp" alt="" width="72" height="72" loading="lazy" decoding="async">
         <div class="item-meta">
-          <span class="item-type">${item.level !== undefined ? `Level ${item.level} · ` : ''}${item.type}</span>
+          <span class="item-type">${item.level !== undefined ? `Level ${esc(item.level)} · ` : ''}${esc(item.type)}</span>
           ${item.attune ? '<span class="attune-badge">⚡ Attunement</span>' : item.invested ? '<span class="attune-badge">⚡ Invested</span>' : ''}
         </div>
         ${etched ? `<p class="item-look">A ${esc(PF2E_ITEMS[item.pf].n.toLowerCase())} rune etched on a ${esc(PF2E_ITEMS[item.on].n.toLowerCase())}.</p>` : ''}
-        ${holds ? `<p class="item-look">Holds <a href="pf2e/spell/${item.spell}">${esc(holds.n)}</a>.</p>` : ''}
+        ${holds ? `<p class="item-look">Holds <a href="pf2e/spell/${encodeURIComponent(item.spell)}">${esc(holds.n)}</a>.</p>` : ''}
         ${item.flavor ? `<p class="item-look">${esc(item.flavor)}</p>` : ''}
         <div class="item-value">${item.value > 0 ? '💰 ' + (item.pf ? formatCoins(item.value) : '~' + item.value.toLocaleString() + ' gp') : '✨ Priceless'}</div>
         ${info ? `<button type="button" class="item-toggle" aria-expanded="false" onclick="toggleItem(this)">Read item ▼</button>
@@ -439,7 +440,7 @@ function renderSaved() {
   container.innerHTML = saved.map((loot, i) => `
     <div class="saved-item" onclick="loadSaved(${i})">
       <h4>Hoard #${i + 1} — ${formatCoins(loot.totalValue)}</h4>
-      <p>${(loot.magic || []).length} magic · ${(loot.gems || []).length + (loot.art || []).length + (loot.goods || []).length} valuables · ${loot.tab}${LOOT_SOURCES[loot.source] ? ' · ' + LOOT_SOURCES[loot.source].label.toLowerCase() : ''}</p>
+      <p>${(loot.magic || []).length} magic · ${(loot.gems || []).length + (loot.art || []).length + (loot.goods || []).length} valuables · ${esc(loot.tab)}${LOOT_SOURCES[loot.source] ? ' · ' + LOOT_SOURCES[loot.source].label.toLowerCase() : ''}</p>
       <div class="saved-meta">${new Date(loot.generatedAt).toLocaleDateString()}</div>
     </div>
   `).join('');

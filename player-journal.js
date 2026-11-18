@@ -246,6 +246,7 @@ function flash(msg, bad = false) {
 }
 
 // Saved journals: the ones with an entry, or that the player started or changed by hand.
+// Returns false (and says so) when the browser won't store them.
 function persist() {
     if (cur) {
         cur.kept = true;
@@ -253,7 +254,25 @@ function persist() {
         jns = [cur, ...jns.filter(j => j !== cur)];
     }
     const list = jns.filter(j => j.kept || j.entries.length).map(({ kept, ...j }) => j);
-    if (!jnStore(list)) flash('Your browser would not save that: its storage may be full.', true);
+    if (jnStore(list)) return true;
+    flash('Your browser would not save that: its storage may be full.', true);
+    return false;
+}
+
+// Another tab saved journals while the editor was open here.
+let jnStale = false;
+
+// Read the journals again from storage, keeping an unsaved draft and the open journal.
+// keepCur: the open journal stays even when another tab deleted it (an edit is about to save into it).
+function jnReload(keepCur) {
+    const draft = jns.find(j => !j.kept && !j.entries.length), mine = cur;
+    jns = jnLoadAll();
+    jns.forEach(j => { j.kept = true; });
+    if (draft && !jns.some(j => j.char === draft.char)) jns.unshift(draft);
+    cur = (mine && jns.find(j => j.id === mine.id)) || null;
+    if (!cur && keepCur && mine) { jns.unshift(mine); cur = mine; }
+    if (!cur) cur = jns[0] || null;
+    jnStale = false;
 }
 
 function charFor(j) {
@@ -379,6 +398,7 @@ function renderEditor() {
 
 function setEditing(next) {
     editing = next;
+    if (!editing && jnStale) { jnReload(false); render(); }
     renderEditor();
     renderBody();
     setUrl();
@@ -471,18 +491,22 @@ function saveEditor(form) {
         const el = form.elements[key];
         raw[key] = type === 'check' ? el.checked : el.value;
     });
-    const old = form.dataset.id ? cur.entries.find(x => x.id === form.dataset.id) : null;
-    if (old) { raw.id = old.id; raw.added = old.added; }
+    const editId = form.dataset.id || '';
+    const before = editId ? cur.entries.find(x => x.id === editId) : null;
+    if (before) { raw.id = before.id; raw.added = before.added; }
     raw.updated = Date.now();
     const e = jnCleanEntry(raw);
     if (!e.title && !e.text && !(kind === 'session' && e.num)) { flash('Give it a title or some notes first.', true); return; }
+    // Save onto the newest copy, so another tab's entries aren't written over.
+    if (jnStale) jnReload(true);
+    const old = editId ? cur.entries.find(x => x.id === editId) : null;
     if (old) cur.entries[cur.entries.indexOf(old)] = e;
     else cur.entries.unshift(e);
     editing = null;
-    persist();
+    const ok = persist();
     render();
     renderEditor();
-    flash(`${JN_KINDS[kind].icon} ${old ? 'Saved' : 'Added'}: ${jnTitle(e)}.`);
+    if (ok) flash(`${JN_KINDS[kind].icon} ${old ? 'Saved' : 'Added'}: ${jnTitle(e)}.`);
 }
 
 let armedDel = { id: '', at: 0 };
@@ -536,7 +560,7 @@ function exportJournal() {
 
 function importJournal(file) {
     if (!file) return;
-    if (file.size > 2000000) { flash('That file is too big to be a journal.', true); return; }
+    if (file.size > 15000000) { flash('That file is too big to be a journal.', true); return; }
     const reader = new FileReader();
     reader.onload = () => {
         let data;
@@ -724,12 +748,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('storage', e => {
         if (e.key !== JN_KEY && e.key !== JN_CB_KEY) return;
         chars = jnCharacters();
-        if (e.key === JN_KEY && !editing) {
-            const draft = jns.find(j => !j.kept && !j.entries.length);
-            jns = jnLoadAll();
-            jns.forEach(j => { j.kept = true; });
-            if (draft && !jns.some(j => j.char === draft.char)) jns.unshift(draft);
-            cur = (cur && jns.find(j => j.id === cur.id)) || jns[0] || null;
+        if (e.key === JN_KEY) {
+            if (editing) jnStale = true;   // picked up when the editor saves or closes
+            else jnReload(false);
         }
         render();
     });
