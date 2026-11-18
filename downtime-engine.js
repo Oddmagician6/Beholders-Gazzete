@@ -207,9 +207,43 @@ const CAROUSE_OUTCOMES = {
         { k: 'odd', t: 'You agreed to adopt a noble family\'s prize-winning peacock. It is loud, vain, and now yours.' },
         { k: 'good', t: 'A retired general enjoyed your company and offers you the use of her library and her cellar, in that order.' },
         { k: 'bad', t: 'You mistook a famous poet\'s new work for a drinking song and sang along. The poet will not forget.' },
-        { k: 'odd', t: 'You agreed to a masked dance with a stranger who left at midnight and one glass slipper. The slipper is your size.' }
+        { k: 'odd', t: 'You agreed to a masked dance with a stranger who fled at midnight and left one glass slipper behind. The slipper is your size.' }
     ]
 };
+// Third-pass outcomes (2026-11-18): swapped in by a draw of their own (carouseWeek), so old seeds keep the rest.
+const CAROUSE_OUTCOMES_MORE = {
+    high: [
+        { k: 'good', t: 'At a supper of roast birds, you befriend the keeper of the royal aviary. She lends you a trained messenger hawk.' },
+        { k: 'good', t: 'A magistrate at a wine tasting writes you a letter of introduction. Her seal will get you past the border wardens.' },
+        { k: 'bad', t: 'You applaud a toast to someone the host is suing. Your place at the breakfast table is gone by morning.' },
+        { k: 'bad', t: 'You spill wine on a count\'s cloak. The count forgives you, but the cloak was borrowed, and its owner sends a bill for 12 gp.' },
+        { k: 'odd', t: 'You judge a contest of ornamental fountains. One coughs into its basin whenever you look away.' },
+        { k: 'odd', t: 'Two families who have feuded for a century finally agree on something: you must marry into one of them. They are still arguing over which.' }
+    ]
+};
+
+// One week's carousing outcome. The first draw keeps the F28 seed; a repeat within the log is drawn
+// again from the same stream, and the newer outcomes swap in from a seed of their own.
+function carouseWeek(circle, seed, i, wk, seen) {
+    const table = CAROUSE_OUTCOMES[circle];
+    const more = CAROUSE_OUTCOMES_MORE[circle] || [];
+    return withSeed(deriveSeed(seed || '0', `carouse.${i}.${wk}`), () => {
+        let o = null;
+        for (let tries = 0; tries < 12; tries++) {
+            o = table[Math.floor(rand() * table.length)];
+            if (more.length) o = withSeed(deriveSeed(seed || '0', `carouse.${i}.${wk}.more.${tries}`), () => dtSwap(o, table, more));
+            if (!seen.has(o.t)) break;
+        }
+        seen.add(o.t);
+        return o;
+    });
+}
+
+// Two draws: a pick from the newer list, kept by its share of both lists.
+function dtSwap(cur, old, more) {
+    const newer = more[Math.floor(rand() * more.length)];
+    return rand() < more.length / (old.length + more.length) ? newer : cur;
+}
 
 // ── Where they live (one draw per character) ─────────────
 const DOWNTIME_LODGING = {
@@ -227,6 +261,17 @@ const DOWNTIME_LODGING = {
         "the guest wing of a merchant prince's house", "a suite at the finest inn in the city", "a house on the hill with a view of the harbor"],
     aristocratic: ["a mansion with its own gatehouse", "a manor just outside the walls, staff included",
         "the entire top floor of the grandest inn in the city", "a palace wing lent by an old family friend", "a walled estate with a deer park"]
+};
+// Third-pass lines (2026-11-18), swapped in from seeds of their own (rollLodging, rollSetting).
+const DOWNTIME_LODGING_MORE = {
+    modest: ["a room above a bell founder's yard", "two rooms behind the public baths", "a loft with a stair of its own",
+        "a room behind a bookbinder's shop", "a garret in the old lockhouse"]
+};
+const DOWNTIME_SETTING_MORE = {
+    craft: { low: ["a plank on trestles in a courtyard", "an empty stall under the stairs", "a borrowed bench under an awning",
+        "a shared shed behind the limekiln", "the old weighing room at the mill"] },
+    gamble: { middle: ["a booth under the grandstand", "a tea room by the west gate", "a covered yard behind the exchange",
+        "the supper room at a coaching inn", "a curtained alcove at the playhouse", "the old tollhouse on market nights"] }
 };
 const DOWNTIME_NEIGHBORS = {
     low: ["a rat-catcher", "a one-eyed doorman", "a dockhand on the night shift", "a fortune teller",
@@ -249,7 +294,7 @@ const DOWNTIME_NEIGHBOR_QUIRKS = [
 const DOWNTIME_SETTINGS = {
     none: { label: 'Days', parts: [
         ["Long breakfasts", "Walks along the walls", "Mending gear", "Writing letters home", "Feeding the ducks", "Card games with the locals", "Sleeping late", "Watching the market"],
-        ["and an early night or two.", "and a lot of staring out of windows.", "and catching up on sleep.", "and not thinking about dungeons for once.", "and some honest boredom.", "and getting to know the neighborhood."]] },
+        ["and an early night or two.", "and a lot of staring out of windows.", "and catching up on gossip.", "and not thinking about dungeons for once.", "and some honest boredom.", "and getting to know the neighborhood."]] },
     craft: { label: 'Workshop', parts: {
         low: ["a borrowed corner of a smithy", "a table in your own room", "the back of a cart in a stable yard", "a cold shed by the river"],
         middle: ["a rented bench in a guild workshop", "a small shop between tenants", "a workroom behind a hardware store", "the back room of a friend's forge"],
@@ -259,7 +304,7 @@ const DOWNTIME_SETTINGS = {
     work: { label: 'The job', parts: {
         trade: [["Hauling crates", "Minding the counter", "Mending nets", "Keeping the books", "Running messages", "Stirring the vats", "Carrying stone",
             "Watching the door at night", "Sorting a back room nobody has sorted in years", "Mucking out stables"],
-            ["a dwarven brewer", "the dockmaster", "a widowed baker", "a stonemason's crew", "a halfling cheesemonger", "a tanner",
+            ["a dwarven brewer", "the dockmaster", "a pastry cook with a temper", "a stonemason's crew", "a halfling cheesemonger", "a tanner",
             "a candlemaker", "a moneylender", "a ferry captain", "the city's busiest stable"]],
         org: [["Copying ledgers", "Drilling recruits", "Tending the sick", "Checking weights at the market", "Cataloguing donations",
             "Escorting the tax collectors", "Teaching apprentices their letters", "Inspecting the city walls"],
@@ -280,8 +325,8 @@ const DOWNTIME_SETTINGS = {
         "open only after dark", "guarded by a very old dog", "where every useful book is out on loan to the same person",
         "where the keeper wants a favor before a fee", "where the dust is thick enough to write in"]] },
     recup: { label: 'Care', parts: [
-        ["a temple infirmary", "the innkeeper's mother", "a halfling herbwife", "a retired army surgeon", "a gnome apothecary with experimental tea",
-        "a quiet convent outside the walls", "a druid with a garden of healing herbs", "a neighbor with a great deal of soup"],
+        ["a sister at the temple infirmary", "the innkeeper's mother", "a halfling herbwife", "a retired army surgeon", "a gnome apothecary with experimental tea",
+        "an old nun at a quiet convent outside the walls", "a druid with a garden of healing herbs", "a neighbor with a great deal of soup"],
         ["who prescribes rest, broth, and no visitors", "who insists on fresh air and long walks", "who reads aloud whether you want it or not",
         "who has a cure for everything and a story for every cure", "who keeps a very strict schedule", "who doesn't believe in pain, yours included",
         "who brews something green every morning", "who charges nothing and makes you feel guilty about it"]] },
@@ -347,7 +392,7 @@ const DOWNTIME_TOWN = ruleTable({
         { k: 'bad', t: "A creditor's man calls at the front door, loudly, while you have guests." },
         { k: 'odd', t: "A painter asks to paint you as a saint for a temple fresco." },
         { k: 'odd', t: "A sealed letter arrives addressed to the previous occupant. It is marked urgent." },
-        { k: 'odd', t: "Your neighbor's prize peacock escapes into your garden and refuses to leave." },
+        { k: 'odd', t: "Your neighbor's prize swan escapes into your garden and refuses to leave." },
         { k: 'good', t: "A wealthy collector asks to hear your war stories over dinner, and pays for the privilege." },
         { k: 'bad', t: "Someone has been using your name to run up bills at the tailor's." }
     ]
@@ -363,14 +408,14 @@ const DOWNTIME_EVENTS = ruleTable({
         { k: 'bad', t: "Your work goes missing overnight, then turns up the next morning, slightly improved. Nobody admits a thing." },
         { k: 'odd', t: "A rival crafter starts making the exact same thing, one day behind you." },
         { k: 'odd', t: "A stranger offers to trade you rare materials for 'a small favor, later'." },
-        { k: 'good', t: "Word gets around. Someone wants to commission a second piece when this one is done." },
+        { k: 'good', t: "Word gets around. Two buyers start bidding on the piece before it's finished." },
         { k: 'odd', t: "You make a mistake that turns out better than the plan." },
         { k: 'good', t: "An apprentice named {name} offers to sweep up for free if you let them watch." }
     ],
     work: [
         { k: 'good', t: "A customer tips you 1d6 sp for going the extra mile." },
-        { k: 'good', t: "Your boss is pleased and gives you Friday off, paid." },
-        { k: 'good', t: "A coworker named {name} turns out to know someone who knows something useful." },
+        { k: 'good', t: "Your boss is pleased and gives you a rest day, paid." },
+        { k: 'good', t: "A coworker named {name} has a cousin in the harbor office who can get a look at any ship's manifest." },
         { k: 'bad', t: "Your boss is short this week and pays you half, with apologies." },
         { k: 'bad', t: "A coworker takes credit for your work. They are very smug about it." },
         { k: 'bad', t: "You are blamed for a breakage. Pay 1d4 gp or lose the job." },
@@ -426,7 +471,7 @@ const DOWNTIME_EVENTS = ruleTable({
         { k: 'bad', t: "A sore loser waits for you outside. He has two friends with him." },
         { k: 'odd', t: "You win a deed to 'a property' in the next town. Nobody knows what's on it." },
         { k: 'odd', t: "An old woman sits at your elbow all night and never once places a bet." },
-        { k: 'odd', t: "You win a sealed box that ticks quietly." },
+        { k: 'odd', t: "Someone leaves a sealed box under your chair. It ticks quietly." },
         { k: 'good', t: "The house likes you. Your drinks are free for the rest of the week." },
         { k: 'bad', t: "The table is crooked and you only realize on the walk home." },
         { k: 'odd', t: "The house offers to wipe your losses if you'll deliver a message for them." }
@@ -436,12 +481,12 @@ const DOWNTIME_EVENTS = ruleTable({
 const DOWNTIME_WHO = {
     low: ["A pickpocket named {name}", "A dockhand named {name}", "A one-legged sailor", "The rat-catcher", "A street urchin", "A tired watchman", "A hedge wizard"],
     middle: ["A guild clerk named {name}", "A traveling merchant", "A watch sergeant named {name}", "A young priest", "A halfling cook", "A gnome inventor", "An off-duty mercenary"],
-    high: ["A minor noble named {name}", "A court poet", "A merchant prince's daughter", "A retired general", "The steward of a great house", "An ambassador's aide", "A famous duelist"]
+    high: ["A minor noble named {name}", "A court poet", "A merchant prince's daughter", "A retired admiral", "The steward of a great house", "An ambassador's aide", "A famous duelist"]
 };
 const DOWNTIME_WHAT = [
     { k: 'good', t: "buys you a drink and tells you about a job going in the hills." },
     { k: 'good', t: "owes you a favor after you help with a stuck cart." },
-    { k: 'good', t: "offers to introduce you to someone useful." },
+    { k: 'good', t: "offers to introduce you to a fence who doesn't ask questions." },
     { k: 'good', t: "returns something you didn't know you'd lost." },
     { k: 'good', t: "warns you that someone has been asking about you." },
     { k: 'bad', t: "takes an instant dislike to you and tells everyone why." },
@@ -494,10 +539,13 @@ function dtFill(text) {
 // One draw per character: where they live and who lives next door.
 function rollLodging(life, seed, i) {
     return withSeed(deriveSeed(seed || '0', `home.${i}.${life}`), () => {
-        const place = dtPick(DOWNTIME_LODGING[life] || DOWNTIME_LODGING.modest);
+        const homes = DOWNTIME_LODGING[life] || DOWNTIME_LODGING.modest;
+        let place = dtPick(homes);
         const who = dtPick(DOWNTIME_NEIGHBORS[carouseCircle(life)]);
         const quirk = dtPick(DOWNTIME_NEIGHBOR_QUIRKS);
         const name = dtLocalName();
+        const more = DOWNTIME_LODGING_MORE[DOWNTIME_LODGING[life] ? life : 'modest'];
+        if (more) place = withSeed(deriveSeed(seed || '0', `home.${i}.${life}.more`), () => dtSwap(place, homes, more));
         return { place, neighbor: `${name}, ${who} ${quirk}` };
     });
 }
@@ -507,6 +555,11 @@ function rollSetting(c, life, seed, i) {
     const S = DOWNTIME_SETTINGS[c.act];
     if (!S) return null;
     const circle = carouseCircle(life);
+    // The newer places swap in from a seed of their own, so the quirk drawn after keeps its seed.
+    const moreList = (DOWNTIME_SETTING_MORE[c.act] || {})[circle];
+    const moreWhere = place => moreList
+        ? withSeed(deriveSeed(seed || '0', `setting.${i}.${c.act}.more`), () => dtSwap(place, S.parts[circle], moreList))
+        : place;
     return withSeed(deriveSeed(seed || '0', `setting.${i}.${c.act}`), () => {
         let text;
         if (c.act === 'none') text = `${dtPick(S.parts[0])} ${dtPick(S.parts[1])}`;
@@ -518,9 +571,10 @@ function rollSetting(c, life, seed, i) {
             text += '.';
         } else if (c.act === 'gamble') {
             const g = DOWNTIME_GAMES[c.work] || DOWNTIME_GAMES.dice;
-            text = `${g.label}. The bets are taken in ${dtPick(S.parts[circle])}, ${dtPick(S.quirks)}.`;
+            const where = moreWhere(dtPick(S.parts[circle]));
+            text = `${g.label}. The bets are taken in ${where}, ${dtPick(S.quirks)}.`;
         } else if (Array.isArray(S.parts)) text = `${dtCap(dtPick(S.parts[0]))}, ${dtPick(S.parts[1])}.`;
-        else text = `${dtCap(dtPick(S.parts[circle]))}, ${dtPick(S.quirks)}.`;
+        else text = `${dtCap(moreWhere(dtPick(S.parts[circle])))}, ${dtPick(S.quirks)}.`;
         return { label: S.label, text: dtFill(text) };
     });
 }
@@ -726,11 +780,9 @@ function downtimeFor(c, days, seed, i = 0, opts = {}) {
         out.extraGp += days * Math.max(0.1, full);
         const circle = carouseCircle(fl);
         const weeks = days ? Math.max(1, Math.floor(days / 7)) : 0;
-        const table = CAROUSE_OUTCOMES[circle];
         out.carouse = { circle, weeks, outcomes: [] };
-        for (let wk = 0; wk < Math.min(weeks, CAROUSE_SHOWN); wk++) {
-            out.carouse.outcomes.push(withSeed(deriveSeed(seed || '0', `carouse.${i}.${wk}`), () => table[Math.floor(rand() * table.length)]));
-        }
+        const seen = new Set();
+        for (let wk = 0; wk < Math.min(weeks, CAROUSE_SHOWN); wk++) out.carouse.outcomes.push(carouseWeek(circle, seed, i, wk, seen));
         lines.push({ text: `Carousing in ${CAROUSE_CIRCLES[circle].label} costs the lifestyle's price again each day, and brings one outcome per week.`, src: 'house' });
     } else if (c.act === 'train') {
         const need = Math.floor(Math.max(0, Number(c.val) || 0));

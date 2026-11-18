@@ -322,7 +322,7 @@ const ENC_HABITATS = ruleTable({
         monsters: "acolyte archmage assassin bandit bandit-captain cat commoner crocodile cult-fanatic cultist doppelganger ghost gladiator gray-ooze guard imp knight mage mastiff noble otyugh priest quasit rakshasa rat giant-rat swarm-of-rats raven spy succubus-incubus thug veteran vampire-vampire vampire-spawn wererat-human wererat-hybrid wererat-rat oni draft-horse riding-horse mule pony berserker scout swarm-of-ravens",
         places: ["in the Shambles", "at the Drowned Rat", "on Tanners' Row", "in the Old Sewers", "at the Hanging Square", "by the Fishmarket", "on the Temple Steps", "in Lamplighter's Alley", "at the Bell Foundry", "under the Bridge", "in the Graveyard on the Hill", "at the Burned Warehouse"],
         ground: ["Market stalls give half cover and can be knocked over (an action) to make difficult terrain.", "A narrow alley: two Medium creatures abreast at most.", "Rooftops 15 feet up, reached by a drainpipe ({dc:10} {skill:str:athletics}) or a stair; jumping the gap between roofs is a long jump.", "Crowds of bystanders count as difficult terrain and give half cover, until they scatter on round 2.", "A wagon full of barrels gives three-quarters cover.", "A canal runs alongside: 10 feet deep, cold and filthy.", "Laundry lines strung across the street make the space above lightly obscured.", "A well in the square: 30 feet down to the water."],
-        hazards: ["Lamp oil spills across the cobbles in the first round. Fire lights it: a 10-foot square burns for 1 minute, and a creature that enters it or starts its turn there makes a DC {dc} {save:dex} save or takes {dmg} fire damage.", "A rotten balcony gives way under the first creature to stand on it: DC {dc} {save:dex} save or fall 15 feet ({dmg} bludgeoning damage).", "The watch arrives in 1d4 + 3 rounds. Anyone still holding a weapon is arrested first and asked questions later."],
+        hazards: ["Lamp oil spills across the cobbles in the first round. Fire lights it: a 10-foot square burns for 1 minute, and a creature that enters it or starts its turn there makes a DC {dc} {save:dex} save or takes {dmg} fire damage.", "A rotten balcony gives way under the first creature to stand on it: DC {dc} {save:dex} save or fall 15 feet ({dmg} bludgeoning damage).", "A chimney stack on the nearest roof is loose. A heavy blow against the wall brings it down: DC {dc} {save:dex} save for anyone in a 10-foot square below, {dmg} bludgeoning damage on a failure."],
         twists: ["A child grabs the nearest coin purse in the confusion and runs for the alleys.", "The town watch arrives on round 4 and, misreading the scene, tries to arrest the party."] },
     dungeon: { label: "Dungeon or ruin", icon: "🏚️", dist: [2, 6, 5], sky: false,
         monsters: "animated-armor archmage basilisk black-pudding bugbear chuul clay-golem cloaker cult-fanatic cultist darkmantle dretch ettercap flesh-golem flying-sword gargoyle gelatinous-cube ghast ghost ghoul giant-centipede giant-fire-beetle giant-rat giant-spider gibbering-mouther goblin gray-ooze grick guardian-naga hobgoblin homunculus imp iron-golem kobold lemure lich mage medusa mimic minotaur minotaur-skeleton mummy mummy-lord ochre-jelly ogre ogre-zombie orc otyugh quasit rat roper rug-of-smothering rust-monster shadow shield-guardian skeleton specter spirit-naga stirge stone-golem swarm-of-bats swarm-of-rats troll vampire-vampire vampire-spawn warhorse-skeleton wererat-human wererat-hybrid wight wraith zombie bandit bandit-captain",
@@ -484,7 +484,7 @@ const ENC_BANDS = encSystemBands(ruleTable([
         parley: ["Plant something, return something, or swear an oath, and the forest lets them go.", "They'd forgive the trespass if the party deals with the loggers upriver."] },
     { key: "undead", label: "Walking dead", icon: "💀", hab: "dungeon swamp grassland desert hills arctic town", lead: "wight ghast ogre-zombie minotaur-skeleton warhorse-skeleton", support: "skeleton zombie ghoul", names: "undead", loot: "undead",
         doing: [["hunt", "shambling toward the scent of the living"], ["guard", "standing in ranks around an old tomb, unmoving until someone crosses the line"], ["work", "digging, endlessly, at a sealed door"], ["travel", "marching toward the nearest village, as they were commanded a century ago"], ["ambush", "lying still among the bones, waiting for someone to walk past"]],
-        tactics: ["Mindless dead walk straight at the nearest living thing.", "Ghouls go for anyone paralyzed; skeletons hold the line.", "The wight directs the rest and drinks from whoever falls."],
+        tactics: ["Mindless dead walk straight at the nearest living thing.", { t: "Ghouls go for anyone paralyzed; skeletons hold the line.", need: "ghoul|ghast" }, { t: "The wight directs the rest and drinks from whoever falls.", need: "wight", group: true }],
         morale: ["Mindless undead fight until destroyed.", "When their master is destroyed, the lesser dead collapse or wander off."],
         parley: null },
     { key: "haunt", label: "Restless spirits", icon: "👻", hab: "dungeon swamp town grassland desert", lead: "wraith ghost specter wight will-o-wisp", support: "shadow specter will-o-wisp", names: "undead", loot: "undead",
@@ -494,7 +494,7 @@ const ENC_BANDS = encSystemBands(ruleTable([
         parley: ["The ghost will rest if the party finishes what it left undone.", "Speak the name of the one who wronged them and they turn their rage elsewhere."] },
     { key: "vampire", label: "Vampire's brood", icon: "🧛", hab: "town dungeon forest", lead: "vampire-vampire vampire-spawn", support: "vampire-spawn swarm-of-bats swarm-of-rats wolf dire-wolf giant-bat", names: "folk", races: "human human elf halfling tiefling", loot: "noble",
         doing: [["parley", "holding a candlelit dinner and inviting the party in"], ["hunt", "prowling the alleys for someone no one will miss"], ["guard", "guarding a coffin in the cellar with swarms of rats"], ["ambush", "waiting on the rafters of the abandoned church"]],
-        tactics: ["Swarms and wolves go first to soak up the party's attacks; the vampire picks off whoever is isolated.", "Spawn grapple and bite; the master charms the strongest fighter.", "They fight near running water's opposite: indoors, at night, near their coffins."],
+        tactics: [{ t: "Swarms and wolves go first to soak up the party's attacks; the vampire picks off whoever is isolated.", need: "swarm|wolf|bat", group: true }, { t: "Spawn grapple and bite; the master charms the strongest fighter.", need: "^vampire-vampire$", group: true }, "They pick their ground: indoors, at night, near their coffins, and never across running water."],
         morale: ["Spawn fight to the death for their master; the master flees as mist once badly hurt.", "The beasts scatter at dawn."],
         parley: ["The vampire offers a bargain: one name, one night, and the party walks free.", "The spawn want to be free of their master and would help destroy them."] },
     { key: "tomb", label: "Tomb guardians", icon: "⚱️", hab: "desert dungeon", lead: "mummy-lord mummy guardian-naga gynosphinx androsphinx", support: "mummy skeleton swarm-of-insects swarm-of-beetles giant-scorpion gargoyle", names: "undead", loot: "hoard:tomb",
@@ -678,16 +678,65 @@ const ENC_TYPE_SCENE = ruleTable({
     construct: { doing: [["guard", "standing guard where it was put"], ["work", "doing the last thing it was ordered to do"]], tactics: "It follows its orders exactly.", morale: "It never flees." },
     dragon: { doing: [["guard", "lounging on its hoard"], ["hunt", "on the wing, hungry"], ["parley", "curious and talkative"]], tactics: "Breath first, then the air.", morale: "It flees when badly hurt, and remembers." },
     elemental: { doing: [["hunt", "loose and destructive"], ["guard", "bound to guard this place"]], tactics: "It attacks whatever's nearest.", morale: "It fights until destroyed or banished." },
-    fey: { doing: [["parley", "curious and mischievous"], ["guard", "guarding a fey place"]], tactics: "Tricks and charms before blades.", morale: "It vanishes when the fun stops." },
+    fey: { doing: [["parley", "curious and mischievous"], ["guard", "guarding a ring of mushrooms no one may step inside"]], tactics: "Tricks and charms before blades.", morale: "It vanishes when the fun stops." },
     fiend: { doing: [["parley", "offering a deal"], ["hunt", "hunting souls"], ["guard", "guarding a portal"]], tactics: "It goes for the weakest will first.", morale: "It retreats when it stops being worth it." },
-    giant: { doing: [["work", "going about its business"], ["guard", "guarding its home"], ["hunt", "hungry"]], tactics: "Rocks first, then it wades in.", morale: "It leaves when bored or badly hurt." },
+    giant: { doing: [["work", "hauling a felled tree back to its steading"], ["guard", "guarding its home"], ["hunt", "hunting for a cow to carry home"]], tactics: "Rocks first, then it wades in.", morale: "It leaves when bored or badly hurt." },
     humanoid: { doing: [["travel", "on the road"], ["camp", "in camp"], ["parley", "suspicious of strangers"], ["ambush", "waiting in ambush"], ["guard", "on guard"]], tactics: "They fight smart: cover, flanking, and focus on whoever's hurt.", morale: "They surrender or run once things go badly." },
     monstrosity: { doing: [["hunt", "stalking prey"], ["guard", "in its lair"], ["ambush", "lying in wait"]], tactics: "It uses its strangest ability first.", morale: "It flees when bloodied." },
-    ooze: { doing: [["hunt", "creeping along the floor"], ["ambush", "lying in wait"]], tactics: "It engulfs or dissolves anything it touches.", morale: "It never flees." },
-    plant: { doing: [["ambush", "lying still among other plants"], ["guard", "rooted in place"]], tactics: "It holds whatever comes close.", morale: "It never flees." },
+    ooze: { doing: [["hunt", "creeping along the floor"], ["ambush", "clinging to the ceiling, waiting"]], tactics: "It engulfs or dissolves anything it touches.", morale: "It doesn't know how to retreat." },
+    plant: { doing: [["ambush", "lying still among other plants"], ["guard", "rooted in place"]], tactics: "It holds whatever comes close.", morale: "It can't run, and wouldn't if it could." },
     swarm: { doing: [["hunt", "boiling out of the dark"], ["camp", "nesting"]], tactics: "It overwhelms whoever's closest.", morale: "Fire or smoke disperses it." },
     undead: { doing: [["hunt", "drawn to the living"], ["guard", "guarding its tomb"], ["ambush", "lying still among the dead"]], tactics: "It attacks the living without pause.", morale: "It fights until destroyed." }
 });
+
+// Third-pass lines (2026-11-18). Each swaps in from a part of its own ("<part>.more"), by its share
+// of the old and new lists together, so every other part of an old seed stays the same.
+const ENC_MORE = ruleTable({
+    typeDoing: {
+        construct: [["work", "polishing the same tile over and over"], ["work", "counting the stones that come down a chute"], ["work", "checking the seals on a row of clay jars"],
+            ["guard", "barring a door that has no hinges"], ["guard", "holding up a cracked beam over a doorway"], ["guard", "turning back anyone without a brass token"]]
+    },
+    hazards: {
+        dungeon: ["A row of brass drains vents steam on round 3: anyone within 5 feet of the wall makes a DC {dc} {save:con} save or takes {dmg} fire damage.",
+            "A lead counterweight swings from the ceiling on round 2: DC {dc} {save:dex} save for anyone in its 15-foot arc, {dmg} bludgeoning damage on a failure.",
+            "A cracked bell hangs in the doorway and hums when anyone casts a spell nearby: creatures within 10 feet make a DC {dc} {save:con} save or are deafened until the end of their next turn.",
+            "An iron grate drops when both ends of the passage are occupied. Anyone beneath it makes a DC {dc} {save:dex} save or is pinned (restrained) until it's lifted: a DC {dc} {skill:str:athletics} check, from either side.",
+            "A seam of lodestone runs across the floor. The first creature to cross it with a drawn iron or steel weapon makes a DC {dc} {save:str} save or the weapon is torn from its grip and sticks to the stone.",
+            "The wall sweats a bitter frost. A creature that ends its turn touching it makes a DC {dc} {save:con} save or takes {dmg} cold damage."]
+    },
+    twists: {
+        town: ["A funeral procession turns the corner on round 2. The bearers set down the coffin and scatter.",
+            "The market bell rings. Stallholders slam their shutters, closing off the shortcuts between stalls.",
+            "Two apprentices on a ladder above the street wave the party up: there's a hiding place in the loft behind them.",
+            "A team of horses bolts through on round 3, the driver still aboard and tangled in the reins.",
+            "A baker opens her shop to the wounded. Anyone still carrying a drawn weapon waits on the step."]
+    },
+    parley: {
+        demons: ["The cleverest of them will name its summoner, if the party breaks the binding stone.",
+            "They would spare this shrine in exchange for the oldest bell in the next town.",
+            "The biggest of them offers safe passage for a year of the party's sleep, staked on a single throw of the dice.",
+            "One of them offers to lead the party home, if they agree to carry its shadow there.",
+            "They want a truce, just long enough to drag an old rival back into the rift.",
+            "The cleverest will answer one question for every promise the party breaks."]
+    }
+});
+
+// Two draws: a pick from the newer list, kept by its share of both lists.
+function encSwap(cur, old, more) {
+    const newer = pick(more);
+    return rand() < more.length / (old.length + more.length) ? newer : cur;
+}
+
+// A band's tactics that fit who's here: { t, need, group } lines need a member whose id matches
+// need, and group lines need more than one creature. Plain lines always fit.
+function encTacticsFor(band, list) {
+    const ids = list.map(e => e.m.id);
+    const n = list.reduce((a, e) => a + (e.count || 1), 0);
+    const fits = x => typeof x === "string" || ((!x.need || ids.some(id => new RegExp(x.need).test(id))) && (!x.group || n > 1));
+    const ok = band.tactics.filter(fits);
+    const x = pick(ok.length ? ok : band.tactics);
+    return typeof x === "string" ? x : x.t;
+}
 
 // Who notices whom, by what the foes are doing (SRD 5.1 surprise: Stealth vs passive Perception;
 // Pathfinder has no surprise round: whoever is sneaking rolls Stealth for initiative).
@@ -875,7 +924,9 @@ function rollEncounterScene(list, seed, opts = {}) {
         return pick(choices);
     });
     const H = ENC_HABITATS[habitat];
-    const doing = part("doing", () => pick(band ? band.doing : typeScene.doing));
+    const doing0 = part("doing", () => pick(band ? band.doing : typeScene.doing));
+    const typeMore = !band && ENC_MORE.typeDoing[encSceneType(lead)];
+    const doing = typeMore ? part("doing.more", () => encSwap(doing0, typeScene.doing, typeMore)) : doing0;
     const tag = doing[0];
 
     const distance = part("distance", () => {
@@ -903,8 +954,10 @@ function rollEncounterScene(list, seed, opts = {}) {
     const ground = part("ground", () => {
         const g = [...H.ground];
         const out = [g.splice(Math.floor(rand() * g.length), 1)[0], g.splice(Math.floor(rand() * g.length), 1)[0]];
-        const hazard = rand() < 0.5 ? fill(pick(H.hazards)) : null;
-        return { features: out, hazard };
+        let hazard = rand() < 0.5 ? pick(H.hazards) : null;
+        const more = ENC_MORE.hazards[habitat];
+        if (hazard && more) hazard = part("ground.more", () => encSwap(hazard, H.hazards, more));
+        return { features: out, hazard: hazard && fill(hazard) };
     });
 
     // The leader: the strongest of the group's leader roles that's here (a vampire, not its bats).
@@ -940,7 +993,7 @@ function rollEncounterScene(list, seed, opts = {}) {
     });
     const leader = opts.lead && opts.lead.name ? encLeadAs(rolledLeader, opts.lead.name, opts.lead.stand) : rolledLeader;
 
-    const tactics = part("tactics", () => band ? pick(band.tactics) : typeScene.tactics);
+    const tactics = part("tactics", () => band ? encTacticsFor(band, list) : typeScene.tactics);
     const morale = part("morale", () => band ? pick(band.morale) : typeScene.morale);
     const parley = part("parley", () => {
         const talk = band ? band.parley : (["humanoid", "giant", "fiend", "dragon", "fey", "celestial"].includes(encSceneType(lead)) ? ["They'd talk, for {gp} or a good reason."] : null);
@@ -949,13 +1002,18 @@ function rollEncounterScene(list, seed, opts = {}) {
         // Pathfinder's XP doesn't grow with level, so its price does: the Gazette's guess.
         const gp = ENC_PF2E ? Math.max(5, Math.round(level * level * xp / 80 / 5) * 5)
             : Math.max(5, xp >= 2000 ? Math.round(xp / 5 / 100) * 100 : Math.round(xp / 5 / 5) * 5);
-        return pick(talk).replace("{gp}", `${gp.toLocaleString("en-US")} gp`);
+        let line = pick(talk);
+        const more = band && ENC_MORE.parley[band.key];
+        if (more) line = part("parley.more", () => encSwap(line, talk, more));
+        return line.replace("{gp}", `${gp.toLocaleString("en-US")} gp`);
     });
 
     const twist = part("twist", () => {
         if (rand() >= 0.4) return null;
         const pool = [...ENC_TWISTS, ...H.twists];
-        const t = pick(pool);
+        let t = pick(pool);
+        const more = ENC_MORE.twists[habitat];
+        if (more) t = part("twist.more", () => encSwap(t, pool, more));
         const maxCr = Math.max(0.125, level);
         const extra = H.monsters.split(" ").map(id => MONSTER_BY_ID[id]).filter(m => m && m.xp > 0 && crValue(m.cr) <= maxCr && !list.some(e => e.m === m));
         const m = pick(extra.length ? extra : [lead]);
