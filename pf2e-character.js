@@ -134,7 +134,7 @@ function pcClean(raw) {
                 sk: Array.isArray(x.sk) ? x.sk.slice(0, 4).map(k => (Object.hasOwn(PC_SKILLS, k) ? k : '')) : [] };
         });
     }
-    c.notes = pcStr(raw.notes, 4000);
+    c.notes = typeof raw.notes === 'string' ? raw.notes.replace(/\r\n?/g, '\n').replace(/[\u0000-\u0009\u000b-\u001f]/g, ' ').slice(0, 4000) : '';   // line breaks stay
     c.spells = pcCleanSpells(raw.spells);
     c.play = pcCleanPlay(raw.play);
     c.updated = Number.isFinite(raw.updated) ? raw.updated : Date.now();
@@ -232,7 +232,7 @@ function pcCleanPlay(raw) {
     // Persistent damage, coins, and items (the PP_ lists are pf2e-play.js's; pages without it keep what reads right).
     const pdTypes = typeof PP_PD_TYPES === 'undefined' ? null : PP_PD_TYPES;
     const seenPd = new Set();
-    p.pd = Array.isArray(raw.pd) ? raw.pd.filter(x => x && typeof x.f === 'string' && /^(\d{1,2}d\d{1,3}|\d{1,3})([+-]\d{1,3})?$/.test(x.f)
+    p.pd = Array.isArray(raw.pd) ? raw.pd.filter(x => x && typeof x.f === 'string' && /^(\d{1,2}d(?:[2-9]|[1-9]\d{1,2})|\d{1,3})([+-]\d{1,3})?$/.test(x.f)
         && typeof x.type === 'string' && /^[a-z]{3,12}$/.test(x.type) && (!pdTypes || pdTypes.includes(x.type)) && !seenPd.has(x.type) && seenPd.add(x.type))
         .slice(0, 6).map(x => ({ f: x.f, type: x.type })) : [];
     const coins = raw.coins && typeof raw.coins === 'object' ? raw.coins : {};
@@ -247,7 +247,8 @@ function pcCleanPlay(raw) {
 function pcLoadAll() {
     try {
         const saved = JSON.parse(localStorage.getItem(PC_KEY));
-        if (Array.isArray(saved)) return saved.map(pcClean).filter(Boolean).slice(0, PC_MAX);
+        // One record that won't clean is dropped on its own, not the whole list (the next save would write that).
+        if (Array.isArray(saved)) return saved.map(x => { try { return pcClean(x); } catch (e) { return null; } }).filter(Boolean).slice(0, PC_MAX);
     } catch (e) {}
     return [];
 }
@@ -345,11 +346,12 @@ function pcProfs(c, level = c.level) {
     });
     up(cls.st);
     if (ch) up(ch.st);
-    // The monk's Paths to Perfection: a chosen save to master, then one to legendary.
-    Object.entries(cls.pp || {}).forEach(([lv, rank]) => {
-        const save = c.paths[lv];
-        if (Number(lv) <= level && save) r[save] = Math.max(r[save], rank);
+    // The monk's Paths to Perfection: a save to master, a different one to master, then one of those two to legendary.
+    pcPathPicks(c).forEach(([lv, save]) => {
+        if (Number(lv) <= level) r[save] = Math.max(r[save], cls.pp[lv]);
     });
+    // Monk Expertise (9) and Graceful Legend (17) raise a monk's qi spells to expert, then master.
+    if (c.cls === 'monk' && r.spell) r.spell = Math.max(r.spell, level >= 17 ? 3 : level >= 9 ? 2 : 1);
     // Multiclass dedications: martial weapons, armor, and the spell attack and DC (one rank for all your spells).
     pcDedications(c, level).forEach(d => {
         const m = PC_MC[d.cls];
@@ -364,6 +366,23 @@ function pcProfs(c, level = c.level) {
         if (d.cast) r.spell = Math.max(r.spell, pcArcSpellRank(c, d.cls, level));
     });
     return r;
+}
+
+// The Paths to Perfection picks that follow the rules, as [level, save]: the second has to differ
+// from the first, and the third has to be one of those two.
+function pcPathPicks(c) {
+    const { cls } = pcParts(c);
+    const lvs = Object.keys((cls && cls.pp) || {}).sort((a, b) => a - b);
+    const out = [];
+    lvs.forEach((lv, i) => {
+        const save = c.paths[lv];
+        if (!save) return;
+        const [a, b] = [c.paths[lvs[0]], c.paths[lvs[1]]];
+        if (i === 1 && save === a) return;
+        if (i === 2 && (!a || !b || a === b || ![a, b].includes(save))) return;
+        out.push([lv, save]);
+    });
+    return out;
 }
 
 function pcBonus(rank, level) {
@@ -401,8 +420,12 @@ function pcSkillPicks(c) {
     if (!cls) return 0;
     const given = pcGivenSkills(c).map(([k]) => k);
     const dupes = given.length - new Set(given).size;
-    return Math.max(0, cls.sk.extra + pcAttrs(c).mods.int + dupes);
+    return Math.max(0, cls.sk.extra + (PC_SKILL_OR[c.cls] ? 1 : 0) + pcAttrs(c).mods.int + dupes);
 }
+
+// Classes trained in one skill of a pair, the player's call (Player Core: the fighter's Acrobatics or
+// Athletics). It's one more free pick; pcTodo asks for it when neither one is trained.
+const PC_SKILL_OR = { fighter: ['acrobatics', 'athletics'] };
 
 // The class's free picks that count: ones another source now gives don't, nor any past the limit.
 function pcPickedSkills(c) {
@@ -491,6 +514,9 @@ function pcGrantedFeats(c) {
     if (bg) (bg.ft || []).forEach(n => grant(n, bg.n));
     [ch, ch2].forEach(x => { if (x) (x.ft || []).forEach(n => grant(n, x.n)); });
     if (c.ch === 'warpriest') grant('Shield Block', 'Warpriest');
+    // Class features that are feats by name (a fighter's Shield Block and Reactive Strike).
+    const { cls } = pcParts(c);
+    if (cls) pcFeatures(c).forEach(f => { if (pcFeatKey(f.name) && !out.some(g => g.name === f.name)) grant(f.name, cls.n); });
     return out;
 }
 
@@ -536,6 +562,11 @@ function pcFeatsFor(c, slot, { archetype = false } = {}) {
     return out.sort((a, b) => b.feat.l - a.feat.l || a.feat.n.localeCompare(b.feat.n));
 }
 
+// The feats in slots the character has at their level (a level-down leaves later picks saved but asleep).
+function pcActiveFeats(c) {
+    return pcFeatSlots(c).map(s => c.feats[s.slot]).filter(Boolean);
+}
+
 // Whether the character has a feat: in a slot (up to their level, or before a slot) or granted.
 function pcHasFeat(c, key, before = '') {
     const slots = pcFeatSlots(c);
@@ -560,7 +591,7 @@ function pcPrereqMet(c, text, stats = pcStats(c)) {
         return any ? ok.includes(true) : !ok.includes(false);
     }
     const key = pcFeatKey(t);
-    return key ? Object.values(c.feats).includes(key) || pcGrantedFeats(c).some(g => g.key === key) : null;
+    return key ? pcActiveFeats(c).includes(key) || pcGrantedFeats(c).some(g => g.key === key) : null;
 }
 
 // ── Archetypes ──────────────────────────────────────────
@@ -794,6 +825,8 @@ function pcSpeed(c) {
         const strong = Number.isFinite(a.st) && pcAttrs(c).mods.str >= a.st;
         sp += strong ? Math.min(0, a.sp + 5) : a.sp;
     }
+    // A monk's Incredible Movement, unarmored: +10 feet at 3rd level, 5 more every 4 levels after.
+    if (c.cls === 'monk' && !a && c.level >= 3) sp += 10 + 5 * Math.floor((c.level - 3) / 4);
     return sp;
 }
 
@@ -818,7 +851,8 @@ function pcStrikes(c) {
     const prof = pcProfs(c);
     const rows = c.gear.weapons.map(w => ({ ...PF2E_ITEMS[w.id], key: w.id, pot: w.pot, str: w.str }))
         .filter(w => w.k === 'w');
-    rows.push({ n: 'Fist', key: '', ct: 'unarmed', dm: '1d4 B', tr: ['agile', 'finesse', 'nonlethal', 'unarmed'], pot: 0, str: 0 });
+    // A monk's Powerful Fist makes it a d6.
+    rows.push({ n: 'Fist', key: '', ct: 'unarmed', dm: c.cls === 'monk' ? '1d6 B' : '1d4 B', tr: ['agile', 'finesse', 'nonlethal', 'unarmed'], pot: 0, str: 0 });
     return rows.map(w => {
         const tr = w.tr || [];
         const ranged = !!w.rg;
@@ -831,7 +865,8 @@ function pcStrikes(c) {
         const m = /^(\d+)d(\d+)\s*(\w*)/.exec(w.dm || '');
         const dice = m ? `${(w.str || 0) + Number(m[1])}d${m[2]}` : '';
         let bonus = 0;
-        if (!ranged) bonus = mods.str;
+        // The thief racket can use Dexterity for a finesse melee Strike's damage.
+        if (!ranged) bonus = finesse && c.cls === 'rogue' && c.ch === 'thief' ? Math.max(mods.str, mods.dex) : mods.str;
         else if (tr.some(t => /^thrown/.test(t))) bonus = mods.str;
         else if (tr.includes('propulsive')) bonus = mods.str > 0 ? Math.floor(mods.str / 2) : mods.str;
         bonus += pcSpecDamage(c, rank);
@@ -896,7 +931,7 @@ function pcFocusOnly(c) {
     const src = pcFocusSources(c).find(k => Object.hasOwn(PC_FOCUS_ONLY, k));
     if (!src) return null;
     const has = src === 'blessed-one' || c.spells.focus.length > 0 || (typeof PF2E_SPELLS !== 'undefined'
-        && Object.values(c.feats).some(f => pcFocusInText(pcText('ft:' + f)).length));
+        && pcActiveFeats(c).some(f => pcFocusInText(pcText('ft:' + f)).length));
     if (!has) return null;
     const [trad, attr] = PC_FOCUS_ONLY[src];
     return { trad, attr, from: src };
@@ -1005,7 +1040,7 @@ function pcSpellGrants(c) {
     const out = { list: [], curr: {}, focus: [] };
     const r = pcSpellRules(c) || { top: 0 };
     const parts = pcParts(c);
-    const feats = new Set([...Object.values(c.feats), ...pcGrantedFeats(c).map(g => g.key).filter(Boolean)]);
+    const feats = new Set([...pcActiveFeats(c), ...pcGrantedFeats(c).map(g => g.key).filter(Boolean)]);
     const names = v => v.replace(/\([^)]*\)/g, '').split(/,|\band\b/).map(pcSpellKey).filter(Boolean);
     const addFocus = (key, from) => { if (key && pcIsFocus(key) && !out.focus.some(f => f.key === key)) out.focus.push({ key, from }); };
     [[parts.ch, c.ch], [parts.ch2, c.ch2]].forEach(([x, id]) => {
@@ -1155,10 +1190,13 @@ function pcStats(c) {
     const mcDc = pcDedications(c).filter(d => PC_MC[d.cls].dc).map(d => ({ cls: d.cls, n: d.n,
         dc: 10 + Math.max(...PF2E_CLASSES[d.cls].key.map(a => mods[a])) + pcBonus(1, L) }));
     const arcs = pcArcCastings(c).map(r => { const atk = mods[r.attr] + pcBonus(prof.spell, L); return { ...r, atk, dc: 10 + atk }; });
-    const skills = Object.fromEntries(Object.entries(PC_SKILLS).map(([k, a]) => [k, mods[a] + pcBonus(ranks[k], L)]));
+    // Armor's check penalty on Strength and Dexterity skills, unless you meet its Strength.
+    const arm = pcArmor(c);
+    const acp = arm && arm.cp < 0 && !(Number.isFinite(arm.st) && mods.str >= arm.st) ? arm.cp : 0;
+    const skills = Object.fromEntries(Object.entries(PC_SKILLS).map(([k, a]) => [k, mods[a] + pcBonus(ranks[k], L) + (a === 'str' || a === 'dex' ? acp : 0)]));
     const loreMods = Object.fromEntries(Object.entries(lores).map(([n, r]) => [n, mods.int + pcBonus(r, L)]));
     return {
-        parts, mods, partial, prof, key, hp, saves, ranks, skills, lores, loreMods,
+        parts, mods, partial, prof, key, hp, saves, ranks, skills, lores, loreMods, acp,
         per: mods.wis + pcBonus(prof.per, L),
         classdc: parts.cls ? 10 + (key ? mods[key] : 0) + pcBonus(prof.classdc, L) : null,
         spellAtk, spellDc: spellAtk === null ? null : 10 + spellAtk, cast, mcDc, arcs,
@@ -1191,11 +1229,14 @@ function pcTodo(c) {
         const picks = pcSkillPicks(c);
         const left = picks - pcPickedSkills(c).length;
         if (left) out.push(['skills', `${left} trained skill${left === 1 ? '' : 's'} to pick.`]);
+        const or = PC_SKILL_OR[c.cls];
+        if (or && !left && !or.some(k => pcSkillRanks(c, 1).ranks[k])) out.push(['skills', `A ${p.cls.n.toLowerCase()} is trained in ${or.map(pcCap).join(' or ')}: make one of your picks one of those.`]);
         const inc = p.cls.lv.inc.filter(l => l <= c.level && !c.skills.inc[l]).length;
         if (inc) out.push(['skills', `${inc} skill increase${inc === 1 ? '' : 's'} to place.`]);
         const feats = pcFeatSlots(c).filter(s => !c.feats[s.slot]).length;
         if (feats) out.push(['feats', `${feats} feat${feats === 1 ? '' : 's'} to pick.`]);
-        Object.keys(p.cls.pp || {}).filter(l => Number(l) <= c.level && !c.paths[l]).forEach(l => out.push(['class', `Pick the save for your level ${l} Path to Perfection.`]));
+        const paths = pcPathPicks(c).map(([l]) => l);
+        Object.keys(p.cls.pp || {}).filter(l => Number(l) <= c.level && !paths.includes(l)).forEach(l => out.push(['class', `Pick the save for your level ${l} Path to Perfection.`]));
         pcDedications(c).forEach(d => { if (d.todo.length) out.push(['feats', `${d.n} Dedication: ${d.todo.join(', ')}.`]); });
     }
     return out;

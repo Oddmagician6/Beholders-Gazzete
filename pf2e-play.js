@@ -28,13 +28,24 @@ function ppCond(c, name) {
 }
 
 // Set a condition's value (0 takes it off), capped at its maximum.
+// Drained also costs Hit Points: level × each point gained comes off the HP along with the
+// maximum; losing drained raises only the maximum (the HP don't come back).
 function ppSetCond(c, name, v) {
     const def = PF2E_CONDITIONS[name];
     if (!def) return;
+    const drain = name === 'Drained' ? { was: ppCond(c, 'Drained'), s: pcStats(c) } : null;
+    const hp = drain ? ppHp(c, drain.s) : 0;
     const list = c.play.cond.filter(x => x !== name && !x.startsWith(name + ' '));
     v = Math.max(0, Math.round(v));
     if (v > 0) list.push(def.max ? `${name} ${Math.min(v, def.max)}` : name);
     c.play.cond = list.sort();
+    if (drain) {
+        const now = ppCond(c, 'Drained');
+        if (now === drain.was) return;
+        const left = Math.max(0, hp - c.level * Math.max(0, now - drain.was));
+        c.play.hp = left >= ppMax(c, drain.s) ? null : left;
+        if (!left && hp) ppKnockOut(c, false);
+    }
 }
 
 // ── Hit points ───────────────────────────────────────────
@@ -57,10 +68,11 @@ function ppDead(c) {
     return ppCond(c, 'Dying') >= ppDeathAt(c);
 }
 
-// Knocked out: dying 1 (2 from a critical hit) plus your wounded value, and unconscious.
+// Knocked out: dying 1 (2 from a critical hit) plus your wounded value, unconscious, and prone.
 function ppKnockOut(c, crit) {
     ppSetCond(c, 'Dying', (crit ? 2 : 1) + ppCond(c, 'Wounded'));
     ppSetCond(c, 'Unconscious', 1);
+    ppSetCond(c, 'Prone', 1);
 }
 
 // Losing dying (by healing or a recovery check) makes you wounded 1, or 1 more.
@@ -149,7 +161,8 @@ function ppHeroicRecovery(c) {
 }
 
 // ── What conditions do to a roll ──────────────────────────
-// what: { kind: 'ac' | 'fort' | 'ref' | 'will' | 'per' | 'skill' | 'attack' | 'spell' | 'damage', abil }
+// what: { kind: 'ac' | 'fort' | 'ref' | 'will' | 'per' | 'skill' | 'attack' | 'spell' | 'damage', abil,
+// attack: true for a spell attack roll (prone counts, unlike for a DC), init: true for initiative }
 // → { n: the total penalty (0 or less), why: ['frightened 2', ...] }. Status penalties don't stack
 // with each other, nor circumstance penalties: only the worst of each kind counts.
 function ppPenalty(c, what) {
@@ -172,12 +185,13 @@ function ppPenalty(c, what) {
     if (['ac', 'fort', 'ref', 'will'].includes(kind)) add(status, v('Fatigued'), 'fatigued');
     if (['ac', 'per', 'ref'].includes(kind)) add(status, v('Unconscious') * 4, 'unconscious');
     if (kind === 'per') add(status, v('Blinded') * 4, 'blinded');
+    if (kind === 'per' && what.init) add(status, v('Deafened') * 2, 'deafened');
     if (kind === 'per' || kind === 'skill') add(status, v('Fascinated') * 2, 'fascinated');
     if (kind === 'ac') {
         const og = PP_OFF_GUARD.find(n => v(n));
         if (og) add(circ, 2, og === 'Off-Guard' ? 'off-guard' : `off-guard (${og.toLowerCase()})`);
     }
-    if (kind === 'attack') add(circ, v('Prone') * 2, 'prone');
+    if (kind === 'attack' || what.attack) add(circ, v('Prone') * 2, 'prone');
     const worst = list => list.reduce((a, b) => (b[0] > a[0] ? b : a), [0, '']);
     const s = worst(status), k = worst(circ);
     return { n: -(s[0] + k[0]), why: [s, k].filter(x => x[0]).map(x => `−${x[0]} ${x[1]}`) };
@@ -210,7 +224,8 @@ function ppEndTurn(c) {
 const PP_PD_TYPES = ['bleed', 'fire', 'acid', 'cold', 'electricity', 'sonic', 'poison', 'mental', 'spirit', 'vitality', 'void', 'force', 'bludgeoning', 'piercing', 'slashing'];
 const PP_PD_ICON = { bleed: '🩸', fire: '🔥', acid: '🧪', cold: '❄️', electricity: '⚡', poison: '☠️', mental: '🌀' };
 const PP_PD_MAX = 6;
-const PP_PD_RE = /^(\d{1,2}d\d{1,3}|\d{1,3})([+-]\d{1,3})?$/;
+// Dice need 2 sides or more (the dice roller turns down a d1).
+const PP_PD_RE = /^(\d{1,2}d(?:[2-9]|[1-9]\d{1,2})|\d{1,3})([+-]\d{1,3})?$/;
 
 // A dice formula's average ("2d6+1" → 8), to tell which of two is higher.
 function ppAvg(f) {
@@ -322,7 +337,9 @@ function ppRefocus(c) {
 // A full night's rest and daily preparations → the names of what came back.
 // HP: Constitution modifier (at least 1) × level. Drained and doomed drop by 1, fatigued ends,
 // and slots, the font, Focus Points, and daily counters refill; Treat Wounds immunity is long over. Wounded stays (Treat Wounds or full HP and rest end it).
+// The dead don't rest: → null, and nothing changes (lowering doomed would bring them back).
 function ppRest(c, s = pcStats(c)) {
+    if (ppDead(c)) return null;
     const p = c.play, back = [];
     ['Drained', 'Doomed'].forEach(n => { const v = ppCond(c, n); if (v) { ppSetCond(c, n, v - 1); back.push(`${n.toLowerCase()} ${v} → ${v - 1 || 'gone'}`); } });
     if (ppCond(c, 'Fatigued')) { ppSetCond(c, 'Fatigued', 0); back.push('fatigue'); }

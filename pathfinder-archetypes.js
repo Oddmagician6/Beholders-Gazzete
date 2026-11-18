@@ -237,7 +237,7 @@ function renderDetail(check, stats) {
     let h = `<div class="pa-top"><h2 class="pa-h" id="pa-detail-h" tabindex="-1">${esc(a.n)} Archetype</h2><button type="button" class="pa-btn pa-small" id="pa-link">🔗 Copy Link</button></div>`;
     if (a.mc) h += `<p class="pa-note">A multiclass archetype: a taste of the ${esc(a.n.toLowerCase())} class. Its dedication's attribute prerequisites are all required.${c && c.cls === a.mc ? ` <b class="pa-no">You're already a ${esc(a.n.toLowerCase())}, so you can't take it.</b>` : ''}</p>`;
     const mine = check && check.list.find(x => x.key === pa.arch);
-    if (c && !mine && check.need) h += `<p class="pa-warn">📏 Before this dedication, take ${check.need} more ${esc(A[check.current].n)} feat${check.need === 1 ? '' : 's'} (the two-feat rule).</p>`;
+    if (c && check && !mine && check.need) h += `<p class="pa-warn">📏 Before this dedication, take ${check.need} more ${esc(A[check.current].n)} feat${check.need === 1 ? '' : 's'} (the two-feat rule).</p>`;
     if (mine) h += `<p class="pa-rule">✔ You took the dedication at level ${mine.level}, and ${mine.feats.length} feat${mine.feats.length === 1 ? '' : 's'} after it.</p>`;
     h += `<h3 class="pa-lvh">Dedication</h3><ul class="pa-feats">${featRow(a.ded, { ...ctx, openText: true })}</ul>`;
     const byLevel = {};

@@ -535,7 +535,7 @@ function onClick(e) {
     if (act === 'mode') { mode = v; renderRollbar(); return; }
     if (act === 'print') { window.print(); return; }
     if (act === 'party') { addToParty(); return; }
-    if (act === 'init') { doRoll(`1d20${plus(adj(cur, s.per, { kind: 'per' }).v)}`, 'initiative (Perception)'); return; }
+    if (act === 'init') { doRoll(`1d20${plus(adj(cur, s.per, { kind: 'per', init: true }).v)}`, 'initiative (Perception)'); return; }
     if (act === 'save') { doRoll(`1d20${plus(adj(cur, s.saves[v], { kind: v }).v)}`, `${PC_SAVES[v][0]} save`); return; }
     if (act === 'skill') {
         const lore = v.startsWith('lore:') ? v.slice(5) : '';
@@ -547,7 +547,7 @@ function onClick(e) {
     if (act === 'spellatk') {
         const a = v ? s.arcs.find(x => x.arc === v) : null;
         if (v && !a) return;
-        doRoll(`1d20${plus(adj(cur, a ? a.atk : s.spellAtk, { kind: 'spell', abil: a ? a.attr : s.cast.attr }).v)}`, a ? `${a.n} spell attack` : 'spell attack');
+        doRoll(`1d20${plus(adj(cur, a ? a.atk : s.spellAtk, { kind: 'spell', abil: a ? a.attr : s.cast.attr, attack: true }).v)}`, a ? `${a.n} spell attack` : 'spell attack');
         return;
     }
     if (act === 'atk') {
@@ -616,7 +616,8 @@ function onClick(e) {
         restArmed = 0;
         let back = [];
         change(() => { back = ppRest(cur, s); });
-        notice = { text: `🛌 Rested and prepared. ${back.length ? 'Back: ' + back.join(', ') + '.' : 'Nothing needed restoring.'}`, ok: true };
+        notice = !back ? { text: 'The dead don\'t rest. Magic that returns the dead comes first.', ok: false }
+            : { text: `🛌 Rested and prepared. ${back.length ? 'Back: ' + back.join(', ') + '.' : 'Nothing needed restoring.'}`, ok: true };
         render();
         return;
     }

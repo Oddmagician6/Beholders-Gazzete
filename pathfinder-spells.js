@@ -247,6 +247,7 @@ function psEditInfo() {
         return { key: 'ct', title: '✨ Cantrips', limit, cap: true, note };
     }
     const b = r.book;
+    if (!b || !PS_BOOK_WORD[ps.c.cls]) return null;   // the class changed under the editor: no book now
     return { key: 'book', title: PS_BOOK_WORD[ps.c.cls][0], limit: b.cantrips + b.spells, cap: false,
         note: ps.arc ? `The ${ps.arc} archetype's ${PS_BOOK_WORD[ps.arc][1]} starts with ${b.cantrips} cantrips, and each new rank of slot adds 2 common spells of that rank: ${b.cantrips} cantrips and ${b.spells} spells at level ${ps.c.level}. Spells learned on top go in too.`
         : ps.c.cls === 'wizard'
@@ -510,7 +511,7 @@ function render() {
     renderStats();
     renderToggles();
     if (ps.edit && psEditInfo()) renderEditor();
-    else { ps.edit = ''; renderPlan(); }
+    else { ps.edit = ''; ps.before = null; renderPlan(); }
 }
 
 // ── Actions ──────────────────────────────────────────────
@@ -555,6 +556,16 @@ function psEndEdit(keep) {
         const fav = ps.c.spells.fav.slice();
         ps.c.spells = ps.before;
         ps.c.spells.fav = fav;
+    }
+    // Done on a saved character: put the edited list (and favorites) onto its newest save, so
+    // what another tab prepared meanwhile isn't overwritten by this tab's older copy.
+    const fresh = keep && ps.charId && (ps.edit === 'ct' || ps.edit === 'book') && pcLoadAll().find(x => x.id === ps.charId);
+    if (fresh) {
+        const { [ps.edit]: list, fav } = psCopy(ps.c.spells);
+        psOpen(fresh, ps.arc);
+        ps.c.spells[ps.edit] = list;
+        ps.c.spells.fav = fav;
+        psGrants();
     }
     ps.edit = '';
     ps.before = null;
@@ -640,8 +651,9 @@ function onClick(e) {
     if (b.id === 'ps-copy') { const t = psText(); if (t) psCopyText(t, '📋 List copied.'); return; }
     if (b.id === 'ps-link') {
         const was = ps.charId;
+        const num = was ? psNumbers() : null;   // the saved character's modifier, read before going standalone
         ps.charId = '';
-        if (was && psNumbers()) ps.m = psNumbers().mod;
+        if (num) ps.m = num.mod;
         const p = psParams();
         ps.charId = was;
         return psCopyText(location.origin + location.pathname + '?' + paramsQuery(p), was ? '🔗 Link copied: it opens these spells as a caster of their own, not the saved character.' : '🔗 Link copied.');

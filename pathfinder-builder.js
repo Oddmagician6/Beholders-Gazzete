@@ -251,7 +251,10 @@ function stepClass() {
         </div>${cur.cls === 'cleric' ? `<p class="cb-faint">Your deity also adds ${PC_DEITY_SPELLS} spells to your list: pick them in the <a href="pathfinder-spell-planner?char=${encodeURIComponent(cur.id)}">🃏 Spell Planner</a>${cur.spells.dy.length ? ` (${cur.spells.dy.length} picked)` : ''}.</p>` : ''}`;
     }
     if (c.pp) {
-        h += `<h3>Paths to Perfection</h3><div class="cb-row">${Object.entries(c.pp).map(([lv, rank]) => `<label class="cb-field">Level ${lv} (${PC_RANKS[rank].toLowerCase()})<select data-path="${lv}" data-focus="path-${lv}"${Number(lv) > cur.level ? ' disabled' : ''}><option value="">Pick a save</option>${Object.entries(PC_SAVES).map(([k, [n]]) => `<option value="${k}"${cur.paths[lv] === k ? ' selected' : ''}>${n}</option>`).join('')}</select></label>`).join('')}</div>`;
+        // The second path takes a different save from the first; the third raises one of those two.
+        const lvs = Object.keys(c.pp).sort((a, b) => a - b);
+        const fits = (lv, k) => { const i = lvs.indexOf(lv), a = cur.paths[lvs[0]], b = cur.paths[lvs[1]] !== a ? cur.paths[lvs[1]] : ''; return i === 1 ? k !== a : i === 2 ? !!a && !!b && [a, b].includes(k) : true; };
+        h += `<h3>Paths to Perfection</h3><div class="cb-row">${Object.entries(c.pp).map(([lv, rank]) => `<label class="cb-field">Level ${lv} (${PC_RANKS[rank].toLowerCase()})<select data-path="${lv}" data-focus="path-${lv}"${Number(lv) > cur.level ? ' disabled' : ''}><option value="">Pick a save</option>${Object.entries(PC_SAVES).filter(([k]) => fits(lv, k) || cur.paths[lv] === k).map(([k, [n]]) => `<option value="${k}"${cur.paths[lv] === k ? ' selected' : ''}>${n}${fits(lv, k) ? '' : ' (doesn\'t count: pick again)'}</option>`).join('')}</select></label>`).join('')}</div>`;
     }
     h += `<h3>Class features</h3><div class="pb-feats">${c.f.map(([l, n, key]) => `<div class="${l > cur.level ? 'cb-later' : ''}">${textBox(`cf:${key}`, `<span class="cb-lv">Level ${l}</span>${esc(n)}`)}</div>`).join('')}</div>`;
     return h;
@@ -308,17 +311,17 @@ function stepSkills() {
     h += `<h4>Lores</h4><p class="cb-lead">${Object.keys(lores).length ? Object.keys(lores).map(esc).join(', ') : 'None yet.'} Add a Lore if a feat or your GM gives you one.</p>
         <div class="cb-row"><label class="cb-field">New Lore<input type="text" id="pb-lore" maxlength="40" placeholder="e.g. Sailing Lore" data-focus="lore-new"></label><button type="button" class="cb-btn" data-act="add-lore">➕ Add Lore</button>${cur.skills.lore.map((l, i) => `<button type="button" class="cb-btn cb-mini" data-del-lore="${i}">✕ ${esc(l)}</button>`).join('')}</div>`;
     const inc = p.cls.lv.inc;
-    h += `<h3>Skill increases</h3><p class="cb-lead">Each one raises a trained skill one rank: to expert at any level, to master from level 7, to legendary from level 15.</p><div class="cb-row">`;
+    h += `<h3>Skill increases</h3><p class="cb-lead">Each one trains a skill you're untrained in, or raises a trained one a rank: to expert at any level, to master from level 7, to legendary from level 15.</p><div class="cb-row">`;
     inc.forEach(l => {
         const later = l > cur.level;
         const before = pcSkillRanks({ ...cur, skills: { ...cur.skills, inc: Object.fromEntries(Object.entries(cur.skills.inc).filter(([lv]) => Number(lv) < l)) } }, l - 1);
-        const opts = [...Object.keys(PC_SKILLS).filter(k => before.ranks[k] >= 1 && before.ranks[k] < pcRankCap(l)).map(k => [k, `${skillName(k)} → ${PC_RANKS[before.ranks[k] + 1].toLowerCase()}`]),
+        const opts = [...Object.keys(PC_SKILLS).filter(k => before.ranks[k] < pcRankCap(l)).map(k => [k, `${skillName(k)} → ${PC_RANKS[before.ranks[k] + 1].toLowerCase()}`]),
             ...Object.entries(before.lores).filter(([, r]) => r < pcRankCap(l)).map(([name, r]) => [`lore:${name}`, `${name} → ${PC_RANKS[r + 1].toLowerCase()}`])];
         const v = cur.skills.inc[l] || '';
         h += `<label class="cb-field pb-inc${later ? ' cb-later' : ''}">Level ${l}<select data-inc="${l}" data-focus="inc-${l}"${later ? ' disabled' : ''}><option value="">Pick a skill</option>${opts.map(([k, t]) => `<option value="${esc(k)}"${v === k ? ' selected' : ''}>${esc(t)}</option>`).join('')}${v && !opts.some(o => o[0] === v) ? `<option value="${esc(v)}" selected>${esc(v.replace(/^lore:/, ''))} (can't go higher)</option>` : ''}</select></label>`;
     });
     h += '</div>';
-    h += `<h3>Your skills at level ${cur.level}</h3><ul class="cb-skill-list">${Object.keys(PC_SKILLS).map(k => `<li class="${ranks[k] ? 'p' : ''}">${rankTag(ranks[k])}<span class="cb-val">${pcSign(stats.skills[k])}</span> ${skillName(k)} <small>${abilShort(PC_SKILLS[k])}</small></li>`).join('')}
+    h += `<h3>Your skills at level ${cur.level}</h3>${stats.acp ? `<p class="cb-faint">Your armor's check penalty (${pcSign(stats.acp)}) is in the Strength and Dexterity skills below, since your Strength is under its threshold. It doesn't apply to checks with the attack trait (Grapple, Shove, Trip...).</p>` : ''}<ul class="cb-skill-list">${Object.keys(PC_SKILLS).map(k => `<li class="${ranks[k] ? 'p' : ''}">${rankTag(ranks[k])}<span class="cb-val">${pcSign(stats.skills[k])}</span> ${skillName(k)} <small>${abilShort(PC_SKILLS[k])}</small></li>`).join('')}
         ${Object.entries(lores).map(([name, r]) => `<li class="p">${rankTag(r)}<span class="cb-val">${pcSign(stats.loreMods[name])}</span> ${esc(name)} <small>INT</small></li>`).join('')}</ul>`;
     return h;
 }
@@ -587,7 +590,7 @@ function onClick(e) {
     if (d.act === 'add-lore') {
         const v = document.getElementById('pb-lore').value.trim().replace(/\s+/g, ' ').slice(0, 40);
         if (!v) return;
-        const name = /lore$/i.test(v) ? v.replace(/lore$/i, 'Lore') : `${v} Lore`;
+        const name = /lore$/i.test(v) ? v.replace(/lore$/i, 'Lore') : `${v.slice(0, 35).trim()} Lore`;   // 40 at most, as saves keep it
         return change(c => { if (!pcLores(c).includes(name) && c.skills.lore.length < 6) c.skills.lore.push(name); });
     }
     if (d.delLore !== undefined) return change(c => { c.skills.lore.splice(Number(d.delLore), 1); });
@@ -685,12 +688,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('cb-del').addEventListener('click', e => {
         if (!cur) return;
         const btn = e.currentTarget;
-        if (btn.dataset.armed !== '1') {
-            btn.dataset.armed = '1';
+        // Armed for this character only: switching characters in between starts over.
+        if (btn.dataset.armed !== cur.id) {
+            btn.dataset.armed = cur.id;
             btn.textContent = '🗑️ Click again to delete';
-            setTimeout(() => { btn.dataset.armed = ''; btn.textContent = '🗑️ Delete'; }, 4000);
+            clearTimeout(btn._t);
+            btn._t = setTimeout(() => { btn.dataset.armed = ''; btn.textContent = '🗑️ Delete'; }, 4000);
             return;
         }
+        clearTimeout(btn._t);
         btn.dataset.armed = '';
         btn.textContent = '🗑️ Delete';
         const name = cur.name || 'Unnamed hero';

@@ -67,7 +67,7 @@ const PF2E_CONDITIONS = {
     'Confused': { max: 0, text: "Off-guard, no reactions, no Delay or Ready. You spend your actions attacking whoever the dice pick. Damage from an attack or spell gives a DC 11 flat check to snap out of it." },
     'Controlled': { max: 0, text: 'Someone else chooses your actions.' },
     'Dazzled': { max: 0, text: 'Your eyes are overwhelmed: everything you see is concealed to you.' },
-    'Deafened': { max: 0, text: "Can't hear. Checks that need hearing fail, Perception for initiative and checks that mix sound with sight take a −2 status penalty, and auditory actions need a DC 5 flat check." },
+    'Deafened': { max: 0, text: "Can't hear. Perception checks that need hearing critically fail, Perception for initiative and checks that mix sound with sight take a −2 status penalty, and auditory actions need a DC 5 flat check." },
     'Doomed': { max: 3, text: 'You die at dying 4 minus this value. It drops by 1 after a full night\'s rest.' },
     'Drained': { max: 4, text: 'A status penalty on Constitution-based rolls and DCs (Fortitude saves), and your HP and maximum HP drop by your level times the value. It drops by 1 after a full night\'s rest.' },
     'Dying': { max: 4, text: "At 0 HP, unconscious, and close to death. Roll a recovery check (flat check, DC 10 + the value) at the start of each turn. You die at dying 4, less your doomed value." },

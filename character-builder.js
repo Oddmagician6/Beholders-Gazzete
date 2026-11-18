@@ -1231,12 +1231,14 @@ document.addEventListener('DOMContentLoaded', () => {
         openChar(cur, step);
         flash('⧉ Duplicated.');
     });
-    let armed = 0;
+    // Armed for one character: switching characters in between starts over.
+    let armed = 0, armedId = '';
     const del = document.getElementById('cb-del');
     del.addEventListener('click', () => {
         if (!cur) return;
-        if (Date.now() - armed > 3000) {
+        if (Date.now() - armed > 3000 || armedId !== cur.id) {
             armed = Date.now();
+            armedId = cur.id;
             del.textContent = '🗑️ Really delete?';
             setTimeout(() => { del.textContent = '🗑️ Delete'; }, 3000);
             return;
