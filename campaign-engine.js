@@ -179,9 +179,9 @@ const CP_SERVES = {
 const CP_LEADS = ruleTable([
     "A letter in the last room, sealed with {faction}'s mark, orders supplies sent to {nextSite}.",
     '{Boss} carries a map with {nextTown} circled, and a date written beside it.',
-    'A prisoner freed in the last room overheard where the next shipment goes: {nextSite}.',
+    'A prisoner chained in the last room, once freed, says they overheard where the next shipment goes: {nextSite}.',
     'The hoard holds a ledger, and one name in it keeps getting paid in {nextTown}.',
-    'A coded note ({dc:13} {skill:int:investigation:society} to read it) names {nextSite} and a day.',
+    'A coded note names {nextSite} and a day ({dc:13} {skill:int:investigation:society} reads it on the spot; otherwise it takes a day to crack, and that day is lost).',
     "{Patron} sends word: {faction}'s people have been seen near {nextTown}.",
     'A survivor swears the rest went to {nextSite}, and took the cart with them.',
     "{Boss}'s orders, half burned in a brazier, name {nextTown} and a buyer there.",
@@ -190,7 +190,7 @@ const CP_LEADS = ruleTable([
     '{Patron} recognizes a seal in the last room: it belongs to someone in {nextTown}.',
     'Every coin in the hoard is newly struck, from the mint at {nextTown}.',
     'A map scratched on the wall of the last room shows the way to {nextSite}, and a warning.',
-    "The last room's prisoner bargains for freedom with one thing: where {faction} meets next, at {nextSite}.",
+    "A prisoner chained in the last room bargains for freedom with one thing: where {faction} meets next, at {nextSite}.",
     "{Boss}'s diary ends mid-sentence: \"Tomorrow, {nextTown}, and then it can't be stopped.\"",
     'A chandler in {nextTown} has been selling the same black candles the party found here.',
     'Tracks from a back way out lead toward {nextSite}, and they are only a day old.',
@@ -301,7 +301,8 @@ function cpLevel(i, n, start, end) {
 function cpPerson(p, factionName) {
     const n = p.npc;
     const role = p.role ? `${p.role.toLowerCase()} of ${factionName}` : `${(p.title || 'leader').toLowerCase()} of ${factionName}`;
-    return { name: n.name, role, race: n.race, gender: n.gender };
+    // Their own secret, so a contact who hires the party again keeps the same one.
+    return { name: n.name, role, race: n.race, gender: n.gender, secret: n.secret };
 }
 
 // The world: each of the three read from its link or rolled from the world part's seed.
@@ -440,7 +441,7 @@ function rollCampaign(seed, opts = {}, set = {}) {
             const mon = o.villain.monster && MONSTER_BY_ID[o.villain.monster];
             serves = `${villain.name}, ${villain.title.toLowerCase()} of ${c.faction}, in person.`;
             if (o.form) serves += ' ' + cpFill(CP_FORMS[o.form].replace(/\{vthey:([^|}]*)\|([^}]*)\}/g, (m, one, many) => (pro.they === 'they' ? many : one)),
-                { ...cc, race: osA(villain.race).toLowerCase(), monster: osA(mon ? mon.name.toLowerCase() : 'monster').toLowerCase() });
+                { ...cc, race: osA(ruleWord('race', villain.race)).toLowerCase(), monster: osA(mon ? mon.name.toLowerCase() : 'monster').toLowerCase() });
             else if (o.guard) serves += ` ${osCap(o.guard)} guards the last room, with ${villain.first} at ${o.guard.startsWith('the ') ? 'its' : 'their'} side.`;
         }
         else if (ch.lt) serves = `${ch.lt.name} is ${cpPoss(c.faction)} ${ch.lt.role.toLowerCase()}, and ${cpLow(ch.lt.motive)}`;
@@ -528,7 +529,7 @@ function campaignText(cp) {
         `${T.icon} ${T.label} · ${cp.n} chapters · party of ${cp.party}, ${cpLevels(cp)}`,
         cp.pitch, '',
         'THE VILLAIN',
-        `${v.name}, ${v.title.toLowerCase()} of ${v.faction} (${v.race}, ${parseInt(v.age, 10)}). ${v.style}`,
+        `${v.name}, ${v.title.toLowerCase()} of ${v.faction} (${ruleWord('race', v.race)}, ${parseInt(v.age, 10)}). ${v.style}`,
         `The scheme: ${osCap(v.name)} ${v.scheme}.`,
         `What everyone wants: ${cp.relic.text}. ${cp.relic.about}`,
         cp.wound ? `The old wound (${cp.wound.from}): ${cp.wound.text}` : '',

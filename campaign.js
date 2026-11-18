@@ -167,9 +167,9 @@ function cpOverviewHtml(cp) {
     cp.chapters.forEach(ch => { const k = ch.contact.name; contactsUsed.set(k, [...(contactsUsed.get(k) || []), ch.i + 1]); });
     const chs = list => list && list.length ? `chapter${list.length > 1 ? 's' : ''} ${list.join(', ')}` : '';
     const cast = [
-        ['The villain', `${v.name}, ${v.title.toLowerCase()} of ${v.faction} (${osCap(v.race)}, ${parseInt(v.age, 10)}). ${v.style} Play them: ${v.trait}. Voice: ${v.voice}.`],
-        ...cp.lts.map(l => [osCap(l.role), `${l.name} (${osCap(l.race)}), ${cpPoss(v.faction)} ${l.role.toLowerCase()}. ${osCap(l.motive)} ${l.chapter !== null ? `Runs chapter ${l.chapter + 1}.` : 'Not met in any chapter yet: use them where you need a face.'}`]),
-        ...cp.contacts.map(p => [p === cp.contacts[cp.contacts.length - 1] ? 'Patron' : 'Contact', `${p.name} (${osCap(p.race)}), ${p.role}. Hires the party in ${chs(contactsUsed.get(p.name)) || 'no chapter yet'}.`])
+        ['The villain', `${v.name}, ${v.title.toLowerCase()} of ${v.faction} (${osCap(ruleWord('race', v.race))}, ${parseInt(v.age, 10)}). ${v.style} Play them: ${v.trait}. Voice: ${v.voice}.`],
+        ...cp.lts.map(l => [osCap(l.role), `${l.name} (${osCap(ruleWord('race', l.race))}), ${cpPoss(v.faction)} ${l.role.toLowerCase()}. ${osCap(l.motive)} ${l.chapter !== null ? `Runs chapter ${l.chapter + 1}.` : 'Not met in any chapter yet: use them where you need a face.'}`]),
+        ...cp.contacts.map(p => [p === cp.contacts[cp.contacts.length - 1] ? 'Patron' : 'Contact', `${p.name} (${osCap(ruleWord('race', p.race))}), ${p.role}. Hires the party in ${chs(contactsUsed.get(p.name)) || 'no chapter yet'}.`])
     ];
     return `
         <header class="os-title">
@@ -195,7 +195,7 @@ function cpOverviewHtml(cp) {
 
         <section class="os-act">
             ${cpHead('The front', `${cp.n} segments to the doom`, '')}
-            <p>Tick one segment after every chapter, and a second when the party fails a chapter or walks away from it. When the last one fills, the doom happens. Read the next segment's line at the start of each chapter, as news.</p>
+            <p>Tick one segment after every chapter, and a second when the party fails a chapter or walks away from it. When the last one fills, the doom happens. Read the next segment's line at the start of each chapter, as news. If failures fill the front early, hold the doom one chapter: the party learns it's about to happen, and the final chapter comes next, as the last chance to stop it.</p>
             <ol class="cp-front">${cp.front.map((t, i) => `<li${i === cp.front.length - 1 ? ' class="cp-doom"' : ''}><span class="cp-seg" aria-hidden="true"></span><span><strong>${i === cp.front.length - 1 ? 'Doom' : `After chapter ${i + 1}`}:</strong> ${esc(t)}</span></li>`).join('')}</ol>
         </section>
 
@@ -267,10 +267,11 @@ function cpBookHtml(cp) {
     const seen = new Set();
     const all = [];
     cp.chapters.forEach(ch => osMonsters(ch.o).forEach(m => { if (!seen.has(m.id)) { seen.add(m.id); all.push(m); } }));
-    all.sort((a, b) => b.xp - a.xp || a.name.localeCompare(b.name));
-    return cp.chapters.map(ch => `<div class="cp-book-ch">${cpGlueHtml(cp, ch, false)}${oneShotBodyHtml(ch.o, { appendix: false })}</div>`).join('')
-        + `<section class="os-act os-appendix">${osPlainHead('Appendix', 'Stat blocks')}${all.map(m => `<details class="os-sb" open>
-            <summary>${esc(m.name)} <span class="os-dim">${esc(crLabel(m.cr))} · ${m.xp.toLocaleString('en-US')} XP</span></summary>
+    all.sort((a, b) => crValue(b.cr) - crValue(a.cr) || a.name.localeCompare(b.name));
+    const book = cp.chapters.map(ch => `<div class="cp-book-ch">${cpGlueHtml(cp, ch, false)}${oneShotBodyHtml(ch.o, { appendix: false })}</div>`).join('');
+    // A Pathfinder creature's XP depends on the party's level, which changes from chapter to chapter.
+    return book + `<section class="os-act os-appendix">${osPlainHead('Appendix', 'Stat blocks')}${all.map(m => `<details class="os-sb" open>
+            <summary>${esc(m.name)} <span class="os-dim">${esc(crLabel(m.cr))}${OS_PF2E ? '' : ` · ${m.xp.toLocaleString('en-US')} XP`}</span></summary>
             <div class="sb-box">${monsterBlockHtml(m)}</div></details>`).join('')}</section>`;
 }
 

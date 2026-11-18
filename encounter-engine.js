@@ -564,7 +564,7 @@ const ENC_BANDS = encSystemBands(ruleTable([
         parley: null },
     { key: "lizardfolk", label: "Lizardfolk hunters", icon: "🐊", hab: "swamp coast forest", lead: "lizardfolk", support: "lizardfolk crocodile giant-lizard giant-frog", names: "lizard", loot: "raider",
         doing: [["hunt", "hunting in the reeds, and the party looks like food"], ["guard", "guarding the egg-mounds of their village"], ["parley", "watching the party with cold interest from the water's edge"], ["camp", "eating something raw in silence"]],
-        tactics: ["They drag people into the water and hold them under.", "Crocodiles go in first; the hunters attack anyone the crocs have grappled."],
+        tactics: ["They drag people into the water and hold them under.", "Crocodiles go in first; the hunters attack anyone the crocs have {alt:grappled|grabbed}."],
         morale: ["They stop the moment the fight stops being worth the meat.", "Purely practical: they retreat if losing and come back later."],
         parley: ["They'd trade a safe route through the swamp for meat or iron worth {gp}.", "They see no shame in switching sides."] },
     { key: "sahuagin", label: "{alt:Sahuagin|Sedacthy} raid", icon: "🦈", hab: "sea coast", lead: "sahuagin merrow", support: "sahuagin reef-shark hunter-shark", names: null, loot: "raider",
@@ -733,9 +733,18 @@ function encTacticsFor(band, list) {
     const ids = list.map(e => e.m.id);
     const n = list.reduce((a, e) => a + (e.count || 1), 0);
     const fits = x => typeof x === "string" || ((!x.need || ids.some(id => new RegExp(x.need).test(id))) && (!x.group || n > 1));
-    const ok = band.tactics.filter(fits);
-    const x = pick(ok.length ? ok : band.tactics);
+    const lines = encLeadLines(band, list, band.tactics, "With nobody to give orders, they go for whoever is nearest.");
+    const ok = lines.filter(fits);
+    const x = pick(ok.length ? ok : lines);
     return typeof x === "string" ? x : x.t;
+}
+
+// A band's lines that play its leader ("the caster", "its master") need one in the fight: a low-level
+// necromancer's band can be all servants. With none of them left, the fallback line.
+function encLeadLines(band, list, lines, fallback = "With nobody to call them off, they fight until destroyed.") {
+    if (!band.leads || list.some(e => band.leads.includes(e.m.id))) return lines;
+    const ok = lines.filter(x => !/\b(?:the caster|its master)\b/i.test(typeof x === "string" ? x : x.t));
+    return ok.length ? ok : [fallback];
 }
 
 // Who notices whom, by what the foes are doing (SRD 5.1 surprise: Stealth vs passive Perception;
@@ -994,7 +1003,7 @@ function rollEncounterScene(list, seed, opts = {}) {
     const leader = opts.lead && opts.lead.name ? encLeadAs(rolledLeader, opts.lead.name, opts.lead.stand) : rolledLeader;
 
     const tactics = part("tactics", () => band ? encTacticsFor(band, list) : typeScene.tactics);
-    const morale = part("morale", () => band ? pick(band.morale) : typeScene.morale);
+    const morale = part("morale", () => band ? pick(encLeadLines(band, list, band.morale)) : typeScene.morale);
     const parley = part("parley", () => {
         const talk = band ? band.parley : (["humanoid", "giant", "fiend", "dragon", "fey", "celestial"].includes(encSceneType(lead)) ? ["They'd talk, for {gp} or a good reason."] : null);
         if (!talk) return null;

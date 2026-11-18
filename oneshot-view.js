@@ -63,6 +63,7 @@ function osRoomHTML(o, i) {
 }
 
 function osStatBlocks(o) {
+    osAtLevel(o);
     const list = osMonsters(o);
     return list.map(m => `<details class="os-sb" id="os-sb-${esc(m.id)}" open>
         <summary>${esc(m.name)} <span class="os-dim">${esc(crLabel(m.cr))} · ${m.xp.toLocaleString('en-US')} XP</span></summary>
@@ -78,6 +79,7 @@ function osPlainHead(tag, title) {
 function oneShotBodyHtml(o, opt = {}) {
     const h = opt.head || osPlainHead, tools = opt.tools || (() => '');
     const s = o.site, p = o.patron;
+    osAtLevel(o);
     return `
         <section class="os-act os-truth">
             ${h('For the DM', "What's really going on", 'plot')}
@@ -97,7 +99,7 @@ function oneShotBodyHtml(o, opt = {}) {
             ${osRead(o.opener)}
             <p class="os-scene">${esc(tavernSceneText(o.tavern.scene))}</p>
             ${osDl([
-                ['Patron', `${p.name}, ${p.role} (${p.race ? osCap(p.race) : `${osCap(ruleWord('race', p.npc.race))}, ${p.npc.age}`}).`],
+                ['Patron', `${p.name}, ${p.role} (${p.race ? osCap(ruleWord('race', p.race)) : `${osCap(ruleWord('race', p.npc.race))}, ${p.npc.age}`}).`],
                 p.npc ? ['Play them', `${p.npc.trait}. Voice: ${p.npc.voice}.`] : null,
                 p.want ? ['What they want', p.want] : null,
                 ['The job', o.job],

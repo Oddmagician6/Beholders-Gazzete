@@ -166,7 +166,7 @@ const OS_PATRONS = [
     'a priest of the harvest', "a noble's disgraced cousin", 'the miller, who hears everything',
     'a caravan master', 'the ferry-keeper', 'a half-blind archivist', 'a smuggler trying to go straight', 'a nervous young noble',
     'the prioress of a hill shrine', 'a bounty clerk from the capital', 'the gravedigger', 'the owner of a traveling circus',
-    "the family's formidable matriarch", 'an off-duty soldier', 'the brewer with the best ale in town', 'a fortune-teller who saw this coming',
+    "the family's formidable elder", 'an off-duty soldier', 'the brewer with the best ale in town', 'a fortune-teller who saw this coming',
     'a beekeeper with a grudge', 'a shepherd who lost half the flock', "a wizard's put-upon apprentice"
 ];
 // Why the patron can't do it: {villain}, {site}, {item}.
@@ -216,7 +216,7 @@ const OS_CLOCKS = [
 // The trail in Act 2: [skill, what it finds]. {site}, {villain}, {holder}, {item}, {town}, {Patron}.
 const OS_CLUES = [
     ['Investigation', "Fresh tracks and a dropped {thing} lead off the road toward {site}."],
-    ['Persuasion', "A frightened {townsfolk} admits seeing lights at {site} three nights running."],
+    ['Persuasion', "Frightened half to death, {townsfolk} admits seeing lights at {site} three nights running."],
     ['History', "The oldest person in {town} remembers what {site} was built for, and why the doors were sealed."],
     ['Perception', "A mark scratched on a milestone matches the one carved over the way into {site}."],
     ['Insight', "{Patron} flinches whenever {villain} is named. They know more than they're saying."],
@@ -697,7 +697,11 @@ function rollOneShot(seed, opts = {}, set = {}) {
     }
     const lastFight = site.rooms[site.rooms.length - 1].fight;
     if (gv && !named && gv.stand && lastFight) {
-        stood = gv.stand.map(id => MONSTER_BY_ID[id]).filter(m => m && crValue(m.cr) <= level).sort((a, b) => b.xp - a.xp)[0] || null;
+        // The strongest who still keeps the fight inside the top budget (high; Pathfinder: extreme),
+        // else the weakest: the boss fight was already built to the budget before the villain joined.
+        const fits = gv.stand.map(id => MONSTER_BY_ID[id]).filter(m => m && crValue(m.cr) <= level).sort((a, b) => b.xp - a.xp);
+        const room = budget[ENC_DIFFS[ENC_DIFFS.length - 1]] - encounterXp(siteFightList(lastFight));
+        stood = fits.find(m => m.xp <= room) || fits[fits.length - 1] || null;
         if (stood) {
             guard = v0.name;
             lastFight.list.push({ id: stood.id, count: 1 });
@@ -756,14 +760,11 @@ function rollOneShot(seed, opts = {}, set = {}) {
     const title = given && given.title ? given.title : fill(plot.title.replace('{Noun}', plot.noun).replace('{Site}', osBare(site.name))
         .replace('{TheSite}', String(site.name).replace(/^The /, 'the '))
         .replace('{Short}', plot.short).replace('{Who}', villain.first || hook.town).replace('{Town}', hook.town));
-    const deadline = fill(plot.clock[0].replace('{n}', plot.days));
     const late = fill(plot.clock[1]);
     const goalRaw = given && given.goal ? given.goal : plot.goal;
     const goal = fill(goalRaw);
     const twist = fill(plot.twist);
     const reward = questRound(osPayBase(level) * party * Lg.pay * (0.75 + hook.pay * 0.5));
-    const job = given && given.hook ? `${given.hook} ${fill('Every lead points to {site}, and to {villain}.')}`
-        : fill(`{Patron} wants {villain} dealt with and {item} brought back from {site}, ${deadline}.`);
 
     // ── Act 2: the trail, the road, the fights ──
     const road = withSeed(seeds.road, () => {
@@ -800,6 +801,10 @@ function rollOneShot(seed, opts = {}, set = {}) {
         }
         return { season, days, clues, complication, fights };
     });
+    // The job is there and back: the clock leaves the road both ways and a day for the site.
+    const deadline = fill(plot.clock[0].replace('{n}', Math.max(plot.days, 2 * road.days.length + 1)));
+    const job = given && given.hook ? `${given.hook} ${fill('Every lead points to {site}, and to {villain}.')}`
+        : fill(`{Patron} wants {villain} dealt with and {item} brought back from {site}, ${deadline}.`);
 
     // ── Act 3: the hoard in the last room ──
     const hoard = withSeed(seeds.hoard, () => OS_PF2E
@@ -847,7 +852,14 @@ function osFightText(f) {
     return siteFightList(f).map(e => `${e.count} × ${e.m.name} (${crLabel(e.m.cr)})`).join(', ');
 }
 
+// Pathfinder XP is read against the party level partyBudget set last; a campaign rolls every chapter
+// before it shows one, so set this adventure's level before reading any creature's XP.
+function osAtLevel(o) {
+    if (OS_PF2E && o.budget && o.budget.level) encPartyLevel = o.budget.level;
+}
+
 function osFightRating(o, f) {
+    osAtLevel(o);
     const xp = encounterXp(siteFightList(f));
     const r = rateEncounter(xp, o.budget);
     return `${xp.toLocaleString('en-US')} XP${r ? `, ${ENCOUNTER_LEVELS[r].label.toLowerCase()}` : ''}`;
@@ -880,6 +892,7 @@ function osSiteLink(o) {
 // Plain text for Copy (and the notebook's notes, cut to fit there).
 function oneShotText(o) {
     const T = OS_TONES[o.tone], s = o.site;
+    osAtLevel(o);
     const out = [
         o.title.toUpperCase(),
         `${T.icon} ${T.label} · ${OS_LENGTHS[o.length].label} · party of ${o.party}, level ${o.level}`,

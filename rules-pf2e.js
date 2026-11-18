@@ -47,7 +47,11 @@ RULE_SYSTEMS.pf2e = {
         [/\buntil a long rest\b/g, "until their next night's rest"],
         [/\bgains a level of exhaustion\b/g, 'is fatigued'], [/\bgain a level of exhaustion\b/g, 'are fatigued'], [/\bone level of exhaustion\b/g, 'fatigue'], [/\bremove curse\b/g, 'cleanse affliction'],
         [/\bnecrotic damage\b/g, 'void damage'], [/\blightning damage\b/g, 'electricity damage'], [/\bpsychic damage\b/g, 'mental damage'],
-        [/\bthunder damage\b/g, 'sonic damage'], [/\bradiant damage\b/g, 'spirit damage']
+        [/\bthunder damage\b/g, 'sonic damage'], [/\bradiant damage\b/g, 'spirit damage'],
+        // Pathfinder has no poisoned condition (a poison's lasting harm is sickened) and no grappled one.
+        [/\bis poisoned for 1 (?:minute|hour)\b/g, 'is sickened 1'], [/\bnot poisoned\b/g, 'not sickened'],
+        [/\bgrappled and restrained\b/g, 'restrained'],
+        [/\ba healing word\b/g, 'a healing spell']
     ],
     // People keep their 5e keys (names and ages are rolled by them); this is what they're called.
     words: {

@@ -545,7 +545,7 @@ const TRAVEL_SEASON_TOUCH = {
 };
 
 // ── Composed travelers (who × where they're headed × news × an ask) ──
-const TRAVELER_WHO = [
+const TRAVELER_WHO = ruleTable([
     ['A tinker', 'a tinker with a cart of rattling pots'],
     ['A pair of nuns', 'two nuns on one very patient donkey'],
     ['A retired adventurer', 'a retired adventurer with one leg, two swords, and a great many stories'],
@@ -572,13 +572,13 @@ const TRAVELER_WHO = [
     ['A beekeeper', 'a beekeeper carrying a hive in a basket, very carefully'],
     ['A fortune-teller', 'a fortune-teller whose cards keep turning up the same card'],
     ['A deserter', 'a soldier with the badges torn off his coat'],
-    ['A tiefling mapmaker', 'a tiefling mapmaker measuring the way with a knotted rope'],
+    ['{alt:A tiefling|A nephilim} mapmaker', '{alt:a tiefling|a nephilim} mapmaker measuring the way with a knotted rope'],
     ['A grandmother', 'a tiny old woman walking alone, unarmed, and entirely unworried'],
     ['Two newlyweds', 'two newlyweds running away from both families'],
-    ['A silent pilgrim', 'a dragonborn pilgrim under a vow of silence who keeps nearly breaking it'],
+    ['A silent pilgrim', '{alt:a dragonborn|a dragonblood} pilgrim under a vow of silence who keeps nearly breaking it'],
     ['A bone collector', 'a scholar collecting old bones in a wheelbarrow "for science"'],
     ['A traveling barber', 'a traveling barber who offers a shave and a tooth-pulling, both at a discount']
-];
+]);
 
 const TRAVELER_HEADING = ['heading the same way', 'coming the other way', 'resting beside the path', 'stopped to mend a strap',
     'waving the party down', 'camped by the way with a small, smoky fire', 'catching up from behind, at a run'];
@@ -609,7 +609,7 @@ const TRAVELER_NEWS = [
     'the temple bells rang by themselves three nights running'
 ];
 
-const TRAVELER_ASK = [
+const TRAVELER_ASK = ruleTable([
     'They ask for an escort to the next town and offer 5 gp for it.',
     'They want to trade a pouch of good pipeweed for a whetstone.',
     'They ask whether anyone can read, and hand over a letter they have carried for weeks.',
@@ -628,7 +628,7 @@ const TRAVELER_ASK = [
     'They are looking for someone who matches one of the party\'s descriptions a little too well.',
     'They ask for water and are very grateful for it.',
     'They want to know if the party has seen anyone pass by in a hurry.'
-];
+]);
 
 // ── Composed discoveries (what × a detail × sometimes a hook) ──
 const DISCOVERY_WHAT = [
