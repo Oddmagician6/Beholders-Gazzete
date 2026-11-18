@@ -377,6 +377,34 @@
       "hashtags": "#Cockatrice #PluckwiseCompany #ChickenInspection #Gorsewick",
       "publishAt": "2026-11-18T02:00:00Z",
       "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "feast-seating-chart-treaty-baronies-turnips",
+      "release_tag": "reel-stage-nov18-feast-ig-20261118",
+      "hashtags": "#GrandFeast #TurnipTable #WishSpell",
+      "publishAt": "2026-11-18T17:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "levitation-slippers-recall-rogue-vault-ceiling",
+      "release_tag": "reel-stage-nov18-slippers-ig-20261118",
+      "hashtags": "#LevitationSlippers #LedgerstoneVault #Heist",
+      "publishAt": "2026-11-18T20:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "thunderwave-tavern-brawl-sleeping-mule-wall",
+      "release_tag": "reel-stage-nov18-tavern-ig-20261118",
+      "hashtags": "#Thunderwave #SleepingMule #ThunderRoom",
+      "publishAt": "2026-11-18T23:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "harpy-jingle-adventuring-party-river-fernsley",
+      "release_tag": "reel-stage-nov18-harpy-ig-20261118",
+      "hashtags": "#HarpyJingle #Tumblebrook #WinterSale",
+      "publishAt": "2026-11-19T02:00:00Z",
+      "custom_artwork_confirmed": true
     }
   ]
 }
