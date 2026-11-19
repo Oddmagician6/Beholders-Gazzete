@@ -612,6 +612,11 @@ function tavernSecondPass(tv) {
         special.name = room.name;
         special.gp = price;
     }
+}
+
+// The scene's newer lines, from a seed of their own: the menu's swaps above take a draw per house
+// dish and drink, so on the same stream a new quality rerolled the crowd, rule, game, night, and trouble.
+function tavernScenePass(tv) {
     tv.scene.crowd = tavernSwap(tv.scene.crowd, TAVERN_SCENES.crowd, TAVERN_CROWD_MORE);
     tv.rule = tavernSwap(tv.rule, TAVERN_RULES, TAVERN_RULES_MORE);
     const g = randomArray(TAVERN_GAMES_MORE);
@@ -745,6 +750,7 @@ function rollTavern(seed, opts = {}) {
     const tv = { seed, name, tier, kind, owner, staff, regulars, menu, rooms, quirk, scene, sign, history, rule, game, tonight, trouble };
     if (realms) tv.realms = part('realms', () => ({ city: randomArray(REALMS_CITIES).n }));
     part('more', () => tavernSecondPass(tv));
+    part('more.scene', () => tavernScenePass(tv));
     return tv;
 }
 
