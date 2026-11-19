@@ -110,6 +110,20 @@ function bbSave() {
     btPost();
 }
 
+// Takes back a bbMark whose change didn't happen, Redo and all. redo: BB.redo as it was before the mark.
+function bbUnmark(redo) {
+    BB.undo.pop();
+    BB.redo = redo;
+    bbUndoButtons();
+}
+
+// The pieces of furniture and labels a map holds (what bmClean keeps on reload); false, after a warning, when it's full.
+function bbRoomFor(type) {
+    const full = type === 'lb' ? BB.m.lb.length >= BM_LIMITS.labels : BB.m.ob.length >= BM_LIMITS.objs;
+    if (full) bbFlash(type === 'lb' ? `⚠️ A map holds ${BM_LIMITS.labels} labels.` : `⚠️ A map holds ${BM_LIMITS.objs} doors and pieces of furniture.`, true);
+    return !full;
+}
+
 // Call before a change.
 function bbMark() {
     BB.undo.push(bmCopy(BB.m));
@@ -123,6 +137,8 @@ function bbSwap(from, to) {
     to.push(bmCopy(BB.m));
     const was = BB.m;
     BB.m = from.pop();
+    // The name isn't a step of its own: undo keeps the one typed since.
+    BB.m.name = was.name;
     BB.store.maps[BB.store.maps.indexOf(was)] = BB.m;
     BB.sel = null;
     if (BB.mode === 'play') btEnsureFog(true);
@@ -142,6 +158,9 @@ function bbUndoButtons() {
 // ── The maps ──────────────────────────────────────────────
 function bbOpen(id) {
     if (BB.dirty) bbSaveNow();
+    // A Delete waiting for its second click was for the map being left.
+    const del = $('bb-delete');
+    if (del && del.dataset.sure) { delete del.dataset.sure; del.textContent = '🗑️ Delete'; }
     BB.m = BB.store.maps.find(m => m.id === id) || BB.store.maps[0];
     BB.store.cur = BB.m.id;
     BB.undo = [];
@@ -310,7 +329,8 @@ function bbSetTool(t) {
     BB.tool = t;
     BB.hover = null;
     if (t !== 'token') BB.placing = null;
-    if (t !== 'ruler') BB.ruler = null;
+    // A ruler put away goes off the players' screen too.
+    if (t !== 'ruler' && BB.ruler) { BB.ruler = null; btPost(); }
     if (t !== 'select') BB.sel = null;
     document.querySelectorAll('#bb-tools [data-tool]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.tool === t)));
     document.querySelectorAll('.bb-opt').forEach(p => { p.hidden = p.dataset.for !== t; });
@@ -442,6 +462,9 @@ function bbSelected() {
 // ── The pointer ───────────────────────────────────────────
 function bbDown(e) {
     if (!$('bb-svg')) return;
+    // A second finger while the first is drawing or dragging: left out, so it can't take over the gesture.
+    if (BB.drag && !e.isPrimary && e.pointerId !== BB.pid) return;
+    BB.pid = e.pointerId;
     const m = BB.m, p = bbPoint(e), free = e.altKey;
     const pan = BB.tool === 'pan' || BB.space || e.button === 1;
     if (pan) {
@@ -487,8 +510,9 @@ function bbDown(e) {
         bbPaint(p.x, p.y, v);
         bbDrawFloor();
     } else if (t === 'erase') {
+        const redo = BB.redo;
         bbMark();
-        BB.drag = { kind: 'rub', last: p, hit: bbRub(p.x, p.y) };
+        BB.drag = { kind: 'rub', last: p, hit: bbRub(p.x, p.y), redo };
         bbDrawAll();
     } else if (t === 'wall') {
         const a = bbGridPoint(p);
@@ -499,13 +523,16 @@ function bbDown(e) {
         return;
     } else if (t === 'door' || t === 'prop') {
         const o = bbNewObj(p, free);
-        bbMark();
         // A door put where one already is takes its place.
-        if (BM_ITEMS[o.k].door) m.ob = m.ob.filter(q => !(BM_ITEMS[q.k].door && Math.abs(q.x - o.x) < 0.05 && Math.abs(q.y - o.y) < 0.05));
+        const ob = BM_ITEMS[o.k].door ? m.ob.filter(q => !(BM_ITEMS[q.k].door && Math.abs(q.x - o.x) < 0.05 && Math.abs(q.y - o.y) < 0.05)) : m.ob;
+        if (ob.length >= BM_LIMITS.objs) { bbRoomFor('ob'); return; }
+        bbMark();
+        m.ob = ob;
         m.ob.push(o);
         bbDrawObjs();
         bbSave();
     } else if (t === 'label') {
+        if (!bbRoomFor('lb')) return;
         bbMark();
         m.lb.push(bbNewLabel(p, free));
         bbLabelNext();
@@ -528,6 +555,7 @@ function bbDown(e) {
 
 function bbMove(e) {
     if (!$('bb-svg')) return;
+    if (BB.drag && e.pointerId !== BB.pid) return;
     const d = BB.drag, p = bbPoint(e), free = e.altKey, m = BB.m;
     if (!d) { if (BB.mode === 'play') btHover(p, e); else bbHoverAt(p, e); return; }
     if (d.kind.startsWith('bt')) { btMove(d, p, e); return; }
@@ -564,6 +592,8 @@ function bbMove(e) {
         if (BB.sel.type === 'lb') $('bb-g-labels').innerHTML = bmLabelsSvg(m); else bbDrawObjs();
         bbDrawUi();
     } else if (d.kind === 'ruler') {
+        // Escape (or a tool switch) cleared it mid-drag.
+        if (!BB.ruler) return;
         BB.ruler.b = free ? p : { x: Math.floor(p.x) + 0.5, y: Math.floor(p.y) + 0.5 };
         bbDrawUi();
         btPost();
@@ -597,6 +627,7 @@ function bbMove(e) {
 }
 
 function bbUp(e) {
+    if (BB.drag && e.pointerId !== BB.pid) return;
     const d = BB.drag;
     BB.drag = null;
     if (!d) return;
@@ -610,13 +641,14 @@ function bbUp(e) {
     } else if (d.kind === 'paint') {
         bbSave();
     } else if (d.kind === 'rub') {
-        if (d.hit) bbSave(); else { BB.undo.pop(); bbUndoButtons(); }
+        if (d.hit) bbSave(); else bbUnmark(d.redo);
     } else if (d.kind === 'wall') {
+        const redo = BB.redo;
         bbMark();
         if (d.a.x === d.b.x && d.a.y === d.b.y) {
             // A click: the grid line under the pointer, on or off.
             const edge = bbEdge(d.p.x, d.p.y);
-            if (!edge) { BB.undo.pop(); bbUndoButtons(); bbDrawUi(); return; }
+            if (!edge) { bbUnmark(redo); bbDrawUi(); return; }
             m[edge.list][edge.i] = d.rub ? 0 : 1 - m[edge.list][edge.i];
         } else {
             bbWallLine(d.a, d.b, d.rub);
@@ -628,8 +660,8 @@ function bbUp(e) {
         bbInspector();
     } else if (d.kind === 'scale' || d.kind === 'rot') {
         const s = bbSelected();
-        // Turned square to the grid: back onto the squares.
-        if (s && d.kind === 'rot' && !d.free && !BM_ITEMS[s.k].edge && s.r % 90 === 0) { Object.assign(s, bmSnap(s, s.x, s.y)); bbDrawObjs(); }
+        // Turned square to the grid: back onto the squares (a click on the handle that turned nothing leaves it be).
+        if (s && d.kind === 'rot' && d.moved && !d.free && !BM_ITEMS[s.k].edge && s.r % 90 === 0) { Object.assign(s, bmSnap(s, s.x, s.y)); bbDrawObjs(); }
         if (d.moved) bbSave();
         bbInspector();
     }
@@ -712,10 +744,11 @@ function bbInspectInput(e) {
 function bbAct(act) {
     const s = bbSelected(), m = BB.m;
     if (!s) return;
-    const list = BB.sel.type === 'ob' ? m.ob : m.lb;
+    const list = BB.sel.type === 'ob' ? m.ob : m.lb, redo = BB.redo;
     bbMark();
     if (act === 'del') { list.splice(BB.sel.i, 1); BB.sel = null; }
     if (act === 'dup') {
+        if (!bbRoomFor(BB.sel.type)) { bbUnmark(redo); return; }
         list.push({ ...s, x: Math.min(m.w, s.x + 1), y: Math.min(m.h, s.y + 1) });
         BB.sel = { type: BB.sel.type, i: list.length - 1 };
     }
@@ -761,7 +794,7 @@ function bbKey(e) {
     if (k === ' ') { e.preventDefault(); BB.space = true; $('bb-stage').classList.add('bb-panning'); return; }
     const build = BB.mode === 'build';
     if (!build && btKey(e, k)) return;
-    if (k === 'escape') { BB.sel = null; BB.ruler = null; bbDrawUi(); bbInspector(); return; }
+    if (k === 'escape') { BB.sel = null; BB.ruler = null; bbDrawUi(); bbInspector(); btPost(); return; }
     if ((k === 'delete' || k === 'backspace') && bbSelected()) { e.preventDefault(); bbAct('del'); return; }
     if (k === 'r' && build) {
         e.preventDefault();
@@ -844,7 +877,7 @@ async function bbPrint() {
     } else {
         const P = bbPages(m);
         land = P.land;
-        html = P.pages.map((v, k) => `<div class="bb-sheet">${bmSvg(m, { ...o, view: v, uid: 'bp' + k }).replace('<svg ', `<svg style="width:${v.w}in;height:${v.h}in" `)}
+        html = P.pages.map((v, k) => `<div class="bb-sheet">${bmSvg(m, { ...o, view: v, joins: true, uid: 'bp' + k }).replace('<svg ', `<svg style="width:${v.w}in;height:${v.h}in" `)}
             <p>${esc(m.name)} · page ${k + 1} of ${P.pages.length} (row ${Math.floor(k / P.cols) + 1}, column ${k % P.cols + 1}) · 1 inch = 5 feet</p></div>`).join('');
     }
     // Scaled to one page, turned sideways: A4's 7.27 inches, less the caption (the page's own 9.4 is for upright).
@@ -997,7 +1030,8 @@ function bbSetup() {
     $('bb-redo').addEventListener('click', () => bbSwap(BB.redo, BB.undo));
     $('bb-grid-on').addEventListener('change', () => { $('bb-g-grid').innerHTML = $('bb-grid-on').checked ? bmGridSvg(BB.m) : ''; });
 
-    $('bb-maps').addEventListener('change', e => bbOpen(e.target.value));
+    // Saved as the open map at once, so a Player View reading the saves follows the switch.
+    $('bb-maps').addEventListener('change', e => { bbOpen(e.target.value); bbSaveNow(); });
     $('bb-name').addEventListener('input', e => {
         BB.m.name = e.target.value.replace(/[\u0000-\u001f]/g, ' ').slice(0, BM_LIMITS.name) || 'Untitled battlemap';
         bbMapOptions();
@@ -1040,13 +1074,17 @@ function bbSetup() {
         bbFlash('🧽 Cleared. Undo brings it all back.');
     });
     const del = $('bb-delete');
+    let delTimer = 0;
     del.addEventListener('click', () => {
-        if (!del.dataset.sure) {
-            del.dataset.sure = '1';
+        // The second click deletes only the map the first one was for.
+        if (del.dataset.sure !== BB.m.id) {
+            del.dataset.sure = BB.m.id;
             del.textContent = '🗑️ Click again to delete';
-            setTimeout(() => { delete del.dataset.sure; del.textContent = '🗑️ Delete'; }, 3500);
+            clearTimeout(delTimer);
+            delTimer = setTimeout(() => { delete del.dataset.sure; del.textContent = '🗑️ Delete'; }, 3500);
             return;
         }
+        clearTimeout(delTimer);
         delete del.dataset.sure;
         del.textContent = '🗑️ Delete';
         const name = BB.m.name;
@@ -1064,15 +1102,27 @@ function bbSetup() {
     window.addEventListener('afterprint', () => { document.body.classList.remove('print-bb'); $('bb-print').innerHTML = ''; });
     window.addEventListener('beforeunload', () => { if (BB.dirty) bbSaveNow(); });
     window.addEventListener('pagehide', () => { if (BB.dirty) bbSaveNow(); });
-    // Another tab saved: take its maps. With changes of this tab's own on the way, take all but the
-    // map being drawn on, so the save that follows doesn't put back the other tab's old copies.
+    // Another tab saved: take its maps. With changes of this tab's own on the way (or a stroke or drag
+    // under way), take all but the map being drawn on, so the save that follows doesn't put back the
+    // other tab's old copies.
     window.addEventListener('storage', e => {
         if (e.key !== BM_KEY && e.key !== null) return;
         const store = bmLoadStore(), id = BB.m.id;
-        if (BB.dirty) {
+        if (BB.dirty || BB.drag) {
             const i = store.maps.findIndex(m => m.id === id);
             if (i >= 0) store.maps[i] = BB.m;
-            else store.maps.unshift(BB.m);
+            else if (store.maps.length < BM_LIMITS.maps) store.maps.unshift(BB.m);
+            else {
+                // Deleted in the other tab, and that tab filled its place: there's no room to keep it.
+                const lost = BB.m.name;
+                BB.drag = null;
+                BB.dirty = false;
+                clearTimeout(BB.saveTimer);
+                BB.store = store;
+                bbOpen(store.maps[0].id);
+                bbFlash(`⚠️ Another tab deleted “${lost}” and filled the page's ${BM_LIMITS.maps} maps, so it couldn't be kept here.`, true);
+                return;
+            }
             BB.store = store;
             bbMapOptions();
             return;

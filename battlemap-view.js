@@ -56,7 +56,17 @@ function bvRender(st) {
 // The same copy, from this browser's saves: the map the Builder has open, the fight, the options.
 function bvFromSaves() {
     const store = bmLoadStore(), m = store.maps.find(x => x.id === store.cur);
-    if (!m) { $('bv-dark').hidden = false; $('bv-dark').textContent = 'No battlemap saved in this browser yet. Draw one in the Battlemap Builder.'; return; }
+    if (!m) {
+        // Nothing saved (or the saves cleared since): none of the last map stays up.
+        BV.key = '';
+        BV.state = null;
+        $('bv-stage').innerHTML = '';
+        $('bv-turn').innerHTML = '';
+        document.title = 'Player View';
+        $('bv-dark').hidden = false;
+        $('bv-dark').textContent = 'No battlemap saved in this browser yet. Draw one in the Battlemap Builder.';
+        return;
+    }
     bvRender(bpCleanState(bpPlayerState(m, bpLoadFight(), bpLoadOpts())));
 }
 
@@ -65,9 +75,12 @@ function bvSetup() {
     const sync = $('bv-sync');
     let channel = null;
     try { channel = new BroadcastChannel(BP_CHANNEL); } catch (e) {}
+    // Opened from a Builder (its 📺 button): follow that tab only, not another tab's map.
+    const from = new URLSearchParams(location.hash.slice(1)).get('from');
     if (channel) {
         channel.addEventListener('message', e => {
             if (!e.data || e.data.type !== 'state') return;
+            if (from && e.data.from !== from) return;
             const st = bpCleanState(e.data.state);
             if (!st) return;
             BV.heard = Date.now();

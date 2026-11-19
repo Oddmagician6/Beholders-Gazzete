@@ -313,7 +313,9 @@ function bmClean(p) {
     const ids = new Set();
     const tk = (Array.isArray(p.k) ? p.k : []).slice(0, BM_LIMITS.tokens).map(t => {
         if (!Array.isArray(t)) return null;
-        const x = num(t[2], 0, w - 1), y = num(t[3], 0, h - 1), n = text(t[1], BM_LIMITS.tname);
+        // The whole token on the map where it fits (a big one on a small map sits in the corner).
+        const sz = BM_TOKEN_SIZES[bmHas(BM_TOKEN_SIZES, t[4]) ? t[4] : 'M'];
+        const x = num(t[2], 0, Math.max(0, w - sz)), y = num(t[3], 0, Math.max(0, h - sz)), n = text(t[1], BM_LIMITS.tname);
         if (x === null || y === null || !n) return null;
         let id = typeof t[0] === 'string' && /^[a-z0-9]{1,16}$/.test(t[0]) ? t[0] : bmId();
         while (ids.has(id)) id = bmId();
@@ -375,7 +377,11 @@ function bmResize(m, w, h) {
         n.fog = new Array(w * h).fill(0);
         for (let y = 0; y < Math.min(h, m.h); y++) for (let x = 0; x < Math.min(w, m.w); x++) n.fog[y * w + x] = m.fog[y * m.w + x];
     }
-    n.tk = m.tk.filter(t => t.x < w && t.y < h).map(t => ({ ...t }));
+    // A token the cut runs through moves back onto the map whole (as bmClean would on reload).
+    n.tk = m.tk.filter(t => t.x < w && t.y < h).map(t => {
+        const sz = BM_TOKEN_SIZES[t.s] || 1;
+        return { ...t, x: Math.min(t.x, Math.max(0, w - sz)), y: Math.min(t.y, Math.max(0, h - sz)) };
+    });
     for (let y = 0; y < Math.min(h, m.h); y++) {
         for (let x = 0; x < Math.min(w, m.w); x++) n.fl[y * w + x] = m.fl[y * m.w + x];
     }
@@ -426,7 +432,9 @@ function bmSnap(o, x, y) {
         const fx = x - Math.floor(x), fy = y - Math.floor(y);
         // The nearer of the square's sides: across (top or bottom) or down (left or right).
         const across = Math.min(fy, 1 - fy) < Math.min(fx, 1 - fx);
-        return across ? { x: Math.floor(x) + 0.5, y: Math.round(y), r: 0 } : { x: Math.round(x), y: Math.floor(y) + 0.5, r: 90 };
+        // A door turned end for end keeps facing that way along the same line.
+        const r = ((Math.round(o.r) % 360) + 360) % 360;
+        return across ? { x: Math.floor(x) + 0.5, y: Math.round(y), r: r === 180 ? 180 : 0 } : { x: Math.round(x), y: Math.floor(y) + 0.5, r: r === 270 ? 270 : 90 };
     }
     const [w, h] = bmLaidSize(o);
     const to = (v, s) => Math.round(s) % 2 ? Math.floor(v) + 0.5 : Math.round(v);
@@ -474,14 +482,47 @@ function bmFloorSvg(m, art, uid) {
     }).join('');
 }
 
-// Every wall as one path: the drawn ones, and wherever floor meets bare rock.
+// The grid lines an edge door (or doorway) stands on, across its width: { list: 'hw' | 'vw', at: [indexes] },
+// or null for a door that isn't along a grid line (stairs, trapdoors, one turned at an odd angle).
+function bmEdgeSpan(m, o) {
+    if (!BM_ITEMS[o.k] || !BM_ITEMS[o.k].edge) return null;
+    const r = ((Math.round(o.r) % 360) + 360) % 360, at = [];
+    const span = c => {
+        const a = Math.round(c - o.w / 2), b = Math.round(c + o.w / 2) - 1;
+        return b < a ? [Math.floor(c), Math.floor(c)] : [a, b];
+    };
+    if (r % 180 === 0) {
+        const gy = Math.round(o.y), [a, b] = span(o.x);
+        if (gy < 0 || gy > m.h) return null;
+        for (let gx = Math.max(0, a); gx <= Math.min(m.w - 1, b); gx++) at.push(gy * m.w + gx);
+        return { list: 'hw', at };
+    }
+    if (r % 180 === 90) {
+        const gx = Math.round(o.x), [a, b] = span(o.y);
+        if (gx < 0 || gx > m.w) return null;
+        for (let gy = Math.max(0, a); gy <= Math.min(m.h - 1, b); gy++) at.push(gy * (m.w + 1) + gx);
+        return { list: 'vw', at };
+    }
+    return null;
+}
+
+// Every wall as one path: the drawn ones (less the gaps open doorways stand in), and wherever floor meets bare rock.
 function bmWallPath(m) {
     const S = SITE_SQUARE, on = (x, y) => bmFloorAt(m, x, y) > 0;
+    let hw = m.hw, vw = m.vw;
+    m.ob.forEach(o => {
+        const it = BM_ITEMS[o.k];
+        if (!it || it.ink !== 'open') return;
+        const e = bmEdgeSpan(m, o);
+        if (!e || !e.at.length) return;
+        if (e.list === 'hw') { if (hw === m.hw) hw = m.hw.slice(); e.at.forEach(i => { hw[i] = 0; }); }
+        else { if (vw === m.vw) vw = m.vw.slice(); e.at.forEach(i => { vw[i] = 0; }); }
+    });
     let d = '';
     for (let y = 0; y <= m.h; y++) {
         let run = -1;
         for (let x = 0; x <= m.w; x++) {
-            const wall = x < m.w && (m.hw[y * m.w + x] || on(x, y - 1) !== on(x, y));
+            const wall = x < m.w && (hw[y * m.w + x] || on(x, y - 1) !== on(x, y));
             if (wall && run < 0) run = x;
             if (!wall && run >= 0) { d += `M${run * S} ${y * S}H${x * S}`; run = -1; }
         }
@@ -489,7 +530,7 @@ function bmWallPath(m) {
     for (let x = 0; x <= m.w; x++) {
         let run = -1;
         for (let y = 0; y <= m.h; y++) {
-            const wall = y < m.h && (m.vw[y * (m.w + 1) + x] || on(x - 1, y) !== on(x, y));
+            const wall = y < m.h && (vw[y * (m.w + 1) + x] || on(x - 1, y) !== on(x, y));
             if (wall && run < 0) run = y;
             if (!wall && run >= 0) { d += `M${x * S} ${run * S}V${y * S}`; run = -1; }
         }
@@ -552,11 +593,14 @@ function bmDoorSvg(m, art, secret = true) {
     return m.ob.filter(o => BM_ITEMS[o.k].door).map(o => bmObjSvg(o, art, secret)).join('');
 }
 
-function bmGridSvg(m, view = null) {
+// joins: also the lines where this part meets the next page (half of each falls on either sheet,
+// so the pages put side by side show the whole line).
+function bmGridSvg(m, view = null, joins = false) {
     const S = SITE_SQUARE, v = view || { x: 0, y: 0, w: m.w, h: m.h };
+    const from = (a) => joins && a > 0 ? a : a + 1, to = (a, n, max) => joins && a + n < max ? a + n : a + n - 1;
     let d = '';
-    for (let x = v.x + 1; x < v.x + v.w; x++) d += `M${x * S} ${v.y * S}V${(v.y + v.h) * S}`;
-    for (let y = v.y + 1; y < v.y + v.h; y++) d += `M${v.x * S} ${y * S}H${(v.x + v.w) * S}`;
+    for (let x = from(v.x); x <= to(v.x, v.w, m.w); x++) d += `M${x * S} ${v.y * S}V${(v.y + v.h) * S}`;
+    for (let y = from(v.y); y <= to(v.y, v.h, m.h); y++) d += `M${v.x * S} ${y * S}H${(v.x + v.w) * S}`;
     return d ? `<path class="bm-grid" d="${d}"/>` : '';
 }
 
@@ -593,15 +637,10 @@ function bmTokenSeen(m, t) {
 function bmRoom(m, x, y) {
     if (!bmFloorAt(m, x, y)) return [];
     const hw = m.hw.slice(), vw = m.vw.slice();
+    // Each door closes every grid line it spans (a double door or a gate, two or three).
     m.ob.forEach(o => {
-        if (!BM_ITEMS[o.k].edge) return;
-        if (o.r % 180 === 0) {
-            const gx = Math.floor(o.x), gy = Math.round(o.y);
-            if (gx >= 0 && gx < m.w && gy >= 0 && gy <= m.h) hw[gy * m.w + gx] = 1;
-        } else if (o.r % 180 === 90) {
-            const gx = Math.round(o.x), gy = Math.floor(o.y);
-            if (gy >= 0 && gy < m.h && gx >= 0 && gx <= m.w) vw[gy * (m.w + 1) + gx] = 1;
-        }
+        const e = bmEdgeSpan(m, o);
+        if (e) e.at.forEach(i => { (e.list === 'hw' ? hw : vw)[i] = 1; });
     });
     const seen = new Uint8Array(m.w * m.h), out = [], stack = [[x, y]];
     seen[y * m.w + x] = 1;
@@ -694,12 +733,12 @@ function bmFogSvg(m, players = false) {
 // part, for printing a page at a time), uid (pattern ids: one per SVG on the page).
 // The token and fog layers are left empty: table play fills them (bmTokenSvg, bmFogSvg).
 function bmSvg(m, opts = {}) {
-    const { style = m.style, grid = true, labels = true, secret = true, view = null, uid = 'bm', title = m.name } = opts;
+    const { style = m.style, grid = true, labels = true, secret = true, view = null, joins = false, uid = 'bm', title = m.name } = opts;
     const S = SITE_SQUARE, art = style === 'art', v = view || { x: 0, y: 0, w: m.w, h: m.h };
     return `<svg class="bm-map bm-${art ? 'art' : 'classic'}" viewBox="${v.x * S} ${v.y * S} ${v.w * S} ${v.h * S}" role="img" aria-label="${siteAttr(title)}" xmlns="http://www.w3.org/2000/svg">
         <defs>${art ? bmDefs(uid, bmFloorsUsed(m)) : ''}${bmTokenDefs(uid)}</defs>
         <rect class="bm-bg" x="${v.x * S}" y="${v.y * S}" width="${v.w * S}" height="${v.h * S}"/>
-        ${bmFloorSvg(m, art, uid)}${bmPropSvg(m, art)}${bmWallSvg(m)}${bmDoorSvg(m, art, secret)}${grid ? bmGridSvg(m, v) : ''}${labels ? bmLabelsSvg(m) : ''}
+        ${bmFloorSvg(m, art, uid)}${bmPropSvg(m, art)}${bmWallSvg(m)}${bmDoorSvg(m, art, secret)}${grid ? bmGridSvg(m, v, joins) : ''}${labels ? bmLabelsSvg(m) : ''}
         <g class="bm-tokens"></g><g class="bm-fog"></g>
     </svg>`;
 }

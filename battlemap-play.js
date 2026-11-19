@@ -41,7 +41,8 @@ function bpLoadFight() {
     let raw = null;
     try { raw = JSON.parse(localStorage.getItem(BP_FIGHT_KEY) || 'null'); } catch (e) {}
     if (!raw || typeof raw !== 'object' || !Array.isArray(raw.list)) raw = null;
-    const n = v => typeof v === 'number' && Number.isFinite(v) ? Math.round(v) : null;
+    // As the tracker reads them (its num()): numbers, or numbers written as text.
+    const n = v => v === '' || v === null || v === undefined || typeof v === 'boolean' || !Number.isFinite(Number(v)) ? null : Math.round(Number(v));
     const list = raw ? raw.list.filter(c => c && typeof c.id === 'number' && typeof c.name === 'string').slice(0, 60) : [];
     return {
         raw,
@@ -68,10 +69,17 @@ function bpCombatant(t, fight) {
     return fight.list.find(c => c.id === t.f && c.name.toLowerCase() === name) || null;
 }
 
-let bpMonsterIndex = null;
+// The Bestiary row for a monster id, from the rules the page shows now (srd52.js swaps MONSTERS
+// between 2014 and 2024; with the 2014 additions on, their rows count too).
+let bpMonsterIndex = null, bpMonsterFor = '';
 function bpMonster(id) {
     if (typeof MONSTERS === 'undefined') return null;
-    if (!bpMonsterIndex) bpMonsterIndex = new Map(MONSTERS.map(r => [r.id, { size: r.size, type: r.type }]));
+    const adds = typeof srd52Monsters === 'function' ? srd52Monsters() : [];
+    const now = (typeof rulesShown === 'string' ? rulesShown : '') + '|' + adds.length + '|' + MONSTERS.length;
+    if (!bpMonsterIndex || bpMonsterFor !== now) {
+        bpMonsterIndex = new Map(adds.concat(MONSTERS).map(r => [r.id, { size: r.size, type: r.type }]));
+        bpMonsterFor = now;
+    }
     return bpMonsterIndex.get(id) || null;
 }
 
@@ -107,7 +115,7 @@ function bpDmToken(t, fight, sel = false) {
     out.now = c.id === fight.turn;
     out.health = health === 'healthy' ? null : health;
     out.bar = typeof c.hp === 'number' && c.max > 0 ? c.hp / c.max : null;
-    out.hp = c.max > 0 ? `HP ${c.hp} / ${c.max}` : '';
+    out.hp = typeof c.hp === 'number' && c.max > 0 ? `HP ${c.hp} / ${c.max}` : '';
     out.conds = c.conds;
     return out;
 }
@@ -122,7 +130,8 @@ function bpPlayerState(m, fight, opts, ruler = null) {
     const tokens = m.tk.filter(t => !t.hid && bmTokenSeen(seen, t)).map(t => {
         const c = bpCombatant(t, fight), v = c ? pv.get(c.id) : null;
         // "Unknown creature A" in the turn order; shorter under a token.
-        const out = { x: t.x, y: t.y, s: t.s, c: t.c, a: t.a, n: v ? v.name.replace(/^Unknown creature /, 'Unknown ') : t.n };
+        // An unknown creature's picture would give away what it is (creature/dragon): initials until revealed.
+        const out = { x: t.x, y: t.y, s: t.s, c: t.c, a: v && v.hidden ? '' : t.a, n: v ? v.name.replace(/^Unknown creature /, 'Unknown ') : t.n };
         if (v) {
             out.now = v.now;
             out.conds = v.conds;

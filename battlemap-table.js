@@ -46,6 +46,17 @@ function btChannel() {
     return BB.chan;
 }
 
+// This tab's name for the Player View it opens (kept through a reload), so that window follows
+// this Builder and not another tab's map.
+function btSession() {
+    if (!BB.sid) {
+        try { BB.sid = sessionStorage.getItem('gazette-battlemap-sid') || ''; } catch (e) {}
+        if (!/^[a-z0-9]{1,16}$/.test(BB.sid || '')) BB.sid = bmId();
+        try { sessionStorage.setItem('gazette-battlemap-sid', BB.sid); } catch (e) {}
+    }
+    return BB.sid;
+}
+
 let btPostTimer = 0;
 // Soon, once: a drag posts once a frame at most. A timer, not a frame: it still runs with this tab behind another.
 function btPost() {
@@ -53,14 +64,14 @@ function btPost() {
     btPostTimer = setTimeout(() => {
         btPostTimer = 0;
         const r = BB.mode === 'play' && BB.ruler ? { ...BB.ruler, text: bbRulerText(BB.ruler) } : null;
-        try { BB.chan.postMessage({ type: 'state', state: bpPlayerState(BB.m, BB.fight, BB.popts, r) }); } catch (e) {}
+        try { BB.chan.postMessage({ type: 'state', from: btSession(), state: bpPlayerState(BB.m, BB.fight, BB.popts, r) }); } catch (e) {}
     }, 16);
 }
 
 function btOpenView() {
     // Saved first: the window draws this map from the saves until this page answers it.
     bbSaveNow();
-    const w = window.open('battlemap-view', 'gazette-battlemap-view', 'popup,width=1280,height=800');
+    const w = window.open('battlemap-view#from=' + btSession(), 'gazette-battlemap-view', 'popup,width=1280,height=800');
     if (!w) { bbFlash('⚠️ The browser blocked the window. Allow pop-ups for this site, or open the Player View link below the map.', true); return; }
     bbFlash('📺 Drag the Player View window to the TV or second screen, then press its ⛶ Full Screen button.');
     btPost();
@@ -205,18 +216,20 @@ function btDown(e, p, rub, free) {
             bbSave();
             return;
         }
+        const redo = BB.redo;
         bbMark();
-        if (BB.fogMode === 'rect') { BB.drag = { kind: 'btbox', a: sq, b: sq, v: rub ? 0 : 1 }; bbDrawUi(); return; }
-        BB.drag = { kind: 'btfog', last: p, v: rub ? 0 : 1, hit: btFogBrush(p.x, p.y, rub ? 0 : 1) };
+        if (BB.fogMode === 'rect') { BB.drag = { kind: 'btbox', a: sq, b: sq, v: rub ? 0 : 1, redo }; bbDrawUi(); return; }
+        BB.drag = { kind: 'btfog', last: p, v: rub ? 0 : 1, hit: btFogBrush(p.x, p.y, rub ? 0 : 1), redo };
         btDraw();
         return;
     }
     // Tokens.
     if (BB.placing) {
         if (!bbOnMap(p)) return;
+        const redo = BB.redo;
         bbMark();
         const t = btAddToken(BB.placing, btSpot(p, BM_TOKEN_SIZES[BB.placing.s], free));
-        if (!t) { BB.undo.pop(); bbUndoButtons(); return; }
+        if (!t) { bbUnmark(redo); return; }
         BB.placing = null;
         BB.tsel = t.id;
         BB.hover = null;
@@ -272,9 +285,9 @@ function btUp(d) {
         for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
             if (bmIn(m, x, y) && m.fog[y * m.w + x] !== d.v) { m.fog[y * m.w + x] = d.v; hit = true; }
         }
-        if (hit) { btDraw(); bbSave(); } else { BB.undo.pop(); bbUndoButtons(); }
+        if (hit) { btDraw(); bbSave(); } else bbUnmark(d.redo);
     } else if (d.kind === 'btfog') {
-        if (d.hit) bbSave(); else { BB.undo.pop(); bbUndoButtons(); }
+        if (d.hit) bbSave(); else bbUnmark(d.redo);
     } else if (d.kind === 'btmove') {
         if (d.moved) bbSave();
         if (BB.tool !== 'ruler') BB.ruler = null;
@@ -369,7 +382,7 @@ function btFightList() {
     }
     const rows = bpOrder(f.list).map(c => {
         const on = btPlaced(c);
-        const hp = c.max > 0 ? `${c.hp}/${c.max}` : '';
+        const hp = c.hp !== null && c.max > 0 ? `${c.hp}/${c.max}` : '';
         return `<li class="bt-row${c.id === f.turn ? ' bt-now' : ''}${c.hp !== null && c.hp <= 0 ? ' bt-down' : ''}">
             <span class="bt-init" title="Initiative">${c.init}</span>
             <span class="bt-name">${c.pc ? '👤' : '👹'} ${esc(c.name)}</span>
@@ -396,7 +409,7 @@ function btInspector() {
     }
     if (!t) { box.innerHTML = '<p class="bb-hint">Click a token to pick it up, and drag it to move it. The ruler shows how far it went.</p>'; return; }
     const c = bpCombatant(t, BB.fight);
-    const live = c ? `<p class="bt-live">${c.max > 0 ? `❤️ ${c.hp} / ${c.max} HP` : 'No HP tracked'}${c.conds.length ? ` · ${c.conds.map(esc).join(', ')}` : ''}</p>
+    const live = c ? `<p class="bt-live">${c.hp !== null && c.max > 0 ? `❤️ ${c.hp} / ${c.max} HP` : 'No HP tracked'}${c.conds.length ? ` · ${c.conds.map(esc).join(', ')}` : ''}</p>
         <p class="bb-hint">It stands for ${esc(c.name)} in the Initiative Tracker: change its hit points and conditions there.${!c.pc && !c.shown ? ' The players see it as an unknown creature until you reveal it there (👁️).' : ''}</p>` : '';
     box.innerHTML = `<h3>${esc(t.n)}</h3>${live}
         ${c ? '' : `<label class="bb-f">Name <input type="text" id="bt-i-name" maxlength="${BM_LIMITS.tname}" value="${esc(t.n)}" autocomplete="off"></label>`}
