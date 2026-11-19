@@ -18,11 +18,24 @@ function initViewEsc(s) {
     return String(s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch]);
 }
 
-// A creature's health as a word; null when its HP isn't tracked.
+// A creature's health as a word; null when its HP isn't tracked. One entered at 0 HP (max 0 too) is down.
 function initHealth(c) {
-    if (typeof c.hp !== 'number' || typeof c.max !== 'number' || c.max <= 0) return null;
+    if (typeof c.hp !== 'number' || typeof c.max !== 'number') return null;
     if (c.hp <= 0) return 'down';
+    if (c.max <= 0) return null;
     return c.hp <= c.max / 2 ? 'bloodied' : 'healthy';
+}
+
+// A character at 0 HP who isn't dying any more: 5e three death-save successes, Pathfinder no dying value.
+function initStable(c) {
+    if (c.pc !== true || initHealth(c) !== 'down') return false;
+    if (INIT_VIEW_PF2E) return !(Array.isArray(c.conds) && c.conds.some(x => typeof x === 'string' && /^Dying\b/.test(x)));
+    return Array.isArray(c.ds) && Number(c.ds[0]) >= 3;
+}
+
+// A number from saved data, or null (an object whose toString was overwritten would make Number() throw).
+function initNum(v) {
+    return typeof v === 'number' || typeof v === 'string' ? Number(v) : null;
 }
 
 // A, B … Z, AA, AB …
@@ -32,21 +45,29 @@ function initLetter(i) {
     return s;
 }
 
-// The player-safe copy of a fight. Letters follow the order creatures joined (their id),
-// so revealing or reordering one doesn't change the others' letters.
+// The player-safe copy of a fight. Each creature's letter is the tag the tracker gave it when it
+// joined (toolbox-table.js addToFight), so revealing, reordering, or removing one doesn't change
+// the others' letters. Rows saved before tags get the letters after the last tag, in the order they joined.
 function initPlayerView(fight) {
-    const list = fight && Array.isArray(fight.list) ? fight.list.filter(c => c && typeof c.id === 'number' && typeof c.name === 'string') : [];
-    const letters = new Map(list.filter(c => !c.pc).sort((a, b) => a.id - b.id).map((c, i) => [c.id, initLetter(i)]));
+    const seen = new Set();
+    const list = fight && Array.isArray(fight.list) ? fight.list.filter(c => c && typeof c.id === 'number' && typeof c.name === 'string' && !seen.has(c.id) && seen.add(c.id)) : [];
+    const foes = list.filter(c => c.pc !== true).sort((a, b) => a.id - b.id);
+    const tags = new Set();
+    const tagOf = c => Number.isInteger(c.tag) && c.tag > 0 && c.tag < 10000 && !tags.has(c.tag) && tags.add(c.tag) ? c.tag : null;
+    const letters = new Map(foes.map(c => [c.id, tagOf(c)]));
+    let n = Math.max(0, ...tags);
+    foes.forEach(c => { if (letters.get(c.id) === null) letters.set(c.id, ++n); });
     const turn = list.some(c => c.id === fight.turn) ? fight.turn : null;
     return {
-        round: Math.max(1, Math.round(Number(fight && fight.round)) || 1),
+        round: Math.max(1, Math.round(initNum(fight && fight.round)) || 1),
         started: turn !== null,
         list: list.map(c => ({
             key: c.id,
-            name: c.pc || c.shown === true ? c.name.slice(0, 40) : `Unknown creature ${letters.get(c.id)}`,
-            hidden: !c.pc && c.shown !== true,
+            name: c.pc === true || c.shown === true ? c.name.slice(0, 40) : `Unknown creature ${initLetter(letters.get(c.id) - 1)}`,
+            hidden: c.pc !== true && c.shown !== true,
             pc: c.pc === true,
             health: initHealth(c),
+            stable: initStable(c),
             conds: [...(Array.isArray(c.conds) ? c.conds.filter(x => typeof x === 'string') : []),
                 ...(Array.isArray(c.pd) ? c.pd.filter(p => p && typeof p.type === 'string').map(p => `Persistent ${p.type}`) : [])].map(x => x.slice(0, 24)).slice(0, 15),
             now: c.id === turn
@@ -63,11 +84,12 @@ function initReadSavedView() {
 function initCleanView(v) {
     if (!v || typeof v !== 'object' || !Array.isArray(v.list)) return null;
     return {
-        round: Math.max(1, Math.round(Number(v.round)) || 1),
+        round: Math.max(1, Math.round(initNum(v.round)) || 1),
         started: v.started === true,
-        list: v.list.slice(0, 40).filter(c => c && typeof c.name === 'string').map(c => ({
-            key: Number(c.key) || 0, name: c.name.slice(0, 40), hidden: c.hidden === true, pc: c.pc === true,
+        list: v.list.slice(0, 60).filter(c => c && typeof c.name === 'string').map(c => ({
+            key: initNum(c.key) || 0, name: c.name.slice(0, 40), hidden: c.hidden === true, pc: c.pc === true,
             health: ['healthy', 'bloodied', 'down'].includes(c.health) ? c.health : null,
+            stable: c.stable === true,
             conds: Array.isArray(c.conds) ? c.conds.filter(x => typeof x === 'string').map(x => x.slice(0, 24)).slice(0, 15) : [],
             now: c.now === true
         }))
@@ -79,7 +101,7 @@ const INIT_HEALTH_WORDS = { healthy: '💚 Healthy', bloodied: INIT_VIEW_PF2E ? 
 // The turn order as a list for the player view (and the DM screen's mini initiative card).
 function initViewListHtml(view) {
     return view.list.map(c => {
-        const word = c.health === 'down' && c.pc ? (INIT_VIEW_PF2E ? '🩸 Down: dying' : '🩸 Down: death saves') : INIT_HEALTH_WORDS[c.health];
+        const word = c.health === 'down' && c.pc ? (c.stable ? '🩹 Down: stable' : INIT_VIEW_PF2E ? '🩸 Down: dying' : '🩸 Down: death saves') : INIT_HEALTH_WORDS[c.health];
         return `<li class="pv-row${c.now ? ' pv-now' : ''}${c.health === 'down' ? ' pv-down' : ''}${c.pc ? ' pv-pc' : ''}${c.hidden ? ' pv-hidden' : ''}"${c.now ? ' aria-current="true"' : ''}>
             <span class="pv-mark" aria-hidden="true">${c.now ? '▶' : ''}</span>
             <span class="pv-who">${c.pc ? '<span class="pv-icon" aria-hidden="true">👤</span>' : c.hidden ? '<span class="pv-icon" aria-hidden="true">❓</span>' : '<span class="pv-icon" aria-hidden="true">👹</span>'}<span class="pv-name">${initViewEsc(c.name)}</span></span>
@@ -92,14 +114,10 @@ function initViewListHtml(view) {
 // "Now: X · Next: Y", or what to say before the fight starts.
 function initViewTurnText(view) {
     if (!view.list.length) return { head: 'No fight yet', sub: 'The DM\'s initiative tracker is empty.' };
-    if (!view.started) return { head: 'Roll for initiative!', sub: 'The fight is about to begin.' };
     const i = view.list.findIndex(c => c.now);
+    if (!view.started || i < 0) return { head: 'Roll for initiative!', sub: 'The fight is about to begin.' };
     const now = view.list[i];
-    // The next one up who isn't down (a downed character still takes a turn for death saves).
-    let next = null;
-    for (let k = 1; k < view.list.length && !next; k++) {
-        const c = view.list[(i + k) % view.list.length];
-        if (c.health !== 'down' || c.pc) next = c;
-    }
-    return { head: `Round ${view.round}`, now: now.name, next: next && next.key !== now.key ? next.name : null };
+    // The row the tracker's Next Turn lands on (it doesn't skip the downed).
+    const next = view.list.length > 1 ? view.list[(i + 1) % view.list.length] : null;
+    return { head: `Round ${view.round}`, now: now.name, next: next ? next.name : null };
 }

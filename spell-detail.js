@@ -119,7 +119,13 @@ function spellDetailHtml(sp) {
 // Toggle a spell button's card in `box`; any other open spell button in `scope` closes.
 function toggleSpellDetail(btn, box, scope = document) {
     const open = btn.getAttribute('aria-expanded') === 'true';
-    scope.querySelectorAll('.sb-spell[aria-expanded="true"]').forEach(b => b.setAttribute('aria-expanded', 'false'));
+    // Another feature's open card closes with its button (a stat block has one card box per feature).
+    scope.querySelectorAll('.sb-spell[aria-expanded="true"]').forEach(b => {
+        b.setAttribute('aria-expanded', 'false');
+        const other = b.closest('.sb-feature');
+        const otherBox = other && other.querySelector('.sb-spell-detail');
+        if (otherBox && otherBox !== box) otherBox.hidden = true;
+    });
     const sp = !open && spellByName(btn.dataset.spell);
     if (!sp) { box.hidden = true; return; }
     btn.setAttribute('aria-expanded', 'true');

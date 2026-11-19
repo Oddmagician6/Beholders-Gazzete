@@ -50,7 +50,7 @@ function bpLoadFight() {
         turn: raw && list.some(c => c.id === raw.turn) ? raw.turn : null,
         list: list.map(c => ({
             id: c.id, name: c.name.slice(0, 40), init: n(c.init) ?? 0, mod: n(c.mod) ?? 0, hp: n(c.hp), max: n(c.max),
-            pc: c.pc === true, shown: c.shown === true,
+            pc: c.pc === true, shown: c.shown === true, tag: c.tag, ds: Array.isArray(c.ds) ? c.ds.slice(0, 2) : null,
             monster: typeof c.monster === 'string' ? c.monster : null, party: typeof c.party === 'string' ? c.party : null,
             conds: Array.isArray(c.conds) ? c.conds.filter(x => typeof x === 'string').map(x => x.slice(0, 20)).slice(0, 15) : []
         }))

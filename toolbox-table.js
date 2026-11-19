@@ -180,7 +180,8 @@ function setupDice() {
 }
 
 // ── Initiative ────────────────────────────────────────────
-let fight = { round: 1, turn: null, nextId: 1, list: [] };
+// nextTag: the player view's letter for the next creature that isn't a player character (init-view.js).
+let fight = { round: 1, turn: null, nextId: 1, nextTag: 1, list: [] };
 let openConds = null;   // id whose condition menu is open, kept across re-renders
 let openPd = null;      // the same for the Pathfinder persistent damage box
 let openBlocks = new Set();   // ids whose stat block is open (this page only)
@@ -206,7 +207,7 @@ function iaV52Rows() {
 // The Monster Manual names not saved yet (book-monsters.js, 5e only). Typing one offers the
 // form for its numbers; saved, it's homebrew and fills the fields like any other monster.
 function iaBookRows() {
-    return INIT_PF2E || typeof bookRows === 'undefined' ? [] : bookRows;
+    return INIT_PF2E || typeof bookOpenRows === 'undefined' ? [] : bookOpenRows();
 }
 let iaBookForm = false;
 
@@ -276,6 +277,7 @@ function loadFight() {
                 // Kept even when this page's rules version lacks it (a 2024 id in 2014): its block shows again in 2024.
                 monster: typeof c.monster === 'string' && /^[a-z0-9-]{1,80}$/.test(c.monster) ? c.monster : null,
                 pc: c.pc === true, pp: num(c.pp), shown: c.shown === true,
+                tag: c.pc !== true && Number.isInteger(c.tag) && c.tag > 0 && c.tag < 10000 ? c.tag : null,
                 conds: Array.isArray(c.conds) ? c.conds.filter(condOk) : [],
                 pd: INIT_PF2E && Array.isArray(c.pd) ? c.pd.filter(pdOk).map(p => ({ dice: p.dice.replace(/\s+/g, ''), type: p.type })).slice(0, PD_MAX) : [],
                 party: typeof c.party === 'string' && /^[a-z0-9]{1,16}$/.test(c.party) ? c.party : null,
@@ -283,10 +285,17 @@ function loadFight() {
                 conc: typeof c.conc === 'string' ? c.conc.slice(0, 40) : '',
                 ds: Array.isArray(c.ds) ? [0, 1].map(i => Math.min(3, Math.max(0, num(c.ds[i]) ?? 0))) : [0, 0]
             }));
+            // A fight saved before tags (or a repeated tag): those creatures get the next tags in the order
+            // they joined, so they keep the letters the player view gave them.
+            const tags = new Set();
+            list.forEach(c => { if (c.tag !== null && !tags.has(c.tag)) tags.add(c.tag); else c.tag = null; });
+            let tag = Math.max(0, ...tags);
+            list.filter(c => !c.pc && c.tag === null).sort((a, b) => a.id - b.id).forEach(c => { c.tag = ++tag; });
             fight = {
                 round: Math.max(1, num(saved.round) || 1),
                 turn: list.some(c => c.id === saved.turn) ? saved.turn : null,
                 nextId: Math.max(num(saved.nextId) || 1, ...list.map(c => c.id + 1)),
+                nextTag: Math.min(9999, Math.max(num(saved.nextTag) || 1, tag + 1)),
                 list
             };
         }
@@ -336,7 +345,8 @@ function addToFight({ name, mod = 0, fixed = null, hp = null, ac = null, count =
         const c = {
             id: fight.nextId++, name: count > 1 || taken.length ? `${base} ${++n}` : name.length > 36 ? base : name,
             init: fixed !== null && count === 1 ? fixed : rollInit(mod), mod,
-            hp: hp !== null ? Math.max(0, hp) : null, max: hp !== null ? Math.max(0, hp) : null, ac, monster, pc, pp, shown: false, conds: [], pd: [],
+            hp: hp !== null ? Math.max(0, hp) : null, max: hp !== null ? Math.max(0, hp) : null, ac, monster, pc, pp, shown: false,
+            tag: pc ? null : fight.nextTag++, conds: [], pd: [],
             party: null, temp: 0, exh: 0, conc: '', ds: [0, 0]
         };
         fight.list.push(c);
@@ -782,7 +792,7 @@ function setupInitiative() {
     clear.addEventListener('click', () => {
         if (!fight.list.length) return;
         armedClick(clear, '🧹 Clear All', () => {
-            fight = { round: 1, turn: null, nextId: 1, list: [] };
+            fight = { round: 1, turn: null, nextId: 1, nextTag: 1, list: [] };
             openBlocks = new Set();
             autoBlock = null;
             saveFight();

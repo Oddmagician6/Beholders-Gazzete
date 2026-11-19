@@ -20,14 +20,30 @@ const SB_ABILITIES = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
 const SB_SECTIONS = [['tr', 'Traits'], ['ac2', 'Actions'], ['ba', 'Bonus Actions'], ['re', 'Reactions'], ['le', 'Legendary Actions']];
 let sbLoading = null;
 
+// One request per file: a retry while the last one is still on its way waits for it instead of
+// adding the script twice (its top-level consts would clash). A failed file can be tried again.
+const sbScripts = new Map();
 function loadScript(src) {
-    return new Promise((resolve, reject) => {
-        const s = document.createElement('script');
-        s.src = src;
-        s.onload = resolve;
-        s.onerror = () => reject(new Error(src));
-        document.head.appendChild(s);
-    });
+    if (!sbScripts.has(src)) {
+        sbScripts.set(src, new Promise((resolve, reject) => {
+            const s = document.createElement('script');
+            s.src = src;
+            s.onload = resolve;
+            s.onerror = () => { sbScripts.delete(src); s.remove(); reject(new Error(src)); };
+            document.head.appendChild(s);
+        }));
+    }
+    return sbScripts.get(src);
+}
+
+// The spell text the spell buttons open (loads with the blocks; it can fail on its own).
+function sbSpellsReady() {
+    return sbPf2e() ? typeof PF2E_SPELLS !== 'undefined' : typeof SPELLS_DATA !== 'undefined';
+}
+
+// A block's own entry: never one an id like "constructor" finds on Object.prototype.
+function sbOwn(table, id) {
+    return Object.prototype.hasOwnProperty.call(table, id) ? table[id] : undefined;
 }
 
 // A page without the encounter engine (the Pathfinder NPC page) goes by its system.
@@ -44,10 +60,10 @@ function loadMonsterBlocks() {
     if (!sbLoading) {
         sbLoading = Promise.all(sbPf2e() ? [
             blocksReady() ? null : loadScript('pf2e-creature-blocks.js'),
-            typeof PF2E_SPELLS !== 'undefined' ? null : loadScript('pf2e-spells-data.js')
+            sbSpellsReady() ? null : loadScript('pf2e-spells-data.js')
         ] : [
             blocksReady() ? null : loadScript('monster-statblocks.js'),
-            typeof SPELLS_DATA !== 'undefined' ? null : loadScript('spells-data.js')
+            sbSpellsReady() ? null : loadScript('spells-data.js')
         ]).then(() => {
             // spells-data.js came late: in 2024 mode, swap its 5.2 text in (srd52.js).
             if (typeof srd52Register === 'function') srd52Register();
@@ -155,10 +171,16 @@ function sbBlockSpells(b, sections) {
     return [...new Set(sections.flatMap(k => (b[k] || []).flatMap(([, t]) => [...t.matchAll(/\[\[(.+?)\]\]/g)].map(x => x[1]))))];
 }
 
+// The Spellbook link's slugs: each spell by the name the spell list knows it by now (a homebrew
+// [[Feeblemind]] is Befuddlement in 2024), so the Spellbook finds it.
+function sbBookSlugs(spells) {
+    return [...new Set(spells.map(n => spellSlug((typeof spellByName === 'function' && spellByName(n) || { name: n }).name)))].join('.');
+}
+
 function sb2024Html(m, b) {
     const sec = Object.fromEntries(SB_SECTIONS.filter(([k]) => b[k]).map(([k]) => [k, sbFeatures2024(b[k])]));
     const spells = sbBlockSpells(sec, Object.keys(sec));
-    const book = spells.length && `spellbook?${paramsQuery({ spells: spells.map(spellSlug).join('.'), list: `${m.name} spells`.slice(0, 40) })}`;
+    const book = spells.length && `spellbook?${paramsQuery({ spells: sbBookSlugs(spells), list: `${m.name} spells`.slice(0, 40) })}`;
     const saves = sbSaves(b);
     return `
         <p class="sb-type">${esc(b.t)}</p>
@@ -195,7 +217,7 @@ function sb2024Text(m, b) {
 
 // The block to draw: a homebrew monster's own, else the SRD one (undefined until loaded).
 function sbBlockOf(m) {
-    return m.block || (blocksReady() ? MONSTER_BLOCKS[m.id] : undefined);
+    return m.block || (blocksReady() ? sbOwn(MONSTER_BLOCKS, m.id) : undefined);
 }
 
 function monsterBlockHtml(m) {
@@ -206,7 +228,7 @@ function monsterBlockHtml(m) {
     if (!b) return '<p class="sb-note">No stat block for this monster.</p>';
     if (sb2024(b)) return sb2024Html(m, b);
     const spells = sbBlockSpells(b, ['tr', 'ac2', 'ba', 're', 'le']);
-    const book = spells.length && `spellbook?${paramsQuery({ spells: spells.map(spellSlug).join('.'), list: `${m.name} spells`.slice(0, 40) })}`;
+    const book = spells.length && `spellbook?${paramsQuery({ spells: sbBookSlugs(spells), list: `${m.name} spells`.slice(0, 40) })}`;
     if (b.book) return `
         <p class="sb-type">${esc(b.t)}</p>
         <div class="sb-core">
@@ -254,9 +276,12 @@ function monsterBlockText(m) {
     return lines.join('\n');
 }
 
-// A click on a [[spell]] button: open its card inside the same feature.
+// A click on a [[spell]] button: open its card inside the same feature. When the spell text
+// didn't load with the blocks (it failed, or a homebrew block drew first), it's fetched first.
 function sbSpellClick(btn, scope) {
-    toggleSpellDetail(btn, btn.closest('.sb-feature').querySelector('.sb-spell-detail'), scope);
+    const open = () => toggleSpellDetail(btn, btn.closest('.sb-feature').querySelector('.sb-spell-detail'), scope);
+    if (sbSpellsReady() || btn.getAttribute('aria-expanded') === 'true') { open(); return; }
+    loadMonsterBlocks().then(open, () => {});
 }
 
 /* ---------- Pathfinder stat blocks ---------- */
@@ -345,7 +370,9 @@ function sbPf2eSpellList(list) {
 }
 
 function sbPf2eSpells([name, dc, atk, note, ranks]) {
-    return { name, head: `DC ${dc}${atk ? `, attack ${sbSigned(atk)}` : ''}${note ? `, ${note}` : ''}`, ranks: ranks.map(([r, list]) => [sbPf2eRank(r), list]) };
+    // A few entries carry no DC in the data (0): left out rather than printed as "DC 0".
+    const head = [dc ? `DC ${dc}` : '', atk ? `attack ${sbSigned(atk)}` : '', note || ''].filter(Boolean).join(', ');
+    return { name, head, ranks: ranks.map(([r, list]) => [sbPf2eRank(r), list]) };
 }
 
 function sbPf2ePerception(m, b) {
@@ -364,7 +391,7 @@ function sbPf2eDefenses(m, b) {
 // block: the text to draw in place of PF2E_BLOCKS[m.id] (an adjusted NPC, npc-statblock-pf2e.js).
 function sbPf2eHtml(m, block = null) {
     if (!block && !blocksReady()) return '<p class="sb-note">Loading the stat block…</p>';
-    const b = block || PF2E_BLOCKS[m.id];
+    const b = block || sbOwn(PF2E_BLOCKS, m.id);
     if (!b) return '<p class="sb-note">No stat block for this creature.</p>';
     const line = (k, v) => v ? `<p><strong>${k}</strong> ${esc(String(v))}</p>` : '';
     const abilities = list => (list || []).map(sbPf2eAbility).join('');
@@ -387,13 +414,13 @@ function sbPf2eHtml(m, block = null) {
         <div class="sb-props">
             ${line('Speed', b.sp)}
             ${(b.st || []).map(sbPf2eStrike).map(s => `<p class="sb-feat"><strong>${s.kind}</strong>${sbPf2eCost('1')} ${esc(s.text)}, <strong>Damage</strong> ${esc(s.dmg)}</p>`).join('')}
-            ${(b.sc || []).map(sbPf2eSpells).map(s => `<div class="sb-feature"><p class="sb-feat"><strong>${esc(s.name)}</strong> ${esc(s.head)}; ${s.ranks.map(([r, l]) => `<strong>${esc(r)}</strong> ${sbPf2eSpellList(l)}`).join('; ')}</p><div class="sb-spell-detail" hidden></div></div>`).join('')}
+            ${(b.sc || []).map(sbPf2eSpells).map(s => `<div class="sb-feature"><p class="sb-feat"><strong>${esc(s.name)}</strong> ${s.head ? `${esc(s.head)}; ` : ''}${s.ranks.map(([r, l]) => `<strong>${esc(r)}</strong> ${sbPf2eSpellList(l)}`).join('; ')}</p><div class="sb-spell-detail" hidden></div></div>`).join('')}
             ${abilities(b.oa)}
         </div>`;
 }
 
 function sbPf2eText(m, block = null) {
-    const b = block || (blocksReady() && PF2E_BLOCKS[m.id]);
+    const b = block || (blocksReady() && sbOwn(PF2E_BLOCKS, m.id));
     if (!b) return '';
     const ability = ([name, cost, traits, text]) =>
         `${name}${cost ? ` ${SB_PF2E_COST_WORDS[cost]}` : ''}${traits.length ? ` (${traits.join(', ')})` : ''} ${sbPf2ePlain(text).replace(/\n+/g, ' ')}`.trim();
@@ -409,7 +436,7 @@ function sbPf2eText(m, block = null) {
         ...(b.da || []).map(ability),
         `Speed ${b.sp}`,
         ...(b.st || []).map(sbPf2eStrike).map(s => `${s.kind} [one action] ${s.text}, Damage ${s.dmg}`),
-        ...(b.sc || []).map(sbPf2eSpells).map(s => `${s.name} ${s.head}; ${s.ranks.map(([r, l]) => `${r} ${l}`).join('; ')}`),
+        ...(b.sc || []).map(sbPf2eSpells).map(s => `${s.name} ${s.head ? `${s.head}; ` : ''}${s.ranks.map(([r, l]) => `${r} ${l}`).join('; ')}`),
         ...(b.oa || []).map(ability)
     ].filter(Boolean).join('\n');
 }

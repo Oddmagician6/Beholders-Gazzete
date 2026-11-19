@@ -78,7 +78,11 @@ function srd52Monsters() {
 function rulesRename(kind, name) {
     if (rulesShown !== '2024' || typeof SRD52_FULL === 'undefined') return null;
     const map = SRD52_FULL.renames[kind] || {};
-    return map[name] || null;
+    if (Object.prototype.hasOwnProperty.call(map, name)) return map[name];
+    // Typed by hand ("branding smite" in a homebrew block): any capitals.
+    const key = String(name).toLowerCase();
+    const hit = Object.keys(map).find(k => k.toLowerCase() === key);
+    return hit ? map[hit] : null;
 }
 
 // ---------- the data swap ----------

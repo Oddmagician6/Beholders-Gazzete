@@ -374,6 +374,7 @@ function hbBlock(mon, cr = hbCr(mon)) {
     const init = mon.init !== null && mon.init !== undefined ? mon.init : hbMod(mon.ab[1]);
     if (mon.book && !HB_SECTIONS.some(([k]) => b[k])) {
         b.book = `Monster Manual (2014), page ${mon.book}`;
+        b.t = b.t.replace(/, [^,()]*$/, '');   // the book form never asks for an alignment
         b.init = init;
     }
     if (mon.style === '2024' && !b.book) b.init = init;

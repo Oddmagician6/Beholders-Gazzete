@@ -79,7 +79,7 @@ function encV52Rows() {
 }
 
 function encBookRows() {
-    return ENC_PF2E || typeof bookRows === 'undefined' ? [] : bookRows;
+    return ENC_PF2E || typeof bookOpenRows === 'undefined' ? [] : bookOpenRows();
 }
 let encBookOpen = null;
 

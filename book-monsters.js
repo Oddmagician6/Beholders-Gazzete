@@ -161,6 +161,14 @@ function bookRefresh() {
     return bookRows;
 }
 
+// bookRows less the ones the rules in use print for free: SRD 5.2 has Allosaurus and a few others,
+// in 2024 and with the 2014 additions on (srd52.js swaps MONSTERS). Those add with their own block.
+function bookOpenRows() {
+    const free = new Set([...(typeof MONSTERS !== 'undefined' ? MONSTERS : []),
+        ...(typeof srd52Monsters === 'function' ? srd52Monsters() : [])].map(m => String(m.name).toLowerCase()));
+    return free.size ? bookRows.filter(r => !free.has(r.name.toLowerCase())) : bookRows;
+}
+
 function bookNamed(name) {
     const key = String(name).trim().toLowerCase();
     const r = BOOK_MONSTERS.find(x => x[0].toLowerCase() === key);
