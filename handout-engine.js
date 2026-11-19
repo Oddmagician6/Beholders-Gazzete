@@ -134,11 +134,18 @@ function handoutBlank(t) {
 // ── Sources: a rolled NPC, quest, or shop, replayed from its link ──
 // from -> the handouts it can fill (the first is where its "Make a Handout" link lands)
 // and the URL keys its link uses besides the seed.
+// text: keys that take one free-text value (a given name, a shop's sign), checked again by the roll that reads them.
 const HANDOUT_SOURCES = {
-    npc: { icon: '🎭', label: 'NPC', fills: ['wanted', 'letter'], keys: ['race', 'profession', 'age', 'gender', 'cls', 'level', 'lock'], page: 'npc-generator' },
-    quest: { icon: '📜', label: 'quest', fills: ['board', 'letter'], keys: ['lvl', 'n', 'job'], page: 'toolbox?tab=quest' },
-    shop: { icon: '🏪', label: 'shop', fills: ['prices'], keys: ['type', 'wealth'], page: 'shop' }
+    npc: { icon: '🎭', label: 'NPC', fills: ['wanted', 'letter'], keys: ['race', 'profession', 'age', 'gender', 'cls', 'level', 'lock', 'world'], text: ['name', 'role', 'faith'], page: 'npc-generator' },
+    quest: { icon: '📜', label: 'quest', fills: ['board', 'letter'], keys: ['lvl', 'n', 'job', 'world'], text: [], page: 'toolbox?tab=quest' },
+    shop: { icon: '🏪', label: 'shop', fills: ['prices'], keys: ['type', 'wealth'], text: ['name'], page: 'shop' }
 };
+
+// A free-text link value: one line, no markup, at most 80 characters, or ''.
+function hoTextParam(v) {
+    v = typeof v === 'string' ? v.replace(/[\u0000-\u001f<>]/g, '').replace(/\s+/g, ' ').trim() : '';
+    return v.length <= 80 ? v : '';
+}
 
 // URLSearchParams -> { from, seed, query } with the source's own keys only, or null.
 // query is the canonical link (from=…&seed=…&…), which a filled handout keeps as src.
@@ -147,6 +154,7 @@ function handoutSourceParams(p) {
     if (!def || !seed) return null;
     const q = new URLSearchParams({ from, seed });
     def.keys.forEach(k => p.getAll(k).slice(0, NPC_PARTS.length).forEach(v => { if (/^[\w.-]{1,40}$/.test(v)) q.append(k, v); }));
+    def.text.forEach(k => { const v = hoTextParam(p.get(k)); if (v) q.set(k, v); });
     return { from, seed, p: q, query: q.toString() };
 }
 
@@ -178,6 +186,8 @@ function handoutSource(src) {
         if (src.from === 'shop') {
             const opts = { type: hoPick(p.get('type'), Object.keys(SHOP_TYPES)), wealth: hoPick(p.get('wealth'), Object.keys(SHOP_WEALTH)) };
             const shop = { ...withSeed(src.seed, () => rollShop({ ...opts, seed: src.seed })), seed: src.seed };
+            const sign = p.get('name');   // the shop page's own sign (?name=, at most 60 characters)
+            if (sign && sign.length <= 60) shop.name = sign;
             return { ...src, shop, title: shop.name };
         }
     } catch (e) {
@@ -577,7 +587,7 @@ function handoutText(h) {
         if (h.sub) lines.push(h.sub);
         if (h.note) lines.push(h.note);
         lines.push('');
-        h.items.filter(i => i.name || i.price).forEach(i => lines.push(`- ${i.name}${i.note ? ` (${i.note})` : ''}: ${i.price ? formatCoins(i.price) : 'ask'}`));
+        h.items.filter(i => i.name || i.price).forEach(i => lines.push(`- ${i.name}${i.note ? ` (${i.note})` : ''}${i.price ? `: ${formatCoins(i.price)}` : ''}`));
         if (h.foot) lines.push('', h.foot);
     }
     return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();

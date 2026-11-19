@@ -140,14 +140,15 @@ function hoRenderTypes() {
 }
 
 // push: true = new history entry, false = replace, null = leave the URL alone.
-function hoRender(push = false) {
+// save: false when the state just came from another tab's save (writing it back would bounce between tabs).
+function hoRender(push = false, save = true) {
     hoRenderTypes();
     hoRenderForm();
     hoRenderPreview();
     hoRenderSource();
     document.getElementById('ho-ink').checked = ho.ink;
     if (push !== null) setUrlParams(hoParams(), push);
-    hoSave();
+    if (save) hoSave();
 }
 
 // ── Actions ───────────────────────────────────────────────
@@ -304,6 +305,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const t = ho.t;
         hoLoad();
         ho.t = t;
-        hoRender(null);
+        hoRender(null, false);
     });
 });

@@ -48,20 +48,22 @@ function dtWorkOk(k) {
     return !!(DOWNTIME_WORK[k] || DOWNTIME_GAMES[k] || (DT_PF2E && DOWNTIME_PF2E_RETRAIN[k]));
 }
 
-function dtNum(v, max) {
+function dtNum(v, max, min = 0) {
     const n = Math.round((Number(v) || 0) * 100) / 100;
-    return Math.min(max, Math.max(0, n));
+    return Math.min(max, Math.max(min, n));
 }
 
 // A character as stored and shared: unknown keys fall back to the defaults.
+// done can be a negative check bonus (Earn Income, gambling); the engine floors it per activity.
 function dtClean(c) {
+    c = c && typeof c === 'object' ? c : {};
     const b = dtBlankChar();
     const out = {
         name: String(c.name || '').slice(0, 40),
         life: DOWNTIME_LIFESTYLES[c.life] ? c.life : b.life,
         act: DOWNTIME_ACTIVITIES[c.act] ? c.act : b.act,
         val: c.val === '' || c.val === undefined ? '' : String(dtNum(c.val, DT_VALUE_MAX)),
-        done: c.done === '' || c.done === undefined ? '' : String(dtNum(c.done, DT_VALUE_MAX)),
+        done: c.done === '' || c.done === undefined ? '' : String(dtNum(c.done, DT_VALUE_MAX, DT_MIN_BONUS)),
         help: String(Math.min(DOWNTIME_MAX_CHARS - 1, Math.floor(dtNum(c.help, 99)))),
         work: dtWorkOk(c.work) ? c.work : b.work
     };
@@ -84,7 +86,7 @@ function dtDecode(s) {
 
 // Anything on the page that comes from the seed.
 function dtRolls() {
-    return dt.events || dt.chars.some(c => c.act === 'carouse' || c.act === 'gamble');
+    return dt.events || dt.chars.some(c => c.act === 'carouse' || c.act === 'gamble' || (DT_PF2E && c.act === 'earn' && c.val !== ''));
 }
 
 function dtDays() {
@@ -93,9 +95,11 @@ function dtDays() {
 
 function downParams() {
     const wk = document.getElementById('dt-weeks'), d = document.getElementById('dt-days');
+    // A cleared box counts as 0 (downtimeDays), so the link says 0 rather than falling back to the default.
+    const val = el => el.value.trim() === '' ? '0' : el.value.trim();
     return urlFor('down', {
-        wk: wk.value.trim() !== '' && wk.value !== defaultValue(wk) ? wk.value.trim() : null,
-        d: d.value.trim() !== '' && d.value !== defaultValue(d) ? d.value.trim() : null,
+        wk: val(wk) !== defaultValue(wk) ? val(wk) : null,
+        d: val(d) !== defaultValue(d) ? val(d) : null,
         c: dt.chars.map(dtEncode),
         ev: dt.events ? null : '0',
         seed: dtRolls() ? dt.seed : null
@@ -115,7 +119,7 @@ function saveDowntime() {
 function loadDowntime() {
     try {
         const s = JSON.parse(localStorage.getItem(DOWNTIME_KEY));
-        if (s && Array.isArray(s.chars) && s.chars.length) return s;
+        if (s && Array.isArray(s.chars) && s.chars.some(c => c && typeof c === 'object')) return s;
     } catch (e) {}
     return null;
 }
@@ -180,6 +184,8 @@ function renderDowntimeResults() {
             if (ft.done) {
                 row.querySelector('.dt-l-done').textContent = ft.done[0];
                 row.querySelector('.dt-done').placeholder = ft.done[1];
+                // A check bonus can be negative.
+                row.querySelector('.dt-done').min = c.act === 'earn' || c.act === 'gamble' ? DT_MIN_BONUS : 0;
             }
         }
         const extraName = { craft: 'materials', research: 'research', carouse: 'carousing', train: 'tutor', gamble: 'losses', learn: 'spell materials' }[c.act] || 'extras';
@@ -220,7 +226,8 @@ function setDowntime(state) {
     const wk = document.getElementById('dt-weeks'), d = document.getElementById('dt-days');
     if (!setFieldValue(wk, state.weeks)) wk.value = defaultValue(wk);
     if (!setFieldValue(d, state.days)) d.value = defaultValue(d);
-    dt.chars = (state.chars && state.chars.length ? state.chars : [dtBlankChar()]).slice(0, DOWNTIME_MAX_CHARS).map(dtClean);
+    const rows = Array.isArray(state.chars) ? state.chars.filter(c => c && typeof c === 'object') : [];
+    dt.chars = (rows.length ? rows : [dtBlankChar()]).slice(0, DOWNTIME_MAX_CHARS).map(dtClean);
     dt.seed = parseSeed(state.seed) || newSeed();
     document.getElementById('dt-events').checked = state.events !== false;
     buildDowntimeRows();

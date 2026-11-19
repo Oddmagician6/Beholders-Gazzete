@@ -95,6 +95,7 @@ function dtIncome(level, rank, crit) {
 const DT_PF2E_SETUP = 2;          // Craft's setup days without the formula
 const DT_PF2E_MAX_BONUS = 50;
 const DT_PF2E_MAX_SPELLS = 20;
+const DT_MIN_BONUS = -10;         // the lowest check bonus (Earn Income, gambling)
 // GM Core's DC by level, 0–20 (the gambling DCs on Pathfinder pages).
 const DT_PF2E_LEVEL_DC = DOWNTIME_PF2E_INCOME.slice(0, 21).map(r => r[0]);
 
@@ -179,7 +180,7 @@ const CAROUSE_OUTCOMES = {
         { k: 'good', t: 'You make friends with a guild journeyman who can get you trade goods at a tenth off for the next month.' },
         { k: 'good', t: 'You sing so well (or so badly) that the tavern offers you a standing free drink if you come back on market days.' },
         { k: 'good', t: 'A merchant in her cups mentions a caravan that needs guards and pays well. She gives you her card.' },
-        { k: 'good', t: 'You win a game of dragonchess against a city clerk, who now owes you a favor with the paperwork.' },
+        { k: 'good', t: ruleText('You win a game of {alt:dragonchess|chess} against a city clerk, who now owes you a favor with the paperwork.') },
         { k: 'bad', t: 'You ran up a tab you can\'t remember. The barkeep can: 3d6 gp, payable before you\'re welcome back.' },
         { k: 'bad', t: 'You started a brawl over a card game. The tavern bans you, and the other player swears revenge.' },
         { k: 'bad', t: 'You promised to sponsor a local festival. The organizers expect 10 gp and are already printing your name.' },
@@ -681,9 +682,10 @@ function downtimeFor(c, days, seed, i = 0, opts = {}) {
         }
     } else if (DT_PF2E && c.act === 'earn') {
         const task = c.val === '' || c.val === undefined ? null : Math.min(20, Math.max(0, Math.floor(Number(c.val) || 0)));
-        const bonus = Math.min(DT_PF2E_MAX_BONUS, Math.floor(Math.max(0, Number(c.done) || 0)));
+        const bonus = Math.min(DT_PF2E_MAX_BONUS, Math.floor(Math.max(DT_MIN_BONUS, Number(c.done) || 0)));
         const rank = (DOWNTIME_PF2E_RANKS[c.work] || DOWNTIME_PF2E_RANKS.trained).label.toLowerCase();
         if (task === null) lines.push({ text: 'Enter the task level the GM offers: usually up to 0–1 in a village, 2–4 in a town, 5–7 in a city.', src: 'PC' });
+        else if (!days) lines.push({ text: 'The check comes after the first day of work: add some downtime to roll it.', src: 'PC' });
         else {
             const dc = DOWNTIME_PF2E_INCOME[task][0];
             const d20 = withSeed(deriveSeed(seed || '0', `earn.${i}`), () => 1 + Math.floor(rand() * 20));
@@ -713,6 +715,8 @@ function downtimeFor(c, days, seed, i = 0, opts = {}) {
         out.busy = Math.min(days, Math.ceil(hours / 8));
         lines.push({ text: `${n} ${rk ? `rank ${rk}` : 'cantrip'} spell${n === 1 ? '' : 's'}: ${formatCoins(price)} of materials each, ${hours} hour${hours === 1 ? '' : 's'} of study, typical DC ${dc} with your tradition's skill (higher for uncommon and rare spells).`, src: 'PC' });
         lines.push({ text: 'A critical success spends half the materials. A failure spends nothing and can try again at the next level; a critical failure spends half.', src: 'PC' });
+        const studyDays = Math.ceil(hours / 8);
+        if (days && studyDays > days) lines.push({ text: `That's about ${studyDays} days of study at 8 hours a day, more than this downtime: the materials are counted in full, and the rest of the study waits for the next break.`, src: 'ruling' });
     } else if (DT_PF2E && c.act === 'retrain') {
         const kind = DOWNTIME_PF2E_RETRAIN[c.work] || DOWNTIME_PF2E_RETRAIN.feat;
         const n = c.val === '' || c.val === undefined ? 1 : Math.min(20, Math.max(1, Math.floor(Number(c.val) || 0)));
@@ -798,7 +802,7 @@ function downtimeFor(c, days, seed, i = 0, opts = {}) {
         } else lines.push({ text: 'Enter the days the training takes to track progress.', src: 'ruling' });
     } else if (c.act === 'gamble') {
         const stake = Math.max(0, Math.round((Number(c.val) || 0) * 100) / 100);
-        const bonus = Math.min(DT_PF2E ? DT_PF2E_MAX_BONUS : GAMBLE_MAX_BONUS, Math.floor(Math.max(0, Number(c.done) || 0)));
+        const bonus = Math.min(DT_PF2E ? DT_PF2E_MAX_BONUS : GAMBLE_MAX_BONUS, Math.floor(Math.max(DT_MIN_BONUS, Number(c.done) || 0)));
         const g0 = DOWNTIME_GAMES[c.work] || DOWNTIME_GAMES.dice;
         const game = DT_PF2E ? { ...g0, dc: DT_PF2E_LEVEL_DC[dtLevel(c)] + g0.pf } : g0;
         out.gamble = { stake, bonus, game, rolls: [], net: 0 };
@@ -857,7 +861,8 @@ function downtimeMoney(gp) {
 
 // One gambling week as text: "🎲 14 + 3 = 17 vs DC 14: won half the stake (+5 gp)".
 function gambleRollText(g) {
-    return `🎲 ${g.d20}${g.total !== g.d20 ? ` + ${g.total - g.d20} = ${g.total}` : ''} vs DC ${g.dc}: ${g.tier}${g.net === undefined ? '' : ` (${g.net >= 0 ? '+' : '−'}${formatCoins(Math.abs(g.net))})`}`;
+    const mod = g.total - g.d20;
+    return `🎲 ${g.d20}${mod ? ` ${mod > 0 ? '+' : '−'} ${Math.abs(mod)} = ${g.total}` : ''} vs DC ${g.dc}: ${g.tier}${g.net === undefined ? '' : ` (${g.net >= 0 ? '+' : '−'}${formatCoins(Math.abs(g.net))})`}`;
 }
 
 // [label, text] pairs for the page and the copied text; older results without the new fields give none.

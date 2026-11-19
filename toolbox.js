@@ -275,6 +275,8 @@ function renderTravel(opts) {
     const left = goal ? Math.round((goal - d.covered) * 10) / 10 : 0;
     const perDay = travelDistance(opts, null).miles;   // a day without bad weather
     const daysLeft = left > 0 && perDay > 0 ? Math.ceil(left / perDay) : 0;
+    const capped = !d.arrived && d.day >= TRAVEL_MAX_DAYS;
+    const plural = travelUnit;
 
     document.getElementById('travel-day').innerHTML = `
         <div class="day-head">
@@ -313,9 +315,9 @@ function renderTravel(opts) {
             </section>` : ''}
             <section class="day-block">
                 <h4>🥾 Distance</h4>
-                <div class="dist-miles">${d.today}<small>miles today</small></div>
-                <p class="dist-sum">${esc(travelPaceLabel(d.dist))}, ${d.dist.hours} hour${d.dist.hours === 1 ? '' : 's'} on the road.
-                    ${goal ? `${d.covered} of ${goal} miles${d.arrived ? '' : `; about ${daysLeft} more day${daysLeft === 1 ? '' : 's'} at this pace`}.` : `${d.covered} miles since setting out.`}</p>
+                <div class="dist-miles">${d.today}<small>${d.today === 1 ? 'mile' : 'miles'} today</small></div>
+                <p class="dist-sum">${esc(travelPaceLabel(d.dist))}, ${plural(d.dist.hours, 'hour')} on the road.
+                    ${goal ? `${d.covered} of ${plural(goal, 'mile')}${d.arrived ? '' : capped ? `; the log stops at day ${TRAVEL_MAX_DAYS}, so start a new journey from here for the last ${plural(left, 'mile')}` : `; about ${plural(daysLeft, 'more day')} at this pace`}.` : `${plural(d.covered, 'mile')} since setting out.`}</p>
                 ${d.dist.notes.length || d.dist.forced.length || d.dist.fatigue || d.sky.effect ? `<ul class="dist-notes">
                     ${d.dist.notes.map(n => `<li>${esc(n)}</li>`).join('')}
                     ${d.dist.forced.map(f => ruleText(`<li>Forced march, hour ${f.hour}: each traveler makes a DC ${f.dc} {save:con} save or gains one level of exhaustion.</li>`)).join('')}${d.dist.fatigue ? `<li>${esc(travelFatigueText(d.dist))}</li>` : ''}
@@ -477,7 +479,8 @@ function applyUrl() {
         });
         if (!seed) return false;
         travel = { seed, day: Math.max(1, parseInt(p.get('day'), 10) || 1), days: [] };
-        showJourney(null);
+        // A link without a season took today's: write it in, so the link keeps it in another month.
+        showJourney(p.get('season') === document.getElementById('tr-season').value ? null : false);
         return true;
     }
     const sel = document.getElementById('name-for');

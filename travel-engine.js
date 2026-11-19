@@ -67,7 +67,7 @@ const TRAVEL_PACES = TRAVEL_PF2E ? {
 });
 
 // Player Core's Travel Speed table: a Speed in feet is a tenth as many miles an hour, eight hours a day.
-const TRAVEL_SPEEDS = [15, 20, 25, 30, 35, 40, 50, 60];
+const TRAVEL_SPEEDS = [10, 15, 20, 25, 30, 35, 40, 50, 60];
 const TRAVEL_SPEED_DEFAULT = 25;
 
 // ── Weather tables ───────────────────────────────────────
@@ -146,7 +146,7 @@ const WEATHER_FLAVOR = {
         'Cloud shadows race across the land faster than any horse.',
         'One cloud in particular follows the party all morning. It is probably nothing.',
         'Patches of sunlight wander over the country like slow lanterns.'],
-    overcast: ['A low grey lid over the world. Nobody casts a shadow, which unsettles the warlock.',
+    overcast: ['A low grey lid over the world. Nobody casts a shadow, which unsettles the {alt:warlock|witch}.',
         'Grey, flat, and still. The kind of sky that keeps its opinions to itself.',
         'Overcast all day. The light never quite commits.',
         'The clouds hang so low they snag on the hilltops.',
@@ -1022,6 +1022,8 @@ function rollWeather(climate, season, prev) {
     if (prev && rand() < 0.55) {
         const near = odds.temp.map((w, i) => (Math.abs(i - prev.band) <= 1 ? w || 0.2 : 0));
         band = travelWeighted(near);
+        // A band this climate and season never sees (snow in a tropical winter): draw from the season's own odds.
+        if (!odds.temp[band]) band = travelWeighted(odds.temp);
     } else band = travelWeighted(odds.temp);
     const tb = TEMP_BANDS[band];
     const high = travelInt(tb.lo, tb.hi);
@@ -1057,7 +1059,7 @@ function rollWeather(climate, season, prev) {
     }
 
     const w = { climate, season, band, high, low, level, wind, windFrom, kind, morningFog };
-    w.flavor = travelPick(WEATHER_FLAVOR[kind]);
+    w.flavor = ruleText(travelPick(WEATHER_FLAVOR[kind]));
     w.tags = weatherTags(w);
     w.slows = SLOW_KINDS.includes(kind);
     w.effects = weatherEffects(w);
@@ -1193,7 +1195,7 @@ function travelMoreHook(ev, seed) {
 
 function rollRoadEvent(terrain, weather, used = []) {
     const r = rand();
-    if (r < 0.2) return { k: 'quiet', t: 'A quiet day', d: travelPick(QUIET_DAYS) };
+    if (r < 0.2) return { k: 'quiet', t: 'A quiet day', d: travelFresh(QUIET_DAYS, used, d => d) };
     if (r < 0.35) return composeTraveler(used);
     if (r < 0.5) return composeDiscovery(terrain, used);
     const fits = ROAD_EVENTS.filter(e => travelFits(e, terrain, weather));
@@ -1305,7 +1307,8 @@ function travelDistance(opts, weather) {
     const hours = Math.min(12, Math.max(1, Number(opts.hours) || 8));
     const terrainDifficult = !!(TRAVEL_TERRAIN[opts.terrain] || {}).difficult;
     const difficult = terrainDifficult || !!(weather && weather.slows);
-    let miles = pace.mph * hours;
+    // A full 8-hour day covers the table's miles a day (18 / 24 / 30); a forced march adds the hourly rate after that.
+    let miles = hours >= 8 ? pace.day + (hours - 8) * pace.mph : Math.min(pace.day, pace.mph * hours);
     if (opts.gallop) miles += 8 - pace.mph;   // one of the hours at a gallop: twice the fast pace
     if (difficult) miles /= 2;
 
@@ -1318,13 +1321,12 @@ function travelDistance(opts, weather) {
     return { pace: opts.pace, mph: pace.mph, hours, gallop: !!opts.gallop, difficult, miles: Math.round(miles * 10) / 10, notes, forced };
 }
 
-// Whole hours on the road to cover some miles at a day's pace (the gallop hour comes first).
-function travelHoursFor(miles, dist) {
-    const slow = dist.difficult ? 2 : 1;
-    const rate = dist.mph / slow;
-    const first = dist.gallop ? 8 / slow : rate;
-    if (miles <= first) return 1;
-    return Math.min(dist.hours, 1 + Math.ceil((miles - first) / rate - 1e-9));
+// Whole hours on the road to cover some miles at a day's pace: the first hour whose distance reaches them.
+function travelHoursFor(miles, opts, weather, maxHours) {
+    for (let h = 1; h < maxHours; h++) {
+        if (travelDistance({ ...opts, hours: h }, weather).miles >= miles - 1e-9) return h;
+    }
+    return maxHours;
 }
 
 // ── A whole journey ──────────────────────────────────────
@@ -1343,7 +1345,7 @@ function rollJourney(seed, opts, days) {
     const moonStart = withSeed(deriveSeed(seed, 'moon'), () => rand() * MOON_MONTH);
     for (let k = 1; k <= days; k++) {
         const weather = weatherOn(k);
-        const event = travelMoreHook(withSeed(deriveSeed(seed, 'e' + k), () => rollRoadEvent(opts.terrain, weather, used)), deriveSeed(seed, 'e' + k + '.more'));
+        let event = travelMoreHook(withSeed(deriveSeed(seed, 'e' + k), () => rollRoadEvent(opts.terrain, weather, used)), deriveSeed(seed, 'e' + k + '.more'));
         const scene = withSeed(deriveSeed(seed, 'v' + k), () => rollScene(opts.terrain, opts.season));
         const find = withSeed(deriveSeed(seed, 'f' + k), () => rollFind(opts.terrain, weather));
         let dist = travelDistance(opts, weather);
@@ -1353,14 +1355,22 @@ function rollJourney(seed, opts, days) {
         covered = Math.round((covered + today) * 10) / 10;
         const arrived = !!goal && covered >= goal;
         // The last day is shorter: count only the hours it takes to arrive (for forced-march saves and the dark).
-        if (arrived && today < dist.miles) dist = travelDistance({ ...opts, hours: travelHoursFor(today, dist) }, weather);
+        if (arrived && today < dist.miles) dist = travelDistance({ ...opts, hours: travelHoursFor(today, opts, weather, dist.hours) }, weather);
+        // The party sleeps in town on arrival, so a night-at-camp event gives way to another, under a seed of its own.
+        if (arrived && event.k === 'camp') {
+            event = travelMoreHook(withSeed(deriveSeed(seed, 'e' + k + '.arrive'), () => {
+                let ev = null;
+                for (let t = 0; t < 20 && (!ev || ev.k === 'camp'); t++) ev = rollRoadEvent(opts.terrain, weather, used);
+                return ev.k === 'camp' ? { k: 'quiet', t: 'A quiet day', d: travelFresh(QUIET_DAYS, used, d => d) } : ev;
+            }), deriveSeed(seed, 'e' + k + '.arrive.more'));
+        }
         const sky = travelSky(opts, moonStart + k - 1, weather, dist.hours);
         // Arriving means a bed in town: no camp and no forecast.
         const camp = arrived ? null : withSeed(deriveSeed(seed, 'c' + k), () => rollCamp(opts.terrain, weather, event.k === 'camp'));
         const tomorrow = arrived ? null : weatherOn(k + 1);
         const sign = arrived ? null : withSeed(deriveSeed(seed, 's' + k), () => tomorrowSign(weather, tomorrow));
         out.push({ day: k, weather, event, scene, find, sky, camp, sign, dist, today, covered, arrived });
-        used.push(event.t);
+        used.push(event.k === 'quiet' ? event.d : event.t);
         if (arrived) break;
     }
     return out;
@@ -1375,6 +1385,11 @@ function travelPaceLabel(dist) {
 // Pathfinder's fatigue line for a long day, or ''.
 function travelFatigueText(dist) {
     return dist.fatigue ? `After ${dist.fatigue} hours on the road, everyone is fatigued until a full night's rest.` : '';
+}
+
+// "1 mile", "2.5 miles".
+function travelUnit(n, one) {
+    return `${n} ${one}${n === 1 ? '' : 's'}`;
 }
 
 // Plain-text lines for one day (Copy Day).
@@ -1392,8 +1407,8 @@ function travelDayText(d, opts) {
         `Sky: ${moon.icon} ${moon.label}, about ${d.sky.daylight} hours of daylight.`,
         `${ev.icon} ${d.event.k === 'quiet' ? ev.label : `${ev.label}: ${d.event.t}`}. ${d.event.d}${d.event.hook ? ` Hook: ${d.event.hook}` : ''}`,
         ...(d.find ? [`🪶 By the way: ${d.find}`] : []),
-        `Travel: ${d.today} miles (${travelPaceLabel(d.dist).replace(/^./, c => c.toLowerCase())}, ${d.dist.hours} hours)` +
-            (goal ? `. ${d.covered} of ${goal} miles${d.arrived ? ', arrived!' : ''}` : `. ${d.covered} miles so far`),
+        `Travel: ${travelUnit(d.today, 'mile')} (${travelPaceLabel(d.dist).replace(/^./, c => c.toLowerCase())}, ${travelUnit(d.dist.hours, 'hour')})` +
+            (goal ? `. ${d.covered} of ${travelUnit(goal, 'mile')}${d.arrived ? ', arrived!' : ''}` : `. ${travelUnit(d.covered, 'mile')} so far`),
         ...d.dist.notes.map(n => `  - ${n}`),
         ...d.dist.forced.map(f => ruleText(`  - Hour ${f.hour}: {save:con} save DC ${f.dc}, or one level of exhaustion.`)),
         ...(d.dist.fatigue ? [`  - ${travelFatigueText(d.dist)}`] : []),
