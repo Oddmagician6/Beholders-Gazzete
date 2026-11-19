@@ -121,9 +121,13 @@ function partyBudgetPf2e(groups) {
     b.avgLevel = b.chars ? b.levels / b.chars : 0;
     b.level = Math.max(1, Math.round(b.avgLevel));
     encPartyLevel = b.level;
+    // A party of one or two runs out of room between tiers (one character: Low and Moderate both 20),
+    // so each tier sits at least 5 XP above the one before, or the higher one could never be rated.
+    let prev = 0;
     ENC_DIFFS.forEach(k => {
         const [four, each] = ENC_PF2E_BUDGET[k];
-        b[k] = b.chars ? Math.max(each, four + (b.chars - 4) * each) : 0;
+        b[k] = b.chars ? Math.max(each, four + (b.chars - 4) * each, prev + 5) : 0;
+        prev = b[k];
     });
     return b;
 }
@@ -297,7 +301,7 @@ const ENC_HABITATS = ruleTable({
     sea: { label: "At sea", icon: "🌊", dist: [4, 6, 10], sky: true,
         monsters: "aboleth chuul dragon-turtle giant-crab giant-octopus giant-sea-horse giant-shark hunter-shark killer-whale kraken merfolk merrow octopus plesiosaurus quipper reef-shark sahuagin sea-hag sea-horse swarm-of-quippers water-elemental storm-giant young-bronze-dragon adult-bronze-dragon bandit bandit-captain thug veteran scout",
         places: ["on the Open Water", "over the Sunken Temple", "in the Kelp Forest", "at the Reef's Edge", "off Devil's Teeth", "in the Fog Bank", "over the Drowned City", "at the Whirlpool", "on the Becalmed Sea", "in the Shark Run", "by the Wreck of the Gilded Gull", "at the Pearl Beds"],
-        ground: ["Underwater: a weapon attack without a dagger, javelin, shortsword, spear, trident, or crossbow has disadvantage unless the creature has a swimming speed.", "Underwater: fire damage is halved for anyone fully under the surface.", "The ship's deck rolls: a creature that Dashes makes a {dc:10} {skill:dex:acrobatics} check or falls prone.", "Rigging and masts can be climbed for height; the crow's nest gives half cover.", "Kelp fronds make anything more than 10 feet away underwater lightly obscured.", "Coral spurs give half cover and scrape: falling prone on them deals 1d4 slashing damage.", "Cargo crates on deck give three-quarters cover until they go over the side.", "The ship's boat hangs on davits: two creatures can cut it loose and row away."],
+        ground: ["{alt:Underwater: a weapon attack without a dagger, javelin, shortsword, spear, trident, or crossbow has disadvantage unless the creature has a swimming speed.|Underwater: a creature without a swim Speed is off-guard, melee bludgeoning and slashing attacks take a -2 penalty, and ranged attacks that don't pierce miss.}", "{alt:Underwater: fire damage is halved for anyone fully under the surface.|Underwater: fire doesn't burn beneath the surface, and actions with the fire trait fail there unless they say otherwise.}", "The ship's deck rolls: a creature that Dashes makes a {dc:10} {skill:dex:acrobatics} check or falls prone.", "Rigging and masts can be climbed for height; the crow's nest gives half cover.", "Kelp fronds make anything more than 10 feet away underwater lightly obscured.", "Coral spurs give half cover and scrape: falling prone on them deals 1d4 slashing damage.", "Cargo crates on deck give three-quarters cover until they go over the side.", "The ship's boat hangs on davits: two creatures can cut it loose and row away."],
         hazards: ["A swell sweeps the deck on round 3: everyone on it makes a DC {dc} {save:str} save or slides 15 feet toward the rail, going over the side on a failure by 5 or more.", "A creature dragged under that can't breathe water must hold its breath; at the start of each of its turns underwater past the first, it makes a DC {dc} {save:con} save or takes {dmg} bludgeoning damage from the pressure.", "Blood in the water. Each round a creature bleeds in the sea, roll a d6: on a 1, a hunter shark arrives."],
         twists: ["Another ship's sails on the horizon. She's coming fast, and she's flying no flag.", "A whale surfaces next to the fight on round 3, rocking every boat and swimmer: DC {dc} {save:dex} save or fall prone (or go under)."] },
     arctic: { label: "Arctic", icon: "❄️", dist: [6, 6, 10], sky: true,
@@ -310,7 +314,7 @@ const ENC_HABITATS = ruleTable({
         monsters: "androsphinx gynosphinx blue-dragon-wyrmling young-blue-dragon adult-blue-dragon ancient-blue-dragon brass-dragon-wyrmling young-brass-dragon adult-brass-dragon ancient-brass-dragon camel djinni efreeti dust-mephit giant-hyena giant-lizard giant-scorpion giant-vulture giant-poisonous-snake gnoll hyena jackal lamia mummy mummy-lord purple-worm roc scorpion vulture bandit bandit-captain tribal-warrior thug scout cult-fanatic cultist poisonous-snake flying-snake swarm-of-insects swarm-of-beetles mule lion medusa ghoul wight earth-elemental fire-elemental salamander death-dog",
         places: ["at the Bleached Oasis", "in the Dune Sea", "at the Buried Gate", "on the Salt Road", "at the Vulture Rocks", "by the Dry Fountain", "in the Glass Flats", "at the Caravanserai Ruin", "in the Red Canyon", "at the Sphinx's Paw", "on the Bone Track", "by the Last Well"],
         ground: ["Loose sand on the dunes is difficult terrain.", "Rock pillars give three-quarters cover.", "A ruined wall half-buried in sand gives half cover.", "Heat shimmer: everything beyond 60 feet is lightly obscured at midday.", "A dune crest: anyone on top can see a long way, and be seen.", "Cracked salt flats: firm, flat, and nowhere to hide.", "A dry wash runs through, 5 feet deep: half cover for anyone crouched in it.", "A palm grove around a pool gives half cover."],
-        hazards: ["Quicksand in the low ground: a creature that enters it sinks 1d4 + 1 feet and is restrained; it takes a DC {dc} {ability:str} check to pull free.", "The sun is merciless. Anyone in heavy armor makes a DC {dc} {save:con} save after the fight or gains a level of exhaustion.", "A sandstorm rolls in on round 4: everyone in the open makes a DC {dc} {save:con} save each round or takes {dmg} slashing damage, and everything beyond 10 feet is heavily obscured."],
+        hazards: ["Quicksand in the low ground: a creature that enters it sinks 1d4 + 1 feet and is restrained; it takes a DC {dc} {ability:str} check to pull free.", "If the fight is by day, the sun is merciless: anyone in heavy armor makes a DC {dc} {save:con} save after the fight or gains a level of exhaustion.", "A sandstorm rolls in on round 4: everyone in the open makes a DC {dc} {save:con} save each round or takes {dmg} slashing damage, and everything beyond 10 feet is heavily obscured."],
         twists: ["A caravan appears on the dune line. Its guards will join whichever side offers them water.", "The fight uncovers a buried stair under the sand. It leads down, and something down there heard."] },
     underdark: { label: "Underdark", icon: "🕳️", dist: [2, 6, 10], sky: false,
         monsters: "black-pudding chuul cloaker darkmantle deep-gnome-svirfneblin drider drow duergar earth-elemental gelatinous-cube gibbering-mouther giant-bat giant-centipede giant-fire-beetle giant-lizard giant-spider gray-ooze grick grimlock hobgoblin kobold magmin mage minotaur ochre-jelly otyugh phase-spider purple-worm roper rust-monster shrieker spirit-naga swarm-of-bats swarm-of-spiders violet-fungus xorn aboleth behir bugbear goblin ghoul ettin fire-giant salamander",
@@ -320,18 +324,35 @@ const ENC_HABITATS = ruleTable({
         twists: ["The fight's noise wakes the shriekers in the next cave, and whatever hunts by them comes in 1d4 rounds.", "A lone svirfneblin scout has been watching from a crack in the wall. They know a way out and will trade it for a favor."] },
     town: { label: "Town", icon: "🏘️", dist: [2, 6, 10], sky: true,
         monsters: "acolyte archmage assassin bandit bandit-captain cat commoner crocodile cult-fanatic cultist doppelganger ghost gladiator gray-ooze guard imp knight mage mastiff noble otyugh priest quasit rakshasa rat giant-rat swarm-of-rats raven spy succubus-incubus thug veteran vampire-vampire vampire-spawn wererat-human wererat-hybrid wererat-rat oni draft-horse riding-horse mule pony berserker scout swarm-of-ravens",
-        places: ["in the Shambles", "at the Drowned Rat", "on Tanners' Row", "in the Old Sewers", "at the Hanging Square", "by the Fishmarket", "on the Temple Steps", "in Lamplighter's Alley", "at the Bell Foundry", "under the Bridge", "in the Graveyard on the Hill", "at the Burned Warehouse"],
+        places: ["in the Shambles", "at the Drowned Rat", "on Tanners' Row", "by the Sewer Grate", "at the Hanging Square", "by the Fishmarket", "on the Temple Steps", "in Lamplighter's Alley", "at the Bell Foundry", "under the Bridge", "in the Graveyard on the Hill", "at the Burned Warehouse"],
         ground: ["Market stalls give half cover and can be knocked over (an action) to make difficult terrain.", "A narrow alley: two Medium creatures abreast at most.", "Rooftops 15 feet up, reached by a drainpipe ({dc:10} {skill:str:athletics}) or a stair; jumping the gap between roofs is a long jump.", "Crowds of bystanders count as difficult terrain and give half cover, until they scatter on round 2.", "A wagon full of barrels gives three-quarters cover.", "A canal runs alongside: 10 feet deep, cold and filthy.", "Laundry lines strung across the street make the space above lightly obscured.", "A well in the square: 30 feet down to the water."],
         hazards: ["Lamp oil spills across the cobbles in the first round. Fire lights it: a 10-foot square burns for 1 minute, and a creature that enters it or starts its turn there makes a DC {dc} {save:dex} save or takes {dmg} fire damage.", "A rotten balcony gives way under the first creature to stand on it: DC {dc} {save:dex} save or fall 15 feet ({dmg} bludgeoning damage).", "A chimney stack on the nearest roof is loose. A heavy blow against the wall brings it down: DC {dc} {save:dex} save for anyone in a 10-foot square below, {dmg} bludgeoning damage on a failure."],
         twists: ["A child grabs the nearest coin purse in the confusion and runs for the alleys.", "The town watch arrives on round 4 and, misreading the scene, tries to arrest the party."] },
     dungeon: { label: "Dungeon or ruin", icon: "🏚️", dist: [2, 6, 5], sky: false,
         monsters: "animated-armor archmage basilisk black-pudding bugbear chuul clay-golem cloaker cult-fanatic cultist darkmantle dretch ettercap flesh-golem flying-sword gargoyle gelatinous-cube ghast ghost ghoul giant-centipede giant-fire-beetle giant-rat giant-spider gibbering-mouther goblin gray-ooze grick guardian-naga hobgoblin homunculus imp iron-golem kobold lemure lich mage medusa mimic minotaur minotaur-skeleton mummy mummy-lord ochre-jelly ogre ogre-zombie orc otyugh quasit rat roper rug-of-smothering rust-monster shadow shield-guardian skeleton specter spirit-naga stirge stone-golem swarm-of-bats swarm-of-rats troll vampire-vampire vampire-spawn warhorse-skeleton wererat-human wererat-hybrid wight wraith zombie bandit bandit-captain",
         places: ["in the Hall of Pillars", "in the Flooded Crypt", "at the Collapsed Chapel", "in the Kennels", "at the Well Room", "in the Ossuary", "on the Spiral Stair", "in the Old Armory", "at the Iron Door", "in the Throne Room", "in the Guardroom", "by the Sealed Vault"],
-        ground: ["Pillars give half cover; the thickest give three-quarters.", "Rubble from a fallen ceiling is difficult terrain.", "A long table and benches can be flipped (an action) for half cover.", "The room is 30 feet across with one other door, standing ajar.", "A raised dais at one end, 5 feet up, reached by steps.", "Ankle-deep water covers the floor: difficult terrain, and it hides the floor.", "Stone sarcophagi give three-quarters cover.", "A portcullis between two halves of the room, raised; the winch is on one side."],
+        ground: ["Pillars give half cover; the thickest give three-quarters.", "Rubble from a fallen ceiling is difficult terrain.", "A long table and benches can be flipped (an action) for half cover.", "A second door in the far wall stands ajar.", "A raised dais at one end, 5 feet up, reached by steps.", "Ankle-deep water covers the floor: difficult terrain, and it hides the floor.", "Stone sarcophagi give three-quarters cover.", "A portcullis between two halves of the room, raised; the winch is on one side."],
         hazards: ["A pressure plate in the middle of the floor: DC {dc} {skill:wis:perception} to spot it, or darts fire for {dmg} piercing damage.", "The ceiling is cracked. The first thunder damage or heavy blow against a wall brings part of it down: DC {dc} {save:dex} save for anyone in a 10-foot square, {dmg} bludgeoning damage on a failure.", "Green slime drips from the ceiling near the far door: a creature passing under it makes a DC {dc} {save:dex} save or takes {dmg} acid damage."],
         twists: ["The door slams and locks on round 2: the lever is on the far side of the room.", "A wandering patrol of the dungeon's other residents hears the fight and turns up on round 5, as eager to fight the winners as either side."] }
 });
 const ENC_HABITAT_KEYS = Object.keys(ENC_HABITATS);
+// At sea a fight is on a ship's deck or under the water, never both: each kind's lines are kept from
+// the other's fights (lines that match neither fit both). It's under water when the strongest foe
+// can't leave it.
+const ENC_SEA_UNDER = /shark|quipper|octopus|whale|orca|plesiosaur|elasmosaur|tylosaur|megalodon|sea-horse|hippocampus|kraken|eel|sea-serpent|reefclaw|merfolk/;
+const ENC_SEA_LINES = { under: /^Underwater|Kelp|Coral|on the Open Water|Becalmed|Fog Bank/, deck: /deck|Rigging|ship's boat|in the Kelp Forest/ };
+// The 2024 rules' wording for 2014 lines (SRD 5.2: surprise is disadvantage on initiative; underwater
+// weapons go by damage type, and ranged attacks past normal range miss). srd52.js sets rulesShown.
+const ENC_2024_TEXT = {
+    "Underwater: a weapon attack without a dagger, javelin, shortsword, spear, trident, or crossbow has disadvantage unless the creature has a swimming speed.":
+        "Underwater: a melee weapon attack that doesn't deal piercing damage has disadvantage unless the creature has a swim speed; a ranged weapon attack has disadvantage, and misses outright past normal range.",
+    "Underwater: fire damage is halved for anyone fully under the surface.": "Underwater: anyone fully under the surface has resistance to fire damage."
+};
+function encV24(s) {
+    if (typeof rulesShown === "undefined" || rulesShown !== "2024" || ENC_PF2E || typeof s !== "string") return s;
+    return ENC_2024_TEXT[s] || s.replace("is surprised in the first round.", "is surprised: they roll initiative with disadvantage.")
+        .replace("doesn't notice the party is surprised.", "doesn't notice the party is surprised: it rolls initiative with disadvantage.");
+}
 // Pathfinder creatures carry their own habitats (pf2e-creatures-data.js), so the lists above
 // are swapped for theirs.
 if (ENC_PF2E) ENC_HABITAT_KEYS.forEach(h => (ENC_HABITATS[h].monsters = PF2E_CREATURES.filter(c => c.habs.includes(h)).map(c => c.id).join(" ")));
@@ -816,6 +837,9 @@ const ENC_TWISTS = ruleTable([
     "A witness hides nearby: {witness}, who'll tell the story however it benefits them.",
     "Halfway through, one of them recognizes a party member from somewhere, and stops to stare."
 ]);
+// The twists above that need foes who think and talk (by index): prisoner, wants out, the leader,
+// the mistake, the runner, recognizing someone.
+const ENC_TWISTS_TALK = [1, 2, 3, 4, 6, 9];
 const ENC_CAPTIVES = ["a merchant's son", "a priest of the local temple", "a halfling peddler", "a terrified tax collector", "a dwarf miner", "a young noble in muddy silks", "a goatherd", "a messenger with a sealed letter", "a captured scout of a rival band", "a dog that won't stop barking"];
 const ENC_MISTAKEN = ["the people who robbed them last week", "tax collectors", "agents of the local lord", "the bounty hunters they've been warned about", "a rival band", "the ones their master told them to expect"];
 const ENC_THINGS = ["a map with a mark on it", "a stolen holy symbol", "a letter addressed to a party member", "the key to a nearby vault", "a sword the party has seen before", "a ledger listing bribes", "a strange glowing stone", "a lockbox that rattles"];
@@ -841,13 +865,21 @@ function encInBand(b, id) {
     return b.members.includes(id) || (typeof rulesOldId === 'function' && b.members.includes(rulesOldId(id)));
 }
 
+function encLeadsBand(b, id) {
+    return b.leads.includes(id) || (typeof rulesOldId === 'function' && b.leads.includes(rulesOldId(id)));
+}
+
+// A band also needs one of its leaders here (a lone wolf isn't a goblin raid; a lone cultist or
+// skeleton still is its band's, with the leaderless lines), and a band the strongest monster leads
+// beats one it only follows in (the wolf pack, not the goblins' wolves).
 function encInferBand(list) {
     if (!list.length) return null;
     const lead = list.reduce((a, b) => (b.m.xp > a.m.xp ? b : a)).m;
+    const follows = ["humanoid", "undead"].includes(encSceneType(lead));
     let best = null, bestN = 0;
     ENC_BANDS.forEach(b => {
-        if (!encInBand(b, lead.id)) return;
-        const n = list.filter(e => encInBand(b, e.m.id)).length;
+        if (!encInBand(b, lead.id) || !(follows || list.some(e => encLeadsBand(b, e.m.id)))) return;
+        const n = list.filter(e => encInBand(b, e.m.id)).length + (encLeadsBand(b, lead.id) ? 0.5 : 0);
         if (n > bestN) { best = b; bestN = n; }
     });
     return best;
@@ -886,7 +918,8 @@ function rollThemedEncounter(budget, diff, opts = {}) {
     };
     if (band && band !== "none") {
         const b = ENC_BAND_BY_KEY[band];
-        return { list: b ? tryBand(b) : [], band: b ? b.key : null };
+        // A habitat picked too: the group keeps to it, or there's no fight (no wolf pack at sea).
+        return { list: b ? tryBand(b, !!habitat) : [], band: b ? b.key : null };
     }
     if (band !== "none" && rand() < 0.85) {
         const canLead = m => fits(m) && m.xp >= target * 0.15 && inHab(m);
@@ -965,10 +998,13 @@ function rollEncounterScene(list, seed, opts = {}) {
             : "Night: darkness beyond any torches or lanterns ({alt:heavily obscured|anyone without darkvision can't see into it}).");
     });
 
+    // At sea: on deck or under the water (ENC_SEA_LINES); other habitats keep every line.
+    const sea = habitat === "sea" ? (ENC_SEA_UNDER.test(lead.id) ? "under" : "deck") : null;
+    const fitsSea = s => !sea || !ENC_SEA_LINES[sea === "under" ? "deck" : "under"].test(s);
     const ground = part("ground", () => {
-        const g = [...H.ground];
-        const out = [g.splice(Math.floor(rand() * g.length), 1)[0], g.splice(Math.floor(rand() * g.length), 1)[0]];
-        let hazard = rand() < 0.5 ? pick(H.hazards) : null;
+        const g = H.ground.filter(fitsSea);
+        const out = [g.splice(Math.floor(rand() * g.length), 1)[0], g.splice(Math.floor(rand() * g.length), 1)[0]].map(encV24);
+        let hazard = rand() < 0.5 ? pick(H.hazards.filter(fitsSea)) : null;
         const more = ENC_MORE.hazards[habitat];
         if (hazard && more) hazard = part("ground.more", () => encSwap(hazard, H.hazards, more));
         return { features: out, hazard: hazard && fill(hazard) };
@@ -1024,7 +1060,9 @@ function rollEncounterScene(list, seed, opts = {}) {
 
     const twist = part("twist", () => {
         if (rand() >= 0.4) return null;
-        const pool = [...ENC_TWISTS, ...H.twists];
+        // Beasts, oozes, plants, and constructs take no prisoners, say nothing, and know no one.
+        const mindless = ["beast", "ooze", "plant", "swarm", "construct"].includes(encSceneType(lead));
+        const pool = [...(mindless ? ENC_TWISTS.filter((t, i) => !ENC_TWISTS_TALK.includes(i)) : ENC_TWISTS), ...H.twists];
         let t = pick(pool);
         const more = ENC_MORE.twists[habitat];
         if (more) t = part("twist.more", () => encSwap(t, pool, more));
@@ -1039,12 +1077,12 @@ function rollEncounterScene(list, seed, opts = {}) {
     const title = part("title", () => {
         const events = ENC_TITLE_EVENTS[tag] || ENC_GENERIC_EVENTS;
         const ev = rand() < 0.75 ? pick(events) : pick(ENC_GENERIC_EVENTS);
-        const place = pick(H.places);
+        const place = pick(H.places.filter(fitsSea));
         const who = leader.name && !leader.name.includes(" of ") ? leader.name.split(" ")[0] : null;
         return who && rand() < 0.2 ? `${who}'s ${ev}` : `The ${ev} ${place}`;
     });
 
-    return { seed, band: band ? band.key : null, habitat, title, doing: doing[1], tag, awareness: ENC_AWARENESS[tag], distance, light, ground, leader, tactics, morale, parley, twist,
+    return { seed, band: band ? band.key : null, habitat, title, doing: doing[1], tag, awareness: encV24(ENC_AWARENESS[tag]), distance, light, ground, leader, tactics, morale, parley, twist,
         loot: band ? band.loot : { beast: "beast", undead: "undead", fiend: "otherworld", fey: "otherworld", celestial: "otherworld", elemental: "otherworld", dragon: "hoard:dragon", humanoid: "bandit" }[encSceneType(lead)] || "beast",
         lootCr: crValue(lead.cr) };
 }
@@ -1070,14 +1108,19 @@ function encSceneLines(s) {
 }
 
 // The loot generator, opened on what these foes would carry (or their hoard).
-function encLootLink(s) {
+// party (optional): { level, chars }. A Pathfinder hoard is sized by the party's level and number, not the foe's.
+function encLootLink(s, party = null) {
     const cr = s.lootCr;
+    const hoard = s.loot.startsWith("hoard:");
+    const lv = n => String(Math.min(20, Math.max(1, Math.round(n))));
     // Pathfinder's loot page takes a level (1-20) where 5e's takes a CR band.
-    const tier = ENC_PF2E ? String(Math.min(20, Math.max(1, Math.round(cr))))
+    const tier = ENC_PF2E ? lv(hoard && party && party.level ? party.level : cr)
         : cr <= 4 ? "0-4" : cr <= 10 ? "5-10" : cr <= 16 ? "11-16" : "17+";
     const p = new URLSearchParams();
-    if (s.loot.startsWith("hoard:")) { p.set("tab", "hoard"); p.set("hoard-cr", tier); p.set("hoard-source", s.loot.slice(6)); }
-    else { p.set("ind-cr", tier); p.set("ind-source", s.loot); }
+    if (hoard) {
+        p.set("tab", "hoard"); p.set("hoard-cr", tier); p.set("hoard-source", s.loot.slice(6));
+        if (ENC_PF2E && party && party.chars) p.set("hoard-pcs", String(Math.min(8, Math.max(2, party.chars))));
+    } else { p.set("ind-cr", tier); p.set("ind-source", s.loot); }
     p.set("seed", deriveSeed(s.seed, "loot"));
     return "loot-generator?" + p.toString();
 }

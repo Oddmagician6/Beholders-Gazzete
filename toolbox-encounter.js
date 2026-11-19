@@ -18,7 +18,8 @@
 
 const ENC_MAX_GROUPS = 8;
 const ENC_MAX_KINDS = 12;
-const ENC_MAX_COUNT = 40;
+// As many of one kind as a roll can bring (two per character, 8 groups of 10), so its link reopens whole.
+const ENC_MAX_COUNT = ENC_MAX_GROUPS * 10 * 2;
 const ENC_PICKER_ROWS = 40;
 const ENC_DEFAULT_PARTY = [{ count: 4, level: 3 }];
 
@@ -224,7 +225,7 @@ function renderEncounter() {
     const pct = n => Math.min(100, n / scale * 100).toFixed(1);
     const level = rating ? ENCOUNTER_LEVELS[rating] : null;
     document.getElementById('en-meter').innerHTML = `
-        <div class="en-rating"><b>${level ? `${level.icon} ${level.label}` : 'No monsters yet'}</b><span>${fmt(xp)} XP</span></div>
+        <div class="en-rating"><b>${level ? `${level.icon} ${level.label}` : enc.list.length ? 'Too weak to count' : 'No monsters yet'}</b><span>${fmt(xp)} XP</span></div>
         <div class="en-bar" role="img" aria-label="${fmt(xp)} XP against budgets of ${ENC_DIFFS.slice(0, -1).map(k => fmt(budget[k])).join(', ')}, and ${fmt(budget[top])}">
             <span class="en-fill en-fill-${rating || 'none'}" style="width:${pct(xp)}%"></span>
             ${ENC_DIFFS.map(k => `<i style="left:${pct(budget[k])}%" title="${ENCOUNTER_LEVELS[k].label}: ${fmt(budget[k])} XP"></i>`).join('')}
@@ -274,7 +275,8 @@ function renderScene() {
     box.hidden = !s;
     if (!s) { box.innerHTML = ''; return; }
     const loot = s.loot.startsWith('hoard:') ? '🏆 Roll Their Hoard' : '💰 Roll What They Carry';
-    const lootHref = encLootLink(s);
+    const b = encBudget();
+    const lootHref = encLootLink(s, { level: ENC_PF2E ? b.level : b.avgLevel, chars: b.chars });
     box.innerHTML = `
         <div class="en-scene-head"><h4 class="en-scene-title">${esc(s.title)}</h4></div>
         <dl class="dt-scene">${encSceneLines(s).map(([label, text]) => `<div><dt>${esc(label)}</dt><dd>${esc(text)}</dd></div>`).join('')}</dl>
@@ -326,6 +328,12 @@ function rollEncounterFor() {
     enc.seed = seed;
     enc.lead = null;
     encChanged(true);
+    // The choices can leave too little to spend (a wolf pack for level 20): say so, not just in the meter.
+    const got = rateEncounter(encounterXp(res.list), encBudget());
+    const want = encDiffKey(diff);
+    if (got && got !== 'over' && ENC_DIFFS.indexOf(got) < ENC_DIFFS.indexOf(want)) {
+        flash('enc-status', `⚠️ Those choices only make a ${ENCOUNTER_LEVELS[got].label} fight for this party, not ${ENCOUNTER_LEVELS[want].label}. Try another type, group, or habitat.`);
+    }
 }
 
 function encounterText() {
@@ -333,7 +341,7 @@ function encounterText() {
     const xp = encounterXp(enc.list);
     const rating = rateEncounter(xp, budget);
     const lines = [
-        `Encounter: ${rating ? ENCOUNTER_LEVELS[rating].label : 'empty'}, ${xp.toLocaleString('en-US')} XP`,
+        `Encounter: ${rating ? ENCOUNTER_LEVELS[rating].label : enc.list.length ? 'too weak to count' : 'empty'}, ${xp.toLocaleString('en-US')} XP`,
         `Party: ${enc.party.map(g => `${g.count} × level ${g.level}`).join(', ')} (${ENC_DIFFS.map(k => `${ENCOUNTER_LEVELS[k].label} ${budget[k].toLocaleString('en-US')}`).join(' / ')} XP)`
     ];
     enc.list.forEach(e => lines.push(ENC_PF2E ? `  ${e.count} × ${e.m.name} (${encStats(e.m, ' each').replace(/ · /g, ', ')})`

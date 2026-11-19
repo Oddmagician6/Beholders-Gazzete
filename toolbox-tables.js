@@ -164,6 +164,8 @@ function renderTableCheck(hit = -1) {
     if (!parsed) { prev.innerHTML = ''; document.getElementById('tbl-prev-n').textContent = ''; return; }
     const notes = [];
     const twin = tables.find(o => o !== t && tableKey(o.name) === tableKey(t.name) && tableKey(t.name));
+    if (parsed.header && !parsed.header.includes('|')) notes.push(`The first line, "${parsed.header.slice(0, 40)}", has no range, so it's read as a heading, not an entry.`);
+    if (parsed.declared && parsed.declared !== parsed.die) notes.push(`The header says d${parsed.declared}, but the ranges end at ${parsed.die}, so it rolls a d${parsed.die}.`);
     if (twin) notes.push(`Another table is also called "${t.name}"; [[${t.name}]] rolls the first one in the list.`);
     const all = tblShared ? tblShared.list.concat(tables) : tables;
     const missing = tableRefs(t.src).filter(r => !tableFind(all, r));
@@ -240,11 +242,15 @@ function tableResultsText(list) {
 
 async function shareTable(t, list, statusId) {
     try {
-        const code = await tablesShareCode(tablesWithRefs(list, t));
+        const pack = tablesWithRefs(list, t);
+        const code = await tablesShareCode(pack);
         const url = new URL(location.pathname, location.href);
         url.search = paramsQuery({ tab: 'tables', t: code });
-        const n = tablesWithRefs(list, t).length - 1;
-        copyText(url.href, statusId, `a link to ${tableLabel(t)}${n ? ` and the ${n} table${n === 1 ? '' : 's'} it rolls` : ''}`);
+        const n = pack.length - 1;
+        // A link carries TABLE_LIMITS.shareTables tables; say which rolled ones didn't fit.
+        const left = [...new Set(pack.flatMap(p => tableRefs(p.src)).map(r => tableFind(list, r)).filter(o => o && !pack.includes(o) && !tableFind(pack, o.name)))];
+        const out = left.length ? ` (⚠️ a link holds ${TABLE_LIMITS.shareTables} tables, so it leaves out ${left.map(o => `"${o.name}"`).join(', ')})` : '';
+        copyText(url.href, statusId, `a link to ${tableLabel(t)}${n ? ` and the ${n} table${n === 1 ? '' : 's'} it rolls` : ''}${out}`);
     } catch (e) {
         flash(statusId, '⚠️ ' + e.message);
     }
@@ -413,9 +419,13 @@ function setupTables() {
     window.addEventListener('storage', e => {
         if (e.key !== TABLES_KEY) return;
         loadTables();
-        if (!curTable()) tblCur = tables.length ? tables[0].id : null;
+        // The open table was deleted there: show another one now, even mid-typing, or the next
+        // keystroke would save this table's text over the one picked in its place.
+        const gone = !curTable();
+        if (gone) tblCur = tables.length ? tables[0].id : null;
         renderTableList();
         const typing = document.activeElement && document.activeElement.closest && document.activeElement.closest('#tbl-main');
-        if (!typing) renderTableEditor();
+        if (gone || !typing) renderTableEditor();
+        if (gone && typing) flash('tables-status', '⚠️ That table was deleted in another tab.');
     });
 }

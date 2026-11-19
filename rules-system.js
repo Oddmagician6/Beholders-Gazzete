@@ -103,7 +103,10 @@ function ruleLinkOk(href) {
     const name = decodeURIComponent(url.pathname.split('/').pop()).replace(/\.html$/, '');
     if (name.startsWith('pathfinder')) return true;
     const tab = url.searchParams.get('tab');
-    return !!(tab ? moves[`${name}?tab=${tab}`] : moves[name]);
+    if (!tab || moves[`${name}?tab=${tab}`]) return !!(tab || moves[name]);
+    // A page with no tab pages of its own moves whole, its ?tab= kept (loot-generator?tab=hoard), as
+    // tab-pages.js's moveLinks does; a hub's tab without a Pathfinder page stays out.
+    return !!moves[name] && !Object.keys(moves).some(k => k.startsWith(`${name}?tab=`));
 }
 
 // A price the generators wrote in 5e gold, in this system's coin (Pathfinder's goods cost about a tenth).

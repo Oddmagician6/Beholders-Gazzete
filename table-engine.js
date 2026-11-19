@@ -52,14 +52,21 @@ function tableCells(rest) {
     return rest.replace(/\|\s*$/, '').split('|').map(c => c.trim()).filter(Boolean).join(' — ');
 }
 
-// → { entries: [{ lo, hi, text }], die, ranged }
+// → { entries: [{ lo, hi, text }], die, ranged, header (ranged: a first line without a range, or null),
+//     declared (the die that header names, or null) }
 function parseTable(src, die = 'auto') {
     const lines = String(src || '').split(/\r?\n/).map(l => l.trim()).filter(l => l && !TABLE_DIVIDER.test(l));
     if (!lines.length) throw new Error('Add some entries, one per line.');
     const matches = lines.map(l => l.match(TABLE_RANGE_LINE));
     let ranged = matches.filter(Boolean).length;
-    // A markdown header ("d8 | Weather") above ranged rows.
-    if (ranged && !matches[0] && ranged === lines.length - 1) { lines.shift(); matches.shift(); }
+    // A markdown header ("d8 | Weather") above ranged rows, or a title line. It's kept (header) so the
+    // page can say a plain line was read as one, with the die it names (declared) to check the ranges by.
+    let header = null, declared = null;
+    if (ranged && !matches[0] && ranged === lines.length - 1) {
+        header = lines.shift(); matches.shift();
+        const d = header.match(/(?:^|[\s|])d(\d{1,4})\b/i);
+        declared = d ? Number(d[1]) : null;
+    }
     ranged = matches.filter(Boolean).length;
     if (ranged && ranged < lines.length) {
         const bad = matches.map((m, i) => (m ? 0 : i + 1)).filter(Boolean);
@@ -94,7 +101,7 @@ function parseTable(src, die = 'auto') {
     }
     const top = entries[entries.length - 1].hi;
     if (top < 2 || top > TABLE_LIMITS.die) throw new Error(`The ranges need to end between 2 and ${TABLE_LIMITS.die} (they end at ${top}).`);
-    return { entries, die: top, ranged: true };
+    return { entries, die: top, ranged: true, header, declared };
 }
 
 // The names a table's entries roll ([[Name]]), in order, without repeats.
