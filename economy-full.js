@@ -132,6 +132,8 @@ function filterAndSort(items) {
     switch (document.getElementById('sort-filter').value) {
         case 'name':        result.sort((a, b) => a.name.localeCompare(b.name)); break;
         case 'category':    result.sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name)); break;
+        case 'base-low':    result.sort((a, b) => a.basePrice - b.basePrice || a.name.localeCompare(b.name)); break;
+        case 'base-high':   result.sort((a, b) => b.basePrice - a.basePrice || a.name.localeCompare(b.name)); break;
         case 'price-low':   result.sort((a, b) => a.currentPrice - b.currentPrice); break;
         case 'price-high':  result.sort((a, b) => b.currentPrice - a.currentPrice); break;
         case 'change-up':   result.sort((a, b) => b.changePercent - a.changePercent); break;
@@ -151,7 +153,7 @@ function sortTable(column) {
     const next = {
         name: 'name',
         category: 'category',
-        basePrice: 'price-low',
+        basePrice: select.value === 'base-low' ? 'base-high' : 'base-low',
         currentPrice: select.value === 'price-low' ? 'price-high' : 'price-low',
         changePercent: select.value === 'change-up' ? 'change-down' : 'change-up',
     }[column];

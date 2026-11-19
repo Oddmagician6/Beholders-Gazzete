@@ -549,11 +549,17 @@ const BS_FILL = { elder: ["mother", "father", "parent", "grandmother", "grandfat
 
 // A named person from the character's past. Rolls from the line's own seed, so the
 // For the DM line names the same mentor and rival the other lines show.
+// The rival never shares the mentor's name: a clash draws again from the same seed.
 function bsWho(id, g) {
+    const avoid = id === 'rival' ? bsWho('mentor', g) : '';
     return withSeed(deriveSeed(bsLineSeed(id), 'who'), () => {
-        const own = BS_NAME_RACES[g.race], r = rand(), near = rand() < 0.7, any = randomArray(NPC_RACES);
-        const race = own && near ? own[Math.floor(r * own.length)] : any;
-        return buildName(race, randomArray(NPC_GENDERS)).name;
+        let name = '';
+        for (let i = 0; i < 6 && (!name || name === avoid); i++) {
+            const own = BS_NAME_RACES[g.race], r = rand(), near = rand() < 0.7, any = randomArray(NPC_RACES);
+            const race = own && near ? own[Math.floor(r * own.length)] : any;
+            name = buildName(race, randomArray(NPC_GENDERS)).name;
+        }
+        return name;
     });
 }
 

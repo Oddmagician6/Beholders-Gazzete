@@ -119,7 +119,7 @@ function dmgParts(dmg) {
 // A Strike's damage with the enfeebled penalty on Strength-based damage.
 function strikeDamage(c, d, x) {
     const { f, type } = dmgParts(x.dmg);
-    const strDmg = !x.ranged || x.traits.some(t => /^thrown/.test(t) || t === 'propulsive');
+    const strDmg = !x.ranged || (!x.traits.includes('splash') && x.traits.some(t => /^thrown/.test(t) || t === 'propulsive'));
     const pen = strDmg ? ppPenalty(c, { kind: 'damage', abil: 'str' }) : { n: 0, why: [] };
     return { f: f + (pen.n ? String(pen.n) : ''), type, pen };
 }

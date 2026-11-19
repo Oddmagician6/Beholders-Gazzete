@@ -867,7 +867,7 @@ function pcStrikes(c) {
         let bonus = 0;
         // The thief racket can use Dexterity for a finesse melee Strike's damage.
         if (!ranged) bonus = finesse && c.cls === 'rogue' && c.ch === 'thief' ? Math.max(mods.str, mods.dex) : mods.str;
-        else if (tr.some(t => /^thrown/.test(t))) bonus = mods.str;
+        else if (tr.some(t => /^thrown/.test(t)) && !tr.includes('splash')) bonus = mods.str;   // a splash weapon adds none
         else if (tr.includes('propulsive')) bonus = mods.str > 0 ? Math.floor(mods.str / 2) : mods.str;
         bonus += pcSpecDamage(c, rank);
         const dmg = dice ? `${dice}${bonus ? (bonus > 0 ? ' + ' : ' − ') + Math.abs(bonus) : ''} ${m[3] || ''}`.trim() : '';

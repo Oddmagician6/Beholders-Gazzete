@@ -98,13 +98,15 @@ function pf2eItemKind(i) {
 const PF2E_RARITY = { u: 'uncommon', r: 'rare', q: 'unique' };
 const pf2eOrdinal = n => n + (n % 10 === 1 && n !== 11 ? 'st' : n % 10 === 2 && n !== 12 ? 'nd' : n % 10 === 3 && n !== 13 ? 'rd' : 'th');
 
-// A scroll or wand of "Nth-rank Spell" gets a common spell of that rank.
+// A scroll or wand of "Nth-rank Spell" gets a common spell of that rank. A specialty wand (Crackling
+// Lightning, Widening) says its own spell, so it keeps its name; it still draws, so old links keep the rest.
 function pf2eSpellFor(i) {
   const m = /(\d+)(?:st|nd|rd|th)-Rank Spell/i.exec(i.n);
   if (!m || typeof PF2E_SPELLS === 'undefined') return null;
   const rank = Number(m[1]);
   const pool = Object.keys(PF2E_SPELLS).filter(k => { const s = PF2E_SPELLS[k]; return s.k === 's' && s.r === rank && !s.ra; });
-  return pool.length ? lootPick(pool) : null;
+  const pick = pool.length ? lootPick(pool) : null;
+  return /^(?:Magic Wand \(|Scroll of )\d/i.test(i.n) ? pick : null;
 }
 
 // Fundamental runes (weapon potency, striking, armor potency, resilient) come etched on a

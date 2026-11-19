@@ -166,8 +166,11 @@ function rollStatBlock(npc, force = null) {
         const a = sbPf2eReach(c, level);
         adj = a !== null ? a : level > c.level ? 1 : sbPf2eAdjLevel(c.level, -1) !== null ? -1 : 0;
     } else if (id !== rolled || (adj < 0 && sbPf2eAdjLevel(c.level, -1) === null)) adj = 0;
-    return { pf2e: true, cls: id, id, level: sbPf2eAdjLevel(c.level, adj), adj, race,
+    const out = { pf2e: true, cls: id, id, level: sbPf2eAdjLevel(c.level, adj), adj, race,
         title: `${adj > 0 ? 'Elite ' : adj < 0 ? 'Weak ' : ''}${c.name}` };
+    // asked: the level picked, when the block couldn't reach it (the page says so); forced: the block was picked too.
+    if (level !== null && out.level !== level) Object.assign(out, { asked: level, forced: !!(force && SB_PF2E_NPCS[force.cls]) });
+    return out;
 }
 
 // A lock's [id, level] from a link.
@@ -182,8 +185,10 @@ function sbPf2eShift(text, d) {
     return text ? text.replace(/([+−-])(\d+)/g, (_, s, n) => sbSigned((s === '+' ? 1 : -1) * +n + d)) : text;
 }
 
-// "1d6+3 bludgeoning" with d more damage.
+// "1d6+3 bludgeoning" with d more damage. A flat "1 piercing" moves too (never below 1).
 function sbPf2eDamage(dmg, d) {
+    const flat = d && dmg.match(/^(\d+)(?![\dd])(.*)$/);
+    if (flat) return `${Math.max(1, +flat[1] + d)}${flat[2]}`;
     const m = dmg.match(/^(\d+d\d+)(?:([+−-])(\d+))?(.*)$/);
     if (!m) return dmg;
     const mod = (m[3] ? (m[2] === '+' ? 1 : -1) * +m[3] : 0) + d;
@@ -208,7 +213,8 @@ function sbPf2eNpcParts(block) {
         if (anc.size && m.size === 'M') m.size = anc.size;
     }
     if (!base) return { m, b: null, swap };
-    const dc = list => (list || []).map(([name, cost, traits, text]) => [name, cost, traits, d ? text.replace(/DC (\d+)/g, (_, n) => `DC ${+n + d}`) : text]);
+    // Flat checks (a firearm's misfire, DC 11 to target a concealed foe) are fixed by the rules, not the creature.
+    const dc = list => (list || []).map(([name, cost, traits, text]) => [name, cost, traits, d ? text.replace(/DC (\d+)\b(?! flat)/g, (_, n) => `DC ${+n + d}`) : text]);
     const b = { ...base, pd: sbPf2eShift(base.pd, d), sk: sbPf2eShift(base.sk, d), ia: dc(base.ia), da: dc(base.da), oa: dc(base.oa),
         st: (base.st || []).map(([ranged, name, bonus, traits, dmg]) => [ranged, name, bonus + d, traits, sbPf2eDamage(dmg, d)]),
         sc: (base.sc || []).map(([name, sdc, atk, note, ranks]) => [name, sdc + d, atk ? atk + d : atk, note, ranks]) };
@@ -230,6 +236,24 @@ function sbPf2eNpcNote(block, swap) {
     if (block.adj) out.push(`${block.adj > 0 ? 'Elite' : 'Weak'} (GM Core): NPC Core's level ${c.level} ${c.name.toLowerCase()} with ${block.adj > 0 ? '+2' : '−2'} to AC, attacks, DCs, saves, Perception, skills, and Strike damage, and ${block.adj > 0 ? 'more' : 'fewer'} HP, all worked in. Damage from its other abilities and spells takes ${block.adj > 0 ? '+2' : '−2'} more (${block.adj > 0 ? '+4' : '−4'} for one it can't use at will).`);
     if (swap) out.push(`Ancestry: NPC Core's block is human; the Gazette moved it to ${ruleWord('race', block.race)} (traits, size, Speed, senses, and a language).`);
     return out;
+}
+
+// The levels a block reaches as it is, weak, or elite, as "−1 to 1".
+function sbPf2eRange(c) {
+    const lv = [-1, 0, 1].map(a => sbPf2eAdjLevel(c.level, a)).filter(l => l !== null);
+    const f = l => String(l).replace('-', '−');
+    return `${f(Math.min(...lv))} to ${f(Math.max(...lv))}`;
+}
+
+// When the Level picker asked for a level the block can't reach, say so (the block is the nearest it gets).
+function sbPf2eLevelNote(npc) {
+    const block = npc.block, want = block && block.asked;
+    const c = block && SB_PF2E_NPCS[block.id];
+    if (!c || !Number.isInteger(want) || want === block.level) return [];
+    const lv = String(want).replace('-', '−');
+    return [block.forced
+        ? `Level ${lv} is out of reach: NPC Core's ${c.name.toLowerCase()} goes from level ${sbPf2eRange(c)} (weak, as written, elite), so this is the nearest. Pick 🎲 Random in the Stat Block picker for someone who fits the level.`
+        : `No one in NPC Core reaches level ${lv}, even as an elite, so this is the nearest.`];
 }
 
 // ==================== PAGE ====================
@@ -265,7 +289,7 @@ function renderPf2eStatBlock(npc) {
         return;
     }
     body.innerHTML = `<div class="sb-pf2e">${sbPf2eHtml(p.m, p.b)}</div>
-        ${sbPf2eNpcNote(block, p.swap).map(t => `<p class="sb-note">${esc(t)}</p>`).join('')}`;
+        ${[...sbPf2eLevelNote(npc), ...sbPf2eNpcNote(block, p.swap)].map(t => `<p class="sb-note">${esc(t)}</p>`).join('')}`;
 }
 
 // The cast sheet's short block: defenses, Strikes, and spells.

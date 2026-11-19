@@ -511,7 +511,7 @@ function shopTextLines(shop, limit = Infinity) {
     const lines = [
         `${shop.name}`,
         `${def.label} · ${SHOP_WEALTH[shop.wealth].label}`,
-        `Keeper: ${k.name}, ${cap1(ruleWord('race', k.race))} ${k.profession}, ${k.age}. ${k.trait}. Flaw: ${k.flaw}. WIS ${k.stats.wis}, CHA ${k.stats.cha}.`,
+        `Keeper: ${k.name}, ${cap1(ruleWord('race', k.race))} ${ruleWord('class', k.profession)}, ${k.age}. ${k.trait}. Flaw: ${k.flaw}. WIS ${k.stats.wis}, CHA ${k.stats.cha}.`,
         `Looks: ${[k.build, shopKeeperHair(k), `${k.eyes} eyes`, k.feature].join(' · ')}`,
         `Voice: ${k.voice}`,
         `Secret: ${k.secret}`,
@@ -664,7 +664,7 @@ const SHOP_DETAILS = {
     cartographer: {
         inside: ['Maps cover every wall, layered over one another like scales.', 'A great globe stands in the corner with a dent where somebody kicked it.', 'Rolled charts fill a rack of pigeonholes to the ceiling.', 'A table holds a half-finished map with one region left blank and a skull drawn in the middle.'],
         services: [['A map of the local roads', 2], ['Hire a guide', 2, 'day'], ['Copy a map', 1], ['Plan a route and mark the dangers', 5], ['Find your way back to somewhere you lost', 10]],
-        buying: [['maps of far places', 5, 'map', 3], ['ship\'s logs', 2, 'log', 4], ['a map of the Underdark', 100, 'map', 1]],
+        buying: [['maps of far places', 5, 'map', 3], ['ship\'s logs', 2, 'log', 4], ['{alt:a map of the Underdark|a map of the Darklands}', 100, 'map', 1]],
         jobs: ['A surveyor sent to chart the hills came back with a map of a valley that is not there.', 'The keeper wants the coast road charted, and nobody who went has come back.', 'A treasure map sold here last month led a party to their deaths, and their kin want answers.', 'Someone breaks in every night and changes one road on the master map.']
     },
     moneychanger: {
@@ -713,7 +713,7 @@ const SHOP_DETAILS = {
         inside: ['A stuffed owlbear stands rearing by the door, wearing a hat.', 'Jars of eyes, teeth, and stranger things fill the shelves, all labeled in red.', 'A wyvern\'s tail hangs over the counter with its stinger capped in a cork.', 'The back room smells like a dragon\'s lair, because some of it was one.'],
         services: [['Identify what a part came from', 1], ['Skin and preserve a trophy', 5], ['Mount a head for your wall', 10], ['Harvest a carcass you bring in', 2, 'plus a cut'], ['Tell you what a beast is weak to', 2]],
         buying: [['owlbear feathers', 2, 'feather', 10], ['troll teeth', 5, 'tooth', 6], ['basilisk eyes', 50, 'eye', 2], ['a mimic tongue', 25, 'tongue', 1], ['a dragon\'s heart', 500, 'heart', 1]],
-        jobs: ['A buyer wants a live displacer beast kitten and will pay 500 gp.', 'The keeper sold a "dead" troll arm last week, and it has since walked off.', 'Someone is poaching the keeper\'s hunting grounds and selling cheaper.', 'A crate of basilisk eyes went missing, and three customers have since turned to stone.']
+        jobs: ['A buyer wants a live {alt:displacer beast kitten|owlbear cub} and will pay 500 gp.', 'The keeper sold a "dead" troll arm last week, and it has since walked off.', 'Someone is poaching the keeper\'s hunting grounds and selling cheaper.', 'A crate of basilisk eyes went missing, and three customers have since turned to stone.']
     }
 };
 
@@ -821,7 +821,7 @@ function shopServiceText([what, gp, per], wealth) {
 
 function shopBuyingText([what, gp, unit, most]) {
     if (!gp) return `${cap1(what)}, ${unit}.`;
-    return `${cap1(what)} at ${formatCoins(ruleCoins(gp))} per ${unit}${most > 1 ? `, up to ${most}` : ''}.`;
+    return `${cap1(what)} at ${formatCoins(Math.max(0.01, ruleCoins(gp)))} per ${unit}${most > 1 ? `, up to ${most}` : ''}.`;
 }
 
 // The place and its extras as [label, text] pairs, for the page, Copy Shop, and the kit. Older saves have none.
@@ -831,10 +831,10 @@ function shopDetailLines(shop) {
     const lines = [['The place', `${cap1(shop.building)}. ${shop.inside}`], ['Hours', shop.hours], ['Security', cap1(shop.security) + '.']];
     if (shop.helper) lines.push(['Helping out', `${shop.helper.name}, ${/^[aeiou]/i.test(ruleWord('race', shop.helper.race)) ? 'an' : 'a'} ${ruleWord('race', shop.helper.race)} ${shop.helper.role}, who ${shop.helper.note}.`]);
     if (shop.services && shop.services.length) lines.push(['Services', shop.services.map(s => shopServiceText(s, shop.wealth)).join(' · ')]);
-    if (shop.buying) lines.push(['Buying', shopBuyingText(shop.buying)]);
+    if (shop.buying) lines.push(['Buying', ruleText(shopBuyingText(shop.buying))]);
     if (shop.sale && byId[shop.sale.id]) lines.push(['On sale', `${byId[shop.sale.id].name}, ${Math.round(SHOP_SALE_OFF * 100)}% off (${shop.sale.why}).`]);
     if (shop.soldOut && byId[shop.soldOut.id]) lines.push(['Sold out', `${byId[shop.soldOut.id].name}: ${shop.soldOut.why}.`]);
-    if (shop.job) lines.push(['Ask about', shop.job]);
+    if (shop.job) lines.push(['Ask about', ruleText(shop.job)]);
     return lines;
 }
 

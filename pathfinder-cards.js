@@ -36,9 +36,9 @@ const PK_TRAIT_NOTES = {
     forceful: () => 'Forceful: +1 damage per weapon die on your second attack of the turn, +2 per die on the third and later.',
     sweep: () => 'Sweep: +1 circumstance bonus to hit if you already attacked a different target this turn.',
     backstabber: () => 'Backstabber: +1 precision damage against an off-guard target (+2 with a +3 potency rune).',
-    backswing: () => 'Backswing: after you miss with it, +1 circumstance bonus to hit with it for the rest of the turn.',
+    backswing: () => 'Backswing: after you miss with it, +1 circumstance bonus to your next attack with it this turn.',
     propulsive: () => 'Propulsive: adds half your Strength modifier to damage if it\'s positive, all of it if negative (counted).',
-    thrown: d => `Thrown ${d} ft.: throw it as a ranged Strike, adding Strength to the damage.`,
+    thrown: (d, s) => `Thrown ${d || s.range} ft.: throw it as a ranged Strike, adding Strength to the damage${s.traits.includes('splash') ? ' (not for a splash weapon)' : ''}.`,
     volley: d => `Volley ${d} ft.: −2 to hit a target within ${d} feet.`,
     'two-hand': d => `Two-hand ${d}: held in two hands, its damage die becomes a ${d}.`,
     versatile: d => `Versatile ${d.toUpperCase()}: it can deal ${PK_DMG[d.toUpperCase()] || d} damage in place of its usual type.`,
@@ -47,7 +47,7 @@ const PK_TRAIT_NOTES = {
     parry: () => 'Parry: spend an action for a +1 circumstance bonus to AC until your next turn.',
     twin: () => 'Twin: +1 circumstance damage per weapon die if you already attacked with another weapon of the same kind this turn.',
     'free-hand': () => 'Free-hand: it leaves that hand free for other things.',
-    splash: () => 'Splash: it splashes everything within 5 feet of the target, even on a miss.',
+    splash: () => 'Splash: on a hit, the target and everything within 5 feet take the splash damage; on a miss, only the target does; a critical miss deals none. No Strength to its damage.',
     trip: () => 'Trip: you can Trip with it, using the hand that holds it.',
     shove: () => 'Shove: you can Shove with it, using the hand that holds it.',
     disarm: () => 'Disarm: you can Disarm with it, using the hand that holds it.',
@@ -110,7 +110,7 @@ function pkStrikes(c) {
         const notes = [];
         s.traits.forEach(t => {
             const [, name, val] = /^([a-z-]+?)(?:-(\d+|d\d+|[a-z]))?$/.exec(t) || [, t, ''];
-            if (PK_TRAIT_NOTES[name]) notes.push(PK_TRAIT_NOTES[name](val || ''));
+            if (PK_TRAIT_NOTES[name]) notes.push(PK_TRAIT_NOTES[name](val || '', s));
         });
         if (!s.rank) notes.unshift('**Untrained:** no proficiency bonus on the attack roll.');
         const more = [];
@@ -180,7 +180,13 @@ function pkSpells(c) {
     grants.list.filter(g => g.rank > 0 && g.to === 'rep').forEach(g => add(g.key, g.from));
     const prepped = Object.keys(s.prep).sort((a, b) => a - b).flatMap(r => s.prep[r].filter(Boolean));
     prepped.forEach(k => add(k, 'prepared'));
-    if (!prepped.length) s.book.forEach(k => add(k, 'spellbook'));
+    if (!prepped.length) {
+        s.book.forEach(k => add(k, 'spellbook'));
+        grants.list.filter(g => g.rank > 0 && g.to === 'book').forEach(g => add(g.key, g.from));
+    }
+    // A cleric's divine font: heal or harm at the top rank, cast from the font's own slots.
+    const cast = pcCasting(c);
+    if (cast && cast.font && cast.font.spell) add(cast.font.spell, 'divine font');
     pcFocus(c, grants).list.forEach(f => add(f.key, f.from || 'focus'));
     arcs.forEach(a => {
         const m = s.mc[a.arc];
@@ -213,7 +219,7 @@ function pkItemCards(host, key, tag = 'Pathfinder item') {
     const x = PF2E_ITEMS[key];
     const r = pkRarity(x);
     const stat = (k, v) => (v ? `<div><dt>${k}</dt><dd>${gcEsc(v)}</dd></div>` : '');
-    const stats = `<dl class="gc-stats">${stat('Price', pkPrice(x.p))}${stat('Bulk', x.bu)}${stat('Usage', x.u)}${stat('Damage', x.dm)}</dl>`;
+    const stats = `<dl class="gc-stats">${stat('Price', pkPrice(x.p) && pkPrice(x.p) + (x.pe > 1 ? ` for ${x.pe}` : ''))}${stat('Bulk', x.bu)}${stat('Usage', x.u)}${stat('Damage', x.dm)}</dl>`;
     return gcFlow(host, pkBlocks(x.x), (body, part, total, tight) => gcTextCard({
         color: PK_RARITY_COLORS[r], name: x.n, sub: `Item ${x.l}${r === 'common' ? '' : ' · ' + r}${(x.tr || []).length ? ' · ' + x.tr.join(', ') : ''}`,
         badge: `<span class="gc-lv" title="Level ${x.l}">${x.l}</span>`, stats, body, part, total, tight, tag, link: `${GC_SITE}/pathfinder-character-cards`

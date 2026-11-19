@@ -114,7 +114,7 @@ function bcSuggest() {
         // A level-up boost past +4 is only half a point, so the key attribute keeps rising
         // and the rest go to whatever is still under +4.
         const { mods } = pcAttrs(bc, l - 1);
-        const k = prio[0];
+        const k = bcKey();   // with no class, no attribute gets the past-+4 priority
         const order = [...prio.filter(a => a === k || mods[a] < 4), ...prio.filter(a => a !== k && mods[a] >= 4)];
         const arr = (bc.boosts[f] || []).slice(0, 4);
         for (let i = 0; i < 4; i++) {

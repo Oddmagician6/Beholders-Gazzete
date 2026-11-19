@@ -26,6 +26,9 @@ const MARKET_PF2E_LOCAL = [
     'dragon-scale', 'phoenix-feather', 'unicorn-horn'
 ];
 
+// Player Core's Animals table prices the common mounts: [gp, level] in place of the converted 5e price.
+const MARKET_PF2E_ANIMALS = { 'horse-riding': [8, 0], warhorse: [30, 2], pony: [7, 0], mule: [2, 0] };
+
 // 5e ids → the Pathfinder item a shop's list means by them.
 const MARKET_PF2E_ALIAS = {
     'rope-hempen-50-feet': 'rope', 'rope-silk-50-feet': 'rope', 'tinderbox': 'flint-and-steel', 'rations-1-day': 'rations',
@@ -121,8 +124,8 @@ function marketPf2eTier(level, gp) {
     MARKET_PF2E_LOCAL.forEach(id => {
         const i = fiveE[id];
         if (!i || PF2E_ITEMS[id]) return;
-        const gp = Math.max(0.01, Math.round(ruleCoins(i.basePrice) * 100) / 100);
-        items.push({ ...i, basePrice: gp, level: 0, tier: marketPf2eTier(0, gp), rarity: 'common', kind: '', type: '', group: '', traits: [], local: true });
+        const [gp, level] = MARKET_PF2E_ANIMALS[id] || [Math.max(0.01, Math.round(ruleCoins(i.basePrice) * 100) / 100), 0];
+        items.push({ ...i, basePrice: gp, level, tier: marketPf2eTier(level, gp), rarity: 'common', kind: '', type: '', group: '', traits: [], local: true });
     });
     items.sort((a, b) => order.indexOf(a.category) - order.indexOf(b.category) || a.level - b.level || a.basePrice - b.basePrice || a.name.localeCompare(b.name));
 

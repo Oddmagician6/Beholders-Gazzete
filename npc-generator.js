@@ -517,12 +517,13 @@ function sheetStatBlock(b) {
 }
 
 // A Pathfinder sheet waits for the block text (pf2e-creature-blocks.js) before it prints.
-function printSelected() {
+// If the block text won't load, the sheet prints once with the numbers only (no retry loop).
+function printSelected(noLoad = false) {
     const saved = readSaved();
     const picked = saved.filter((npc, i) => pickedSaved.has(savedKey(npc, i)));
     if (!picked.length) return;
-    if (NPC_PF2E && showStatsOn() && picked.some(npcHasBlock) && typeof PF2E_BLOCKS === 'undefined') {
-        loadMonsterBlocks().then(printSelected, printSelected);
+    if (noLoad !== true && NPC_PF2E && showStatsOn() && picked.some(npcHasBlock) && typeof PF2E_BLOCKS === 'undefined') {
+        loadMonsterBlocks().then(() => printSelected(true), () => printSelected(true));
         return;
     }
     document.getElementById('print-sheet').innerHTML =
@@ -566,7 +567,7 @@ function loadSavedNPC(index) {
     if (saved[index]) {
         currentNPC = saved[index];
         locks.clear();
-        displayNPC(true, true, true);
+        displayNPC(showStatsOn(), document.getElementById('include-secrets').checked, document.getElementById('include-quest').checked);
         // An NPC saved before links has no seed; its history entry carries it instead.
         setUrlParams(npcParams(), true, currentNPC.seed ? null : { npc: currentNPC });
         document.getElementById('npc-card').scrollIntoView({ behavior: 'smooth' });
@@ -579,7 +580,7 @@ function showUnlinkedNPC() {
     locks.clear();
     if (npc && typeof npc === 'object') {
         currentNPC = npc;
-        displayNPC(true, true, true);
+        displayNPC(showStatsOn(), document.getElementById('include-secrets').checked, document.getElementById('include-quest').checked);
         return;
     }
     currentNPC = null;
@@ -602,6 +603,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!ruleHasStatBlocks()) {
         ['npc-class', 'npc-level', 'include-stats'].forEach(id => { document.getElementById(id).closest('.control-group, .toggle').hidden = true; });
     }
+    // The Handout Maker is D&D's only for now: a Pathfinder page leaves its button out.
+    if (!ruleLinkOk('handouts')) document.getElementById('handout-btn').style.display = 'none';
     realmsPicker('npc-world', 'npc');
     renderSavedNPCs();
     document.querySelectorAll('.lock-btn').forEach(btn => btn.addEventListener('click', () => toggleLock(btn.dataset.lock)));

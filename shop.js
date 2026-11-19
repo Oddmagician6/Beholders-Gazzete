@@ -9,6 +9,8 @@ const SHOP_KEY = ruleKey('gazette-shop');
 let shop = null;
 let priceTimer = null;
 let haggleBonus = 0; // remembered between shops
+// The top haggle bonus: a level-20 Pathfinder face can pass +30 Diplomacy; 5e tops out near +20.
+const HAGGLE_MAX = ruleSystemId() === 'pf2e' ? 40 : 20;
 
 function esc(text) {
     return String(text).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -58,7 +60,7 @@ function keeperHTML(k) {
             <span class="keeper-icon" aria-hidden="true">${npcFaceHtml(k)}</span>
             <div>
                 <div class="keeper-name">${esc(k.name)}</div>
-                <div class="keeper-sub">${esc(cap(ruleWord('race', k.race)))} · ${esc(k.age)} · ${esc(k.profession)}</div>
+                <div class="keeper-sub">${esc(cap(ruleWord('race', k.race)))} · ${esc(k.age)} · ${esc(ruleWord('class', k.profession))}</div>
             </div>
         </div>
         <p class="keeper-greeting">"${esc(shop.greeting)}"</p>
@@ -92,7 +94,7 @@ function haggleHTML() {
         <h2 class="shop-h">🤝 Haggle</h2>
         <div class="haggle-row">
             <label for="haggle-bonus">Your ${ruleText('{alt:Persuasion|Diplomacy}')} bonus</label>
-            <input type="number" id="haggle-bonus" value="${h ? h.bonus : haggleBonus}" min="-5" max="20" step="1" ${h ? 'disabled' : ''}>
+            <input type="number" id="haggle-bonus" value="${h ? h.bonus : haggleBonus}" min="-5" max="${HAGGLE_MAX}" step="1" ${h ? 'disabled' : ''}>
             <button type="button" class="btn" id="haggle-btn" ${h ? 'disabled' : ''}>🎲 Roll to Haggle</button>
         </div>
         <p class="haggle-result" id="haggle-result">${result}</p>
@@ -227,7 +229,7 @@ function roll(push = true) {
 
 function haggle() {
     if (!shop || shop.haggle) return;
-    haggleBonus = Math.max(-5, Math.min(20, parseInt(document.getElementById('haggle-bonus').value, 10) || 0));
+    haggleBonus = Math.max(-5, Math.min(HAGGLE_MAX, parseInt(document.getElementById('haggle-bonus').value, 10) || 0));
     shop.haggle = rollHaggle(shop, haggleBonus);
     render();
     saveShop();
