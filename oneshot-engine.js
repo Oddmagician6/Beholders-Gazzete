@@ -560,10 +560,19 @@ function osPayBase(level) {
     return OS_PF2E ? PF2E_TREASURE[level].cur / 4 * 0.4 : QUEST_PAY[level];
 }
 
-// XP for each character: 5e splits the fights' XP; Pathfinder gives each character the fights'
-// XP as for a party of four.
+// XP for each character: 5e splits the fights' XP; Pathfinder gives each character what a party of
+// four would get for the same threat (GM Core): each fight's XP is scaled from this party's budget to
+// a four-character one, so a solo Low fight is worth 60 like any Low fight. A party of four is unchanged.
 function osXpEach(o) {
-    return OS_PF2E ? Math.round(o.xp * 4 / o.party) : Math.floor(o.xp / o.party);
+    if (!OS_PF2E) return Math.floor(o.xp / o.party);
+    osAtLevel(o);
+    const b = o.budget;
+    const fights = [...o.road.fights, ...o.site.rooms.map(r => r.fight).filter(Boolean)];
+    return Math.round(fights.reduce((t, f) => {
+        const xp = encounterXp(siteFightList(f));
+        const k = ENC_DIFFS.find(d => xp <= b[d]) || 'extreme';
+        return t + (xp && b[k] ? xp * ENC_PF2E_BUDGET[k][0] / b[k] : 0);
+    }, 0));
 }
 
 function osPick(arr) {
@@ -872,6 +881,8 @@ function osFightLink(o, f, habitat) {
     f.list.forEach(e => p.append('m', `${e.id}.${e.count}`));
     if (habitat) p.set('env', habitat);
     if (f.band) p.set('pack', f.band);
+    // The difficulty it was built at, so a reroll there keeps to it (a boss fight is high: Pathfinder severe).
+    if (f.diff && encDiffKey(f.diff) !== 'moderate') p.set('diff', encDiffKey(f.diff));
     p.set('seed', f.seed);
     // A campaign chapter's named boss keeps their name (and the monster they came as) there.
     const rooms = o.site.rooms, L = o.site.boss && o.site.boss.leader;
@@ -916,14 +927,14 @@ function oneShotText(o) {
         ...o.road.fights.map(f => `Fight, day ${f.day}: ${osFightText(f)} (${osFightRating(o, f)}). ${osCap(f.scene.doing)}.`), '',
         `ACT 3: ${s.name.toUpperCase()}`,
         `Read aloud: ${o.arrive}`,
-        siteText(s, {}), '',
-        `The boss. Read aloud: ${o.bossRead}`,
-        `Hoard: ${lootHoardText(o.hoard)}`, '',
+        siteText(s, { hoard: lootHoardText(o.hoard) }), '',
+        `The boss. Read aloud: ${o.bossRead}`, '',
         'WRAP-UP',
         `If they win: ${o.win}`,
         `If they fail: ${o.fail}`,
         ...o.threads.map(t => `Loose thread: ${t}`),
-        `XP for every fight: ${o.xp.toLocaleString('en-US')} (${osXpEach(o).toLocaleString('en-US')} each).`
+        OS_PF2E ? `XP for every fight: ${osXpEach(o).toLocaleString('en-US')} for each character.`
+            : `XP for every fight: ${o.xp.toLocaleString('en-US')} (${osXpEach(o).toLocaleString('en-US')} each).`
     ];
     return out.join('\n');
 }

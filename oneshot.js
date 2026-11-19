@@ -63,7 +63,8 @@ function osFromUrl() {
     os.lock = [...new Set((q.get('lock') || '').split(',').filter(id => OS_PARTS.includes(id)))];
 }
 
-// An article's campaign block as the engine's `given` (null when it has none).
+// An article's campaign block as the engine's `given` (null when it has none; false when the
+// articles didn't load, so the link keeps its article for a reload).
 async function osLoadArticle(id) {
     if (!id) return null;
     try {
@@ -79,7 +80,7 @@ async function osLoadArticle(id) {
             rumor: c.rumor
         };
     } catch (e) {
-        return null;
+        return false;
     }
 }
 
@@ -168,7 +169,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     osFromUrl();
     os.given = await osLoadArticle(os.art);
-    if (os.art && !os.given) { os.art = ''; flash('That article has no campaign block, so this adventure is all rolled.', true); }
+    if (os.given === false) { os.given = null; flash('⚠️ The Gazette article didn\'t load (offline?), so this adventure is all rolled. Reload to try again.', true); }
+    else if (os.art && !os.given) { os.art = ''; flash('That article has no campaign block, so this adventure is all rolled.', true); }
     setUrlParams(osParams(), false);
     osRoll();
     render();
@@ -224,7 +226,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.addEventListener('popstate', async () => {
         const art = os.art;
         osFromUrl();
-        if (os.art !== art) os.given = await osLoadArticle(os.art);
+        if (os.art !== art) os.given = (await osLoadArticle(os.art)) || null;
         osRoll();
         render();
     });

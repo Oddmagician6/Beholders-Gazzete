@@ -186,6 +186,15 @@ function dsRuleBody(rule) {
     return rulesCardHtml(rule, '').replace(/^<section[^>]*><h2>[\s\S]*?<\/h2>/, '').replace(/<\/section>$/, '');
 }
 
+// A stat block card's monster. A card saved under 2024 rules, shown under 2014, falls back to the
+// SRD 5.1 monster its 2024 id stands for (goblin-warrior: goblin), once srd52-full-data.js is in.
+function dsMonster(id) {
+    if (typeof MONSTER_BY_ID === 'undefined' || !id) return null;
+    if (Object.hasOwn(MONSTER_BY_ID, id)) return MONSTER_BY_ID[id];
+    const old = typeof rulesOldId === 'function' ? rulesOldId(id) : null;
+    return old && Object.hasOwn(MONSTER_BY_ID, old) ? MONSTER_BY_ID[old] : null;
+}
+
 // The title in a card's header.
 function dsCardTitle(c, ctx) {
     if (c.type === 'rules') { const r = dsRule(c.rule); return r ? r.title : 'Rules'; }
@@ -193,7 +202,7 @@ function dsCardTitle(c, ctx) {
     if (c.type === 'table') { const t = ctx.tables().find(x => x.id === c.table); return t ? t.name || 'Untitled table' : 'Random table'; }
     if (c.type === 'entry') { const e = nbFind(ctx.nb(), c.entry); return e ? e.title : 'Notebook entry'; }
     if (c.type === 'monster') {
-        const m = typeof MONSTER_BY_ID !== 'undefined' && Object.hasOwn(MONSTER_BY_ID, c.m) ? MONSTER_BY_ID[c.m] : null;
+        const m = dsMonster(c.m);
         return m ? m.name : 'Stat block';
     }
     if (c.type === 'notes') return c.title || 'Notes';

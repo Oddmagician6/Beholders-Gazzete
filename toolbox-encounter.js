@@ -416,7 +416,8 @@ function applyEncUrl(p) {
     const FIELDS = { diff: 'en-diff', type: 'en-roll-type', env: 'en-env', band: 'en-band' };
     Object.entries(FIELDS).forEach(([k, id]) => {
         const el = document.getElementById(id);
-        if (!setFieldValue(el, p.get(k))) el.value = defaultValue(el);
+        // diff=high from a D&D-style link is severe in Pathfinder.
+        if (!setFieldValue(el, k === 'diff' && p.get(k) ? encDiffKey(p.get(k)) : p.get(k))) el.value = defaultValue(el);
     });
     enc.band = Object.hasOwn(ENC_BAND_BY_KEY, p.get('pack')) ? p.get('pack') : null;
     enc.seed = parseSeed(p.get('seed'));

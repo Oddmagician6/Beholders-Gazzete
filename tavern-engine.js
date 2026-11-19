@@ -239,7 +239,7 @@ const TAVERN_QUIRKS = ruleTable([
     'Every drink comes with a free fortune, written by the cook. The fortunes are threats.',
     'A rowboat hangs from the ceiling, and someone sleeps in it most nights.',
     'Whoever starts a fight here cleans up after it, under supervision.',
-    'There is no menu. The cook brings what the cook feels you need.',
+    'The menu is only a suggestion. The cook brings what the cook feels you need.',
     'A tame raven steals shiny things and keeps them in a nest above the bar. The nest is worth a fortune.',
     'Every chair is from a different place. One of them is clearly a throne, and nobody sits in it.',
     'A goat lives here. It has the run of the place and a better room than most guests.',
@@ -738,6 +738,10 @@ function rollTavern(seed, opts = {}) {
     const tonight = part('tonight', () => randomArray(TAVERN_TONIGHT));
     const trouble = part('trouble', () => { const x = randomArray(TAVERN_TROUBLE); return rand() < 0.65 ? x : null; });
 
+    // Two people with one full name (a tiefling's virtue name, say): the later one is "Other <name>",
+    // as a tavern would tell them apart. No draws, so nothing else moves.
+    const named = new Set([owner.name]);
+    [...staff, ...regulars].forEach(n => { if (named.has(n.name)) n.name = `Other ${n.name}`; named.add(n.name); });
     const tv = { seed, name, tier, kind, owner, staff, regulars, menu, rooms, quirk, scene, sign, history, rule, game, tonight, trouble };
     if (realms) tv.realms = part('realms', () => ({ city: randomArray(REALMS_CITIES).n }));
     part('more', () => tavernSecondPass(tv));

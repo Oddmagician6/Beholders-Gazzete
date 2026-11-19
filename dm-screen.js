@@ -32,10 +32,14 @@ function armedClick(btn, label, action) {
         btn._t = setTimeout(() => { delete btn.dataset.armed; btn.textContent = label; }, 3000);
         return;
     }
+    disarm(btn, label);
+    action();
+}
+
+function disarm(btn, label) {
     clearTimeout(btn._t);
     delete btn.dataset.armed;
     btn.textContent = label;
-    action();
 }
 
 function dsLayout() {
@@ -96,7 +100,7 @@ function pickerHtml(c, ctx) {
         return lab('Entry', `<select data-pick="entry"><option value="">Choose an entry…</option>${groups}</select>`);
     }
     if (c.type === 'monster') {
-        const m = Object.hasOwn(MONSTER_BY_ID, c.m) ? MONSTER_BY_ID[c.m] : null;
+        const m = dsMonster(c.m);
         return `<form class="ds-inline" data-form="monster">
             <label class="ds-pick-label"><span>${DS_PF2E ? 'Creature' : 'Monster (SRD or your homebrew)'}</span><input type="text" name="m" list="ds-monsters" maxlength="80" placeholder="Type a name: goblin, ${DS_PF2E ? 'ogre' : 'lich'}…" autocomplete="off" value="${m ? dsEsc(monsterLabel(m)) : ''}"></label>
             <button type="submit" class="ds-btn">🐉 Show</button>
@@ -245,9 +249,11 @@ function entryBody(c, ctx) {
 }
 
 function monsterBody(c) {
-    const m = Object.hasOwn(MONSTER_BY_ID, c.m) ? MONSTER_BY_ID[c.m] : null;
+    const m = dsMonster(c.m);
+    if (!m && c.m && dsUi.oldIds === 'loading') return '<p class="ds-faint">Looking it up…</p>';
     if (!m) return c.m ? '<p class="ds-faint">That monster is gone (a homebrew monster removed from the notebook?). Choose another.</p>' + pickerHtml(c) : null;
-    const failed = !m.block && dsUi.blocksFailed;
+    // The spell text can fail on its own: a block that did load still shows.
+    const failed = !m.block && !blocksReady() && dsUi.blocksFailed;
     const links = [
         `<a href="toolbox?${paramsQuery({ tab: 'init', add: `${m.id}.1` })}">⚔️ Add to Initiative</a>`,
         m.hb ? `<a href="monster-maker?nb=${dsEsc(m.id.slice(HB_PREFIX.length))}">🐲 Open in the Monster Maker</a>`
@@ -378,7 +384,14 @@ function renderBoardKeepingFocus() {
 function needBlocks() {
     // A 2024 card brings its own block but still needs the spell text for its spell buttons.
     const cards = dsLayout().cards.filter(c => c.type === 'monster' && c.m);
-    const needBlock = !blocksReady() && cards.some(c => !(MONSTER_BY_ID[c.m] || {}).block);
+    // A 2024 card under 2014 rules: its 5.1 id is in the 2024 data's rename list.
+    if (!DS_PF2E && !dsUi.oldIds && typeof rulesLoadFull === 'function' && typeof SRD52_FULL === 'undefined'
+        && cards.some(c => !c.m.startsWith(HB_PREFIX) && !dsMonster(c.m))) {
+        dsUi.oldIds = 'loading';
+        const done = () => { dsUi.oldIds = 'done'; renderTypes('monster'); needBlocks(); };
+        rulesLoadFull().then(done, done);
+    }
+    const needBlock = !blocksReady() && cards.some(c => !(dsMonster(c.m) || {}).block);
     const needSpells = typeof SPELLS_DATA === 'undefined' && cards.length;
     if (!needBlock && !needSpells) return;
     loadMonsterBlocks().then(() => { dsUi.blocksFailed = false; renderTypes('monster'); })
@@ -682,6 +695,7 @@ function setupDrag(board) {
 function setupLayouts() {
     document.getElementById('ds-layout').addEventListener('change', e => {
         ds.cur = e.target.value;
+        disarm(document.getElementById('ds-del'), '🗑️ Delete');
         dsUi.menu = null;
         dsUi.pick.clear();
         dsStore();
@@ -721,6 +735,9 @@ function setupLayouts() {
     const del = document.getElementById('ds-del');
     del.addEventListener('click', () => {
         if (ds.layouts.length < 2) return;
+        // The second click deletes the layout the first one armed, never another one shown since.
+        if (del.dataset.armed && del.dataset.layout !== ds.cur) disarm(del, '🗑️ Delete');
+        del.dataset.layout = ds.cur;
         armedClick(del, '🗑️ Delete', () => {
             const L = dsLayout();
             ds.layouts = ds.layouts.filter(l => l.id !== L.id);
@@ -753,6 +770,14 @@ document.addEventListener('DOMContentLoaded', () => {
     board.addEventListener('input', onBoardInput);
     board.addEventListener('keydown', onBoardKey);
     setupDrag(board);
+
+    // Player View shows the rules version this screen shows (a rules= this page was opened with included).
+    document.getElementById('ds-view').addEventListener('click', e => {
+        const a = e.currentTarget;
+        const r = typeof rulesLinkParams === 'function' ? rulesLinkParams({}).rules : null;
+        const base = a.getAttribute('href').split('?')[0];
+        a.setAttribute('href', r ? `${base}?rules=${r}` : base);
+    });
 
     document.getElementById('ds-print').addEventListener('click', () => {
         if (!dsLayout().cards.length) { flash('Add some cards first.'); return; }

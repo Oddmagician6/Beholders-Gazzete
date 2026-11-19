@@ -211,7 +211,9 @@ function setupTavern() {
     document.getElementById('tv-print').addEventListener('click', printTavern);
     window.addEventListener('afterprint', () => document.body.classList.remove('print-tavern'));
     document.getElementById('tv-link').addEventListener('click', () =>
-        copyPageLink(ok => flash('tavern-status', ok ? '🔗 Link copied. It opens this tavern with this rumor.' : '⚠️ Copy blocked by the browser.')));
+        copyPageLink(ok => flash('tavern-status', !ok ? '⚠️ Copy blocked by the browser.'
+            // The rumors still loading (or failed): the address has no rumor in it yet.
+            : tavern.rumorIdx !== null ? '🔗 Link copied. It opens this tavern with this rumor.' : '🔗 Link copied. It opens this tavern (the rumor hadn\'t come in yet).')));
 
     fetch('rumors.json').then(r => r.json()).then(data => {
         tavernRumors = (data && data.rumors) || [];

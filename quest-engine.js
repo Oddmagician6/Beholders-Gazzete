@@ -744,6 +744,10 @@ const QUEST_REALMS_INTEREST = [
     "A contact in {f} will pay a little extra for a full report afterward, names included."
 ];
 
+// Task lines with a clock of their own (a time a rolled deadline could contradict; "before the eggs
+// hatch" can take any deadline).
+const QUEST_TIMED_TASK = /Before sundown|arrives in three days|for three nights|on the next tide|before the unmasking/;
+
 function rollQuest(seed, opts = {}) {
     const part = (label, fn) => withSeed(deriveSeed(seed, label), fn);
     const level = Math.min(20, Math.max(1, Math.floor(opts.level) || 1));
@@ -770,7 +774,10 @@ function rollQuest(seed, opts = {}) {
     const feature = part("feature", () => randomArray(QUEST_FEATURES));
     const obstacle = part("obstacle", () => rand() < 0.7 ? randomArray(QUEST_OBSTACLES) : null);
     const stakes = part("stakes", () => questCap(questFill(randomArray(rand() < 0.6 ? j.stakes : QUEST_STAKES), ctx)));
-    const deadline = part("deadline", () => questFill(randomArray(QUEST_DEADLINES), ctx));
+    // A task that names its own time (before sundown, the buyer in three days) sets the deadline;
+    // the roll is still drawn, so nothing else moves.
+    const rolledDeadline = part("deadline", () => questFill(randomArray(QUEST_DEADLINES), ctx));
+    const deadline = QUEST_TIMED_TASK.test(taskLine) ? "As the job says" : rolledDeadline;
 
     const reward = part("reward", () => ({
         gp: questRound(questPayBase(level) * size * j.pay * (0.75 + rand() * 0.5)),
@@ -813,12 +820,14 @@ function questRewardText(r) {
     return `${r.terms}.${r.inKind ? ` About a third of it comes as ${r.inKind}.` : ""}${r.bonus ? ` Plus ${r.bonus}.` : ""}`;
 }
 
-// The DM Toolbox Encounter tab, opened with this party and these monsters.
+// The DM Toolbox Encounter tab (Pathfinder: the Encounter Builder), opened with this party and these monsters.
 function questEncounterLink(q) {
-    const p = new URLSearchParams({ tab: "enc", party: `${q.size}x${q.level}` });
+    const pf = typeof ENC_PF2E !== "undefined" && ENC_PF2E;
+    const p = new URLSearchParams(pf ? { party: `${q.size}x${q.level}` } : { tab: "enc", party: `${q.size}x${q.level}` });
     q.foe.list.forEach(e => p.append("m", `${e.m.id}.${e.count}`));
-    if (q.foe.diff !== "moderate") p.set("diff", q.foe.diff);
-    return "toolbox?" + p.toString();
+    const diff = encDiffKey(q.foe.diff);
+    if (diff !== "moderate") p.set("diff", diff);
+    return (pf ? "pathfinder-encounter-builder?" : "toolbox?") + p.toString();
 }
 
 function questFoeText(foe) {

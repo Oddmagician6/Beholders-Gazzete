@@ -1250,7 +1250,8 @@ function siteText(s, ctx) {
     out.push('');
     s.rooms.forEach((r, i) => {
         out.push(`${r.n}. ${r.name}`, `  ${r.text}`);
-        siteRoomLines(s, i).forEach(([k, v]) => out.push(`  ${k}: ${v}`));
+        // A hoard already rolled (the One-Shot's) replaces the "roll it in the Loot generator" line.
+        siteRoomLines(s, i).forEach(([k, v]) => out.push(`  ${k}: ${k === 'Hoard' && ctx && ctx.hoard ? `${siteCap(s.hoard.container)}: ${ctx.hoard}` : v}`));
         out.push('');
     });
     if (s.wander) out.push(`Wandering monsters: ${siteWanderText(s)}`);
