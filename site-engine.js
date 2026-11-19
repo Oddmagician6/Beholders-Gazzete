@@ -1007,8 +1007,8 @@ function siteNameFor(seed, kind) {
 function rollSite(seed, opts = {}) {
     const part = (label, fn) => withSeed(deriveSeed(seed, label), fn);
     const drawn = part('options', () => ({ kind: sitePick(SITE_KIND_FIRST), size: siteWeighted([['medium', 5], ['small', 3], ['large', 3]]) }));
-    const kind = SITE_KINDS[opts.kind] ? opts.kind : siteMoreKind(seed, drawn.kind);
-    const size = SITE_SIZES[opts.size] ? opts.size : drawn.size;
+    const kind = Object.hasOwn(SITE_KINDS, opts.kind) ? opts.kind : siteMoreKind(seed, drawn.kind);
+    const size = Object.hasOwn(SITE_SIZES, opts.size) ? opts.size : drawn.size;
     const level = siteClamp(opts.level, 1, 20, 3);
     const party = siteClamp(opts.party, 1, 8, 4);
     const K = SITE_KINDS[kind], Z = SITE_SIZES[size];

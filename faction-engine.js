@@ -971,6 +971,11 @@ function facRollFaction(seed, i, type, prev, realms = false) {
         }
         if (!takenNames.has(f.nameRaw)) break;
     }
+    // Two houses of one family name: this one goes by its head ("the House of Corin Redfern").
+    if (type === 'house' && takenNames.has(f.nameRaw)) {
+        const npc = f.leader.npc;
+        f.nameRaw = `the House of ${npc.firstName}${npc.surname ? ' ' + npc.surname : ''}`;
+    }
 
     f.goal = facPick(t.goals);
     f.method = facPick(t.methods);
@@ -1036,9 +1041,9 @@ function facTies(factions) {
 // opts: { count: 'random'|few|full|many, focus: 'random'|type, scale: 'random'|town|city|kingdom }
 function rollFactions(seed, opts = {}) {
     const part = (label, fn) => withSeed(deriveSeed(seed, label), fn);
-    const count = FAC_COUNTS[opts.count] ? opts.count : part('count', () => facWeighted([['full', 5], ['few', 3], ['many', 2]]));
-    const focus = FAC_TYPES[opts.focus] ? opts.focus : null;
-    const scale = FAC_SCALES[opts.scale] ? opts.scale : part('scale', () => facWeighted([['city', 5], ['town', 3], ['kingdom', 2]]));
+    const count = Object.hasOwn(FAC_COUNTS, opts.count) ? opts.count : part('count', () => facWeighted([['full', 5], ['few', 3], ['many', 2]]));
+    const focus = Object.hasOwn(FAC_TYPES, opts.focus) ? opts.focus : null;
+    const scale = Object.hasOwn(FAC_SCALES, opts.scale) ? opts.scale : part('scale', () => facWeighted([['city', 5], ['town', 3], ['kingdom', 2]]));
     const c = FAC_COUNTS[count];
     const n = part('n.' + count, () => c.min + Math.floor(rand() * (c.max - c.min + 1)));
 
@@ -1051,7 +1056,7 @@ function rollFactions(seed, opts = {}) {
         order[0] = focus;
     }
 
-    const realms = opts.world === 'realms' && typeof REALMS_FACTIONS !== 'undefined';
+    const realms = opts.world === 'realms' && typeof REALMS_FACTIONS !== 'undefined' && realmsAllowed();   // never on a Pathfinder page, however it's asked for
     const factions = [];
     for (let i = 0; i < n; i++) factions.push(part(`faction.${i}.${order[i]}`, () => facRollFaction(seed, i, order[i], factions, realms)));
     if (realms) part('realms.' + order.slice(0, n).join('.'), () => facRealmsFactions(factions));
@@ -1279,12 +1284,12 @@ function facLines(w, i, ctx) {
         ['Leader', `${f.leader.title} ${facPersonLine(f.leader)}. ${f.leader.style}`],
         ['Base', facCap(fill(f.base)) + '.'],
         ['Symbol', facCap(facSymbolText(f, ctx)) + `. Motto: "${fill(f.motto)}"`],
-        ['Numbers', `About ${f.members.toLocaleString('en-US')} members. Treasury: ${formatCoins(f.treasury)}.`],
+        ['Numbers', `About ${f.members.toLocaleString('en-US')} members. Treasury: ${formatCoins(ruleCoins(f.treasury))}.`],
         ['Resources', f.resources.map(fill).join(' ')],
         ['Reputation', fill(f.rep)],
         ['Friends and foes', [allies.length ? `Allied with ${list(allies)}` : '', rivals.length ? `at odds with ${list(rivals)}` : ''].filter(Boolean).join('; ').replace(/^at/, 'At') + '.'],
         ['To join', fill(f.join)],
-        ['For the party', `${fill(f.want)} Reward: ${formatCoins(f.reward)} and ${fill(f.perk)}.`],
+        ['For the party', `${fill(f.want)} Reward: ${formatCoins(Math.max(0.01, ruleCoins(f.reward)))} and ${fill(f.perk)}.`],
         ['Secret', fill(f.secret)]
     );
     if (!allies.length && !rivals.length) lines.splice(lines.findIndex(l => l[0] === 'Friends and foes'), 1);

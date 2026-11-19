@@ -7,12 +7,12 @@
    Nothing is stored: the URL holds the history.
    URL: ?tab=history&seed=&ages=&span=&start=&age=<number>
         &gods=&gsize=&gshape=&gnaming=&gworld=  (a linked pantheon)
-        &facs=&fcount=&ffocus=&fscale=  (linked factions)
+        &facs=&fcount=&ffocus=&fscale=&fworld=  (linked factions)
    ============================================ */
 
 const HIS_FIELDS = { ages: 'his-ages', span: 'his-span', start: 'his-start' };
 const HIS_GOD_KEYS = { gsize: 'size', gshape: 'shape', gnaming: 'naming', gworld: 'world' };
-const HIS_FAC_KEYS = { fcount: 'count', ffocus: 'focus', fscale: 'scale' };
+const HIS_FAC_KEYS = { fcount: 'count', ffocus: 'focus', fscale: 'scale', fworld: 'world' };
 
 let hisState = { seed: null, data: null, view: 0, gods: null, pantheon: null, facs: null, factions: null };
 
@@ -37,7 +37,7 @@ function hisParams() {
     params.gods = g ? g.seed : null;
     Object.entries(HIS_GOD_KEYS).forEach(([key, opt]) => { params[key] = g && g[opt] && g[opt] !== 'random' ? g[opt] : null; });
     params.facs = f ? f.seed : null;
-    Object.entries(HIS_FAC_KEYS).forEach(([key, opt]) => { params[key] = f && f[opt] !== 'random' ? f[opt] : null; });
+    Object.entries(HIS_FAC_KEYS).forEach(([key, opt]) => { params[key] = f && f[opt] && f[opt] !== 'random' ? f[opt] : null; });
     return worldUrlFor('history', params);
 }
 

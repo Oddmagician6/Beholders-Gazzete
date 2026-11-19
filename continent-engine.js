@@ -922,15 +922,15 @@ function rollContinent(seed, opts = {}) {
         land: contWeighted([['even', 5], ['less', 3], ['more', 3]]),
         nations: rand()
     }));
-    const size = CONT_SIZES[opts.size] ? opts.size : drawn.size;
-    const landKey = CONT_LANDS[opts.land] ? opts.land : drawn.land;
+    const size = Object.hasOwn(CONT_SIZES, opts.size) ? opts.size : drawn.size;
+    const landKey = Object.hasOwn(CONT_LANDS, opts.land) ? opts.land : drawn.land;
     const Z = CONT_SIZES[size];
     const asked = parseInt(opts.nations, 10);
     const want = asked >= 3 && asked <= 8 ? asked : Z.nations[0] + Math.floor(drawn.nations * (Z.nations[1] - Z.nations[0] + 1));
     const m = contTerrain(deriveSeed(seed, 'land.' + size), Z, CONT_LANDS[landKey].frac);
     // opts as asked ('random' where nothing was picked), so a link can ask for this same map.
     const c = { seed, size, land: landKey, map: m, opts: {
-        size: CONT_SIZES[opts.size] ? opts.size : 'random', land: CONT_LANDS[opts.land] ? opts.land : 'random',
+        size: Object.hasOwn(CONT_SIZES, opts.size) ? opts.size : 'random', land: Object.hasOwn(CONT_LANDS, opts.land) ? opts.land : 'random',
         nations: asked >= 3 && asked <= 8 ? String(asked) : 'random' } };
 
     const used = new Set();

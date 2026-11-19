@@ -487,7 +487,7 @@ function townName(setting) {
         const tail = rand() < 0.55 ? townPick(s.tails) : townPick(TOWN_NAME_TAILS);
         const h = head.toLowerCase();
         // No repeats ("Hollowhollow") and no triple letters ("Bellley").
-        if (h.endsWith(tail) || tail.startsWith(h) || (/(.)$/.test(h) && h.slice(-1) === tail[0])) continue;
+        if (h.endsWith(tail) || tail.startsWith(h) || (/(.)\1$/.test(h) && h.slice(-1) === tail[0])) continue;
         let name = head + tail;
         if (TOWN_BANNED.includes(name.toLowerCase())) continue;
         const front = rand();
@@ -513,12 +513,12 @@ function rollTown(seed, opts = {}) {
         setting: townPick(TOWN_SETTING_KEYS),
         wealth: townWeighted([['modest', 5], ['poor', 3], ['prosperous', 3]])
     }));
-    const size = TOWN_SIZES[opts.size] ? opts.size : rolled.size;
-    const setting = TOWN_SETTINGS[opts.setting] ? opts.setting : rolled.setting;
-    const wealth = TOWN_WEALTH[opts.wealth] ? opts.wealth : rolled.wealth;
+    const size = Object.hasOwn(TOWN_SIZES, opts.size) ? opts.size : rolled.size;
+    const setting = Object.hasOwn(TOWN_SETTINGS, opts.setting) ? opts.setting : rolled.setting;
+    const wealth = Object.hasOwn(TOWN_WEALTH, opts.wealth) ? opts.wealth : rolled.wealth;
     const z = TOWN_SIZES[size], s = TOWN_SETTINGS[setting], wl = TOWN_WEALTH[wealth];
     const t = { seed, size, setting, wealth };
-    const realms = opts.world === 'realms' && typeof REALMS_CITIES !== 'undefined';
+    const realms = opts.world === 'realms' && typeof REALMS_CITIES !== 'undefined' && realmsAllowed();   // never on a Pathfinder page, however it's asked for
     if (realms) {
         t.realms = true;
         // Where in the Realms: near one of its cities, a few days off.
@@ -776,7 +776,7 @@ function townLines(t, ctx) {
         ['Rule', townGovText(t, ctx)],
         ['In charge', `${t.leader.title} ${townPersonLine(t.leader)}. ${t.leader.style}`],
         ['The watch', w.count
-            ? `${facCap(w.name)}, about ${w.count} strong. ${townFill(w.kind, t, ctx, t.trouble.faction)} ${w.party} A bribe runs about ${formatCoins(w.bribe)}.`
+            ? `${facCap(w.name)}, about ${w.count} strong. ${townFill(w.kind, t, ctx, t.trouble.faction)} ${w.party} A bribe runs about ${formatCoins(Math.max(0.01, ruleCoins(w.bribe)))}.`
             : `${w.name}.`]
     ];
     if (t.captain) lines.push(['Watch captain', townPersonLine(t.captain) + '.']);
@@ -806,7 +806,7 @@ function townPeopleLines(t, ctx) {
 }
 
 function townLawLines(t) {
-    return t.laws.map(l => `${l.text} Fine: ${formatCoins(l.fine)}.`);
+    return t.laws.map(l => `${l.text} Fine: ${formatCoins(Math.max(0.01, ruleCoins(l.fine)))}.`);
 }
 
 function townTroubleText(t, ctx) {

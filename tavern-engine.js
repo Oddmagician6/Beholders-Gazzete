@@ -629,7 +629,7 @@ function tavernScenePass(tv) {
 // opts: { quality: tier key or 'random' }. Returns the tavern without a rumor.
 function rollTavern(seed, opts = {}) {
     const part = (label, fn) => withSeed(deriveSeed(seed, label), fn);
-    const realms = opts.world === 'realms' && typeof REALMS_CITIES !== 'undefined';
+    const realms = opts.world === 'realms' && typeof REALMS_CITIES !== 'undefined' && realmsAllowed();   // never on a Pathfinder page, however it's asked for
     const npcOpts = realms ? { realms: true } : {};
 
     const owner = part('owner', () => ({ ...rollNPC(npcOpts), role: randomArray(TAVERN_OWNER_ROLES) }));
@@ -641,7 +641,7 @@ function rollTavern(seed, opts = {}) {
         let r = rand() * TAVERN_TIER_KEYS.reduce((s, k) => s + TAVERN_TIERS[k].weight, 0);
         return TAVERN_TIER_KEYS.find(k => (r -= TAVERN_TIERS[k].weight) <= 0) || 'modest';
     });
-    const tier = TAVERN_TIERS[opts.quality] ? opts.quality : rolledTier;
+    const tier = Object.hasOwn(TAVERN_TIERS, opts.quality) ? opts.quality : rolledTier;
     const t = TAVERN_TIERS[tier];
     const ti = TAVERN_TIER_KEYS.indexOf(tier);
     const band = TAVERN_BAND[tier];

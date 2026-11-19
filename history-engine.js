@@ -151,7 +151,7 @@ const HIS_KINDS = {
         label: 'A golden age', icon: '🌟', len: 1, need: 'realm',
         names: ['the Golden Age', 'the Age of Wonders', 'the Bright Years', 'the Age of Towers', 'the Long Summer'],
         text: [
-            '{realm} grew rich: its wizards raised towers, its poets wrote the songs still sung today, and nobody went hungry for a hundred years.',
+            '{realm} grew rich: its wizards raised towers, its poets wrote the songs still sung today, and for as long as it lasted nobody went hungry.',
             'Under {figure}, {realm} built libraries, academies, and a palace at {site} so beautiful that visitors wept.',
             'Peace settled over {realm}; trade ran from sea to sea, and the old gods were honored with gold.'
         ],
@@ -171,7 +171,7 @@ const HIS_KINDS = {
         text: [
             '{realm} went to war with {foe}. It lasted three generations, and both sides won some of it.',
             '{foe} came against {realm}. {figure} held the line at {site} while the rest of the realm burned.',
-            'A quarrel over a marriage set {realm} against {rival}, and it took a century to end.'
+            'A quarrel over a marriage set {realm} against {rival}, and the war outlived everyone who started it.'
         ],
         textNo: [
             'With no crown to stop them, the warlords fought each other and {foe} for every field and ford.',
@@ -211,7 +211,7 @@ const HIS_KINDS = {
     },
     cataclysm: {
         label: 'A cataclysm', icon: '🌋', len: 0.3,
-        names: ['the Sundering', 'the Night of Falling Stars', 'the Drowning', 'the Spellplague', 'the Breaking'],
+        names: ['the Sundering', 'the Night of Falling Stars', 'the Drowning', 'the Unweaving', 'the Breaking'],
         text: [
             'The wizards of {realm} reached too far. In one night, {site} vanished, and the sky stayed red for a year.',
             'A star fell on {realm}. The capital was gone by morning, and the sea came in where it had been.'
@@ -501,11 +501,13 @@ function hisFoe() {
 
 // ── The roll ─────────────────────────────────────────────
 // opts: { ages: 'random'|few|standard|long, span: 'random'|short|long|deep, start: 'random'|gods|empire|dark|migration }
+const HIS_AGAIN = ['Second', 'Third', 'Fourth', 'Fifth'];
+
 function rollHistory(seed, opts = {}) {
     const part = (label, fn) => withSeed(deriveSeed(seed, label), fn);
-    const ages = HIS_AGES[opts.ages] ? opts.ages : part('ages', () => hisWeighted([['standard', 5], ['few', 3], ['long', 2]]));
-    const span = HIS_SPANS[opts.span] ? opts.span : part('span', () => hisWeighted([['long', 5], ['short', 3], ['deep', 2]]));
-    const start = HIS_STARTS[opts.start] ? opts.start : part('start', () => hisWeighted([['gods', 3], ['empire', 2], ['dark', 2], ['migration', 3]]));
+    const ages = Object.hasOwn(HIS_AGES, opts.ages) ? opts.ages : part('ages', () => hisWeighted([['standard', 5], ['few', 3], ['long', 2]]));
+    const span = Object.hasOwn(HIS_SPANS, opts.span) ? opts.span : part('span', () => hisWeighted([['long', 5], ['short', 3], ['deep', 2]]));
+    const start = Object.hasOwn(HIS_STARTS, opts.start) ? opts.start : part('start', () => hisWeighted([['gods', 3], ['empire', 2], ['dark', 2], ['migration', 3]]));
     const a = HIS_AGES[ages];
     const n = part('n.' + ages, () => a.min + Math.floor(rand() * (a.max - a.min + 1)));
 
@@ -529,7 +531,8 @@ function rollHistory(seed, opts = {}) {
     list.forEach((x, i) => {
         x.startAgo = ago;
         const len = Math.max(10, Math.round(total * x.weight / weightSum / 10) * 10);
-        ago = i === list.length - 1 ? 0 : Math.max(0, ago - len);
+        // Ten years kept back for each age still to come, so none ends up with none.
+        ago = i === list.length - 1 ? 0 : Math.max((list.length - 1 - i) * 10, ago - len);
         x.endAgo = ago;
     });
     list[list.length - 1].ongoing = true;
@@ -650,10 +653,13 @@ function hisRollAge(i, forced, st, used) {
     vars.after = st.realm ? st.realm.name : null;
     vars.newRoot = st.realm ? st.realm.root : vars.realmRoot;
 
-    let name = hisPick(K.names);
-    for (let t = 0; t < 6 && st.usedNames.has(name); t++) name = hisPick(K.names);
     const fill = s => s.replace(/\{(realm|realmRoot|old|foe|foeShort|site|dir|beast|people|figure|rival|newRoot|new)\}/g, (m, k) => vars[k]);
-    name = fill(name);
+    // Not a name the timeline has already (checked as it reads, once its {realm} and the rest are filled in).
+    let name = fill(hisPick(K.names));
+    for (let t = 0; t < 6 && st.usedNames.has(name); t++) name = fill(hisPick(K.names));
+    // Still taken: the second one ("the Second Wandering").
+    const base = name;
+    for (let k = 0; st.usedNames.has(name) && k < HIS_AGAIN.length; k++) name = base.replace(/^(the )?/i, `$1${HIS_AGAIN[k]} `);
     st.usedNames.add(name);
     st.prevKind = kind;
     return {

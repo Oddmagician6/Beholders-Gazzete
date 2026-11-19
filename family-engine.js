@@ -65,13 +65,14 @@ const FAM_HIDDEN_MORE = ["a shepherd's hut in the hills", 'a dwarven hold that o
 
 // ── The NPC page's rolls ──────────────────────────────────
 // An NPC from one seed, the NPC page's way (facNpc, with a race when one is set).
-function famNpc(seed, cat, age, race) {
+// realms: someone rolled in the Forgotten Realms (a Realms faction's leader), who keeps their Realms name.
+function famNpc(seed, cat, age, race, realms = false) {
     const seeds = Object.fromEntries(NPC_PARTS.map(part => [part, deriveSeed(seed, part)]));
-    return rollNPC({ professionType: cat, age: age || 'random', race: race || 'random' }, seeds);
+    return rollNPC({ professionType: cat, age: age || 'random', race: race || 'random', ...(realms ? { realms: true } : {}) }, seeds);
 }
 
-function famNpcQuery(seed, cat, age, race) {
-    return paramsQuery({ seed, profession: cat, age: age || null, race: race || null });
+function famNpcQuery(seed, cat, age, race, realms = false) {
+    return paramsQuery({ seed, profession: cat, age: age || null, race: race || null, world: realms ? 'realms' : null });
 }
 
 // The name rollNPC's identity part draws from a seed, for a fixed race and gender.
@@ -418,8 +419,8 @@ function famScandalMore(s, key) {
 // Returns { fam, gens, size, race, noble }.
 function rollFamily(seed, opts = {}) {
     const part = (label, fn) => withSeed(deriveSeed(seed, label), fn);
-    const gens = FAM_GENS[opts.gens] ? Number(opts.gens) : part('gens', () => facWeighted([[3, 3], [4, 4], [5, 2]]));
-    const size = FAM_SIZES[opts.size] ? opts.size : part('size', () => facWeighted([['small', 1], ['big', 1]]));
+    const gens = Object.hasOwn(FAM_GENS, opts.gens) ? Number(opts.gens) : part('gens', () => facWeighted([[3, 3], [4, 4], [5, 2]]));
+    const size = Object.hasOwn(FAM_SIZES, opts.size) ? opts.size : part('size', () => facWeighted([['small', 1], ['big', 1]]));
     const S = FAM_SIZES[size];
     const root = opts.root || null;
 
@@ -428,7 +429,8 @@ function rollFamily(seed, opts = {}) {
     const headCat = root ? root.cat : 'noble';
     const headAge = root ? root.age : part('head.age', () => facWeighted([['adult', 2], ['middle', 5], ['old', 3]]));
     const headRace = root ? null : (NPC_RACES.includes(opts.race) ? opts.race : null);
-    const npc = famNpc(headSeed, headCat, headAge, headRace);
+    const headRealms = !!(root && root.realms);
+    const npc = famNpc(headSeed, headCat, headAge, headRace, headRealms);
     const race = npc.race, R = NPC_AGE_RANGES[race];
     const noble = !root || root.cat === 'noble' || !!root.house;
     const hereditary = !!npc.surname && race !== 'orc' && !/^the /.test(npc.surname);
@@ -475,22 +477,27 @@ function rollFamily(seed, opts = {}) {
     }
 
     // Someone marrying into the family, about the age of their partner (in their own race's years).
-    function spouse(label, p, minW = 0) {
+    // kidW: a child of theirs born that many years ago, which a partner of another race must be old enough for.
+    function spouse(label, p, minW = 0, kidW = null) {
         return part(label, () => {
             const sRace = rand() < 0.85 ? p.race : facPick(NPC_RACES);
             const gender = famGenderPick(p.gender);
             const sA0 = NPC_AGE_RANGES[sRace].adult[0], sSpace = Math.max(1, Math.round(sA0 / 26));
             let w = Math.round(p._w * sA0 / NPC_AGE_RANGES[p.race].adult[0]);
             w += rand() < 0.15 ? -(5 + Math.floor(rand() * 16)) * sSpace : Math.round((rand() - 0.5) * 12 * sSpace);
-            w = Math.max(NPC_AGE_RANGES[sRace].young[0], sRace === p.race ? Math.max(w, minW) : w);
+            // Another race's partner was old enough (in their own years) for the child: minW is a parent's
+            // (their child's years plus the family's youngest parent age), kidW a child still to come.
+            const sY0 = NPC_AGE_RANGES[sRace].young[0];
+            const kid = minW ? minW - NPC_AGE_RANGES[p.race].young[0] : kidW;
+            w = Math.max(sY0, sRace === p.race ? Math.max(w, minW) : kid !== null ? Math.max(w, kid + sY0) : w);
             const cat = facWeighted(catsWed);
             return { race: sRace, gender, w, cat };
         });
     }
 
-    function marry(label, p, minW = 0, kind = 'wed') {
+    function marry(label, p, minW = 0, kind = 'wed', kidW = null) {
         if (fam.people.length >= S.cap) return null;
-        const s = spouse(label, p, minW);
+        const s = spouse(label, p, minW, kidW);
         return union(p, person(label, { ...s, surname: null }), kind);
     }
 
@@ -516,10 +523,12 @@ function rollFamily(seed, opts = {}) {
             return { n: main && !n ? 1 : n, gap, steps };
         });
         const youngest = b && b.race === a.race ? Math.min(a._w, b._w) : a._w;
-        const latest = Math.max(a.dead ? a.ago : 0, b && b.dead && b.race === a.race ? b.ago : 0);
-        let w = Math.min(youngest - plan.gap, cap), heir = main;
+        // A partner of another race: no child before they were old enough (in their own years) or after they died.
+        const bCap = b && b.race !== a.race ? b._w - NPC_AGE_RANGES[b.race].young[0] : Infinity;
+        const latest = Math.max(a.dead ? a.ago : 0, b && b.dead ? b.ago : 0);
+        let w = Math.min(youngest - plan.gap, cap, bCap), heir = main;
         // The main line goes on if it can: the eldest born as soon as the younger parent was old enough.
-        if (main && w < latest) w = Math.min(youngest - gapLo, cap);
+        if (main && w < latest) w = Math.min(youngest - gapLo, cap, bCap);
         for (let k = 0; k < plan.n && w >= latest && fam.people.length < S.cap; k++) {
             const kid = child(`${label}.k${k}`, u, w);
             // The line runs on through the eldest who lived to grow up.
@@ -537,7 +546,8 @@ function rollFamily(seed, opts = {}) {
         const chance = life >= A0 ? (item.main ? 0.9 : 0.7) : life >= Y0 ? 0.3 : 0;
         const plan = part(item.label + '.wed', () => ({ wed: rand() < chance, apart: rand() < 0.07, again: rand() < 0.4 }));
         if (!plan.wed && !(item.main && life >= Y0 && item.row < gens - 1)) return;
-        const u1 = marry(item.label + '.s0', p, 0, plan.apart ? 'apart' : 'wed');
+        // On the main line, a partner of another race is old enough for the heir born as soon as can be.
+        const u1 = marry(item.label + '.s0', p, 0, plan.apart ? 'apart' : 'wed', item.main ? p._w - gapLo : null);
         if (!u1) return;
         haveKids(item.label + '.u0', u1, item.row, item.main);
         const s1 = famPerson(fam, u1.b);
@@ -551,7 +561,7 @@ function rollFamily(seed, opts = {}) {
 
     // The head, and how many generations below and above them the tree shows.
     const head = person('head', { race, gender: npc.gender, w: parseInt(npc.age, 10) || A0, surname: null, cat: headCat, alive: true, npc });
-    head.npc = famNpcQuery(headSeed, headCat, headAge === 'random' ? null : headAge, headRace);
+    head.npc = famNpcQuery(headSeed, headCat, headAge === 'random' ? null : headAge, headRace, headRealms);
     // At least the head's parents above them; below, as many generations as the head is old enough for.
     // (Counted with the longest gap, so the generations below have room to be born.)
     const down = Math.max(0, Math.min(gens - 2, Math.floor((head._w - 1) / gapHi)));
@@ -577,13 +587,14 @@ function rollFamily(seed, opts = {}) {
         kid.of = u.id;
         // Brothers and sisters, older and younger, born while both parents lived.
         const youngest = s.race === race ? Math.min(pw, sp._w) : pw;
-        const latest = Math.max(parent.dead ? parent.ago : 0, sp.dead && s.race === race ? sp.ago : 0);
+        const latest = Math.max(parent.dead ? parent.ago : 0, sp.dead ? sp.ago : 0);
+        const spCap = s.race === race ? Infinity : sp._w - NPC_AGE_RANGES[s.race].young[0];
         const j = Math.floor(plan.at * plan.n);
         let older = kid._w, younger = kid._w;
         for (let k = 0; k < plan.n - 1; k++) {
             const elder = k < j;
             const w = elder ? (older += plan.steps[k]) : (younger -= plan.steps[k]);
-            if (w > youngest - Y0 || w < latest || fam.people.length >= S.cap) continue;
+            if (w > youngest - Y0 || w > spCap || w < latest || fam.people.length >= S.cap) continue;
             const sib = child(`${label}.k${k}`, u, w);
             sides.push({ id: sib.id, label: `${label}.k${k}`, row: up - i + 1, main: false });
         }
@@ -615,8 +626,10 @@ function rollFamily(seed, opts = {}) {
     fam.name = facCap(root && root.house ? root.house : famHouseName(npc, noble, hereditary));
 
     // A scandal or two.
+    // A hidden child never goes below the generations asked for.
+    const rowOf = id => { const p = famPerson(fam, id), u = p && p.of && famUnion(fam, p.of); return u ? 1 + rowOf(u.a) : 0; };
     const c = famScandalCtx(fam, (o, u) => {
-        if (fam.people.length >= FAM_LIMITS.people) return null;
+        if (fam.people.length >= FAM_LIMITS.people || rowOf(u.a) >= gens - 1) return null;
         const nu = union(famPerson(fam, u.a), null, u.kind);
         const k = person(`hidden.${nu.id}`, { ...o, surname: null });
         k.of = nu.id;
@@ -767,7 +780,7 @@ function famBlank(race) {
 // p: { seed, cat, age } as facNpc makes them. o: { title, house, extra: more URL params }
 function famRootLink(p, o = {}) {
     return 'worldbuilder?' + paramsQuery({
-        tab: 'family', root: p.seed, rcat: p.cat, rage: p.age || null,
+        tab: 'family', root: p.seed, rcat: p.cat, rage: p.age || null, rworld: p.realms ? 'realms' : null,
         rtitle: o.title || null, house: o.house || null, ...(o.extra || {})
     });
 }

@@ -585,7 +585,7 @@ const CAL_FESTIVALS = ruleTable({
         party: [
             { t: 'Find a gift for a stranger that actually suits them: a {dc:13} {skill:wis:insight} check.', prize: 'a gift in return', gp: 1 },
             { t: 'Tell the best story at the long table: a {dc:14} {skill:cha:performance} check.', prize: 'the goose', gp: 2 },
-            { t: 'Make sure the poorest family on the street gets a feast: buy it (5 gp) or win it at dice ({dc:13} {ability:cha} check with a gaming set).', prize: 'a blessing that may matter later', gp: 0 }
+            { t: 'Make sure the poorest family on the street gets a feast: buy it ({alt:5 gp|5 sp}) or win it at dice ({dc:13} {ability:cha} check with a gaming set).', prize: 'a blessing that may matter later', gp: 0 }
         ],
         food: ['Plum pudding set alight', 'Roast goose', 'Spiced gingerbread and hot milk'],
         custom: ['A stranger at the door must be let in and fed.', 'Gifts are given unwrapped, so nobody can hide a cheap one.', 'Old quarrels are set aside for one night.'],
@@ -684,8 +684,10 @@ function calSwap(cur, old, more) {
     return rand() < more.length / (old.length + more.length) ? newer : cur;
 }
 
-function calFill(text, cal) {
-    const moon = cal.moons[0] ? cal.moons[0].name : 'the moon';
+// mi: which moon a festival watches (calMoonFestDay), the first by default.
+function calFill(text, cal, mi = 0) {
+    const mo = cal.moons[mi] || cal.moons[0];
+    const moon = mo ? mo.name : 'the moon';
     return text.replace(/\{moon\}/g, moon);
 }
 
@@ -865,14 +867,31 @@ function calFestivals(cal) {
     });
 }
 
-// A moon festival lands on a night when the first moon is full, if the month has one.
+// The night a moon festival falls on in a year's month: { day, moon } for the first moon's full night,
+// else another moon's, else the night the first moon is nearest full. null when the world has no moon.
+function calMoonFestDay(cal, year, i) {
+    const m = cal.months[i];
+    if (!cal.moons.length) return null;
+    for (let mi = 0; mi < cal.moons.length; mi++) {
+        for (let d = 1; d <= m.days; d++) {
+            if (calMoonPhase(cal.moons[mi], calAbsDay(cal, year, i, d)) === 4) return { day: d, moon: mi };
+        }
+    }
+    const mo = cal.moons[0], off = d => Math.abs((((calAbsDay(cal, year, i, d) + mo.offset) % mo.cycle + mo.cycle) % mo.cycle) - mo.cycle / 2);
+    let best = 1;
+    for (let d = 2; d <= m.days; d++) if (off(d) < off(best)) best = d;
+    return { day: best, moon: 0 };
+}
+
 function calAlignMoonFestivals(cal) {
     cal.months.forEach((m, i) => {
         const fest = m.festival;
-        if (!CAL_FESTIVALS[fest.kind].moon || !cal.moons.length) return;
-        for (let d = 1; d <= m.days; d++) {
-            if (calMoonPhase(cal.moons[0], calAbsDay(cal, cal.year, i, d)) === 4) { fest.day = d; fest.length = 1; return; }
-        }
+        if (!CAL_FESTIVALS[fest.kind].moon) return;
+        const at = calMoonFestDay(cal, cal.year, i);
+        if (!at) return;
+        fest.day = at.day;
+        fest.length = 1;
+        if (at.moon) fest.moon = at.moon;
     });
 }
 
@@ -912,7 +931,11 @@ function calNextFestival(cal) {
     cal.months.forEach((m, i) => {
         const f = m.festival;
         let at = calAbsDay(cal, t.year, i, f.day);
-        if (at + f.length - 1 < now) at += yd;
+        if (at + f.length - 1 < now) {
+            // Next year's: a moon festival moves with the moon.
+            const next = CAL_FESTIVALS[f.kind].moon && calMoonFestDay(cal, t.year + 1, i);
+            at = next ? calAbsDay(cal, t.year + 1, i, next.day) : at + yd;
+        }
         const wait = Math.max(0, at - now);
         if (!best || wait < best.wait) best = { month: i, wait, on: at <= now };
     });
@@ -940,8 +963,8 @@ function calConjunctions(cal, max = 3) {
 // opts: { months: 'random'|10-13, week: 'random'|5-10, moons: 'random'|1-3, style: 'random'|key, climate }
 function rollCalendar(seed, opts = {}) {
     const part = (label, fn) => withSeed(deriveSeed(seed, label), fn);
-    const climate = TRAVEL_CLIMATES[opts.climate] ? opts.climate : 'temperate';
-    const style = CAL_STYLES[opts.style] ? opts.style : part('style', () => calPick(Object.keys(CAL_STYLES)));
+    const climate = Object.hasOwn(TRAVEL_CLIMATES, opts.climate) ? opts.climate : 'temperate';
+    const style = Object.hasOwn(CAL_STYLES, opts.style) ? opts.style : part('style', () => calPick(Object.keys(CAL_STYLES)));
     const monthCount = [10, 11, 12, 13].includes(Number(opts.months)) ? Number(opts.months)
         : part('months', () => calWeighted([[12, 9], [10, 3], [13, 4], [11, 2]]));
     const weekLen = Number(opts.week) >= 5 && Number(opts.week) <= 10 ? Number(opts.week)
@@ -1076,7 +1099,7 @@ function calFestivalWhen(cal, i) {
 
 function calPrizeText(p) {
     if (!p.prize) return '';
-    return p.gp ? `${p.prize} (${formatCoins(p.gp)})` : p.prize;
+    return p.gp ? `${p.prize} (${formatCoins(Math.max(0.01, ruleCoins(p.gp)))})` : p.prize;
 }
 
 function calMoonLine(cal, moon) {
@@ -1086,7 +1109,7 @@ function calMoonLine(cal, moon) {
 
 function calFestivalLines(cal, i) {
     const m = cal.months[i], f = m.festival, k = CAL_FESTIVALS[f.kind];
-    const fill = s => calFill(s, cal).replace(/\{month\}/g, m.name);
+    const fill = s => calFill(s, cal, f.moon || 0).replace(/\{month\}/g, m.name);
     const lines = [
         ['When', `${calCap(calFestivalWhen(cal, i))}, kept by ${f.keeper}`],
         ['What happens', fill(f.happens)],

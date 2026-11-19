@@ -47,10 +47,12 @@ function nbSplitLine(lines, label, marker, dmLabel) {
 }
 
 // A tab's options from a link: the link's value when the field can hold it, else the field's default.
+// A picker whose tab hasn't been opened yet holds only its default, so the value goes through as it is
+// (every engine checks its options against its own tables).
 function nbUrlOpts(p, fields) {
     return Object.fromEntries(Object.entries(fields).map(([key, id]) => {
         const el = document.getElementById(id), v = p.get(key);
-        const ok = v !== null && (el.tagName !== 'SELECT' || [...el.options].some(o => o.value === v));
+        const ok = v !== null && (el.tagName !== 'SELECT' || el.options.length <= 1 || [...el.options].some(o => o.value === v));
         return [key, ok ? v : defaultValue(el)];
     }));
 }
@@ -86,7 +88,13 @@ const NB_SHEETS = {
             const head = `${f.icon} ${f.name}`;
             return { head, lines: nbLinesOf(head, f.lines, ['What could go wrong']) };
         });
-        return [{ head: '', lines: top }, ...fests];
+        // A linked pantheon's holy days this year, as the Calendar tab lists them.
+        const pan = nbUrlPantheon(p, CAL_GOD_KEYS);
+        const holy = pan ? pan.gods.map(god => ({ god, ...(panHolyDate(god, cal) || {}) })).filter(h => h.month !== undefined)
+            .sort((a, b) => a.month - b.month || a.day - b.day) : [];
+        const holyPart = holy.length ? [{ head: `⛪ Holy days of ${pan.name}`, lines: nbLinesOf(`⛪ Holy days of ${pan.name}`, holy.map(h =>
+            [calCap(h.god.holyName), `The ${calOrdinal(h.day)} of ${cal.months[h.month].name}, for ${h.god.name} (${panHolyWhen(h.god.holy)}). ${h.god.rite}`])) }] : [];
+        return [{ head: '', lines: top }, ...fests, ...holyPart];
     },
 
     pantheon(p, seed) {

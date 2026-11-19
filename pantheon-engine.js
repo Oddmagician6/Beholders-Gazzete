@@ -141,7 +141,7 @@ const PAN_DOMAINS = {
         priests: ['Dawnbringers', 'Lightkeepers', 'the Radiant', 'Candlewardens', 'Heralds of the Morning'],
         vestments: ['white and gold robes that are a nightmare to keep clean', 'orange vestments and a sunburst pendant', 'polished breastplates over yellow tunics'],
         offering: ['candles', 'gold leaf', 'a song at dawn', 'a polished mirror'],
-        followers: ['paladins, judges, and honest merchants', 'farmers who need sun and sailors who need lighthouses', 'anyone afraid of the dark', 'artists and glassmakers'],
+        followers: ['holy knights, judges, and honest merchants', 'farmers who need sun and sailors who need lighthouses', 'anyone afraid of the dark', 'artists and glassmakers'],
         holy: { s: ['summer', 'spring'], kinds: [['turn', 4], ['day', 1]] },
         holyNames: ['the Feast of the First Dawn', 'Highsun', 'the Day Without Shadows', 'Lightsmas', 'the Kindling', 'Sunreturn'],
         rites: [
@@ -927,7 +927,9 @@ function panShape(shape, gods) {
             } else if (k === 0 && rand() < 0.35) {
                 roles[c] = { role: `${panCap(PAN_KIN.sibling[kin])} of ${name(a)}`, rel: `Older than the world and twice as stubborn`, rank: 'elder' };
             } else if (k >= 3 && rand() < 0.4) {
-                const parent = rest[Math.floor(rand() * Math.min(k, 3))];
+                // A child of the elder's (never the elder's own brother or sister).
+                const kids = rest.slice(0, Math.min(k, 3)).filter(x => roles[x].rank === 'child');
+                const parent = kids[Math.floor(rand() * kids.length)];
                 roles[c] = { role: `Grandchild of ${name(a)}`, rel: `${panCap(PAN_KIN.child[kin])} of ${name(parent)}`, rank: 'young' };
             } else {
                 const nth = ['Eldest', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh', 'Eighth', 'Ninth', 'Tenth', 'Eleventh'][born++];
@@ -1029,6 +1031,8 @@ function panFeuds(gods, shape) {
     for (let t = 0; t < 30 && bonds.length < bondCount && friendly.length; t++) {
         const [x, y] = panWeighted(friendly);
         if (bonds.some(b => b.a === x || b.b === x || b.a === y || b.b === y)) continue;
+        // The two camps' leaders are sworn enemies.
+        if (shape.camps && shape.roles[x].rank === 'ruler' && shape.roles[y].rank === 'ruler') continue;
         let why = panPick(PAN_BOND_WHY);
         for (let k = 0; k < 6 && seenBond.has(why); k++) why = panPick(PAN_BOND_WHY);
         seenBond.add(why);
@@ -1041,16 +1045,16 @@ function panFeuds(gods, shape) {
 // opts: { size: 'random'|small|standard|large, shape: 'random'|key, naming: 'random'|key }
 function rollPantheon(seed, opts = {}) {
     const part = (label, fn) => withSeed(deriveSeed(seed, label), fn);
-    const size = PAN_SIZES[opts.size] ? opts.size : part('size', () => panWeighted([['standard', 5], ['small', 3], ['large', 2]]));
-    const shape = PAN_SHAPES[opts.shape] ? opts.shape : part('shape', () => panWeighted([['family', 3], ['court', 3], ['camps', 2], ['many', 2]]));
-    const naming = PAN_NAMING[opts.naming] ? opts.naming : part('naming', () => panWeighted([['lyrical', 4], ['stern', 3], ['ancient', 3], ['titles', 1]]));
+    const size = Object.hasOwn(PAN_SIZES, opts.size) ? opts.size : part('size', () => panWeighted([['standard', 5], ['small', 3], ['large', 2]]));
+    const shape = Object.hasOwn(PAN_SHAPES, opts.shape) ? opts.shape : part('shape', () => panWeighted([['family', 3], ['court', 3], ['camps', 2], ['many', 2]]));
+    const naming = Object.hasOwn(PAN_NAMING, opts.naming) ? opts.naming : part('naming', () => panWeighted([['lyrical', 4], ['stern', 3], ['ancient', 3], ['titles', 1]]));
     const sz = PAN_SIZES[size];
     const count = part('count.' + size, () => sz.min + Math.floor(rand() * (sz.max - sz.min + 1)));
 
     const gods = [];
     for (let i = 0; i < count; i++) gods.push(part('god.' + i, () => panRollGod(i, gods)));
     part('names.' + naming + '.' + count, () => panNameGods(gods, naming));
-    const realms = opts.world === 'realms' && typeof REALMS_GODS !== 'undefined';
+    const realms = opts.world === 'realms' && typeof REALMS_GODS !== 'undefined' && realmsAllowed();   // never on a Pathfinder page, however it's asked for
     if (realms) part('realms.' + count, () => panRealmsGods(gods));
     gods.forEach(g => { if (!g.holyName) g.holyName = `${g.name}'s Day`; });
 
@@ -1241,7 +1245,7 @@ function panGodLines(p, i, cal) {
         ['Priests', `Called ${g.priests}; they wear ${g.vestments}. Offerings: ${g.offering}.`],
         ['Worshipped by', panCap(g.followers) + '.'],
         ['Omen', g.omen],
-        ['For the party', `${g.wants} Reward: ${formatCoins(g.reward)}.`]
+        ['For the party', `${g.wants} Reward: ${formatCoins(Math.max(0.01, ruleCoins(g.reward)))}.`]
     ];
     if (feuds.length || friends.length) {
         lines.splice(4, 0, ['Friends and foes', [friends.length ? `Close to ${panList(friends)}` : '', feuds.length ? `at odds with ${panList(feuds)}` : ''].filter(Boolean).join('; ').replace(/^at/, 'At') + '.']);

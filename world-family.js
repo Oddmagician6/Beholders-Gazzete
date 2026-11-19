@@ -10,13 +10,13 @@
    started by hand (no link: ?tab=family&fam=<entry id>).
    The Factions and Town tabs link here with a root= person (famRootLink), and the tree is
    then built around that same NPC.
-   URL: ?tab=family&seed=&gens=&size=&race=&root=&rcat=&rage=&rtitle=&house=&facs=&fcount=&ffocus=&fscale=
+   URL: ?tab=family&seed=&gens=&size=&race=&root=&rcat=&rage=&rworld=&rtitle=&house=&facs=&fcount=&ffocus=&fscale=&fworld=
         or ?tab=family&fam=<notebook entry id>
    ============================================ */
 
 const FAM_FIELDS = { gens: 'fam-gens', size: 'fam-size', race: 'fam-race' };
 // A linked faction roll's URL keys (they link the saved family to the saved factions, NB_USES).
-const FAM_FROM_KEYS = ['facs', 'fcount', 'ffocus', 'fscale'];
+const FAM_FROM_KEYS = ['facs', 'fcount', 'ffocus', 'fscale', 'fworld'];
 
 let famState = { seed: null, roll: null, root: null, from: {}, entry: '', sel: '', fit: false, removing: '', backing: false, filing: false };
 const famTimers = {};
@@ -35,7 +35,7 @@ function famRollParams() {
     });
     params.seed = famState.seed;
     const r = famState.root;
-    Object.assign(params, { root: r ? r.seed : null, rcat: r ? r.cat : null, rage: r && r.age ? r.age : null, rtitle: r && r.title ? r.title : null, house: r && r.house ? r.house : null });
+    Object.assign(params, { root: r ? r.seed : null, rcat: r ? r.cat : null, rage: r && r.age ? r.age : null, rworld: r && r.realms ? 'realms' : null, rtitle: r && r.title ? r.title : null, house: r && r.house ? r.house : null });
     FAM_FROM_KEYS.forEach(k => { params[k] = famState.from[k] || null; });
     return params;
 }
@@ -55,7 +55,8 @@ function famRootFrom(p) {
     const cat = p.get('rcat');
     if (!seed || !cat || !Object.hasOwn(npcData.professions, cat)) return null;
     const age = NPC_AGE_BUCKETS.includes(p.get('rage')) ? p.get('rage') : '';
-    return { seed, cat, age, title: famLine(p.get('rtitle'), FAM_LIMITS.title), house: famLine(p.get('house'), FAM_LIMITS.name) };
+    const realms = p.get('rworld') === 'realms' && typeof realmsAllowed === 'function' && realmsAllowed();
+    return { seed, cat, age, ...(realms ? { realms: true } : {}), title: famLine(p.get('rtitle'), FAM_LIMITS.title), house: famLine(p.get('house'), FAM_LIMITS.name) };
 }
 
 // push: true = new history entry, false = replace, null = leave the URL alone.

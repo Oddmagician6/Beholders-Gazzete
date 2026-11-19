@@ -141,7 +141,7 @@ function facFamilyLink(w, i, ctx) {
     return famRootLink(f.leader, {
         title: f.leader.title,
         house: f.type === 'house' ? facCap(facName(w, i, ctx)) : '',
-        extra: { facs: facState.seed, fcount: p.count, ffocus: p.focus, fscale: p.scale }
+        extra: { facs: facState.seed, fcount: p.count, ffocus: p.focus, fscale: p.scale, fworld: p.world || null }
     });
 }
 
