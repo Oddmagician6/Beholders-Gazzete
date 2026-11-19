@@ -96,6 +96,8 @@ function mcWeaponText(list) {
     const out = [];
     if (list.includes('simple')) out.push('simple weapons');
     if (list.includes('martial')) out.push('martial weapons');
+    if (list.includes('martial-finesse-light')) out.push('martial weapons with the Finesse or Light property');
+    if (list.includes('martial-light')) out.push('martial weapons with the Light property');
     list.filter(w => CB_WEAPONS[w] && !list.includes(CB_WEAPONS[w][1])).forEach(w => out.push(CB_WEAPONS[w][0].toLowerCase()));
     return [...new Set(out)];
 }
@@ -119,11 +121,14 @@ function mcProfs() {
     });
 }
 
+// The level a half caster (paladin, ranger) starts casting at: 2 in SRD 5.1, 1 in SRD 5.2.1.
+const mcHalfFrom = () => (mc24() ? 1 : 2);
+
 // Classes with the Spellcasting feature at their level (Pact Magic is apart).
 function mcCasters() {
     return mcPicked().filter(r => {
         const k = cbClass(r.cls, mcR());
-        return k.cast && (k.cast.prog === 'full' || (k.cast.prog === 'half' && r.lv >= 2));
+        return k.cast && (k.cast.prog === 'full' || (k.cast.prog === 'half' && r.lv >= mcHalfFrom()));
     });
 }
 
@@ -133,9 +138,11 @@ function mcSlots() {
     if (!casters.length) return { slots: [], casterLevel: 0, one: null };
     if (casters.length === 1) {
         const r = casters[0];
-        return { slots: cbSlots(cbClass(r.cls, mcR()), r.lv), casterLevel: 0, one: r };
+        return { slots: cbSlots(cbClass(r.cls, mcR()), r.lv, mc24()), casterLevel: 0, one: r };
     }
-    const L = casters.reduce((t, r) => t + (cbClass(r.cls, mcR()).cast.prog === 'full' ? r.lv : Math.floor(r.lv / 2)), 0);
+    // Half casters add half their levels: rounded down in 2014, up in 2024.
+    const half = lv => (mc24() ? Math.ceil(lv / 2) : Math.floor(lv / 2));
+    const L = casters.reduce((t, r) => t + (cbClass(r.cls, mcR()).cast.prog === 'full' ? r.lv : half(r.lv)), 0);
     return { slots: L ? CB_FULL_SLOTS[L - 1] : [], casterLevel: L, one: null };
 }
 
@@ -147,7 +154,7 @@ function mcHitPoints() {
     rows.forEach((r, i) => {
         const k = cbClass(r.cls, mcR());
         for (let lv = 1; lv <= r.lv; lv++) hp += Math.max(1, (i === 0 && lv === 1 ? k.hd : k.hd / 2 + 1) + con);
-        if (r.cls === 'sorcerer') hp += r.lv;   // Draconic Resilience
+        if (r.cls === 'sorcerer' && (!mc24() || r.lv >= 3)) hp += r.lv;   // Draconic Resilience (2024: from level 3)
     });
     return hp + mc.tough * mcTotal();
 }
@@ -184,7 +191,9 @@ function mcNotes() {
     const extra = rows.filter(r => ['barbarian', 'fighter', 'monk', 'paladin', 'ranger'].includes(r.cls) && r.lv >= 5);
     if (extra.length > 1) out.push(`<b>Extra Attack</b> doesn't add up: ${extra.map(r => cbClass(r.cls, mcR()).name).join(' and ')} each give it, but they don't add up: you attack ${lvOf('fighter') >= 20 ? 'four times' : lvOf('fighter') >= 11 ? 'three times' : 'twice'} when you take the Attack action.`);
     if (lvOf('barbarian') && lvOf('monk')) out.push('<b>Unarmored Defense</b>: barbarian and monk each have one, and you can only use one of them. Once you have it, you can\'t gain it again from the other class.');
-    if (lvOf('cleric') >= 2 && lvOf('paladin') >= 3) out.push('<b>Channel Divinity</b>: the cleric and paladin options are all yours, but taking the feature a second time doesn\'t give you more uses.');
+    if (lvOf('cleric') >= 2 && lvOf('paladin') >= 3) out.push(mc24()
+        ? '<b>Channel Divinity</b>: the 2024 rules have no multiclass rule for it, so the cleric and the paladin each keep their own feature, with its own uses and options.'
+        : '<b>Channel Divinity</b>: the cleric and paladin options are all yours, but taking the feature a second time doesn\'t give you more uses.');
     const casters = mcCasters();
     if (casters.length > 1) out.push('<b>Spells known and prepared</b> are worked out for each class on its own, as if you had only that class. Each class can only learn or prepare spells of a level it could cast on its own, but the shared slots can cast any of them, up-cast if you like.');
     if (has('warlock') && casters.length) out.push('<b>Pact Magic and Spellcasting</b>: your pact slots and your other slots are separate pools, but either kind can cast a spell from any of your classes.');
@@ -199,6 +208,7 @@ function mcParams() {
     if (rows.length) p.c = rows.map(r => `${r.cls}.${r.lv}`).join(',');
     if (CB_ABILITIES.some(a => mc.s[a] !== 10)) p.s = CB_ABILITIES.map(a => mc.s[a]).join('.');
     if (mc.tough) p.t = 1;
+    if (mcR() === '2014' && typeof rulesStored === 'function' && rulesStored() === '2024') p.rules = '2014';
     return p;
 }
 
@@ -333,7 +343,7 @@ function renderMagic() {
     const lines = rows.map(r => {
         const k = cbClass(r.cls, mcR()), rules = cbSpellRules(mcChar(r));
         const a = k.cast.ability;
-        if (!rules || (k.cast.prog === 'half' && r.lv < 2)) return `<li><b>${k.icon} ${esc(k.name)} ${r.lv}</b>: no spells until ${k.name.toLowerCase()} level 2.</li>`;
+        if (!rules || (k.cast.prog === 'half' && r.lv < mcHalfFrom())) return `<li><b>${k.icon} ${esc(k.name)} ${r.lv}</b>: no spells until ${k.name.toLowerCase()} level ${mcHalfFrom()}.</li>`;
         const bits = [`${a.toUpperCase()} (save DC ${8 + prof + m[a]}, attack ${cbSign(prof + m[a])})`];
         if (rules.cantrips) bits.push(`${rules.cantrips} cantrips`);
         if (rules.type === 'known') bits.push(`${rules.list} spells known`);

@@ -30,7 +30,7 @@ function cbResources(c, d = cbDerive(c)) {
     if (at('bard', 1)) add('inspiration', 'Bardic Inspiration', Math.max(1, m.cha), L >= 5 ? 'short' : 'long', `d${L >= 15 ? 12 : L >= 10 ? 10 : L >= 5 ? 8 : 6}`);
     if (at('cleric', 2)) add('channel', 'Channel Divinity', L >= 18 ? 3 : L >= 6 ? 2 : 1, 'short', `Turn Undead (DC ${d.x.dc('wis')}) or Preserve Life (${5 * L} HP)`);
     if (at('cleric', 10)) add('intervention', 'Divine Intervention', 1, 'none', L >= 20 ? 'Always works; once per 7 days' : `${L}% chance; 7 days if it works, a long rest if not`);
-    if (at('druid', 2) && L < 20) add('wild-shape', 'Wild Shape', 2, 'short', `CR ${L >= 8 ? 1 : L >= 4 ? '1/2' : '1/4'}, up to ${Math.floor(L / 2)} hours`);
+    if (at('druid', 2) && L < 20) add('wild-shape', 'Wild Shape', 2, 'short', `CR ${L >= 8 ? 1 : L >= 4 ? '1/2' : '1/4'}, up to ${Math.floor(L / 2)} hour${L >= 4 ? 's' : ''}`);
     if (at('druid', 2)) add('natural-recovery', 'Natural Recovery', 1, 'long', `On a short rest: regain spent slots totaling up to ${Math.ceil(L / 2)} levels (none 6th+). Tap the used slots to get them back.`);
     if (at('fighter', 1)) add('second-wind', 'Second Wind', 1, 'short', `Bonus action: regain 1d10 + ${L} HP`, { heal: `1d10+${L}` });
     if (at('fighter', 2)) add('action-surge', 'Action Surge', L >= 17 ? 2 : 1, 'short', L >= 17 ? 'Once per turn' : 'One more action');
@@ -70,8 +70,8 @@ function cbResources24(c, d) {
     if (at('barbarian', 14)) add('presence', 'Intimidating Presence', 1, 'long', `Frighten foes within 30 ft. (DC ${d.x.dc('str')}); a rage buys it back`);
     if (at('bard', 1)) add('inspiration', 'Bardic Inspiration', Math.max(1, m.cha), L >= 5 ? 'short' : 'long', `d${L >= 15 ? 12 : L >= 10 ? 10 : L >= 5 ? 8 : 6}`);
     if (at('cleric', 2)) add('channel', 'Channel Divinity', L >= 18 ? 4 : L >= 6 ? 3 : 2, 'one', `Divine Spark, Turn Undead${L >= 3 ? ', or Preserve Life' : ''} (DC ${d.x.dc('wis')})`);
-    if (at('cleric', 10)) add('intervention', 'Divine Intervention', 1, L >= 20 ? 'none' : 'long', L >= 20 ? 'Wish takes 2d4 long rests to come back' : 'A cleric spell of 5th level or lower, no slot');
-    if (at('druid', 2)) add('wild-shape', 'Wild Shape', L >= 17 ? 4 : L >= 6 ? 3 : 2, 'one', `CR ${L >= 8 ? 1 : L >= 4 ? '1/2' : '1/4'}, ${Math.floor(L / 2)} hours, ${L} temporary HP`);
+    if (at('cleric', 10)) add('intervention', 'Divine Intervention', 1, 'long', L >= 20 ? 'A cleric spell of 5th level or lower, or Wish, no slot. After a Wish it takes 2d4 long rests to come back: tap it off again until then.' : 'A cleric spell of 5th level or lower, no slot');
+    if (at('druid', 2)) add('wild-shape', 'Wild Shape', L >= 17 ? 4 : L >= 6 ? 3 : 2, 'one', `CR ${L >= 8 ? 1 : L >= 4 ? '1/2' : '1/4'}, ${Math.floor(L / 2)} hour${L >= 4 ? 's' : ''}, ${L} temporary HP`);
     if (at('druid', 5)) add('resurgence', 'Wild Resurgence slot', 1, 'long', 'Turn a Wild Shape use into a 1st-level slot');
     if (at('druid', 6)) add('natural-recovery', 'Natural Recovery', 1, 'long', `On a short rest: regain spent slots totaling up to ${Math.ceil(L / 2)} levels (none 6th+). Tap the used slots to get them back.`);
     if (at('druid', 6)) add('circle-cast', 'Circle spell without a slot', 1, 'long', 'One of your circle spells');
@@ -147,7 +147,9 @@ function cbPartyLive(c, d = cbDerive(c)) {
 function cbPlaySpeed(c, d) {
     const p = c.play;
     const v24 = cbIs24(c);
-    if ((p.exh >= 5 && !v24) || p.exh >= 6 || ['Grappled', 'Restrained', 'Paralyzed', 'Petrified', 'Stunned', 'Unconscious'].some(n => p.cond.includes(n))) return 0;
+    // 2014 Stunned can't move; 2024 Stunned is Incapacitated, which leaves Speed alone.
+    const stop = ['Grappled', 'Restrained', 'Paralyzed', 'Petrified', 'Unconscious', ...(v24 ? [] : ['Stunned'])];
+    if ((p.exh >= 5 && !v24) || p.exh >= 6 || stop.some(n => p.cond.includes(n))) return 0;
     const load = cbLoad(c, d).state;
     const speed = load === 'over' ? Math.min(5, d.speed) : Math.max(0, d.speed - (load === 'heavy' ? 20 : load === 'encumbered' ? 10 : 0));
     if (v24) return Math.max(0, speed - 5 * p.exh);
@@ -156,11 +158,14 @@ function cbPlaySpeed(c, d) {
 
 // ── Inventory and coins (F60) ────────────────────────────
 // Pounds for one: the player's own weight, else a pack's contents, else the SRD weight (0 if unknown).
+// A gear table's entry for a typed name, never an inherited one (gear named "constructor").
+const cbOwn = (table, name) => (Object.hasOwn(table, name) ? table[name] : undefined);
+
 function cbItemWeight(g) {
     if (g.lb !== undefined) return g.lb;
-    const pack = CB_PACK_ITEMS[g.name];
-    if (pack) return Math.round(pack.reduce((t, [n, q]) => t + (CB_WEIGHTS[n] || 0) * q, 0) * 100) / 100;
-    return CB_WEIGHTS[g.name] || 0;
+    const pack = cbOwn(CB_PACK_ITEMS, g.name);
+    if (pack) return Math.round(pack.reduce((t, [n, q]) => t + (cbOwn(CB_WEIGHTS, n) || 0) * q, 0) * 100) / 100;
+    return cbOwn(CB_WEIGHTS, g.name) || 0;
 }
 
 // Carrying capacity is STR × 15 lb (every SRD race is Small or Medium, so no size change; a 2024
@@ -209,7 +214,7 @@ const cbAttuned = c => c.gear.filter(g => g.att).length;
 
 // Open the pack at c.gear[i] into its contents (merged with what's already there). → false if it can't.
 function cbUnpack(c, i) {
-    const g = c.gear[i], items = g && CB_PACK_ITEMS[g.name];
+    const g = c.gear[i], items = g && cbOwn(CB_PACK_ITEMS, g.name);
     if (!items || c.gear.length + items.length > CB_MAX_GEAR) return false;
     if (g.qty > 1) g.qty -= 1;
     else c.gear.splice(i, 1);
@@ -244,7 +249,11 @@ function cbPlayFit(c, d = cbDerive(c)) {
     const res = {};
     cbResources(c, d).forEach(r => { if (p.res[r.id]) res[r.id] = Math.min(p.res[r.id], r.max); });
     p.res = res;
-    if (p.hp !== null && p.hp >= cbPlayMax(c, d)) p.hp = null;
+    // A maximum halved by exhaustion (2014) takes the hit points down with it, and taking the
+    // exhaustion off raises only the maximum: so the hit points are kept as a number, not as "full".
+    const max = cbPlayMax(c, d);
+    if (max < d.hp && (p.hp === null || p.hp > max)) p.hp = max;
+    if (p.hp !== null && p.hp >= d.hp) p.hp = null;
     if (p.conc && !cbSpellsKnownAll(c).concat(d.magic ? d.magic.always : [], Object.values(c.spells.arcanum), cbRaceSpells(c).map(s => s.name)).includes(p.conc)) p.conc = '';
     return c;
 }
@@ -259,9 +268,11 @@ function cbDamage(c, d, n) {
     p.temp -= out.temp;
     const rest = n - out.temp;
     const before = cbPlayHp(c, d);
-    if (p.conc) out.conc = Math.max(10, Math.floor(n / 2));
+    if (p.conc && !cbConcSafe(c, p.conc)) out.conc = Math.min(cbIs24(c) ? 30 : Infinity, Math.max(10, Math.floor(n / 2)));
     if (before === 0) {
-        // Damage at 0 hit points is a failed death save (massive damage kills outright).
+        // Damage at 0 hit points is a failed death save (massive damage kills outright). A stable
+        // character starts dying again: the three successes go, and the saves start over.
+        if (p.ds[0] >= 3 && p.ds[1] < 3) p.ds = [0, 0];
         if (rest >= max) { out.dead = true; p.ds = [0, 3]; }
         else if (rest > 0) { p.ds[1] = Math.min(3, p.ds[1] + 1); out.failed = true; }
         if (p.ds[1] >= 3) out.dead = true;
@@ -275,6 +286,11 @@ function cbDamage(c, d, n) {
         if (rest - out.hp >= max) { out.dead = true; p.ds = [0, 3]; }
     }
     return out;
+}
+
+// Concentration that damage can't break: a 2024 ranger's Hunter's Mark from level 13 (Relentless Hunter).
+function cbConcSafe(c, spell) {
+    return cbIs24(c) && c.cls === 'ranger' && c.level >= 13 && spell === "Hunter's Mark";
 }
 
 // → hit points actually regained
@@ -312,7 +328,16 @@ function cbSpendHitDie(c, d, roll = f => rollDice(f)) {
     const con = d.m.con;
     const r = roll(`1d${d.k.hd}${con ? (con > 0 ? '+' : '') + con : ''}`);
     c.play.hd += 1;
-    return { roll: r, healed: cbHeal(c, d, Math.max(0, r.total)) };
+    // 2024 rules: a spent Hit Point Die always gives back at least 1.
+    return { roll: r, healed: cbHeal(c, d, Math.max(cbIs24(c) ? 1 : 0, r.total)) };
+}
+
+// A long rest (both rules) and a 2024 short rest need at least 1 hit point to start.
+// → '' or why not
+function cbRestBlock(c, d, long) {
+    if (cbPlayHp(c, d) > 0 || (!long && !cbIs24(c))) return '';
+    return c.play.ds[1] >= 3 ? "The dead don't rest: bring the character back first (heal the hit points the spell gives)."
+        : `A ${long ? 'long' : 'short'} rest needs at least 1 hit point to start: heal first.`;
 }
 
 // → the names of what came back

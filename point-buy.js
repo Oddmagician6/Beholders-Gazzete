@@ -37,6 +37,17 @@ function flash(msg, bad = false) {
 
 // The builder's rules want a character; this is just enough of one.
 const pbChar = () => (pb24() ? { rules: '2024', bg: pb.bg, bgOpt: { boost: pb.abil } } : { race: pb.race, subrace: '', raceOpt: { abil: pb.abil } });
+// The bonuses as picked so far (a +1 / +1 / +1 split shows +1s while it's still filling).
+function pbBonus() {
+    const b = cbRacialBonus(pbChar());
+    if (pb24() && pb.split === 3 && pb.abil.length < 3) {
+        CB_ABILITIES.forEach(a => { b[a] = pb.abil.includes(a) ? 1 : 0; });
+    }
+    return b;
+}
+// A score with its bonus: the builder caps a 2024 score at 20 (cbScores), so this does too.
+const pbTotal = (a, bonus) => (pb24() ? Math.min(20, pb.base[a] + bonus[a]) : pb.base[a] + bonus[a]);
+
 // What the bonus is from, for the grid: the race's name, or the background's.
 const pbFromName = () => (pb24() ? (pbBg() ? pbBg().name : '') : (cbRace(pb.race) ? cbRace(pb.race).name : ''));
 const pbRaceName = r => (r.subraces ? r.subraces[0].name : r.name);
@@ -91,6 +102,8 @@ function pbParams() {
     if (pb.bg && pb24()) p.bg = pb.bg;
     if (pb.abil.length) p.plus = pb.abil.join('.');
     if (pb.cls) p.cls = pb.cls;
+    if (pb24() && pb.bg && pb.split === 3 && pb.abil.length < 3) p.sp = 3;
+    if (pbR() === '2014' && typeof rulesStored === 'function' && rulesStored() === '2024') p.rules = '2014';
     return p;
 }
 
@@ -105,7 +118,7 @@ function pbFromUrl() {
     if (pb24()) {
         const bg = pbBg();
         pb.abil = bg ? plus.filter(a => pbBgAllowed(bg).includes(a)).slice(0, 3) : [];
-        pb.split = pb.abil.length === 3 ? 3 : 2;
+        pb.split = pb.abil.length === 3 || q.get('sp') === '3' ? 3 : 2;
         if (pb.split === 2) pb.abil = pb.abil.slice(0, 2);
     } else {
         const r = cbRace(pb.race);
@@ -177,12 +190,12 @@ function renderMeter() {
 }
 
 function renderGrid() {
-    const bonus = cbRacialBonus(pbChar());
+    const bonus = pbBonus();
     const key = cbClass(pb.cls) ? cbClass(pb.cls).primary : [];
     const r = cbRace(pb.race);
     const pool = pb.method === 'array' ? CB_STANDARD_ARRAY : pb.method === 'roll' && pb.pool.length === 6 ? pb.pool : null;
     document.getElementById('pb-grid').innerHTML = CB_ABILITIES.map(a => {
-        const base = pb.base[a], total = base + bonus[a], mod = cbMod(total);
+        const base = pb.base[a], total = pbTotal(a, bonus), mod = cbMod(total);
         let ctl;
         if (pb.method === 'point') {
             const cost = CB_POINT_COST[base], next = CB_POINT_COST[base + 1];
@@ -211,9 +224,9 @@ function renderGrid() {
 function renderSummary() {
     const el = document.getElementById('pb-summary');
     if (pb.method === 'roll' && pb.pool.length !== 6) { el.innerHTML = ''; return; }
-    const bonus = cbRacialBonus(pbChar());
-    const total = CB_ABILITIES.reduce((t, a) => t + pb.base[a] + bonus[a], 0);
-    const mods = CB_ABILITIES.reduce((t, a) => t + cbMod(pb.base[a] + bonus[a]), 0);
+    const bonus = pbBonus();
+    const total = CB_ABILITIES.reduce((t, a) => t + pbTotal(a, bonus), 0);
+    const mods = CB_ABILITIES.reduce((t, a) => t + cbMod(pbTotal(a, bonus)), 0);
     const worth = pbWorth(pb.base);
     const bits = [`Scores add up to <b>${total}</b>`, `modifiers to <b>${cbSign(mods)}</b>`];
     if (pb.method !== 'point') {
@@ -222,7 +235,7 @@ function renderSummary() {
     }
     const over = CB_ABILITIES.filter(a => pb.base[a] + bonus[a] > 20);
     let h = `<p>${bits.join(' · ')}.</p>`;
-    if (over.length) h += `<p class="pb-warn">${over.map(a => a.toUpperCase()).join(', ')} goes over 20, the most a score can be without magic.</p>`;
+    if (over.length) h += `<p class="pb-warn">${over.map(a => a.toUpperCase()).join(', ')} ${pb24() ? 'would go over 20, so the bonus past 20 is lost (the most a score can be without magic)' : 'goes over 20, the most a score can be without magic'}.</p>`;
     if (pb24()) {
         const bg = pbBg();
         if (bg && pb.abil.length < pb.split) h += `<p class="pb-warn">Pick ${pb.split - pb.abil.length} more ${pb.split - pb.abil.length === 1 ? 'ability' : 'abilities'} for ${esc(bg.name)}'s ${pb.split === 3 ? '+1 / +1 / +1' : '+2 / +1'}.</p>`;
@@ -244,13 +257,13 @@ function render() {
 
 // ── Actions ──────────────────────────────────────────────
 function pbText() {
-    const bonus = cbRacialBonus(pbChar());
+    const bonus = pbBonus();
     const r = pb24() ? null : cbRace(pb.race), k = cbClass(pb.cls), bg = pbBg();
     const head = [r ? pbRaceName(r) : '', k ? k.name : '', bg ? `(${bg.name})` : ''].filter(Boolean).join(' ');
     const how = PB_METHOD_NAMES[pb.method] + (pb.method === 'point' ? ` (${cbPointSpent(pb.base)}/${CB_POINT_BUDGET})` : '');
     const lines = CB_ABILITIES.map(a => {
-        const t = pb.base[a] + bonus[a];
-        return `${a.toUpperCase()} ${t} (${cbSign(cbMod(t))})${bonus[a] ? ` = ${pb.base[a]} + ${bonus[a]}` : ''}`;
+        const t = pbTotal(a, bonus);
+        return `${a.toUpperCase()} ${t} (${cbSign(cbMod(t))})${t !== pb.base[a] ? ` = ${pb.base[a]} + ${t - pb.base[a]}` : ''}`;
     });
     return [(head ? head + ' · ' : '') + how, ...lines].join('\n');
 }

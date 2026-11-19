@@ -264,7 +264,7 @@ function cbPlayClean(raw, c) {
 function cbLoadAll() {
     try {
         const saved = JSON.parse(localStorage.getItem(CB_KEY));
-        if (Array.isArray(saved)) return saved.map(cbClean).filter(Boolean).slice(0, CB_MAX);
+        if (Array.isArray(saved)) return saved.map(x => { try { return cbClean(x); } catch (e) { return null; } }).filter(Boolean).slice(0, CB_MAX);
     } catch (e) {}
     return [];
 }
@@ -1029,7 +1029,7 @@ function cbDerive(c) {
     let ac, acHow;
     const strExempt = !v24 && c.race === 'dwarf';
     if (armor) {
-        const dex = armor.cap === null ? m.dex : Math.min(m.dex, armor.cap);
+        const dex = armor.cap === null ? m.dex : armor.cap === 0 ? 0 : Math.min(m.dex, armor.cap);
         ac = armor.base + dex;
         acHow = armor.name;
         if (style('defense')) { ac += 1; acHow += ', Defense'; }
@@ -1045,8 +1045,9 @@ function cbDerive(c) {
         [ac, acHow] = opts.sort((x, y) => y[0] - x[0])[0];
     }
     if (shield) {
-        ac += 2; acHow += ', shield';
-        if (!cbArmorProfs(c).includes('shield')) notes.push('Not proficient with shields.');
+        const trained = cbArmorProfs(c).includes('shield');
+        if (trained || !v24) { ac += 2; acHow += ', shield'; }
+        if (!trained) notes.push(v24 ? 'No shield training: the shield gives no AC.' : 'Not proficient with shields.');
     }
 
     // Speed
@@ -1157,6 +1158,8 @@ function cbDerive(c) {
     const hp = cbHitPoints(c);
     return {
         k, race, sub, L, prof, s, m, saves, skills, ac, acHow, notes, speed, init, hp, hd: k ? `${L}d${k.hd}` : '',
+        // A plain ability check: 2014 Jack of All Trades and Remarkable Athlete count (they're never proficient).
+        checks: Object.fromEntries(CB_ABILITIES.map(a => [a, m[a] + (v24 ? 0 : Math.max(jack, ['str', 'dex', 'con'].includes(a) ? athlete : 0))])),
         passive: 10 + perception, attacks, breath, magic, raceTraits, classFeatures, picked, feats, bgFeature,
         senses, tools: cbTools(c), langs: cbLanguages(c), armorProfs: cbArmorProfs(c),
         weaponProfs: cbWeaponProfText(c), x, rules: v24 ? '2024' : '2014'

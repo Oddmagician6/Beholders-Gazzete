@@ -15,7 +15,7 @@ const CC_SETS = [['attack', '⚔️ Attacks'], ['class', '📘 Class features'],
 const CC_RARITIES = ['common', 'uncommon', 'rare', 'very rare', 'legendary', 'artifact'];
 
 // The item index, rebuilt after a rules switch (srd52.js swaps MAGIC_ITEM_TEXT in place).
-const CC_ITEM_SLUG = {};
+const CC_ITEM_SLUG = Object.create(null);
 let CC_ITEMS = [];
 function ccIndex() {
     Object.keys(CC_ITEM_SLUG).forEach(k => { delete CC_ITEM_SLUG[k]; });
@@ -95,6 +95,8 @@ const CC_PROP_NOTES = {
     loading: 'Loading: only one shot per action, bonus action, or reaction.'
 };
 
+const CC_HEAVY_2024 = 'Heavy: disadvantage on attacks with it unless your Strength (melee) or Dexterity (ranged) is 13 or higher.';
+
 function ccAttacks(c, d) {
     const out = d.attacks.map(a => {
         const w = Object.values(CB_WEAPONS).find(x => x[0] === a.name);
@@ -102,7 +104,7 @@ function ccAttacks(c, d) {
         const range = props.find(p => p.startsWith('range '));
         const vers = props.find(p => p.startsWith('versatile'));
         const plain = props.filter(p => p !== range && p !== vers);
-        const notes = plain.map(p => CC_PROP_NOTES[p]).filter(Boolean);
+        const notes = plain.map(p => (p === 'heavy' && cbIs24(c) ? CC_HEAVY_2024 : CC_PROP_NOTES[p])).filter(Boolean);
         if (vers) notes.unshift(`Versatile: ${a.dmg.replace(/^\d+d\d+/, vers.match(/\((.+)\)/)[1])} ${a.type} with two hands.`);
         if (!a.prof) notes.unshift('**Not proficient:** no proficiency bonus on the attack roll.');
         const reach = w && w[2] === 'melee' ? (plain.includes('reach') ? '10 ft.' : '5 ft.') : '';
@@ -115,9 +117,11 @@ function ccAttacks(c, d) {
     });
     if (d.breath) {
         out.push({
-            name: 'Breath Weapon', sub: `Dragonborn${d.breath.kind ? ' (' + d.breath.kind + ')' : ''} · action`,
+            name: 'Breath Weapon', sub: `Dragonborn${d.breath.kind ? ' (' + d.breath.kind + ')' : ''} · ${cbIs24(c) ? 'replaces one attack' : 'action'}`,
             hitLabel: 'Save', hit: `DC ${d.x.dc('con')} ${d.breath.save.toUpperCase()}`, dmg: d.breath.dice, dmgType: d.breath.dmg,
-            more: [['Area', d.breath.area]], notes: ['Each creature in the area saves; half damage on a success. Once per short or long rest.']
+            more: [['Area', d.breath.area]], notes: [cbIs24(c)
+                ? `Use it in place of one attack when you take the Attack action. Each creature in the area saves; half damage on a success. ${d.prof} uses, all back on a long rest.`
+                : 'Each creature in the area saves; half damage on a success. Once per short or long rest.']
         });
     }
     return out;
@@ -128,15 +132,17 @@ function ccFeatures(c, d) {
     const k = d.k;
     const cls = [];
     const choices = cbClassChoices(c).filter(ch => !ch.skills);
-    const picked = choices.some(ch => cbChoiceValue(c, ch.key).length);
+    const madeFor = f => choices.some(ch => (ch.label.startsWith(f.name) || f.name.startsWith(ch.label)) && cbChoiceValue(c, ch.key).length);
     d.classFeatures.forEach(f => {
-        if (picked && /see Choices/.test(f.text)) return;
+        if (/see Choices/.test(f.text) && madeFor(f)) return;
         cls.push({ name: f.name, text: f.text, sub: `${k.name} · ${cbOrd(f.level)} level`, kind: 'class' });
     });
     choices.forEach(ch => {
         const vals = cbChoiceValue(c, ch.key).map(v => ch.options[v]).filter(Boolean);
         const bare = vals.filter(o => !o[1]);
-        vals.filter(o => o[1]).forEach(o => cls.push({ name: o[0], text: o[1], sub: `${k.name} · ${ch.label}`, kind: 'option' }));
+        const mastery = ch.mastery && typeof CB24_MASTERY_TEXT !== 'undefined' ? Object.values(CB24_MASTERY_TEXT) : null;
+        const textOf = o => { const m = mastery && mastery.find(t => t[0] === o[1]); return m ? `${m[0]}: ${m[1]}` : o[1]; };
+        vals.filter(o => o[1]).forEach(o => cls.push({ name: o[0], text: textOf(o), sub: `${k.name} · ${ch.label}`, kind: 'option' }));
         if (bare.length) cls.push({ name: ch.label, text: bare.map(o => o[0]).join(', ') + '.', sub: `${k.name} · your choice`, kind: 'option' });
     });
     d.feats.forEach(f => cls.push({ name: f.name, text: f.text, sub: f.from ? `Feat · ${f.from}` : 'Feat', kind: 'feat' }));
@@ -210,7 +216,7 @@ function renderSets() {
 
 function renderItems() {
     const q = cc.q.trim().toLowerCase();
-    const hits = CC_ITEMS.filter(n => (!q || n.toLowerCase().includes(q)) && (!cc.rarity || gcRarity(MAGIC_ITEM_TEXT[n][0]) === cc.rarity));
+    const hits = CC_ITEMS.filter(n => MAGIC_ITEM_TEXT[n] && (!q || n.toLowerCase().includes(q)) && (!cc.rarity || gcRarity(MAGIC_ITEM_TEXT[n][0]) === cc.rarity));
     const full = cc.items.length >= CC_MAX_ITEMS;
     document.getElementById('cc-results').innerHTML = hits.slice(0, 60).map(n => {
         const has = cc.items.includes(n);

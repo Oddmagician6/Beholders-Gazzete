@@ -113,9 +113,13 @@ function setCond(name, on) {
 }
 
 // ── Rolling ──────────────────────────────────────────────
-function doRoll(formula, label, d20 = true) {
+// test: a D20 Test, which 2024 exhaustion lowers by 2 a level (a death save keeps its bare die for the 1 and 20).
+function doRoll(formula, label, d20 = true, test = d20) {
     let r;
-    try { r = rollAndRecord(formula, d20 ? mode : 'normal', `${who()}: ${label}`); } catch (e) { flash(e.message, true); return null; }
+    const exh = test && cur && cbIs24(cur) ? 2 * cur.play.exh : 0;
+    if (exh) { formula += `-${exh}`; label += ` (exhaustion −${exh})`; }
+    const name = who().length > 24 ? who().slice(0, 23) + '…' : who();
+    try { r = rollAndRecord(formula, d20 ? mode : 'normal', `${name}: ${label}`); } catch (e) { flash(e.message, true); return null; }
     lastRoll = { label, r };
     renderRollbar();
     return r;
@@ -168,9 +172,9 @@ function hpPanel(c, d) {
           <button type="button" class="cs-btn" data-act="temp">🛡️ Temp HP</button></div>`;
     if (notice) {
         h += `<div class="cs-banner${notice.ok ? ' cs-ok' : ''}"><p>${esc(notice.text)}</p>
-            ${notice.conc && p.conc ? `<p>Concentrating on <b>${esc(p.conc)}</b>: make a DC ${notice.conc} Constitution save.</p>` : ''}
+            ${notice.conc && p.conc === notice.spell ? `<p>Concentrating on <b>${esc(p.conc)}</b>: make a DC ${notice.conc} Constitution save.</p>` : ''}
             <div class="cs-btnrow">
-              ${notice.conc && p.conc ? `<button type="button" class="cs-btn cs-gold cs-mini" data-act="conc-save">🎲 Roll CON Save</button>` : ''}
+              ${notice.conc && p.conc === notice.spell ? `<button type="button" class="cs-btn cs-gold cs-mini" data-act="conc-save">🎲 Roll CON Save</button>` : ''}
               ${notice.endurance ? `<button type="button" class="cs-btn cs-gold cs-mini" data-act="endurance">💪 Use Relentless Endurance (stay at 1 HP)</button>` : ''}
               <button type="button" class="cs-btn cs-mini" data-act="notice-off">✕ Dismiss</button></div></div>`;
     }
@@ -191,7 +195,7 @@ function hpPanel(c, d) {
     if (restOpen) {
         const back = ['pact slots', ...cbResources(c, d).filter(r => r.recharge === 'short').map(r => r.name), ...cbResources(c, d).filter(r => r.recharge === 'one').map(r => 'one ' + r.name)];
         if (!(d.magic && d.magic.pact)) back.shift();
-        if (c.cls === 'sorcerer' && L >= 20) back.push('4 sorcery points');
+        if (c.cls === 'sorcerer' && L >= 20 && !cbIs24(c)) back.push('4 sorcery points');
         h += `<div class="cs-rest"><p><b>☕ Short rest</b> (at least an hour). Spend hit dice to heal, one at a time, then finish the rest.</p>
             <div class="cs-btnrow">
               <button type="button" class="cs-btn" data-act="hitdie"${left ? '' : ' disabled'}>🎲 Spend a Hit Die (${left} left)</button>
@@ -328,14 +332,14 @@ function inventoryPanel(c, d) {
         '': c.play.enc ? `Encumbered past ${lbs(str * 5)} lb., heavily past ${lbs(str * 10)} lb.` : 'Capacity is STR × 15. Coins aren\'t counted.'
     }[load.state];
     const rows = c.gear.map((g, i) => {
-        const pack = CB_PACKS[g.name], mi = g.mi && typeof MAGIC_ITEM_TEXT !== 'undefined' ? MAGIC_ITEM_TEXT[g.name] : null;
+        const pack = cbOwn(CB_PACKS, g.name), mi =g.mi && typeof MAGIC_ITEM_TEXT !== 'undefined' ? MAGIC_ITEM_TEXT[g.name] : null;
         const notes = [];
         if (pack) notes.push(esc(pack[1]));
         if (mi) notes.push(`${esc(mi[0])} · <a href="dnd-character-cards?char=${id}&amp;items=${magicItemSlug(g.name)}">🎴 card</a>`);
         const acts = [];
         if (g.a) acts.push(`<button type="button" class="cs-btn cs-mini" data-act="wear" data-i="${i}" aria-pressed="${c.wear.armor === g.a}">${c.wear.armor === g.a ? '🛡️ Worn' : 'Wear'}</button>`);
         if (g.name === 'Shield') acts.push(`<button type="button" class="cs-btn cs-mini" data-act="shield" data-i="${i}" aria-pressed="${c.wear.shield}">${c.wear.shield ? '🛡️ Held' : 'Hold'}</button>`);
-        if (cbNeedsAttune(g)) acts.push(`<button type="button" class="cs-btn cs-mini" data-act="attune" data-i="${i}" aria-pressed="${!!g.att}"${!g.att && att >= CB_ATTUNE_MAX ? ' disabled' : ''}>${g.att ? '✨ Attuned' : 'Attune'}</button>`);
+        if (cbNeedsAttune(g)) acts.push(`<button type="button" class="cs-btn cs-mini" data-act="attune" data-i="${i}" aria-pressed="${!!g.att}"${!g.att && att >= cbAttuneMax(c) ? ' disabled' : ''}>${g.att ? '✨ Attuned' : 'Attune'}</button>`);
         if (pack) acts.push(`<button type="button" class="cs-btn cs-mini" data-act="unpack" data-i="${i}">📦 Unpack</button>`);
         acts.push(`<button type="button" class="cs-btn cs-mini cs-red" data-act="drop" data-i="${i}" aria-label="Remove ${esc(g.name)}">✕</button>`);
         return `<tr><td>${esc(g.name)}${notes.length ? `<small>${notes.join(' · ')}</small>` : ''}</td>
@@ -357,7 +361,7 @@ function inventoryPanel(c, d) {
         <div class="cs-meter${state}"><i style="width:${Math.min(100, Math.round(100 * load.lb / Math.max(1, load.cap)))}%"></i></div>
         <p class="cs-dim">${load.state ? '⚠️ ' : ''}${esc(say)}</p>
         <div class="cs-btnrow"><button type="button" class="cs-btn cs-mini" data-act="enc" aria-pressed="${c.play.enc}">Variant: encumbrance ${c.play.enc ? 'on' : 'off'}</button>
-          <span class="cs-dim">Attunement: <b>${att} of ${CB_ATTUNE_MAX}</b></span></div>
+          <span class="cs-dim">Attunement: <b>${att} of ${cbAttuneMax(c)}</b></span></div>
         </div><div>
         <h3>Gear</h3>
         <div class="cs-scroll"><table class="cs-table cs-gear"><thead><tr><th>Item</th><th>Qty</th><th>lb each</th><th></th></tr></thead><tbody>${rows.length ? rows.join('') : '<tr><td colspan="4" class="cs-dim">Nothing yet.</td></tr>'}</tbody></table></div>
@@ -468,7 +472,7 @@ function onClick(e) {
 
     if (act === 'mode') { mode = v; renderRollbar(); return; }
     if (act === 'init') { doRoll(`1d20${plus(d.init)}`, 'initiative'); return; }
-    if (act === 'check') { doRoll(`1d20${plus(d.m[v])}`, `${CB_ABILITY_NAMES[v]} check`); return; }
+    if (act === 'check') { doRoll(`1d20${plus(d.checks[v])}`, `${CB_ABILITY_NAMES[v]} check`); return; }
     if (act === 'save') { doRoll(`1d20${plus(d.saves.find(x => x.a === v).total)}`, `${CB_ABILITY_NAMES[v]} save`); return; }
     if (act === 'skill') { const s = d.skills.find(x => x.id === v); doRoll(`1d20${plus(s.total)}`, s.name); return; }
     if (act === 'atk') { const a = d.attacks[i]; doRoll(`1d20${plus(a.hit)}`, `${a.name} attack`); return; }
@@ -501,7 +505,11 @@ function onClick(e) {
             flash(parts.join('; ') + '.');
             const res = cbResources(cur, d2).find(x => x.id === 'relentless-endurance');
             notice = null;
-            if (r.dead) notice = { text: r.failed ?'💀 A third death save failure: dead.' : '💀 Massive damage: what was left over is at least your hit point maximum, so that\'s instant death.' };
+            if (r.dead) {
+                notice = { text: r.failed ? '💀 A third death save failure: dead.' : '💀 Massive damage: what was left over is at least your hit point maximum, so that\'s instant death.' };
+                setCond('Unconscious', true);
+                return;
+            }
             else if (r.down) {
                 const spell = p.conc, endurance = !!res && !p.res[res.id];
                 setCond('Unconscious', true);
@@ -509,7 +517,7 @@ function onClick(e) {
                 // Relentless Endurance means never going down, so the spell comes back (with its save).
                 if (endurance && spell) notice.kept = { spell, dc: r.conc };
             } else if (r.failed) notice = { text: '🩸 Damage at 0 hit points: one death save failure (two for a critical hit; tap another failure).' };
-            if (r.conc && p.conc) notice = Object.assign(notice || { text: `Took ${n} damage.` }, { conc: r.conc });
+            if (r.conc && p.conc) notice = Object.assign(notice || { text: `Took ${n} damage.` }, { conc: r.conc, spell: p.conc });
         });
         return;
     }
@@ -518,12 +526,13 @@ function onClick(e) {
         change(p => {
             p.hp = 1; p.res['relentless-endurance'] = 1; p.ds = [0, 0]; setCond('Unconscious', false);
             if (kept) p.conc = kept.spell;
-            notice = kept ? { text: '💪 Still up.', conc: kept.dc } : null;
+            notice = kept && kept.dc ? { text: '💪 Still up.', conc: kept.dc, spell: kept.spell } : null;
         });
         flash('💪 Relentless Endurance: you stay up at 1 hit point.');
         return;
     }
     if (act === 'conc-save') {
+        if (!notice || !notice.conc || notice.spell !== cur.play.conc) { notice = null; render(); return; }
         const dc = notice.conc;
         const r = doRoll(`1d20${plus(d.saves.find(x => x.a === 'con').total)}`, `CON save to keep concentration (DC ${dc})`);
         if (!r) return;
@@ -533,7 +542,7 @@ function onClick(e) {
         return;
     }
     if (act === 'deathsave') {
-        const r = doRoll('1d20', 'death save', false);
+        const r = doRoll('1d20', 'death save', true, false);
         if (!r) return;
         let out;
         change((p, d2) => {
@@ -546,7 +555,11 @@ function onClick(e) {
     }
     if (act === 'ds') { change(p => { p.ds[Number(v)] = Math.max(0, Math.min(3, p.ds[Number(v)] + (filled ? -1 : 1))); }); return; }
 
-    if (act === 'short') { restOpen = !restOpen; render(); return; }
+    if (act === 'short') {
+        const no = restOpen ? '' : cbRestBlock(cur, d, false);
+        if (no) { flash(no, true); return; }
+        restOpen = !restOpen; render(); return;
+    }
     if (act === 'short-cancel') { restOpen = false; render(); return; }
     if (act === 'hitdie') {
         let got;
@@ -562,6 +575,8 @@ function onClick(e) {
         return;
     }
     if (act === 'long') {
+        const no = cbRestBlock(cur, d, true);
+        if (no) { longArmed = 0; flash(no, true); render(); return; }
         if (Date.now() - longArmed > 3000) {
             longArmed = Date.now();
             render();
@@ -590,7 +605,7 @@ function onClick(e) {
     if (act === 'wear' && g) { change(() => { cur.wear.armor = cur.wear.armor === g.a ? '' : g.a; }); return; }
     if (act === 'shield') { change(() => { cur.wear.shield = !cur.wear.shield; }); return; }
     if (act === 'attune' && g) {
-        if (!g.att && cbAttuned(cur) >= CB_ATTUNE_MAX) { flash(`You can attune to ${CB_ATTUNE_MAX} items at once: end one first.`, true); return; }
+        if (!g.att && cbAttuned(cur) >= cbAttuneMax(cur)) { flash(`You can attune to ${cbAttuneMax(cur)} items at once: end one first.`, true); return; }
         change(() => { if (g.att) delete g.att; else g.att = true; });
         return;
     }
@@ -650,11 +665,12 @@ function onClick(e) {
         let got = 0;
         change((p, d2) => {
             p.res[r.id] = (p.res[r.id] || 0) + 1;
+            if (r.id === 'metabolism') delete p.res.ki;
             const was = cbPlayHp(cur, d2);
             got = cbHeal(cur, d2, n);
             if (was === 0 && got) setCond('Unconscious', false);
         });
-        flash(`💚 ${r.name}: +${got} hit points${got < n ? ` (rolled ${n}; you were near full)` : ''}.`);
+        flash(`💚 ${r.name}: +${got} hit points${got < n ? ` (rolled ${n}; you were near full)` : ''}${r.id === 'metabolism' ? ', and every focus point back' : ''}.`);
     }
 }
 
@@ -710,6 +726,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key !== CB_KEY && e.key !== null) return;
         chars = cbLoadAll();
         const same = cur && chars.find(x => x.id === cur.id);
-        if (same) { cur = same; cbPlayFit(cur); render(); } else openChar(chars[0] || null);
+        if (same) { cur = same; cbPlayFit(cur); if (loadParty().some(m => m.id === cur.id)) pushLive(); render(); } else openChar(chars[0] || null);
     });
 });
