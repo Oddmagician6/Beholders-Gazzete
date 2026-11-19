@@ -9,7 +9,7 @@
        saves: [6 booleans], skills: { perception: 1 (proficient) | 2 (expertise) },
        vuln, resist, immune, condImm, senses: { blind, blindBeyond, dark, tremor, truesight },
        langs, tele, cr: 'auto' | an SRD CR, dpr/atk/dc: numbers that replace the estimate's
-       own reading of the actions (null = read them),
+       own reading of the actions (null = read them), init (initiative bonus; null = Dex),
        tr, ac2, ba, re, le: features, legN (legendary actions a round),
        book: its page in the 2014 Monster Manual (0 = none; book-monsters.js),
        style: '2014' | '2024', the stat block's layout and wording (L1T T4): 2024 writes
@@ -162,7 +162,7 @@ const HB_EMPTY = {
     hd: 4, hdie: 0, hpFlat: 0, speed: { walk: 30, burrow: 0, climb: 0, fly: 0, swim: 0, hover: false },
     ab: [10, 10, 10, 10, 10, 10], saves: [false, false, false, false, false, false], skills: {},
     vuln: '', resist: '', immune: '', condImm: '', senses: { blind: 0, blindBeyond: false, dark: 0, tremor: 0, truesight: 0 },
-    langs: '', tele: 0, cr: 'auto', dpr: null, atk: null, dc: null,
+    langs: '', tele: 0, cr: 'auto', dpr: null, atk: null, dc: null, init: null,
     tr: [], ac2: [], ba: [], re: [], le: [], legN: 3, book: 0, style: '2014'
 };
 
@@ -173,7 +173,7 @@ function hbBlank() {
 function hbCleanAtk(a) {
     const o = a && typeof a === 'object' ? a : {};
     return {
-        kind: Object.hasOwn(HB_ATTACKS, o.kind) ? o.kind : 'mw',
+        kind: typeof o.kind === 'string' && Object.hasOwn(HB_ATTACKS, o.kind) ? o.kind : 'mw',
         abil: hbInt(o.abil, -1, 5, 0),
         reach: hbInt(o.reach, 0, 300, 5),
         range: hbLine(o.range, 20),
@@ -231,6 +231,7 @@ function hbClean(raw) {
         dpr: hbOpt(raw.dpr, 0, 999),
         atk: hbOpt(raw.atk, -5, 30),
         dc: hbOpt(raw.dc, 0, 40),
+        init: hbOpt(raw.init, -10, 30),
         ...Object.fromEntries(HB_SECTIONS.map(([k]) => [k, hbCleanFeats(raw[k])])),
         legN: hbInt(raw.legN, 1, 5, 3),
         book: hbInt(raw.book, 0, 999, 0),
@@ -284,7 +285,7 @@ function hbAttackText(mon, f, pb) {
 function hbTokens(mon, text, pb) {
     const ab = k => HB_ABILS.indexOf(k.toLowerCase());
     return text
-        .replace(/\{name\}/g, hbShortName(mon))
+        .replace(/\{name\}/g, () => hbShortName(mon))
         .replace(/\{Name\}/g, () => { const s = hbShortName(mon); return s.charAt(0).toUpperCase() + s.slice(1); })
         .replace(/\{atk:(str|dex|con|int|wis|cha)\}/gi, (_, k) => hbSigned(hbMod(mon.ab[ab(k)]) + pb).replace('−', '-'))
         .replace(/\{dc:(str|dex|con|int|wis|cha)\}/gi, (_, k) => String(8 + pb + hbMod(mon.ab[ab(k)])))
@@ -369,11 +370,13 @@ function hbBlock(mon, cr = hbCr(mon)) {
         pb
     };
     HB_SECTIONS.forEach(([k]) => { const list = hbFeatures(mon, k, pb); if (list.length) b[k] = list; });
+    // Initiative: the DM's number (a 2024 block's, which can add proficiency), else Dex.
+    const init = mon.init !== null && mon.init !== undefined ? mon.init : hbMod(mon.ab[1]);
     if (mon.book && !HB_SECTIONS.some(([k]) => b[k])) {
         b.book = `Monster Manual (2014), page ${mon.book}`;
-        b.init = hbMod(mon.ab[1]);
+        b.init = init;
     }
-    if (mon.style === '2024' && !b.book) b.init = hbMod(mon.ab[1]);
+    if (mon.style === '2024' && !b.book) b.init = init;
     if (b.le && mon.style === '2024') {
         const n = hbShortName(mon);
         b.li = `Legendary Action Uses: ${mon.legN}. Immediately after another creature's turn, ${n} can expend a use to take one of the following actions. ${n.charAt(0).toUpperCase() + n.slice(1)} regains all expended uses at the start of each of its turns.`;
@@ -393,12 +396,14 @@ function hbCount(w) {
 
 // What one feature does in a turn: damage (an attack's hit, or a save effect's biggest
 // number), its to-hit, its DC, and whether it's limited (recharge or per day).
+// Reads both styles: 2014 "+5 to hit … Hit: 7 (1d8 + 3) slashing damage" and 2024
+// "Melee Attack Roll: +5 … Hit: 7 (1d8 + 3) Slashing damage".
 function hbFeatHit(mon, f, pb) {
     const text = hbFeatText(mon, f, pb);
-    const hit = text.match(/to hit/i);
-    const toHit = text.match(/([+\-−]\d+) to hit/);
+    const hit = text.match(/to hit|Attack Roll:/i);
+    const toHit = text.match(/([+\-−]\d+) to hit/) || text.match(/Attack Roll: ([+\-−]\d+)/i);
     const dc = text.match(/DC (\d+)/);
-    const dmgs = s => [...s.matchAll(/(\d+) \(\d+d\d+(?: [+−-] \d+)?\) [a-z]+ damage|Hit: (\d+) [a-z]+ damage/g)].map(m => Number(m[1] || m[2]));
+    const dmgs = s => [...s.matchAll(/(\d+) \(\d+d\d+(?: [+−-] \d+)?\) [a-z]+ damage|Hit: (\d+) [a-z]+ damage/gi)].map(m => Number(m[1] || m[2]));
     let dmg;
     if (hit) {
         const sentence = (text.split(/Hit:/)[1] || '').split(/\.(?:\s|$)/)[0];
@@ -452,7 +457,9 @@ function hbReadOffense(mon, pb) {
     const leg = mon.le.filter(f => f.name || f.text || f.atk).map(f => {
         const hit = hbFeatHit(mon, f, pb);
         const named = (hit.text.match(/makes (?:a|one) ([A-Za-z' -]+?) attack/i) || [])[1];
-        const act = named && plain.find(a => a.name.toLowerCase().replace(/s$/, '').startsWith(named.toLowerCase().replace(/s$/, '')));
+        // "makes one attack" (the Attack preset): its best one.
+        const act = (named && plain.find(a => a.name.toLowerCase().replace(/s$/, '').startsWith(named.toLowerCase().replace(/s$/, ''))))
+            || (/makes (?:a|one) (?:weapon )?attack\b/i.test(hit.text) ? best : null);
         const cost = Number((f.name.match(/costs (\d) actions/i) || [])[1]) || 1;
         const uses = Math.floor(mon.legN / cost);
         const dmg = Math.max(hit.dmg, act ? act.dmg : 0);
@@ -485,7 +492,8 @@ function hbEstimateWith(mon, pb) {
     const def = [], off = [];
     // Defensive: effective hit points…
     const hp = hbHp(mon).avg;
-    const rawIdx = hbRowFor(hp, 4);
+    // The CR it's meant for (the one picked, else its hit points' row) sets the multipliers.
+    const rawIdx = mon.cr !== 'auto' ? HB_CRS.indexOf(mon.cr) : hbRowFor(hp, 4);
     const expected = hbCrValue(HB_CRS[rawIdx]);
     let eff = hp;
     def.push(`Hit points ${hp}.`);
@@ -585,6 +593,8 @@ function hbFromSrd(id) {
     const ac = b.ac.match(/^(\d+)(?: \((.*)\))?/);
     if (ac) { mon.ac = Number(ac[1]); mon.acNote = ac[2] || ''; }
     mon.ab = b.ab.slice();
+    // A 2024 block's initiative can add proficiency (an ancient red dragon's +14 on Dex 10).
+    if (v24 && typeof b.init === 'number' && b.init !== hbMod(mon.ab[1])) mon.init = b.init;
     const hp = b.hp.match(/^(\d+)(?: \((\d+)d(\d+)(?: ([+-]) (\d+))?\))?/);
     if (hp) {
         if (hp[2]) {
@@ -676,8 +686,14 @@ if (typeof nbOnChange === 'function') {
 }
 
 // ── Share codes ───────────────────────────────────────────
+// The most a link's monster may unpack to: more than the longest monster hbClean keeps
+// (100 features of 3,000 characters, 3 bytes each at worst), checked both ways.
+const HB_SHARE_BYTES = 2000000;
+
 async function hbShareCode(mon) {
-    const code = await packShareCode({ v: 1, m: mon });
+    const data = { v: 1, m: mon };
+    if (new TextEncoder().encode(JSON.stringify(data)).length > HB_SHARE_BYTES) throw new Error('That monster is too long for a link. Shorten its text, or save it to the notebook and export that instead.');
+    const code = await packShareCode(data);
     if (code.length > HB_LIMITS.share) throw new Error(`That monster is too long for a link (${code.length.toLocaleString()} characters; ${HB_LIMITS.share.toLocaleString()} at most). Shorten its text, or save it to the notebook and export that instead.`);
     return code;
 }
@@ -686,7 +702,7 @@ async function hbFromShareCode(code) {
     const broken = new Error('That monster link is broken or cut short. Ask for it again, and copy the whole link.');
     let data;
     try {
-        data = await unpackShareCode(code, HB_LIMITS.share + 10, 200000);
+        data = await unpackShareCode(code, HB_LIMITS.share + 10, HB_SHARE_BYTES);
     } catch (e) {
         throw e.browser ? new Error("This browser can't open compressed monster links. Try a newer browser.") : broken;
     }

@@ -202,7 +202,8 @@ function rulesRefresh() {
     if (!SRD52_OK) return Promise.resolve();
     const want = rulesVersion();
     // The version asked for when the data is in (a later switch, made while this one loaded, wins).
-    const go = () => { rulesSwap(rulesVersion() === '2024' && typeof SRD52_FULL !== 'undefined' ? '2024' : '2014'); srd52Changed(); };
+    // A text-only page holds no rules data, so it shows 2024 without the file.
+    const go = () => { rulesSwap(rulesVersion() === '2024' && (RULES_TEXT_ONLY || typeof SRD52_FULL !== 'undefined') ? '2024' : '2014'); srd52Changed(); };
     if (want === '2024' && !RULES_TEXT_ONLY && typeof SRD52_FULL === 'undefined') {
         document.documentElement.classList.add('rules-loading');
         return rulesLoadFull().then(() => { rulesFailed = false; go(); }, () => { rulesFailed = true; rulesPage = '2014'; rulesPinnedByUrl = false; go(); })
@@ -262,7 +263,7 @@ function rulesStampLink(e) {
 
 // Kept for older callers: re-applies the current version (say, after spells-data.js loads late).
 function srd52Register() {
-    if (SRD52_OK) rulesSwap(rulesShown === '2024' ? '2024' : rulesVersion() === '2024' && typeof SRD52_FULL !== 'undefined' ? '2024' : '2014');
+    if (SRD52_OK) rulesSwap(rulesShown === '2024' ? '2024' : rulesVersion() === '2024' && (RULES_TEXT_ONLY || typeof SRD52_FULL !== 'undefined') ? '2024' : '2014');
 }
 
 function srd52Set(on) {

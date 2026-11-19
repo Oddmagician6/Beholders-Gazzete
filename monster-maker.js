@@ -91,8 +91,10 @@ function armed(btn, warn, action) {
     btn._t = setTimeout(() => { delete btn.dataset.armed; btn.textContent = btn.dataset.label; }, 3000);
 }
 
+// Anything typed in: a name, a feature, or any number changed from a blank monster.
 function hasWork(mon) {
-    return !!(mon.name || HB_SECTIONS.some(([k]) => mon[k].length));
+    const plain = m => JSON.stringify({ ...m, style: '' });
+    return !!(mon.name || HB_SECTIONS.some(([k]) => mon[k].length)) || plain(mon) !== plain(hbBlank());
 }
 
 // ── The draft ─────────────────────────────────────────────
@@ -385,6 +387,7 @@ function renderAll() {
     document.getElementById('mm-dpr').placeholder = String(read.dpr);
     document.getElementById('mm-atkb').placeholder = read.atk === null ? '—' : hbSigned(read.atk).replace('−', '-');
     document.getElementById('mm-dcv').placeholder = read.dc === null ? '—' : String(read.dc);
+    document.getElementById('mm-init').placeholder = hbSigned(hbMod(mon.ab[1])).replace('−', '-');
     updateAttackLines();
     // The stat block.
     const art = `img/creature/${HB_TYPES.includes(row.type) ? row.type : row.type === 'swarm' ? 'beast' : 'monstrosity'}.webp`;
@@ -444,8 +447,8 @@ function openEntry(id, said = true) {
 }
 
 function startFromSrd(id) {
-    const m = MONSTER_BY_ID[id];
-    if (!m || m.hb) return;
+    const m = Object.hasOwn(MONSTER_BY_ID, id) ? MONSTER_BY_ID[id] : null;
+    if (!m || m.hb) { mmFlash("⚠️ That link's SRD monster isn't one this page knows. Your draft is still here."); return; }
     mmFlash(`📂 Loading the ${m.name}…`);
     loadMonsterBlocks().then(() => {
         const mon = hbFromSrd(id);

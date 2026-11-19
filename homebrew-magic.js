@@ -61,11 +61,12 @@ function hbmCleanSpell(raw) {
     if (!name) return null;
     const level = Number.isInteger(raw.level) && raw.level >= 0 && raw.level <= 9 ? raw.level : 1;
     const concentration = raw.concentration === true;
-    let duration = hbmLine(raw.duration) || 'Instantaneous';
+    // Room for the "Concentration, up to " the cleaning adds, so a saved spell cleans the same twice.
+    let duration = hbmLine(raw.duration, HBM_LIMITS.line + 25) || (concentration ? '1 minute' : 'Instantaneous');
     if (concentration && !/^concentration/i.test(duration)) duration = `Concentration, up to ${duration.charAt(0).toLowerCase()}${duration.slice(1)}`;
     return {
         name, level,
-        school: HBM_SCHOOLS.includes(raw.school) ? raw.school : 'Evocation',
+        school: typeof raw.school === 'string' && HBM_SCHOOLS.includes(raw.school) ? raw.school : 'Evocation',
         cast: hbmLine(raw.cast) || '1 action',
         range: hbmLine(raw.range) || 'Self',
         duration,
@@ -86,9 +87,9 @@ function hbmCleanItem(raw) {
     const price = Number.isFinite(raw.price) && raw.price > 0 ? Math.min(HBM_LIMITS.price, Math.round(raw.price * 100) / 100) : 0;
     return {
         name,
-        kind: Object.hasOwn(HBM_ITEM_KINDS, raw.kind) ? raw.kind : 'wondrous',
+        kind: typeof raw.kind === 'string' && Object.hasOwn(HBM_ITEM_KINDS, raw.kind) ? raw.kind : 'wondrous',
         detail: hbmLine(raw.detail, 40),
-        rarity: Object.hasOwn(HBM_RARITIES, raw.rarity) ? raw.rarity : 'uncommon',
+        rarity: typeof raw.rarity === 'string' && Object.hasOwn(HBM_RARITIES, raw.rarity) ? raw.rarity : 'uncommon',
         attune: raw.attune === true,
         attuneBy: raw.attune === true ? hbmLine(raw.attuneBy) : '',
         price,
@@ -163,20 +164,22 @@ function hbmRegister(nb) {
     if (typeof SPELLS_DATA !== 'undefined') for (let i = SPELLS_DATA.length - 1; i >= 0; i--) if (SPELLS_DATA[i].hb) SPELLS_DATA.splice(i, 1);
     if (typeof MAGIC_ITEM_TEXT !== 'undefined') hbmItems.forEach(it => { delete MAGIC_ITEM_TEXT[it.name]; });
     hbmNames.clear();
-    const seen = new Set();
-    const fresh = name => {
+    // One of each name per kind (a spell and an item may share one). A name like __proto__
+    // can't be a key of MAGIC_ITEM_TEXT, so an item with one is left out.
+    const fresh = seen => name => {
         const k = name.toLowerCase();
         if (seen.has(k)) return false;
         seen.add(k);
         return true;
     };
-    hbmSpells = hbmSaved(nb, 'spell').filter(e => !hbmSrd.spells.has(e.spell.name.toLowerCase()) && fresh(e.spell.name))
+    const spellSeen = new Set(), itemSeen = new Set();
+    hbmSpells = hbmSaved(nb, 'spell').filter(e => !hbmSrd.spells.has(e.spell.name.toLowerCase()) && fresh(spellSeen)(e.spell.name))
         .map(e => hbmSpellRow(e.spell, e.id)).sort((a, b) => a.name.localeCompare(b.name));
-    hbmItems = hbmSaved(nb, 'item').filter(e => !hbmSrd.items.has(e.item.name.toLowerCase()) && fresh(e.item.name))
+    hbmItems = hbmSaved(nb, 'item').filter(e => !(e.item.name in Object.prototype) && !hbmSrd.items.has(e.item.name.toLowerCase()) && fresh(itemSeen)(e.item.name))
         .map(e => ({ id: e.id, ...e.item })).sort((a, b) => a.name.localeCompare(b.name));
     if (typeof SPELLS_DATA !== 'undefined') SPELLS_DATA.push(...hbmSpells);
     if (typeof MAGIC_ITEM_TEXT !== 'undefined') hbmItems.forEach(it => { MAGIC_ITEM_TEXT[it.name] = [hbmItemLine(it), hbmItemText(it)]; });
-    seen.forEach(k => hbmNames.add(k));
+    [...spellSeen, ...itemSeen].forEach(k => hbmNames.add(k));
     hbmListeners.forEach(fn => fn());
 }
 
@@ -283,6 +286,7 @@ function hbmRead(kind, form) {
 // Save a spell or item; id: the entry it replaces. Returns the entry, or throws an Error for the DM.
 function hbmSave(kind, value, id) {
     if (!value) throw new Error('Give it a name first.');
+    if (value.name in Object.prototype) throw new Error(`The site can't file a ${kind} under "${value.name}". Pick another name.`);
     if (hbmSrdHas(kind, value.name)) throw new Error(`${value.name} is already in the SRD, so it's on the site as it is. Give yours another name.`);
     const nb = nbLoad();
     const twin = hbmSaved(nb, kind).find(e => e.id !== id && e[kind].name.toLowerCase() === value.name.toLowerCase());

@@ -63,8 +63,9 @@ const amSign = n => (n < 0 ? '−' + Math.abs(n) : '+' + n);
 
 // ── The math ─────────────────────────────────────────────
 // "2d6 + 1d4 - 1" → { dice: [[2, 6], [1, 4]], flat: -1 }, or null if it isn't a damage roll.
+// A label after it is fine ("3d6 Sneak Attack", as the box's own example has it).
 function amParse(text) {
-    const s = String(text || '').replace(/\s+/g, '').toLowerCase().replace(/[−–]/g, '-');
+    const s = String(text || '').trim().replace(/\s+[a-z][a-z' ]*$/i, '').replace(/\s+/g, '').toLowerCase().replace(/[−–]/g, '-');
     if (!s || s.length > 40 || !/^[+-]?(\d*d\d+|\d+)([+-](\d*d\d+|\d+))*$/.test(s)) return null;
     const out = { dice: [], flat: 0 };
     for (const [, sign, count, size, num] of s.matchAll(/([+-]?)(?:(\d*)d(\d+)|(\d+))/g)) {
@@ -99,17 +100,18 @@ function amAverages(roll, gwf, extraFlat, xcrit) {
     return { hit: Math.max(0, dice + flat), crit: Math.max(0, 2 * dice + flat + more) };
 }
 
-// Chance of each natural d20 result (index 1–20) for the roll mode; Lucky rerolls a 1 once.
+// Chance of each natural d20 result (index 1–20) for the roll mode. Lucky rerolls a 1 once;
+// with advantage or disadvantage it rerolls only one of the dice, even when both are 1s.
 function amNaturals(mode, lucky) {
-    const one = [0], cdf = [0], out = [0];
-    for (let n = 1; n <= 20; n++) {
-        one[n] = lucky ? (n === 1 ? 1 / 400 : 21 / 400) : 1 / 20;
-        cdf[n] = cdf[n - 1] + one[n];
+    const out = Array(21).fill(0);
+    if (mode !== 'adv' && mode !== 'dis') {
+        for (let n = 1; n <= 20; n++) out[n] = lucky ? (n === 1 ? 1 / 400 : 21 / 400) : 1 / 20;
+        return out;
     }
-    for (let n = 1; n <= 20; n++) {
-        out[n] = mode === 'adv' ? cdf[n] ** 2 - cdf[n - 1] ** 2
-            : mode === 'dis' ? (1 - cdf[n - 1]) ** 2 - (1 - cdf[n]) ** 2
-            : one[n];
+    const keep = mode === 'adv' ? Math.max : Math.min;
+    for (let a = 1; a <= 20; a++) for (let b = 1; b <= 20; b++) {
+        if (!lucky || (a !== 1 && b !== 1)) { out[keep(a, b)] += 1 / 400; continue; }
+        for (let r = 1; r <= 20; r++) out[a === 1 ? keep(r, b) : keep(a, r)] += 1 / 8000;
     }
     return out;
 }
@@ -220,12 +222,15 @@ function amRoundPf(o, ac) {
 const amTarget = () => am.ac + am.cover - (AM_PF2E && am.offGuard ? 2 : 0);
 const amHasTrade = () => !AM_PF2E && am.rows.some(r => r.trade && amParse(r.dmg) && r.n);
 
-// The AC ranges (1–30) where the trade-off adds damage, as [[lo, hi], …]. It usually pays
-// against low AC, stops paying in the middle, and pays again once only the crit range can
-// hit (a crit hits whatever the penalty).
+// The highest AC the page can aim at: the box's top plus the most cover.
+const AM_TOP = AM_AC_MAX + Math.max(...AM_COVERS);
+
+// The AC ranges (1 to AM_TOP) where the trade-off adds damage, as [[lo, hi], …]. It usually
+// pays against low AC, stops paying in the middle, and pays again once only the crit range
+// can hit (a crit hits whatever the penalty).
 function amTradeRanges() {
     const out = [];
-    for (let ac = 1; ac <= 30; ac++) {
+    for (let ac = 1; ac <= AM_TOP; ac++) {
         if (!(amRound(am, ac, true).total > amRound(am, ac, false).total + 1e-9)) continue;
         const last = out[out.length - 1];
         if (last && last[1] === ac - 1) last[1] = ac;
@@ -237,9 +242,9 @@ function amTradeRanges() {
 function amTradeVerdict() {
     const ranges = amTradeRanges();
     if (!ranges.length) return 'It costs damage at every AC: leave it off.';
-    if (ranges.length === 1 && ranges[0][0] === 1 && ranges[0][1] === 30) return 'It adds damage at every AC.';
-    const text = ranges.map(([lo, hi]) => (lo === 1 ? `AC ${hi} or lower` : hi === 30 ? `AC ${lo} or higher` : lo === hi ? `AC ${lo}` : `AC ${lo}–${hi}`));
-    const crit = ranges.length > 1 && ranges[ranges.length - 1][1] === 30 ? ' (up there only the crit range hits, and a crit lands whatever the penalty)' : '';
+    if (ranges.length === 1 && ranges[0][0] === 1 && ranges[0][1] === AM_TOP) return 'It adds damage at every AC.';
+    const text = ranges.map(([lo, hi]) => (lo === 1 ? `AC ${hi} or lower` : hi === AM_TOP ? `AC ${lo} or higher` : lo === hi ? `AC ${lo}` : `AC ${lo}–${hi}`));
+    const crit = ranges.length > 1 && ranges[ranges.length - 1][1] === AM_TOP ? ' (up there only the crit range hits, and a crit lands whatever the penalty)' : '';
     return `It adds damage against ${text.join(' and ')}${crit}, and costs damage everywhere else.`;
 }
 
@@ -270,7 +275,7 @@ function amFromUrl() {
     const q = urlParams();
     am.ac = amClamp(q.get('ac'), 1, AM_AC_MAX, AM_DEFAULTS.ac);
     am.cover = AM_COVERS.includes(Number(q.get('cov'))) ? Number(q.get('cov')) : 0;
-    am.mode = AM_MODES[q.get('mode')] && q.get('mode') ? q.get('mode') : '';
+    am.mode = q.get('mode') && Object.hasOwn(AM_MODES, q.get('mode')) ? q.get('mode') : '';
     am.crit = !AM_PF2E && [19, 18].includes(Number(q.get('crit'))) ? Number(q.get('crit')) : 20;
     am.bless = !AM_PF2E && q.get('bless') === '1';
     am.lucky = !AM_PF2E && q.get('lucky') === '1';
@@ -305,8 +310,11 @@ function amFromCharacter(c) {
     // The character's own rules version rules this page view (srd52.js rulesUse).
     if (!AM_PF2E && typeof rulesUse === 'function' && (c.rules || '2014') !== amR()) rulesUse(c.rules || '2014');
     const d = cbDerive(c), L = c.level, v24 = cbIs24(c);
+    // Thirsting Blade (and 2024's Devouring Blade) is the warlock's Extra Attack with the pact weapon.
+    const inv = id => c.cls === 'warlock' && (c.opts.invocations || []).includes(id);
     const extra = c.cls === 'fighter' ? (L >= 20 ? 4 : L >= 11 ? 3 : L >= 5 ? 2 : 1)
-        : ['barbarian', 'monk', 'paladin', 'ranger'].includes(c.cls) && L >= 5 ? 2 : 1;
+        : ['barbarian', 'monk', 'paladin', 'ranger'].includes(c.cls) && L >= 5 ? 2
+            : inv('devouring-blade') ? 3 : inv('thirsting-blade') ? 2 : 1;
     // 2024: a Fighting Style feat, from the class (opts.styles) or any feat slot.
     const gwf = v24 ? c.opts.styles.includes('great-weapon') || cbFeatSlots(c).some(s => s.feat === 'great-weapon')
         : !!CB_CLASS_STYLES[c.cls] && c.opts.styles.includes('great-weapon');
@@ -315,13 +323,15 @@ function amFromCharacter(c) {
     am.rows = d.attacks.slice(0, AM_MAX_ROWS).map((a, i) => {
         const w = Object.values(CB_WEAPONS).find(x => x[0] === a.name);
         const melee = !!w && w[2] === 'melee';
+        // 2024's Radiant Strikes also counts an Unarmed Strike; 2014's Improved Divine Smite is weapons only.
+        const smites = smite && (melee || (v24 && !w && /^unarmed/i.test(a.name)));
         return {
             name: amName(a.name), n: i ? 0 : extra, hit: a.hit,
-            dmg: a.dmg + (smite && melee ? ' + 1d8' : ''),
+            dmg: a.dmg + (smites ? ' + 1d8' : ''),
             gwf: gwf && melee && /two-handed/.test(a.props), trade: false, ranged: !!w && !melee
         };
     });
-    if (extra > 1) said.push(`Extra Attack (${extra} on the first row)`);
+    if (extra > 1) said.push(c.cls === 'warlock' ? `${inv('devouring-blade') ? 'Devouring' : 'Thirsting'} Blade (${extra} on the first row; make that row the pact weapon)` : `Extra Attack (${extra} on the first row)`);
     am.crit = c.cls === 'fighter' && L >= 15 ? 18 : c.cls === 'fighter' && L >= 3 ? 19 : 20;
     if (am.crit < 20) said.push(`Improved Critical (${am.crit}–20)`);
     am.lucky = c.race === 'halfling';
@@ -332,7 +342,7 @@ function amFromCharacter(c) {
     if (am.xcrit) said.push(`${am.xcrit} extra crit ${am.xcrit > 1 ? 'dice' : 'die'}`);
     am.once = c.cls === 'rogue' ? `${Math.ceil(L / 2)}d6` : '';
     if (am.once) said.push(`Sneak Attack ${am.once}`);
-    if (smite) said.push('Improved Divine Smite +1d8');
+    if (smite) said.push(v24 ? 'Radiant Strikes +1d8' : 'Improved Divine Smite +1d8');
     if (am.rows.some(r => r.gwf)) said.push('Great Weapon Fighting');
     const tips = [];
     if (c.cls === 'barbarian') tips.push(`Raging? Add + ${L >= 16 ? 4 : L >= 9 ? 3 : 2} to a Strength melee row's damage.`);
@@ -400,7 +410,7 @@ function renderResults() {
     out.push(`<h2 class="am-h">Against AC ${ac}${coverText}</h2>`);
     out.push(`<div class="am-stats">
         <div class="am-stat am-big"><span>Damage per round</span><b>${amNum(round.total)}</b></div>
-        <div class="am-stat"><span>First attack hits</span><b>${amPct(first.odds.hit)}</b> <span class="am-dim">crit ${amPct(first.odds.crit)}</span></div>
+        <div class="am-stat"><span>First attack hits</span>${round.attacks ? `<b>${amPct(first.odds.hit)}</b> <span class="am-dim">crit ${amPct(first.odds.crit)}</span>` : '<b>—</b> <span class="am-dim">no attacks set</span>'}</div>
         <div class="am-stat"><span>Hits at least once</span><b>${amPct(round.any)}</b></div>
         <div class="am-stat"><span>Hits a round</span><b>${amNum(round.hits)}</b> <span class="am-dim">of ${round.attacks}</span></div>
     </div>`);
@@ -433,7 +443,8 @@ function renderResults() {
         out.push(`<div class="am-trade${diff > 1e-9 ? ' am-yes' : ' am-no'}"><b>${amSign(-am.pen)} to hit / ${amSign(am.bon)} damage:</b> ${amNum(round.total)} a round with it, ${amNum(off)} without (${diff >= 0 ? '+' : '−'}${amNum(Math.abs(diff))}). ${amTradeVerdict()}</div>`);
     }
 
-    const lo = Math.max(1, ac - 6), hi = Math.min(AM_AC_MAX, lo + 12);
+    // Around the target, which cover can push past the box's top.
+    const lo = Math.max(1, ac - 6), hi = Math.max(ac, Math.min(AM_AC_MAX, lo + 12));
     const rowsAc = [];
     for (let a = lo; a <= hi; a++) {
         const on = amRound(am, a, true), off = trading ? amRound(am, a, false) : on;
