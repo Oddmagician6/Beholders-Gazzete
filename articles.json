@@ -9073,6 +9073,142 @@
         "rumor": "They say the harpies are writing a new jingle for the temple, and the hook goes off the bell tower."
       },
       "fiction": true
+    },
+    {
+      "id": "major-image-gold-audit-party-loan-ledgerhall",
+      "title": "Major Image Gold Vanishes in Audit; Party Had Borrowed on It",
+      "category": "Finance",
+      "author": "Barnaby Tallowmere",
+      "date": "2026-11-19",
+      "excerpt": "An adventuring party banked 6,400 gp of dungeon loot. The audit found 2,000 gp was Major Image gold, and they had already borrowed against it.",
+      "social": "An adventuring party banked 6,400 gp from a dungeon treasure room. At the counting house's year-end audit, 2,000 gp of it was an illusion and went out like a candle. They had already borrowed 1,500 gp against the deposit and spent it on a cart and a mule. Do you bite every coin before you bank it?",
+      "content": "<p>An adventuring party's 6,400 gp deposit at Ledgerhall Counting House shrank to 4,400 gp on Tuesday, when the year-end audit found that 2,000 gp of it was Major Image gold. The Hollowcrown Company had carried the coins out of a treasure room on the Undermaw's sixth level in September, and in October they borrowed 1,500 gp against the full balance.</p>\n\n<p>On the Loaf Index, at roughly 5 copper a loaf, the missing gold is 40,000 loaves. The loan is another 30,000. (I have checked this four times. The second time I had to sit on the floor.)</p>\n\n<p>Ledgerhall holds its audit each November, because the skeleton clerks on the third floor do not keep a calendar and nobody has asked them to. A clerk walks the vault and casts dispel magic on every shelf. Most years this finds a mimic. This year, one sack on shelf 31 made a small sound like a candle being blown out, and the shelf was empty.</p>\n\n<p>A Major Image cast at high enough power lasts until someone dispels it. Whoever stocks that treasure room knows this. The coins looked right, clinked right, and smelled faintly of dungeon. They also weighed nothing, which is where I get cross. Two thousand gold pieces weigh forty pounds. I looked it up. The party's porter, a Fish Street lad named Tobin, says he carried the heavy sack the whole way up. Their fighter, Ottilie Marsh, carried the other one and told me she assumed she was simply very strong.</p>\n\n<p>\"We did think about weighing it,\" said the party's wizard, Fenna Drollwick. \"Then we thought about lunch.\"</p>\n\n<p>The loan is the hard part. Ledgerhall lent 1,500 gp against a balance that has now lost a third of itself, and the Hollowcrown Company spent the money on a cart, a mule, and a deposit on rooms over a cooper's. The counting house wants 2,000 gp of fresh collateral by the end of the month or it will call the loan. The party has the mule. Malgrim Dusk-Vael, Chief Executive Lich of Vaultmere Holdings, which bought Ledgerhall in <a href=\"/a/lich-merger-400-skeleton-layoffs-desks\">the skeleton-clerk merger</a>, said in a statement that \"gold which cannot survive an audit was never on the books in any meaningful sense.\" Dusk-Vael added that the shelf has been relet.</p>\n\n<p>This is the economics of it, and I am sorry. A lender values your collateral at what it is worth on the day it checks, and the day it checks is usually the worst day for you. Last week Sterling Vanmoor called dungeon gold \"the safest asset under the realm.\" Sterling has never been on the sixth level.</p>\n\n<p>My aunt Marigold keeps her savings in a boot. She shook it at me this morning so I could hear it clink, and then she made me hold it. It was heavy. I have never been so relieved by a boot.</p>\n\n<p>What this means for your pantry: before you borrow against dungeon gold, put it on a scale. You can hire one for about a loaf a week.</p>\n\n<p><em>— B.T. (Loaf Index: see sidebar)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "Weigh the Hoard",
+          "text": "A local counting house suspects that some of the dungeon gold in its vault is illusion, and it wants the party to test every sack quietly before the depositors notice. Whoever planted the false coins in the dungeon is still stocking treasure rooms, and three more parties are due to bank their hauls this week."
+        },
+        "npc": {
+          "name": "Hettie Scalebright",
+          "role": "Vault Weigher, Second Shelf",
+          "want": "She wants every sack in the vault weighed before the depositors start asking where their gold went.",
+          "secret": "She has known about the light sacks for a month and has been quietly swapping her own real coins in to cover a friend's deposit.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Sixth-Level Strongroom",
+          "text": "A treasure room deep in a dungeon that refills with gleaming coin every few weeks. Every coin looks perfect, and none of it leaves a mark in the dust when it's moved.",
+          "tavern": false
+        },
+        "rumor": "My cousin says half the gold in the counting house vault is made of nothing, and the skeletons upstairs knew all along."
+      },
+      "fiction": true
+    },
+    {
+      "id": "piercers-mine-guild-sends-hats-not-helmets",
+      "title": "Piercers Fall in Mine; Guild Sends Party Hats, Not Helmets",
+      "category": "Labor",
+      "author": "Brakka Stonesweat",
+      "date": "2026-11-19",
+      "excerpt": "Piercers kept dropping on an adventuring party mining the Coldseam for a share of the ore. They asked the guild for helmets. The guild sent hats.",
+      "social": "Four adventurers took a winter mining job for a share of the ore. Then the piercers started falling from the ceiling. They asked the guild for helmets. The guild sent four knitted hats with pompoms and a note promising a warm work environment. What would your character do with the hat?",
+      "content": "<p>The piercers fell, the adventuring party asked for helmets, and the guild sent hats.</p>\n\n<p>An adventuring party between jobs signed on to work the Coldseam silver mine this winter \"for a share of the ore.\" On their third shift, piercers started dropping from the ceiling of the east gallery. The party wrote to the Honorable Company of Ore-Getters, which runs the mine, and asked for four iron helmets. On Tuesday a crate arrived. Inside were four knitted wool hats with pompoms.</p>\n\n<p>\"I opened the crate and thought, that's a lot of padding for four helmets,\" said Marta Thrask, the party's fighter and, for the season, its lead pick. \"Then I kept digging. It was all padding.\"</p>\n\n<p>For anyone who hasn't worked a deep seam: a piercer looks like a stalactite until it lets go. It drops point first on whatever walks under it. The east gallery has a lot of stalactites. Nobody can say how many of them are rock.</p>\n\n<p>The crate came with a scroll from Provost Ambrel Quillstone, the Company's head of shaft welfare. It said the Company \"has responded to concerns with a seasonally appropriate headwear solution\" and \"remains committed to a warm and positive work environment.\" Let me translate. That means they sent hats. A warm work environment means your ears are warm while something heavy lands on them.</p>\n\n<p>The hats are the Company's own colors, blue and gold. Each one has the Ore-Getters' crest stitched on the front, which Thrask points out makes a nice target.</p>\n\n<p>\"The pompom took the first hit,\" said Orlo Fennimere, the party's cleric. \"The pompom did not survive. I've cast cure wounds eleven times since Monday and I came here to mine.\" He has started charging the rest of the party a copper a spell. I've told him to put that in writing and keep a copy.</p>\n\n<p>About that share of the ore. The contract promises the party one share for every forty the Company takes. After four shifts that comes to a lump of silver the size of a dried pea. Pip Loamsby, the party's rogue, has been carrying it in her cheek \"so nobody can audit it.\"</p>\n\n<p>Provost Quillstone came down Wednesday to inspect. He wore a hat. Then he looked up, saw the gallery ceiling, and went back up the shaft in what Thrask timed at under a minute. He sent a second note that afternoon recommending \"mindful walking.\"</p>\n\n<p>Over in the money pages, Sterling Vanmoor wrote that the Ore-Getters' hats are \"a lean answer to a cost question.\" I've worked under a lot of ceilings, Sterling. Not one of them cared what I had on my head.</p>\n\n<p>The party has stopped work in the east gallery until four helmets arrive. They also want hazard pay. And they want the pea weighed in front of witnesses. Ludo Sarne, the party's wizard, keeps a mage hand floating overhead in the meantime. It holds an umbrella.</p>\n\n<p>Every miner I ever worked with knew this by their second week: if the ceiling can kill you, you get a helmet. Thrask says she'll keep the hat, though. \"It's warm,\" she said. \"I'll wear it to the bar when I'm paid. If I'm paid.\"</p>\n\n<p><em>Solidarity. And stretch your back. — Brakka</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Gallery of Falling Stone",
+          "text": "A mining company hires the party as winter labor for a share of the ore, and on the first shift something drops from the ceiling. The foreman will double their share if they clear the east gallery, but the company's supply clerk refuses to sign out any helmets."
+        },
+        "npc": {
+          "name": "Hester Gauldry",
+          "role": "Company Supply Clerk",
+          "want": "She wants to close the winter ledger under budget so she keeps her post.",
+          "secret": "The helmets are sitting in her storeroom; she sold the order slip back to the smith and pocketed the difference.",
+          "race": "dwarf",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The East Gallery",
+          "text": "A long silver-bearing tunnel with a ceiling bristling with stalactites. Use darkmantle stats for whatever drops from it, and note that the rock ones don't twitch when a torch passes.",
+          "tavern": false
+        },
+        "rumor": "They say the mining company ordered a hundred helmets last spring, and every one of them walked out the back door of the storeroom."
+      },
+      "fiction": true
+    },
+    {
+      "id": "salamander-oven-subscription-lapses-40-pies",
+      "title": "Salamander Oven Subscription Lapses Mid-Bake; 40 Pies Half-Done",
+      "category": "Technology",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-11-19",
+      "excerpt": "The Grand Feast's salamander oven stopped heating at noon when its heat subscription lapsed. Forty test pies came out half-baked. Still a great oven.",
+      "social": "The Grand Feast's rented salamander oven stopped heating at noon sharp, in the middle of the test bake, because the heat subscription didn't renew. The feast purse was one gold short. All forty pies came out golden on top and raw underneath. Would you eat a half-baked pie for the Feastwarden?",
+      "content": "<p>Okay. OKAY. The Grand Feast committee ran its first test bake this morning, and at noon sharp the salamander oven's heat subscription failed to renew, mid-bake, with 40 pies inside. Every pie came out golden on top and raw on the bottom. Quick backstory for anyone new: <a href=\"/a/halfling-feastwarden-feast-2000-brindlemoor\">Feastwarden Odo Plumbrook promised to feed 2,000 guests</a> on the Town Green on the 26th, on a budget of 900 gp, and <a href=\"/a/salamander-oven-30-gp-heat-subscription-feast\">rented this oven from Cinderlatch Works</a> with the heat billed separately.</p>\n\n<p>I was there with my slate. For the first hour it was glorious. The committee had sprung for the Blaze tier at 12 gp a day, the salamander was coiled on its firebrick glowing a healthy orange, and the mana throughput was so high the mica window fogged. Forty pies went in: apple, mutton, and one turnip, because the treaty requires a turnip.</p>\n\n<p>At noon the Blaze tier tried to renew itself out of the feast purse. The purse had 11 gp in it. A little brass bell on the oven went ding, a glowing firmware glyph came up on the door reading YOUR HEAT HAS PAUSED, and the salamander dropped to Ember, the free tier, right there in front of us. It uncoiled, turned to face the back wall, and went from a roar to the warmth of a sleeping cat.</p>\n\n<p>The runic latency on that downgrade? Instant. Honestly impressive. The renewal button, meanwhile, needed a wax seal, a witness, and a twenty-minute wait for a courier from Cinderlatch.</p>\n\n<p>By then the pie tops were done and the bottoms were batter. Marigold Tunney, a volunteer baker who had been up since four rolling crust, cut one open. \"That's a lid,\" she said. \"Somebody baked me forty lids.\"</p>\n\n<p>Dobb Wrenfield, Cinderlatch's spokesman, arrived with the courier and a pamphlet. \"The oven never stopped,\" he told me. \"It stepped down to a gentler experience. Ember is our most popular tier.\" I asked whether anyone pays for Ember. He said that is why it's popular.</p>\n\n<p>Plumbrook climbed onto a flour barrel and did the math out loud. \"Forty half pies,\" he said, \"is twenty whole pies. We are ahead of where we were yesterday.\" Nobody had the heart to point out that yesterday there was also no raw dough on the floor.</p>\n\n<p>Fire Marshal Tamsin Coalhurst inspected the salamander and ruled it \"cold enough.\" Reeve Maudrey Fennick of Brindlemoor asked how the renewal got paid. Plumbrook had found the missing gold piece in his other coat, which leaves the feast purse at 0 gp and a coupon. \"We are aware of the pies,\" the Reeve said.</p>\n\n<p>My familiar Byte, a pseudodragon who now speaks only in ad copy, hopped onto the oven and announced, \"Don't let your pie go half-baked. Upgrade today.\" Then he ate the turnip one. Brother Tumbleberry has already sent the committee a note saying his grandmother baked pies in a hole in the ground. I've seen the Town Green. It already has holes. Duchess dug them.</p>\n\n<p>Rating: four out of five beholder eyes. The salamander oven is the finest piece of kitchen hardware I've ever touched, for exactly as long as you can pay it.</p>\n\n<p>Damage Report: Pies baked: 20, technically, in 40 halves. Feast purse: 0 gp and a coupon. Days to Feast Day: 7. Eyebrows: fine. Byte: full.</p>\n\n<p><em>— Nyx (they/them). Damage Report below.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Oven Gone Cold",
+          "text": "A town bakery's rented salamander oven has gone cold the night before a wedding feast, and the rental house claims the bill went unpaid, though the baker swears she paid in full. She'll pay the party to find out where her coin went before 300 guests sit down to raw bread."
+        },
+        "npc": {
+          "name": "Corwin Hatch",
+          "role": "Heat Renewals Clerk",
+          "want": "He wants every lapsed oven renewed by sundown so he keeps his quota bonus.",
+          "secret": "He has been marking paid accounts as lapsed and pocketing the second payment, and the salamanders know it.",
+          "race": "gnome",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Renewal Window",
+          "text": "A single brass counter in a hot back room where customers queue to restart their ovens. The salamanders kept in the cages behind it watch the ledger closely and hiss whenever a false entry is written (use the salamander's stats if they get loose).",
+          "tavern": false
+        },
+        "rumor": "My cousin says if you whisper the password to a rented salamander it'll bake on the free tier, but he also says the moon is a pie."
+      },
+      "fiction": true
+    },
+    {
+      "id": "bard-suggestion-spell-900-voters-goat-rally",
+      "title": "Bard's Suggestion Spell Makes 900 Voters Agree With a Goat",
+      "category": "Elections",
+      "author": "Ottoline Vex",
+      "date": "2026-11-19",
+      "excerpt": "A bard cast Suggestion to warm up a Brindlemoor rally. Then 900 voters agreed with both candidates, a heckler and a goat. The Board would like a word.",
+      "social": "A bard was paid 6 silver to warm up a Brindlemoor election rally. She cast Suggestion on the whole hall instead. 900 voters then agreed with both candidates, a heckler, and a goat named Pudding. The Board of Elections has opened an inquiry. Your bard has a crowd and one spell slot: what do you tell them to agree with?",
+      "content": "<p>A bard hired to warm up the crowd at a Burgess rally in Brindlemoor cast the Suggestion spell on Tuesday night, and 900 voters spent the next eight hours agreeing with everything they heard. That included both candidates, a heckler, and a goat. The Brindlemoor Board of Elections opened an inquiry Wednesday morning.</p>\n\n<p>The bard, Jessamy Pipwell of the Warm Welcome Company, was paid 6 silver by the campaign of Ada Plumtree, who is standing for the Tanner's Row seat. Her instructions, according to a contract I have read and the Board has now read twice, were \"get them in a good mood.\" Pipwell took the stage at the Corn Exchange at seven, played two verses of a drinking song, and said \"agree with everything you hear tonight\" with a flourish of her lute.</p>\n\n<p>I will note for the record, as the Board did, that the Suggestion spell is written for one creature. Pipwell says she aimed it at \"the crowd, generally.\" Her party's wizard, a gnome who gave his name as Fosk and nothing else, said the acoustics in the Corn Exchange are \"very good, unfortunately.\"</p>\n\n<p>The lady from Tanner's Row spoke first. Plumtree promised to fix the gutters on Tanner's Row, and 900 people agreed. Her opponent, the gentleman from the Dyers' Guild, Hesketh Wardle, then said the gutters were fine and Plumtree was lying about them. All 900 agreed with that too. By my tally the evening produced Promises Made: 31, Promises Agreed With: 27,900, Promises Kept: none. The gutters are as they were.</p>\n\n<p>At about half past eight a tanner at the back shouted, \"You're both frauds and this hall smells of glue.\" The crowd agreed with him warmly and went on agreeing with the candidates. Then a goat named Pudding, brought by a dairywoman who could not find a sitter, said \"baa.\" The hall agreed with the goat. Several voters have since told the Board they still agree with the goat, though none can say about what.</p>\n\n<p>Clerk of Polls Ivo Thatchley, who chairs the Board, said the inquiry will decide whether a rally held under an enchantment counts as campaigning, entertainment, or one assault on 900 people. \"Campaign spending rules allow bunting, ale, and one band,\" he said. \"A bard is a band. That is the problem.\" A courtier who asked not to be named because they were not authorized to be awake told me Wardle's campaign wants the whole rally struck from the record, while Plumtree's wants credit for the agreeing.</p>\n\n<p>This is the Council's second try at an orderly by-election this month, the first having ended when <a href=\"/a/mimic-ballot-box-eats-31-votes-brindlemoor\">a mimic ate 31 ballots</a>. It is also the second bard in a month to talk her way into civic life; the last one <a href=\"/a/bard-persuasion-gate-guard-appointed-tollwick\">became Tollwick's gate guard</a>. Pipwell, reached at the Sleeping Mule, said she regrets nothing and now charges 9 silver.</p>\n\n<p>Pudding is not on the ballot. Pudding is polling at forty percent.</p>\n\n<p><em>— O.V., from the gallery</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Agreeable Electorate",
+          "text": "Three nights before a mayoral vote, an entire market street agrees with whoever spoke to them last, and the enchantment is renewed every evening at dusk. The town's Clerk of Polls will pay 50 gp to find the caster before the polls open, while both candidates quietly hire criers to reach the street first."
+        },
+        "npc": {
+          "name": "Marigold Askew",
+          "role": "Hired Rally Minstrel",
+          "want": "She wants to keep her winter bookings and stay out of the stocks.",
+          "secret": "Both candidates paid her, and she has been casting Suggestion for whichever one paid last that day.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Old Corn Exchange",
+          "text": "A domed grain hall used for rallies and dances. Its curved ceiling carries any spoken word to every seat, which is why a spell meant for one listener keeps reaching the whole room.",
+          "tavern": false
+        },
+        "rumor": "I heard they've asked the goat to stand for the seat, and frankly she'd get my vote."
+      },
+      "fiction": true
     }
   ]
 }
