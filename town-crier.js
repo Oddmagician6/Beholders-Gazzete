@@ -44,10 +44,9 @@ async function loadCrierPool() {
     let pool = all.filter(a => crierDate(a.date) >= cutoff);
     if (pool.length < 4) pool = all.slice(0, CRIER_FALLBACK);
 
-    return {
-        pool: pool.map(a => ({ id: a.id, title: crierStripTags(a.title), category: a.category || 'News', date: a.date })),
-        edition: all[0].date
-    };
+    const slim = a => ({ id: a.id, title: crierStripTags(a.title), category: a.category || 'News', date: a.date });
+    // all: every in-world article, for finding a headline a link pins after it leaves the recent pool.
+    return { pool: pool.map(slim), all: all.map(slim), edition: all[0].date };
 }
 
 // The opener follows the article id, so a shared link (?crier=<id>) shouts the same line.

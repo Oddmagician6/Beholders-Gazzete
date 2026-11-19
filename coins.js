@@ -41,7 +41,8 @@ function splitLink(coins, extraGp, ways) {
   const q = new URLSearchParams({ tab: 'split' });
   Object.keys(COIN_CP).forEach(k => { if (coins[k] > 0) q.set(k, Math.floor(coins[k])); });
   if (extraGp > 0) q.set('other', Math.round(extraGp * 100) / 100);
-  if (ways && partySize(ways) !== SPLIT_DEFAULT_WAYS) q.set('n', partySize(ways));
+  // Always written when given: without n= the splitter takes the saved party's size, not this one.
+  if (ways) q.set('n', partySize(ways));
   const moved = typeof TAB_PAGES !== 'undefined' && TAB_PAGES && TAB_PAGES.moves && TAB_PAGES.moves['toolbox?tab=split'];
   if (moved) q.delete('tab');
   return (moved || 'toolbox') + '?' + q.toString();

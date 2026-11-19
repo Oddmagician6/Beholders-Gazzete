@@ -442,6 +442,8 @@ function clearSplit() {
 // ── URL ───────────────────────────────────────────────────
 // Names: ?for=<type>&seed=. Travel: ?tab=travel&climate=&season=&terrain=&pace=&hours=&ride=&miles=&day=&seed=
 function tabParams(tab) {
+    // A shared table still on screen keeps its link (t=) when the reader comes back to the tab.
+    if (tab === 'tables' && typeof tblShared !== 'undefined' && tblShared && tblShared.code) return urlFor(tab, { t: tblShared.code });
     if (TOOLBOX_STORED_TABS.includes(tab)) return urlFor(tab, {});
     if (tab === 'split') return splitParams();
     if (tab === 'enc') return encParams();

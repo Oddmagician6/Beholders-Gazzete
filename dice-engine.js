@@ -13,7 +13,8 @@
    ============================================ */
 
 const DICE_LIMITS = { dice: 100, sides: 1000, terms: 12, length: 80 };
-const DICE_HISTORY_KEY = 'gazette-dice-history';
+// Pathfinder pages keep their own history (ruleKey: gazette-dice-history-pf2e), like their other saves.
+const DICE_HISTORY_KEY = typeof ruleKey === 'function' ? ruleKey('gazette-dice-history') : 'gazette-dice-history';
 const DICE_HISTORY_MAX = 50;
 
 function diceRand() {

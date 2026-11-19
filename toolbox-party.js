@@ -14,12 +14,12 @@
 let party = [];
 
 // Number fields: their party.js limits.
-const PARTY_NUMS = { ac: [0, 40], hp: [1, 999], pp: [1, 40], init: [-10, PARTY_INIT_MAX] };
+const PARTY_NUMS = { ac: [0, PARTY_AC_MAX], hp: [1, 999], pp: [1, 40], init: [-10, PARTY_INIT_MAX] };
 
 function partyCardHtml(c, i) {
     const levels = Array.from({ length: 20 }, (_, l) => `<option value="${l + 1}"${l + 1 === c.level ? ' selected' : ''}>${l + 1}</option>`).join('');
     const num = (key, label, ph) => `<label>${label} <input type="number" class="pt-f" data-k="${key}" min="${PARTY_NUMS[key][0]}" max="${PARTY_NUMS[key][1]}" step="1" inputmode="numeric" placeholder="${ph}" value="${c[key] ?? ''}"></label>`;
-    return `<li class="pt-char" data-i="${i}">
+    return `<li class="pt-char" data-i="${i}" data-id="${c.id}">
         <div class="pt-tools">
             <button type="button" class="clk-mini" data-act="up" aria-label="Move ${esc(partyMemberName(c, i))} up"${i ? '' : ' disabled'}>▲</button>
             <button type="button" class="clk-mini" data-act="down" aria-label="Move ${esc(partyMemberName(c, i))} down"${i < party.length - 1 ? '' : ' disabled'}>▼</button>
@@ -75,8 +75,9 @@ function partySave() {
     if (!saveParty(party)) flash('party-status', "⚠️ This browser wouldn't save the party (storage full or blocked).");
 }
 
+// By id: another tab may have moved or removed characters while a card here was being typed in.
 function partyIndex(el) {
-    return Number(el.closest('.pt-char').dataset.i);
+    return party.findIndex(c => c.id === el.closest('.pt-char').dataset.id);
 }
 
 // Text: saved as typed. Numbers and the level: saved cleaned, and the box shows the clean value on change.
@@ -84,6 +85,7 @@ function onPartyField(e, done) {
     const f = e.target.closest('.pt-f');
     if (!f) return;
     const i = partyIndex(f);
+    if (i < 0) { renderPartyTab(); flash('party-status', '⚠️ That character was removed in another tab.'); return; }
     const c = cleanPartyMember({ ...party[i], [f.dataset.k]: f.value });
     party[i] = c;
     if (done && f.dataset.k in PARTY_NUMS) f.value = c[f.dataset.k] ?? '';
@@ -95,6 +97,7 @@ function onPartyClick(e) {
     const btn = e.target.closest('button[data-act]');
     if (!btn) return;
     const i = partyIndex(btn);
+    if (i < 0) { renderPartyTab(); return; }
     const c = party[i];
     const act = btn.dataset.act;
     if (act === 'remove') {
@@ -172,6 +175,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!list.contains(document.activeElement)) { renderPartyTab(); return; }
         renderPartySum();
         // Typing in a card: only the Play Sheet lines change.
-        list.querySelectorAll('.pt-char').forEach(li => { const c = party[Number(li.dataset.i)]; li.querySelector('.pt-live-box').innerHTML = c ? partyLiveHtml(c) : ''; });
+        list.querySelectorAll('.pt-char').forEach(li => { const c = party.find(m => m.id === li.dataset.id); li.querySelector('.pt-live-box').innerHTML = c ? partyLiveHtml(c) : ''; });
     });
 });

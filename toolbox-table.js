@@ -795,7 +795,8 @@ function setupInitiative() {
 // The Party tab's characters (party.js) join the fight, skipping any whose name is already in it.
 function addPartyToFight(list = loadParty()) {
     if (!list.length) { flash('init-status', 'No party is saved yet. Enter it on the 👥 Party tab.'); return; }
-    const here = new Set(fight.list.map(c => c.name.toLowerCase()));
+    // A stat-block monster called Goblin doesn't keep out a PC called Goblin (a PC typed in by hand still does).
+    const here = new Set(fight.list.filter(c => !c.monster).map(c => c.name.toLowerCase()));
     const todo = list.map((m, i) => ({ m, name: partyMemberName(m, i).slice(0, 36) })).filter(x => !here.has(x.name.toLowerCase()));
     const skipped = list.length - todo.length;
     if (!todo.length) { flash('init-status', '👥 The whole party is already in the fight.'); return; }

@@ -63,7 +63,7 @@ function renderClocks() {
     document.getElementById('clk-count').textContent = clocks.length;
     list.innerHTML = clocks.map((c, i) => {
         const full = c.filled >= c.size;
-        return `<li class="clk-card${full ? ' full' : ''}" data-i="${i}">
+        return `<li class="clk-card${full ? ' full' : ''}" data-i="${i}" data-id="${c.id}">
             <label class="sr-only" for="clk-name-${c.id}">Clock name</label>
             <input type="text" class="clk-name" id="clk-name-${c.id}" value="${esc(c.name)}" maxlength="60" placeholder="Unnamed clock" autocomplete="off">
             <div class="clk-face" title="Click a segment to fill up to it; click the last filled one to empty it">${clockSvg(c.size, c.filled)}</div>
@@ -106,7 +106,8 @@ function addClock(e) {
 function onClockClick(e) {
     const card = e.target.closest('.clk-card');
     if (!card) return;
-    const i = Number(card.dataset.i);
+    const i = clocks.findIndex(x => x.id === card.dataset.id);
+    if (i < 0) { renderClocks(); return; }
     const c = clocks[i];
     const seg = e.target.closest('.clk-seg');
     if (seg) {
@@ -149,14 +150,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const list = document.getElementById('clk-list');
     list.addEventListener('click', onClockClick);
     // Typing renames in place (no redraw, so the field keeps focus).
+    // By id: another tab may have moved or removed clocks while this one was being typed in.
+    const cardClock = el => clocks.find(c => c.id === el.closest('.clk-card').dataset.id) || null;
     list.addEventListener('input', e => {
         if (!e.target.classList.contains('clk-name')) return;
-        clocks[Number(e.target.closest('.clk-card').dataset.i)].name = e.target.value.slice(0, 60);
+        const c = cardClock(e.target);
+        if (!c) { renderClocks(); flash('clocks-status', '⚠️ That clock was removed in another tab.'); return; }
+        c.name = e.target.value.slice(0, 60);
         saveClocks();
     });
     list.addEventListener('change', e => {
         if (!e.target.classList.contains('clk-size')) return;
-        const c = clocks[Number(e.target.closest('.clk-card').dataset.i)];
+        const c = cardClock(e.target);
+        if (!c) { renderClocks(); return; }
         c.size = Number(e.target.value);
         c.filled = Math.min(c.filled, c.size);
         saveClocks();

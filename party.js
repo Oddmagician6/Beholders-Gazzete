@@ -24,6 +24,8 @@ const PARTY_CLASSES = PARTY_PF2E
     ? ['Alchemist', 'Barbarian', 'Bard', 'Champion', 'Cleric', 'Druid', 'Fighter', 'Investigator', 'Monk', 'Oracle', 'Ranger', 'Rogue', 'Sorcerer', 'Swashbuckler', 'Witch', 'Wizard']
     : ['Barbarian', 'Bard', 'Cleric', 'Druid', 'Fighter', 'Monk', 'Paladin', 'Ranger', 'Rogue', 'Sorcerer', 'Warlock', 'Wizard'];
 const PARTY_INIT_MAX = PARTY_PF2E ? 40 : 20;
+// Pathfinder AC runs past 40 at high levels (a level-20 fighter in +3 full plate has 45).
+const PARTY_AC_MAX = PARTY_PF2E ? 60 : 40;
 
 function partyInt(v, lo, hi, def) {
     if (v === '' || v === null || v === undefined) return def;
@@ -44,7 +46,7 @@ function cleanPartyMember(c) {
         player: partyText(c.player),
         cls: partyText(c.cls),
         level: partyInt(c.level, 1, 20, 1),
-        ac: partyInt(c.ac, 0, 40, null),
+        ac: partyInt(c.ac, 0, PARTY_AC_MAX, null),
         hp: partyInt(c.hp, 1, 999, null),
         pp: partyInt(c.pp, 1, 40, null),
         init: partyInt(c.init, -10, PARTY_INIT_MAX, 0),

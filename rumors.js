@@ -26,7 +26,9 @@ function truthLabel(truth) {
 async function loadRumors() {
     try {
         const response = await fetch('rumors.json');
-        allRumors = await response.json();
+        const data = await response.json();
+        if (!data || !Array.isArray(data.rumors)) throw new Error('rumors.json has no rumors list');
+        allRumors = data;
         baseCount = allRumors.rumors.length;
         console.log(`Loaded ${allRumors.rumors.length} rumors`);
     } catch (error) {
@@ -38,13 +40,14 @@ async function loadRumors() {
 
 // Generate a random rumor
 function generateRumor() {
+    // The Realms deck is built in (realms.js), so it deals even when rumors.json didn't load.
+    if (realmsOn('rumor-world')) { generateRealmsRumor(); return; }
+
     if (!allRumors.rumors.length) {
-        document.getElementById('rumor-display').innerHTML = 
+        document.getElementById('rumor-display').innerHTML =
             '<p style="color: #f44336;">Rumors not loaded yet. Please wait...</p>';
         return;
     }
-
-    if (realmsOn('rumor-world')) { generateRealmsRumor(); return; }
 
     // Deal from the category's deck (rumor-deck.js): no repeats until it runs out
     const deal = dealRumor(allRumors.rumors, baseCount, currentCategory, currentIdx);
@@ -138,6 +141,7 @@ function applyUrl() {
         document.getElementById('rumor-world').value = 'realms';
         displayRumor(REALMS_RUMORS[realmsIdx]);
         document.getElementById('rumor-link').hidden = false;
+        updateDeckCount();
         animateDisplay();
         return true;
     }
@@ -152,10 +156,25 @@ function applyUrl() {
         idx = reader;
     }
     currentIdx = idx;
+    // A Gazette rumor: the World picker (and its deck) goes back to the Gazette's own.
+    document.getElementById('rumor-world').value = '';
     displayRumor(allRumors.rumors[idx]);
     document.getElementById('rumor-link').hidden = !shareable;
+    updateDeckCount();
     animateDisplay();
     return true;
+}
+
+// Back to an address with no rumor in it: the box goes back to its first look.
+let rumorPlaceholder = '';
+function showNoRumor() {
+    currentIdx = -1;
+    realmsIdx = -1;
+    document.getElementById('rumor-display').innerHTML = rumorPlaceholder;
+    document.getElementById('rumor-link').hidden = true;
+    document.getElementById('rumor-next').hidden = true;
+    updateTruthMeter(null);
+    document.getElementById('truth-fill').style.width = '';
 }
 
 function copyLink() {
@@ -341,6 +360,7 @@ function addRumor() {
 
     // Display it (reader-added rumors stay out of the URL)
     currentIdx = allRumors.rumors.length - 1;
+    realmsIdx = -1;   // or syncUrl would keep the Realms rumor's link
     displayRumor(newRumor);
     syncUrl(true);
     addToRecent(newRumor);
@@ -387,6 +407,7 @@ async function setupCrier() {
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('year').textContent = new Date().getFullYear();
+    rumorPlaceholder = document.getElementById('rumor-display').innerHTML;
 
     setupCrier();
     await loadRumors();
@@ -400,5 +421,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     updateDeckCount();
     applyUrl();
     // Back/Forward step through earlier draws.
-    window.addEventListener('popstate', applyUrl);
+    window.addEventListener('popstate', () => { if (!applyUrl()) showNoRumor(); });
 });

@@ -42,11 +42,12 @@ function rollQuestFor(seed = newSeed(), push = true) {
 }
 
 function applyQuestUrl(p) {
+    const seed = parseSeed(p.get('seed'));
     Object.entries(QUEST_FIELDS).forEach(([key, id]) => {
         const el = document.getElementById(id);
-        if (!setFieldValue(el, p.get(key))) el.value = defaultValue(el);
+        // A visit with no quest in the link keeps the World remembered from last time (realmsPicker).
+        if (!setFieldValue(el, p.get(key)) && !(key === 'world' && !seed && !p.has('world'))) el.value = defaultValue(el);
     });
-    const seed = parseSeed(p.get('seed'));
     if (!seed && !p.has('lvl') && !p.has('n')) questUseParty();
     if (!seed) return false;
     rollQuestFor(seed, null);

@@ -190,6 +190,9 @@ function renderTables() {
 
 // ── Actions ───────────────────────────────────────────────
 function selectTable(id) {
+    // A Delete armed for the table that was on screen doesn't carry over to this one.
+    const del = document.getElementById('tbl-delete');
+    if (id !== tblCur && del.dataset.armed) { clearTimeout(del._t); delete del.dataset.armed; del.textContent = '🗑️ Delete'; }
     tblCur = id;
     renderTableList();
     renderTableEditor();
@@ -277,7 +280,7 @@ async function applyTablesUrl(p) {
     try {
         const list = await tablesFromShareCode(code);
         if (seq !== tblShareSeq) return;
-        tblShared = { list, result: null, error: '' };
+        tblShared = { list, result: null, error: '', code };
     } catch (e) {
         if (seq !== tblShareSeq) return;
         tblShared = { list: [], result: null, error: e.message };
@@ -300,7 +303,7 @@ function renderSharedTable() {
     const r = tblShared.result;
     box.innerHTML = `
         <h3 class="tbl-shared-h">📨 A shared table: ${esc(tableLabel(t))}</h3>
-        <p class="tbl-shared-sub">${parsed ? `${parsed.entries.length} entries on a d${parsed.die}` : `⚠️ ${esc(err)}`}${subs.length ? `, and it rolls ${subs.map(s => esc(tableLabel(s))).join(', ')}` : ''}. Roll it here, or save ${subs.length ? 'them' : 'it'} to your tables.</p>
+        <p class="tbl-shared-sub">${parsed ? `${parsed.entries.length} entr${parsed.entries.length === 1 ? 'y' : 'ies'} on a d${parsed.die}` : `⚠️ ${esc(err)}`}${subs.length ? `, and it rolls ${subs.map(s => esc(tableLabel(s))).join(', ')}` : ''}. Roll it here, or save ${subs.length ? 'them' : 'it'} to your tables.</p>
         <div class="tool-toolbar">
             <button type="button" class="btn btn-gold" data-shared="roll"${parsed ? '' : ' disabled'}>🎲 Roll It</button>
             <button type="button" class="btn" data-shared="save">💾 Save to My Tables</button>

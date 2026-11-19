@@ -64,9 +64,10 @@ function rollTavernFor(seed = newSeed(), push = true) {
 function applyTavUrl(p) {
     const q = document.getElementById('tv-quality');
     if (!setFieldValue(q, p.get('q'))) q.value = defaultValue(q);
-    const world = document.getElementById('tv-world');
-    if (!setFieldValue(world, p.get('world'))) world.value = defaultValue(world);
     const seed = parseSeed(p.get('seed'));
+    const world = document.getElementById('tv-world');
+    // A visit with no tavern in the link keeps the World remembered from last time (realmsPicker).
+    if (!setFieldValue(world, p.get('world')) && (seed || p.has('world'))) world.value = defaultValue(world);
     if (!seed) return false;
     tavern.seed = seed;
     tavern.name = npcGiven(p.get('name'));

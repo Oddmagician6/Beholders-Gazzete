@@ -63,8 +63,10 @@ function loadKit() {
 // index/id, so the URL can rebuild the whole kit. Pass a seed/id to replay a roll.
 const SEEDED = ['npc', 'loot', 'shop'];
 
+// A pinned headline (a link, a saved kit) is found among every article, so an older link keeps
+// its headline after it leaves the recent pool; fresh draws come from the recent pool.
 function rollCrier(id) {
-    const pick = (id && crierById(crier.pool, id)) || pickCrier(crier.pool, kit.crier && kit.crier.id);
+    const pick = (id && crierById(crier.all || crier.pool, id)) || pickCrier(crier.pool, kit.crier && kit.crier.id);
     if (pick) kit.crier = { ...pick, edition: crier.edition };
 }
 
@@ -96,7 +98,11 @@ function rollKitShop(seed = newSeed()) {
 
 const ROLLERS = { crier: rollCrier, rumor: rollRumor, npc: rollKitNPC, loot: rollKitLoot, shop: rollKitShop };
 
+// Rerolls wait until the headlines and rumors have loaded and a shared link has been read.
+let kitReady = false;
+
 function reroll(part) {
+    if (!kitReady) return;
     ROLLERS[part]();
     render(part);
     saveKit();
@@ -105,6 +111,7 @@ function reroll(part) {
 
 // Roll Everything skips locked panels.
 function rollAll() {
+    if (!kitReady) return;
     const parts = Object.keys(ROLLERS).filter(part => !kit.locks.includes(part));
     if (!parts.length) { setStatus('Every panel is locked. Unlock one to reroll it.'); return; }
     parts.forEach(part => ROLLERS[part]());
@@ -396,6 +403,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const panelOf = { 'rumor-category': 'rumor', 'npc-race': 'npc', 'npc-profession': 'npc', 'loot-kind': 'loot', 'loot-cr': 'loot', 'shop-type': 'shop', 'shop-wealth': 'shop' };
     OPTION_IDS.forEach(id => document.getElementById(id).addEventListener('change', () => reroll(panelOf[id])));
 
+    // The address as the page opened: a reroll clicked while the files load rewrites it.
+    const opened = urlParams();
     const [rumors, headlines] = await Promise.allSettled([
         fetch('rumors.json').then(r => r.json()),
         loadCrierPool()
@@ -413,7 +422,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (kit.rumor && rumorPool[kit.rumorIdx]) kit.rumor = rumorPool[kit.rumorIdx];
 
     // A shared link wins over the saved kit.
-    if (!applyUrl(urlParams())) {
+    const fromLink = applyUrl(opened);
+    if (!fromLink) {
         // First visit (or nothing saved): roll a fresh kit.
         if (!kit.npc) rollKitNPC();
         if (!kit.loot) rollKitLoot();
@@ -426,8 +436,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
     Object.keys(ROLLERS).forEach(render);
-    saveKit();
-    syncUrl(false);
+    // A headline or rumor the link pins but that didn't load (a failed fetch) stays in the address
+    // and out of the saved kit, so a refresh once the files load shows it.
+    const lost = fromLink && ((opened.has('crier') && !kit.crier) || (opened.has('rumor') && !kit.rumor));
+    if (lost) {
+        const p = kitParams();
+        if (opened.has('crier') && !kit.crier) p.crier = opened.get('crier');
+        if (opened.has('rumor') && !kit.rumor) p.rumor = opened.get('rumor');
+        setUrlParams(p, false);
+    } else {
+        saveKit();
+        syncUrl(false);
+    }
+    kitReady = true;
 
     // Back/Forward step through rerolls.
     window.addEventListener('popstate', () => {
