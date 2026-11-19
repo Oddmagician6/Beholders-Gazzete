@@ -9,6 +9,12 @@
 
 const RUMOR_DECK_KEY = ruleKey('gazette-rumor-deck');
 
+// A rumor this page can deal: Pathfinder pages leave out the ones about D&D's own creatures and classes
+// ("dnd": true in rumors.json: beholders, mind flayers, a paladin). Their indexes stay, so links keep working.
+function rumorFits(r) {
+    return !!r && !(r.dnd && typeof ruleSystemId === 'function' && ruleSystemId() === 'pf2e');
+}
+
 function loadRumorDecks(baseCount) {
     try {
         const saved = JSON.parse(localStorage.getItem(RUMOR_DECK_KEY));
@@ -23,7 +29,7 @@ function saveRumorDecks(state) {
 
 // Every index in the category, in rumors order.
 function rumorCategoryPool(rumors, category) {
-    return rumors.map((r, i) => i).filter(i => category === 'all' || rumors[i].category === category);
+    return rumors.map((r, i) => i).filter(i => rumorFits(rumors[i]) && (category === 'all' || rumors[i].category === category));
 }
 
 function shuffleRumorIndexes(list) {
@@ -38,7 +44,7 @@ function shuffleRumorIndexes(list) {
 // The deck's remaining indexes, dropping any that no longer fit the category
 // (reader-added rumors live only until a refresh).
 function rumorDeckLeft(state, rumors, category) {
-    const left = (state.decks[category] || []).filter(i => rumors[i] && (category === 'all' || rumors[i].category === category));
+    const left = (state.decks[category] || []).filter(i => rumorFits(rumors[i]) && (category === 'all' || rumors[i].category === category));
     state.decks[category] = left;
     return left;
 }

@@ -331,12 +331,19 @@
           (rest.length > shown ? `<div class="mv-more"><button class="btn btn-gold" id="mv-more">📜 Show ${Math.min(PAGE, rest.length - shown)} more</button></div>` : '');
     }
 
-    function pick(t) {
-        topic = desk.categories.includes(t) ? t : 'all';
+    // A topic with stories (an empty one has no chip, and its empty list read as "no stories yet": B402)
+    const hasTopic = t => stories.some(a => a.category === t);
+
+    // Each pick is a Back step (B396)
+    function pick(t, push = true) {
+        topic = hasTopic(t) ? t : 'all';
         shown = PAGE;
         renderChips(); render();
-        history.replaceState(null, '', location.pathname + (topic === 'all' ? '' : '?topic=' + encodeURIComponent(topic)));
+        const url = location.pathname + (topic === 'all' ? '' : '?topic=' + encodeURIComponent(topic));
+        if (url === location.pathname + location.search) return;
+        if (push) history.pushState(null, '', url); else history.replaceState(null, '', url);
     }
+    window.addEventListener('popstate', () => { if (desk && stories.length) pick(new URLSearchParams(location.search).get('topic'), false); });
 
     document.getElementById('mv-chips').addEventListener('click', e => {
         const b = e.target.closest('.chip'); if (b) pick(b.dataset.topic);
@@ -360,8 +367,7 @@
         stories = (data.articles || []).map((a, i) => ({ ...a, i }))
             .filter(a => a.real)
             .sort((a, b) => b.date.localeCompare(a.date) || b.i - a.i);
-        topic = desk.categories.includes(params.get('topic')) ? params.get('topic') : 'all';
-        renderChips(); render();
+        pick(params.get('topic'), false);
     }).catch(() => { /* keep the pre-rendered stories */ });
     </script>
   <script src="nav.js"></script>

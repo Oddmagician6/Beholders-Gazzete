@@ -112,7 +112,8 @@ async function renderDaily() {
     try {
         const [rumors] = await Promise.all([
             fetch('rumors.json').then(r => r.json()).then(d => d.rumors || []).catch(() => []),
-            DAILY_SCRIPTS.reduce((p, src) => p.then(() => loadScript(src)), Promise.resolve())
+            // A script that fails costs only the parts that need it (tryPart), not the whole package (B400)
+            DAILY_SCRIPTS.reduce((p, src) => p.then(() => loadScript(src).catch(e => console.warn('Daily package:', src, e))), Promise.resolve())
         ]);
         const parts = rollDaily(dailyDate(), rumors);
         if (!parts.length) return;

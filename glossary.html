@@ -271,7 +271,20 @@
         ? list.map(a => `<li><a href="a/${encodeURIComponent(a.id)}">${esc(a.title)}</a></li>`).join('')
         : '<li class="empty">No dispatches filed yet.</li>';
 
-    let realm = [], activeType = 'all';
+    // A type's label: own keys only (a type named "constructor" printed native code: B405)
+    const typeLabel = t => Object.hasOwn(TYPE_LABELS, t) ? TYPE_LABELS[t] : t;
+    let realm = [], activeType = 'all', loaded = false;
+    const start = new URLSearchParams(location.search);
+    document.getElementById('realm-search').value = start.get('q') || '';
+
+    // The search and type pick live in the address, so a reload or a shared link keeps them (B403)
+    function syncUrl() {
+        const p = new URLSearchParams();
+        const q = document.getElementById('realm-search').value.trim();
+        if (q) p.set('q', q);
+        if (activeType !== 'all') p.set('type', activeType);
+        history.replaceState(null, '', location.pathname + (p.toString() ? '?' + p : '') + location.hash);
+    }
 
     function renderWriters(g) {
         document.getElementById('writer-grid').innerHTML = g.writers.map(w => `
@@ -309,7 +322,7 @@
     function renderChips() {
         const types = [...new Set(realm.map(e => e.type))];
         document.getElementById('realm-chips').innerHTML =
-            ['all', ...types].map(t => `<button class="chip ${t === activeType ? 'active' : ''}" data-type="${esc(t)}">${t === 'all' ? 'All' : esc(TYPE_LABELS[t] || t)}</button>`).join('');
+            ['all', ...types].map(t => `<button class="chip ${t === activeType ? 'active' : ''}" data-type="${esc(t)}">${t === 'all' ? 'All' : esc(typeLabel(t))}</button>`).join('');
     }
 
     function renderRealm() {
@@ -322,7 +335,7 @@
           <div class="realm-card">
             <div class="realm-top">
               <span class="realm-name">${esc(e.name)}</span>
-              <span class="realm-type">${esc(TYPE_LABELS[e.type] || e.type)}</span>
+              <span class="realm-type">${esc(typeLabel(e.type))}</span>
             </div>
             ${e.blurb ? `<p class="realm-blurb">${esc(e.blurb)}</p>` : ''}
             <div class="realm-count">Mentioned in ${e.appearances} ${e.appearances === 1 ? 'dispatch' : 'dispatches'}</div>
@@ -332,15 +345,22 @@
 
     document.getElementById('realm-chips').addEventListener('click', e => {
         const b = e.target.closest('.chip'); if (!b) return;
-        activeType = b.dataset.type; renderChips(); renderRealm();
+        activeType = b.dataset.type; renderChips(); renderRealm(); syncUrl();
     });
-    document.getElementById('realm-search').addEventListener('input', renderRealm);
+    document.getElementById('realm-search').addEventListener('input', () => { if (!loaded) return; renderRealm(); syncUrl(); });
 
     fetch('glossary.json?t=' + Date.now())
         .then(r => r.json())
-        .then(g => { renderWriters(g); realm = g.realm || []; renderChips(); renderRealm(); })
+        .then(g => {
+            renderWriters(g); realm = g.realm || []; loaded = true;
+            if (realm.some(e => e.type === start.get('type'))) activeType = start.get('type');
+            renderChips(); renderRealm();
+        })
         .catch(() => {
             document.getElementById('writer-grid').innerHTML = '<p class="realm-empty">The newsroom scroll could not be loaded.</p>';
+            // The realm list comes from the same file: say so there too, and don't offer a search over nothing (B404)
+            document.getElementById('realm-grid').innerHTML = '<p class="realm-empty">The Who&#39;s Who scroll could not be loaded. Try refreshing.</p>';
+            document.getElementById('realm-search').disabled = true;
         });
     </script>
   <script src="nav.js"></script>

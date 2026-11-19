@@ -26,9 +26,10 @@ function edPic(a, small) {
     return src ? `<figure class="ed-pic"><img src="${edEsc(src)}" alt="" width="${small ? 480 : 960}" height="${small ? 320 : 640}" loading="${small ? 'lazy' : 'eager'}" decoding="async" onerror="this.parentNode.remove()"></figure>` : '';
 }
 
-// Article text as written by the newsroom (trusted, same as article.html), minus the old <br> spacers
+// Article text as written by the newsroom (trusted, same as article.html), minus the old <br> spacers between
+// blocks. A <br> inside a paragraph (a list of bullets) stays (B392).
 function edBody(a) {
-    return String(a.content || '').replace(/<br\s*\/?>/gi, '');
+    return String(a.content || '').replace(/(^|>)\s*(?:<br\s*\/?>\s*)+(?=<|$)/gi, '$1');
 }
 
 function edKicker(a) {
@@ -79,10 +80,20 @@ function edAds(date) {
 function edRender(date) {
     const out = document.getElementById('ed-out');
     const items = edByDate.get(date);
+    const print = document.getElementById('ed-print');
     if (!items) {
-        out.innerHTML = `<p class="ed-msg">No edition went to press on ${edEsc(edShort(date))}. ${edDates.length ? `Try <a href="edition?date=${edDates[0]}">the newest one</a>.` : ''}</p>`;
+        // A day with no paper (or not a real date): nothing picked, nothing to print or page through (B393, B399)
+        out.innerHTML = edRealDate(date)
+            ? `<p class="ed-msg">No edition went to press on ${edEsc(edShort(date))}. ${edDates.length ? `Try <a href="edition?date=${edDates[0]}">the newest one</a>.` : ''}</p>`
+            : `<p class="ed-msg">That isn't a date on the calendar. Pick an edition above${edDates.length ? `, or read <a href="edition?date=${edDates[0]}">the newest one</a>` : ''}.</p>`;
+        document.getElementById('ed-pick').selectedIndex = -1;
+        ['ed-older', 'ed-newer'].forEach(id => { const el = document.getElementById(id); el.href = '#'; el.setAttribute('aria-disabled', 'true'); });
+        if (print) print.disabled = true;
+        document.getElementById('ed-page-style').textContent = '';
+        document.title = "The Print Edition | The Beholder's Gazette";
         return;
     }
+    if (print) print.disabled = false;
     const [lead, ...rest] = items;
     const no = edDates.length - edDates.indexOf(date);
     const canon = document.querySelector('link[rel="canonical"]');
@@ -113,7 +124,7 @@ function edRender(date) {
         ${rest.map(a => edStory(a, false)).join('')}
         <img class="ed-rule" src="img/woodcut/section-rule.webp" alt="" width="1200" height="86">
         ${edAds(date)}
-        <div class="ed-foot"><img class="ed-foot-art" src="img/woodcut/printing-press.webp" alt="" width="282" height="320">Satire. Every name is a fictional stand-in · Printed by The Beholder's Gazette${host ? ' · ' + edEsc(host) : ''}</div>
+        <div class="ed-foot"><img class="ed-foot-art" src="img/woodcut/printing-press.webp" alt="" width="282" height="320">${items.every(a => a.fiction) ? 'Made-up news from the realms' : items.some(a => a.fiction) ? 'Satire and made-up realm news. Names in the satire are fictional stand-ins' : 'Satire. Every name is a fictional stand-in'} · Printed by The Beholder's Gazette${host ? ' · ' + edEsc(host) : ''}</div>
       </div>`;
 
     // Page numbers and the date in the print margins (Chrome and Edge draw @page margin boxes)
@@ -133,6 +144,13 @@ function edRender(date) {
     link('ed-older', edDates[i + 1]);
     link('ed-newer', edDates[i - 1]);
     document.getElementById('ed-pick').value = date;
+}
+
+// YYYY-MM-DD that names a real day (2026-02-30 doesn't).
+function edRealDate(d) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(d || '')) return false;
+    const t = new Date(d + 'T12:00:00Z');
+    return !isNaN(t) && t.toISOString().slice(0, 10) === d;
 }
 
 function edGo(date, push) {

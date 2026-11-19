@@ -29,7 +29,8 @@
     .ed-bar { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center; margin-bottom: 12px; }
     .ed-bar select { width: auto; flex: 0 1 260px; min-width: 0; max-width: 100%; }
     .ed-bar .btn { font-size: 0.72rem; padding: 8px 14px; }
-    .ed-bar .btn[aria-disabled="true"] { opacity: 0.4; pointer-events: none; }
+    .ed-bar .btn[aria-disabled="true"], .ed-bar .btn:disabled { opacity: 0.4; pointer-events: none; }
+    .ed-bar[hidden] { display: none; }
     .ed-hint { text-align: center; color: var(--text-dim); font-family: var(--font-ui); font-size: 0.8rem; margin: 0 0 22px; }
     .ed-hint a { color: var(--gold-bright); }
     .ed-msg { text-align: center; color: var(--text-dim); font-family: var(--font-ui); padding: 40px 0; }

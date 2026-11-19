@@ -211,7 +211,7 @@
     .not-found h2 { color: var(--gold-bright); margin-bottom: 16px; }
     .not-found p { color: var(--text-dim); font-size: 0.92rem; }
     .article-tools { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 22px 0 6px; }
-    .article-tools[hidden] { display: none; }
+    .article-tools[hidden], .article-tools [hidden] { display: none; }
     .article-tools .btn { font-size: 0.7rem; padding: 8px 14px; }
 
     /* ── Use This in My Campaign (F69): campaignHtml() below and export-articles.ps1 ── */
@@ -596,7 +596,7 @@
         <a href="https://discord.gg/EEZyzmUpaw" target="_blank" rel="noopener">Discord</a>
         <a href="https://www.facebook.com/profile.php?id=61595603783023" target="_blank" rel="noopener">Facebook</a>
       </div>
-      <p class="satire-note">Satire. Not real news. Names in articles are fictional stand-ins.</p>
+      <p class="satire-note">Satire and made-up realm news, apart from the Across the Multiverse desk's real tabletop reports. Names in the satire are fictional stand-ins.</p>
       <p class="satire-note fan-note">The Beholder's Gazette is unofficial Fan Content permitted under the <a href="https://company.wizards.com/en/legal/fancontentpolicy" target="_blank" rel="noopener">Fan Content Policy</a>. Not approved/endorsed by Wizards. Portions of the materials used are property of Wizards of the Coast. &copy;Wizards of the Coast LLC.</p>
       <p class="footer-copy">Powered by Static Magic &copy; <span id="year"></span></p>
     </div>
@@ -655,7 +655,7 @@
         if (!id) return showNotFound();
 
         const article = data.articles.find(a => a.id === id);
-        if (!article) return showNotFound();
+        if (!article) return prerendered() || showNotFound();
 
         document.title = article.title + ' | The Beholder\'s Gazette';
         setCategory(article);
@@ -675,8 +675,15 @@
 
       } catch (e) {
         console.error(e);
-        showNotFound();
+        if (!prerendered()) showNotFound();
       }
+    }
+
+    // An a/ page already holds its story (export-articles.ps1): when articles.json fails or is an older copy
+    // without it, the page keeps that story readable instead of saying it's lost (B389).
+    function prerendered() {
+      const el = document.getElementById('article-content');
+      return !!window.GAZETTE_ARTICLE_ID && !!el.querySelector('p') && !el.querySelector('.not-found') && !/Unrolling the scroll/.test(el.textContent);
     }
 
     // Same rule as export-articles.ps1 (which pre-renders this block on the a/ pages): same category
@@ -711,10 +718,10 @@
     let desksPromise;
     function loadDesks() {
       desksPromise = desksPromise || fetch('glossary.json?t=' + Date.now()).then(r => r.json()).then(g => {
-        const byCategory = {};
+        const byCategory = Object.create(null);  // own keys only: a category "constructor" isn't a desk (B405)
         (g.writers || []).forEach(w => (w.categories || []).forEach(c => { byCategory[c] = w; }));
         return byCategory;
-      }).catch(() => ({}));
+      }).catch(() => Object.create(null));
       return desksPromise;
     }
 

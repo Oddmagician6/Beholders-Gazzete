@@ -5,7 +5,8 @@
    so switching types or reloading keeps what you typed.
    URL: ?t=<type>[&from=npc|quest|shop&seed=…&<that tool's own keys>]. A link with a roll
    fills the handout from it, unless that handout was already filled from the same roll
-   (then your edits stay). A filled handout keeps its roll as src, and the address bar
+   (then your edits stay). If you've edited that handout, the link's roll waits behind a
+   Replace / Keep choice (hoPending). A filled handout keeps its roll as src, and the address bar
    shows it, so 🔗 Copy Link shares the roll.
    ============================================ */
 
@@ -79,11 +80,30 @@ function hoApplyUrl() {
     let t = p.get('t');
     if (!HO_TYPES.includes(t)) t = fills[0] || ho.t;
     ho.t = t;
+    hoPending = null;
     if (src && fills.includes(t) && ho.forms[t].src !== src.query) {
-        const h = handoutFromSource(t, handoutSource(src));
-        if (h) ho.forms[t] = h;
-        else hoFlash('⚠️ That link names a roll this page could not rebuild.');
+        const made = handoutSource(src);
+        const h = handoutFromSource(t, made);
+        if (!h) hoFlash('⚠️ That link names a roll this page could not rebuild.');
+        // A handout you've typed into isn't replaced by a link without asking (B387): the link's roll waits.
+        else if (!hoIsBlank(t) && hoIsEdited()) hoPending = { t, h, src: made, query: src.query };
+        else ho.forms[t] = h;
     }
+}
+
+// A linked roll waiting while your edited handout of that type stays: { t, h, src, query }, or null.
+let hoPending = null;
+
+function hoRenderPending() {
+    const box = document.getElementById('ho-pending');
+    if (!box) return;
+    const p = hoPending && hoPending.t === ho.t ? hoPending : null;
+    if (!p) { box.hidden = true; box.innerHTML = ''; return; }
+    const def = HANDOUT_SOURCES[p.src.from];
+    box.hidden = false;
+    box.innerHTML = `<span>This link brings a ${def.icon} ${def.label} roll, <a href="${hoEsc(handoutSourceLink(p.src))}">${hoEsc(p.src.title)}</a>. Your edited ${HANDOUT_TYPES[p.t].label} is still here.</span>
+        <button type="button" class="btn" id="ho-take" title="Throw away your edits and fill it from the link's roll">Replace Mine with It</button>
+        <button type="button" class="btn" id="ho-keep">Keep Mine</button>`;
 }
 
 // ── Form ──────────────────────────────────────────────────
@@ -146,8 +166,10 @@ function hoRender(push = false, save = true) {
     hoRenderForm();
     hoRenderPreview();
     hoRenderSource();
+    hoRenderPending();
     document.getElementById('ho-ink').checked = ho.ink;
-    if (push !== null) setUrlParams(hoParams(), push);
+    // While a link's roll waits, the address keeps that link (a refresh asks again).
+    if (push !== null && !(hoPending && hoPending.t === ho.t)) setUrlParams(hoParams(), push);
     if (save) hoSave();
 }
 
@@ -167,6 +189,7 @@ function hoRoll() {
     const h = handoutFromSource(ho.t, handoutSource(handoutSourceParams(q)));
     if (!h) { hoFlash('⚠️ The roll failed. Try again.'); return; }
     ho.forms[ho.t] = h;
+    if (hoPending && hoPending.t === ho.t) hoPending = null;
     hoRender(true);
 }
 
@@ -277,6 +300,15 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('change', hoOnInput);
     form.addEventListener('click', hoOnClick);
     document.getElementById('ho-source').addEventListener('click', hoOnSourceClick);
+    const pending = document.getElementById('ho-pending');
+    if (pending) pending.addEventListener('click', e => {
+        const b = e.target.closest('button');
+        if (!b || !hoPending) return;
+        const p = hoPending;
+        hoPending = null;
+        if (b.id === 'ho-take') { ho.forms[p.t] = p.h; hoRender(false); hoFlash('Filled from the link\'s roll.'); }
+        else if (b.id === 'ho-keep') { hoRender(false); hoFlash('Kept your handout.'); }
+    });
     const roll = document.getElementById('ho-roll');
     roll.addEventListener('click', () => hoArmed(roll, hoRoll, !hoIsBlank(ho.t) && hoIsEdited()));
     document.getElementById('ho-print').addEventListener('click', hoPrint);
@@ -285,6 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const clear = document.getElementById('ho-clear');
     clear.addEventListener('click', () => hoArmed(clear, () => {
         ho.forms[ho.t] = handoutBlank(ho.t);
+        if (hoPending && hoPending.t === ho.t) hoPending = null;
         hoRender(true);
         hoFlash('🧽 Cleared.');
     }, !hoIsBlank(ho.t)));

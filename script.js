@@ -10,6 +10,7 @@ let allArticles = [];     // what the grid is showing: all but the featured stor
 let displayedCount = 6;
 let desks = [];           // newsroom desks from glossary.json: { id, name, short, icon, color, categories }
 let section = 'all';      // the section bar's pick: 'all' or a desk id
+let ready = false;        // articles and desks are in (before that, section links follow their href)
 
 /* ── INIT ────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
@@ -30,8 +31,15 @@ function setDateBanner() {
   const el = document.getElementById('date-banner');
   if (!el) return;
   const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
-  const edition = Math.floor(Math.random() * 9000 + 1000);
-  el.textContent = new Date().toLocaleDateString('en-US', opts) + ' · Edition #' + edition;
+  // No number until the articles say which edition this is (setEditionNo): a random one changed on every reload (B398)
+  el.textContent = new Date().toLocaleDateString('en-US', opts);
+}
+
+// The same number the print edition gives the newest day's paper (edition.js: one per day with stories).
+function setEditionNo() {
+  const el = document.getElementById('date-banner');
+  const n = new Set(latest.map(a => a.date).filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d || ''))).size;
+  if (el && n) el.textContent = el.textContent.replace(/ · Edition #\d+$/, '') + ' · Edition #' + n;
 }
 
 /* ── ARTICLE LOADING ─────────────────────────────────────── */
@@ -59,15 +67,28 @@ async function loadArticles() {
     renderSections();
     showSection();
     renderTicker(latest.slice(0, 8));
+    setEditionNo();
+    ready = true;
 
   } catch (err) {
     console.error('Failed to load articles:', err);
     const grid = document.getElementById('article-grid');
     const feat = document.getElementById('featured-article');
+    // The stories export-articles.ps1 wrote into the page stay readable; only an empty page shows the error (B390)
+    if (grid && grid.querySelector('.card')) return;
     if (feat) feat.innerHTML = errorBox('Could not load the latest scroll. The messenger raven may have been eaten.<br><small>' + err.message + '</small>');
     if (grid) grid.innerHTML = '';
   }
 }
+
+// Back/Forward between section picks (B396)
+window.addEventListener('popstate', () => {
+  if (!ready) return;
+  const id = new URLSearchParams(location.search).get('section');
+  section = id && desks.some(d => d.id === id) ? id : 'all';
+  renderSections();
+  showSection();
+});
 
 /* ── SECTIONS ────────────────────────────────────────────── */
 // Every article belongs to the desk whose categories include its category.
@@ -144,8 +165,9 @@ function pickSection(id) {
   section = desks.some(d => d.id === id) ? id : 'all';
   renderSections();
   showSection();
-  // Keep the pick in the URL so a section front can be shared or bookmarked
-  history.replaceState(null, '', location.pathname + (section === 'all' ? '' : '?section=' + encodeURIComponent(section)));
+  // Keep the pick in the URL so a section front can be shared or bookmarked; each pick is a Back step (B396)
+  const url = location.pathname + (section === 'all' ? '' : '?section=' + encodeURIComponent(section));
+  if (url !== location.pathname + location.search) history.pushState(null, '', url);
   document.getElementById('section-bar')?.scrollIntoView({ behavior:'smooth', block:'nearest' });
 }
 
@@ -153,7 +175,8 @@ function pickSection(id) {
 // and a modified click (new tab) still follows them.
 document.addEventListener('click', e => {
   const link = e.target.closest('#section-bar [data-section], #article-grid [data-section], #featured-article [data-section]');
-  if (!link || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || e.button) return;
+  // Before the articles and desks are in, the link's own href (the archive) does the job (B395)
+  if (!link || !ready || !desks.length || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || e.button) return;
   e.preventDefault();
   pickSection(link.dataset.section);
 });
@@ -169,15 +192,15 @@ function renderFeatured(article) {
         ${deskTag(article, 'category-badge')}
       </div>
       <h2 class="featured-headline">
-        <a href="a/${article.id}" style="color:inherit;">${article.title}</a>
+        <a href="a/${article.id}" style="color:inherit;">${esc(article.title)}</a>
       </h2>
       <div class="article-meta">
-        <span>✍️ <strong>${article.author || 'The Gazette Staff'}</strong></span>
+        <span>✍️ <strong>${esc(article.author || 'The Gazette Staff')}</strong></span>
         <span>📅 ${formatDate(article.date)}</span>
         <span>⏱️ ${readTime(article.content)} min read</span>
       </div>
       <div class="featured-content">
-        ${article.excerpt || stripTags(article.content).substring(0, 280) + '…'}
+        ${article.excerpt ? esc(article.excerpt) : esc(stripTags(article.content).substring(0, 280)) + '…'}
       </div>
       <a href="a/${article.id}" class="btn">📜 Read Full Scroll</a>
     </div>
@@ -202,8 +225,8 @@ function renderGrid() {
     <article class="card" style="animation-delay:${i * 0.08}s;${d && d.color ? `--desk:${d.color}` : ''}">
       ${storyPic(a, 'card-pic', true, true)}
       ${deskTag(a)}
-      <h3><a href="a/${a.id}">${a.title}</a></h3>
-      <p>${a.excerpt || stripTags(a.content).substring(0, 110) + '…'}</p>
+      <h3><a href="a/${a.id}">${esc(a.title)}</a></h3>
+      <p>${a.excerpt ? esc(a.excerpt) : esc(stripTags(a.content).substring(0, 110)) + '…'}</p>
       <div class="card-date">📅 ${formatDate(a.date)}</div>
       <a href="a/${a.id}" class="btn" style="font-size:0.68rem;padding:7px 14px;margin-top:14px;">📜 Read Scroll</a>
     </article>

@@ -350,6 +350,29 @@ function nbRollHref(kind, href) {
     return href.slice(0, at + 1) + q.toString();
 }
 
+// A D&D tool link saved from a page with srd52.js carries the rules version it was rolled under (rules=2014 or
+// rules=2024), so it reopens as the same roll whatever the reader's setting is later (B385). Worldbuilder and
+// Pathfinder links don't read the 5e rules, so they stay bare.
+const NB_RULES_HREF = /^(npc-generator|toolbox|dnd-one-shot-generator|dnd-campaign-generator)(\.html)?\?/;
+function nbRulesHref(href) {
+    if (!NB_RULES_HREF.test(href) || typeof SRD52_OK === 'undefined' || !SRD52_OK || typeof rulesShown !== 'string') return href;
+    const at = href.indexOf('?');
+    if (new URLSearchParams(href.slice(at + 1)).has('rules')) return href;
+    // Appended as text: re-writing the query would re-encode it, and the link would stop matching its older saves.
+    return href + (at === href.length - 1 || href.endsWith('&') ? '' : '&') + 'rules=' + (rulesShown === '2024' ? '2024' : '2014');
+}
+
+// The same link as it was saved before B385 (no rules=): a bare link was a 2014 roll unless the reader's
+// setting said otherwise, so a rules=2014 save finds it.
+function nbBareHref(href) {
+    const m = /^([^?]*\?)(.*)$/.exec(href);
+    if (!m) return null;
+    const parts = m[2].split('&'), i = parts.indexOf('rules=2014');
+    if (i < 0) return null;
+    parts.splice(i, 1);
+    return parts.length ? m[1] + parts.join('&') : m[1].slice(0, -1);
+}
+
 // The saved entry for a roll (its kind, seed, and the options that change it), or null.
 function nbFindRoll(nb, kind, seed, get) {
     const sig = nbSig(kind, seed, get);
@@ -361,13 +384,13 @@ function nbFindRoll(nb, kind, seed, get) {
 // hand-written entry (no link) is always new.
 function nbAdd(item) {
     const nb = nbLoad();
-    const href = String(item.href || '');
+    const href = nbRulesHref(String(item.href || '')), bare = nbBareHref(href);
     // A continent is the same map in either look (style=), so its seed and options find it too:
     // its pins are kept on the one entry.
     const map = item.kind === 'continent' && href ? nbEntrySig({ kind: 'continent', href }) : null;
     // The month, god, faction, or age on screen is only where the link opens: the same roll either way.
     const roll = nbRollHref(item.kind, href);
-    const old = href && nb.entries.find(e => e.href === href || (e.kind === item.kind && e.href && nbRollHref(e.kind, e.href) === roll)
+    const old = href && nb.entries.find(e => e.href === href || (bare && e.href === bare) || (e.kind === item.kind && e.href && nbRollHref(e.kind, e.href) === roll)
         || (map && e.kind === 'continent' && e.href && nbEntrySig(e) === map));
     if (old) return { entry: old, existed: true, linked: 0 };
     if (!Object.hasOwn(NB_KINDS, item.kind) || !nbHrefOk(item.kind, href)) return null;
@@ -413,7 +436,7 @@ function nbParseFile(text) {
 }
 
 // Fold an imported notebook into this one. An entry whose link is already here keeps
-// the one here (and gains the imported notes, DM notes, switched lines, and reworded lines); so does a hand-written entry with the same
+// the one here (and gains the imported notes, DM notes, and reworded lines, but keeps its own switches); so does a hand-written entry with the same
 // id and kind (the same notebook imported twice). The rest come in under fresh ids.
 // Returns { added, merged, full, ids } (ids: each incoming id → its id here, so a map's picture can follow it).
 function nbMerge(nb, incoming) {
@@ -425,7 +448,8 @@ function nbMerge(nb, incoming) {
             map[e.id] = same.id;
             if (e.notes && !same.notes.includes(e.notes)) same.notes = nbText(same.notes ? `${same.notes}\n\n${e.notes}` : e.notes, NB_LIMITS.notes);
             if (e.dm && !(same.dm || '').includes(e.dm)) same.dm = nbText(same.dm ? `${same.dm}\n\n${e.dm}` : e.dm, NB_LIMITS.notes);
-            if (e.flip) same.flip = nbFlips([...(same.flip || []), ...e.flip]);
+            // The 👁️/🔒 switches stay as this copy has them: merging both sets would turn a line made DM-only here
+            // public again (B388).
             // Reworded lines come along where this copy still has the rolled wording.
             if (e.edits) {
                 const edits = nbEdits({ ...e.edits, ...(same.edits || {}) });

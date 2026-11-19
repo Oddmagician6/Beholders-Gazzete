@@ -30,7 +30,7 @@ function tavernQuality() {
 }
 
 function tavernRumor() {
-    return tavern.rumorIdx !== null ? tavernRumors[tavern.rumorIdx] || null : null;
+    return tavern.rumorIdx !== null && rumorFits(tavernRumors[tavern.rumorIdx]) ? tavernRumors[tavern.rumorIdx] : null;
 }
 
 // Deal the next rumor (no repeats until the deck runs out). Waits if rumors.json hasn't loaded.
@@ -74,8 +74,8 @@ function applyTavUrl(p) {
     tavern.data = tavernRoll(seed, q.value);
     const idx = /^\d+$/.test(p.get('rumor') || '') ? Number(p.get('rumor')) : null;
     tavern.rumorIdx = idx;
-    // A link with no rumor (or one rumors.json no longer has) gets a fresh deal.
-    if (tavernRumors.length && !tavernRumors[idx]) { tavern.rumorIdx = null; dealTavernRumor(); setUrlParams(tavParams(), false); }
+    // A link with no rumor (or one rumors.json no longer has, or a D&D-only one on a Pathfinder page) gets a fresh deal.
+    if (tavernRumors.length && !rumorFits(tavernRumors[idx])) { tavern.rumorIdx = null; dealTavernRumor(); setUrlParams(tavParams(), false); }
     renderTavern();
     return true;
 }
@@ -220,7 +220,7 @@ function setupTavern() {
         tavernRumors = (data && data.rumors) || [];
         if (!tavern.data) return;
         // The tavern rolled before the rumors arrived: deal now, or keep the linked one.
-        if (!tavernRumors[tavern.rumorIdx]) {
+        if (!rumorFits(tavernRumors[tavern.rumorIdx])) {
             tavern.rumorIdx = null;
             dealTavernRumor();
             if (currentTab() === 'tavern') setUrlParams(tavParams(), false);

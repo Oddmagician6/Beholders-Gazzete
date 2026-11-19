@@ -226,7 +226,7 @@
           <a href="https://discord.gg/EEZyzmUpaw" target="_blank" rel="noopener">Discord</a>
           <a href="https://www.facebook.com/profile.php?id=61595603783023" target="_blank" rel="noopener">Facebook</a>
         </div>
-        <p class="satire-note">Satire. Not real news. Names in articles are fictional stand-ins.</p>
+        <p class="satire-note">Satire and made-up realm news, apart from the Across the Multiverse desk's real tabletop reports. Names in the satire are fictional stand-ins.</p>
         <p class="satire-note fan-note">The Beholder's Gazette is unofficial Fan Content permitted under the <a href="https://company.wizards.com/en/legal/fancontentpolicy" target="_blank" rel="noopener">Fan Content Policy</a>. Not approved/endorsed by Wizards. Portions of the materials used are property of Wizards of the Coast. &copy;Wizards of the Coast LLC.</p>
         <p class="footer-copy">Powered by Static Magic &copy; <span id="year"></span></p>
       </div>
@@ -244,7 +244,7 @@
     const day = s => new Date(s + 'T12:00:00');
     const PAGE = 30;
 
-    let articles = [], desks = [], section = 'all', shown = PAGE;
+    let articles = [], desks = [], section = 'all', shown = PAGE, loaded = false;
     const params = new URLSearchParams(location.search);
     const search = document.getElementById('ar-search');
     search.value = params.get('q') || '';
@@ -306,19 +306,32 @@
     }
 
     // Keep the filters in the URL so a filtered view can be shared or bookmarked
-    function syncUrl() {
+    // A desk pick is a Back step; typing replaces the address as it goes (B396).
+    function syncUrl(push = false) {
         const p = new URLSearchParams();
         if (section !== 'all') p.set('section', section);
         if (search.value.trim()) p.set('q', search.value.trim());
-        history.replaceState(null, '', location.pathname + (p.toString() ? '?' + p : ''));
+        const url = location.pathname + (p.toString() ? '?' + p : '');
+        if (url === location.pathname + location.search) return;
+        if (push) history.pushState(null, '', url); else history.replaceState(null, '', url);
     }
+    // A desk this archive has stories from (an empty one has no chip to show it's picked: B402)
+    const pickable = id => articles.some(a => a.desk && a.desk.id === id);
+    window.addEventListener('popstate', () => {
+        if (!loaded) return;
+        const q = new URLSearchParams(location.search);
+        section = pickable(q.get('section')) ? q.get('section') : 'all';
+        search.value = q.get('q') || ''; shown = PAGE;
+        renderChips(); render();
+    });
 
     document.getElementById('ar-chips').addEventListener('click', e => {
         const b = e.target.closest('.chip'); if (!b) return;
         section = b.dataset.section; shown = PAGE;
-        renderChips(); render(); syncUrl();
+        renderChips(); render(); syncUrl(true);
     });
-    search.addEventListener('input', () => { shown = PAGE; render(); syncUrl(); });
+    // Before the articles are in (or if they failed), typing doesn't turn the message into "no matches" (B401)
+    search.addEventListener('input', () => { if (!loaded) return; shown = PAGE; render(); syncUrl(); });
     document.getElementById('ar-list').addEventListener('click', e => {
         if (e.target.id === 'ar-more') { shown += PAGE; render(); return; }
         // A category tag narrows the list to its desk
@@ -326,14 +339,14 @@
         if (!tag || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
         e.preventDefault();
         section = tag.dataset.section; shown = PAGE;
-        renderChips(); render(); syncUrl();
+        renderChips(); render(); syncUrl(true);
         window.scrollTo({ top: document.getElementById('ar-chips').getBoundingClientRect().top + scrollY - 80, behavior: 'smooth' });
     });
     document.getElementById('ar-count').addEventListener('click', e => {
         if (e.target.id !== 'ar-reset') return;
         e.preventDefault();
         section = 'all'; search.value = ''; shown = PAGE;
-        renderChips(); render(); syncUrl();
+        renderChips(); render(); syncUrl(true);
     });
 
     Promise.all([
@@ -347,8 +360,10 @@
             .map(a => ({ ...a, desk: deskOf(a),
                 text: fold(`${a.title} ${a.excerpt} ${a.author} ${a.category} ${plain(a.content)}`) }));
         const wanted = params.get('section');
-        if (wanted && desks.some(d => d.id === wanted)) section = wanted;
+        loaded = true;
+        if (wanted && pickable(wanted)) section = wanted;
         renderChips(); render();
+        syncUrl();
     }).catch(() => {
         document.getElementById('ar-list').innerHTML = '<p class="ar-empty"><img class="mascot" src="img/mascot/error.webp" alt="" width="140" height="140" decoding="async">The archive scroll could not be loaded. The mice may have won.</p>';
     });
