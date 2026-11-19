@@ -1072,7 +1072,9 @@ function encSceneLines(s) {
 // The loot generator, opened on what these foes would carry (or their hoard).
 function encLootLink(s) {
     const cr = s.lootCr;
-    const tier = cr <= 4 ? "0-4" : cr <= 10 ? "5-10" : cr <= 16 ? "11-16" : "17+";
+    // Pathfinder's loot page takes a level (1-20) where 5e's takes a CR band.
+    const tier = ENC_PF2E ? String(Math.min(20, Math.max(1, Math.round(cr))))
+        : cr <= 4 ? "0-4" : cr <= 10 ? "5-10" : cr <= 16 ? "11-16" : "17+";
     const p = new URLSearchParams();
     if (s.loot.startsWith("hoard:")) { p.set("tab", "hoard"); p.set("hoard-cr", tier); p.set("hoard-source", s.loot.slice(6)); }
     else { p.set("ind-cr", tier); p.set("ind-source", s.loot); }

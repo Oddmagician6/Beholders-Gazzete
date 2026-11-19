@@ -18,11 +18,12 @@ const lootData = {
 
   gems: {
     '10': ['Azurite','Banded Agate','Blue Quartz','Eye Agate','Hematite','Lapis Lazuli','Malachite','Obsidian','Rhodochrosite','Tiger Eye Agate','Turquoise','Moss Agate','Snowflake Obsidian','Raw Amber (chip)','Polished Granite Sphere'],
-    '50': ['Bloodstone','Carnelian','Chalcedony','Chrysoprase','Citrine','Jasper','Moonstone','Onyx','Peridot','Rock Crystal','Sard','Sardonyx','Smoky Quartz','Star Rose Quartz','Zircon','Aventurine','Iolite','Labradorite','Prehnite','Sunstone','Unakite'],
+    // The DMG's own gems sit at its prices; swaps between tiers keep each list's length (old links).
+    '50': ['Bloodstone','Carnelian','Chalcedony','Chrysoprase','Citrine','Jasper','Moonstone','Onyx','Copper Sunstone','Rock Crystal','Sard','Sardonyx','Smoky Quartz','Star Rose Quartz','Zircon','Aventurine','Iolite','Labradorite','Prehnite','Sunstone','Unakite'],
     '100': ['Amber','Amethyst','Chrysoberyl','Coral','Red Garnet','Jade','Jet','Freshwater Pearl','Red Spinel','Tourmaline','Fire Opal (small)','Heliodor','Kunzite','Morganite','Pink Tourmaline','Tsavorite Garnet'],
-    '500': ['Alexandrite','Aquamarine','Black Pearl','Blue Spinel','Fire Opal','Topaz','Pink Pearl','Golden Beryl','Indicolite Tourmaline','Malaia Garnet','Copper Sunstone','Padparadscha Sapphire'],
-    '1000': ['Black Sapphire','Diamond','Jacinth','Ruby','Star Ruby','Star Sapphire (blue)','Fine Alexandrite','Large Tsavorite','Demantoid Garnet','Red Beryl'],
-    '5000': ['Black Opal','Blue Diamond','Flawless Emerald','Flawless Ruby','Black Star Sapphire','Flawless Diamond','Imperial Jadeite','Paraiba Tourmaline','Red Diamond','Fancy Vivid Yellow Diamond']
+    '500': ['Alexandrite','Aquamarine','Black Pearl','Blue Spinel','Large Tsavorite','Topaz','Pink Pearl','Golden Beryl','Indicolite Tourmaline','Malaia Garnet','Peridot','Padparadscha Sapphire'],
+    '1000': ['Black Opal','Flawless Emerald','Imperial Jadeite','Paraiba Tourmaline','Star Ruby','Star Sapphire (blue)','Fine Alexandrite','Fire Opal','Demantoid Garnet','Red Beryl'],
+    '5000': ['Black Sapphire','Blue Diamond','Diamond','Flawless Ruby','Black Star Sapphire','Flawless Diamond','Jacinth','Ruby','Red Diamond','Fancy Vivid Yellow Diamond']
   },
 
   art: {
@@ -369,17 +370,18 @@ const lootData = {
     I: 'legendary'
   },
 
-  // DMG Treasure Tables (simplified but faithful)
+  // DMG Treasure Tables (simplified but faithful). Coins: [N, N*S] is NdS (×mult). An individual's
+  // coins come all at once rather than as one d100 bundle, sized so the average matches the DMG's.
   treasureTables: {
     individual: {
       '0-4':  { cp:[5,30],  sp:[2,12],  ep:0,       gp:[1,6],   pp:0,       gemChance:30, gemTier:'10',   artChance:0,  artTier:'25',   magicChance:0,  magicTable:'A' },
-      '5-10': { cp:[4,24],  sp:[6,36],  ep:0,       gp:[2,12],  pp:0,       gemChance:40, gemTier:'50',   artChance:25, artTier:'25',   magicChance:15, magicTable:'B' },
-      '11-16':{ cp:0,       sp:[4,24],  ep:[2,12],  gp:[2,12],  pp:[1,6],   gemChance:50, gemTier:'100',  artChance:40, artTier:'250',  magicChance:30, magicTable:'D' },
-      '17+':  { cp:0,       sp:0,       ep:[2,12],  gp:[6,36],  pp:[2,12],  gemChance:60, gemTier:'500',  artChance:50, artTier:'2500', magicChance:50, magicTable:'H' }
+      '5-10': { cp:[4,24],  sp:[6,36],  ep:0,       gp:[2,12],  pp:0,       cpMult:100, spMult:10, gpMult:10,               gemChance:40, gemTier:'50',   artChance:25, artTier:'25',   magicChance:15, magicTable:'B' },
+      '11-16':{ cp:0,       sp:[4,24],  ep:[2,12],  gp:[2,12],  pp:[1,6],   spMult:10, epMult:10, gpMult:100, ppMult:10,    gemChance:50, gemTier:'100',  artChance:40, artTier:'250',  magicChance:30, magicTable:'D' },
+      '17+':  { cp:0,       sp:0,       ep:[2,12],  gp:[6,36],  pp:[2,12],  epMult:100, gpMult:100, ppMult:100,              gemChance:60, gemTier:'500',  artChance:50, artTier:'2500', magicChance:50, magicTable:'H' }
     },
     hoard: {
       '0-4':  { cp:[6,36],  sp:[3,18],  ep:0,       gp:[2,12],  pp:0,       cpMult:100, spMult:100, gpMult:10,   gemChance:40, gemTier:'10',   artChance:30, artTier:'25',   magicChance:20, magicTable:'A', magicCount:[1,3] },
-      '5-10': { cp:[2,12],  sp:[2,12],  ep:0,       gp:[6,36],  pp:[3,18],  cpMult:100, spMult:1000,gpMult:100,  gemChance:50, gemTier:'50',   artChance:40, artTier:'250',  magicChance:35, magicTable:'C', magicCount:[1,4] },
+      '5-10': { cp:[2,12],  sp:[2,12],  ep:0,       gp:[6,36],  pp:[3,18],  cpMult:100, spMult:1000,gpMult:100,  gemChance:50, gemTier:'50',   artChance:40, artTier:'250',  magicChance:35, magicTable:'C', magicCount:[1,4], ppMult:10 },
       '11-16':{ cp:0,       sp:0,       ep:0,       gp:[4,24],  pp:[5,30],  cpMult:1,   spMult:1,   gpMult:1000, gemChance:60, gemTier:'500',  artChance:50, artTier:'750',  magicChance:50, magicTable:'E', magicCount:[1,4], ppMult:100 },
       '17+':  { cp:0,       sp:0,       ep:0,       gp:[12,72], pp:[8,48],  cpMult:1,   spMult:1,   gpMult:1000, gemChance:70, gemTier:'1000', artChance:60, artTier:'2500', magicChance:70, magicTable:'I', magicCount:[1,4], ppMult:1000 }
     }

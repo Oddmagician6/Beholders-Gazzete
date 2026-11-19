@@ -132,6 +132,8 @@ function generateLoot(seed = newSeed(), push = true) {
   } });
 
   if (found) ({ coins, gems, art, magic } = found);
+  // A Pathfinder hoard rolled for N characters splits N ways (the box can still be changed after).
+  if (LOOT_PF2E && currentTab === 'hoard') document.getElementById('party-size').value = document.getElementById('hoard-pcs').value;
   // Homebrew items (homebrew-magic.js, opt-in): swapped in from a stream of their own, so the rest of the roll stays the same.
   if (!LOOT_PF2E && lootHomebrewOn()) {
     const mixed = hbmLootSwap(magic, seed, currentTab === 'magic' ? document.getElementById('magic-type').value : 'any');
@@ -174,7 +176,7 @@ function pf2eGenerateTab(tab, luckMult) {
   // Custom: a small find for the level, keeping only the parts that are ticked.
   const t = pf2eRollTreasure('hoard', Number(val('custom-cr')), { luckMult, share: 0.25, goods: document.getElementById('custom-goods').checked });
   const on = id => document.getElementById(id).checked;
-  if (!on('custom-coins')) t.coins = { cp: 0, sp: 0, ep: 0, gp: 0, pp: 0 };
+  if (!on('custom-coins')) { t.coins = { cp: 0, sp: 0, ep: 0, gp: 0, pp: 0 }; t.coinNote = ''; }
   if (!on('custom-gems')) t.gems = [];
   if (!on('custom-art')) t.art = [];
   if (!on('custom-magic')) t.magic = [];
@@ -450,14 +452,24 @@ function loadSaved(i) {
   try {
     const saved = readLoot();
     // A hoard saved before links has no seed; its history entry carries it instead.
-    if (saved[i]) { currentLoot = saved[i]; displayLoot(); setUrlParams(lootParams(), true, currentLoot.seed ? null : { loot: currentLoot }); }
+    if (saved[i]) { currentLoot = saved[i]; restoreTab(currentLoot); displayLoot(); setUrlParams(lootParams(), true, currentLoot.seed ? null : { loot: currentLoot }); }
   } catch(e) {}
+}
+
+// A saved hoard brings back its tab and fields, so the notes and Regenerate match it.
+function restoreTab(loot) {
+  if (!LOOT_TABS.includes(loot.tab)) return;
+  switchTab(loot.tab);
+  const fields = loot.fields && typeof loot.fields === 'object' ? loot.fields : {};
+  tabFields(currentTab).forEach(el => {
+    if (!setFieldValue(el, fields[el.id])) setFieldValue(el, defaultValue(el));
+  });
 }
 
 // Back/Forward onto an entry with no seed: a hoard saved before links, or the empty page.
 function showUnlinkedLoot() {
   const loot = history.state && history.state.loot;
-  if (loot && typeof loot === 'object') { currentLoot = loot; displayLoot(); return; }
+  if (loot && typeof loot === 'object') { currentLoot = loot; restoreTab(loot); displayLoot(); return; }
   currentLoot = null;
   document.getElementById('loot-display').style.display = 'none';
 }

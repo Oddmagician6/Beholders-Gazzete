@@ -89,9 +89,11 @@ function onTabLinks(go) {
         if (url.origin !== location.origin) return;
         const name = tabPageName(url.pathname);
         const tab = url.searchParams.get('tab');
-        const to = (tab && moves[`${name}?tab=${tab}`]) || moves[name];
+        const byTab = tab && moves[`${name}?tab=${tab}`];
+        const to = byTab || moves[name];
         if (!to) return;
-        url.searchParams.delete('tab');
+        // A tab's own page drops the tab; a whole page's move keeps it (loot-generator?tab=hoard).
+        if (byTab) url.searchParams.delete('tab');
         url.pathname = url.pathname.replace(/[^/]*$/, '') + to;
         a.href = url.href;   // the browser follows the new address
     };

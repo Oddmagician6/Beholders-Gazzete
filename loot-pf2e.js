@@ -40,7 +40,8 @@ const PF2E_SHARES = { level: 1, half: 0.5, quarter: 0.25, small: 0.125 };
 // Wands and staves are permanent items (Foundry files wands with the consumables).
 const pf2eIsStaff = i => (i.tr || []).includes('staff');
 const pf2eIsWand = i => i.ct === 'wand' || (i.tr || []).includes('wand');
-const pf2eConsumable = i => (i.k === 'c' && i.ct !== 'wand') || i.k === 'm';
+// Bombs are filed as weapons but are used up when thrown.
+const pf2eConsumable = i => (i.k === 'c' && i.ct !== 'wand') || i.k === 'm' || (i.k === 'w' && (i.tr || []).includes('bomb'));
 
 // Item kinds the Items tab filters by: a test on an item record (pf2e-items-data.js keys).
 const PF2E_KINDS = {
@@ -108,11 +109,13 @@ function pf2eSpellFor(i) {
 
 // Fundamental runes (weapon potency, striking, armor potency, resilient) come etched on a
 // base weapon or suit of armor half the time: "+1 Longsword", "Striking Spear".
-const PF2E_FUNDAMENTAL = /^(Weapon|Armor) Potency \(\+(\d)\)$|^(Greater |Major )?(Striking|Resilient)$/;
+// The data names the higher grades "Striking (Greater)"; the etched item reads "Greater Striking Spear".
+const PF2E_FUNDAMENTAL = /^(Weapon|Armor) Potency \(\+(\d)\)$|^(Striking|Resilient)(?: \((Greater|Major)\))?$/;
 
 function pf2eEtch(i, entry) {
-  const m = PF2E_FUNDAMENTAL.exec(i.n);
-  if (!m || rand() < 0.5) return;
+  const raw = PF2E_FUNDAMENTAL.exec(i.n);
+  if (!raw || rand() < 0.5) return;
+  const m = [raw[0], raw[1], raw[2], raw[4] ? raw[4] + ' ' : undefined, raw[3]];
   const armor = m[1] === 'Armor' || m[4] === 'Resilient';
   const base = lootPick(PF2E_ITEM_LIST.filter(b => b.l === 0 && b.p > 0 && !b.ra && (armor ? b.k === 'a' && b.ct !== 'unarmored' : b.k === 'w' && b.ct !== 'unarmed')));
   entry.name = m[2] ? `+${m[2]} ${base.n}` : `${m[3] || ''}${m[4]} ${base.n}`;
@@ -224,8 +227,19 @@ function pf2eRollTreasure(kind, level, opts = {}) {
     cash = gp - [...gems, ...art].reduce((t, g) => t + g.value, 0);
     coins = pf2eCoins(cash, level);
     if (opts.items !== false) {
+      // GM Core: each character past four adds a permanent item of the level and two consumables
+      // (one a level up); each one short of four takes the same away, lowest levels first.
+      const top = Math.min(20, level + 1), lvl = Math.min(20, Math.max(1, level));
+      const slots = (list, extra) => {
+        const flat = list.flatMap(([l, n]) => Array(n).fill(l));
+        for (let p = 4; p < pcs; p++) flat.push(...extra);
+        for (let p = pcs; p < 4 && flat.length; p++) flat.splice(-extra.length, extra.length);
+        return flat.map(l => [l, 1]);
+      };
+      const perm = pcs === 4 ? row.perm : slots(row.perm, [lvl]);
+      const cons = pcs === 4 ? row.cons : slots(row.cons, [lvl, top]);
       // Each item slot of the level comes with the share's chance (a whole level keeps them all).
-      for (const [list, k] of [[row.perm, 'permanent'], [row.cons, 'consumable']]) {
+      for (const [list, k] of [[perm, 'permanent'], [cons, 'consumable']]) {
         list.forEach(([l, n]) => {
           for (let x = 0; x < n; x++) {
             if (share < 1 && rand() >= share * luck) continue;

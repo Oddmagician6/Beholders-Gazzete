@@ -8,10 +8,34 @@ const lootRoll = (min, max) => Math.floor(rand() * (max - min + 1)) + min;
 const lootPick = arr => arr[Math.floor(rand() * arr.length)];
 const lootD100 = () => lootRoll(1, 100);
 
-// Safely resolve a coin entry: [min,max] or 0
+// The sum of n dice of s sides from one draw (so a roll takes as many draws as it always did):
+// the draw picks a total by its real odds, bell curve and all.
+const LOOT_DICE_CDF = {};
+function lootDice(n, s) {
+  const key = n + 'd' + s;
+  if (!LOOT_DICE_CDF[key]) {
+    let dist = [1];
+    for (let k = 0; k < n; k++) {
+      const next = new Array(dist.length + s - 1).fill(0);
+      dist.forEach((p, i) => { for (let f = 0; f < s; f++) next[i + f] += p / s; });
+      dist = next;
+    }
+    let run = 0;
+    LOOT_DICE_CDF[key] = dist.map(p => (run += p));
+  }
+  const cdf = LOOT_DICE_CDF[key], u = rand();
+  const i = cdf.findIndex(c => u < c);
+  return n + (i < 0 ? cdf.length - 1 : i);
+}
+
+// Safely resolve a coin entry: [min,max] (NdS, as [N, N*S]) or 0
 function resolveCoin(entry, multiplier = 1, luckMult = 1) {
   if (!entry || entry === 0) return 0;
-  if (Array.isArray(entry)) return Math.floor(lootRoll(entry[0], entry[1]) * multiplier * luckMult);
+  if (Array.isArray(entry)) {
+    const [lo, hi] = entry, s = hi / lo;
+    const roll = lo > 1 && Number.isInteger(s) && s > 1 ? lootDice(lo, s) : lootRoll(lo, hi);
+    return Math.floor(roll * multiplier * luckMult);
+  }
   return 0;
 }
 
@@ -19,12 +43,13 @@ function resolveCoin(entry, multiplier = 1, luckMult = 1) {
 function generateCoins(table, luckMult = 1) {
   const cpMult = table.cpMult || 1;
   const spMult = table.spMult || 1;
+  const epMult = table.epMult || 1;
   const gpMult = table.gpMult || 1;
   const ppMult = table.ppMult || 1;
   return {
     cp: resolveCoin(table.cp, cpMult, luckMult),
     sp: resolveCoin(table.sp, spMult, luckMult),
-    ep: resolveCoin(table.ep, 1,      luckMult),
+    ep: resolveCoin(table.ep, epMult, luckMult),
     gp: resolveCoin(table.gp, gpMult, luckMult),
     pp: resolveCoin(table.pp, ppMult, luckMult)
   };
@@ -628,7 +653,7 @@ function decorateTreasure(t, kind, cr, opts = {}) {
     if (rand() < (hoard ? 0.7 : 0.25)) {
       const [lo, hi] = opts.lockDcs || LOOT_LOCK_DC[cr];
       const dc = rand() < 0.5 ? lo : hi;
-      t.lock = { dc, text: ruleText(`DC ${dc} {ability:dex:thievery} check{alt: with thieves' tools|} to pick, or DC ${Math.min(30, dc + 5)} {ability:str} to force. ${lootPick(LOOT_LOCK_KEYS)}`) };
+      t.lock = { dc, text: ruleText(`DC ${dc} {ability:dex:thievery} check{alt: with thieves' tools|} to pick, or DC ${opts.lockDcs ? dc + 5 : Math.min(30, dc + 5)} {ability:str} to force. ${lootPick(LOOT_LOCK_KEYS)}`) };
     }
     if (rand() < (hoard ? 0.35 : 0.08)) t.trap = (opts.trap || lootTrap)(cr);
   }
