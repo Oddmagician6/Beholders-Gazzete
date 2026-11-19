@@ -147,8 +147,8 @@ const SITE_KINDS = ruleTable({
             { name: 'The bath', text: 'A copper tub that fills itself with hot water when anyone says the right word.' }
         ],
         ends: [
-            { name: 'The observatory', text: 'The top of the tower: a domed roof that opens on the stars, and a brass telescope pointing at one of them.' },
-            { name: 'The wizard\'s study', text: 'A cluttered room at the top, every surface covered in notes. The wizard\'s chair is still warm.' },
+            { name: 'The observatory', text: 'A domed room high in the tower, its roof open on the stars, and a brass telescope pointing at one of them.' },
+            { name: 'The wizard\'s study', text: 'A cluttered room, every surface covered in notes. The wizard\'s chair is still warm.' },
             { name: 'The vault of wonders', text: 'A locked room of shelves lined with things the wizard collected and should not have.' },
             { name: 'The lightning chamber', text: 'A copper rod runs down from the roof into a crackling coil. The air tastes of storms.' }
         ],
@@ -537,7 +537,7 @@ const SITE_KINDS = ruleTable({
             { name: 'The kitchen', text: 'A huge range, copper pans, and a pie on the table that is still warm.' },
             { name: 'The master bedroom', text: 'A four-poster bed hung with black curtains, and a dressing table covered in letters.' },
             { name: 'The portrait gallery', text: 'Generations of the family, each portrait with the eyes cut out.' },
-            { name: 'The conservatory', text: 'Glass on every side, and plants grown over everything. Some of the plants have grown over people.' },
+            { name: 'The glasshouse', text: 'Glass on every side, and plants grown over everything. Some of the plants have grown over people.' },
             { name: 'The study', text: 'A desk with a half-written letter, and a safe in the wall behind a painting.' },
             { name: 'The wine cellar', text: 'Racks of dusty bottles, and a wall that sounds hollow when knocked.' },
             { name: 'The attic', text: 'Trunks, broken furniture, dress dummies, and a little window that looks out on the wrong season.' }
@@ -752,20 +752,30 @@ function siteDoorDcs(s) {
     return [dc, dc];
 }
 // Who holds the place, mid-sentence ("held by ..."), for every group a kind can have.
-const SITE_HOLDERS = {
+const SITE_HOLDERS = ruleTable({
     undead: 'the walking dead', haunt: 'restless spirits', necromancer: 'a necromancer and their servants', vampire: "a vampire's brood",
     cult: 'a cult', tomb: 'its old guardians', wererats: 'a wererat gang', spiders: 'giant spiders', lurkers: 'things that ooze and lurk',
-    kobolds: 'kobolds', duergar: 'duergar prospectors', grimlocks: 'grimlocks and worse', goblins: 'goblins', vermin: 'giant vermin',
+    kobolds: 'kobolds', duergar: '{alt:duergar|hryngar} prospectors', grimlocks: 'grimlocks and worse', goblins: 'goblins', vermin: 'giant vermin',
     burrowers: 'a burrowing terror', elementals: 'creatures from an elemental rift', orcs: 'an orc war band', workshop: "the wizard's guardians",
     devils: 'devils', shadows: 'spies and assassins', lies: "something that isn't what it seems", demons: 'demons', aberrant: 'things from beyond',
-    lizardfolk: 'lizardfolk', hags: 'a hag and her servants', oldworld: 'ancient guardians', sahuagin: 'sahuagin raiders', bandits: 'a bandit gang',
-    hobgoblins: 'a hobgoblin warband', gnolls: 'a gnoll pack', clans: 'clan warriors', pirates: 'a pirate crew', dragon: 'a dragon and its servants',
-    hunters: 'a great predator', brutes: 'trolls and brutes', 'giants-hill': 'hill giants and ogres', wolves: 'a wolf pack', weres: 'the moon-cursed',
+    lizardfolk: 'lizardfolk', hags: 'a hag and her servants', oldworld: 'ancient guardians', sahuagin: '{alt:sahuagin|sedacthy} raiders', bandits: 'a bandit gang',
+    hobgoblins: 'a hobgoblin warband', gnolls: '{alt:a gnoll pack|a kholo pack}', clans: 'clan warriors', pirates: 'a pirate crew', dragon: 'a dragon and its servants',
+    hunters: 'a great predator', brutes: 'trolls and brutes', 'giants-hill': '{alt:hill|cave} giants and ogres', wolves: 'a wolf pack', weres: 'the moon-cursed',
     sky: 'sky hunters', watch: 'soldiers who went bad', nobles: "a noble's retinue", pits: 'pit fighters', druids: 'a druid circle',
     drow: 'a drow patrol', deep: 'beasts of the deep', fey: 'fey wardens', 'giants-frost': 'frost giants', 'giants-fire': 'fire giants',
     'giants-high': 'giant lords', celestial: "heaven's wardens", dinos: 'beasts from a lost valley'
-};
+});
 const SITE_AGO = [60, 120, 200, 300, 450, 600, 800, 1000, 1400];
+// Hoard containers that belong to one of a kind's last rooms: kind → { container index: [the ends it fits] }.
+const SITE_CONTAINER_ENDS = {
+    temple: { 3: [2, 3] },
+    keep: { 0: [2], 2: [1], 3: [3] },
+    seacave: { 2: [2], 3: [3] },
+    shipwreck: { 0: [0], 1: [1], 4: [0] },
+    lighthouse: { 2: [0] },
+    manor: { 1: [0], 2: [1] },
+    barrow: { 0: [0], 1: [2], 5: [3] }
+};
 
 // Someone else in a room (siteEvent): a prisoner, a rival party, or one of the others.
 // {name}: a person's name (left out when npc-data.js isn't loaded). {gp}: a ransom or price by tier.
@@ -773,7 +783,7 @@ const SITE_EVENT_KINDS = [['prisoner', 3], ['rivals', 3], ['other', 4]];
 const SITE_EVENT_ROLES = ['a merchant\'s clerk', 'a tax collector', 'a young priest', 'a scout from the nearest town', 'a tinker', 'an herbalist', 'a minor noble\'s youngest', 'a retired soldier', 'a bard who came for a song', 'a mapmaker', 'a farmer\'s eldest', 'a runaway apprentice', 'a pilgrim', 'a watch sergeant'];
 const SITE_PRISON_HELD = ['is chained to the wall by one ankle', 'sits in a cage hung from the ceiling', 'is tied to a chair and gagged', 'is locked in a cupboard, knocking softly', 'lies bound in a corner, pretending to be asleep', 'is shackled to a heavy chest', 'is tied to a post with their hands over their head', 'sits in a pit with a grate over it'];
 const SITE_PRISON_KNOWS = ['Freed, they know a way out that the place\'s masters don\'t watch.', 'They were taken for ransom, and their family will pay {gp} for them alive.', 'They saw what waits in the last room, and won\'t stop talking about it.', 'They are not what they seem: they are one of their captors, left here to tell a good story and lead the party into a trap.', 'Give them a weapon and they\'ll fight beside the party until they can run.', 'They know the name of whoever leads this place, and one thing it fears.', 'They came here on purpose, looking for someone, and they still mean to find them.', 'They\'re too weak to walk, and someone will have to carry them out.', 'They\'d rather stay: they owe money in town, and here at least they\'re fed.', 'They\'ve counted the guards for days and know when the watch changes.', 'They hid something valuable in this room before they were caught, and they\'ll share it.', 'They insist they can\'t leave until something of theirs is found, deeper in.'];
-const SITE_RIVAL_LEAD = ['a loud fighter in polished armor', 'a nervous wizard', 'a cleric of a war god', 'a halfling with far too many knives', 'a ranger who doesn\'t talk', 'a bard who is writing all this down', 'a paladin who is very sure of everything', 'a sorcerer barely out of childhood'];
+const SITE_RIVAL_LEAD = ruleTable(['a loud fighter in polished armor', 'a nervous wizard', 'a cleric of a war god', 'a halfling with far too many knives', 'a ranger who doesn\'t talk', 'a bard who is writing all this down', '{alt:a paladin|a champion} who is very sure of everything', 'a sorcerer barely out of childhood']);
 const SITE_RIVAL_DOING = ['are resting here, licking their wounds', 'are arguing over a map', 'are trying to open a door that won\'t open', 'are burying one of their own', 'are pinned down here, low on spells and food', 'are going through a dead foe\'s pockets', 'are lost, and too proud to say so', 'are already packing up a share of the loot'];
 const SITE_RIVAL_MOOD = ruleTable(['They want the hoard and will race the party to it.', 'They\'d split the hoard evenly if the party helps them.', 'They\'ll sell the party their map of the rest of the place for {gp}.', 'They\'ll turn on the party at the worst moment.', 'They\'ve had enough: they\'d hand over everything they\'ve learned for an escort out.', 'They take the party for enemies and attack first, unless someone talks fast ({dc:13} {skill:cha:persuasion}).', 'They were hired by someone the party knows, and that someone said nothing about the party.', 'They\'ll join the party for the rest of the way, and want a fair share.']);
 const SITE_EVENT_OTHER = [
@@ -1080,6 +1090,11 @@ function rollSite(seed, opts = {}) {
     // The hoard in the last room, and the boss of the place.
     const lastFight = rooms[count - 1].fight;
     const hoard = part('hoard.' + kind, () => ({ container: sitePick(K.containers) }));
+    // A container that names one of the other last rooms ("under the oath stone" in the ship of the dead)
+    // gives way to one that doesn't, under its own seed.
+    const ties = SITE_CONTAINER_ENDS[kind] || {}, endAt = K.ends.indexOf(types.end);
+    const fits = c => { const t = ties[K.containers.indexOf(c)]; return !t || t.includes(endAt); };
+    if (!fits(hoard.container)) hoard.container = part('hoard.fit.' + kind, () => sitePick(K.containers.filter(fits)));
     hoard.source = { dragon: 'dragon', bandits: 'bandits', pirates: 'smugglers', cult: 'cult', necromancer: 'wizard', workshop: 'wizard', tomb: 'tomb', 'giants-hill': 'giant', hags: 'den', shadows: 'guild', wererats: 'guild' }[band] || K.hoard;
     hoard.seed = deriveSeed(seed, 'hoard');
     hoard.tier = tier;
@@ -1170,14 +1185,20 @@ function siteMonsterText(f) {
 }
 
 function siteFightRating(s, f) {
+    // Pathfinder XP is read against the party's level, which the last roll on the page set:
+    // read it against this site's (a notebook sheet may hold sites of several levels).
+    const was = SITE_PF2E ? encPartyLevel : 0;
+    if (SITE_PF2E) encPartyLevel = s.level;
     const xp = encounterXp(siteFightList(f));
+    if (SITE_PF2E) encPartyLevel = was;
     const r = rateEncounter(xp, s.budget);
     return `${xp.toLocaleString('en-US')} XP${r ? `, ${ENCOUNTER_LEVELS[r].label.toLowerCase()}` : ''}`;
 }
 
 const SITE_DIRS = { '1,0': 'east', '-1,0': 'west', '0,1': 'south', '0,-1': 'north' };
 
-function siteDoorText(s, kind) {
+// winchHere: the room the exit is read from holds a portcullis's winch.
+function siteDoorText(s, kind, winchHere = false) {
     const K = SITE_KINDS[s.kind];
     const [lock, find] = siteDoorDcs(s);
     return ruleText({
@@ -1186,7 +1207,8 @@ function siteDoorText(s, kind) {
         locked: `${K.door}, locked (DC ${lock} {ability:dex:thievery} check{alt: with thieves' tools|}, or DC ${lock + 5} {ability:str} to force it)`,
         stuck: `${K.door}, swollen shut (DC ${lock - 2} {skill:str:athletics} to shove it open)`,
         secret: `a secret door (DC ${find} {skill:wis:perception} to find it)`,
-        portcullis: `a portcullis (the winch is on the far side; DC ${lock + 5} {ability:str} to lift it)`,
+        portcullis: winchHere ? 'a portcullis (the winch is on this side: an action to raise or drop it)'
+            : `a portcullis (the winch is on the far side; DC ${lock + 5} {ability:str} to lift it)`,
         stairs: 'a stair'
     }[kind]);
 }
@@ -1201,7 +1223,8 @@ function siteExits(s, i) {
         const kind = s.doors[k];
         let dir = SITE_DIRS[`${B.x - A.x},${B.y - A.y}`];
         if (kind === 'stairs') dir = B.y < A.y ? 'up' : 'down';
-        out.push(`${dir} to ${j + 1}, ${kind === 'stairs' ? 'by a stair' : `through ${siteDoorText(s, kind)}`}`);
+        // A portcullis's winch is on the inner side: the room further in (the higher number).
+        out.push(`${dir} to ${j + 1}, ${kind === 'stairs' ? 'by a stair' : `through ${siteDoorText(s, kind, i > j)}`}`);
     });
     return out;
 }
@@ -1512,10 +1535,23 @@ function siteMapSvg(s, title, opts = {}) {
     if (snap) { W = Math.ceil(W / SITE_SQUARE) * SITE_SQUARE; H = Math.ceil(H / SITE_SQUARE) * SITE_SQUARE; }
     const last = cells.length - 1;
     let corr = '', walls = '', fills = '', floors = '', doors = '', lines = '', labels = '';
+    // Without the secret doors, the rooms found only through one stay off the map too.
+    const shown = new Set([0]);
+    if (secret) cells.forEach((c, i) => shown.add(i));
+    else {
+        for (let grew = true; grew;) {
+            grew = false;
+            s.map.edges.forEach((e, k) => {
+                if (s.doors[k] === 'secret' || shown.has(e.a) === shown.has(e.b)) return;
+                shown.add(e.a); shown.add(e.b); grew = true;
+            });
+        }
+    }
 
     s.map.edges.forEach((e, k) => {
         const kind = s.doors[k];
         if (kind === 'secret' && !secret) return;
+        if (!shown.has(e.a) || !shown.has(e.b)) return;
         const A = cells[e.a], B = cells[e.b];
         const pa = center(A), pb = center(B);
         corr += `<line class="sm-corr-wall${art ? ' sm-a-wall' : ''}" x1="${pa.x}" y1="${pa.y}" x2="${pb.x}" y2="${pb.y}"/>`;
@@ -1544,6 +1580,7 @@ function siteMapSvg(s, title, opts = {}) {
     });
 
     cells.forEach((c, i) => {
+        if (!shown.has(i)) return;
         const p = center(c);
         const shape = siteRoomShape(s, i);
         const cls = `sm-room${i === last ? ' sm-end' : ''}${art ? ' sm-a-room' : ''}`;

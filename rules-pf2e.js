@@ -50,6 +50,8 @@ RULE_SYSTEMS.pf2e = {
         [/\bthunder damage\b/g, 'sonic damage'], [/\bradiant damage\b/g, 'spirit damage'],
         // Pathfinder has no poisoned condition (a poison's lasting harm is sickened) and no grappled one.
         [/\bis poisoned for 1 (?:minute|hour)\b/g, 'is sickened 1'], [/\bnot poisoned\b/g, 'not sickened'],
+        [/\bis poisoned until the end of their next turn\b/g, 'is sickened 1'],
+        [/\ba spell of 1st level or higher\b/g, 'a spell of rank 1 or higher'],
         [/\bgrappled and restrained\b/g, 'restrained'],
         [/\ba healing word\b/g, 'a healing spell']
     ],

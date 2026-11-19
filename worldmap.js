@@ -67,12 +67,16 @@ function weSave() {
 function weMark() {
     WE.undo.push(wmCopy(WE.m));
     if (WE.undo.length > WE_UNDO_MAX) WE.undo.shift();
+    WE.redoHeld = WE.redo;
     WE.redo = [];
     weUndoButtons();
 }
 
+// A change that came to nothing (a stroke over what was already there): Redo comes back too.
 function weUnmark() {
     WE.undo.pop();
+    if (WE.redoHeld) WE.redo = WE.redoHeld;
+    WE.redoHeld = null;
     weUndoButtons();
 }
 
@@ -84,6 +88,7 @@ function weSwap(from, to) {
     WE.store.maps[WE.store.maps.indexOf(was)] = WE.m;
     WE.sel = null;
     WE.draft = null;
+    if (was.w !== WE.m.w || was.h !== WE.m.h) WE.ruler = null;
     weSave();
     if (was.w !== WE.m.w || was.h !== WE.m.h) weBuild(false);
     else weDrawAll();
@@ -763,6 +768,10 @@ function weAct(act) {
     const s = weSelected(), m = WE.m;
     if (!s) return;
     const type = WE.sel.type, list = type === 'ic' ? m.ic : type === 'tx' ? m.tx : m.ln;
+    if (act === 'dup') {
+        const [cap, what] = { ic: [WM_LIMITS.icons, 'icons'], tx: [WM_LIMITS.texts, 'labels'], ln: [WM_LIMITS.lines, 'lines'] }[type];
+        if (list.length >= cap) { weFlash(`⚠️ A map holds up to ${cap} ${what}.`); return; }
+    }
     weMark();
     if (act === 'del') { list.splice(WE.sel.i, 1); WE.sel = null; }
     if (act === 'dup') {
@@ -811,7 +820,8 @@ function weKey(e) {
         if (k === 'backspace') { e.preventDefault(); WE.draft.pts.pop(); if (!WE.draft.pts.length) WE.draft = null; weDrawUi(); return; }
     }
     if (k === ' ') { e.preventDefault(); WE.space = true; $('we-stage').classList.add('we-panning'); return; }
-    if (k === 'escape') { WE.sel = null; WE.ruler = null; weDrawUi(); weInspector(); return; }
+    // Not mid-drag: the drag's end still needs what it was moving.
+    if (k === 'escape') { if (WE.drag) return; WE.sel = null; WE.ruler = null; weDrawUi(); weInspector(); return; }
     if ((k === 'delete' || k === 'backspace') && weSelected()) { e.preventDefault(); weAct('del'); return; }
     if (k === 'r' && weSelected()) { e.preventDefault(); weAct(e.shiftKey ? 'unturn' : 'turn'); return; }
     if (k === 'r' && (WE.tool === 'icon' || WE.tool === 'text')) {
@@ -1102,7 +1112,7 @@ function weSetup() {
         weSave();
     });
 
-    $('we-maps').addEventListener('change', e => weOpen(e.target.value));
+    $('we-maps').addEventListener('change', e => { unsure(); weOpen(e.target.value); });   // unsure: the Delete button's, below
     $('we-name').addEventListener('input', e => {
         WE.m.name = e.target.value.replace(/[\u0000-\u001f]/g, ' ').slice(0, WM_LIMITS.name) || 'Untitled world';
         weMapOptions();
@@ -1123,6 +1133,7 @@ function weSetup() {
         const i = WE.store.maps.indexOf(WE.m);
         WE.m = WE.store.maps[i] = wmResize(WE.m, v[1], v[2]);
         WE.sel = null;
+        WE.ruler = null;   // it measured the old map's spots
         weFillMapFields();
         weBuild(true);
         weSave();
@@ -1147,15 +1158,18 @@ function weSetup() {
         weFlash('🧽 Cleared. Undo brings it all back.');
     });
     const del = $('we-delete');
+    // Two clicks on the same map: the first is for the map on screen then, so switching maps asks again.
+    let delTimer = 0;
+    const unsure = () => { clearTimeout(delTimer); delete del.dataset.sure; del.textContent = '🗑️ Delete'; };
     del.addEventListener('click', () => {
-        if (!del.dataset.sure) {
-            del.dataset.sure = '1';
+        if (del.dataset.sure !== WE.m.id) {
+            unsure();
+            del.dataset.sure = WE.m.id;
             del.textContent = '🗑️ Click again to delete';
-            setTimeout(() => { delete del.dataset.sure; del.textContent = '🗑️ Delete'; }, 3500);
+            delTimer = setTimeout(unsure, 3500);
             return;
         }
-        delete del.dataset.sure;
-        del.textContent = '🗑️ Delete';
+        unsure();
         const name = WE.m.name;
         WE.store.maps = WE.store.maps.filter(m => m !== WE.m);
         if (!WE.store.maps.length) WE.store.maps.push(wmBlank(200, 130, 'My world'));
@@ -1175,10 +1189,22 @@ function weSetup() {
     window.addEventListener('storage', e => {
         if (e.key !== WM_KEY && e.key !== null) return;
         const store = wmLoadStore(), id = WE.m.id;
-        if (WE.dirty) {
+        // Changes on the way, or a stroke or drag under way: keep this map as it is here.
+        if (WE.dirty || WE.drag) {
             const i = store.maps.findIndex(m => m.id === id);
             if (i >= 0) store.maps[i] = WE.m;
-            else store.maps.unshift(WE.m);
+            else if (store.maps.length < WM_LIMITS.maps) store.maps.unshift(WE.m);
+            else {
+                // Deleted in the other tab, and that tab filled its place: there's no room to keep it.
+                const lost = WE.m.name;
+                WE.drag = null;
+                WE.dirty = false;
+                clearTimeout(WE.saveTimer);
+                WE.store = store;
+                weOpen(store.maps[0].id);
+                weFlash(`⚠️ Another tab deleted “${lost}” and filled the page's ${WM_LIMITS.maps} maps, so it couldn't be kept here.`, true);
+                return;
+            }
             WE.store = store;
             weMapOptions();
             return;

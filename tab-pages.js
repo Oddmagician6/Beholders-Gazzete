@@ -99,6 +99,8 @@ function onTabLinks(go) {
     };
     document.addEventListener('click', move, true);
     document.addEventListener('auxclick', move, true);   // a middle click
+    // Before the link can be copied (right click, long press) or shown in the status bar (hover, focus).
+    ['contextmenu', 'mouseover', 'focusin', 'touchstart'].forEach(t => document.addEventListener(t, move, { capture: true, passive: true }));
 })();
 
 // An old link (toolbox.html?tab=init&add=goblin) moves to the tab's own page before anything reads it.

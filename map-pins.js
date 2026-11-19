@@ -63,7 +63,9 @@ function pinSvg(pins, W, H, { cls = 'mp', r = 6.5, sel = '' } = {}) {
     const head = `M0 0C${f(-r * 0.35)} ${f(-r * 1.1)} ${f(-r)} ${f(-r * 1.6)} ${f(-r)} ${f(cy)}A${f(r)} ${f(r)} 0 1 1 ${f(r)} ${f(cy)}C${f(r)} ${f(-r * 1.6)} ${f(r * 0.35)} ${f(-r * 1.1)} 0 0Z`;
     return `<g class="${cls}-pins">${pins.map((p, n) => {
         const label = `Pin ${n + 1}: ${pinLabel(p, n)}`;
-        return `<g class="${cls}-pin${p.id === sel ? ` ${cls}-pin-on` : ''}" data-pin="${pinEsc(p.id)}" tabindex="0" role="button" aria-label="${pinEsc(label)}" transform="translate(${f(p.x * W)} ${f(p.y * H)})"><title>${pinEsc(label)}</title><path class="${cls}-pin-head" d="${head}"/><text class="${cls}-pin-n" y="${f(cy + 0.4)}" style="font-size:${f(r * (n < 9 ? 1.45 : 1.2))}px">${n + 1}</text></g>`;
+        // A pin too near the top for its head hangs down from its spot instead, so it stays on the map.
+        const down = p.y * H < r * 3.3;
+        return `<g class="${cls}-pin${p.id === sel ? ` ${cls}-pin-on` : ''}" data-pin="${pinEsc(p.id)}" tabindex="0" role="button" aria-label="${pinEsc(label)}" transform="translate(${f(p.x * W)} ${f(p.y * H)})"><title>${pinEsc(label)}</title><path class="${cls}-pin-head" d="${head}"${down ? ' transform="scale(1 -1)"' : ''}/><text class="${cls}-pin-n" y="${f((down ? -cy : cy) + 0.4)}" style="font-size:${f(r * (n < 9 ? 1.45 : 1.2))}px">${n + 1}</text></g>`;
     }).join('')}</g>`;
 }
 
@@ -86,11 +88,14 @@ function pinWire(host, o) {
     let drag = null;
     const end = () => { if (drag && o.dragging) o.dragging(false); drag = null; };
     host.addEventListener('pointerdown', ev => {
+        // A second finger (a pinch) calls off the pin the first one was about to drop.
+        // (The same pointer again means its last press ended off the map: start afresh.)
+        if (drag && ev.pointerId !== drag.pid) { drag.multi = true; return; }
         if (ev.button !== 0 || !o.placing()) return;
         const frame = o.frame();
         if (!frame || !frame.contains(ev.target)) return;
         const el = ev.target.closest('g[data-pin]');
-        drag = { el, id: el ? el.dataset.pin : null, x0: ev.clientX, y0: ev.clientY, moved: false, pt: null };
+        drag = { el, id: el ? el.dataset.pin : null, pid: ev.pointerId, x0: ev.clientX, y0: ev.clientY, moved: false, pt: null, multi: false };
         if (el) {
             ev.preventDefault();
             try { host.setPointerCapture(ev.pointerId); } catch (e) { /* the drag still follows the pointer while it's over the map */ }
@@ -98,7 +103,7 @@ function pinWire(host, o) {
         }
     });
     host.addEventListener('pointermove', ev => {
-        if (!drag) return;
+        if (!drag || ev.pointerId !== drag.pid) return;
         if (!drag.moved && Math.hypot(ev.clientX - drag.x0, ev.clientY - drag.y0) < 5) return;
         drag.moved = true;
         if (!drag.el) return;
@@ -111,13 +116,15 @@ function pinWire(host, o) {
     host.addEventListener('pointerup', ev => {
         if (!drag) return;
         const d = drag;
+        // The other finger of a pinch lifting: no pin from it (the drag ends with its own finger).
+        if (ev.pointerId !== d.pid) { if (!d.el) end(); return; }
         end();
         if (d.el) {
             if (d.moved && d.pt) o.move(d.id, d.pt.x, d.pt.y);
-            else if (!d.moved) o.open(d.id, true);
+            else if (!d.moved && !d.multi) o.open(d.id, true);
             return;
         }
-        if (d.moved) return;
+        if (d.moved || d.multi) return;
         const frame = o.frame(), { W, H } = o.size();
         const pt = frame && pinPoint(frame, ev, W, H);
         if (pt) o.place(pt.x, pt.y);

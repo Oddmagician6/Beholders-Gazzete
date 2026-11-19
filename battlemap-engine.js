@@ -765,6 +765,9 @@ function bmFromSite(s, style = 'art') {
     x0 = Math.max(0, x0 - 1); y0 = Math.max(0, y0 - 1);
     const w = Math.min(BM_LIMITS.side, Math.min(W, x1 + 2) - x0), h = Math.min(BM_LIMITS.side, Math.min(H, y1 + 2) - y0);
     const m = bmBlank(w, h, String(s.name).slice(0, BM_LIMITS.name), BM_STYLES[style] ? style : 'art');
+    // The squares the whole site needs, when that's more than a map holds (the page warns first; bmPack leaves it out).
+    const needW = Math.min(W, x1 + 2) - x0, needH = Math.min(H, y1 + 2) - y0;
+    if (needW > w || needH > h) m.cut = { w: needW, h: needH };
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) m.fl[y * w + x] = fl[(y + y0) * W + x + x0];
     m.ob = ob.map(o => ({ ...o, x: o.x - x0, y: o.y - y0 })).filter(o => o.x >= 0 && o.y >= 0 && o.x <= w && o.y <= h);
     m.lb = lb.map(l => ({ ...l, x: l.x - x0, y: l.y - y0 })).filter(l => l.x >= 0 && l.y >= 0 && l.x <= w && l.y <= h);

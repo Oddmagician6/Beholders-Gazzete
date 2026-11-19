@@ -91,7 +91,7 @@ function pinBoard(o) {
             <ol class="wb-pin-list">${pins.map((p, n) => rowHTML(nb, self, p, n)).join('')}</ol>
             <ol class="wb-pin-key">${wpKeyHTML(nb, pins)}</ol>
             <p class="wb-small wb-pin-foot">${o.foot(nb, self)}</p>
-            <p class="pan-links"><button type="button" class="btn wb-pin-clear">${state.clearing ? '⚠️ Click again to remove every pin' : '🗑️ Remove All Pins'}</button></p>` : '';
+            <p class="pan-links"><button type="button" class="btn wb-pin-clear">${state.clearing === self.id ? '⚠️ Click again to remove every pin' : '🗑️ Remove All Pins'}</button></p>` : '';
 
         if (refocus) { const el = o.card.querySelector(refocus); if (el) el.focus({ preventScroll: true }); }
     }
@@ -181,10 +181,13 @@ function pinBoard(o) {
             return;
         }
         if (t.classList.contains('wb-pin-clear')) {
-            if (!state.clearing) {
-                state.clearing = true;
+            // The first click counts for the map it was made on: another map asks again.
+            const e = o.entry(nbLoad());
+            if (!e) return;
+            if (state.clearing !== e.id) {
+                state.clearing = e.id;
                 render();
-                setTimeout(() => { if (state.clearing) { state.clearing = false; render(); } }, 4000);
+                setTimeout(() => { if (state.clearing === e.id) { state.clearing = false; render(); } }, 4000);
                 return;
             }
             state.clearing = false;
@@ -200,13 +203,20 @@ function pinBoard(o) {
         const box = e.target.closest('.wb-pin-name, .wb-pin-note');
         if (!box) return;
         const id = box.dataset.pin, k = box.classList.contains('wb-pin-name') ? 'name' : 'note', key = id + '|' + k;
-        clearTimeout(timers[key]);
-        timers[key] = setTimeout(() => {
+        if (timers[key]) clearTimeout(timers[key].t);
+        const run = () => {
             delete timers[key];
             if (o.edit(pins => { const p = pins.find(q => q.id === id); if (!p) return false; p[k] = box.value; }, true)) renderMap();
-        }, 400);
+        };
+        timers[key] = { t: setTimeout(run, 400), run };
     });
     nbOnChange(nb => { if (o.ready() && !state.dragging) render(nb); });
 
-    return { state, render, renderMap, place, line: wpLine };
+    // Save the names and notes still being typed, onto the map they were typed on: call it before
+    // another map takes this one's place.
+    function flush() {
+        Object.values(timers).forEach(({ t, run }) => { clearTimeout(t); run(); });
+    }
+
+    return { state, render, renderMap, place, flush, line: wpLine };
 }

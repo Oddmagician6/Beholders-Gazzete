@@ -348,9 +348,66 @@ function wmResize(m, w, h) {
     const W = w * WM_CELL, H = h * WM_CELL, on = (x, y) => x >= -60 && y >= -60 && x <= W + 60 && y <= H + 60;
     n.ic = n.ic.map(o => ({ ...o, x: o.x + dx, y: o.y + dy })).filter(o => on(o.x, o.y));
     n.tx = n.tx.map(o => ({ ...o, x: o.x + dx, y: o.y + dy })).filter(o => on(o.x, o.y));
-    n.ln = n.ln.map(l => ({ ...l, p: l.p.map(q => [q[0] + dx, q[1] + dy]).filter(q => on(q[0], q[1])) })).filter(l => l.p.length >= 2);
-    n.ln.forEach(l => { if (l.p.length < 3) l.cl = 0; });
+    // Lines are cut at the edge, so a road across the part that's kept stays (in pieces, if it
+    // leaves and comes back); a closed region is cut to the edge as a shape.
+    const box = [-60, -60, W + 60, H + 60];
+    n.ln = n.ln.flatMap(l => {
+        const pts = l.p.map(q => [q[0] + dx, q[1] + dy]);
+        if (l.cl) {
+            const p = wmClipPoly(pts, box);
+            return p.length >= 3 ? [{ ...l, p }] : p.length === 2 ? [{ ...l, p, cl: 0 }] : [];
+        }
+        return wmClipRuns(pts, box).map(p => ({ ...l, p, cl: 0 }));
+    }).slice(0, WM_LIMITS.lines);
     return n;
+}
+
+// A segment cut to the box [x0, y0, x1, y1] (Liang–Barsky): [a, b] or null when it's all outside.
+function wmClipSeg(a, b, [x0, y0, x1, y1]) {
+    const dx = b[0] - a[0], dy = b[1] - a[1];
+    let t0 = 0, t1 = 1;
+    for (const [p, q] of [[-dx, a[0] - x0], [dx, x1 - a[0]], [-dy, a[1] - y0], [dy, y1 - a[1]]]) {
+        if (p === 0) { if (q < 0) return null; continue; }
+        const r = q / p;
+        if (p < 0) { if (r > t1) return null; if (r > t0) t0 = r; }
+        else { if (r < t0) return null; if (r < t1) t1 = r; }
+    }
+    const at = t => [a[0] + t * dx, a[1] + t * dy];
+    return [t0 > 0 ? at(t0) : a, t1 < 1 ? at(t1) : b];
+}
+
+// An open line cut to the box: the runs of it inside, each of two points or more.
+function wmClipRuns(pts, box) {
+    const runs = [];
+    let cur = null;
+    for (let k = 1; k < pts.length; k++) {
+        const seg = wmClipSeg(pts[k - 1], pts[k], box);
+        if (!seg) { cur = null; continue; }
+        if (!cur || seg[0] !== pts[k - 1]) { cur = [seg[0]]; runs.push(cur); }
+        cur.push(seg[1]);
+        if (seg[1] !== pts[k]) cur = null;
+    }
+    return runs.filter(r => r.length >= 2).map(r => r.slice(0, WM_LIMITS.pts));
+}
+
+// A closed shape cut to the box (Sutherland–Hodgman).
+function wmClipPoly(pts, [x0, y0, x1, y1]) {
+    const edges = [[q => q[0] >= x0, (a, b) => [x0, a[1] + (b[1] - a[1]) * (x0 - a[0]) / (b[0] - a[0])]],
+        [q => q[0] <= x1, (a, b) => [x1, a[1] + (b[1] - a[1]) * (x1 - a[0]) / (b[0] - a[0])]],
+        [q => q[1] >= y0, (a, b) => [a[0] + (b[0] - a[0]) * (y0 - a[1]) / (b[1] - a[1]), y0]],
+        [q => q[1] <= y1, (a, b) => [a[0] + (b[0] - a[0]) * (y1 - a[1]) / (b[1] - a[1]), y1]]];
+    let out = pts;
+    for (const [inside, cross] of edges) {
+        const list = out;
+        out = [];
+        list.forEach((b, k) => {
+            const a = list[(k + list.length - 1) % list.length];
+            if (inside(b)) { if (!inside(a)) out.push(cross(a, b)); out.push(b); }
+            else if (inside(a)) out.push(cross(a, b));
+        });
+        if (!out.length) break;
+    }
+    return out.slice(0, WM_LIMITS.pts);
 }
 
 // ── Random land ───────────────────────────────────────────

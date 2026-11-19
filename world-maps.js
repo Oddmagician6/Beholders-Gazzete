@@ -65,6 +65,7 @@ function mapsShow(id, push = null) {
     const list = mapsEntries();
     const next = list.some(e => e.id === id) ? id : (list.some(e => e.id === mapsState.id) ? mapsState.id : (list[0] ? list[0].id : ''));
     if (next !== mapsState.id) {
+        if (mapsBoard) mapsBoard.flush();
         mapsState.id = next;
         mapsState.deleting = false;
         mapsState.view.fit = true;
@@ -530,15 +531,24 @@ function mapsDeleteMap() {
 function mapsOrphansBack() {
     const nb = nbLoad();
     let id = '';
+    const moves = [];
+    // As many as there's room for, by the same cap as Upload; the rest wait here for another time.
     for (const r of mapsOrphans(nb)) {
+        if (mapsEntries(nb).length >= MAP_LIMITS.maps) break;
         const got = mapFileEntry(nb, r);
         if (!got) break;
-        if (got !== r.id) mapPut({ ...r, id: got }).then(() => mapDelete(r.id)).catch(() => {});
+        if (got !== r.id) moves.push([r, got]);
         id = id || got;
     }
+    if (!id) {
+        flash('maps-status', mapsEntries(nb).length >= MAP_LIMITS.maps ? `⚠️ The notebook holds ${MAP_LIMITS.maps} maps at most. Delete one first.` : '⚠️ The notebook is full. Remove an entry first.');
+        return;
+    }
     if (!nbStore(nb)) { flash('maps-status', "⚠️ This browser won't keep a notebook (storage is full or off)."); return; }
-    mapsReload().then(() => { if (id) mapsShow(id, true); });
-    flash('maps-status', id ? '📓 Back in the notebook.' : '⚠️ The notebook is full. Remove an entry first.');
+    // A picture filed under a new id moves there once its entry is kept (the old copy goes only after).
+    Promise.all(moves.map(([r, got]) => mapPut({ ...r, id: got }).then(() => mapDelete(r.id)).catch(() => {})))
+        .then(mapsReload).then(() => mapsShow(id, true));
+    flash('maps-status', '📓 Back in the notebook.');
 }
 
 function mapsOrphansDelete() {

@@ -335,7 +335,10 @@ function nbFindRoll(nb, kind, seed, get) {
 function nbAdd(item) {
     const nb = nbLoad();
     const href = String(item.href || '');
-    const old = href && nb.entries.find(e => e.href === href);
+    // A continent is the same map in either look (style=), so its seed and options find it too:
+    // its pins are kept on the one entry.
+    const map = item.kind === 'continent' && href ? nbEntrySig({ kind: 'continent', href }) : null;
+    const old = href && nb.entries.find(e => e.href === href || (map && e.kind === 'continent' && e.href && nbEntrySig(e) === map));
     if (old) return { entry: old, existed: true, linked: 0 };
     if (!Object.hasOwn(NB_KINDS, item.kind) || !nbHrefOk(item.kind, href)) return null;
     if (nb.entries.length >= NB_LIMITS.entries) return { entry: null, full: true };

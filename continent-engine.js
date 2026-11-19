@@ -275,7 +275,7 @@ const CONT_POIS = {
         'A farmer outside {near} ploughed up a gold torc by {site}. Since then, the mound has been humming.',
         '{nation} wants the old chief in {site} named as its founder, and needs proof. The proof is still in the grave.',
         'Mist rolls out of {site} every dawn and stops at the edge of {near}. Each day, a little closer.'] },
-    dragon: { label: 'Dragon\'s lair', site: 'lair', biomes: { mountains: 6, hills: 1 },
+    dragon: { label: 'Dragon\'s lair', site: 'lair', hold: 'dragon', biomes: { mountains: 6, hills: 1 },
         names: ['Mount {r}', 'the {Adj} Peak', '{r}\'s Teeth', 'the Smoking Crag', 'the Burnt Horn', 'the {Adj} Spire'], adj: ['Black', 'Red', 'Ashen', 'Broken', 'Howling', 'Cinder'], hooks: [
         'Herds vanish from the valleys below {place}, and {near} pays tribute it can\'t afford. The herders say dragon. The cave is {site}.',
         'Smoke rises from {place} for the first time in a lifetime. {nation} has offered a knighthood to whoever finds out why, inside {site}.',
@@ -1010,6 +1010,7 @@ function rollContinent(seed, opts = {}) {
         if (a >= 0 && b >= 0 && a !== b) shared[a][b]++;
     }));
     c.nations.forEach((nat, k) => { nat.neighbors = c.nations.map((o, j) => j).filter(j => shared[k][j] > 0); });
+    const masses = contGroups(m, i => !!m.land[i]);
     c.nations.forEach((nat, k) => {
         if (nat.feud) return;
         let pool = nat.neighbors.filter(j => !c.nations[j].feud);
@@ -1018,9 +1019,11 @@ function rollContinent(seed, opts = {}) {
             .sort((a, b) => contCellDist(m, nat.cap, c.nations[a].cap) - contCellDist(m, nat.cap, c.nations[b].cap)).slice(0, 2);
         if (!pool.length) return;
         const j = pool[Math.floor(nat.feudPick * pool.length)];
+        // No border: across the sea only when their capitals stand on different lands (else across the wilds).
         nat.feud = { with: j, why: nat.feudWhy, now: nat.feudNow, sea: !nat.neighbors.includes(j) };
+        if (nat.feud.sea && masses.id[nat.cap] === masses.id[c.nations[j].cap]) { nat.feud.sea = false; nat.feud.wilds = true; }
         const o = c.nations[j];
-        if (!o.feud) o.feud = { with: k, why: nat.feudWhy, now: nat.feudNow, sea: nat.feud.sea };
+        if (!o.feud) o.feud = { with: k, why: nat.feudWhy, now: nat.feudNow, sea: nat.feud.sea, ...(nat.feud.wilds ? { wilds: true } : {}) };
     });
 
     // Borders (E5): what each shared border is mostly made of, from the cells along it.
@@ -1116,9 +1119,10 @@ function rollContinent(seed, opts = {}) {
     // Trade (E5): each nation sells to one realm it isn't feuding with, by the road between
     // them, or by sea when both have a coast and no border.
     c.nations.forEach((nat, k) => {
-        const foe = nat.feud ? nat.feud.with : -1;
-        let pool = nat.neighbors.filter(j => j !== foe);
-        if (!pool.length && nat.coastal) pool = c.nations.filter(o => o.index !== k && o.index !== foe && o.coastal).map(o => o.index);
+        // Not with a realm it feuds with, either way round (a feud says there's no trade).
+        const foe = j => (nat.feud && nat.feud.with === j) || (c.nations[j].feud && c.nations[j].feud.with === k);
+        let pool = nat.neighbors.filter(j => !foe(j));
+        if (!pool.length && nat.coastal) pool = c.nations.filter(o => o.index !== k && !foe(o.index) && o.coastal).map(o => o.index);
         if (!pool.length) return;
         const j = pool[Math.floor(nat.tradePick[0] * pool.length)];
         const road = c.roads.find(r => [c.towns[r.a].nation, c.towns[r.b].nation].sort().join() === [k, j].sort().join());
@@ -1215,6 +1219,24 @@ function rollContinent(seed, opts = {}) {
             b.how = done.get(key);
         }));
     });
+    // Last of all: a place or sea named the same as one before it is named again, under its own seed.
+    const taken = new Set(c.nations.map(n => n.name).concat(c.towns.map(t => t.name)).map(s => s.toLowerCase()));
+    const rename = (cur, label, draw) => {
+        if (!taken.has(cur.toLowerCase())) return cur;
+        return part(label, () => {
+            for (let t = 0; t < 8; t++) { const n = draw(); if (!taken.has(n.toLowerCase())) return n; }
+            return cur;
+        });
+    };
+    c.pois.forEach(p => {
+        const P = CONT_POIS[p.kind];
+        if (p.place) p.name = p.place = rename(p.place, `poi.rename.${p.id}`, () => contPick(P.names).replace('{r}', hisRoot(used)).replace('{Adj}', contPick(P.adj)));
+        taken.add(p.name.toLowerCase());
+    });
+    c.seas.forEach((s, i) => {
+        s.name = rename(s.name, `sea.rename.${i}`, () => contPick(CONT_SEAS).replace('{r}', hisRoot(used)).replace('{Adj}', contPick(CONT_SEA_ADJ)));
+        taken.add(s.name.toLowerCase());
+    });
     return c;
 }
 
@@ -1282,7 +1304,7 @@ function contFeudText(c, nat) {
     if (!nat.feud) return 'None worth a war, yet.';
     const o = c.nations[nat.feud.with];
     const why = nat.feud.why.replace('{other}', o.root);
-    return `With ${o.name}${nat.feud.sea ? ', across the water,' : ''} over ${why}.${nat.feud.now ? ' ' + nat.feud.now : ''}`;
+    return `With ${o.name}${nat.feud.sea ? ', across the water,' : nat.feud.wilds ? ', across the wilds between them,' : ''} over ${why}.${nat.feud.now ? ' ' + nat.feud.now : ''}`;
 }
 
 function contTradeText(c, nat) {

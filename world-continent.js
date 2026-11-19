@@ -44,6 +44,7 @@ function contParams() {
 
 // push: true = new history entry, false = replace, null = leave the URL alone.
 function rollContinentFor(seed = newSeed(), push = true) {
+    if (contBoard) contBoard.flush();   // names and notes being typed go on the old map
     contState.seed = seed;
     contState.data = contCached(seed, contOpts());
     contState.journey = null;
@@ -74,7 +75,8 @@ function contTownLink(c, t) {
 }
 
 function contSiteLink(p) {
-    return 'worldbuilder?' + new URLSearchParams({ tab: 'sites', kind: CONT_POIS[p.kind].site, seed: p.seed }).toString();
+    // A dragon's lair asks for a dragon to hold it (when the party's level can face one).
+    return 'worldbuilder?' + new URLSearchParams({ tab: 'sites', kind: CONT_POIS[p.kind].site, seed: p.seed, ...(CONT_POIS[p.kind].hold ? { hold: CONT_POIS[p.kind].hold } : {}) }).toString();
 }
 
 function contTravelLink(c, a, b, trip) {

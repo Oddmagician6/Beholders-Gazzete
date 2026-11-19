@@ -9,6 +9,7 @@
    own "Explore a ruin from this age" picks the age). Nothing is stored: the URL holds it.
    Two map styles: 🎨 Illustrated (floors, furniture, and doors from img/map) and ✒️ Classic.
    URL: ?tab=sites&seed=&kind=&size=&level=&party=&style= (style: only when classic)
+        &hold=<group>  (who should hold it when they can at this level: the Continent's dragon lairs)
    A new site (no seed in the URL) starts at the Toolbox Party tab's level and size (party.js);
    a shared one keeps its own (a missing level or party means level 3, 4 characters).
         &his=&hages=&hspan=&hstart=&hage=<age number>  (a linked history)
@@ -20,11 +21,11 @@ const SITE_HIS_KEYS = { hages: 'ages', hspan: 'span', hstart: 'start' };
 // The kinds with a picture (img/site/<kind>.webp, from page-art.py); the rest show none until theirs is made.
 const SITE_ART = ['crypt', 'mine', 'tower', 'temple', 'fort', 'lair', 'keep', 'sewer', 'seacave', 'shipwreck', 'lighthouse', 'manor', 'barrow'];
 
-let siteState = { seed: null, data: null, his: null, history: null, hage: -1 };
+let siteState = { seed: null, data: null, his: null, history: null, hage: -1, hold: '' };
 
 function siteOpts() {
     const v = id => document.getElementById(id).value;
-    return { kind: v('site-kind'), size: v('site-size'), level: v('site-level'), party: v('site-party') };
+    return { kind: v('site-kind'), size: v('site-size'), level: v('site-level'), party: v('site-party'), bands: siteState.hold ? [siteState.hold] : null };
 }
 
 function siteStyle() {
@@ -42,6 +43,7 @@ function siteParams() {
         params[key] = fieldValue(el) === defaultValue(el) ? null : el.value;
     });
     params.seed = siteState.seed;
+    params.hold = siteState.hold || null;
     params.style = siteStyle() === 'art' ? null : siteStyle();
     const h = siteState.his;
     params.his = h ? h.seed : null;
@@ -70,6 +72,7 @@ function applySiteUrl(p) {
         if (!setFieldValue(el, p.get(key))) el.value = defaultValue(el);
     });
     document.getElementById('site-style').value = SITE_STYLES[p.get('style')] ? p.get('style') : 'art';
+    siteState.hold = Object.hasOwn(ENC_BAND_BY_KEY, p.get('hold') || '') ? p.get('hold') : '';
     const his = parseSeed(p.get('his'));
     const h = his ? { seed: his } : null;
     if (h) Object.entries(SITE_HIS_KEYS).forEach(([key, opt]) => { h[opt] = p.get(key) || 'random'; });
@@ -287,7 +290,17 @@ async function siteEditMap() {
     btn.disabled = true;
     try {
         await worldScript('battlemap-engine.js');
-        const p = bmPack(bmFromSite(s, siteStyle()));
+        const m = bmFromSite(s, siteStyle());
+        // Too big for one battle map: say what gets cut, and go on the second click.
+        const sure = `${siteState.seed}|${siteStyle()}`;
+        if (m.cut && btn.dataset.sure !== sure) {
+            btn.dataset.sure = sure;
+            btn.disabled = false;
+            siteStatus(`⚠️ This site needs ${m.cut.w} × ${m.cut.h} squares, and a battle map holds ${BM_LIMITS.side} × ${BM_LIMITS.side}: the ${[m.cut.h > m.h ? 'bottom' : '', m.cut.w > m.w ? 'right-hand' : ''].filter(Boolean).join(' and ')} edge would be cut off. Click ✏️ again to open it anyway, or ⬇️ download the whole map as a picture.`);
+            return;
+        }
+        delete btn.dataset.sure;
+        const p = bmPack(m);
         delete p.id;
         delete p.t;
         // After the #, so a big site never makes the address too long for the server.
@@ -326,9 +339,10 @@ function setupSites() {
 
     // Same seed: a new option keeps everything it doesn't touch.
     Object.values(SITE_FIELDS).forEach(id => document.getElementById(id).addEventListener('change', () => {
+        if (id === 'site-kind') siteState.hold = '';   // the holder was asked for that kind of place
         if (siteState.seed) rollSiteFor(siteState.seed, false);
     }));
-    document.getElementById('site-roll').addEventListener('click', () => rollSiteFor());
+    document.getElementById('site-roll').addEventListener('click', () => { siteState.hold = ''; rollSiteFor(); });
     const card = document.getElementById('site-card');
     card.addEventListener('click', e => {
         if (e.target.closest('#site-link-his')) { siteLinkHistory(true); return; }
@@ -361,7 +375,7 @@ WORLD_TABS.sites = {
     setup: setupSites,
     params: siteParams,
     apply: applySiteUrl,
-    fresh: push => rollSiteFor(newSeed(), push),
+    fresh: push => { siteState.hold = ''; rollSiteFor(newSeed(), push); },
     rolled: () => !!siteState.seed,
     entry: () => ({ title: siteState.data.name, sub: siteSummary(siteState.data) })
 };
