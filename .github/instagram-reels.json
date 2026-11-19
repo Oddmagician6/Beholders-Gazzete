@@ -405,6 +405,34 @@
       "hashtags": "#HarpyJingle #Tumblebrook #WinterSale",
       "publishAt": "2026-11-19T02:00:00Z",
       "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "major-image-gold-audit-party-loan-ledgerhall",
+      "release_tag": "reel-stage-nov19-gold-ig-20261119",
+      "hashtags": "#IllusionGold #DungeonLoot #Ledgerhall #MuleCollateral",
+      "publishAt": "2026-11-19T17:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "piercers-mine-guild-sends-hats-not-helmets",
+      "release_tag": "reel-stage-nov19-hats-ig-20261119",
+      "hashtags": "#Piercers #ColdseamMine #PompomHats #MageHand",
+      "publishAt": "2026-11-19T20:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "salamander-oven-subscription-lapses-40-pies",
+      "release_tag": "reel-stage-nov19-oven-ig-20261119",
+      "hashtags": "#SalamanderOven #GrandFeast #HalfBakedPies #FreeTier",
+      "publishAt": "2026-11-19T23:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "bard-suggestion-spell-900-voters-goat-rally",
+      "release_tag": "reel-stage-nov19-goat-ig-20261119",
+      "hashtags": "#SuggestionSpell #PuddingTheGoat #Brindlemoor #BardRally",
+      "publishAt": "2026-11-20T02:00:00Z",
+      "custom_artwork_confirmed": true
     }
   ]
 }
