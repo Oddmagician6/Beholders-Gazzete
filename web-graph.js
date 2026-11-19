@@ -51,7 +51,7 @@ function webGraph(nb) {
         if (e.fam && Array.isArray(e.fam.people)) e.fam.people.forEach(p => { if (p.to) add(e.id, p.to, 'family', p.name); });
     });
     const edges = [...pairs.values()];
-    const deg = {};
+    const deg = Object.create(null);   // an entry id like "constructor" must not read Object's
     edges.forEach(ed => { deg[ed.a] = (deg[ed.a] || 0) + 1; deg[ed.b] = (deg[ed.b] || 0) + 1; });
     const nodes = nb.entries.map(e => ({ id: e.id, kind: e.kind, title: e.title, deg: deg[e.id] || 0 }));
     return { nodes, edges };

@@ -778,9 +778,10 @@ function famBlank(race) {
 
 // A link that rolls the family of someone rolled elsewhere (a faction leader, a town's ruler).
 // p: { seed, cat, age } as facNpc makes them. o: { title, house, extra: more URL params }
+// The family's own seed comes from the person's, so the same button opens the same family (and finds it in the notebook).
 function famRootLink(p, o = {}) {
     return 'worldbuilder?' + paramsQuery({
-        tab: 'family', root: p.seed, rcat: p.cat, rage: p.age || null, rworld: p.realms ? 'realms' : null,
+        tab: 'family', seed: deriveSeed(p.seed, 'family'), root: p.seed, rcat: p.cat, rage: p.age || null, rworld: p.realms ? 'realms' : null,
         rtitle: o.title || null, house: o.house || null, ...(o.extra || {})
     });
 }

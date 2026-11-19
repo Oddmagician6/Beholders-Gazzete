@@ -132,7 +132,7 @@ function renderPantheon() {
     const cal = panLinkedCalendar();
     document.getElementById('pan-card').innerHTML = `
         <header class="wb-head">
-            <p class="wb-kicker">${sh.icon} ${esc(sh.label)} · ${p.gods.length} gods · ${p.realms ? '🐉 Forgotten Realms' : `${nm.icon} ${esc(nm.label.toLowerCase())} names`}</p>
+            <p class="wb-kicker">${sh.icon} ${esc(sh.label)} · ${p.gods.length} gods · ${p.realms ? '🐉 Forgotten Realms' : p.naming === 'titles' ? `${nm.icon} known by titles` : `${nm.icon} ${esc(nm.label.toLowerCase())} names`}</p>
             <h3 class="wb-name">${esc(panCap(p.name))}</h3>
             <p class="wb-sub">${esc(panSummary(p))}</p>
             <p class="wb-note">${esc(sh.about)}</p>

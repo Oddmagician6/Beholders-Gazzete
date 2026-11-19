@@ -78,6 +78,23 @@ function onTabLinks(go) {
 // On a Pathfinder page, a link to a D&D tool that has a Pathfinder page opens that page (the
 // notebook's entries link to worldbuilder?tab=..., written by either system). The standalone Pathfinder
 // pages (pathfinder-npc-generator) carry the same moves with no tabs.
+// Where a link (a URL object) opens on this page: the Pathfinder page it moves to, or itself.
+// Text that leaves the page (the notebook's Copy All and Word file) goes through this too.
+function tabPageMoved(url) {
+    const moves = TAB_PAGES && TAB_PAGES.moves;
+    if (!moves || url.origin !== location.origin) return url;
+    const name = tabPageName(url.pathname);
+    const tab = url.searchParams.get('tab');
+    const byTab = tab && moves[`${name}?tab=${tab}`];
+    const to = byTab || moves[name];
+    if (!to) return url;
+    const out = new URL(url.href);
+    // A tab's own page drops the tab; a whole page's move keeps it (loot-generator?tab=hoard).
+    if (byTab) out.searchParams.delete('tab');
+    out.pathname = out.pathname.replace(/[^/]*$/, '') + to;
+    return out;
+}
+
 (function moveLinks() {
     const moves = TAB_PAGES && TAB_PAGES.moves;
     if (!moves) return;
@@ -85,17 +102,8 @@ function onTabLinks(go) {
         const a = e.target.closest && e.target.closest('a[href]');
         // The nav's links mean what they say: its 5e Toolkit group opens the D&D tools.
         if (!a || a.target || a.hasAttribute('download') || a.closest('.main-nav')) return;
-        const url = new URL(a.href, location.href);
-        if (url.origin !== location.origin) return;
-        const name = tabPageName(url.pathname);
-        const tab = url.searchParams.get('tab');
-        const byTab = tab && moves[`${name}?tab=${tab}`];
-        const to = byTab || moves[name];
-        if (!to) return;
-        // A tab's own page drops the tab; a whole page's move keeps it (loot-generator?tab=hoard).
-        if (byTab) url.searchParams.delete('tab');
-        url.pathname = url.pathname.replace(/[^/]*$/, '') + to;
-        a.href = url.href;   // the browser follows the new address
+        const url = new URL(a.href, location.href), to = tabPageMoved(url);
+        if (to !== url) a.href = to.href;   // the browser follows the new address
     };
     document.addEventListener('click', move, true);
     document.addEventListener('auxclick', move, true);   // a middle click

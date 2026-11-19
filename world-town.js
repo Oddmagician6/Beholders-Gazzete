@@ -160,7 +160,7 @@ function townGodsHTML(t, ctx) {
         return `<div class="wb-today">
             <p>⛪ The temple here keeps the gods of ${esc(townState.pantheon.name)}.</p>
             <p class="wb-small">The ${t.size === 'hamlet' ? 'shrine' : 'temple'} belongs to ${esc(god.name)}${followers ? `, and ${followers} of the factions in town ${followers === 1 ? 'follows' : 'follow'} one of its gods` : ''}.</p>
-            <button type="button" class="btn" id="town-unlink">✕ Use made-up gods instead</button>
+            <button type="button" class="btn" id="town-unlink">✕ ${t.realms ? 'Use the Realms gods instead' : 'Use made-up gods instead'}</button>
             ${god.linked ? `<a class="btn" href="${esc(townPantheonLink(god))}">⛪ Read about ${esc(god.name)}</a>` : ''}
         </div>`;
     }

@@ -132,7 +132,10 @@ function nbNum(v) {
 
 // A play date as YYYY-MM-DD, or ''.
 function nbDate(v) {
-    return typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) && !isNaN(new Date(v + 'T00:00:00Z')) ? v : '';
+    if (typeof v !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(v)) return '';
+    // A day the month doesn't have (Feb 30) rolls over in Date, so it must come back the same.
+    const d = new Date(v + 'T00:00:00Z');
+    return !isNaN(d) && d.toISOString().slice(0, 10) === v ? v : '';
 }
 
 // A kind's own fields from untrusted data ({} for kinds without any).
@@ -183,7 +186,7 @@ function nbClean(raw) {
     raw.entries.forEach(e => {
         const ok = e && typeof e === 'object'
             && typeof e.id === 'string' && /^[a-z0-9]{1,16}$/.test(e.id) && !ids.has(e.id)
-            && Object.hasOwn(NB_KINDS, e.kind)
+            && typeof e.kind === 'string' && Object.hasOwn(NB_KINDS, e.kind)
             && nbHrefOk(e.kind, e.href)
             && nbText(e.title, NB_LIMITS.title)
             && (e.kind !== 'monster' || (typeof hbClean === 'function' ? !!hbClean(e.mon) : !!e.mon))
@@ -213,9 +216,18 @@ function nbClean(raw) {
     nb.entries.forEach(e => {
         e.links = [...new Set(e.links)].filter(l => l !== e.id && ids.has(l)).slice(0, NB_LIMITS.links);
         if (e.pins) nbSetPins(e, e.pins, ids);
-        if (e.fam && typeof famSetLinks === 'function') famSetLinks(e.fam, ids, e.id);
     });
+    // A link runs both ways: one the other end no longer lists (cut at its limit) goes from this end too.
+    const back = new Map(nb.entries.map(e => [e.id, new Set(e.links)]));
+    nb.entries.forEach(e => { e.links = e.links.filter(l => back.get(l).has(e.id)); });
+    const npcs = nbNpcIds(nb);
+    nb.entries.forEach(e => { if (e.fam && typeof famSetLinks === 'function') famSetLinks(e.fam, npcs, e.id); });
     return { nb, dropped };
+}
+
+// The ids of the NPC entries (the only entries a family member can be).
+function nbNpcIds(nb) {
+    return new Set(nb.entries.filter(e => e.kind === 'npc').map(e => e.id));
 }
 
 // key: another system's notebook (the backup page restores the Pathfinder one too).
@@ -295,6 +307,9 @@ function nbEntryUses(e) {
 function nbLink(nb, a, b) {
     const x = nbFind(nb, a), y = nbFind(nb, b);
     if (!x || !y || a === b) return false;
+    if (x.links.includes(b) && y.links.includes(a)) return true;
+    // Each end keeps at most NB_LIMITS.links, as cleaning does.
+    if (x.links.length >= NB_LIMITS.links || y.links.length >= NB_LIMITS.links) return false;
     if (!x.links.includes(b)) x.links.push(b);
     if (!y.links.includes(a)) y.links.push(a);
     return true;
@@ -323,6 +338,18 @@ function nbSetPins(e, pins, ids) {
     else delete e.pins;
 }
 
+// URL keys that only pick what's on screen (a month, a god), not what was rolled.
+const NB_VIEW_KEYS = { calendar: ['view'], pantheon: ['god'], factions: ['faction'], history: ['age'] };
+
+// A link without its view keys.
+function nbRollHref(kind, href) {
+    const keys = NB_VIEW_KEYS[kind], at = href.indexOf('?');
+    if (!keys || at < 0) return href;
+    const q = new URLSearchParams(href.slice(at + 1));
+    keys.forEach(k => q.delete(k));
+    return href.slice(0, at + 1) + q.toString();
+}
+
 // The saved entry for a roll (its kind, seed, and the options that change it), or null.
 function nbFindRoll(nb, kind, seed, get) {
     const sig = nbSig(kind, seed, get);
@@ -338,7 +365,10 @@ function nbAdd(item) {
     // A continent is the same map in either look (style=), so its seed and options find it too:
     // its pins are kept on the one entry.
     const map = item.kind === 'continent' && href ? nbEntrySig({ kind: 'continent', href }) : null;
-    const old = href && nb.entries.find(e => e.href === href || (map && e.kind === 'continent' && e.href && nbEntrySig(e) === map));
+    // The month, god, faction, or age on screen is only where the link opens: the same roll either way.
+    const roll = nbRollHref(item.kind, href);
+    const old = href && nb.entries.find(e => e.href === href || (e.kind === item.kind && e.href && nbRollHref(e.kind, e.href) === roll)
+        || (map && e.kind === 'continent' && e.href && nbEntrySig(e) === map));
     if (old) return { entry: old, existed: true, linked: 0 };
     if (!Object.hasOwn(NB_KINDS, item.kind) || !nbHrefOk(item.kind, href)) return null;
     if (nb.entries.length >= NB_LIMITS.entries) return { entry: null, full: true };
@@ -422,7 +452,7 @@ function nbMerge(nb, incoming) {
         nbSetPins(into, [...have, ...fresh], new Set(nb.entries.map(x => x.id)));
     });
     // Family members open the same NPC entries under their ids here.
-    const here = new Set(nb.entries.map(x => x.id));
+    const here = nbNpcIds(nb);
     incoming.entries.forEach(e => {
         const into = map[e.id] && nbFind(nb, map[e.id]);
         if (!into || !into.fam || into.fam !== e.fam) return;

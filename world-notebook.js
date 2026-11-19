@@ -23,7 +23,23 @@
    ============================================ */
 
 const nbView = { open: new Set(), removing: null, clearing: false, last: false, players: false, pick: [], plOpen: {}, ink: false, editing: null, draft: '' };
-const nbFieldTimers = {};
+const nbFieldTimers = {};   // key → { t: timer, run: the save }
+
+// Save a field 400 ms after the last keystroke.
+function nbQueueSave(key, run) {
+    if (nbFieldTimers[key]) clearTimeout(nbFieldTimers[key].t);
+    nbFieldTimers[key] = { run, t: setTimeout(() => { delete nbFieldTimers[key]; run(); }, 400) };
+}
+
+// Save every field still waiting (before the page goes, and before anything reads the notebook out).
+function nbFlushSaves() {
+    Object.keys(nbFieldTimers).forEach(key => {
+        const f = nbFieldTimers[key];
+        delete nbFieldTimers[key];
+        clearTimeout(f.t);
+        f.run();
+    });
+}
 
 function nbKindOpt(kind) {
     return NB_KINDS[kind] || { icon: '📄', label: kind };
@@ -167,13 +183,30 @@ function nbOpenQuests(nb) {
     return nb.entries.filter(e => e.kind === 'quest' && e.status === 'open').sort((a, b) => a.added.localeCompare(b.added));
 }
 
-function nbLastHTML(nb) {
+// The recap is for the players: a session's or quest's own line switched to DM-only under
+// 🖨️ Print for Players stays out of it too (those lines start shown, so a switch hides them).
+function nbRecapView(nb) {
     const s = nbLastSession(nb);
+    if (!s) return null;
+    const off = (e, label) => (e.flip || []).includes('|' + label);
+    const v = {
+        title: s.title, date: s.date && !off(s, 'Played on') ? s.date : '',
+        recap: off(s, 'What happened') ? '' : s.recap,
+        npcs: off(s, 'NPCs met') ? '' : s.npcs,
+        loot: off(s, 'Loot handed out') ? '' : s.loot,
+        threads: off(s, 'Open threads') ? [] : nbLines(s.threads),
+        quests: nbOpenQuests(nb).map(q => ({ title: q.title, giver: off(q, 'Giver') ? '' : q.giver }))
+    };
+    return v;
+}
+
+function nbLastHTML(nb) {
+    const s = nbRecapView(nb);
     if (!s) return '';
-    const threads = nbLines(s.threads), quests = nbOpenQuests(nb);
+    const { threads, quests } = s;
     return `<h3 class="nb-last-h">📣 Last time${nb.name ? ` on ${esc(nb.name)}` : ''}…</h3>
         <p class="nb-last-meta">${esc(s.title)}${s.date ? ` · ${esc(nbDateText(s.date))}` : ''}</p>
-        <div class="nb-last-recap">${s.recap.split(/\n+/).map(p => `<p>${esc(p)}</p>`).join('')}</div>
+        ${s.recap ? `<div class="nb-last-recap">${s.recap.split(/\n+/).map(p => `<p>${esc(p)}</p>`).join('')}</div>` : ''}
         ${s.npcs ? `<h4>Faces from last time</h4><p>${esc(s.npcs)}</p>` : ''}
         ${s.loot ? `<h4>What you carried away</h4><p>${esc(s.loot)}</p>` : ''}
         ${threads.length ? `<h4>Still unresolved</h4><ul>${threads.map(t => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
@@ -181,12 +214,13 @@ function nbLastHTML(nb) {
 }
 
 function nbLastText(nb) {
-    const s = nbLastSession(nb);
+    const s = nbRecapView(nb);
     if (!s) return '';
-    const out = [`Last time${nb.name ? ` on ${nb.name}` : ''}…`, s.title + (s.date ? ` · ${nbDateText(s.date)}` : ''), '', s.recap];
+    const out = [`Last time${nb.name ? ` on ${nb.name}` : ''}…`, s.title + (s.date ? ` · ${nbDateText(s.date)}` : '')];
+    if (s.recap) out.push('', s.recap);
     if (s.npcs) out.push('', 'Faces from last time: ' + s.npcs);
     if (s.loot) out.push('', 'What you carried away: ' + s.loot);
-    const threads = nbLines(s.threads), quests = nbOpenQuests(nb);
+    const { threads, quests } = s;
     if (threads.length) out.push('', 'Still unresolved:', ...threads.map(t => '- ' + t));
     if (quests.length) out.push('', 'Quests still open:', ...quests.map(q => '- ' + q.title + (q.giver ? `, for ${q.giver}` : '')));
     return out.join('\n');
@@ -194,13 +228,13 @@ function nbLastText(nb) {
 
 // The recap as a document (docx.js blocks).
 function nbLastBlocks(nb) {
-    const s = nbLastSession(nb);
+    const s = nbRecapView(nb);
     if (!s) return [];
-    const threads = nbLines(s.threads), quests = nbOpenQuests(nb);
+    const { threads, quests } = s;
     return [
         { t: 'title', text: `Last time${nb.name ? ` on ${nb.name}` : ''}…` },
         { t: 'kicker', text: s.title + (s.date ? ` · ${nbDateText(s.date)}` : '') },
-        { t: 'p', text: s.recap },
+        ...(s.recap ? [{ t: 'p', text: s.recap }] : []),
         ...(s.npcs ? [{ t: 'h2', text: 'Faces from last time' }, { t: 'p', text: s.npcs }] : []),
         ...(s.loot ? [{ t: 'h2', text: 'What you carried away' }, { t: 'p', text: s.loot }] : []),
         ...(threads.length ? [{ t: 'h2', text: 'Still unresolved' }, ...threads.map(t => ({ t: 'li', text: t }))] : []),
@@ -467,6 +501,7 @@ function setupPlayers() {
     });
     document.getElementById('nb-pl-print').addEventListener('click', () => {
         if (!nbView.pick.length) return;
+        renderPlayers(nbLoad());   // the sheets as the notebook has them now
         document.body.classList.add('print-players');
         window.print();
     });
@@ -579,6 +614,7 @@ function nbSaveField(box) {
     const title = card.querySelector('.nb-f[data-f="title"]');
     if (title && title !== document.activeElement) title.value = e.title;
     if (nbView.last) renderLast(nb);
+    if (nbView.players) renderPlayers(nb);
 }
 
 function nbByAdded(nb) {
@@ -614,7 +650,7 @@ function nbEntryFacts(nb, e) {
     if (e.fam && e.fam.scandals.length) out.push(f('Family secrets', e.fam.scandals.map(s => famScandalText(e.fam, s)).join(' ')));
     const linked = e.links.map(l => nbFind(nb, l)).filter(Boolean).map(o => o.title);
     if (linked.length) out.push(f('Linked to', linked.join('; ')));
-    if (e.href) out.push(f('', new URL(e.href, location.href).href));
+    if (e.href) out.push(f('', tabPageMoved(new URL(e.href, location.href)).href));
     return out;
 }
 
@@ -753,7 +789,12 @@ function setupNotebook() {
     });
     list.addEventListener('change', e => {
         const sel = e.target.closest('.nb-addlink');
-        if (sel && sel.value) { nbEdit(nb => nbLink(nb, sel.dataset.id, sel.value)); return; }
+        if (sel && sel.value) {
+            let ok = true;
+            nbEdit(nb => { ok = nbLink(nb, sel.dataset.id, sel.value); });
+            if (!ok) flash('nb-status', `⚠️ An entry holds ${NB_LIMITS.links} links at most. Unlink one first.`);
+            return;
+        }
         const qs = e.target.closest('.nb-qs');
         if (qs) nbEdit(nb => { const q = nbFind(nb, qs.dataset.id); if (q) nbSetField(q, 'status', qs.value); });
     });
@@ -761,17 +802,13 @@ function setupNotebook() {
     list.addEventListener('input', e => {
         const field = e.target.closest('.nb-f');
         if (field) {
-            const key = field.dataset.id + '|' + field.dataset.f;
-            clearTimeout(nbFieldTimers[key]);
-            nbFieldTimers[key] = setTimeout(() => { delete nbFieldTimers[key]; nbSaveField(field); }, 400);
+            nbQueueSave(field.dataset.id + '|' + field.dataset.f, () => nbSaveField(field));
             return;
         }
         const box = e.target.closest('.nb-notes');
         if (!box) return;
         const k = box.dataset.k === 'dm' ? 'dm' : 'notes', key = box.dataset.id + '|' + k;
-        clearTimeout(nbFieldTimers[key]);
-        nbFieldTimers[key] = setTimeout(() => {
-            delete nbFieldTimers[key];
+        nbQueueSave(key, () => {
             const nb = nbLoad();
             const entry = nbFind(nb, box.dataset.id);
             if (!entry) return;
@@ -780,8 +817,13 @@ function setupNotebook() {
             else entry[k] = v;
             if (!nbStore(nb, true)) flash('nb-status', "⚠️ This browser won't keep a notebook (storage is full or off).");
             else if (k === 'notes' && nbView.players) renderPlayers(nb);
-        }, 400);
+        });
     });
+    // Typing that hasn't saved yet saves before the page goes away.
+    window.addEventListener('pagehide', nbFlushSaves);
+    // So does a click on anything that reads it (Export, Copy All, Print, another tab), before its own handler runs.
+    document.addEventListener('click', e => { if (e.target.closest && e.target.closest('button, a')) nbFlushSaves(); }, true);
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') nbFlushSaves(); });
     list.addEventListener('toggle', e => {
         const d = e.target;
         if (!d.classList || !d.classList.contains('nb-more')) return;

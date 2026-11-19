@@ -119,7 +119,7 @@ function calHolyHTML(c) {
     return `<section class="wb-block wb-wide">
         <h4>⛪ Holy days of ${esc(calState.pantheon.name)}</h4>
         <ul class="wb-list">${holy.map(h => `<li><b>${esc(calCap(h.god.holyName))}</b> <span class="wb-tag">${PAN_DOMAINS[h.god.domain].icon} ${esc(h.god.name)}</span><br>The ${calOrdinal(h.day)} of ${esc(c.months[h.month].name)}: ${esc(panHolyWhen(h.god.holy))}.</li>`).join('')}</ul>
-        <p class="wb-holy-actions"><a class="btn" href="${esc(calPantheonLink())}">⛪ Open the pantheon</a> <button type="button" class="btn" id="cal-unlink">✕ Take the holy days off</button></p>
+        <p class="wb-holy-actions"><a class="btn" id="cal-open-gods" href="${esc(calPantheonLink())}">⛪ Open the pantheon</a> <button type="button" class="btn" id="cal-unlink">✕ Take the holy days off</button></p>
     </section>`;
 }
 
@@ -180,6 +180,19 @@ function calMonthsHTML(c) {
     </table>`;
 }
 
+// The main phase (0 new, 2 first quarter, 4 full, 6 last quarter) that begins on this day, or -1
+// (moon festivals keep the day the full moon begins). In lunar months the first moon's new moon is
+// each month's first day, as the page says, rather than the day or two before it where the phase begins.
+function calPhaseOn(c, mo, i, d) {
+    const abs = calAbsDay(c, c.year, i, d);
+    const p = calMoonPhase(mo, abs);
+    if (c.lengthMode === 'lunar' && mo === c.moons[0]) {
+        if (d === 1) return 0;
+        if (p === 0) return -1;
+    }
+    return p % 2 === 0 && calMoonPhase(mo, abs - 1) !== p ? p : -1;
+}
+
 function calMonthViewHTML(c) {
     const i = calState.view, m = c.months[i], f = m.festival, w = c.week.names.length;
     const fl = calFestivalLines(c, i);
@@ -198,10 +211,10 @@ function calMonthViewHTML(c) {
         // The first moon's main phases on the day they begin; other moons only when they turn full.
         let ph = '';
         if (c.moons[0]) {
-            const p = calMoonPhase(c.moons[0], abs);
-            if (p % 2 === 0 && calMoonPhase(c.moons[0], abs - 1) !== p) ph = `<span class="ph" title="${esc(c.moons[0].name)}: ${esc(MOON_PHASES[p].label)}">${moonArtHtml(p)}</span>`;
+            const p = calPhaseOn(c, c.moons[0], i, d);
+            if (p >= 0) ph = `<span class="ph" title="${esc(c.moons[0].name)}: ${esc(MOON_PHASES[p].label)}">${moonArtHtml(p)}</span>`;
         }
-        const others = c.moons.slice(1).filter(mo => calMoonPhase(mo, abs) === 4 && calMoonPhase(mo, abs - 1) !== 4);
+        const others = c.moons.slice(1).filter(mo => calPhaseOn(c, mo, i, d) === 4);
         const holyHere = holy.filter(h => h.day === d);
         if (holyHere.length) cls.push('holy');
         const title = [fest ? fl.name : '', ...holyHere.map(h => `${calCap(h.god.holyName)} (${h.god.name})`), ...others.map(mo => `${mo.name} full`)].filter(Boolean).join('; ');
@@ -312,6 +325,18 @@ function setupCalendar() {
         if (m) { showCalMonth(Number(m.dataset.month)); document.getElementById('cal-month').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
         const a = e.target.closest('.wb-arrow');
         if (a) { showCalMonth(calState.view + Number(a.dataset.step), `#cal-month .wb-arrow[data-step="${a.dataset.step}"]`); return; }
+        // The pantheon opens on its tab in place, so this calendar stays linked to it (a new page would forget it).
+        const og = e.target.closest('#cal-open-gods');
+        if (og && !e.button && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey && tabOnPage('pantheon')) {
+            e.preventDefault();
+            const q = nbQuery(calPantheonLink());
+            switchWorldTab('pantheon').then(ok => {
+                if (!ok) return;
+                WORLD_TABS.pantheon.apply(q);
+                setUrlParams(panParams(), false);
+            });
+            return;
+        }
         if (e.target.closest('#cal-unlink')) {
             calLinkPantheon(null);
             flash('cal-status', 'The holy days are off the calendar.');

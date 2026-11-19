@@ -299,8 +299,11 @@ function nbSheet(e) {
     }
     if (e.fam && typeof famPersonLine === 'function') {
         const fam = e.fam;
+        // Anyone in a secret union (a hidden child, a secret partner) starts DM-only: their line gives it away.
+        const secret = new Set(fam.unions.filter(u => u.kind === 'secret').flatMap(u => [u.a, u.b]));
+        const hidden = p => secret.has(p.id) || (!!p.of && (famUnion(fam, p.of) || {}).kind === 'secret');
         parts.push({ head: 'The family', lines: fam.people.flatMap(p => [
-            { key: `The family|${p.id}`, label: p.name, text: famPersonLine(fam, p), dm: false },
+            { key: `The family|${p.id}`, label: p.name, text: famPersonLine(fam, p), dm: hidden(p) },
             ...(p.note ? [{ key: `The family|${p.id}|note`, label: `About ${p.name.split(' ')[0]}`, text: p.note, dm: true }] : [])
         ]) });
         if (fam.scandals.length) {

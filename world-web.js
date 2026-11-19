@@ -141,6 +141,8 @@ function renderWeb(nb = nbLoad(), mode = 'keep') {
     ['web-tidy', 'web-restart', 'web-png'].forEach(id => { document.getElementById(id).disabled = !has; });
     document.getElementById('web-kinds').innerHTML = has ? webKindsHTML() : '';
     const { nodes, edges } = webVisible();
+    // Nothing showing (every kind hidden): no picture to save.
+    document.getElementById('web-png').disabled = !nodes.length;
     stage.innerHTML = webInnerHTML(nodes, edges);
     webState.nodeEls = new Map([...stage.querySelectorAll('.wg-node')].map(el => [el.dataset.id, el]));
     webState.edgeEls = new Map(nodes.map(nd => [nd.id, []]));
@@ -149,6 +151,8 @@ function renderWeb(nb = nbLoad(), mode = 'keep') {
         webState.edgeEls.get(el.dataset.b).push({ el, other: el.dataset.a, end: 2 });
     });
     webState.fixed.forEach(id => { const el = webState.nodeEls.get(id); if (el) el.classList.add('wg-fixed'); });
+    // A filter that hides the picked entry closes its panel.
+    if (webState.sel && !webState.nodeEls.has(webState.sel)) webState.sel = null;
     webState.bounds = webBounds(nodes);
     webState.on = [];
     const lines = g.edges.length;
@@ -341,18 +345,32 @@ function webOpenInNotebook(id) {
 
 // ── Dragging an entry ─────────────────────────────────────
 function webMoveNode(id, x, y) {
+    if (!webState.nodeEls.has(id)) return false;   // redrawn without it (removed, or a filter hid it)
     webState.pos[id] = [Math.round(x * 10) / 10, Math.round(y * 10) / 10];
     webState.nodeEls.get(id).setAttribute('transform', `translate(${webState.pos[id][0]} ${webState.pos[id][1]})`);
     webState.edgeEls.get(id).forEach(({ el, end }) => {
         el.setAttribute(`x${end}`, webState.pos[id][0]);
         el.setAttribute(`y${end}`, webState.pos[id][1]);
     });
+    return true;
+}
+
+// Store one entry's place (and whether it stays put) into the layout as stored now, so another
+// tab's moves since this one drew are kept.
+function webSaveOne(id) {
+    const store = webLoadStore();
+    const pos = { ...store.pos, [id]: webState.pos[id] }, fixed = new Set(store.fixed);
+    if (webState.fixed.has(id)) fixed.add(id); else fixed.delete(id);
+    return webSaveStore(pos, fixed, new Set(webState.entries.keys()), webState.loose);
 }
 
 function webKeepPlaced(id) {
+    // The entry can be gone by now (removed in another tab while it was being dragged).
+    if (!webState.entries.has(id) || !webState.pos[id]) return;
     webState.fixed.add(id);
-    webState.nodeEls.get(id).classList.add('wg-fixed');
-    if (!webSaveStore(webState.pos, webState.fixed, new Set(webState.entries.keys()), webState.loose)) flash('web-status', "⚠️ This browser won't keep the layout (storage is full or off).");
+    const el = webState.nodeEls.get(id);
+    if (el) el.classList.add('wg-fixed');
+    if (!webSaveOne(id)) flash('web-status', "⚠️ This browser won't keep the layout (storage is full or off).");
 }
 
 function setupWebView(view) {
@@ -384,6 +402,8 @@ function setupWebView(view) {
     });
     view.addEventListener('pointermove', ev => {
         if (!ptrs.has(ev.pointerId)) return;
+        // A mouse let go outside the web (no pointerup reached it): the press is over.
+        if (ev.pointerType === 'mouse' && !(ev.buttons & 1)) { up({ pointerId: ev.pointerId, type: 'pointercancel' }); return; }
         ptrs.set(ev.pointerId, local(ev));
         const v = webState.view;
         if (pinch && ptrs.size >= 2) {
@@ -409,7 +429,12 @@ function setupWebView(view) {
         }
         if (drag) {
             const w = world(local(ev));
-            webMoveNode(drag.id, w.x + drag.dx, w.y + drag.dy);
+            if (!webMoveNode(drag.id, w.x + drag.dx, w.y + drag.dy)) {
+                // Its entry left the web mid-drag: let go.
+                drag = null;
+                view.classList.remove('wg-dragging');
+                try { view.releasePointerCapture(ev.pointerId); } catch (e) { /* not captured */ }
+            }
         } else {
             v.x = pan.vx + dx;
             v.y = pan.vy + dy;
@@ -500,7 +525,10 @@ async function webDownload() {
     const nb = nbLoad();
     const b = webBounds(nodes, 40);
     const title = nb.name ? 46 : 0;
-    const vb = { x: b.x, y: b.y - title, w: b.w, h: b.h + title };
+    // Room for the whole name across the top (26 px type, about 0.62 em a letter), on a small web too.
+    const need = title ? 48 + nb.name.length * 26 * 0.62 : 0;
+    const vb = { x: b.x, y: b.y - title, w: Math.max(b.w, need), h: b.h + title };
+    if (vb.w > b.w) vb.x -= (vb.w - b.w) / 2;
     const scale = Math.min(2, 8000 / vb.w, 8000 / vb.h);
     const w = Math.round(vb.w * scale), h = Math.round(vb.h * scale);
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb.x.toFixed(1)} ${vb.y.toFixed(1)} ${vb.w.toFixed(1)} ${vb.h.toFixed(1)}">`
@@ -564,7 +592,7 @@ function setupWeb() {
             webState.fixed.delete(id);
             const el = webState.nodeEls.get(id);
             if (el) el.classList.remove('wg-fixed');
-            webSaveStore(webState.pos, webState.fixed, new Set(webState.entries.keys()), webState.loose);
+            webSaveOne(id);
             webPanel();
             flash('web-status', '📌 It moves again the next time you tidy up.');
         }

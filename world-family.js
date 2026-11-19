@@ -140,7 +140,18 @@ function famEdit(fn, quiet = false) {
     fam.edited = new Date().toISOString();
     const clean = famClean(fam);
     if (!clean) return false;
-    famSetLinks(clean, new Set(nb.entries.map(x => x.id)), e.id);
+    famSetLinks(clean, nbNpcIds(nb), e.id);
+    // A removed person's switched lines go with them, so a newcomer given their id starts on the defaults.
+    const here = new Set(clean.people.map(p => p.id));
+    const stays = k => { const m = /^The family\|([a-z0-9]+)(\||$)/.exec(k); return !m || here.has(m[1]); };
+    if (e.flip) {
+        const flip = e.flip.filter(stays);
+        if (flip.length) e.flip = flip; else delete e.flip;
+    }
+    if (e.edits) {
+        const edits = Object.fromEntries(Object.entries(e.edits).filter(([k]) => stays(k)));
+        if (Object.keys(edits).length) e.edits = edits; else delete e.edits;
+    }
     clean.people.forEach(p => { if (p.to) nbLink(nb, e.id, p.to); });
     if (e.title === e.fam.name && clean.name !== e.fam.name) e.title = nbText(clean.name, NB_LIMITS.title) || e.title;
     e.fam = clean;

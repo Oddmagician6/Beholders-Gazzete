@@ -136,7 +136,7 @@ function famClean(raw) {
     return fam;
 }
 
-// People may only point at notebook entries that exist (ids), never at the family's own entry.
+// People may only point at notebook NPC entries that exist (ids: nbNpcIds), never at the family's own entry.
 function famSetLinks(fam, ids, self) {
     fam.people.forEach(p => { if (p.to && (!ids.has(p.to) || p.to === self)) p.to = ''; });
 }
@@ -375,6 +375,8 @@ function famRemove(fam, id) {
     const set = new Set(gone);
     fam.people = fam.people.filter(x => !set.has(x.id));
     fam.unions = fam.unions.filter(u => set.has(u.a) ? false : true);
+    // A marriage left with no partner and no children is gone too (it would block parents and removals).
+    fam.unions = fam.unions.filter(u => u.b || fam.people.some(x => x.of === u.id));
     fam.scandals = fam.scandals.filter(s => !s.who.some(w => set.has(w)));
     if (set.has(fam.root)) fam.root = fam.top;
     return gone.length;
