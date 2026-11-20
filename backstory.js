@@ -689,7 +689,30 @@ function flash(msg, bad = false) {
 }
 
 const bsLineSeed = id => bs.set[id] || deriveSeed(bs.seed, id);
-const bsLine = id => withSeed(bsLineSeed(id), () => BS_ROLL[id](bs));
+// A line that clashes with what Family or Mentor already says (dead parents, then "my father" in the hook; an
+// only child with a sister; a dead mentor asked to visit) draws again from its own seed until it fits. A kept
+// (locked) line never changes, and a line that doesn't clash keeps its old text (W1 #9).
+const BS_CLASH = {
+    // "my late father's shop", "the beast that took my mother", "a map in my mother's things" fit dead parents.
+    parents: [/(?<!\b(?:late|dying|took|avenge) )\b(?:my|their) (?:mother|father|parents?)\b(?!'s things)/i, ['bond', 'reason', 'secret', 'hook', 'events']],
+    only: [/\b(?:my|their) (?:sisters?|brothers?|twin|siblings?)\b/i, ['bond', 'reason', 'secret', 'hook', 'events']],
+    mentor: [/send for help|die offstage|then have .+ visit|one person who knows the secret, and tired/i, ['useit']]
+};
+function bsClashes(id, text) {
+    const keys = Object.keys(BS_CLASH).filter(k => BS_CLASH[k][1].includes(id) && BS_CLASH[k][0].test(text));
+    if (!keys.length) return false;
+    const fam = keys.some(k => k !== 'mentor') ? bsRoll('family') : '';
+    return keys.some(k => k === 'parents' ? /^My parents died\b/.test(fam)
+        : k === 'only' ? /^An only child\b/.test(fam)
+        : /\. They died\b/.test(bsRoll('mentor')));
+}
+const bsRoll = id => withSeed(bsLineSeed(id), () => BS_ROLL[id](bs));
+function bsLine(id) {
+    let t = bsRoll(id);
+    if (bs.lock.includes(id)) return t;
+    for (let k = 0; k < 12 && bsClashes(id, t); k++) t = withSeed(deriveSeed(bsLineSeed(id), 'fit' + k), () => BS_ROLL[id](bs));
+    return t;
+}
 const bsAll = () => Object.fromEntries(BS_IDS.map(id => [id, bsLine(id)]));
 
 // ── Address bar ──────────────────────────────────────────
@@ -710,7 +733,7 @@ function bsFromUrl() {
     bs.seed = parseSeed(q.get('seed')) || newSeed();
     bs.race = bsRaceOk(q.get('race')) ? q.get('race') : '';
     bs.cls = bsClassOk(q.get('cls')) ? q.get('cls') : '';
-    bs.bg = BS_BG[q.get('bg')] ? q.get('bg') : '';
+    bs.bg = Object.hasOwn(BS_BG, q.get('bg') || '') ? q.get('bg') : '';
     bs.gender = BS_GENDERS.some(g => g[0] && g[0] === q.get('g')) ? q.get('g') : '';
     bs.set = {};
     (q.get('set') || '').split(',').forEach(t => {
@@ -720,8 +743,9 @@ function bsFromUrl() {
     bs.lock = [...new Set((q.get('lock') || '').split(',').filter(id => BS_IDS.includes(id)))];
 }
 
-function bsChanged() {
-    setUrlParams(bsParams(), false);
+// push: a new history entry (🎲 Roll New Backstory), so Back brings the last roll back (W1 #13).
+function bsChanged(push = false) {
+    setUrlParams(bsParams(), push);
     render();
 }
 
@@ -805,13 +829,37 @@ async function useForCharacter() {
         c.race = bs.race;
         c.cls = bs.cls;
     }
-    if (!c.name) c.name = bsLine('name').slice(0, 60);
+    const name = c.name || bsLine('name').slice(0, 60);
     const block = 'Backstory\n' + bsText(false);
     const notes = c.notes.trim() ? `${c.notes.trimEnd()}\n\n${block}` : block;
     if (notes.length > 4000) return fail('That character\'s notes are nearly full (4,000 characters); trim them in the builder first.');
-    c.notes = notes;
-    if (!(BS_PF2E ? pcSave(c) : cbSave(c))) return fail('Could not save: this browser\'s storage is full or blocked.');
+    // A saved character gets only its notes (and a missing name) written into the record as it was saved: a
+    // clean here, with this page's spell list and no homebrew, could drop spells or gear it keeps elsewhere (W1 #1).
+    if (id && !bsPatchSaved(id, name, notes)) return fail('Could not save: this browser\'s storage is full or blocked.');
+    if (!id) {
+        c.name = name;
+        c.notes = notes;
+        if (!(BS_PF2E ? pcSave(c) : cbSave(c))) return fail('Could not save: this browser\'s storage is full or blocked.');
+    }
     location.href = BS_BUILDER;
+}
+
+// Writes notes (and a name, if it had none) into a saved character's own record and puts it first. True when kept.
+function bsPatchSaved(id, name, notes) {
+    const key = BS_PF2E ? PC_KEY : CB_KEY;
+    try {
+        const raw = JSON.parse(localStorage.getItem(key));
+        const i = Array.isArray(raw) ? raw.findIndex(x => x && typeof x === 'object' && x.id === id) : -1;
+        if (i < 0) return false;
+        const rec = raw[i];
+        if (!(typeof rec.name === 'string' && rec.name.trim())) rec.name = name;
+        rec.notes = notes;
+        rec.updated = Date.now();
+        raw.splice(i, 1);
+        raw.unshift(rec);
+        localStorage.setItem(key, JSON.stringify(raw));
+        return true;
+    } catch (e) { return false; }
 }
 
 function fillRaces() {
@@ -821,7 +869,7 @@ function fillRaces() {
 function rollNew() {
     bs.seed = newSeed();
     BS_IDS.forEach(id => { if (!bs.lock.includes(id)) delete bs.set[id]; });
-    bsChanged();
+    bsChanged(true);
 }
 
 document.addEventListener('DOMContentLoaded', () => {

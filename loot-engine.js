@@ -81,8 +81,46 @@ function generateArt(chance, tier, countRange, luckMult = 1) {
 // d100 weights used when rarity is 'random'
 const RARITY_WEIGHTS = { common:30, uncommon:25, rare:20, 'very-rare':15, legendary:8, artifact:2 };
 
+// The 2024 rules (srd52.js showing 2024, SRD 5.2.1 loaded): each item sits at its 5.2 rarity and attunement,
+// and an item 5.2 renamed one-to-one comes out under its new name (Deck of Many Things → Mysterious Deck).
+// Items whose 5.2 rarity varies, and the few 5.2 dropped, keep their 2014 pool (B492).
+function loot24() {
+  return typeof rulesShown === 'string' && rulesShown === '2024' && typeof SRD52_FULL !== 'undefined';
+}
+const LOOT_RARITIES = ['common', 'uncommon', 'rare', 'very-rare', 'legendary', 'artifact'];
+function loot52Name(name) {
+  const n51 = (typeof MAGIC_ITEM_ALIASES !== 'undefined' && MAGIC_ITEM_ALIASES[name]) || name;
+  return SRD52_FULL.renames.items[n51] || n51;
+}
+// { rarity, attune } from an item's 5.2 text, or null (not in 5.2).
+function loot52Info(name) {
+  const t = SRD52_FULL.items[loot52Name(name)];
+  if (!t) return null;
+  const head = String(Array.isArray(t) ? t[0] : t).split('\n')[0];
+  const m = /\b(very rare|uncommon|common|rare|legendary|artifact)\b/i.exec(head);
+  return { rarity: m && !/rarity varies/i.test(head) ? m[1].toLowerCase().replace(' ', '-') : null, attune: /requires attunement/i.test(head) };
+}
+// A one-to-one 5.2 rename only: a grouped one (Belt of Hill Giant Strength → Belt of Giant Strength) keeps its own name.
+function loot52Display(name) {
+  const n51 = (typeof MAGIC_ITEM_ALIASES !== 'undefined' && MAGIC_ITEM_ALIASES[name]) || name;
+  const to = SRD52_FULL.renames.items[n51];
+  if (!to) return name;
+  return Object.values(SRD52_FULL.renames.items).filter(v => v === to).length === 1 ? to : name;
+}
+let lootPools24 = null;
+function lootPools() {
+  if (!loot24()) return lootData.magicItems;
+  if (lootPools24) return lootPools24;
+  const out = Object.fromEntries(LOOT_RARITIES.map(r => [r, []]));
+  LOOT_RARITIES.forEach(r => (lootData.magicItems[r] || []).forEach(it => {
+    const info = loot52Info(it.name);
+    out[info && info.rarity && out[info.rarity] ? info.rarity : r].push(info ? { ...it, attune: info.attune } : it);
+  }));
+  return (lootPools24 = out);
+}
+
 function magicPool(rarity, type = 'any') {
-  const pool = lootData.magicItems[rarity] || [];
+  const pool = lootPools()[rarity] || [];
   return type === 'any' ? pool : pool.filter(i => i.type === type);
 }
 
@@ -98,9 +136,10 @@ function getMagicItem(rarity, type = 'any') {
   const pool = magicPool(rarity, type);
   if (!pool.length) return null;
   const item = lootPick(pool);
+  // A generic item ("Potion of Resistance") comes out as one of its SRD kinds.
+  const name = item.variants ? lootPick(item.variants) : item.name;
   return {
-    // A generic item ("Potion of Resistance") comes out as one of its SRD kinds.
-    name:      item.variants ? lootPick(item.variants) : item.name,
+    name:      loot24() ? loot52Display(name) : name,
     rarity,
     type:      item.type,
     attune:    item.attune || false,

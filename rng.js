@@ -102,7 +102,9 @@ function setFieldValue(el, v) {
     return true;
 }
 
+// A browser with no Clipboard API (a plain-http address) says "blocked" instead of throwing (W1 #15).
 function copyPageLink(onDone) {
+    if (!navigator.clipboard || !navigator.clipboard.writeText) { onDone(false); return; }
     navigator.clipboard.writeText(location.href)
         .then(() => onDone(true))
         .catch(() => onDone(false));

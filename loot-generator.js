@@ -509,6 +509,12 @@ document.addEventListener('DOMContentLoaded', () => {
   renderSaved();
   setupSourcePickers();
   setupLootHomebrew();
+  // D&D: the 2014/2024 rules picker. A switch rolls the same seed again under the new rules (B492).
+  const rulesBox = document.getElementById('loot-rules');
+  if (rulesBox && !LOOT_PF2E && typeof srd52Toggle === 'function') rulesBox.innerHTML = srd52Toggle();
+  if (!LOOT_PF2E && typeof srd52OnChange === 'function') srd52OnChange(() => {
+    if (currentLoot && currentLoot.seed && applyUrl(null)) setUrlParams(lootParams(), false);
+  });
   // A system with no splitter page hides the button.
   if (!ruleLinkOk('toolbox?tab=split')) document.getElementById('split-btn').hidden = true;
   applyUrl(false);

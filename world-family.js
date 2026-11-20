@@ -19,7 +19,11 @@ const FAM_FIELDS = { gens: 'fam-gens', size: 'fam-size', race: 'fam-race' };
 const FAM_FROM_KEYS = ['facs', 'fcount', 'ffocus', 'fscale', 'fworld'];
 
 let famState = { seed: null, roll: null, root: null, from: {}, entry: '', sel: '', fit: false, removing: '', backing: false, filing: false };
-const famTimers = {};
+const famTimers = {};   // id|field -> { h: timer, run }: text typed but not saved yet
+// Saves any text still waiting, onto the family it was typed into, before the page moves to another family (W1 #2).
+function famFlushEdits() {
+    Object.keys(famTimers).forEach(t => { const p = famTimers[t]; clearTimeout(p.h); delete famTimers[t]; p.run(); });
+}
 
 function famOpts() {
     const v = id => document.getElementById(id).value;
@@ -61,6 +65,7 @@ function famRootFrom(p) {
 
 // push: true = new history entry, false = replace, null = leave the URL alone.
 function rollFamilyFor(seed = newSeed(), push = true) {
+    famFlushEdits();
     famState.seed = seed;
     famState.entry = '';
     famState.roll = rollFamily(seed, { ...famOpts(), root: famState.root });
@@ -72,6 +77,7 @@ function rollFamilyFor(seed = newSeed(), push = true) {
 }
 
 function applyFamUrl(p) {
+    famFlushEdits();
     Object.entries(FAM_FIELDS).forEach(([key, id]) => {
         const el = document.getElementById(id);
         if (!setFieldValue(el, p.get(key))) el.value = defaultValue(el);
@@ -152,13 +158,21 @@ function famEdit(fn, quiet = false) {
         const edits = Object.fromEntries(Object.entries(e.edits).filter(([k]) => stays(k)));
         if (Object.keys(edits).length) e.edits = edits; else delete e.edits;
     }
-    clean.people.forEach(p => { if (p.to) nbLink(nb, e.id, p.to); });
+    famRelink(nb, e, clean);
     if (e.title === e.fam.name && clean.name !== e.fam.name) e.title = nbText(clean.name, NB_LIMITS.title) || e.title;
     e.fam = clean;
     e.sub = nbText(famSummary(clean), NB_LIMITS.sub);
     if (!nbStore(nb, quiet)) { flash('fam-status', "⚠️ This browser won't keep a notebook (storage is full or off), so it can't keep your changes."); return false; }
     if (filed) flash('fam-status', '📓 This family is in your notebook now. Open this link again and your changes come back.');
     return true;
+}
+
+// The family's notebook links follow its people: each NPC someone is gets linked, and one nobody is any more
+// (cleared, or their relative removed) gets unlinked (W1 #10).
+function famRelink(nb, e, fam) {
+    const now = new Set(fam.people.map(p => p.to).filter(Boolean));
+    (e.fam ? e.fam.people : []).forEach(p => { if (p.to && !now.has(p.to)) nbUnlink(nb, e.id, p.to); });
+    now.forEach(to => nbLink(nb, e.id, to));
 }
 
 // ── Render ────────────────────────────────────────────────
@@ -325,6 +339,9 @@ function famRenderTree() {
     const p = famState.sel && famPerson(fam, famState.sel), name = document.getElementById('fam-p-name');
     if (p && name) name.textContent = p.name;
     if (p && !p.npc) document.querySelectorAll('#fam-person .fam-npc').forEach(el => el.remove());
+    // The printed roster follows the edit too (W1 #11).
+    const roster = document.querySelector('#fam-card .fam-print');
+    if (roster) roster.outerHTML = famPrintHTML(fam);
 }
 
 // ── Actions ───────────────────────────────────────────────
@@ -418,6 +435,7 @@ function famBack() {
     famState.backing = false;
     const nb = nbLoad(), e = famEntry(nb);
     if (!e || !famState.roll) return;
+    famRelink(nb, e, famState.roll.fam);
     e.fam = famState.roll.fam;
     e.sub = nbText(famSummary(e.fam), NB_LIMITS.sub);
     famState.sel = '';
@@ -435,6 +453,7 @@ function famStartBlank() {
 }
 
 function famSave(statusId) {
+    famFlushEdits();
     const nb = nbLoad();
     if (famEntry(nb)) { flash(statusId, '📓 This family is already in the notebook.'); return; }
     if (!famState.roll) return;
@@ -446,6 +465,7 @@ function famSave(statusId) {
 }
 
 function printFamily() {
+    famFlushEdits();
     if (!famNow().fam) return;
     document.body.classList.add('print-fam');
     window.print();
@@ -529,18 +549,16 @@ function setupFamily() {
         const box = e.target.closest('.fam-f');
         if (!box || ['gender', 'race', 'dead', 'to'].includes(box.dataset.f)) return;
         const id = famState.sel, key = box.dataset.f, t = id + '|' + key;
-        clearTimeout(famTimers[t]);
-        famTimers[t] = setTimeout(() => {
-            delete famTimers[t];
-            if (famEdit(famSetField(id, key, box.value), true)) famRenderTree();
-        }, 400);
+        if (famTimers[t]) clearTimeout(famTimers[t].h);
+        const run = () => { if (famEdit(famSetField(id, key, box.value), true)) famRenderTree(); };
+        famTimers[t] = { run, h: setTimeout(() => { delete famTimers[t]; run(); }, 400) };
     });
     // Leaving a text box saves what's still waiting.
     card.addEventListener('focusout', e => {
         const box = e.target.closest('.fam-f');
         if (!box || ['gender', 'race', 'dead', 'to'].includes(box.dataset.f)) return;
         const id = famState.sel, key = box.dataset.f, t = id + '|' + key;
-        if (famTimers[t]) { clearTimeout(famTimers[t]); delete famTimers[t]; if (famEdit(famSetField(id, key, box.value), true)) famRenderTree(); }
+        if (famTimers[t]) { const p = famTimers[t]; clearTimeout(p.h); delete famTimers[t]; p.run(); }
     });
 
     document.getElementById('fam-copy').addEventListener('click', () => {

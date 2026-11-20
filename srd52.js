@@ -8,7 +8,8 @@
      MAGIC_ITEM_TEXT, MONSTERS, and MONSTER_BY_ID in place, so every page script keeps working.
      A 5.1 name that 5.2 renamed or grouped still finds its 5.2 entry (MONSTER_BY_ID.goblin is the
      Goblin Warrior, MAGIC_ITEM_TEXT['Belt of Hill Giant Strength'] the Belt of Giant Strength), and
-     the few 5.1 entries 5.2 dropped (drow, Restorative Ointment) stay. Homebrew rows are kept.
+     the few 5.1 items 5.2 dropped (Restorative Ointment) stay. A 5.1 monster 5.2 dropped looks up
+     a 5.2 stand-in (RULES_STAND_IN: MONSTER_BY_ID.orc is "Orc (Tough)"). Homebrew rows are kept.
      Loaded with the page (document.write, so page scripts see 2024 data from their first line)
      when the setting is already 2024; loaded on the fly when the reader switches.
    - A link can carry ?rules=2024 or ?rules=2014: it rules that page view without changing the
@@ -23,10 +24,10 @@
    - srd52Monsters(): the additions' monster rows in 2014 (in 2024 they're already in MONSTERS).
    - srd52Toggle(): the switch's markup ([data-rules] picker + [data-srd52] additions box).
    - srd52Tag(), srd52IsSpell(), srd52IsItem(): the "📗 SRD 5.2" marks, only for the additions in 2014.
-   Seeded rolls draw from whatever MONSTERS holds, so a 2024 page's links carry rules=2024: the
-     address (setUrlParams), copied links (rulesLinkParams), and any same-site <a> with a query that
-     a script built by hand (stamped when it's clicked). A page pinned to 2014 (?rules=2014 under a
-     2024 setting) carries rules=2014 the same way. Back/Forward re-reads an address's rules=.
+   Seeded rolls draw from whatever MONSTERS holds, so a page's links carry its version (rules=2024
+     or rules=2014): the address (setUrlParams), copied links (rulesLinkParams), and any same-site <a>
+     with a query that a script built by hand (stamped when it's clicked). An address with no roll
+     stays bare. Back/Forward re-reads an address's rules=.
    - rulesFailed: the 2024 data didn't load (offline); the page stays in 2014 and the picker says so.
    - <script src="srd52.js" data-text-only>: a page with rules text but no spell, monster, or item
      lists (the Rules page). It needs no srd52-data.js, never loads the 2024 data file, and shows
@@ -109,6 +110,23 @@ const RULES_HAB_KIN = {
     hippopotamus: 'crocodile', pteranodon: 'triceratops'
 };
 
+// The 5.1 monsters 5.2 dropped -> the 5.2 one a 2024 page uses instead (B493). 5.2 folded the rat and the
+// insect swarms into its own; the rest keep their name with the stand-in's stats ("Orc (Tough)").
+const RULES_STAND_IN = {
+    'giant-rat-diseased': 'giant-rat', 'swarm-of-beetles': 'swarm-of-insects', 'swarm-of-centipedes': 'swarm-of-insects',
+    'swarm-of-spiders': 'swarm-of-insects', 'swarm-of-wasps': 'swarm-of-insects',
+    drow: 'priest-acolyte', 'deep-gnome-svirfneblin': 'scout', lizardfolk: 'tough', orc: 'tough', duergar: 'spy'
+};
+const RULES_FOLDED = new Set(['giant-rat-diseased', 'swarm-of-beetles', 'swarm-of-centipedes', 'swarm-of-spiders', 'swarm-of-wasps']);
+const rulesStandIns = {};
+function rulesStandIn(id, m, v52) {
+    const s = v52[RULES_STAND_IN[id]];
+    if (!s) return null;
+    if (RULES_FOLDED.has(id)) return s;
+    if (!rulesStandIns[id] || rulesStandIns[id].standIn !== s.name) rulesStandIns[id] = { ...s, name: `${m.name} (${s.name})`, standIn: s.name };
+    return rulesStandIns[id];
+}
+
 function rulesHabitats() {
     if (typeof ENC_MONSTER_HABITATS === 'undefined' || rulesHabitats.done) return;
     const H = ENC_MONSTER_HABITATS;
@@ -168,7 +186,7 @@ function rulesSwap(v) {
         Object.keys(by).forEach(id => { if (by[id] && by[id].v52) delete by[id]; });
         if (full) {
             const v52 = Object.fromEntries(full.monsters.map(m => [m.id, m]));
-            Object.entries(RULES51.byId).forEach(([id, m]) => { by[id] = v52[full.renames.monsters[id] || id] || m; });
+            Object.entries(RULES51.byId).forEach(([id, m]) => { by[id] = v52[full.renames.monsters[id] || id] || rulesStandIn(id, m, v52) || m; });
             Object.assign(by, v52);
         } else {
             Object.assign(by, RULES51.byId);
@@ -234,24 +252,28 @@ function rulesUse(v, fromUrl = false) {
     return rulesRefresh();
 }
 
-// After a switch the address says rules=2024 in 2024 and nothing in 2014, as setUrlParams writes it
-// (so Copy Link on the address carries the version).
+// After a switch the address carries the new version, as setUrlParams writes it (so Copy Link on the address
+// carries it): rules=2024, or rules=2014 when the address holds a roll (a bare address stays bare).
 function rulesDropUrlParam() {
     const p = new URLSearchParams(location.search);
     const was = p.get('rules');
     p.delete('rules');
     if (rulesVersion() === '2024') p.set('rules', '2024');
+    else if ([...p.keys()].length) p.set('rules', '2014');
     if (p.get('rules') === was) return;
     const qs = p.toString();
     history.replaceState(history.state, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
 }
 
-// setUrlParams (rng.js) runs every address the page writes through this.
-// 2024 pages stamp rules=2024; a page pinned to 2014 by its address under a 2024 setting stamps rules=2014.
+// setUrlParams (rng.js) runs every address the page writes through this, and copied links too.
+// 2024 pages stamp rules=2024; 2014 pages stamp rules=2014 on any link that holds a roll, so a shared 2014
+// link opens on 2014 for a reader set to 2024 (B491). A page pinned to 2014 by its address stamps it always.
 function rulesLinkParams(params) {
     if (!SRD52_OK || params.rules) return params;
     if (rulesShown === '2024') return { ...params, rules: '2024' };
-    return rulesPage === '2014' && rulesStored() === '2024' && rulesPinnedByUrl ? { ...params, rules: '2014' } : params;
+    if (rulesPage === '2014' && rulesPinnedByUrl) return { ...params, rules: '2014' };
+    const roll = Object.values(params).some(v => Array.isArray(v) ? v.some(x => x !== null && x !== undefined && x !== '') : v !== null && v !== undefined && v !== '');
+    return roll ? { ...params, rules: '2014' } : params;
 }
 
 // A same-site link with a query that a script built by hand: give it the page's rules= as it's followed.

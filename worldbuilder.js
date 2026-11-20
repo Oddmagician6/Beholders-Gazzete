@@ -52,6 +52,14 @@ if (ruleSystemId() === 'pf2e') {
         if (i >= 0) list.splice(i + 1, 0, 'pf2e-creatures-data.js');
     });
 }
+// D&D pages: the 2014/2024 rules (srd52.js) come in right after the monsters, so a 2024 reader's sites and encounters
+// roll 5.2 foes, as on the one-shot that links here (B494). No picker here: the reader's setting or a rules= link.
+else {
+    new Set([WORLD_ENGINE_ORDER, ...Object.values(WORLD_ENGINES)]).forEach(list => {
+        const i = list.indexOf('monsters-data.js');
+        if (i >= 0) list.splice(i + 1, 0, 'srd52-data.js', 'srd52.js');
+    });
+}
 // Tabs set up first: pantheon links the calendar, factions/town read the pantheon, history the factions, sites the history.
 const WORLD_NEEDS = { pantheon: ['calendar'], factions: ['pantheon'], town: ['pantheon'], history: ['factions'], sites: ['history'] };
 const worldScripts = {};   // src → Promise, settled once the script has run
@@ -68,11 +76,28 @@ function worldScript(src) {
     }));
 }
 
+// Once srd52.js is in (D&D): wait for the 2024 data when that's the version, and from then on roll the open tab
+// again when the version changes (Back/Forward to a rules= address, another tab's switch).
+let worldRulesHooked = false;
+function worldRules() {
+    if (typeof SRD52_OK === 'undefined' || !SRD52_OK) return null;
+    if (!worldRulesHooked) {
+        worldRulesHooked = true;
+        srd52OnChange(() => {
+            const t = worldShown;
+            if (!worldOpened.has(t) || !WORLD_ENGINES[t].includes('srd52.js')) return;
+            if (WORLD_TABS[t].apply(urlParams())) setUrlParams(WORLD_TABS[t].params(), false);
+        });
+    }
+    return rulesRefresh();
+}
+
 function loadWorldTab(tab) {
     return worldReady[tab] || (worldReady[tab] = Promise.all([
         ...(WORLD_NEEDS[tab] || []).map(loadWorldTab),
         ...WORLD_ENGINE_ORDER.filter(src => WORLD_ENGINES[tab].includes(src)).map(worldScript)
-    ]).then(() => { if (WORLD_TABS[tab].setup) WORLD_TABS[tab].setup(); })
+    ]).then(worldRules)
+      .then(() => { if (WORLD_TABS[tab].setup) WORLD_TABS[tab].setup(); })
       .catch(err => { delete worldReady[tab]; throw err; }));
 }
 
@@ -105,6 +130,7 @@ function flash(id, text) {
 }
 
 function copyText(text, statusId, what) {
+    if (!navigator.clipboard || !navigator.clipboard.writeText) { flash(statusId, '⚠️ Copy blocked by the browser.'); return; }
     navigator.clipboard.writeText(text)
         .then(() => flash(statusId, `📋 Copied ${what}.`))
         .catch(() => flash(statusId, '⚠️ Copy blocked by the browser.'));

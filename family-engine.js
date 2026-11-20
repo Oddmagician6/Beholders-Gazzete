@@ -453,16 +453,35 @@ function rollFamily(seed, opts = {}) {
             fate.ago = part(label + '.late', () => Math.floor(rand() * (o.maxAgo + 1)));
             fate.age = o.w - fate.ago;
         }
+        // Never past their race's longest life: a parent kept alive for their eldest dies as late as that allows (W1 #4).
+        const end = NPC_AGE_RANGES[o.race].ancient[1];
+        if (fate.dead && fate.age > end) {
+            fate.ago = Math.min(o.maxAgo !== undefined ? o.maxAgo : o.w, o.w - end);
+            fate.age = o.w - fate.ago;
+        }
+        // Someone who married lived to be old enough to (W1 #3): o.minAge, their race's youngest grown age.
+        if (fate.dead && o.minAge !== undefined && fate.age < o.minAge) {
+            fate.age = part(label + '.grown', () => o.minAge + Math.floor(rand() * (o.w - o.minAge + 1)));
+            fate.ago = o.w - fate.age;
+            if (fate.kind === 'young') {
+                fate.kind = 'adult';
+                fate.cause = part(label + '.grown.cause', () => facPick(FAM_CAUSES.adult));
+            }
+        }
         if (fate.dead && !FAM_NOT_POISON.test(fate.cause)) fate.cause = part(label + '.fate.more', () => famSwap(fate.cause, FAM_CAUSES[fate.kind], FAM_CAUSES_MORE[fate.kind]));
         // o.npc: someone rolled already (the head), who keeps their own name and link.
         const id = o.npc ? { n: { first: o.npc.firstName, name: o.npc.name } } : famFindName(deriveSeed(seed, label + '.id'), o.race, o.gender, o.surname, used, o.surname === null ? surname : null);
         used.add(id.n.first);
+        // A family name the NPC tables can't roll (a Realms house): the first name found, then theirs, and no NPC
+        // link, which would open as someone else (W1 #12).
+        const exact = !o.surname || o.npc || id.n.surname === o.surname;
+        const name = exact ? id.n.name : o.race === 'dragonborn' ? `${id.n.first} of Clan ${o.surname}` : `${id.n.first} ${o.surname}`;
         const p = {
-            id: 'p' + (pn++).toString(36), name: id.n.name, gender: o.gender, race: o.race,
+            id: 'p' + (pn++).toString(36), name, gender: o.gender, race: o.race,
             age: fate.age, dead: fate.dead, ago: fate.ago, cause: fate.cause,
             title: '', note: '', npc: '', to: '', of: '', _w: o.w, _cat: o.cat
         };
-        if (!p.dead && !o.npc) {
+        if (!p.dead && !o.npc && exact) {
             const ag = famFindAge(deriveSeed(seed, label + '.age'), o.race, p.age);
             if (ag) p.npc = paramsQuery({ seed: deriveSeed(seed, label + '.npc'), profession: o.cat, lock: [`identity.${id.seed}.${o.race}.${o.gender}`, `age.${ag.seed}.${ag.bucket}`] });
         }
@@ -498,7 +517,7 @@ function rollFamily(seed, opts = {}) {
     function marry(label, p, minW = 0, kind = 'wed', kidW = null) {
         if (fam.people.length >= S.cap) return null;
         const s = spouse(label, p, minW, kidW);
-        return union(p, person(label, { ...s, surname: null }), kind);
+        return union(p, person(label, { ...s, surname: null, minAge: NPC_AGE_RANGES[s.race].young[0] }), kind);
     }
 
     // A child born into the family. maxAgo: they died after their own eldest was born, if they have one later.
@@ -570,7 +589,8 @@ function rollFamily(seed, opts = {}) {
     // Up the line: each ancestor a generation older, with a partner, and the line child's brothers and sisters.
     let kid = head;
     const sides = [];
-    for (let i = 1; i <= up; i++) {
+    // One ancestor couple above kid (and, with sibs, the line child's brothers and sisters).
+    function upStep(i, sibs) {
         const label = 'up' + i;
         const plan = part(label, () => ({
             gap: gapLo + Math.floor(rand() * (gapHi - gapLo + 1)),
@@ -594,19 +614,24 @@ function rollFamily(seed, opts = {}) {
         for (let k = 0; k < plan.n - 1; k++) {
             const elder = k < j;
             const w = elder ? (older += plan.steps[k]) : (younger -= plan.steps[k]);
-            if (w > youngest - Y0 || w > spCap || w < latest || fam.people.length >= S.cap) continue;
+            if (!sibs || w > youngest - Y0 || w > spCap || w < latest || fam.people.length >= S.cap) continue;
             const sib = child(`${label}.k${k}`, u, w);
             sides.push({ id: sib.id, label: `${label}.k${k}`, row: up - i + 1, main: false });
         }
         parent._line = true;
         kid = parent;
     }
-    fam.top = kid.id;
+    for (let i = 1; i <= up; i++) upStep(i, true);
     fam.root = head.id;
 
     // Down from the head first (their line gets the room), then their brothers and sisters, then the older branches.
     queue.push({ id: head.id, label: 'head', row: up, main: true }, ...sides);
     for (let q = 0; q < queue.length; q++) grow(queue[q]);
+    // A line below the head that ended early (no child old enough to carry it): the generations asked for are
+    // made up above, one more couple each (W1 #6).
+    const rowsDown = id => { const ks = famUnionsOf(fam, id).flatMap(u => famKids(fam, u.id)); return ks.length ? 1 + Math.max(...ks.map(k => rowsDown(k.id))) : 1; };
+    for (let i = up + 1, have = rowsDown(kid.id); have < gens; i++, have++) upStep(i, false);
+    fam.top = kid.id;
 
     // Titles: the head, the heir, the partner at the head's side, those before them, and what the rest do.
     const R0 = FAM_CAT_TITLES;
@@ -720,7 +745,10 @@ function famNewPerson(fam, anchor, rel, other = null) {
     else if (rel === 'sibling') age = Math.max(0, born - 2 * space);
     else {
         const kids = famUnionsOf(fam, anchor.id).concat(famMarriedInto(fam, anchor.id) || []).flatMap(u => famKids(fam, u.id));
-        age = kids.length ? Math.max(0, Math.min(...kids.map(famBorn)) - 2 * space) : Math.max(0, born - A0);
+        // Born after both parents were grown (W1 #5): counted from the younger one when the other is named.
+        const youngest = Math.min(born, ...(other ? [famBorn(other)] : []));
+        age = kids.length ? Math.min(...kids.map(famBorn)) - 2 * space : youngest - A0;
+        age = Math.max(0, Math.min(age, youngest - R.young[0]));
         age = Math.max(age, ...[anchor, other].filter(p => p && p.dead).map(p => p.ago));
     }
     const gender = rel === 'spouse' ? famGenderPick(anchor.gender) : famGenderPick();
