@@ -28,7 +28,7 @@ const showStatsOn = () => ruleHasStatBlocks() && document.getElementById('includ
 // before them doesn't count. npcBlockName: the block's name for one-line lists.
 const NPC_PF2E = typeof renderPf2eStatBlock === 'function';
 const npcHasBlock = npc => !!npc.block && ruleHasStatBlocks() && !NPC_PF2E === !npc.block.pf2e;
-const npcBlockName = npc => npcHasBlock(npc) ? npc.block.title.replace(/ \(.*\)$/, '') : '';
+const npcBlockName = npc => npcHasBlock(npc) ? String(npc.block.title || '').replace(/ \(.*\)$/, '') : '';
 
 // Locked parts (NPC_PARTS in npc-data.js) keep their seed when the rest rerolls.
 const locks = new Set();

@@ -89,7 +89,8 @@ function marketPf2eCategory(it, id) {
         default:
             if (tr.includes('precious')) return 'trade-goods';
             if (MARKET_PF2E_TOOL.test(id)) return 'tools';
-            return it.l > 0 || magic ? 'magic-items' : 'adventuring-gear';
+            // A level alone doesn't make gear magic (a simple lock is level 1); invested or focused does.
+            return magic || tr.includes('invested') || tr.includes('focused') ? 'magic-items' : 'adventuring-gear';
     }
 }
 

@@ -12,6 +12,7 @@
        own reading of the actions (null = read them), init (initiative bonus; null = Dex),
        tr, ac2, ba, re, le: features, legN (legendary actions a round),
        book: its page in the 2014 Monster Manual (0 = none; book-monsters.js),
+       xp0: true for a CR 0 monster worth 0 XP (kept from an SRD one like the frog),
        style: '2014' | '2024', the stat block's layout and wording (L1T T4): 2024 writes
        "Melee Attack Roll: +5, reach 5 ft." attacks, the 2024 property labels, and an `init`, so
        toolbox-statblock.js draws it in the 2024 layout }
@@ -101,6 +102,11 @@ function hbPb(cr) {
 
 function hbXp(cr) {
     return HB_XP[Math.max(0, HB_CRS.indexOf(cr))];
+}
+
+// A monster's XP: a CR 0 one that does no harm (the SRD's frog, crab, or rat) is worth 0 (xp0).
+function hbMonXp(mon, cr) {
+    return cr === '0' && mon.xp0 ? 0 : hbXp(cr);
 }
 
 function hbText(v, max) {
@@ -228,6 +234,7 @@ function hbClean(raw) {
         langs: hbLine(raw.langs, HB_LIMITS.line),
         tele: hbInt(raw.tele, 0, 999, 0),
         cr: typeof raw.cr === 'string' && HB_CRS.includes(raw.cr) ? raw.cr : 'auto',
+        xp0: raw.xp0 === true,
         dpr: hbOpt(raw.dpr, 0, 999),
         atk: hbOpt(raw.atk, -5, 30),
         dc: hbOpt(raw.dc, 0, 40),
@@ -366,7 +373,7 @@ function hbBlock(mon, cr = hbCr(mon)) {
         sp: hbSpeedLine(mon),
         ab: mon.ab.slice(),
         pr: hbProps(mon, pb),
-        cr: `${cr} (${hbXp(cr).toLocaleString('en-US')} XP)`,
+        cr: `${cr} (${hbMonXp(mon, cr).toLocaleString('en-US')} XP)`,
         pb
     };
     HB_SECTIONS.forEach(([k]) => { const list = hbFeatures(mon, k, pb); if (list.length) b[k] = list; });
@@ -404,14 +411,20 @@ function hbFeatHit(mon, f, pb) {
     const hit = text.match(/to hit|Attack Roll:/i);
     const toHit = text.match(/([+\-−]\d+) to hit/) || text.match(/Attack Roll: ([+\-−]\d+)/i);
     const dc = text.match(/DC (\d+)/);
-    const dmgs = s => [...s.matchAll(/(\d+) \(\d+d\d+(?: [+−-] \d+)?\) [a-z]+ damage|Hit: (\d+) [a-z]+ damage/gi)].map(m => Number(m[1] || m[2]));
-    let dmg;
+    // "7 (1d8 + 3) slashing damage", or a flat "15 fire damage" (a flat Plus dice, a save's "takes 18 fire damage").
+    const dmgs = s => [...s.matchAll(/(\d+)(?: \(\d+d\d+(?: [+−-] \d+)?\))? [a-z]+ damage/gi)].map(m => Number(m[1]));
+    let dmg, area = false;
     if (hit) {
         const sentence = (text.split(/Hit:/)[1] || '').split(/\.(?:\s|$)/)[0];
         dmg = dmgs('Hit:' + sentence).reduce((a, b) => a + b, 0);
-    } else dmg = Math.max(0, ...dmgs(text));
+    } else {
+        dmg = Math.max(0, ...dmgs(text));
+        // The DMG's estimate counts an area effect (a breath, a burst) as hitting two targets.
+        area = dmg > 0 && /\b(cone|line|cube|sphere|cylinder|radius|emanation|burst|each creature)\b/i.test(text);
+        if (area) dmg *= 2;
+    }
     return {
-        name: f.name, dmg,
+        name: area ? `${f.name} (two targets)` : f.name, dmg,
         toHit: toHit ? Number(toHit[1].replace('−', '-')) : null,
         dc: dc ? Number(dc[1]) : null,
         limited: /recharge|\/day|\/ day|per day/i.test(f.name),
@@ -429,6 +442,8 @@ function hbReadOffense(mon, pb) {
     const plain = acts.filter(a => !a.multi && !a.limited && a.dmg > 0);
     const best = plain.reduce((b, a) => (!b || a.dmg > b.dmg ? a : b), null);
     let regular = best ? best.dmg : 0, how = best ? `${best.name} ${best.dmg}` : '';
+    // The actions the round's damage comes from, with how much each gives (they set the to-hit or DC).
+    let used = best ? [[best, best.dmg]] : [];
     const multi = acts.find(a => a.multi);
     if (multi) {
         const named = [...multi.text.matchAll(/\b(one|two|three|four|five|six|\d+|twice)\b (?:with its |with |of its |using its )?([A-Za-z][A-Za-z' -]*?)(?=,| and |\.| or |$)/gi)]
@@ -440,8 +455,12 @@ function hbReadOffense(mon, pb) {
             }).filter(Boolean);
         const total = named.reduce((t, x) => t + x.act.dmg * x.count, 0);
         const n = (multi.text.match(/makes (\w+) (?:\w+ )?attacks/i) || [])[1];
-        if (total > regular) { regular = total; how = `Multiattack: ${named.map(x => `${x.count > 1 ? x.count + ' × ' : ''}${x.act.name} ${x.act.dmg}`).join(' + ')}`; }
-        else if (n && best && hbCount(n) * best.dmg > regular) { regular = hbCount(n) * best.dmg; how = `Multiattack: ${hbCount(n)} × ${best.name} ${best.dmg}`; }
+        if (total > regular) { regular = total; how = `Multiattack: ${named.map(x => `${x.count > 1 ? x.count + ' × ' : ''}${x.act.name} ${x.act.dmg}`).join(' + ')}`; used = named.map(x => [x.act, x.act.dmg * x.count]); }
+        else {
+            // "makes three attacks": its best attack (not a save effect) that many times.
+            const atk = plain.filter(a => a.toHit !== null).reduce((b, a) => (!b || a.dmg > b.dmg ? a : b), null);
+            if (n && atk && hbCount(n) * atk.dmg > regular) { regular = hbCount(n) * atk.dmg; how = `Multiattack: ${hbCount(n)} × ${atk.name} ${atk.dmg}`; used = [[atk, regular]]; }
+        }
     }
     if (how) steps.push(`Each round: ${how} = ${regular}.`);
     const lim = acts.filter(a => a.limited && a.dmg > 0).reduce((b, a) => (!b || a.dmg > b.dmg ? a : b), null);
@@ -449,6 +468,7 @@ function hbReadOffense(mon, pb) {
     if (lim && lim.dmg > regular) {
         dpr = Math.round((lim.dmg + 2 * regular) / 3);
         steps.push(`${lim.name} (${lim.dmg}) once in the first three rounds: (${lim.dmg} + 2 × ${regular}) ÷ 3 = ${dpr}.`);
+        used = [[lim, lim.dmg], ...used.map(([a, d]) => [a, d * 2])];
     }
     const bonus = mon.ba.filter(f => f.name || f.text || f.atk).map(f => hbFeatHit(mon, f, pb)).filter(a => a.dmg > 0 && !a.limited)
         .reduce((b, a) => (!b || a.dmg > b.dmg ? a : b), null);
@@ -467,9 +487,15 @@ function hbReadOffense(mon, pb) {
         return { name: f.name.replace(/\s*\(costs \d actions\)/i, ''), dmg, uses, total: dmg * uses };
     }).filter(x => x.total > 0).reduce((b, x) => (!b || x.total > b.total ? x : b), null);
     if (leg) { dpr += leg.total; steps.push(`Legendary ${leg.name} ${leg.uses > 1 ? `${leg.uses} × ${leg.dmg}` : leg.dmg}: +${leg.total}.`); }
+    // The best to-hit; the DC of the save effects that deal the damage (any action's when none
+    // does); and whether most of the damage comes from save effects (then the DC counts).
     const hits = acts.map(a => a.toHit).filter(x => x !== null);
-    const dcs = acts.map(a => a.dc).filter(x => x !== null);
-    return { dpr, steps, atk: hits.length ? Math.max(...hits) : null, dc: dcs.length ? Math.max(...dcs) : null, limited: lim };
+    const saveActs = used.map(([a]) => a).filter(a => a.toHit === null);
+    const dcs = (saveActs.length ? saveActs : acts).map(a => a.dc).filter(x => x !== null);
+    const sum = test => used.filter(([a]) => test(a)).reduce((t, [, d]) => t + d, 0);
+    const saveDmg = sum(a => a.toHit === null && a.dc !== null);
+    return { dpr, steps, atk: hits.length ? Math.max(...hits) : null, dc: dcs.length ? Math.max(...dcs) : null, limited: lim,
+        byDc: dcs.length > 0 && saveDmg > sum(a => a.toHit !== null) };
 }
 
 // The first CR whose range (column hi) reaches value.
@@ -545,8 +571,9 @@ function hbEstimateWith(mon, pb) {
     else off.push('No damage found in the actions: 0 a round.');
     let oIdx = hbRowFor(dpr, 7);
     // …against attack bonus or save DC.
-    // Your attack bonus, else your DC, else the best to-hit in the actions, else their best DC.
-    const useDc = mon.atk === null && (mon.dc !== null || read.atk === null);
+    // Your attack bonus, else your DC, else the to-hit of the attacks the damage comes from, or
+    // the DC when save effects deal most of it (or nothing has a to-hit).
+    const useDc = mon.atk === null && (mon.dc !== null || read.atk === null || (mon.dpr === null && read.byDc));
     const val = useDc ? (mon.dc !== null ? mon.dc : read.dc) : (mon.atk !== null ? mon.atk : read.atk);
     const want = HB_CR_TABLE[oIdx][useDc ? 8 : 5];
     off.push(`${dpr} damage a round is CR ${HB_CRS[oIdx]}, where the usual ${useDc ? 'save DC' : 'attack bonus'} is ${useDc ? want : '+' + want}.`);
@@ -612,6 +639,7 @@ function hbFromSrd(id) {
     delete mon.speed[''];
     const crName = b.cr.split(' ')[0];
     mon.cr = HB_CRS.includes(crName) ? crName : 'auto';
+    mon.xp0 = mon.cr === '0' && /\b(?:0 XP|XP 0)\b/.test(b.cr);
     const pb = b.pb || hbPb(mon.cr === 'auto' ? '1' : mon.cr);
     b.pr.forEach(([k, v]) => {
         if (k === 'Saving Throws') v.split(',').forEach(s => { const i = HB_ABIL_NAMES.indexOf(s.trim().slice(0, 3)); if (i >= 0) mon.saves[i] = true; });
@@ -654,7 +682,7 @@ function hbFromSrd(id) {
 function hbRow(mon, id) {
     const cr = hbCr(mon);
     return {
-        id, name: mon.name || 'Homebrew monster', cr, xp: hbXp(cr), ac: mon.ac, hp: hbHp(mon).avg,
+        id, name: mon.name || 'Homebrew monster', cr, xp: hbMonXp(mon, cr), ac: mon.ac, hp: hbHp(mon).avg,
         dex: hbMod(mon.ab[1]), size: mon.size, type: (mon.type || 'monstrosity').toLowerCase(), hb: true, block: hbBlock(mon, cr)
     };
 }

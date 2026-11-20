@@ -606,6 +606,8 @@ document.addEventListener('DOMContentLoaded', () => {
     nbOnChange(() => { renderSaved(); renderSource(); document.getElementById('mm-copy-new').hidden = !draftEntry(); });
     window.addEventListener('storage', e => {
         if (e.key !== MM_DRAFT_KEY) return;
+        // An edit here is still waiting to be kept: keep it (the newest typing wins) rather than lose it.
+        if (storeTimer) { storeDraft(); return; }
         loadDraft();
         fillForm();
         renderAll();

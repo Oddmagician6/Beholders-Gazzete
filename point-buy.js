@@ -285,6 +285,11 @@ function loadSpells() {
 // The builder opens the newest character, so it lands on this one.
 async function sendToBuilder() {
     const btn = document.getElementById('pb-send');
+    // The builder reads two picks as +2 / +1, so a +1 / +1 / +1 needs all three first.
+    if (pb24() && pbBg() && pb.split === 3 && pb.abil.length && pb.abil.length < 3) {
+        flash(`Pick ${3 - pb.abil.length} more ${3 - pb.abil.length === 1 ? 'ability' : 'abilities'} for the +1 / +1 / +1 first, or switch to +2 / +1.`, true);
+        return;
+    }
     btn.disabled = true;
     try {
         // Saving re-cleans every saved character, which drops spells it can't look up.

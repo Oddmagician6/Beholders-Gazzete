@@ -214,7 +214,9 @@ function sbPf2eNpcParts(block) {
     }
     if (!base) return { m, b: null, swap };
     // Flat checks (a firearm's misfire, DC 11 to target a concealed foe) are fixed by the rules, not the creature.
-    const dc = list => (list || []).map(([name, cost, traits, text]) => [name, cost, traits, d ? text.replace(/DC (\d+)\b(?! flat)/g, (_, n) => `DC ${+n + d}`) : text]);
+    // A Strike written into an ability ("The Strike has a +15 attack modifier") moves like the block's own.
+    const dc = list => (list || []).map(([name, cost, traits, text]) => [name, cost, traits, d ? text.replace(/DC (\d+)\b(?! flat)/g, (_, n) => `DC ${+n + d}`)
+        .replace(/([+−-])(\d+)(?= attack (?:modifier|bonus))/g, (_, s, n) => sbSigned((s === '+' ? 1 : -1) * +n + d)) : text]);
     const b = { ...base, pd: sbPf2eShift(base.pd, d), sk: sbPf2eShift(base.sk, d), ia: dc(base.ia), da: dc(base.da), oa: dc(base.oa),
         st: (base.st || []).map(([ranged, name, bonus, traits, dmg]) => [ranged, name, bonus + d, traits, sbPf2eDamage(dmg, d)]),
         sc: (base.sc || []).map(([name, sdc, atk, note, ranks]) => [name, sdc + d, atk ? atk + d : atk, note, ranks]) };
@@ -235,6 +237,11 @@ function sbPf2eNpcNote(block, swap) {
     const out = [];
     if (block.adj) out.push(`${block.adj > 0 ? 'Elite' : 'Weak'} (GM Core): NPC Core's level ${c.level} ${c.name.toLowerCase()} with ${block.adj > 0 ? '+2' : '−2'} to AC, attacks, DCs, saves, Perception, skills, and Strike damage, and ${block.adj > 0 ? 'more' : 'fewer'} HP, all worked in. Damage from its other abilities and spells takes ${block.adj > 0 ? '+2' : '−2'} more (${block.adj > 0 ? '+4' : '−4'} for one it can't use at will).`);
     if (swap) out.push(`Ancestry: NPC Core's block is human; the Gazette moved it to ${ruleWord('race', block.race)} (traits, size, Speed, senses, and a language).`);
+    // A block picked by hand whose ancestry isn't this person's (an elf with the dwarf smith's block).
+    else if (c && !sbPf2eFits(c, block.race)) {
+        const own = c.traits.filter(t => SB_PF2E_ANCESTRY_TRAITS.includes(t) && t !== 'human');
+        out.push(`Ancestry: NPC Core's ${c.name.toLowerCase()} has the ${own.join(' and ')} trait${own.length === 1 ? '' : 's'}, and the block keeps ${own.length === 1 ? 'it' : 'them'} (with its Speed and senses), though this person's ancestry is ${ruleWord('race', block.race)}. Pick 🎲 Random in the Stat Block picker for a block that fits.`);
+    }
     return out;
 }
 
