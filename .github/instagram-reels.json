@@ -433,6 +433,34 @@
       "hashtags": "#SuggestionSpell #PuddingTheGoat #Brindlemoor #BardRally",
       "publishAt": "2026-11-20T02:00:00Z",
       "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "carrion-crawler-skeleton-guardpost-level-two",
+      "release_tag": "reel-stage-nov20-crawler-ig-20261120",
+      "hashtags": "#CarrionCrawler #SkeletonStrike #Undermaw #GravelstepFive",
+      "publishAt": "2026-11-20T17:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "gust-of-wind-market-leaves-14-stalls",
+      "release_tag": "reel-stage-nov20-wind-ig-20261120",
+      "hashtags": "#GustOfWind #BrindlemoorMarket #PumpkinCart #HelpfulWizard",
+      "publishAt": "2026-11-20T20:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "unlimited-tiny-hut-10-feet-voidpocket-mule",
+      "release_tag": "reel-stage-nov20-hut-ig-20261120",
+      "hashtags": "#TinyHut #BiscuitTheMule #VoidpocketLabs #UnlimitedRoom",
+      "publishAt": "2026-11-20T23:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "giant-boar-duchess-9-piglets-feast",
+      "release_tag": "reel-stage-nov20-piglets-ig-20261120",
+      "hashtags": "#Duchess #NinePiglets #GrandFeast #TurnipSoup",
+      "publishAt": "2026-11-21T02:00:00Z",
+      "custom_artwork_confirmed": true
     }
   ]
 }
