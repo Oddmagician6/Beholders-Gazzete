@@ -137,7 +137,7 @@ function handoutBlank(t) {
 // text: keys that take one free-text value (a given name, a shop's sign), checked again by the roll that reads them.
 const HANDOUT_SOURCES = {
     npc: { icon: '🎭', label: 'NPC', fills: ['wanted', 'letter'], keys: ['race', 'profession', 'age', 'gender', 'cls', 'level', 'lock', 'world'], text: ['name', 'role', 'faith'], page: 'npc-generator' },
-    quest: { icon: '📜', label: 'quest', fills: ['board', 'letter'], keys: ['lvl', 'n', 'job', 'world'], text: [], page: 'toolbox?tab=quest' },
+    quest: { icon: '📜', label: 'quest', fills: ['board', 'letter'], keys: ['lvl', 'n', 'job', 'world', 'rules'], text: [], page: 'toolbox?tab=quest' },
     shop: { icon: '🏪', label: 'shop', fills: ['prices'], keys: ['type', 'wealth'], text: ['name'], page: 'shop' }
 };
 

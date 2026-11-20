@@ -330,7 +330,7 @@ const CAL_FESTIVALS = ruleTable({
         party: [
             { t: 'Join the scything race: three rounds of {dc:12} {skill:str:athletics} checks, most successes wins.', prize: 'a barrel of cider', gp: 2 },
             { t: 'Guess the weight of the prize pumpkin with a {dc:14} {skill:wis:survival} check.', prize: 'the pumpkin and a silver spoon', gp: 1 },
-            { t: 'Help bring in a late field before the rain: a {dc:13} {alt:Constitution check|Fortitude save}, or gain a level of exhaustion.', prize: 'a farmer\'s gratitude and a week of free meals', gp: 0 }
+            { t: 'Help bring in a late field before the rain: a {dc:13} {alt:Constitution check|Fortitude save}, or {alt:gain a level of exhaustion|become fatigued}.', prize: 'a farmer\'s gratitude and a week of free meals', gp: 0 }
         ],
         food: ['Harvest loaf baked in the shape of a sheaf', 'Roast goose with apples', 'New cider and old cheese'],
         custom: ['The last sheaf is kept over the hearth until next year, for luck.', 'Whoever finds the bean in the harvest loaf rules the feast.', 'Nobody may refuse a dance tonight.'],
@@ -517,7 +517,7 @@ const CAL_FESTIVALS = ruleTable({
         party: [
             { t: 'Find someone in the crowd by their walk alone: a {dc:15} {skill:wis:perception} check.', prize: null, gp: 0 },
             { t: 'Pass as a noble at the masked ball: a {dc:14} {skill:cha:deception} check, rolled again whenever someone asks you to dance.', prize: 'a night among the powerful', gp: 0 },
-            { t: 'Win the prize for the best mask: a {dc:13} {skill:cha:performance} check, or a {ability:dex} check with artisan\'s tools.', prize: 'a silver mask', gp: 10 }
+            { t: 'Win the prize for the best mask: a {dc:13} {skill:cha:performance} check, or a {ability:dex:crafting} check with artisan\'s tools.', prize: 'a silver mask', gp: 10 }
         ],
         food: ['Sugared almonds', 'Masked pies with a surprise inside', 'Black wine'],
         custom: ['Anything said behind a mask before midnight can\'t be held against the speaker.', 'Removing someone\'s mask by force is a crime.', 'Unmasking at midnight is done all at once, with a shout.'],
@@ -645,6 +645,9 @@ const CAL_FESTIVALS = ruleTable({
 });
 
 // Who keeps the festival.
+// Midsummer festival names that say the day itself is the solstice.
+const CAL_SOLSTICE_NAMES = ['The Longest Day', 'Sunstanding', 'The Shortest Night'];
+
 const CAL_KEEPERS = ['the whole town', 'the farmers', 'the temple', 'the guilds', 'the children', 'the old families', 'the young folk', 'the market traders', 'the lord\'s household', 'the poor quarter'];
 
 // ── Helpers ──────────────────────────────────────────────
@@ -880,7 +883,7 @@ function calMoonFestDay(cal, year, i) {
     const mo = cal.moons[0], off = d => Math.abs((((calAbsDay(cal, year, i, d) + mo.offset) % mo.cycle + mo.cycle) % mo.cycle) - mo.cycle / 2);
     let best = 1;
     for (let d = 2; d <= m.days; d++) if (off(d) < off(best)) best = d;
-    return { day: best, moon: 0 };
+    return { day: best, moon: 0, near: true };
 }
 
 function calAlignMoonFestivals(cal) {
@@ -892,7 +895,21 @@ function calAlignMoonFestivals(cal) {
         fest.day = at.day;
         fest.length = 1;
         if (at.moon) fest.moon = at.moon;
+        if (at.near) fest.near = true;
     });
+}
+
+// The main phase (0 new, 2 first quarter, 4 full, 6 last quarter) that begins on this day of this year, or
+// -1. In lunar months the first moon's new moon is each month's first day, as the page says, rather than
+// the day or two before it where the phase begins. The month view and the pantheon's holy days share it.
+function calPhaseBegins(cal, mo, month, day) {
+    const abs = calAbsDay(cal, cal.year, month, day);
+    const p = calMoonPhase(mo, abs);
+    if (cal.lengthMode === 'lunar' && mo === cal.moons[0]) {
+        if (day === 1) return 0;
+        if (p === 0) return -1;
+    }
+    return p % 2 === 0 && calMoonPhase(mo, abs - 1) !== p ? p : -1;
 }
 
 // ── Dates ────────────────────────────────────────────────
@@ -1058,6 +1075,21 @@ function rollCalendar(seed, opts = {}) {
             if (name !== f.name && !names.has(name)) { names.delete(f.name); names.add(name); f.name = name; }
         });
     });
+    // A year that begins on the longest day: its midsummer festival in the first month is held that day, and
+    // one in a later month (past the solstice) doesn't call itself the longest day.
+    if (start === 'midsummer') {
+        const used = new Set(cal.months.map(m => m.festival.name));
+        cal.months.forEach((m, i) => {
+            const f = m.festival;
+            if (f.kind !== 'midsummer') return;
+            if (i === 0) f.day = 1;
+            else if (CAL_SOLSTICE_NAMES.includes(f.name)) {
+                const name = CAL_FESTIVALS.midsummer.names.concat(CAL_FEST_NAMES_MORE.midsummer || [])
+                    .find(n => !CAL_SOLSTICE_NAMES.includes(n) && !used.has(n));
+                if (name) { used.delete(f.name); used.add(name); f.name = name; }
+            }
+        });
+    }
     calAlignMoonFestivals(cal);
     return cal;
 }
@@ -1110,9 +1142,11 @@ function calMoonLine(cal, moon) {
 function calFestivalLines(cal, i) {
     const m = cal.months[i], f = m.festival, k = CAL_FESTIVALS[f.kind];
     const fill = s => calFill(s, cal, f.moon || 0).replace(/\{month\}/g, m.name);
+    // A moon festival in a month with no full moon this year (calMoonFestDay) is kept on the nearest night.
+    const near = f.near ? fill(`; no moon is full in ${m.name} this year, so it's kept the night {moon} comes nearest`) : '';
     const lines = [
-        ['When', `${calCap(calFestivalWhen(cal, i))}, kept by ${f.keeper}`],
-        ['What happens', fill(f.happens)],
+        ['When', `${calCap(calFestivalWhen(cal, i))}, kept by ${f.keeper}${near}`],
+        ['What happens', fill(f.near ? f.happens.replace('rise full', 'rise nearly full') : f.happens)],
         ['For the party', fill(f.party.t) + (f.party.prize ? ` Prize: ${calPrizeText(f.party)}.` : '')],
         ['On the table', f.food],
         ['Custom', fill(f.custom)],

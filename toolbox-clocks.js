@@ -17,12 +17,14 @@ let clocks = [];
 // ── Data ──────────────────────────────────────────────────
 function cleanClock(c) {
     if (!c || typeof c !== 'object') return null;
-    const size = CLOCK_SIZES.includes(Number(c.size)) ? Number(c.size) : 4;
+    // Only numbers and numeric strings: an object here ({"size":{"toString":0}}) would throw in Number().
+    const num = v => typeof v === 'number' || typeof v === 'string' ? Number(v) : NaN;
+    const size = CLOCK_SIZES.includes(num(c.size)) ? num(c.size) : 4;
     return {
         id: typeof c.id === 'string' && /^[a-z0-9]{1,16}$/.test(c.id) ? c.id : newClockId(),
         name: typeof c.name === 'string' ? c.name.slice(0, 60) : '',
         size,
-        filled: Math.min(size, Math.max(0, Math.floor(Number(c.filled)) || 0))
+        filled: Math.min(size, Math.max(0, Math.floor(num(c.filled)) || 0))
     };
 }
 
@@ -37,10 +39,24 @@ function loadClocks() {
     } catch (e) {}
 }
 
+let clocksUnsaved = false;
+
 function saveClocks() {
-    try { localStorage.setItem(CLOCKS_KEY, JSON.stringify(clocks)); } catch (e) {
+    try { localStorage.setItem(CLOCKS_KEY, JSON.stringify(clocks)); clocksUnsaved = false; } catch (e) {
+        clocksUnsaved = true;
         flash('clocks-status', "⚠️ This browser wouldn't save the clocks (storage full or blocked).");
     }
+}
+
+// Before a change: take the saved list as it is now, so a change made in another tab (or on the DM
+// screen) a moment ago isn't written over with this tab's older copy. Changes go by clock id.
+// A list this browser couldn't save stays as it is (the saved one is older).
+function syncClocks() {
+    if (clocksUnsaved) return;
+    try {
+        const saved = JSON.parse(localStorage.getItem(CLOCKS_KEY));
+        clocks = Array.isArray(saved) ? saved.map(cleanClock).filter(Boolean).slice(0, CLOCKS_MAX) : [];
+    } catch (e) {}
 }
 
 // ── Drawing ───────────────────────────────────────────────
@@ -94,7 +110,8 @@ function setFilled(i, n) {
 
 function addClock(e) {
     e.preventDefault();
-    if (clocks.length >= CLOCKS_MAX) { flash('clocks-status', `⚠️ ${CLOCKS_MAX} clocks at most. Remove some first.`); return; }
+    syncClocks();
+    if (clocks.length >= CLOCKS_MAX) { renderClocks(); flash('clocks-status', `⚠️ ${CLOCKS_MAX} clocks at most. Remove some first.`); return; }
     const nameEl = document.getElementById('clk-new-name');
     clocks.push(cleanClock({ name: nameEl.value.trim(), size: document.getElementById('clk-new-size').value, filled: 0 }));
     nameEl.value = '';
@@ -106,21 +123,29 @@ function addClock(e) {
 function onClockClick(e) {
     const card = e.target.closest('.clk-card');
     if (!card) return;
-    const i = clocks.findIndex(x => x.id === card.dataset.id);
-    if (i < 0) { renderClocks(); return; }
-    const c = clocks[i];
     const seg = e.target.closest('.clk-seg');
+    const btn = e.target.closest('button[data-act]');
+    if (!seg && !btn) return;
+    syncClocks();
+    const i = clocks.findIndex(x => x.id === card.dataset.id);
+    if (i < 0) { renderClocks(); flash('clocks-status', '⚠️ That clock was removed in another tab.'); return; }
+    const c = clocks[i];
     if (seg) {
         const s = Number(seg.dataset.seg);
         setFilled(i, s === c.filled - 1 ? s : s + 1);
         return;
     }
-    const btn = e.target.closest('button[data-act]');
-    if (!btn) return;
     const act = btn.dataset.act;
-    if (act === 'inc') setFilled(i, c.filled + 1);
-    else if (act === 'dec') setFilled(i, c.filled - 1);
-    else if (act === 'reset') setFilled(i, 0);
+    // − and + and Reset redraw the card: keep the keyboard on the same control (or its partner once
+    // this one is disabled: + on a full clock hands focus to −).
+    const refocus = () => {
+        const sel = a => document.querySelector(`.clk-card[data-id="${c.id}"] [data-act="${a}"]`);
+        const el = [act, act === 'inc' ? 'dec' : act === 'dec' ? 'inc' : 'inc'].map(sel).find(x => x && !x.disabled);
+        if (el) el.focus();
+    };
+    if (act === 'inc') { setFilled(i, c.filled + 1); refocus(); }
+    else if (act === 'dec') { setFilled(i, c.filled - 1); refocus(); }
+    else if (act === 'reset') { setFilled(i, 0); refocus(); }
     else if (act === 'up' || act === 'down') {
         const j = act === 'up' ? i - 1 : i + 1;
         if (j < 0 || j >= clocks.length) return;
@@ -154,6 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cardClock = el => clocks.find(c => c.id === el.closest('.clk-card').dataset.id) || null;
     list.addEventListener('input', e => {
         if (!e.target.classList.contains('clk-name')) return;
+        syncClocks();
         const c = cardClock(e.target);
         if (!c) { renderClocks(); flash('clocks-status', '⚠️ That clock was removed in another tab.'); return; }
         c.name = e.target.value.slice(0, 60);
@@ -161,6 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     list.addEventListener('change', e => {
         if (!e.target.classList.contains('clk-size')) return;
+        syncClocks();
         const c = cardClock(e.target);
         if (!c) { renderClocks(); return; }
         c.size = Number(e.target.value);
@@ -183,11 +210,17 @@ document.addEventListener('DOMContentLoaded', () => {
             flash('clocks-status', `🧹 Cleared ${n} clock${n === 1 ? '' : 's'}.`);
         });
     });
-    // Another tab on the same browser changed the clocks.
+    // Another tab on the same browser changed the clocks (key null: the site's storage was cleared).
+    // A name being typed in keeps its focus and caret through the redraw, so the card still catches up.
     window.addEventListener('storage', e => {
-        if (e.key !== CLOCKS_KEY) return;
+        if (e.key !== null && e.key !== CLOCKS_KEY) return;
         clocks = [];
+        clocksUnsaved = false;
         loadClocks();
-        if (!document.activeElement || !document.activeElement.classList.contains('clk-name')) renderClocks();
+        const a = document.activeElement;
+        const typing = a && a.classList.contains('clk-name') ? { id: a.id, s: a.selectionStart, e: a.selectionEnd } : null;
+        renderClocks();
+        const back = typing && document.getElementById(typing.id);
+        if (back) { back.focus(); try { back.setSelectionRange(typing.s, typing.e); } catch (err) {} }
     });
 });

@@ -163,6 +163,11 @@ function setupQuest() {
     Object.values(QUEST_FIELDS).forEach(id => document.getElementById(id).addEventListener('change', () => {
         if (quest.seed) rollQuestFor(quest.seed, false);
     }));
+    // The 2014/2024 rules switched (the Encounter tab's picker, another tab, Back): the foe is drawn from
+    // the new monster list, so roll the same quest again; the card, the address, and Save stay one quest.
+    if (typeof srd52OnChange === 'function') srd52OnChange(() => {
+        if (quest.seed) rollQuestFor(quest.seed, currentTab() === 'quest' ? false : null);
+    });
     document.getElementById('qs-roll').addEventListener('click', () => rollQuestFor());
     document.getElementById('qs-copy').addEventListener('click', () => {
         if (quest.data) copyText(questText(quest.data), 'quest-status', 'the quest');
@@ -174,7 +179,8 @@ function setupQuest() {
     document.getElementById('qs-handout').hidden = !ruleLinkOk('handouts');
     document.getElementById('qs-handout').addEventListener('click', () => {
         if (!quest.seed) return;
-        const { tab, ...p } = questParams();
+        // rules= (srd52.js) goes along, so the handout's link back opens this same quest and foe.
+        const { tab, ...p } = typeof rulesLinkParams === 'function' ? rulesLinkParams(questParams()) : questParams();
         location.href = 'handouts?' + paramsQuery({ t: 'board', from: 'quest', ...p });
     });
     document.getElementById('qs-save').addEventListener('click', saveQuestToNotebook);

@@ -748,6 +748,13 @@ const QUEST_REALMS_INTEREST = [
 // hatch" can take any deadline).
 const QUEST_TIMED_TASK = /Before sundown|arrives in three days|for three nights|on the next tide|before the unmasking/;
 
+// Places a day's travel or more away, and the deadlines nobody could meet from there.
+const QUEST_FAR_PLACE = /\btwo days\b|\ba day's ride\b|\bthree valleys over\b/;
+const QUEST_SHORT_DEADLINE = ["Tonight", "By dawn", "Before the bell strikes {n} tomorrow"];
+
+// A twist that says no fight comes: the quest plans none (the foe roll is still drawn).
+const QUEST_NO_FIGHT_TWIST = /^Nothing attacks\b/;
+
 function rollQuest(seed, opts = {}) {
     const part = (label, fn) => withSeed(deriveSeed(seed, label), fn);
     const level = Math.min(20, Math.max(1, Math.floor(opts.level) || 1));
@@ -776,7 +783,12 @@ function rollQuest(seed, opts = {}) {
     const stakes = part("stakes", () => questCap(questFill(randomArray(rand() < 0.6 ? j.stakes : QUEST_STAKES), ctx)));
     // A task that names its own time (before sundown, the buyer in three days) sets the deadline;
     // the roll is still drawn, so nothing else moves.
-    const rolledDeadline = part("deadline", () => questFill(randomArray(QUEST_DEADLINES), ctx));
+    // A site a day or more away can't take an overnight deadline: those draw again (in the same stream).
+    const rolledDeadline = part("deadline", () => {
+        let line = randomArray(QUEST_DEADLINES);
+        if (QUEST_FAR_PLACE.test(place.name)) while (QUEST_SHORT_DEADLINE.includes(line)) line = randomArray(QUEST_DEADLINES);
+        return questFill(line, ctx);
+    });
     const deadline = QUEST_TIMED_TASK.test(taskLine) ? "As the job says" : rolledDeadline;
 
     const reward = part("reward", () => ({
@@ -788,7 +800,7 @@ function rollQuest(seed, opts = {}) {
 
     // A fight, if the job has one: the place's best-fitting monster type that has
     // something for this party, then any type at all.
-    const foe = part("foe", () => {
+    const rolledFoe = part("foe", () => {
         if (rand() >= j.foe) return null;
         const budget = partyBudget([{ count: size, level }]);
         for (const type of [...place.foes, ""]) {
@@ -797,6 +809,7 @@ function rollQuest(seed, opts = {}) {
         }
         return null;
     });
+    const foe = QUEST_NO_FIGHT_TWIST.test(twist) ? null : rolledFoe;
 
     // The second pass (R5), drawn last.
     const more = part("more", () => ({
@@ -827,6 +840,8 @@ function questEncounterLink(q) {
     q.foe.list.forEach(e => p.append("m", `${e.m.id}.${e.count}`));
     const diff = encDiffKey(q.foe.diff);
     if (diff !== "moderate") p.set("diff", diff);
+    // The rules version these monsters came from (srd52.js), so a copied link opens the same stat blocks.
+    if (!pf && typeof rulesLinkParams === "function") { const r = rulesLinkParams({ m: "x" }).rules; if (r) p.set("rules", r); }
     return (pf ? "pathfinder-encounter-builder?" : "toolbox?") + p.toString();
 }
 

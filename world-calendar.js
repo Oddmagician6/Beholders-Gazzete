@@ -180,17 +180,10 @@ function calMonthsHTML(c) {
     </table>`;
 }
 
-// The main phase (0 new, 2 first quarter, 4 full, 6 last quarter) that begins on this day, or -1
-// (moon festivals keep the day the full moon begins). In lunar months the first moon's new moon is
-// each month's first day, as the page says, rather than the day or two before it where the phase begins.
+// The main phase that begins on this day, or -1 (calendar-engine.js calPhaseBegins; moon festivals keep
+// the day the full moon begins).
 function calPhaseOn(c, mo, i, d) {
-    const abs = calAbsDay(c, c.year, i, d);
-    const p = calMoonPhase(mo, abs);
-    if (c.lengthMode === 'lunar' && mo === c.moons[0]) {
-        if (d === 1) return 0;
-        if (p === 0) return -1;
-    }
-    return p % 2 === 0 && calMoonPhase(mo, abs - 1) !== p ? p : -1;
+    return calPhaseBegins(c, mo, i, d);
 }
 
 function calMonthViewHTML(c) {

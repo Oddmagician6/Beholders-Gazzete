@@ -1191,8 +1191,10 @@ function panHolyDate(god, cal) {
     }
     if (spec.kind === 'moon' && cal.moons && cal.moons.length && typeof calMoonPhase === 'function') {
         const want = spec.phase === 'dark' ? 0 : 4;
+        // The day the month view marks that phase on (in lunar months, a new moon is the month's first day).
         for (let k = 0; k < days.length; k++) {
             const [m, d] = days[k];
+            if (typeof calPhaseBegins === 'function') { if (calPhaseBegins(cal, cal.moons[0], m, d) === want) return at(k); continue; }
             const abs = calAbsDay(cal, cal.year, m, d);
             if (calMoonPhase(cal.moons[0], abs) === want && calMoonPhase(cal.moons[0], abs - 1) !== want) return at(k);
         }
