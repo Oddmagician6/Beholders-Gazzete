@@ -259,7 +259,7 @@ function rulesDropUrlParam() {
     const was = p.get('rules');
     p.delete('rules');
     if (rulesVersion() === '2024') p.set('rules', '2024');
-    else if ([...p.keys()].length) p.set('rules', '2014');
+    else if ([...p.keys()].some(k => k !== 'tab')) p.set('rules', '2014');
     if (p.get('rules') === was) return;
     const qs = p.toString();
     history.replaceState(history.state, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
@@ -272,7 +272,8 @@ function rulesLinkParams(params) {
     if (!SRD52_OK || params.rules) return params;
     if (rulesShown === '2024') return { ...params, rules: '2024' };
     if (rulesPage === '2014' && rulesPinnedByUrl) return { ...params, rules: '2014' };
-    const roll = Object.values(params).some(v => Array.isArray(v) ? v.some(x => x !== null && x !== undefined && x !== '') : v !== null && v !== undefined && v !== '');
+    // Which tab is open (tab=) isn't a roll.
+    const roll = Object.entries(params).some(([k, v]) => k !== 'tab' && (Array.isArray(v) ? v.some(x => x !== null && x !== undefined && x !== '') : v !== null && v !== undefined && v !== ''));
     return roll ? { ...params, rules: '2014' } : params;
 }
 

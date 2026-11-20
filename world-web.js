@@ -131,6 +131,7 @@ function webKindsHTML() {
 function renderWeb(nb = nbLoad(), mode = 'keep') {
     webBuild(nb, mode);
     webState.drawn = true;
+    webState.raw = webNbRaw();
     const { view, stage } = webEls();
     const empty = document.getElementById('web-empty');
     const g = webState.graph;
@@ -627,5 +628,10 @@ WORLD_TABS.web = {
     params: () => worldUrlFor('web', {}),
     apply: () => { renderWeb(); return true; },
     fresh: () => renderWeb(),
-    rolled: () => webState.drawn
+    // A notebook saved quietly since (a title or note typed on the Notebook tab) draws again (B509).
+    rolled: () => webState.drawn && webState.raw === webNbRaw()
 };
+
+function webNbRaw() {
+    try { return localStorage.getItem(NB_KEY); } catch (e) { return null; }
+}

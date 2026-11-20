@@ -173,6 +173,24 @@ function webLayout(nodes, edges, { pos = {}, fixed = new Set(), seed = webSeed(n
             }
             t = Math.max(k * 0.02, t - cool);
         }
+        // A crowded web can still leave two entries on top of each other: push apart any pair closer than two of
+        // the biggest dots (24) plus a little, moving only what may move (B516).
+        const MIN = 56, MIN2 = MIN * MIN;
+        for (let s = 0; s < 40; s++) {
+            let moved = false;
+            for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) {
+                if (frozen[i] && frozen[j]) continue;
+                let dx = X[j] - X[i], dy = Y[j] - Y[i], d2 = dx * dx + dy * dy;
+                if (d2 >= MIN2) continue;
+                if (d2 < 0.01) { dx = rng() - 0.5; dy = rng() - 0.5; d2 = dx * dx + dy * dy; }
+                const d = Math.sqrt(d2), push = (MIN - d) / d;
+                const wi = frozen[i] ? 0 : frozen[j] ? 1 : 0.5, wj = 1 - wi;
+                X[i] -= dx * push * wi; Y[i] -= dy * push * wi;
+                X[j] += dx * push * wj; Y[j] += dy * push * wj;
+                moved = true;
+            }
+            if (!moved) break;
+        }
     }
     const lim = WEB_LIMITS.coord;
     nodes.forEach((nd, i) => {

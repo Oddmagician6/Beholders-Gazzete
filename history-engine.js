@@ -48,7 +48,7 @@ const HIS_FORMS = {
 const HIS_FOES = [
     ['the orc hordes of the {dir}', 'the Orc Hordes'], ['the giants of the {dir} mountains', 'the Giants'], ['the dragon {beast}', '{beast}'],
     ['raiders from across the {dir} sea', 'the Sea Raiders'], ['the dead, risen under a lich-king', 'the Lich-King'], ['the fey of the deep wood', 'the Fey'],
-    ['a demon horde out of a torn sky', 'the Demon Horde'], ['the sahuagin of the drowned coast', 'the Sahuagin'],
+    ['a demon horde out of a torn sky', 'the Demon Horde'], ['the {alt:sahuagin|sedacthy} of the drowned coast', 'the {alt:Sahuagin|Sedacthy}'],
     ['the hobgoblin legions of {beast}', 'the Hobgoblin Legions'], ['a horse-lord\'s nation from the {dir} steppe', 'the Horse Lords']
 ];
 const HIS_DIRS = ['north', 'south', 'east', 'west', 'far north', 'far south'];
@@ -495,7 +495,9 @@ function hisSite(used) {
 function hisFoe() {
     const [full, short] = hisPick(HIS_FOES);
     const dir = hisPick(HIS_DIRS), beast = hisPick(HIS_BEASTS);
-    const f = s => s.replace('{dir}', dir).replace('{beast}', beast);
+    // {alt:5e|other}: another system's own creature (Pathfinder's sedacthy for the sahuagin, B515).
+    const other = typeof ruleSystemId === 'function' && ruleSystemId() !== '5e';
+    const f = s => s.replace('{dir}', dir).replace('{beast}', beast).replace(/\{alt:([^|}]*)\|([^}]*)\}/g, (m, a, b) => other ? b : a);
     return { foe: f(full), foeShort: f(short) };
 }
 
@@ -547,7 +549,34 @@ function rollHistory(seed, opts = {}) {
         if (rand() < roles.length / (K.roles.length + roles.length) && !x.figure.fixed) x.figure.role = role;
     }));
     hisThirdPass(list, st, part, start);
+    hisFitYears(list, st);
     return { seed, ages, span, start, total, list, realm: st.realm, old: st.old };
+}
+
+// A name or line that says how long it lasted, in an age too short for it (B513): "the Hundred-Year War" in 70
+// years takes a name that doesn't count (one the timeline hasn't used), and fifty years of tribute in fewer is just years.
+function hisFitYears(list, st) {
+    list.forEach(x => {
+        const len = x.startAgo - x.endAgo;
+        if (len < 100 && /Hundred-Year War/.test(x.name)) {
+            const alt = ['Long War', 'Red Years', 'Age of Swords', 'Bitter War'].find(n => !list.some(y => y.name.includes(n)));
+            if (alt) {
+                const was = x.name;
+                x.name = x.name.replace('Hundred-Year War', alt);
+                st.usedNames.delete(was);
+                st.usedNames.add(x.name);
+            }
+        }
+        if (len < 50) x.text = x.text.replace('paid tribute for fifty years', 'paid tribute for years');
+        // An empire that "became" the same name (the realms' newer names can give two empires of one root the same
+        // one): it grew instead (B514).
+        if (x.kind === 'empire') {
+            const m = /^(.+?) conquered its neighbors one by one and became (.+?), with/.exec(x.text);
+            if (m && m[1].toLowerCase() === m[2].toLowerCase()) x.text = x.text.replace(` and became ${m[2]}, with`, ', and grew greater still, with');
+            const c = /took the crown of (.+?), then everyone else's; the conquests made (.+?)\.$/.exec(x.text);
+            if (c && c[1].toLowerCase() === c[2].toLowerCase()) x.text = x.text.replace(`; the conquests made ${c[2]}.`, '; the conquests made it greater still.');
+        }
+    });
 }
 
 // The third pass (R9), after everything else: newer figure roles, and newer names for the realms.
@@ -665,7 +694,10 @@ function hisRollAge(i, forced, st, used) {
     return {
         i, kind, name, weight,
         began: HIS_BEGAN[prev] || HIS_BEGAN.start,
-        text: fill(text),
+        // An empire that was one already grows; it doesn't conquer its way into itself (B514).
+        text: vars.new === vars.realm && kind === 'empire'
+            ? fill(text).replace(/ and became [^,]+, with/, ', and grew greater still, with').replace(/; the conquests made .+\.$/, '; the conquests made it greater still.')
+            : fill(text),
         figure: { name: figure.name, race: figure.race, role, fixed: /\{figure\}/.test(text) },
         faith: fill(faith),
         legacies: legacies.map(([lk, t, hook]) => ({ kind: lk, text: fill(t), hook: fill(hook) })),

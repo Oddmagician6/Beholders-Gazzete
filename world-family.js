@@ -16,7 +16,7 @@
 
 const FAM_FIELDS = { gens: 'fam-gens', size: 'fam-size', race: 'fam-race' };
 // A linked faction roll's URL keys (they link the saved family to the saved factions, NB_USES).
-const FAM_FROM_KEYS = ['facs', 'fcount', 'ffocus', 'fscale', 'fworld'];
+const FAM_FROM_KEYS = ['facs', 'fcount', 'ffocus', 'fscale', 'fworld', 'fgods', 'fgsize', 'fgshape', 'fgnaming', 'fgworld'];
 
 let famState = { seed: null, roll: null, root: null, from: {}, entry: '', sel: '', fit: false, removing: '', backing: false, filing: false };
 const famTimers = {};   // id|field -> { h: timer, run }: text typed but not saved yet

@@ -8,13 +8,31 @@
    URL: ?tab=history&seed=&ages=&span=&start=&age=<number>
         &gods=&gsize=&gshape=&gnaming=&gworld=  (a linked pantheon)
         &facs=&fcount=&ffocus=&fscale=&fworld=  (linked factions)
+        &fgods=&fgsize=&fgshape=&fgnaming=&fgworld=  (the factions' own gods, when not this history's; fgods=none: none)
    ============================================ */
 
 const HIS_FIELDS = { ages: 'his-ages', span: 'his-span', start: 'his-start' };
 const HIS_GOD_KEYS = { gsize: 'size', gshape: 'shape', gnaming: 'naming', gworld: 'world' };
 const HIS_FAC_KEYS = { fcount: 'count', ffocus: 'focus', fscale: 'scale', fworld: 'world' };
+const HIS_FGOD_KEYS = { fgsize: 'size', fgshape: 'shape', fgnaming: 'naming', fgworld: 'world' };
 
-let hisState = { seed: null, data: null, view: 0, gods: null, pantheon: null, facs: null, factions: null };
+// The linked factions keep the gods they were named with (B507): fgods= when those aren't this history's gods.
+// A link without fgods= (older ones too) means the history's gods, as before.
+function hisFacGodsFrom(p, g) {
+    const s = p.get('fgods');
+    if (s === 'none') return null;
+    const seed = parseSeed(s);
+    if (!seed) return g ? { ...g } : null;
+    const o = { seed };
+    Object.entries(HIS_FGOD_KEYS).forEach(([key, opt]) => { o[opt] = p.get(key) || 'random'; });
+    return o;
+}
+function hisSameGods(a, b) {
+    if (!a || !b) return !a && !b;
+    return a.seed === b.seed && Object.values(HIS_FGOD_KEYS).every(k => (a[k] || 'random') === (b[k] || 'random'));
+}
+
+let hisState = { seed: null, data: null, view: 0, gods: null, pantheon: null, facs: null, factions: null, facPantheon: null };
 
 function hisOpts() {
     const v = id => document.getElementById(id).value;
@@ -22,7 +40,7 @@ function hisOpts() {
 }
 
 function hisCtx() {
-    return { pantheon: hisState.pantheon, factions: hisState.factions, facCtx: { pantheon: hisState.pantheon } };
+    return { pantheon: hisState.pantheon, factions: hisState.factions, facCtx: { pantheon: hisState.facPantheon } };
 }
 
 function hisParams() {
@@ -38,6 +56,9 @@ function hisParams() {
     Object.entries(HIS_GOD_KEYS).forEach(([key, opt]) => { params[key] = g && g[opt] && g[opt] !== 'random' ? g[opt] : null; });
     params.facs = f ? f.seed : null;
     Object.entries(HIS_FAC_KEYS).forEach(([key, opt]) => { params[key] = f && f[opt] && f[opt] !== 'random' ? f[opt] : null; });
+    const fg = f && !hisSameGods(f.gods, g) ? f.gods : undefined;
+    params.fgods = fg === undefined ? null : fg ? fg.seed : 'none';
+    Object.entries(HIS_FGOD_KEYS).forEach(([key, opt]) => { params[key] = fg && fg[opt] && fg[opt] !== 'random' ? fg[opt] : null; });
     return worldUrlFor('history', params);
 }
 
@@ -46,6 +67,7 @@ function hisSetLinks(g, f) {
     hisState.pantheon = g ? rollPantheon(g.seed, g) : null;
     hisState.facs = f;
     hisState.factions = f ? rollFactions(f.seed, f) : null;
+    hisState.facPantheon = !f || !f.gods ? null : hisSameGods(f.gods, g) ? hisState.pantheon : rollPantheon(f.gods.seed, f.gods);
 }
 
 // push: true = new history entry, false = replace, null = leave the URL alone.
@@ -71,7 +93,9 @@ function applyHisUrl(p) {
         const el = document.getElementById(id);
         if (!setFieldValue(el, p.get(key))) el.value = defaultValue(el);
     });
-    hisSetLinks(hisLinkFrom(p, 'gods', HIS_GOD_KEYS), hisLinkFrom(p, 'facs', HIS_FAC_KEYS));
+    const g = hisLinkFrom(p, 'gods', HIS_GOD_KEYS), f = hisLinkFrom(p, 'facs', HIS_FAC_KEYS);
+    if (f) f.gods = hisFacGodsFrom(p, g);
+    hisSetLinks(g, f);
     const seed = parseSeed(p.get('seed'));
     if (!seed) return false;
     rollHistoryFor(seed, null);
@@ -91,7 +115,7 @@ function hisLink(what, on) {
         g = on ? { seed: panState.seed, ...panOpts() } : null;
     } else {
         if (on && !WORLD_TABS.factions.rolled()) WORLD_TABS.factions.fresh(null);
-        f = on ? { seed: facState.seed, ...facOpts() } : null;
+        f = on ? { seed: facState.seed, ...facOpts(), gods: facState.gods ? { ...facState.gods } : null } : null;
         // The factions' own gods come along when this history has none yet.
         if (on && !g && facState.gods) g = { ...facState.gods };
     }

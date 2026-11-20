@@ -71,13 +71,14 @@ const NB_HREF = /^(?:(worldbuilder|npc-generator|toolbox|dnd-one-shot-generator|
 const NB_LIMITS = { entries: 500, title: 120, sub: 400, notes: 4000, name: 80, href: 2000, links: 60, flips: 400, flip: 300, edits: 200, edit: 2000, file: 15000000 };
 // The options that make two rolls with one seed different, per kind (its own URL keys).
 const NB_SIG_KEYS = {
-    pantheon: ['size', 'shape', 'naming', 'world'], factions: ['count', 'focus', 'scale', 'world'], history: ['ages', 'span', 'start'], continent: ['size', 'land', 'nations'],
+    pantheon: ['size', 'shape', 'naming', 'world'], factions: ['count', 'focus', 'scale', 'world', 'gods', 'gsize', 'gshape', 'gnaming', 'gworld'], history: ['ages', 'span', 'start'], continent: ['size', 'land', 'nations'],
     family: ['gens', 'size', 'race', 'root', 'rcat', 'rage', 'rworld', 'rtitle', 'house']
 };
 // URL keys that name another tab's roll: the seed key, and its option keys → that kind's keys.
 const NB_USES = {
     gods: { kind: 'pantheon', keys: { gsize: 'size', gshape: 'shape', gnaming: 'naming', gworld: 'world' } },
-    facs: { kind: 'factions', keys: { fcount: 'count', ffocus: 'focus', fscale: 'scale', fworld: 'world' } },
+    // A link with no fgods= named its factions with its own gods= (B508): see nbEntryUses.
+    facs: { kind: 'factions', keys: { fcount: 'count', ffocus: 'focus', fscale: 'scale', fworld: 'world', fgods: 'gods', fgsize: 'gsize', fgshape: 'gshape', fgnaming: 'gnaming', fgworld: 'gworld' } },
     his: { kind: 'history', keys: { hages: 'ages', hspan: 'span', hstart: 'start' } },
     cont: { kind: 'continent', keys: { csize: 'size', cland: 'land', cnat: 'nations' } }
 };
@@ -300,7 +301,12 @@ function nbEntryUses(e) {
     const q = nbQuery(e.href);
     return Object.entries(NB_USES).filter(([key]) => q.get(key)).map(([key, u]) => {
         const back = Object.fromEntries(Object.entries(u.keys).map(([mine, theirs]) => [theirs, mine]));
-        return nbSig(u.kind, q.get(key), k => q.get(back[k]) || '');
+        const get = mine => {
+            if (key !== 'facs' || !/^fg/.test(mine)) return q.get(mine) || '';
+            const fg = q.get('fgods');
+            return fg === 'none' ? '' : fg ? q.get(mine) || '' : q.get(mine.slice(1)) || '';
+        };
+        return nbSig(u.kind, q.get(key), k => get(back[k]));
     });
 }
 
@@ -382,15 +388,18 @@ function nbFindRoll(nb, kind, seed, get) {
 // Save a roll: { kind, title, sub, href, notes, dm, ...that kind's fields }. Returns { entry, existed, linked }
 // or null when the browser won't store it. The same link twice keeps the first entry; a
 // hand-written entry (no link) is always new.
+// A saved link as its clean address (an older save ends its page in .html), for telling two saves apart (B519).
+const nbCleanPath = h => String(h || '').replace(/^([a-z0-9-]+)\.html(?=\?|$)/, '$1');
+
 function nbAdd(item) {
     const nb = nbLoad();
-    const href = nbRulesHref(String(item.href || '')), bare = nbBareHref(href);
+    const href = nbRulesHref(nbCleanPath(item.href)), bare = nbBareHref(href);
     // A continent is the same map in either look (style=), so its seed and options find it too:
     // its pins are kept on the one entry.
     const map = item.kind === 'continent' && href ? nbEntrySig({ kind: 'continent', href }) : null;
     // The month, god, faction, or age on screen is only where the link opens: the same roll either way.
     const roll = nbRollHref(item.kind, href);
-    const old = href && nb.entries.find(e => e.href === href || (bare && e.href === bare) || (e.kind === item.kind && e.href && nbRollHref(e.kind, e.href) === roll)
+    const old = href && nb.entries.find(e => nbCleanPath(e.href) === href || (bare && nbCleanPath(e.href) === bare) || (e.kind === item.kind && e.href && nbRollHref(e.kind, nbCleanPath(e.href)) === roll)
         || (map && e.kind === 'continent' && e.href && nbEntrySig(e) === map));
     if (old) return { entry: old, existed: true, linked: 0 };
     if (!Object.hasOwn(NB_KINDS, item.kind) || !nbHrefOk(item.kind, href)) return null;

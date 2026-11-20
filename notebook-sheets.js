@@ -137,7 +137,9 @@ const NB_SHEETS = {
         const h = rollHistory(seed, nbUrlOpts(p, HIS_FIELDS));
         const pantheon = nbUrlPantheon(p, HIS_GOD_KEYS);
         const f = nbUrlLink(p, 'facs', HIS_FAC_KEYS);
-        const ctx = { pantheon, factions: f ? rollFactions(f.seed, f) : null, facCtx: { pantheon } };
+        const fg = f ? hisFacGodsFrom(p, nbUrlLink(p, 'gods', HIS_GOD_KEYS)) : null;
+        const facPantheon = fg ? rollPantheon(fg.seed, fg) : null;
+        const ctx = { pantheon, factions: f ? rollFactions(f.seed, f) : null, facCtx: { pantheon: facPantheon } };
         const ages = h.list.map((age, i) => {
             const head = `${HIS_KINDS[age.kind].icon} Age ${i + 1}: ${hisCap(age.name)}`;
             let lines = nbLinesOf(head, hisAgeLines(h, i, ctx));

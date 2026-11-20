@@ -87,10 +87,12 @@ function facLinkPantheon(on) {
 }
 
 // ── Render ────────────────────────────────────────────────
-function facNpcLink(p) {
+// faith: a Realms god the person serves (their faction's), so the NPC page doesn't roll them another (B510).
+function facNpcLink(p, faith = '') {
     const params = new URLSearchParams({ seed: p.seed, profession: p.cat });
     if (p.age) params.set('age', p.age);
     if (p.realms) params.set('world', 'realms');
+    if (p.realms && faith) params.set('faith', faith);
     return 'npc-generator?' + params.toString();
 }
 
@@ -141,13 +143,15 @@ function facFamilyLink(w, i, ctx) {
     return famRootLink(f.leader, {
         title: f.leader.title,
         house: f.type === 'house' ? facCap(facName(w, i, ctx)) : '',
-        extra: { facs: facState.seed, fcount: p.count, ffocus: p.focus, fscale: p.scale, fworld: p.world || null }
+        extra: { facs: facState.seed, fcount: p.count, ffocus: p.focus, fscale: p.scale, fworld: p.world || null,
+            fgods: p.gods || 'none', fgsize: p.gsize, fgshape: p.gshape, fgnaming: p.gnaming, fgworld: p.gworld }
     });
 }
 
 function facPeopleLinks(f) {
     const people = [f.leader, ...f.lieutenants];
-    return `<p class="pan-links">${people.map(p => `<a class="btn" href="${esc(facNpcLink(p))}">${facNpcIcon(p)} ${esc(p.npc.firstName)}</a>`).join(' ')}</p>`;
+    const d = facDeity(f, facState.pantheon), faith = d && d.god && d.god.realms ? d.name : '';
+    return `<p class="pan-links">${people.map(p => `<a class="btn" href="${esc(facNpcLink(p, faith))}">${facNpcIcon(p)} ${esc(p.npc.firstName)}</a>`).join(' ')}</p>`;
 }
 
 function facOneHTML(w, i, ctx) {

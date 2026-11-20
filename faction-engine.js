@@ -369,7 +369,7 @@ const FAC_TYPES = {
         names: ['the Order of the {Thing}', 'the Knights of the {Thing}', 'the Brotherhood of the {Thing}', 'the Sworn Company of the {Thing}', 'the Knights of {God}'],
         domains: ['war', 'light', 'life', 'tempest'],
         goals: [
-            'Guard the road and every traveler on it, as they swore to three hundred years ago.',
+            'Guard the road and every traveler on it, as they swore to when the order began.',
             'Hunt down the last servant of an evil they defeated long ago.',
             'Recover the order\'s lost banner from the place where it fell.',
             'Win back the respect they lost after a battle nobody talks about.',
@@ -1064,7 +1064,8 @@ function rollFactions(seed, opts = {}) {
     factions.forEach(f => {
         const t = FAC_TYPES[f.type];
         const members = (t.members[0] + f.memberRoll * (t.members[1] - t.members[0])) * s.members;
-        f.members = Math.max(3, members >= 100 ? Math.round(members / 10) * 10 : Math.round(members));
+        // Never fewer than its named leader and lieutenants (B518).
+        f.members = Math.max(3, 1 + f.lieutenants.length, members >= 100 ? Math.round(members / 10) * 10 : Math.round(members));
         f.treasury = Math.max(10, Math.round((t.treasury[0] + f.treasuryRoll * (t.treasury[1] - t.treasury[0])) * s.treasury / 10) * 10);
     });
     const w = { seed, count, focus: focus || 'random', scale, factions, realms };
@@ -1082,6 +1083,8 @@ function facRealmsFactions(factions) {
     const swap = (f, r) => {
         used.add(r.n);
         Object.assign(f, { nameRaw: r.n, goal: facCap(r.goal) + '.', symbol: r.s, realms: { about: r.about }, deity: null });
+        // A Realms faction run by someone the roll can't be (the Xanathar): the rolled leader is their lieutenant here (B511).
+        if (r.lead && f.leader) f.leader.title = r.lead;
     };
     const options = f => REALMS_FACTIONS.filter(r => r.type === f.type && !used.has(r.n));
     factions.forEach(f => {
@@ -1139,7 +1142,8 @@ function facThirdPass(w, part, tiesLabel) {
         f.perk = facSwap(f.perk, t.perks, m.perks);
         // A temple has no symbol of its own (it shows its god's): the draws are made all the same.
         const symbol = facSwap(f.symbol, t.symbols || [], m.symbols);
-        if (f.symbol) f.symbol = symbol;
+        // A Realms faction keeps its own emblem (B517).
+        if (f.symbol && !f.realms) f.symbol = symbol;
     }));
     // Still no two rivalries the same heat, and no two alliances the same reason.
     part(tiesLabel, () => {
