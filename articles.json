@@ -9209,6 +9209,142 @@
         "rumor": "I heard they've asked the goat to stand for the seat, and frankly she'd get my vote."
       },
       "fiction": true
+    },
+    {
+      "id": "carrion-crawler-skeleton-guardpost-level-two",
+      "title": "Carrion Crawler Takes Post After Party Evicts Skeleton Guards",
+      "category": "Adventurers",
+      "author": "Hollis Delvewright",
+      "date": "2026-11-20",
+      "excerpt": "An adventuring party wheeled six striking skeletons off Level 2 for 30 gp. Forty minutes later a carrion crawler had their post. Hit points tallied.",
+      "social": "Chapter 9 paid an adventuring party 30 gold to clear six striking skeletons off Level 2 of the Undermaw. The party carried them out in a wheelbarrow, two at a time. Forty minutes later a carrion crawler moved into the empty guardpost. Would your character have taken the job for 30 gold?",
+      "content": "<p>THE UNDERMAW, LEVEL 2, 40 FEET DOWN — A carrion crawler moved into the empty skeleton guardpost on Level 2 this morning. Forty minutes earlier, the Gravelstep Five, an adventuring party hired by Chapter 9 to clear the level, had carried out the six skeletons who were sitting in it. The skeletons were on strike. The party had been told they were an obstruction.</p>\n\n<p>The contract, which I have read all the way to the end, paid 30 gp to remove \"undead obstructions from the Level 2 vault corridor.\" The six skeletons who <a href=\"/a/skeleton-guards-walk-off-undermaw-level-two\">walked off the post earlier this month</a> were still on their picket, with their skull for a cup. They did not fight. \"They went limp,\" said the party's fighter, Marta Quillon. \"Have you ever carried a skeleton that's gone limp? It's all elbows.\" The Five took them up to the Level 1 landing in a wheelbarrow, two at a time, which is three trips.</p>\n\n<p>Then they went back down for their voucher, and the box score went like this. The rogue stepped into the guardpost and was paralyzed at the door. The wizard, reaching for him, was paralyzed reaching. The fighter went in at 26 hit points and came out at 7, carrying the wizard. The rogue stayed where he was. The carrion crawler, eight feet of it, had curled up under the sergeant's old stool as if it had been issued the stool. The party's bard, who asked to be named, said, \"In fairness, it is in exactly the spot they stood for four hundred years.\"</p>\n\n<p>The skeleton sergeant came back down at noon to collect a boot he had left behind. He looked at the crawler, and at the party, and at the wheelbarrow. He then levered the crawler off the rogue with the butt of his spear, the way you would move a dog off a chair, and charged the Five 4 sp. \"Relief shift,\" he said. \"That is the rate.\"</p>\n\n<p>Chapter 9 does not see a problem. Deputy Registrar Pell Oddingwick confirmed the post is occupied. \"The vacancy has been filled,\" he said, adding that the Guild's maps list the post as manned, \"which it now is.\" Asked whether the crawler is on the payroll, he said it had not asked to be. The Five have not been paid. Chapter 9's position is that the contract was to clear the corridor, and the corridor is not clear.</p>\n\n<p>The skeletons are now in the back room of the Sleeping Mule, on credit. Keeper Bess Harrowgate says six tenants who do not eat is the best week she has had since the cube. Their claim for four centuries of back wages is still before Examiner Odalys Brackenmoor. The sergeant says they will not return to the post now. \"It has a tenant,\" he said.</p>\n\n<p>I lost another ten-foot pole prodding the stool. I rolled poorly on the stool. Chapter 9 still calls Level 2 mostly cleared, and mostly now has a crawler in it.</p>\n\n<p><em>— H.D., filing from below</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Post Nobody Relieved",
+          "text": "A dungeon guild hires the party to remove six skeletons sitting outside an old vault door; the skeletons are on strike and will not fight back. Something has waited centuries for that post to empty, and the guild clerk who wrote the contract knows it. Use the ghoul's stats for the thing under the stool."
+        },
+        "npc": {
+          "name": "Tamsin Rook",
+          "role": "Guild Contracts Clerk",
+          "want": "She wants the corridor marked cleared before the guild reprints its maps at the end of the month.",
+          "secret": "She knew something lived behind the guardpost and wrote 'obstructions' in the contract so the guild would not owe hazard pay.",
+          "race": "human",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Old Vault Guardpost",
+          "text": "A stone alcove outside a sealed vault door, with one stool and six pairs of footprints worn an inch deep into the floor. Whatever sits on the stool seems to believe it has been hired.",
+          "tavern": false
+        },
+        "rumor": "My cousin says the skeletons down there were never guarding the vault at all, they were guarding us from whatever's been waiting behind them."
+      },
+      "fiction": true
+    },
+    {
+      "id": "gust-of-wind-market-leaves-14-stalls",
+      "title": "Wizard's Gust of Wind Clears Market Leaves and 14 Stalls",
+      "category": "Local Chaos",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-11-20",
+      "excerpt": "A wizard offered to sweep the leaves off Brindlemoor's market square with Gust of Wind. The leaves left. So did 14 stalls and a pumpkin cart. Allegedly.",
+      "social": "A wizard was handed a broom and asked to sweep the leaves off Brindlemoor's market square. He cast Gust of Wind instead. The leaves are gone. So are 14 stalls, 6 awnings and a whole cart of pumpkins, and his party owes the vendors 88 gold. When someone hands your character a broom, what do they actually do with it?",
+      "content": "<p>At roughly the second bell after noon, a wizard from the Lanternmoth Company cast Gust of Wind down the length of Brindlemoor's market square to clear away the autumn leaves, and allegedly cleared away 14 market stalls, 6 awnings, and one full cart of pumpkins along with them. The leaves are gone. Nobody disputes that part.</p>\n\n<p>The wizard, a halfling named Fennimore Pallthistle, says he was only being helpful. The square's sweeper had leaned his broom against the fishmonger's stall and gone for soup, and Pallthistle allegedly volunteered to \"save everyone an afternoon.\" Witnesses say he did not look down the row first. He did not check who was standing in it. He pointed his hand toward the far end of the square and said the word.</p>\n\n<p>\"It was a beautiful line of wind,\" said Marta Greel, who was buying turnips at the time and is now buying them from a different stall, since hers is on a roof. \"Very straight. Very long. I would call it about sixty feet of no more market.\"</p>\n\n<p>Vendors report that the leaves went first, in a lovely gold swirl, and then the awnings went, and then the tables went, and then the pumpkins rolled the length of the square and into the horse trough at the end like a very orange avalanche. The cheese seller's sign was found three streets over. A rack of wool hats allegedly reached the Undermaw gate. Every pigeon on the square was blown clean over the chapel, which this reporter counts as the only good news of the week.</p>\n\n<p>The worst part, according to the vendors, is that Pallthistle held the spell. Gust of Wind keeps blowing while the caster concentrates, and he allegedly kept concentrating for most of a minute because, in his words, \"there were still some leaves by the well.\" There were. There are not now. There is also no well cover.</p>\n\n<p>The rest of the Lanternmoth Company arrived halfway through. Their fighter, Bryn Tolloway, tried to grab the pumpkin cart and was blown into the trough with it. Their cleric is said to have watched the whole thing from the bakery steps holding a sticky bun and \"declining to get involved.\" Speaking of which, there was a brass weathervane spinning on top of the bakery the whole time, and it is honestly the shiniest thing on the square. Anyway.</p>\n\n<p>Watch Sergeant Adda Kemble of the City Watch arrived after the wind stopped and wrote the company up for 88 gold in damages, payable to the vendors. That is on top of what wizards around here already owe since the Rattlepan Company's <a href=\"/a/thunderwave-tavern-brawl-sleeping-mule-wall\">Thunderwave took out a tavern wall</a> two days ago. Market stall holders have now lost stalls twice this month, after <a href=\"/a/retired-adventurers-veterans-parade-12-stalls\">the veterans parade kicked in 12 of them</a>.</p>\n\n<p>Pallthistle maintains the job was done. \"They asked for no leaves,\" he said, standing in the empty square. \"Look around. Do you see a single leaf?\" This reporter looked around. He did not. He also did not see a market.</p>\n\n<p>The sweeper has his broom back. It was allegedly found on the chapel roof with the pigeons.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "Gone With the Wind",
+          "text": "A wizard's Gust of Wind scattered a whole market across the rooftops of a riverside town, and a stall-keeper's iron lockbox went with it. She will pay the party 25 gp to find it before anyone else climbs up to look, and the town guard wants the stray stock returned before the looting starts."
+        },
+        "npc": {
+          "name": "Hesper Quillam",
+          "role": "Cider and pear stall-keeper",
+          "want": "She wants her lockbox found and returned unopened, today, before the guard starts collecting what blew away.",
+          "secret": "The lockbox holds three forged guild stall permits she has been renting out to other vendors for years.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Rooftop Bazaar",
+          "text": "The tiled roofs around the market square, now covered in tables, awnings, hats, and pumpkins after the wind. Townsfolk are climbing up with ladders to claim things, and not always their own things.",
+          "tavern": false
+        },
+        "rumor": "Word is that wizard didn't miss at all, and somebody paid him to blow that one stall onto the roof on purpose."
+      },
+      "fiction": true
+    },
+    {
+      "id": "unlimited-tiny-hut-10-feet-voidpocket-mule",
+      "title": "'Unlimited' Tiny Hut Is 10 Feet Wide. Six Heroes, One Mule Tried",
+      "category": "Consumer",
+      "author": "Sterling Vanmoor",
+      "date": "2026-11-20",
+      "excerpt": "Voidpocket Labs sold a party an 'unlimited' Tiny Hut for a winter long rest. The fine print says 10 feet across. They were six plus a mule. I see density.",
+      "social": "A party of six bought an 'unlimited' Tiny Hut for a winter long rest. The fine print said 10 feet across. They also had a mule, a chest of 2,000 copper, and one suit of plate armor. The mule got the middle. Where does your character sleep when the hut only fits four?",
+      "content": "<p>A party of six adventurers and one mule spent Tuesday night inside a single boxed Tiny Hut on the Frostgate Road, after Voidpocket Labs sold them its new Hut-in-a-Box Unlimited for 75 gp. The fine print, printed on the inside of the lid, puts the dome at 10 feet across. Nobody in the party got a long rest. I have rarely been more excited about a product.</p>\n\n<p>The party calls itself the Ironkettle Company. They bought the hut for the winter road north of Brindlemoor, where snow and owlbears make an open camp a bad idea. The box says UNLIMITED in gold leaf on all four sides. Below that, in letters a halfling would squint at, it says \"unlimited uses per tenday, dome 10 ft. across, occupancy subject to geometry.\" The packaging calls the floor plan \"cozy-first.\" Synergy, friends. Voidpocket already did this once with its <a href=\"/a/bag-of-holding-unlimited-storage-voidpocket-review\">unlimited Endless Sack</a>, and I bought two of those.</p>\n\n<p>\"We read 'unlimited' and figured it meant room,\" said Tamsin Oakhollow, the party's ranger, who spent the night with the mule's tail across her face. \"It meant we could be miserable as often as we liked.\" The fighter slept standing up in his plate, because the plate would not fit on the floor. The wizard's spellbook went under the dwarf. The chest of 2,000 copper went under the wizard. The mule, a gray named Biscuit, took the middle and kicked whoever got close, which was everyone.</p>\n\n<p>Here is what the haters miss. Voidpocket did not sell a cramped hut. Voidpocket sold a co-resting space with zero wasted square footage. Six adventurers, one mule, and a fortune in copper, all inside the same warm dome while a blizzard howled outside. That is density. That is a lean camp. That party woke up closer than any party in the realm, and the cleric is not speaking to the bard, which I'd call a natural rightsizing of the adventuring party.</p>\n\n<p>Voidpocket representative Odalys Brindlefoot told me by sending stone that the hut \"performed exactly as described on the lid,\" and that a Family Dome, 20 feet across, is available as a 40 gp upgrade. The Ironkettles asked for a refund. She offered them a second hut. They set the two side by side and learned the domes do not connect. The mule picked one. The party took the other.</p>\n\n<p>Brakka Stonesweat will write that this is a scam on working adventurers. Brakka has never scaled anything but a tavern stair. I once shared a carriage with Guildmaster Pellam Strood of the Lanternwright Consortium, and he told me, \"Sterling, the customer always wants more room. Sell them the feeling of room.\" I think about that every time I fold myself into my own Hut-in-a-Box, which is nightly, for the discipline.</p>\n\n<p>Key takeaways for the ambitious adventurer:</p>\n\n<p>- Read the lid before you trust the box.<br>- Every mule is a stakeholder.<br>- Small footprint, big upside.</p>\n\n<p><em>— Sterling Vanmoor, Guild Visionary. Let's connect at the Yawning Portal.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Hut Refund Line",
+          "text": "A dozen travelers are camped outside a Voidpocket Labs shopfront with their boxed Tiny Hut purchases, demanding refunds before the first blizzard closes the pass. The shop's clerk offers the party a free Family Dome if they can make the crowd go away, but one of the returned boxes is not a hut at all, and something has been sleeping in it."
+        },
+        "npc": {
+          "name": "Hollis Grumbeck",
+          "role": "Voidpocket returns clerk",
+          "want": "He wants the refund line gone before his manager visits at dawn.",
+          "secret": "He wrote the fine print himself and knows the Family Dome is just two small huts sold as one.",
+          "race": "gnome",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Snowbound Mule",
+          "text": "A roadside inn on a mountain pass where stranded travelers pitch boxed huts in the stableyard because the rooms are full. Every hut in the yard is exactly 10 feet across, and the stablehands swear one of them is bigger on the inside.",
+          "tavern": true
+        },
+        "rumor": "My cousin says if you cast Tiny Hut inside a Voidpocket hut, the two domes fight and the smaller one always wins."
+      },
+      "fiction": true
+    },
+    {
+      "id": "giant-boar-duchess-9-piglets-feast",
+      "title": "Feast Boar Has 9 Piglets; Town Won't Eat a New Mother",
+      "category": "Creature Features",
+      "author": "Brother Wendell Tumbleberry",
+      "date": "2026-11-20",
+      "excerpt": "Duchess, the giant boar meant to headline Brindlemoor's Grand Feast, had 9 piglets six days out. No one will eat a new mother. Brother Wendell says soup.",
+      "social": "Duchess, the giant boar bought to be the centerpiece of Brindlemoor's Grand Feast, had nine piglets on Thursday night. The feast is six days away and 2,000 guests are coming. Her landlady says house rule six, no eating the guests, now covers ten. What should go in the middle of the table instead?",
+      "content": "<p>Friends, Duchess, the giant boar brought in from the Thornwood to be the centerpiece of Brindlemoor's Grand Feast, gave birth to nine piglets in the big stall at the Sleeping Mule late Thursday night. The feast is on the Town Green on the 26th, six days from now, and as of this morning not one soul in town will agree to eat a new mother.</p>\n\n<p>For anyone just joining us: Feastwarden Odo Plumbrook promised <a href=\"/a/feast-budget-900-gp-goose-600-plumbrook\">a feast for 2,000 on a 900 gp budget</a>, and Duchess was the plan for the middle of the table. Everyone called her a boar. That is what happens when you let the hunters who caught her decide such things. Nobody checked, and Duchess did not volunteer it.</p>\n\n<p>Keeper Bess Harrowgate, who <a href=\"/a/giant-boar-tavern-stable-duchess-harrowgate\">rents Duchess the stall</a>, found the litter at the late bell. \"Nine of them, and every one hungry,\" she said. \"House rule six is no eating the guests. Last night we had one guest in that stall. This morning I count ten.\" She has opened a second page in the ledger and written \"piglets, nine, minors\" at the top.</p>\n\n<p>Plumbrook gave his statement standing on a chair outside the stable door. \"This is a strong start,\" he said. \"We wanted a centerpiece. Now we have a centerpiece with nine smaller centerpieces.\" Asked what 2,000 people will eat on the 26th, he said the committee was \"exploring the menu\" and climbed down. Mortimer, the tavern's mule, brayed from the woodshed for the length of the speech and some while after.</p>\n\n<p>Brindlemoor has taken her side. A petition reading LEAVE DUCHESS BE had 640 marks by noon, three of them from the butchers' guild. Hilde Brackwater, a turnip farmer, brought a blanket and a basket and stood by the stall door to shoo off gawkers. A little girl from Fish Street has named the runt Turnip, so that is settled too.</p>\n\n<p>Now, the health part. The old herbals say a sow with a new litter wants to be kept warm and fed a great deal, and left unfussed for a full moon. The Midwives' Hall ran a study on farm sows last spring and found that a mother nursing a big litter eats close to twice her usual feed. Duchess already ate two bushels of turnips a day. Harrowgate tells me the lease did not foresee four. Please don't crowd the stall, friends. She has tusks, and she has had a long night.</p>\n\n<p>My friend Nyx Spindlecoil sent word that she could hang a scrying mirror over the straw so the whole realm can watch the piglets sleep. Go outside, Nyx. Walk over and look at them quietly, like a person.</p>\n\n<p>As for the feast, I have a suggestion nobody on the committee asked for. Turnip-and-barley soup, made in the biggest pot in Brindlemoor, feeds two thousand for about 40 gold, and nobody has to look a mother in the eye. Duchess has eaten most of the town's turnips, so do buy them early.</p>\n\n<p><em>Rest well, friends. — Brother Wendell</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "Count the Piglets Twice",
+          "text": "One of nine piglets has gone missing from a tavern stable three days before a town feast, and the mother, a giant boar, is pacing hard enough to crack the stall boards. The innkeeper offers 25 gp to find the piglet before the sow goes looking herself, and the feast committee is suddenly very quiet."
+        },
+        "npc": {
+          "name": "Wilmot Crane",
+          "role": "Hired Feast Caterer",
+          "want": "He wants to deliver the roast he promised the committee so he gets paid.",
+          "secret": "He took the piglet himself, then could not do it, and has been hiding it in his pantry feeding it his own breakfast.",
+          "race": "human",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Farrow and Firkin",
+          "text": "A roadside inn whose big stall holds a giant boar and her litter; use the giant boar's stats for the mother. The regulars have started paying their tabs in turnips.",
+          "tavern": true
+        },
+        "rumor": "Somebody on the feast committee told the cook to roast the runt and call it a suckling special, and the cook has not been seen since."
+      },
+      "fiction": true
     }
   ]
 }

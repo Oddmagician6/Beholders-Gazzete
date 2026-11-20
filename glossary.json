@@ -1,5 +1,5 @@
 {
-    "generated":  "2026-11-19",
+    "generated":  "2026-11-20",
     "writers":  [
                     {
                         "id":  "ottoline-vex",
@@ -144,8 +144,13 @@
                                            "name":  "Barnaby Tallowmere"
                                        }
                                    ],
-                        "article_count":  35,
+                        "article_count":  36,
                         "articles":  [
+                                         {
+                                             "id":  "unlimited-tiny-hut-10-feet-voidpocket-mule",
+                                             "title":  "\u0027Unlimited\u0027 Tiny Hut Is 10 Feet Wide. Six Heroes, One Mule Tried",
+                                             "date":  "2026-11-20"
+                                         },
                                          {
                                              "id":  "harpy-jingle-adventuring-party-river-fernsley",
                                              "title":  "Harpy Jingle Walks Party Into River; Shop Calls It Foot Traffic",
@@ -165,11 +170,6 @@
                                              "id":  "reincarnate-spell-upgrade-fighter-badger-second-spring",
                                              "title":  "Party Pays 450 gp Reincarnate Upgrade; Fighter Is a Badger",
                                              "date":  "2026-11-10"
-                                         },
-                                         {
-                                             "id":  "doppelganger-temp-agency-14-firms-one-clerk",
-                                             "title":  "Doppelganger Temp Agency Bills 14 Firms for One Clerk",
-                                             "date":  "2026-11-08"
                                          }
                                      ]
                     },
@@ -363,8 +363,13 @@
                                            "name":  "Nyx Spindlecoil"
                                        }
                                    ],
-                        "article_count":  36,
+                        "article_count":  37,
                         "articles":  [
+                                         {
+                                             "id":  "giant-boar-duchess-9-piglets-feast",
+                                             "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
+                                             "date":  "2026-11-20"
+                                         },
                                          {
                                              "id":  "cockatrice-henhouse-party-grabs-212-chickens",
                                              "title":  "Cockatrice in Henhouse: Party Grabs 212 Chickens Bare-Handed",
@@ -384,11 +389,6 @@
                                              "id":  "shrieker-mushrooms-tanners-row-sleepless-wendell",
                                              "title":  "Adventurers Bring Home Shriekers; Tanner\u0027s Row Can\u0027t Sleep",
                                              "date":  "2026-11-09"
-                                         },
-                                         {
-                                             "id":  "dryad-leaf-drop-87-sneezing-brindlemoor-wendell",
-                                             "title":  "Dryad Leaf Drop Leaves 87 Brindlemoor Folk Sneezing",
-                                             "date":  "2026-11-08"
                                          }
                                      ]
                     },
@@ -423,8 +423,13 @@
                                            "name":  "Hollis Delvewright"
                                        }
                                    ],
-                        "article_count":  38,
+                        "article_count":  39,
                         "articles":  [
+                                         {
+                                             "id":  "gust-of-wind-market-leaves-14-stalls",
+                                             "title":  "Wizard\u0027s Gust of Wind Clears Market Leaves and 14 Stalls",
+                                             "date":  "2026-11-20"
+                                         },
                                          {
                                              "id":  "thunderwave-tavern-brawl-sleeping-mule-wall",
                                              "title":  "Thunderwave Ends Tavern Brawl; Tavern Gains a Room",
@@ -444,11 +449,6 @@
                                              "id":  "giant-boar-tavern-stable-duchess-harrowgate",
                                              "title":  "Giant Boar Rents Tavern Stable; Innkeeper Names Her Duchess",
                                              "date":  "2026-11-12"
-                                         },
-                                         {
-                                             "id":  "retired-adventurers-veterans-parade-12-stalls",
-                                             "title":  "Retired Adventurers at Veterans Parade Kick In 12 Market Stalls",
-                                             "date":  "2026-11-11"
                                          }
                                      ]
                     },
@@ -481,8 +481,13 @@
                                            "name":  "Skritch Mudwhistle"
                                        }
                                    ],
-                        "article_count":  33,
+                        "article_count":  34,
                         "articles":  [
+                                         {
+                                             "id":  "carrion-crawler-skeleton-guardpost-level-two",
+                                             "title":  "Carrion Crawler Takes Post After Party Evicts Skeleton Guards",
+                                             "date":  "2026-11-20"
+                                         },
                                          {
                                              "id":  "nothic-sells-party-heist-plan-rivals",
                                              "title":  "Nothic Sells Party\u0027s Heist Plan to Rivals for 5 Gold",
@@ -502,11 +507,6 @@
                                              "id":  "giant-boar-feast-alive-fourth-attempt",
                                              "title":  "Giant Boar Brought Back Alive for Feast. Nobody Said Dead.",
                                              "date":  "2026-11-11"
-                                         },
-                                         {
-                                             "id":  "skeleton-guards-walk-off-undermaw-level-two",
-                                             "title":  "Skeleton Guards Walk Off Level Two After 400 Years on Post",
-                                             "date":  "2026-11-08"
                                          }
                                      ]
                     },
@@ -598,8 +598,23 @@
                       "short":  "Brindlemoor",
                       "type":  "place",
                       "blurb":  "A frontier market town built on top of the entrance to the Undermaw. Its economy runs on adventurers, and so does its hospital.",
-                      "appearances":  117,
+                      "appearances":  120,
                       "articles":  [
+                                       {
+                                           "id":  "giant-boar-duchess-9-piglets-feast",
+                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "gust-of-wind-market-leaves-14-stalls",
+                                           "title":  "Wizard\u0027s Gust of Wind Clears Market Leaves and 14 Stalls",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "unlimited-tiny-hut-10-feet-voidpocket-mule",
+                                           "title":  "\u0027Unlimited\u0027 Tiny Hut Is 10 Feet Wide. Six Heroes, One Mule Tried",
+                                           "date":  "2026-11-20"
+                                       },
                                        {
                                            "id":  "bard-suggestion-spell-900-voters-goat-rally",
                                            "title":  "Bard\u0027s Suggestion Spell Makes 900 Voters Agree With a Goat",
@@ -609,21 +624,6 @@
                                            "id":  "salamander-oven-subscription-lapses-40-pies",
                                            "title":  "Salamander Oven Subscription Lapses Mid-Bake; 40 Pies Half-Done",
                                            "date":  "2026-11-19"
-                                       },
-                                       {
-                                           "id":  "feast-seating-chart-treaty-baronies-turnips",
-                                           "title":  "Rival Baronies RSVP to Feast; Seating Chart Is Now a Treaty",
-                                           "date":  "2026-11-18"
-                                       },
-                                       {
-                                           "id":  "harpy-jingle-adventuring-party-river-fernsley",
-                                           "title":  "Harpy Jingle Walks Party Into River; Shop Calls It Foot Traffic",
-                                           "date":  "2026-11-18"
-                                       },
-                                       {
-                                           "id":  "levitation-slippers-recall-rogue-vault-ceiling",
-                                           "title":  "Levitation Slippers Recalled; Rogue Stuck on Vault Ceiling",
-                                           "date":  "2026-11-18"
                                        }
                                    ]
                   },
@@ -632,8 +632,18 @@
                       "short":  "the Guild",
                       "type":  "institution",
                       "blurb":  "A guild of heritage keepers who sue to protect old buildings and groves in the capital.",
-                      "appearances":  98,
+                      "appearances":  100,
                       "articles":  [
+                                       {
+                                           "id":  "carrion-crawler-skeleton-guardpost-level-two",
+                                           "title":  "Carrion Crawler Takes Post After Party Evicts Skeleton Guards",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "unlimited-tiny-hut-10-feet-voidpocket-mule",
+                                           "title":  "\u0027Unlimited\u0027 Tiny Hut Is 10 Feet Wide. Six Heroes, One Mule Tried",
+                                           "date":  "2026-11-20"
+                                       },
                                        {
                                            "id":  "bard-suggestion-spell-900-voters-goat-rally",
                                            "title":  "Bard\u0027s Suggestion Spell Makes 900 Voters Agree With a Goat",
@@ -648,16 +658,6 @@
                                            "id":  "harpy-jingle-adventuring-party-river-fernsley",
                                            "title":  "Harpy Jingle Walks Party Into River; Shop Calls It Foot Traffic",
                                            "date":  "2026-11-18"
-                                       },
-                                       {
-                                           "id":  "nothic-sells-party-heist-plan-rivals",
-                                           "title":  "Nothic Sells Party\u0027s Heist Plan to Rivals for 5 Gold",
-                                           "date":  "2026-11-17"
-                                       },
-                                       {
-                                           "id":  "feast-2000-tiered-seating-heroes-feast-bid",
-                                           "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
-                                           "date":  "2026-11-15"
                                        }
                                    ]
                   },
@@ -700,8 +700,13 @@
                       "short":  "Chapter 9",
                       "type":  "organization",
                       "blurb":  "The guild chapter that licenses parties to enter the Undermaw, sells the maps, and insists the maps are accurate.",
-                      "appearances":  71,
+                      "appearances":  72,
                       "articles":  [
+                                       {
+                                           "id":  "carrion-crawler-skeleton-guardpost-level-two",
+                                           "title":  "Carrion Crawler Takes Post After Party Evicts Skeleton Guards",
+                                           "date":  "2026-11-20"
+                                       },
                                        {
                                            "id":  "nothic-sells-party-heist-plan-rivals",
                                            "title":  "Nothic Sells Party\u0027s Heist Plan to Rivals for 5 Gold",
@@ -721,11 +726,6 @@
                                            "id":  "prophecies-contradict-all-come-true-fourth-attempt",
                                            "title":  "13 Prophecies Contradict Each Other. All 13 Come True.",
                                            "date":  "2026-11-13"
-                                       },
-                                       {
-                                           "id":  "kenku-witness-robbery-adventuring-party-suspects",
-                                           "title":  "Kenku Witness Reenacts Robbery, Frames Adventuring Party",
-                                           "date":  "2026-11-09"
                                        }
                                    ]
                   },
@@ -768,8 +768,13 @@
                       "short":  "the Undermaw",
                       "type":  "place",
                       "blurb":  "The dungeon under Brindlemoor. Its levels are numbered, its bottom has never been found, and the Guild calls it mostly cleared.",
-                      "appearances":  53,
+                      "appearances":  54,
                       "articles":  [
+                                       {
+                                           "id":  "gust-of-wind-market-leaves-14-stalls",
+                                           "title":  "Wizard\u0027s Gust of Wind Clears Market Leaves and 14 Stalls",
+                                           "date":  "2026-11-20"
+                                       },
                                        {
                                            "id":  "major-image-gold-audit-party-loan-ledgerhall",
                                            "title":  "Major Image Gold Vanishes in Audit; Party Had Borrowed on It",
@@ -789,11 +794,6 @@
                                            "id":  "kobolds-strike-trapped-picket-line-adventuring-party",
                                            "title":  "Party Hired to Clear Out Kobolds Finds Trapped Picket Line",
                                            "date":  "2026-11-13"
-                                       },
-                                       {
-                                           "id":  "prophecies-contradict-all-come-true-fourth-attempt",
-                                           "title":  "13 Prophecies Contradict Each Other. All 13 Come True.",
-                                           "date":  "2026-11-13"
                                        }
                                    ]
                   },
@@ -802,8 +802,13 @@
                       "short":  "Oddingwick",
                       "type":  "person",
                       "blurb":  "Chapter 9\u0027s spokesman on permits, openings and corrections. He has announced the opening of Level Seven more times than he has seen it.",
-                      "appearances":  51,
+                      "appearances":  52,
                       "articles":  [
+                                       {
+                                           "id":  "carrion-crawler-skeleton-guardpost-level-two",
+                                           "title":  "Carrion Crawler Takes Post After Party Evicts Skeleton Guards",
+                                           "date":  "2026-11-20"
+                                       },
                                        {
                                            "id":  "fourth-attempt-copper-pieces-59-percent-changers",
                                            "title":  "Fourth Attempt Sells Last Copper Pieces at 59% of Value",
@@ -823,11 +828,6 @@
                                            "id":  "adventuring-party-glowing-mushrooms-no-rations-wendell",
                                            "title":  "Adventuring Party Eats Glowing Mushrooms, Forgot Rations",
                                            "date":  "2026-11-07"
-                                       },
-                                       {
-                                           "id":  "ankheg-sinkhole-fish-street-cheese-stall",
-                                           "title":  "Ankheg Opens Sinkhole Under Fish Street Cheese Stall",
-                                           "date":  "2026-11-06"
                                        }
                                    ]
                   },
@@ -870,8 +870,18 @@
                       "short":  "the Company",
                       "type":  "organization",
                       "blurb":  "A Brindlemoor adventuring party that brought a sack of shrieker mushrooms home from the Undermaw to sell, and kept Tanner\u0027s Row awake for four nights.",
-                      "appearances":  40,
+                      "appearances":  42,
                       "articles":  [
+                                       {
+                                           "id":  "gust-of-wind-market-leaves-14-stalls",
+                                           "title":  "Wizard\u0027s Gust of Wind Clears Market Leaves and 14 Stalls",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "unlimited-tiny-hut-10-feet-voidpocket-mule",
+                                           "title":  "\u0027Unlimited\u0027 Tiny Hut Is 10 Feet Wide. Six Heroes, One Mule Tried",
+                                           "date":  "2026-11-20"
+                                       },
                                        {
                                            "id":  "bard-suggestion-spell-900-voters-goat-rally",
                                            "title":  "Bard\u0027s Suggestion Spell Makes 900 Voters Agree With a Goat",
@@ -886,16 +896,6 @@
                                            "id":  "piercers-mine-guild-sends-hats-not-helmets",
                                            "title":  "Piercers Fall in Mine; Guild Sends Party Hats, Not Helmets",
                                            "date":  "2026-11-19"
-                                       },
-                                       {
-                                           "id":  "levitation-slippers-recall-rogue-vault-ceiling",
-                                           "title":  "Levitation Slippers Recalled; Rogue Stuck on Vault Ceiling",
-                                           "date":  "2026-11-18"
-                                       },
-                                       {
-                                           "id":  "thunderwave-tavern-brawl-sleeping-mule-wall",
-                                           "title":  "Thunderwave Ends Tavern Brawl; Tavern Gains a Room",
-                                           "date":  "2026-11-18"
                                        }
                                    ]
                   },
@@ -1006,8 +1006,13 @@
                       "short":  "the Watch",
                       "type":  "institution",
                       "blurb":  "Underpaid, overworked, and frequently outmatched by griffins.",
-                      "appearances":  28,
+                      "appearances":  29,
                       "articles":  [
+                                       {
+                                           "id":  "gust-of-wind-market-leaves-14-stalls",
+                                           "title":  "Wizard\u0027s Gust of Wind Clears Market Leaves and 14 Stalls",
+                                           "date":  "2026-11-20"
+                                       },
                                        {
                                            "id":  "thunderwave-tavern-brawl-sleeping-mule-wall",
                                            "title":  "Thunderwave Ends Tavern Brawl; Tavern Gains a Room",
@@ -1026,11 +1031,6 @@
                                        {
                                            "id":  "gelatinous-cube-storage-rent-brindlemoor-warehouse",
                                            "title":  "Gelatinous Cube Storage Rents at 2 gp, Eats 11 Crates",
-                                           "date":  "2026-11-05"
-                                       },
-                                       {
-                                           "id":  "long-rest-interrupted-watch-rotation-fourth-attempt",
-                                           "title":  "Long Rest Interrupted Four Times Over Watch Rotation",
                                            "date":  "2026-11-05"
                                        }
                                    ]
@@ -1074,8 +1074,18 @@
                       "short":  "the Sleeping Mule",
                       "type":  "place",
                       "blurb":  "A Tanner\u0027s Row tavern in Brindlemoor with a deep cellar, a loyal clientele of adventurers, and until recently a very clean walk-in cooler.",
-                      "appearances":  26,
+                      "appearances":  28,
                       "articles":  [
+                                       {
+                                           "id":  "carrion-crawler-skeleton-guardpost-level-two",
+                                           "title":  "Carrion Crawler Takes Post After Party Evicts Skeleton Guards",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "giant-boar-duchess-9-piglets-feast",
+                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
+                                           "date":  "2026-11-20"
+                                       },
                                        {
                                            "id":  "bard-suggestion-spell-900-voters-goat-rally",
                                            "title":  "Bard\u0027s Suggestion Spell Makes 900 Voters Agree With a Goat",
@@ -1090,16 +1100,6 @@
                                            "id":  "griffon-egg-feast-geese-adventuring-party",
                                            "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
                                            "date":  "2026-11-17"
-                                       },
-                                       {
-                                           "id":  "feast-2000-tiered-seating-heroes-feast-bid",
-                                           "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
-                                           "date":  "2026-11-15"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-gems-winter-inn-bill-pretty",
-                                           "title":  "Party Pays Winter Inn Bill in Gems; Keeper Rates Them \u0027Pretty\u0027",
-                                           "date":  "2026-11-12"
                                        }
                                    ]
                   },
@@ -1138,6 +1138,40 @@
                                    ]
                   },
                   {
+                      "name":  "Keeper Bess Harrowgate",
+                      "short":  "Harrowgate",
+                      "type":  "person",
+                      "blurb":  "Keeper of the Sleeping Mule tavern. Extends credit to adventurers and, it turns out, to cubes.",
+                      "appearances":  20,
+                      "articles":  [
+                                       {
+                                           "id":  "carrion-crawler-skeleton-guardpost-level-two",
+                                           "title":  "Carrion Crawler Takes Post After Party Evicts Skeleton Guards",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "giant-boar-duchess-9-piglets-feast",
+                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "thunderwave-tavern-brawl-sleeping-mule-wall",
+                                           "title":  "Thunderwave Ends Tavern Brawl; Tavern Gains a Room",
+                                           "date":  "2026-11-18"
+                                       },
+                                       {
+                                           "id":  "feast-2000-tiered-seating-heroes-feast-bid",
+                                           "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
+                                           "date":  "2026-11-15"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-gems-winter-inn-bill-pretty",
+                                           "title":  "Party Pays Winter Inn Bill in Gems; Keeper Rates Them \u0027Pretty\u0027",
+                                           "date":  "2026-11-12"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Brindlemoor Board of Elections",
                       "short":  "the Board",
                       "type":  "organization",
@@ -1168,40 +1202,6 @@
                                            "id":  "dragon-hoard-annex-zoning-hearing-fish-street",
                                            "title":  "Zoning Board Weighs Dragon Hoard Annex on Fish Street",
                                            "date":  "2026-11-04"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Keeper Bess Harrowgate",
-                      "short":  "Harrowgate",
-                      "type":  "person",
-                      "blurb":  "Keeper of the Sleeping Mule tavern. Extends credit to adventurers and, it turns out, to cubes.",
-                      "appearances":  18,
-                      "articles":  [
-                                       {
-                                           "id":  "thunderwave-tavern-brawl-sleeping-mule-wall",
-                                           "title":  "Thunderwave Ends Tavern Brawl; Tavern Gains a Room",
-                                           "date":  "2026-11-18"
-                                       },
-                                       {
-                                           "id":  "feast-2000-tiered-seating-heroes-feast-bid",
-                                           "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
-                                           "date":  "2026-11-15"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-gems-winter-inn-bill-pretty",
-                                           "title":  "Party Pays Winter Inn Bill in Gems; Keeper Rates Them \u0027Pretty\u0027",
-                                           "date":  "2026-11-12"
-                                       },
-                                       {
-                                           "id":  "giant-boar-tavern-stable-duchess-harrowgate",
-                                           "title":  "Giant Boar Rents Tavern Stable; Innkeeper Names Her Duchess",
-                                           "date":  "2026-11-12"
-                                       },
-                                       {
-                                           "id":  "kenku-witness-robbery-adventuring-party-suspects",
-                                           "title":  "Kenku Witness Reenacts Robbery, Frames Adventuring Party",
-                                           "date":  "2026-11-09"
                                        }
                                    ]
                   },
@@ -1342,6 +1342,40 @@
                                    ]
                   },
                   {
+                      "name":  "the Gravelstep Five",
+                      "short":  "the Five",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor adventuring party that took 30 gp from Chapter 9 to clear six striking skeletons off Undermaw Level 2, and cleared them.",
+                      "appearances":  15,
+                      "articles":  [
+                                       {
+                                           "id":  "carrion-crawler-skeleton-guardpost-level-two",
+                                           "title":  "Carrion Crawler Takes Post After Party Evicts Skeleton Guards",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "nothic-sells-party-heist-plan-rivals",
+                                           "title":  "Nothic Sells Party\u0027s Heist Plan to Rivals for 5 Gold",
+                                           "date":  "2026-11-17"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-3000-potatoes-exposure-plumbrook",
+                                           "title":  "Adventuring Party Peels 3,000 Potatoes, Paid in Exposure",
+                                           "date":  "2026-11-14"
+                                       },
+                                       {
+                                           "id":  "reincarnate-spell-upgrade-fighter-badger-second-spring",
+                                           "title":  "Party Pays 450 gp Reincarnate Upgrade; Fighter Is a Badger",
+                                           "date":  "2026-11-10"
+                                       },
+                                       {
+                                           "id":  "kenku-witness-robbery-adventuring-party-suspects",
+                                           "title":  "Kenku Witness Reenacts Robbery, Frames Adventuring Party",
+                                           "date":  "2026-11-09"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Merchant Princes",
                       "short":  "the Merchant Princes",
                       "type":  "institution",
@@ -1410,6 +1444,40 @@
                                    ]
                   },
                   {
+                      "name":  "Examiner Odalys Brackenmoor",
+                      "short":  "Brackenmoor",
+                      "type":  "person",
+                      "blurb":  "Chapter 9\u0027s hearing examiner. Rules on grievances, permits and, lately, whether a chair is a monster.",
+                      "appearances":  13,
+                      "articles":  [
+                                       {
+                                           "id":  "carrion-crawler-skeleton-guardpost-level-two",
+                                           "title":  "Carrion Crawler Takes Post After Party Evicts Skeleton Guards",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "skeleton-guards-walk-off-undermaw-level-two",
+                                           "title":  "Skeleton Guards Walk Off Level Two After 400 Years on Post",
+                                           "date":  "2026-11-08"
+                                       },
+                                       {
+                                           "id":  "ten-foot-pole-recall-one-inch-short",
+                                           "title":  "Ten-Foot Poles Recalled After Coming Up One Inch Short",
+                                           "date":  "2026-11-06"
+                                       },
+                                       {
+                                           "id":  "loot-split-equal-share-torchbearer-20-gold",
+                                           "title":  "Loot Split: Torchbearer\u0027s \u0027Equal Share\u0027 Is 20 of 3,000 Gold",
+                                           "date":  "2026-11-05"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-fealty-dropped-coins-lord-hask",
+                                           "title":  "Adventuring Party Sworn to Lord After Coin Pickup Mishap",
+                                           "date":  "2026-11-04"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Party of the Red Oliphant",
                       "short":  "the Red Oliphants",
                       "type":  "party",
@@ -1444,36 +1512,36 @@
                                    ]
                   },
                   {
-                      "name":  "Examiner Odalys Brackenmoor",
-                      "short":  "Brackenmoor",
+                      "name":  "Feastwarden Odo Plumbrook",
+                      "short":  "Plumbrook",
                       "type":  "person",
-                      "blurb":  "Chapter 9\u0027s hearing examiner. Rules on grievances, permits and, lately, whether a chair is a monster.",
+                      "blurb":  "A Brindlemoor halfling appointed Feastwarden of the Grand Feast. He has promised to feed 2,000 people and has never once doubted it.",
                       "appearances":  12,
                       "articles":  [
                                        {
-                                           "id":  "skeleton-guards-walk-off-undermaw-level-two",
-                                           "title":  "Skeleton Guards Walk Off Level Two After 400 Years on Post",
-                                           "date":  "2026-11-08"
+                                           "id":  "giant-boar-duchess-9-piglets-feast",
+                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
+                                           "date":  "2026-11-20"
                                        },
                                        {
-                                           "id":  "ten-foot-pole-recall-one-inch-short",
-                                           "title":  "Ten-Foot Poles Recalled After Coming Up One Inch Short",
-                                           "date":  "2026-11-06"
+                                           "id":  "salamander-oven-subscription-lapses-40-pies",
+                                           "title":  "Salamander Oven Subscription Lapses Mid-Bake; 40 Pies Half-Done",
+                                           "date":  "2026-11-19"
                                        },
                                        {
-                                           "id":  "loot-split-equal-share-torchbearer-20-gold",
-                                           "title":  "Loot Split: Torchbearer\u0027s \u0027Equal Share\u0027 Is 20 of 3,000 Gold",
-                                           "date":  "2026-11-05"
+                                           "id":  "feast-seating-chart-treaty-baronies-turnips",
+                                           "title":  "Rival Baronies RSVP to Feast; Seating Chart Is Now a Treaty",
+                                           "date":  "2026-11-18"
                                        },
                                        {
-                                           "id":  "adventuring-party-fealty-dropped-coins-lord-hask",
-                                           "title":  "Adventuring Party Sworn to Lord After Coin Pickup Mishap",
-                                           "date":  "2026-11-04"
+                                           "id":  "griffon-egg-feast-geese-adventuring-party",
+                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
+                                           "date":  "2026-11-17"
                                        },
                                        {
-                                           "id":  "loot-split-torchbearer-paid-exposure-grievance",
-                                           "title":  "Loot Split Dispute: Torchbearer Paid in \u0027Exposure\u0027",
-                                           "date":  "2026-11-02"
+                                           "id":  "red-dragon-lich-feast-invites-fire-marshal",
+                                           "title":  "Red Dragon and Lich Demand Feast Invites; Fire Marshal Says No",
+                                           "date":  "2026-11-16"
                                        }
                                    ]
                   },
@@ -1546,16 +1614,16 @@
                                    ]
                   },
                   {
-                      "name":  "Feastwarden Odo Plumbrook",
-                      "short":  "Plumbrook",
-                      "type":  "person",
-                      "blurb":  "A Brindlemoor halfling appointed Feastwarden of the Grand Feast. He has promised to feed 2,000 people and has never once doubted it.",
+                      "name":  "Brackwater",
+                      "short":  "Brackwater",
+                      "type":  "place",
+                      "blurb":  "A barony across the Quillmarch Bridge from Ashenfold. The two have been negotiating a lasting peace for longer than anyone remembers.",
                       "appearances":  11,
                       "articles":  [
                                        {
-                                           "id":  "salamander-oven-subscription-lapses-40-pies",
-                                           "title":  "Salamander Oven Subscription Lapses Mid-Bake; 40 Pies Half-Done",
-                                           "date":  "2026-11-19"
+                                           "id":  "giant-boar-duchess-9-piglets-feast",
+                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
+                                           "date":  "2026-11-20"
                                        },
                                        {
                                            "id":  "feast-seating-chart-treaty-baronies-turnips",
@@ -1563,19 +1631,19 @@
                                            "date":  "2026-11-18"
                                        },
                                        {
-                                           "id":  "griffon-egg-feast-geese-adventuring-party",
-                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
-                                           "date":  "2026-11-17"
-                                       },
-                                       {
-                                           "id":  "red-dragon-lich-feast-invites-fire-marshal",
-                                           "title":  "Red Dragon and Lich Demand Feast Invites; Fire Marshal Says No",
+                                           "id":  "winter-wolves-baronies-hire-same-party",
+                                           "title":  "Winter Wolves Block Road; Both Baronies Hire Same Party",
                                            "date":  "2026-11-16"
                                        },
                                        {
-                                           "id":  "feast-2000-tiered-seating-heroes-feast-bid",
-                                           "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
-                                           "date":  "2026-11-15"
+                                           "id":  "potion-of-invisibility-envoy-parley-three-days",
+                                           "title":  "Potion of Invisibility Envoy Sits Through 3-Day Parley",
+                                           "date":  "2026-11-07"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-shortcut-border-nine-hours-incident",
+                                           "title":  "Adventuring Party\u0027s Shortcut Turns 2-Hour Road Into 9",
+                                           "date":  "2026-11-05"
                                        }
                                    ]
                   },
@@ -1712,40 +1780,6 @@
                                            "id":  "press-ban-ivory-keep-judge-blocks-donwald",
                                            "title":  "Judge Blocks Press Ban at the Ivory Keep, Orders Scribes Back",
                                            "date":  "2026-10-15"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Brackwater",
-                      "short":  "Brackwater",
-                      "type":  "place",
-                      "blurb":  "A barony across the Quillmarch Bridge from Ashenfold. The two have been negotiating a lasting peace for longer than anyone remembers.",
-                      "appearances":  10,
-                      "articles":  [
-                                       {
-                                           "id":  "feast-seating-chart-treaty-baronies-turnips",
-                                           "title":  "Rival Baronies RSVP to Feast; Seating Chart Is Now a Treaty",
-                                           "date":  "2026-11-18"
-                                       },
-                                       {
-                                           "id":  "winter-wolves-baronies-hire-same-party",
-                                           "title":  "Winter Wolves Block Road; Both Baronies Hire Same Party",
-                                           "date":  "2026-11-16"
-                                       },
-                                       {
-                                           "id":  "potion-of-invisibility-envoy-parley-three-days",
-                                           "title":  "Potion of Invisibility Envoy Sits Through 3-Day Parley",
-                                           "date":  "2026-11-07"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-shortcut-border-nine-hours-incident",
-                                           "title":  "Adventuring Party\u0027s Shortcut Turns 2-Hour Road Into 9",
-                                           "date":  "2026-11-05"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-ambushes-envoy-carrying-quest-reward",
-                                           "title":  "Adventuring Party Ambushes Envoy Carrying Their Reward",
-                                           "date":  "2026-11-03"
                                        }
                                    ]
                   },
@@ -2090,6 +2124,40 @@
                                    ]
                   },
                   {
+                      "name":  "Duchess",
+                      "short":  "Duchess",
+                      "type":  "creature",
+                      "blurb":  "The giant boar brought back alive from the Thornwood to be the Grand Feast\u0027s centerpiece. She now rents the big stall at the Sleeping Mule and keeps the pigeons off the roof.",
+                      "appearances":  8,
+                      "articles":  [
+                                       {
+                                           "id":  "giant-boar-duchess-9-piglets-feast",
+                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "salamander-oven-subscription-lapses-40-pies",
+                                           "title":  "Salamander Oven Subscription Lapses Mid-Bake; 40 Pies Half-Done",
+                                           "date":  "2026-11-19"
+                                       },
+                                       {
+                                           "id":  "thunderwave-tavern-brawl-sleeping-mule-wall",
+                                           "title":  "Thunderwave Ends Tavern Brawl; Tavern Gains a Room",
+                                           "date":  "2026-11-18"
+                                       },
+                                       {
+                                           "id":  "griffon-egg-feast-geese-adventuring-party",
+                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
+                                           "date":  "2026-11-17"
+                                       },
+                                       {
+                                           "id":  "feast-2000-tiered-seating-heroes-feast-bid",
+                                           "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
+                                           "date":  "2026-11-15"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Envoy Halric Dunmere",
                       "short":  "Dunmere",
                       "type":  "person",
@@ -2324,40 +2392,6 @@
                                            "id":  "bard-college-plagiarism-scandal",
                                            "title":  "College of Valor Accused of Song Plagiarism",
                                            "date":  "2026-04-18"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Duchess",
-                      "short":  "Duchess",
-                      "type":  "creature",
-                      "blurb":  "The giant boar brought back alive from the Thornwood to be the Grand Feast\u0027s centerpiece. She now rents the big stall at the Sleeping Mule and keeps the pigeons off the roof.",
-                      "appearances":  7,
-                      "articles":  [
-                                       {
-                                           "id":  "salamander-oven-subscription-lapses-40-pies",
-                                           "title":  "Salamander Oven Subscription Lapses Mid-Bake; 40 Pies Half-Done",
-                                           "date":  "2026-11-19"
-                                       },
-                                       {
-                                           "id":  "thunderwave-tavern-brawl-sleeping-mule-wall",
-                                           "title":  "Thunderwave Ends Tavern Brawl; Tavern Gains a Room",
-                                           "date":  "2026-11-18"
-                                       },
-                                       {
-                                           "id":  "griffon-egg-feast-geese-adventuring-party",
-                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
-                                           "date":  "2026-11-17"
-                                       },
-                                       {
-                                           "id":  "feast-2000-tiered-seating-heroes-feast-bid",
-                                           "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
-                                           "date":  "2026-11-15"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-3000-potatoes-exposure-plumbrook",
-                                           "title":  "Adventuring Party Peels 3,000 Potatoes, Paid in Exposure",
-                                           "date":  "2026-11-14"
                                        }
                                    ]
                   },
@@ -2834,6 +2868,40 @@
                                            "id":  "bond-yields-24-year-high-reserve-hike-loaf-index",
                                            "title":  "Bond Yields Hit 24-Year High; Reserve Polishes Its Hike Wand",
                                            "date":  "2026-10-13"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Pellam Isles",
+                      "short":  "Pellam",
+                      "type":  "place",
+                      "blurb":  "A scatter of fishing islands whose sailors have a long habit of staying with their ships.",
+                      "appearances":  6,
+                      "articles":  [
+                                       {
+                                           "id":  "unlimited-tiny-hut-10-feet-voidpocket-mule",
+                                           "title":  "\u0027Unlimited\u0027 Tiny Hut Is 10 Feet Wide. Six Heroes, One Mule Tried",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "sahuagin-underwater-trade-parley-varnholt-water-breathing",
+                                           "title":  "Sahuagin Demand Underwater Trade Talks; Envoys Hold Breath",
+                                           "date":  "2026-11-11"
+                                       },
+                                       {
+                                           "id":  "rogue-pickpockets-envoy-whistle-varnholt-pellam-incident",
+                                           "title":  "Rogue Picks Envoy\u0027s Pocket, Starts Varnholt-Pellam Incident",
+                                           "date":  "2026-11-06"
+                                       },
+                                       {
+                                           "id":  "gelatinous-cube-conference-room-varnholt-pellam-parley",
+                                           "title":  "Gelatinous Cube Hosted Varnholt-Pellam Parley as \u0027Glass Room\u0027",
+                                           "date":  "2026-11-04"
+                                       },
+                                       {
+                                           "id":  "ring-of-protection-identify-spell-shop-markup",
+                                           "title":  "Unidentified Ring Sold for 40 gp, Resold at 1,800 gp",
+                                           "date":  "2026-11-03"
                                        }
                                    ]
                   },
@@ -3416,40 +3484,6 @@
                                    ]
                   },
                   {
-                      "name":  "the Pellam Isles",
-                      "short":  "Pellam",
-                      "type":  "place",
-                      "blurb":  "A scatter of fishing islands whose sailors have a long habit of staying with their ships.",
-                      "appearances":  5,
-                      "articles":  [
-                                       {
-                                           "id":  "sahuagin-underwater-trade-parley-varnholt-water-breathing",
-                                           "title":  "Sahuagin Demand Underwater Trade Talks; Envoys Hold Breath",
-                                           "date":  "2026-11-11"
-                                       },
-                                       {
-                                           "id":  "rogue-pickpockets-envoy-whistle-varnholt-pellam-incident",
-                                           "title":  "Rogue Picks Envoy\u0027s Pocket, Starts Varnholt-Pellam Incident",
-                                           "date":  "2026-11-06"
-                                       },
-                                       {
-                                           "id":  "gelatinous-cube-conference-room-varnholt-pellam-parley",
-                                           "title":  "Gelatinous Cube Hosted Varnholt-Pellam Parley as \u0027Glass Room\u0027",
-                                           "date":  "2026-11-04"
-                                       },
-                                       {
-                                           "id":  "ring-of-protection-identify-spell-shop-markup",
-                                           "title":  "Unidentified Ring Sold for 40 gp, Resold at 1,800 gp",
-                                           "date":  "2026-11-03"
-                                       },
-                                       {
-                                           "id":  "ghost-ship-varnholt-harbor-visa-pellam-parley",
-                                           "title":  "Ghost Ship Docks in Varnholt; Customs Demands a Visa",
-                                           "date":  "2026-10-27"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "the Royal Bureau of Labor Tallies",
                       "short":  "the Bureau",
                       "type":  "agency",
@@ -3480,6 +3514,40 @@
                                            "id":  "golden-coast-clerks-call-first-strike-margrave-rolls-initiative",
                                            "title":  "Golden Coast Clerks Call First Strike; Margrave Rolls for Initiative",
                                            "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Thornwood",
+                      "short":  "the Thornwood",
+                      "type":  "place",
+                      "blurb":  "An old forest a two-day walk from Brindlemoor, home to giant boars and oaks with hollows big enough to sleep in.",
+                      "appearances":  5,
+                      "articles":  [
+                                       {
+                                           "id":  "giant-boar-duchess-9-piglets-feast",
+                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "feast-2000-tiered-seating-heroes-feast-bid",
+                                           "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
+                                           "date":  "2026-11-15"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-3000-potatoes-exposure-plumbrook",
+                                           "title":  "Adventuring Party Peels 3,000 Potatoes, Paid in Exposure",
+                                           "date":  "2026-11-14"
+                                       },
+                                       {
+                                           "id":  "giant-boar-tavern-stable-duchess-harrowgate",
+                                           "title":  "Giant Boar Rents Tavern Stable; Innkeeper Names Her Duchess",
+                                           "date":  "2026-11-12"
+                                       },
+                                       {
+                                           "id":  "giant-boar-feast-alive-fourth-attempt",
+                                           "title":  "Giant Boar Brought Back Alive for Feast. Nobody Said Dead.",
+                                           "date":  "2026-11-11"
                                        }
                                    ]
                   },
@@ -3973,35 +4041,6 @@
                                            "id":  "albarn-protests-rubber-bullets-167-arrested-ramah",
                                            "title":  "Albarn Protests Hit Day Five; Chancellor Ramah Won\u0027t Resign",
                                            "date":  "2026-10-24"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "the Thornwood",
-                      "short":  "the Thornwood",
-                      "type":  "place",
-                      "blurb":  "An old forest a two-day walk from Brindlemoor, home to giant boars and oaks with hollows big enough to sleep in.",
-                      "appearances":  4,
-                      "articles":  [
-                                       {
-                                           "id":  "feast-2000-tiered-seating-heroes-feast-bid",
-                                           "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
-                                           "date":  "2026-11-15"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-3000-potatoes-exposure-plumbrook",
-                                           "title":  "Adventuring Party Peels 3,000 Potatoes, Paid in Exposure",
-                                           "date":  "2026-11-14"
-                                       },
-                                       {
-                                           "id":  "giant-boar-tavern-stable-duchess-harrowgate",
-                                           "title":  "Giant Boar Rents Tavern Stable; Innkeeper Names Her Duchess",
-                                           "date":  "2026-11-12"
-                                       },
-                                       {
-                                           "id":  "giant-boar-feast-alive-fourth-attempt",
-                                           "title":  "Giant Boar Brought Back Alive for Feast. Nobody Said Dead.",
-                                           "date":  "2026-11-11"
                                        }
                                    ]
                   },
@@ -4545,6 +4584,30 @@
                                            "id":  "live-birds-underwear-mirage-bay-skyport-smuggling",
                                            "title":  "10 Live Birds in His Smalls: Skyport Wardens Cry Fowl",
                                            "date":  "2026-10-17"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Mortimer",
+                      "short":  "Mortimer",
+                      "type":  "creature",
+                      "blurb":  "The Sleeping Mule Tavern\u0027s own mule, an old gray, lately moved to the woodshed to make room for a giant boar.",
+                      "appearances":  3,
+                      "articles":  [
+                                       {
+                                           "id":  "giant-boar-duchess-9-piglets-feast",
+                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "giant-boar-tavern-stable-duchess-harrowgate",
+                                           "title":  "Giant Boar Rents Tavern Stable; Innkeeper Names Her Duchess",
+                                           "date":  "2026-11-12"
+                                       },
+                                       {
+                                           "id":  "haunted-house-rental-guest-trauma",
+                                           "title":  "Haunted House Listed on AirBnBugbear Causes Guest Trauma",
+                                           "date":  "2026-04-23"
                                        }
                                    ]
                   },
@@ -5812,25 +5875,6 @@
                                    ]
                   },
                   {
-                      "name":  "Mortimer",
-                      "short":  "Mortimer",
-                      "type":  "creature",
-                      "blurb":  "The Sleeping Mule Tavern\u0027s own mule, an old gray, lately moved to the woodshed to make room for a giant boar.",
-                      "appearances":  2,
-                      "articles":  [
-                                       {
-                                           "id":  "giant-boar-tavern-stable-duchess-harrowgate",
-                                           "title":  "Giant Boar Rents Tavern Stable; Innkeeper Names Her Duchess",
-                                           "date":  "2026-11-12"
-                                       },
-                                       {
-                                           "id":  "haunted-house-rental-guest-trauma",
-                                           "title":  "Haunted House Listed on AirBnBugbear Causes Guest Trauma",
-                                           "date":  "2026-04-23"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Nu Yarrow",
                       "short":  "Nu Yarrow",
                       "type":  "place",
@@ -5865,6 +5909,25 @@
                                            "id":  "copper-thief-window-dive-id-left-oakahoma-watch",
                                            "title":  "Copper Thief Dives Through Window, Leaves His ID in Backpack",
                                            "date":  "2026-10-18"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Odalys Brindlefoot",
+                      "short":  "Brindlefoot",
+                      "type":  "person",
+                      "blurb":  "Voidpocket Labs representative. Points to the fine print, then offers an upgrade.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "unlimited-tiny-hut-10-feet-voidpocket-mule",
+                                           "title":  "\u0027Unlimited\u0027 Tiny Hut Is 10 Feet Wide. Six Heroes, One Mule Tried",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "bag-of-holding-unlimited-storage-voidpocket-review",
+                                           "title":  "Bag of Holding \u0027Unlimited\u0027 Plan: 12 gp Buys 500 Pounds",
+                                           "date":  "2026-11-05"
                                        }
                                    ]
                   },
@@ -6458,6 +6521,25 @@
                                    ]
                   },
                   {
+                      "name":  "the Rattlepan Company",
+                      "short":  "the Rattlepan Company",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor adventuring party whose gnome wizard ended a Sleeping Mule brawl with Thunderwave and took out the east wall. They owe the tavern 63 gold and 4 silver.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "gust-of-wind-market-leaves-14-stalls",
+                                           "title":  "Wizard\u0027s Gust of Wind Clears Market Leaves and 14 Stalls",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "thunderwave-tavern-brawl-sleeping-mule-wall",
+                                           "title":  "Thunderwave Ends Tavern Brawl; Tavern Gains a Room",
+                                           "date":  "2026-11-18"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Salmon Scroll",
                       "short":  "the Salmon Scroll",
                       "type":  "company",
@@ -6644,6 +6726,25 @@
                                            "id":  "lich-merger-400-skeleton-layoffs-desks",
                                            "title":  "Lich Merger Rightsizes 400 Skeletons, Who Keep Coming In",
                                            "date":  "2026-10-31"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Voidpocket Labs",
+                      "short":  "Voidpocket",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor maker of extradimensional storage goods, best known for the Endless Sack subscription.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "unlimited-tiny-hut-10-feet-voidpocket-mule",
+                                           "title":  "\u0027Unlimited\u0027 Tiny Hut Is 10 Feet Wide. Six Heroes, One Mule Tried",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "bag-of-holding-unlimited-storage-voidpocket-review",
+                                           "title":  "Bag of Holding \u0027Unlimited\u0027 Plan: 12 gp Buys 500 Pounds",
+                                           "date":  "2026-11-05"
                                        }
                                    ]
                   },
@@ -7830,6 +7931,20 @@
                                            "id":  "hurricane-isleias-884000-power-outages-wendell-soup",
                                            "title":  "Hurricane Isleias Darkens 884,000 Hearths; Cold Soup Advised",
                                            "date":  "2026-10-12"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Fennimore Pallthistle",
+                      "short":  "Pallthistle",
+                      "type":  "person",
+                      "blurb":  "Halfling wizard of the Lanternmoth Company, who cleared Brindlemoor\u0027s market square of leaves with Gust of Wind and maintains the job was done.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "gust-of-wind-market-leaves-14-stalls",
+                                           "title":  "Wizard\u0027s Gust of Wind Clears Market Leaves and 14 Stalls",
+                                           "date":  "2026-11-20"
                                        }
                                    ]
                   },
@@ -10844,6 +10959,20 @@
                                    ]
                   },
                   {
+                      "name":  "the Ironkettle Company",
+                      "short":  "the Ironkettles",
+                      "type":  "organization",
+                      "blurb":  "A six-member adventuring party from Brindlemoor who bought an \u0027unlimited\u0027 Tiny Hut and one mule named Biscuit.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "unlimited-tiny-hut-10-feet-voidpocket-mule",
+                                           "title":  "\u0027Unlimited\u0027 Tiny Hut Is 10 Feet Wide. Six Heroes, One Mule Tried",
+                                           "date":  "2026-11-20"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Jeap Compass wagon",
                       "short":  "Jeap Compass",
                       "type":  "product",
@@ -10896,6 +11025,20 @@
                                            "id":  "fish-oil-memory-trial-365-elders-wendell",
                                            "title":  "Fish Oil Pills Fail 2-Year Memory Trial; Sages Shrug",
                                            "date":  "2026-10-23"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Lanternmoth Company",
+                      "short":  "the Lanternmoth Company",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor adventuring party whose halfling wizard swept the market square\u0027s autumn leaves with Gust of Wind, along with 14 stalls. They owe the vendors 88 gold.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "gust-of-wind-market-leaves-14-stalls",
+                                           "title":  "Wizard\u0027s Gust of Wind Clears Market Leaves and 14 Stalls",
+                                           "date":  "2026-11-20"
                                        }
                                    ]
                   },
@@ -11204,20 +11347,6 @@
                                            "id":  "golf-course-tree-removal-430-trees-donwald",
                                            "title":  "Judge Halts Golf Course Tree Removal; Dryads Cheer",
                                            "date":  "2026-10-27"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "the Rattlepan Company",
-                      "short":  "the Rattlepan Company",
-                      "type":  "organization",
-                      "blurb":  "A Brindlemoor adventuring party whose gnome wizard ended a Sleeping Mule brawl with Thunderwave and took out the east wall. They owe the tavern 63 gold and 4 silver.",
-                      "appearances":  1,
-                      "articles":  [
-                                       {
-                                           "id":  "thunderwave-tavern-brawl-sleeping-mule-wall",
-                                           "title":  "Thunderwave Ends Tavern Brawl; Tavern Gains a Room",
-                                           "date":  "2026-11-18"
                                        }
                                    ]
                   },
@@ -11918,20 +12047,6 @@
                                            "id":  "attack-ads-fact-check-ohyo-vale-governor",
                                            "title":  "Ohyo Vale Governor Race: Attack Ads Fact-Checked, Both Fail",
                                            "date":  "2026-10-22"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Voidpocket Labs",
-                      "short":  "Voidpocket",
-                      "type":  "organization",
-                      "blurb":  "A Brindlemoor maker of extradimensional storage goods, best known for the Endless Sack subscription.",
-                      "appearances":  1,
-                      "articles":  [
-                                       {
-                                           "id":  "bag-of-holding-unlimited-storage-voidpocket-review",
-                                           "title":  "Bag of Holding \u0027Unlimited\u0027 Plan: 12 gp Buys 500 Pounds",
-                                           "date":  "2026-11-05"
                                        }
                                    ]
                   },
