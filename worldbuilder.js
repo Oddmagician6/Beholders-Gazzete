@@ -77,14 +77,18 @@ function loadWorldTab(tab) {
 }
 
 // Load a tab; false (and a note on the tab) when a script didn't arrive.
+const WORLD_LOAD_FAILED = "⚠️ This tab didn't load. Check your connection and reload the page.";
+
 async function readyWorldTab(tab) {
+    // The panel's last status line is its main one (the Notebook's first sits in a box that can be hidden).
+    const status = [...document.querySelectorAll(`#tab-${tab} .tool-status`)].pop();
     try {
         await loadWorldTab(tab);
+        if (status && status.textContent === WORLD_LOAD_FAILED) status.textContent = '';
         return true;
     } catch (err) {
         console.error(err);
-        const status = document.querySelector(`#tab-${tab} .tool-status`);
-        if (status) status.textContent = "⚠️ This tab didn't load. Check your connection and reload the page.";
+        if (status) status.textContent = WORLD_LOAD_FAILED;
         return false;
     }
 }
@@ -108,11 +112,14 @@ function copyText(text, statusId, what) {
 
 // ── Tabs ──────────────────────────────────────────────────
 function currentWorldTab() {
-    const t = urlParams().get('tab') || tabOfPage();
-    return WORLD_TAB_ORDER.includes(t) && tabOnPage(t) ? t : WORLD_TAB_ORDER[0];
+    // A ?tab= this page doesn't have falls back to the page's own tab, not the hub's first.
+    const ok = t => WORLD_TAB_ORDER.includes(t) && tabOnPage(t);
+    const asked = urlParams().get('tab'), own = tabOfPage();
+    return ok(asked) ? asked : ok(own) ? own : WORLD_TAB_ORDER[0];
 }
 
 let worldShown = null;   // the tab on screen, which may still be loading
+const worldOpened = new Set();   // tabs that got on screen ready (a failed load leaves its tab out, so a retry rolls it)
 
 function showWorldTab(tab) {
     worldShown = tab;
@@ -137,10 +144,11 @@ async function switchWorldTab(tab) {
     const was = worldShown;
     showWorldTab(tab);
     if (!await readyWorldTab(tab) || tab !== worldShown) return false;
-    if (tab !== was) {
+    if (tab !== was || !worldOpened.has(tab)) {
         if (!WORLD_TABS[tab].rolled()) WORLD_TABS[tab].fresh(null);
         setUrlParams(WORLD_TABS[tab].params(), true);
     }
+    worldOpened.add(tab);
     return true;
 }
 
@@ -162,6 +170,7 @@ async function applyWorldUrl() {
     showWorldTab(tab);
     if (!await readyWorldTab(tab) || tab !== worldShown) return;
     if (!WORLD_TABS[tab].apply(urlParams())) WORLD_TABS[tab].fresh(false);
+    worldOpened.add(tab);
 }
 
 document.addEventListener('DOMContentLoaded', () => {

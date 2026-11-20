@@ -248,8 +248,9 @@ function rulesCardHtml(card, q = '') {
                 Array.isArray(text) ? text.map(t => `<dd>${m(t)}</dd>`).join('') : `<dd>${m(text)}</dd>`}</div>`).join('')}</dl>` : '';
         }
         if (b.table) {
-            const rows = b.table.rows.filter(r => all || rulesHit(q, r));
-            return rows.length ? `<div class="rules-table"><table><thead><tr>${b.table.head.map(h => `<th>${rulesEsc(h)}</th>`).join('')}</tr></thead>
+            // A match in the heading row ("d20 Tests") keeps the whole table.
+            const rows = b.table.rows.filter(r => all || rulesHit(q, b.table.head) || rulesHit(q, r));
+            return rows.length ? `<div class="rules-table"><table><thead><tr>${b.table.head.map(h => `<th>${m(h)}</th>`).join('')}</tr></thead>
                 <tbody>${rows.map(r => `<tr>${r.map(c => `<td>${m(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>` : '';
         }
         return '';

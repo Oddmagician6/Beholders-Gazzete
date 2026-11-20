@@ -219,8 +219,10 @@ function rulesRefresh() {
 
 function rulesSet(v) {
     v = v === '2024' ? '2024' : '2014';
-    try { localStorage.setItem(RULES_KEY, v); } catch (e) {}
-    rulesPage = null;
+    let kept = false;
+    try { localStorage.setItem(RULES_KEY, v); kept = localStorage.getItem(RULES_KEY) === v; } catch (e) {}
+    // A browser that won't keep the setting still gets the pick on this page.
+    rulesPage = kept ? null : v;
     rulesPinnedByUrl = false;
     rulesDropUrlParam();
     return rulesRefresh();
@@ -368,6 +370,8 @@ if (SRD52_OK) {
     window.addEventListener('popstate', () => {
         const v = new URLSearchParams(location.search).get('rules');
         if ((v === '2014' || v === '2024') && v !== rulesVersion()) rulesUse(v, true);
+        // An address with no rules= follows the reader's setting again, not the last address's pin.
+        else if (!v && rulesPinnedByUrl) rulesUse(null);
     });
     if (!RULES_TEXT_ONLY) ['click', 'auxclick', 'contextmenu'].forEach(t => document.addEventListener(t, rulesStampLink, true));
 }

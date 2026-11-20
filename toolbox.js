@@ -48,8 +48,10 @@ function copyText(text, statusId, what) {
 
 // ── Tabs ──────────────────────────────────────────────────
 function currentTab() {
-    const t = urlParams().get('tab') || tabOfPage();
-    return TOOLBOX_TABS.includes(t) && tabOnPage(t) ? t : TOOLBOX_TABS[0];
+    // A ?tab= this page doesn't have falls back to the page's own tab, not the hub's first.
+    const ok = t => TOOLBOX_TABS.includes(t) && tabOnPage(t);
+    const asked = urlParams().get('tab'), own = tabOfPage();
+    return ok(asked) ? asked : ok(own) ? own : TOOLBOX_TABS[0];
 }
 
 function showTab(tab) {

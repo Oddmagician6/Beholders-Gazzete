@@ -6,6 +6,8 @@
    ============================================ */
 
 function renderRules(q) {
+    // rules-data.js didn't arrive: the prerendered cards stay as they are.
+    if (typeof RULES_CARDS === 'undefined') return;
     const html = RULES_CARDS.map(c => rulesCardHtml(c, q)).filter(Boolean);
     document.getElementById('rules-grid').innerHTML = html.join('');
     document.getElementById('rules-empty').hidden = html.length > 0;
@@ -26,6 +28,10 @@ function rulesFlash(text) {
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('year').textContent = new Date().getFullYear();
     const box = document.getElementById('rules-q');
+    // Print and Copy Link first: they work on the cards already on the page whatever happens below.
+    document.getElementById('rules-print').addEventListener('click', () => window.print());
+    document.getElementById('rules-link').addEventListener('click', () =>
+        copyPageLink(ok => rulesFlash(ok ? '🔗 Link copied.' : '⚠️ Copy blocked by the browser.')));
     box.value = (urlParams().get('q') || '').slice(0, 40);
     // The 2014/2024 picker (srd52.js): three cards have 2024 versions.
     if (typeof srd52Toggle === 'function') {
@@ -40,9 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
         renderRules(box.value);
         setUrlParams({ q: box.value.trim() || null }, false);
     });
-    document.getElementById('rules-print').addEventListener('click', () => window.print());
-    document.getElementById('rules-link').addEventListener('click', () =>
-        copyPageLink(ok => rulesFlash(ok ? '🔗 Link copied.' : '⚠️ Copy blocked by the browser.')));
     window.addEventListener('popstate', () => {
         box.value = (urlParams().get('q') || '').slice(0, 40);
         renderRules(box.value);

@@ -294,9 +294,11 @@ async function contDownloadMap() {
     // The journey on screen is drawn after the map, so draw it into the copy too.
     const W = c.map.cols * CONT_CELL, H = c.map.rows * CONT_CELL;
     const pins = document.getElementById('cont-png-pins').checked ? contPins() : [];
+    // Callbacks, not replacement strings: a pin named "Gold $& Glory" would otherwise splice the match in.
+    const journey = contJourneyPath(c, contState.journey), pinsSvg = pinSvg(pins, W, H, { cls: 'cm' });
     const svg = contMapSvg(c, `Map of ${name}`, 'cmx', contStyle())
-        .replace('id="cmx-journey" d=""', `id="cmx-journey" d="${contJourneyPath(c, contState.journey)}"`)
-        .replace(/<\/svg>\s*$/, `${pinSvg(pins, W, H, { cls: 'cm' })}</svg>`);
+        .replace('id="cmx-journey" d=""', () => `id="cmx-journey" d="${journey}"`)
+        .replace(/<\/svg>\s*$/, () => `${pinsSvg}</svg>`);
     const file = `${mapFileSlug(name)}-map.png`;
     btn.disabled = true;
     contStatus('🗺️ Drawing the map…');

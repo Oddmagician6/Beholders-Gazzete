@@ -28,7 +28,8 @@ function mapPageCss(prefix) {
 
 // The SVG at w × h pixels with its styles inside it.
 function mapSvgForExport(svg, w, h, css) {
-    return svg.replace(/<svg\b/, `<svg width="${w}" height="${h}"`).replace(/(<svg\b[^>]*>)/, `$1<style>${css}</style>`);
+    // Callbacks, so a "$" in the CSS (a font's data: URL) is taken as it is.
+    return svg.replace(/<svg\b/, () => `<svg width="${w}" height="${h}"`).replace(/(<svg\b[^>]*>)/, m => `${m}<style>${css}</style>`);
 }
 
 // The SVG with each picture it links (href="img/…") written into it as a data: URL: an SVG

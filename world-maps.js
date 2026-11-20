@@ -24,7 +24,7 @@ const mapsState = {
     urlKey: '',
     cardKey: '',       // what the card was last built for (the map, its picture), so pin edits don't rebuild it
     want: '',          // a map asked for (URL) before the pictures loaded
-    deleting: false,
+    deleting: '',      // the map whose 🗑️ Delete was clicked once (a second click on the same map deletes it)
     pins: [], sel: '', // the pins last drawn, for redrawing at a new zoom
     view: { k: 1, x: 0, y: 0, fit: true, vw: 0, vh: 0 }
 };
@@ -67,7 +67,7 @@ function mapsShow(id, push = null) {
     if (next !== mapsState.id) {
         if (mapsBoard) mapsBoard.flush();
         mapsState.id = next;
-        mapsState.deleting = false;
+        mapsState.deleting = '';
         mapsState.view.fit = true;
         if (mapsBoard) { mapsBoard.state.sel = ''; mapsBoard.state.mode = false; }
     }
@@ -105,7 +105,7 @@ function renderMaps(nb = nbLoad()) {
     document.getElementById('maps-replace').disabled = !e;
     const del = document.getElementById('maps-delete');
     del.disabled = !e;
-    del.textContent = mapsState.deleting ? '⚠️ Click again to delete this map' : '🗑️ Delete Map';
+    del.textContent = e && mapsState.deleting === e.id ? '⚠️ Click again to delete this map' : '🗑️ Delete Map';
     document.getElementById('maps-upload').disabled = mapsState.db === false;
 
     const orphans = mapsOrphans(nb);
@@ -510,13 +510,14 @@ async function mapsReload() {
 function mapsDeleteMap() {
     const e = mapsEntry();
     if (!e) return;
-    if (!mapsState.deleting) {
-        mapsState.deleting = true;
+    // The confirmation belongs to this map: another tab removing it moves the view on, and the next map asks afresh.
+    if (mapsState.deleting !== e.id) {
+        const id = mapsState.deleting = e.id;
         renderMaps();
-        setTimeout(() => { if (mapsState.deleting) { mapsState.deleting = false; renderMaps(); } }, 4000);
+        setTimeout(() => { if (mapsState.deleting === id) { mapsState.deleting = ''; renderMaps(); } }, 4000);
         return;
     }
-    mapsState.deleting = false;
+    mapsState.deleting = '';
     const nb = nbLoad();
     nbRemove(nb, e.id);
     // Out of the list first, so the redraw doesn't show it as a picture without a map.
@@ -586,6 +587,18 @@ async function mapsPrint() {
     window.print();
 }
 
+// The picture to draw under the pins: a bitmap, or a decoded <img> where the browser can't make one
+// (the same fallback the upload check uses, so a picture that got in can always come out).
+async function mapsPicture(rec) {
+    if (typeof createImageBitmap === 'function') {
+        try { return await createImageBitmap(rec.blob); } catch (e) { /* try an <img> */ }
+    }
+    const img = new Image();
+    img.src = mapsUrl(rec);
+    await img.decode();
+    return img;
+}
+
 async function mapsDownload() {
     const e = mapsEntry(), rec = mapsRec(), btn = document.getElementById('maps-png');
     if (!e || !rec || btn.disabled) return;
@@ -603,13 +616,18 @@ async function mapsDownload() {
     flash('maps-status', '🗺️ Drawing the map…');
     let under = null, ok = false;
     try {
-        under = await createImageBitmap(rec.blob);
+        under = await mapsPicture(rec).catch(() => null);
+        if (!under) {
+            btn.disabled = false;
+            flash('maps-status', "⚠️ This browser couldn't open the picture to draw the pins on it. Untick the pins to save the picture as it is.");
+            return;
+        }
         const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}">${mapsPinsForPicture(pins, w, h)}</svg>`;
         ok = await mapExportPng(svg, w, h, mapPageCss('.um-'), file, { under, type });
     } catch (err) {
         ok = false;
     } finally {
-        if (under) under.close();
+        if (under && under.close) under.close();
     }
     btn.disabled = false;
     flash('maps-status', ok ? `⬇️ Saved ${file}: ${w.toLocaleString('en-US')} × ${h.toLocaleString('en-US')} pixels, with ${pins.length} ${pins.length === 1 ? 'pin' : 'pins'}.`
@@ -647,10 +665,12 @@ function setupMaps() {
     let nameTimer = null;
     name.addEventListener('input', () => {
         clearTimeout(nameTimer);
+        // The name is for the map on screen now: if another tab removes it meanwhile, no other map takes it.
+        const id = mapsState.id, typed = name.value;
         nameTimer = setTimeout(() => {
             const nb = nbLoad(), e = mapsEntry(nb);
-            if (!e) return;
-            e.title = nbText(name.value, NB_LIMITS.title) || 'My map';
+            if (!e || e.id !== id) return;
+            e.title = nbText(typed, NB_LIMITS.title) || 'My map';
             if (!nbStore(nb, true)) { flash('maps-status', "⚠️ This browser won't keep a notebook (storage is full or off)."); return; }
             const opt = document.querySelector(`#maps-pick option[value="${e.id}"]`);
             if (opt) opt.textContent = e.title + (mapsState.recs.has(e.id) ? '' : ' (no picture here)');
@@ -690,7 +710,8 @@ WORLD_TABS.maps = {
     setup: setupMaps,
     params: mapsParams,
     apply: p => {
-        const id = p.get('map') || '';
+        // No map= is the first map (the address the tab opened on), so Back to it shows it again.
+        const id = p.get('map') || (mapsState.db === null ? '' : (mapsEntries()[0] || {}).id || '');
         if (mapsState.db === null) mapsState.want = id;
         else mapsShow(id, null);
         return true;

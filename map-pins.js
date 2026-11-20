@@ -13,7 +13,8 @@
 const PIN_LIMITS = { pins: 60, name: 80, note: 400 };
 
 function pinText(v, max) {
-    return typeof v === 'string' ? v.replace(/[\u0000-\u001F\u007F]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max) : '';
+    // Control characters, U+FFFE/U+FFFF, and half surrogate pairs are left out: XML (the SVG export) can't hold them.
+    return typeof v === 'string' ? v.replace(/[\u0000-\u001F\u007F￾￿]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max).replace(/[\uD800-\uDBFF]$/, '') : '';
 }
 
 function pinEsc(text) {

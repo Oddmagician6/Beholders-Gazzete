@@ -20,6 +20,11 @@ const TAB_PAGES = (() => {
     try { return JSON.parse(el.textContent); } catch (e) { return null; }
 })();
 
+// Whether tab names one of the tabs (an own key: "constructor" or "toString" from an address isn't one).
+function tabPageKnown(tab) {
+    return !!TAB_PAGES && typeof tab === 'string' && Object.hasOwn(TAB_PAGES.tabs, tab);
+}
+
 // "dnd-dice-roller" for /dnd-dice-roller.html and for /dnd-dice-roller (GitHub Pages serves both).
 function tabPageName(path) {
     return decodeURIComponent(path.split('/').pop()).replace(/\.html$/, '');
@@ -40,7 +45,7 @@ function tabOfPage() {
 // first tab, so no tab means the first one. Another tab's roll moves the address to that tab's page.
 function tabPageAddress(params) {
     const { tab = TAB_PAGES.first, ...rest } = params;
-    if (!TAB_PAGES.tabs[tab]) return [location.pathname, params];
+    if (!tabPageKnown(tab)) return [location.pathname, params];
     if (tab === (tabOfPage() || TAB_PAGES.first)) return [location.pathname, rest];
     return [tabPagePath(tab), rest];
 }
@@ -48,7 +53,7 @@ function tabPageAddress(params) {
 // The title, the hero kicker, text, and art, and the how-it-works guide for the tab on screen.
 function showTabPage(tab) {
     if (!TAB_PAGES) return;
-    const page = tab === TAB_PAGES.first && !tabOfPage() ? TAB_PAGES.hub : TAB_PAGES.tabs[tab];
+    const page = tab === TAB_PAGES.first && !tabOfPage() ? TAB_PAGES.hub : tabPageKnown(tab) ? TAB_PAGES.tabs[tab] : null;
     if (!page) return;
     document.title = page.title;
     const kicker = document.querySelector('.page-hero .hero-kicker');
@@ -116,7 +121,7 @@ function tabPageMoved(url) {
     if (!TAB_PAGES) return;
     const p = new URLSearchParams(location.search);
     const tab = p.get('tab');
-    if (!TAB_PAGES.tabs[tab]) return;
+    if (!tabPageKnown(tab)) return;
     p.delete('tab');
     const qs = p.toString();
     history.replaceState(history.state, '', tabPagePath(tab) + (qs ? '?' + qs : '') + location.hash);

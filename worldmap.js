@@ -847,6 +847,11 @@ async function weCopyLink() {
     delete p.id;
     delete p.t;
     const code = await packShareCode(p);
+    // A link longer than weFromLink takes would open as "broken": say so instead of copying it.
+    if (code.length > WM_LIMITS.code) {
+        weFlash(`⚠️ This map has too much drawn on it for a link (${code.length.toLocaleString('en-US')} characters, ${WM_LIMITS.code.toLocaleString('en-US')} at most). Download it as a PNG, or keep it in a backup (Privacy page).`, true);
+        return;
+    }
     const url = new URL('fantasy-world-map-maker', location.href);
     url.hash = 'm=' + code;
     try {
