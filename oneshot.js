@@ -41,6 +41,16 @@ function osParams() {
     return p;
 }
 
+// What Save to Notebook links to: the roll without the page's 🔒 marks, and without a part's seed
+// when it's the one the adventure's seed gives anyway (keeping a part changes nothing on its own).
+function osSaveParams() {
+    const p = osParams();
+    delete p.lock;
+    const set = OS_PARTS.filter(id => os.set[id] && String(os.set[id]) !== String(deriveSeed(os.seed, id))).map(id => `${id}.${os.set[id]}`);
+    if (set.length) p.set = set.join(','); else delete p.set;
+    return p;
+}
+
 function osFromUrl() {
     const q = urlParams();
     os.art = /^[a-z0-9][a-z0-9-]{0,99}$/.test(q.get('art') || '') ? q.get('art') : '';
@@ -137,7 +147,7 @@ function rollNew() {
 // A quest (linked to this page) and the site (the Worldbuilder's Sites tab), linked to each other.
 function saveToNotebook() {
     const o = os.data;
-    const href = (OS_PF2E ? 'pathfinder-one-shot-generator?' : 'dnd-one-shot-generator?') + paramsQuery(osParams());
+    const href = (OS_PF2E ? 'pathfinder-one-shot-generator?' : 'dnd-one-shot-generator?') + paramsQuery(osSaveParams());
     const notes = [o.pitch, `Patron: ${o.patron.name}, ${o.patron.role}, at ${o.tavern.name} in ${o.town}.`,
         `The job: ${o.job}`, `Site: ${o.site.name}.`, ...o.threads.map(t => `Thread: ${t}`)].join('\n');
     // What's really going on is the DM's alone, as on the page: the 🔒 notes, never the players' ones.
@@ -175,6 +185,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     osRoll();
     render();
     loadMonsterBlocks().then(render, () => {});
+    // The 2014/2024 rules switched (another tab, or Back to a rules= address): roll again on the new
+    // data, so the page, the address, and what Save to Notebook files stay one adventure.
+    if (typeof srd52OnChange === 'function') srd52OnChange(() => osChanged(false));
 
     partyChip(document.getElementById('os-party-chip'), {
         label: 'Use the Party', title: "Set the party level and size to the Toolbox Party tab's",

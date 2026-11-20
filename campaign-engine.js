@@ -66,7 +66,7 @@ const CP_SCHEMES = {
     ],
     company: [
         ["has taken a foreign crown's gold to break {realm} from the inside, and {relic} is the payment", "the company opens the border forts, and a foreign army marches through"],
-        ["means to make {faction} the only army {realm} has left, then name the price", "{realm} pays {villain} whatever {vthey} asks, forever"],
+        ["means to make {faction} the only army {realm} has left, then name the price", "{realm} pays {villain}'s price, whatever it is, forever"],
         ["is starting a war between {realm} and its neighbor so both will hire {faction}, and {relic} is the insult that starts it", "the war comes, and {faction} {faction:fights|fight} for whichever side pays more that week"]
     ],
     order: [
@@ -146,7 +146,8 @@ const CP_PORTENTS = {
     ],
     late: [
         '{Villain} moves {relic} to the place it was always meant to be used.',
-        "{PatronFaction}'s leader is arrested on the word of {faction}.",
+        // The patron faction's leader hires the party for the last chapter, so they get out again.
+        "{PatronFaction}'s leader is arrested on the word of {faction}, and buys a way out of the cells with nearly everything {patronFaction:it has|they have} left.",
         'Half the towns of {realm} pay {faction} for protection now.',
         "{Villain}'s people walk openly in the capital, wearing {faction}'s colors.",
         "The last of {villain}'s rivals is found dead, and the party gets the blame.",
@@ -302,7 +303,8 @@ function cpPerson(p, factionName) {
     const n = p.npc;
     const role = p.role ? `${p.role.toLowerCase()} of ${factionName}` : `${(p.title || 'leader').toLowerCase()} of ${factionName}`;
     // Their own secret, so a contact who hires the party again keeps the same one.
-    return { name: n.name, role, race: n.race, gender: n.gender, secret: n.secret };
+    // And the same way of talking: the one-shot plays them by these, not its own rolled NPC's.
+    return { name: n.name, role, race: n.race, gender: n.gender, secret: n.secret, trait: n.trait, voice: n.voice };
 }
 
 // The world: each of the three read from its link or rolled from the world part's seed.
@@ -457,7 +459,8 @@ function rollCampaign(seed, opts = {}, set = {}) {
         ch.lead = next ? cpFill(arc.leads[i], { ...cc, nextSite: next.o.site.name, nextTown: next.o.town }) : '';
         // A Pathfinder check's DC is the chapter's level DC (GM Core), not the table's fixed one.
         if (OS_PF2E) ch.lead = ch.lead.replace(/\bDC \d+/, `DC ${osClueDc(o.site)}`);
-        ch.stage = i < n - 1 ? fill(arc.front[i]) : '';
+        // The news is read at the start of the next chapter: until the party learns the name, the alias.
+        ch.stage = i < n - 1 ? cpFill(arc.front[i], i + 1 <= reveal ? { ...c, villain: arc.alias } : c) : '';
         // The pitch opens with where the chapter sits in the arc, in place of the one-shot's tone line.
         const at = ch.last ? 'last' : i === 0 ? 'first' : i === reveal ? 'reveal' : i < reveal ? 'early' : i === n - 2 ? 'near' : 'late';
         const opens = withSeed(deriveSeed(seeds['ch' + i], 'open'), () => osSlotPick(CP_CHAPTER_OPENS[at], 'open.' + at, { key: slotKey, i, n }));
@@ -496,8 +499,8 @@ function cpWildText(w, vi, wi, ctx) {
 // The Worldbuilder link for each part of the world (what Save to Notebook files).
 // The world's link keys, as the Worldbuilder writes them (notebook.js NB_USES matches entries by them).
 const CP_USES = {
-    gods: { kind: 'pantheon', keys: { gods: 'seed', gsize: 'size', gshape: 'shape', gnaming: 'naming' } },
-    facs: { kind: 'factions', keys: { facs: 'seed', fcount: 'count', ffocus: 'focus', fscale: 'scale' } },
+    gods: { kind: 'pantheon', keys: { gods: 'seed', gsize: 'size', gshape: 'shape', gnaming: 'naming', gworld: 'world' } },
+    facs: { kind: 'factions', keys: { facs: 'seed', fcount: 'count', ffocus: 'focus', fscale: 'scale', fworld: 'world' } },
     his: { kind: 'history', keys: { his: 'seed', hages: 'ages', hspan: 'span', hstart: 'start' } }
 };
 
@@ -508,7 +511,7 @@ function cpLinkParams(o, key) {
     Object.entries(keys).forEach(([mine, theirs]) => { if (o[theirs] && o[theirs] !== 'random') out[mine] = o[theirs]; });
     return out;
 }
-const CP_LINK_OPTS = { pantheon: ['size', 'shape', 'naming'], factions: ['count', 'focus', 'scale'], history: ['ages', 'span', 'start'] };
+const CP_LINK_OPTS = { pantheon: ['size', 'shape', 'naming', 'world'], factions: ['count', 'focus', 'scale', 'world'], history: ['ages', 'span', 'start'] };
 
 function cpWorldHref(W, tab) {
     const extra = tab === 'factions' ? cpLinkParams(W.gods, 'gods') : tab === 'history' ? { ...cpLinkParams(W.gods, 'gods'), ...cpLinkParams(W.facs, 'facs') } : {};

@@ -56,7 +56,8 @@ function cpNotebookWorld() {
         return cpLinkFrom(p, key);
     };
     const fe = latest('factions'), pe = latest('pantheon'), he = latest('history');
-    const links = { facs: fe ? own(fe, 'facs') : null, his: he ? own(he, 'his') : null };
+    // With no factions entry, the factions a saved history was built on (its facs= link).
+    const links = { facs: fe ? own(fe, 'facs') : he ? cpLinkFrom(nbQuery(he.href), 'facs') : null, his: he ? own(he, 'his') : null };
     links.gods = (fe && cpLinkFrom(nbQuery(fe.href), 'gods')) || (he && cpLinkFrom(nbQuery(he.href), 'gods')) || (pe ? own(pe, 'gods') : null);
     return links;
 }
@@ -75,6 +76,16 @@ function cpParams(withChapter = true) {
     if (cps.lock.length) p.lock = cps.lock.join(',');
     if (withChapter && cps.ch) p.ch = cps.ch + 1;
     CP_WORLD_KEYS.forEach(k => { if (cps.links[k]) Object.assign(p, cpLinkParams(cps.links[k], k)); });
+    return p;
+}
+
+// What Save to Notebook links to: the roll without the page's 🔒 marks, and without a part's seed
+// when it's the one the campaign's seed gives anyway (keeping a part changes nothing on its own).
+function cpSaveParams() {
+    const p = cpParams(false);
+    delete p.lock;
+    const set = CP_PARTS.filter(id => cps.set[id] && String(cps.set[id]) !== String(deriveSeed(cps.seed, id))).map(id => `${id}.${cps.set[id]}`);
+    if (set.length) p.set = set.join(','); else delete p.set;
     return p;
 }
 
@@ -268,9 +279,11 @@ function cpBookHtml(cp) {
     const all = [];
     cp.chapters.forEach(ch => osMonsters(ch.o).forEach(m => { if (!seen.has(m.id)) { seen.add(m.id); all.push(m); } }));
     all.sort((a, b) => crValue(b.cr) - crValue(a.cr) || a.name.localeCompare(b.name));
-    const book = cp.chapters.map(ch => `<div class="cp-book-ch">${cpGlueHtml(cp, ch, false)}${oneShotBodyHtml(ch.o, { appendix: false })}</div>`).join('');
+    // The foes' links point at this appendix (cp-sb-), not the chapter on screen, which print hides.
+    const book = cp.chapters.map(ch => `<div class="cp-book-ch">${cpGlueHtml(cp, ch, false)}${oneShotBodyHtml(ch.o, { appendix: false })}</div>`).join('')
+        .replace(/href="#os-sb-/g, 'href="#cp-sb-');
     // A Pathfinder creature's XP depends on the party's level, which changes from chapter to chapter.
-    return book + `<section class="os-act os-appendix">${osPlainHead('Appendix', 'Stat blocks')}${all.map(m => `<details class="os-sb" open>
+    return book + `<section class="os-act os-appendix">${osPlainHead('Appendix', 'Stat blocks')}${all.map(m => `<details class="os-sb" id="cp-sb-${esc(m.id)}" open>
             <summary>${esc(m.name)} <span class="os-dim">${esc(crLabel(m.cr))}${OS_PF2E ? '' : ` · ${m.xp.toLocaleString('en-US')} XP`}</span></summary>
             <div class="sb-box">${monsterBlockHtml(m)}</div></details>`).join('')}</section>`;
 }
@@ -310,7 +323,7 @@ function cpWorldEntry(W, tab) {
 // The campaign as a quest, each chapter as a quest of its own, and the world they stand on, all linked.
 function saveToNotebook() {
     const cp = cps.data, v = cp.villain;
-    const href = CP_PAGE + '?' + paramsQuery(cpParams(false));
+    const href = CP_PAGE + '?' + paramsQuery(cpSaveParams());
     // The scheme and the front are the DM's alone, as on the page: the 🔒 notes, never the players' ones.
     const dm = [`The scheme: ${osCap(v.name)} ${v.scheme}.`, `What everyone wants: ${cp.relic.text}.`,
         'The front:', ...cp.front.map((t, i) => `${i + 1}. ${t}`), `Secret: ${v.secret}`, `Their people call ${v.name} ${cp.alias}.`].join('\n');
@@ -327,7 +340,7 @@ function saveToNotebook() {
     cp.chapters.forEach(ch => {
         const o = ch.o;
         const r = nbAdd({ kind: 'quest', title: `${cp.title}, chapter ${ch.i + 1}: ${o.title}`, sub: `Level ${ch.level} · ${o.site.name}`,
-            href: CP_PAGE + '?' + paramsQuery({ ...cpParams(false), ch: ch.i + 1 }),
+            href: CP_PAGE + '?' + paramsQuery({ ...cpSaveParams(), ch: ch.i + 1 }),
             notes: [o.pitch, `In the campaign: ${ch.serves}`, ch.lead ? `The way on: ${ch.lead}` : ''].filter(Boolean).join('\n'),
             dm: `Twist: ${o.twist}\nPatron's secret: ${o.patron.secret}`, giver: o.patron.name, reward: formatCoins(o.reward), status: 'open' });
         tally(r);
@@ -368,6 +381,9 @@ document.addEventListener('DOMContentLoaded', () => {
     setUrlParams(cpParams(), false);
     render();
     loadMonsterBlocks().then(render, () => {});
+    // The 2014/2024 rules switched (another tab, or Back to a rules= address): roll again on the new
+    // data, so the page, the address, and what Save to Notebook files stay one campaign.
+    if (typeof srd52OnChange === 'function') srd52OnChange(() => cpChanged(false));
 
     partyChip(document.getElementById('cp-party-chip'), {
         label: 'Use the Party', title: "Set the first chapter's level and the party size to the Toolbox Party tab's",

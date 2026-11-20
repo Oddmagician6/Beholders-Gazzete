@@ -952,6 +952,12 @@ function siteFight(K, band, budget, diff, seed) {
         const again = rollThemedEncounter(budget, diff, { band });
         if (encounterXp(again.list) > encounterXp(r.list)) r = again;
     }
+    // A band too weak for this level (bandits at level 19) leaves the boss fight rating Low or under:
+    // the habitat's monsters get a try at it, and the stronger fight stays.
+    for (let t = 0; diff === 'high' && r.list.length && t < 3 && encounterXp(r.list) < budget.moderate; t++) {
+        const wild = rollThemedEncounter(budget, diff, { habitat: K.habitat, band: 'none' });
+        if (encounterXp(wild.list) > encounterXp(r.list)) r = wild;
+    }
     if (!r.list.length) r = rollThemedEncounter(budget, diff, { habitat: K.habitat, band: 'none' });
     if (!r.list.length) return null;
     const [seen, doing] = sitePick(siteDoingPool(K, r.list));

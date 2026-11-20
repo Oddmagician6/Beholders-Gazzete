@@ -33,13 +33,21 @@ function osFightHTML(o, f, label) {
     </div>`;
 }
 
-function osHoardHTML(l) {
+// The thing the job is about, where the party finds it (the hoard, or the boss has it).
+function osPrizeText(o) {
+    return `${osCap(o.item)}, what everyone wants, is here: with the hoard, or in ${o.villain.name}'s keeping.`;
+}
+
+// The hoard in the site's own container (as Copy writes it), not the loot roll's.
+function osHoardHTML(l, o) {
     const coins = Object.entries(l.coins).filter(([, v]) => v > 0).map(([t, v]) => `${v.toLocaleString('en-US')} ${t}`).join(' · ');
     const things = [...l.gems, ...l.art, ...(l.goods || [])].map(i => `<li><span>${esc(i.name)}</span><span class="os-dim">${formatCoins(i.value)}</span></li>`).join('');
     const magic = l.magic.map(m => `<li><span>${esc(m.name)}${m.attune || m.invested ? ` <span class="os-dim">(${m.invested ? 'invested' : 'attunement'})</span>` : ''}</span><span class="os-dim">${esc(m.rarity.replace('-', ' '))}</span></li>`).join('');
-    const find = lootFindLines(l).filter(([k]) => k !== 'Found in');
+    const box = o && o.site.hoard && o.site.hoard.container;
+    const find = [box ? ['Kept', siteCap(box) + '.'] : null, ...lootFindLines(l).filter(([k]) => k !== 'Found in' && !(box && k === 'Kept'))].filter(Boolean);
     return `<div class="os-hoard">
         <h4>💎 The hoard <span class="os-dim">(${formatCoins(l.totalValue)} in all)</span></h4>
+        ${o ? `<p><strong>What they came for:</strong> ${esc(osPrizeText(o))}</p>` : ''}
         ${find.length ? osDl(find) : ''}
         <p><strong>Coins:</strong> ${coins || 'none'}</p>
         ${things ? `<ul class="os-loot">${things}</ul>` : ''}
@@ -58,7 +66,7 @@ function osRoomHTML(o, i) {
         ${r.fight ? `<p class="os-foes"><strong>Foes:</strong> ${osMonsterList(r.fight)} <span class="os-dim">(${esc(osFightRating(o, r.fight))})</span></p>` : ''}
         ${osDl(lines)}
         ${r.fight ? `<p class="os-links"><a class="os-btn" href="${esc(osFightLink(o, r.fight, SITE_KINDS[s.kind].habitat))}">⚔️ Run this fight</a></p>` : ''}
-        ${last ? osHoardHTML(o.hoard) : ''}
+        ${last ? osHoardHTML(o.hoard, o) : ''}
     </section>`;
 }
 

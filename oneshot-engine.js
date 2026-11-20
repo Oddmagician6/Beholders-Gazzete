@@ -708,7 +708,10 @@ function rollOneShot(seed, opts = {}, set = {}) {
     if (gv && !named && gv.stand && lastFight) {
         // The strongest who still keeps the fight inside the top budget (high; Pathfinder: extreme),
         // else the weakest: the boss fight was already built to the budget before the villain joined.
-        const fits = gv.stand.map(id => MONSTER_BY_ID[id]).filter(m => m && crValue(m.cr) <= level).sort((a, b) => b.xp - a.xp);
+        // Someone the fight doesn't already have, so the named villain isn't one row among their own kind.
+        const have = new Set(lastFight.list.map(e => e.id));
+        const all = gv.stand.map(id => MONSTER_BY_ID[id]).filter(m => m && crValue(m.cr) <= level).sort((a, b) => b.xp - a.xp);
+        const fits = all.some(m => !have.has(m.id)) ? all.filter(m => !have.has(m.id)) : all;
         const room = budget[ENC_DIFFS[ENC_DIFFS.length - 1]] - encounterXp(siteFightList(lastFight));
         stood = fits.find(m => m.xp <= room) || fits[fits.length - 1] || null;
         if (stood) {
@@ -739,7 +742,8 @@ function rollOneShot(seed, opts = {}, set = {}) {
         // An article's role is written as a label ("Village midwife"); here it sits mid-sentence.
         role: given && given.npc && given.npc.role ? given.npc.role.replace(/^[A-Z](?=[a-z])/, c => c.toLowerCase()) : hook.role,
         race: given && given.npc && given.npc.race ? given.npc.race : '',
-        npc: hook.npc,
+        // A campaign's contact comes back as the same person: their own manner, not this roll's NPC's.
+        npc: given && given.npc && given.npc.trait ? { ...hook.npc, trait: given.npc.trait, voice: given.npc.voice || hook.npc.voice } : hook.npc,
         want: given && given.npc ? given.npc.want || '' : '',
         secret: given && given.npc && given.npc.secret ? given.npc.secret : hook.npc.secret
     };
@@ -756,7 +760,9 @@ function rollOneShot(seed, opts = {}, set = {}) {
         const days = osInt(3, 7);
         const noun = pick(OS_TONES[tone].nouns, 'noun.' + tone);
         const title = pick(OS_TITLES, 'title');
-        const threads = osSlotFirst(siteShuffle(OS_THREADS), OS_THREADS, 'thread', slot).slice(0, 2);
+        // A campaign's patron hires the party again later, so they can't vanish in a loose thread.
+        const threads = osSlotFirst(siteShuffle(OS_THREADS), OS_THREADS, 'thread', slot)
+            .filter(t => !(slot && /^A week later \{Patron\} is gone/.test(t))).slice(0, 2);
         return { item, short, goal, twist: villain.mind === 'folk' ? twistAll[0] : twistAny[0], clock, days, noun, title, threads };
     });
 
@@ -915,6 +921,7 @@ function oneShotText(o) {
         'ACT 1: THE HOOK',
         `${o.town}, at ${o.tavern.name} (${o.tavern.kind.label}).`,
         `Read aloud: ${o.opener}`,
+        tavernSceneText(o.tavern.scene),
         `Patron: ${o.patron.name}, ${o.patron.role}. ${o.patron.npc.trait}. Voice: ${o.patron.npc.voice}.`,
         `The job: ${o.job}`,
         `Why the party: ${o.why}`,
@@ -927,7 +934,9 @@ function oneShotText(o) {
         ...o.road.fights.map(f => `Fight, day ${f.day}: ${osFightText(f)} (${osFightRating(o, f)}). ${osCap(f.scene.doing)}.`), '',
         `ACT 3: ${s.name.toUpperCase()}`,
         `Read aloud: ${o.arrive}`,
-        siteText(s, { hoard: lootHoardText(o.hoard) }), '',
+        // The hoard as the page shows it: with its lock, trap, and story, and the thing the job is about.
+        siteText(s, { hoard: [lootHoardText(o.hoard), ...lootFindLines(o.hoard).filter(([k]) => !['Found in', 'Kept'].includes(k)).map(([k, v]) => `${k}: ${v}`)].join(' ') }),
+        typeof osPrizeText === 'function' ? osPrizeText(o) : '', '',
         `The boss. Read aloud: ${o.bossRead}`, '',
         'WRAP-UP',
         `If they win: ${o.win}`,

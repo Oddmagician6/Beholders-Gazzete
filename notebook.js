@@ -71,7 +71,7 @@ const NB_HREF = /^(?:(worldbuilder|npc-generator|toolbox|dnd-one-shot-generator|
 const NB_LIMITS = { entries: 500, title: 120, sub: 400, notes: 4000, name: 80, href: 2000, links: 60, flips: 400, flip: 300, edits: 200, edit: 2000, file: 15000000 };
 // The options that make two rolls with one seed different, per kind (its own URL keys).
 const NB_SIG_KEYS = {
-    pantheon: ['size', 'shape', 'naming', 'world'], factions: ['count', 'focus', 'scale', 'world'], continent: ['size', 'land', 'nations'],
+    pantheon: ['size', 'shape', 'naming', 'world'], factions: ['count', 'focus', 'scale', 'world'], history: ['ages', 'span', 'start'], continent: ['size', 'land', 'nations'],
     family: ['gens', 'size', 'race', 'root', 'rcat', 'rage', 'rworld', 'rtitle', 'house']
 };
 // URL keys that name another tab's roll: the seed key, and its option keys → that kind's keys.
