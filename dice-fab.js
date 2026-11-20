@@ -23,7 +23,13 @@ const DICE_FAB_KEY = 'gazette-dice-fab';
         try { return localStorage.getItem(DICE_FAB_KEY) !== 'off'; } catch (e) { return true; }
     }
 
+    // The full roller for this page's system (a Pathfinder page has its own).
+    function fullRoller() {
+        return document.documentElement.dataset.system === 'pf2e' ? 'pathfinder-dice-roller' : 'toolbox?tab=dice';
+    }
+
     function build() {
+        mode = 'normal';   // the buttons below start on Normal
         fab = document.createElement('button');
         fab.type = 'button';
         fab.className = 'dice-fab';
@@ -59,7 +65,7 @@ const DICE_FAB_KEY = 'gazette-dice-fab';
             <div class="dice-pop-result" aria-live="polite"></div>
             <ol class="dice-pop-recent"></ol>
             <div class="dice-pop-foot">
-                <a href="toolbox?tab=dice">Full roller &amp; history →</a>
+                <a href="${fullRoller()}">Full roller &amp; history →</a>
                 <button type="button" class="dice-pop-hide">Hide button</button>
             </div>`;
         document.body.append(fab, pop);
@@ -144,7 +150,7 @@ const DICE_FAB_KEY = 'gazette-dice-fab';
         // Ability-score sets (the Dice tab's six rolls) show here but reroll only there.
         pop.querySelector('.dice-pop-recent').innerHTML = loadDiceHistory().slice(0, 5).map(h => `
             <li><button type="button"${h.stats ? ' disabled' : ` data-f="${esc(h.f)}" data-mode="${esc(h.mode || 'normal')}" title="Roll ${esc(h.f)} again"`}>
-                <span>${esc(h.label || h.f)}${h.mode && h.mode !== 'normal' ? ` (${h.mode})` : ''}</span><b>${h.total}</b>
+                <span>${esc(h.label || h.f)}${h.mode && h.mode !== 'normal' ? ` (${esc(h.mode)})` : ''}</span><b>${h.total}</b>
             </button></li>`).join('');
     }
 
@@ -157,6 +163,17 @@ const DICE_FAB_KEY = 'gazette-dice-fab';
 
     function start() {
         if (fabOn()) build();
+        // Another tab rolled or hid/showed the button: follow it without writing the choice back.
+        window.addEventListener('storage', e => {
+            if (e.key === DICE_HISTORY_KEY) renderRecent();
+            if (e.key === DICE_FAB_KEY || e.key === null) {
+                const on = fabOn();
+                if (on && !fab) build();
+                if (!on) remove();
+                if (on && fab) renderRecent();
+                window.dispatchEvent(new Event('gazette-dice-fab'));
+            }
+        });
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
     else start();

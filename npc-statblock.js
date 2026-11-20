@@ -175,6 +175,21 @@ const SB_ATTACK_CANTRIPS = {
     'Vicious Mockery': ['wis', '60 ft.', '1d4', 'psychic', 'The target has disadvantage on its next attack roll before the end of its next turn.']
 };
 
+// The same cantrips under the 2024 rules (SRD 5.2), where they changed. Same keys, so the picks don't move.
+const SB_ATTACK_CANTRIPS_2024 = {
+    'Chill Touch': ['melee', '5 ft.', '1d10', 'necrotic', 'The target can\'t regain hit points until the end of the caster\'s next turn.'],
+    'Shocking Grasp': ['melee', '5 ft.', '1d8', 'lightning', 'The target can\'t make opportunity attacks until the start of its next turn.'],
+    'Produce Flame': ['ranged', '60 ft.', '1d8', 'fire', ''],
+    'Sacred Flame': ['dex', '60 ft.', '1d8', 'radiant', 'The target gains no benefit from half or three-quarters cover.'],
+    'Acid Splash': ['dex', '60 ft.', '1d6', 'acid', 'It bursts in a 5-foot-radius sphere: every creature in it makes the save.'],
+    'Poison Spray': ['ranged', '30 ft.', '1d12', 'poison', ''],
+    'Vicious Mockery': ['wis', '60 ft.', '1d6', 'psychic', 'The target has disadvantage on its next attack roll before the end of its next turn.']
+};
+function sbCantrip(name) {
+    const v24 = typeof rulesShown === 'string' && rulesShown === '2024';
+    return (v24 && SB_ATTACK_CANTRIPS_2024[name]) || SB_ATTACK_CANTRIPS[name];
+}
+
 // Spells NPCs like to have ready, by class and spell level. Anything else on the
 // class's SRD list can still turn up, less often.
 const SB_SPELL_PICKS = {
@@ -703,7 +718,7 @@ function rollStatBlock(npc, force = null) {
         const tier = level >= 17 ? 4 : level >= 11 ? 3 : level >= 5 ? 2 : 1;
         const cantrips = (spellcasting.lines[0] && spellcasting.lines[0].label.startsWith('Cantrips') ? spellcasting.lines[0].spells : []);
         cantrips.filter(c => SB_ATTACK_CANTRIPS[c]).slice(0, 2).forEach(c => {
-            const [kind, range, die, type, rider] = SB_ATTACK_CANTRIPS[c];
+            const [kind, range, die, type, rider] = sbCantrip(c);
             const invs = level >= 2 && cls === 'Warlock';
             if (c === 'Eldritch Blast') {
                 const agon = invs ? m.cha : 0;

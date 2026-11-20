@@ -144,7 +144,7 @@ const RULES_CARDS = [
                 ['Heavily obscured', 'Darkness, thick fog, dense foliage.'],
                 ['Darkvision', 'Within its range, dim light counts as bright and darkness as dim. No colors in darkness, only grays.'],
                 ['Blindsight', 'Perceives its surroundings within its range without needing sight.'],
-                ['Truesight', 'Within its range: sees through normal and magical darkness, sees invisible things, sees through illusions (and auto-saves against them), sees a shapechanger\'s true form, and sees into the Ethereal Plane.']
+                ['Truesight', 'Within its range: sees through normal and magical darkness, sees invisible things, sees through visual illusions (and auto-saves against them), sees the true form of a shapechanger or anything changed by magic, and sees into the Ethereal Plane.']
             ] },
             { table: { head: ['Light source', 'Bright', 'Dim (beyond)', 'Lasts'], rows: [
                 ['Candle', '5 ft', '+5 ft', '1 hour'],

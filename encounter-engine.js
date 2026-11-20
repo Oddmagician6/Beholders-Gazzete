@@ -150,6 +150,18 @@ function encounterXp(list) {
     return list.reduce((t, e) => t + e.m.xp * e.count, 0);
 }
 
+// Four SRD 5.1 rows came from 5e-bits at half their XP (Dretch, Riding Horse, Deep Gnome, Brass Dragon
+// Wyrmling). Their stat blocks and totals show the right XP now, but rolls still weigh them at the old
+// numbers, so a seeded 2014 link keeps its monsters. Only those 2014 rows (SRD 5.2's Riding Horse was
+// always 50; Pathfinder has a riding-horse too).
+const ENC_PICK_XP = { 'dretch': 25, 'riding-horse': 25, 'deep-gnome-svirfneblin': 50, 'brass-dragon-wyrmling': 100 };
+function encPickXp(m) {
+    return (!ENC_PF2E && !m.v52 && !m.hb && ENC_PICK_XP[m.id]) || m.xp;
+}
+function encounterPickXp(list) {
+    return list.reduce((t, e) => t + encPickXp(e.m) * e.count, 0);
+}
+
 function rateEncounter(xp, budget) {
     if (!xp || !budget.chars) return null;
     return ENC_DIFFS.find(k => xp <= budget[k]) || 'over';
@@ -219,7 +231,7 @@ function rollEncounter(budget, diff, type = '') {
     diff = encDiffKey(diff);
     const target = budget[diff];
     const maxCr = encMaxCr(budget);
-    const pool = ENC_MONSTERS.filter(m => m.xp > 0 && m.xp <= target && crValue(m.cr) <= maxCr && (!type || encSceneType(m) === type));
+    const pool = ENC_MONSTERS.filter(m => m.xp > 0 && encPickXp(m) <= target && crValue(m.cr) <= maxCr && (!type || encSceneType(m) === type));
     if (!pool.length) return [];
     return fillEncounter(pool, budget, diff);
 }
@@ -237,30 +249,30 @@ function fillEncounter(pool, budget, diff, leadPool = null) {
         const top = budget.chars <= 2 || rand() < 0.2 ? 1 : 0.7;
         const themed = !!(leadPool && leadPool.length);
         const base = themed ? leadPool : pool;
-        const leads = base.filter(m => m.xp >= target * 0.15 && m.xp <= target * top);
+        const leads = base.filter(m => encPickXp(m) >= target * 0.15 && encPickXp(m) <= target * top);
         const lead = pick(leads.length ? leads : base);
         // A group's leader brings followers rather than copies of itself, when it has any.
-        const kinds = themed && rolledKinds === 1 && pool.some(m => m.xp < lead.xp) ? 2 : rolledKinds;
+        const kinds = themed && rolledKinds === 1 && pool.some(m => encPickXp(m) < encPickXp(lead)) ? 2 : rolledKinds;
         const list = [{ m: lead, count: 1 }];
-        let spent = lead.xp, count = 1;
-        const room = () => Math.min(cap - count, Math.floor((target - spent) / lead.xp));
+        let spent = encPickXp(lead), count = 1;
+        const room = () => Math.min(cap - count, Math.floor((target - spent) / encPickXp(lead)));
         // A lone kind fills the budget with more of the same; a lead may bring a twin.
         const more = kinds === 1 ? room() : rand() < 0.3 ? Math.min(1, room()) : 0;
-        if (more > 0) { list[0].count += more; spent += lead.xp * more; count += more; }
+        if (more > 0) { list[0].count += more; spent += encPickXp(lead) * more; count += more; }
         for (let k = 1; k < kinds && count < cap; k++) {
             const left = target - spent;
-            const support = pool.filter(m => m.xp < lead.xp && m.xp <= left && !list.some(e => e.m === m));
+            const support = pool.filter(m => encPickXp(m) < encPickXp(lead) && encPickXp(m) <= left && !list.some(e => e.m === m));
             if (!support.length) break;
             const m = pick(support);
-            const most = Math.min(cap - count, Math.floor(left / m.xp));
+            const most = Math.min(cap - count, Math.floor(left / encPickXp(m)));
             const n = Math.max(1, Math.ceil(most * (0.5 + rand() * 0.5)));
             list.push({ m, count: n });
-            spent += m.xp * n; count += n;
+            spent += encPickXp(m) * n; count += n;
         }
         // A group short of its budget sends more of its last followers.
         const last = list[list.length - 1];
-        const extra = themed && spent < target * 0.8 ? Math.min(cap - count, Math.floor((target - spent) / last.m.xp)) : 0;
-        if (extra > 0) { last.count += extra; spent += last.m.xp * extra; count += extra; }
+        const extra = themed && spent < target * 0.8 ? Math.min(cap - count, Math.floor((target - spent) / encPickXp(last.m))) : 0;
+        if (extra > 0) { last.count += extra; spent += encPickXp(last.m) * extra; count += extra; }
         if (spent > bestXp) { best = list; bestXp = spent; }
     }
     return best;
@@ -889,7 +901,7 @@ function encLeadsBand(b, id) {
 // beats one it only follows in (the wolf pack, not the goblins' wolves).
 function encInferBand(list) {
     if (!list.length) return null;
-    const lead = list.reduce((a, b) => (b.m.xp > a.m.xp ? b : a)).m;
+    const lead = list.reduce((a, b) => (encPickXp(b.m) > encPickXp(a.m) ? b : a)).m;
     const follows = ["humanoid", "undead"].includes(encSceneType(lead));
     let best = null, bestN = 0;
     ENC_BANDS.forEach(b => {
@@ -913,7 +925,7 @@ function rollThemedEncounter(budget, diff, opts = {}) {
     const band = opts.band || "";
     const target = budget[diff];
     const maxCr = encMaxCr(budget);
-    const fits = m => m && m.xp > 0 && m.xp <= target && crValue(m.cr) <= maxCr && (!type || m.type === type);
+    const fits = m => m && m.xp > 0 && encPickXp(m) <= target && crValue(m.cr) <= maxCr && (!type || m.type === type);
     const floor = encFloor(budget, diff);
     const inHab = m => !habitat || (ENC_MONSTER_HABITATS[m.id] || []).includes(habitat);
     // The whole group keeps to one habitat (the one picked, or one of theirs) when it can,
@@ -928,7 +940,7 @@ function rollThemedEncounter(budget, diff, opts = {}) {
         if (!home && strict) return [];
         const pool = home ? local : all;
         // A random group needs one of its leaders in the fight (no necromancer-less zombies).
-        if (randomBand && !pool.some(m => b.leads.includes(m.id) && m.xp >= budget[diff] * 0.15)) return [];
+        if (randomBand && !pool.some(m => b.leads.includes(m.id) && encPickXp(m) >= budget[diff] * 0.15)) return [];
         return fillEncounter(pool, budget, diff, pool.filter(m => b.leads.includes(m.id)));
     };
     if (band && band !== "none") {
@@ -937,13 +949,13 @@ function rollThemedEncounter(budget, diff, opts = {}) {
         return { list: b ? tryBand(b, !!habitat) : [], band: b ? b.key : null };
     }
     if (band !== "none" && rand() < 0.85) {
-        const canLead = m => fits(m) && m.xp >= target * 0.15 && inHab(m);
+        const canLead = m => fits(m) && encPickXp(m) >= target * 0.15 && inHab(m);
         const bands = ENC_BANDS.filter(b => (!habitat || b.habs.includes(habitat)) && b.leads.some(id => canLead(MONSTER_BY_ID[id])));
         let best = null, bestXp = 0;
         for (let t = 0; t < 8 && bands.length; t++) {
             const b = bands.splice(Math.floor(rand() * bands.length), 1)[0];
             const list = tryBand(b, !!habitat, true);
-            const xp = encounterXp(list);
+            const xp = encounterPickXp(list);
             if (xp > bestXp) { best = { list, band: b.key }; bestXp = xp; }
             if (xp > floor) break;
         }
@@ -968,7 +980,7 @@ function rollEncounterScene(list, seed, opts = {}) {
     if (!list.length) return null;
     const part = (label, fn) => withSeed(deriveSeed(seed, label), fn);
     const band = Object.hasOwn(ENC_BAND_BY_KEY, opts.band) && encBandFits(ENC_BAND_BY_KEY[opts.band], list) ? ENC_BAND_BY_KEY[opts.band] : encInferBand(list);
-    const leadEntry = list.reduce((a, b) => (b.m.xp > a.m.xp ? b : a));
+    const leadEntry = list.reduce((a, b) => (encPickXp(b.m) > encPickXp(a.m) ? b : a));
     const lead = leadEntry.m;
     const level = Math.min(20, Math.max(1, Math.round(opts.level || 1)));
     const typeScene = ENC_TYPE_SCENE[encSceneType(lead)] || ENC_TYPE_SCENE.humanoid;
@@ -1028,7 +1040,7 @@ function rollEncounterScene(list, seed, opts = {}) {
     // The leader: the strongest of the group's leader roles that's here (a vampire, not its bats).
     const rolledLeader = part("leader", () => {
         const heads = band ? list.filter(e => band.leads.includes(e.m.id)) : [];
-        const boss = (heads.length ? heads : list).reduce((a, b) => (b.m.xp > a.m.xp ? b : a));
+        const boss = (heads.length ? heads : list).reduce((a, b) => (encPickXp(b.m) > encPickXp(a.m) ? b : a));
         const lead = boss.m;
         const type = encSceneType(lead);
         const fallback = { humanoid: "folk", dragon: "dragon", fiend: "fiend", celestial: "celestial", beast: "beast", swarm: "beast" }[type] || null;

@@ -280,7 +280,7 @@ const PF2E_CHOICES = {
   "precision": {"n":"Precision","c":"ranger","t":"ranger-hunters-edge","b":"PC"},
   "rascal": {"n":"Rascal","c":"swashbuckler","t":"swashbuckler-style","sk":["thievery"],"ft":["Dirty Trick"],"b":"PC2"},
   "redemption": {"n":"Redemption","c":"champion","t":"champion-cause","sa":"holy","b":"PC2"},
-  "ruffian": {"n":"Ruffian","c":"rogue","t":"rogue-racket","sk":["intimidation"],"key":"str","st":{"13":{"medium":2},"19":{"medium":3}},"b":"PC"},
+  "ruffian": {"n":"Ruffian","c":"rogue","t":"rogue-racket","sk":["intimidation"],"key":"str","st":{"1":{"medium":1},"13":{"medium":2},"19":{"medium":3}},"b":"PC"},
   "school-of-ars-grammatica": {"n":"School of Ars Grammatica","c":"wizard","t":"wizard-arcane-school","b":"PC"},
   "school-of-battle-magic": {"n":"School of Battle Magic","c":"wizard","t":"wizard-arcane-school","b":"PC"},
   "school-of-civic-wizardry": {"n":"School of Civic Wizardry","c":"wizard","t":"wizard-arcane-school","b":"PC"},

@@ -8,17 +8,18 @@
 // Cache keys drop the query string (?seed=, ?t=, ?id= ...): pages rebuild their state from the URL.
 // Links use clean addresses (about, a/<id>); keyFor maps each one to its file's key (about.html).
 
-const VERSION = 'c89d5c2d1c64';
+const VERSION = '92a356b2554e';
 const STATIC = 'gazette-static-' + VERSION;
 const PAGES = 'gazette-pages';
 const FONTS = 'gazette-fonts';
 
 const PRECACHE = [
   // Tool pages
-  'npc-generator.html', 'loot-generator.html', 'rumors.html', 'spellbook.html',
+  'npc-generator.html', 'loot-generator.html', 'rumors.html', 'spellbook.html', 'pathfinder-market-exchange.html',
   'economy.html', 'shop.html', 'session-kit.html', 'dnd-one-shot-generator.html', 'dnd-campaign-generator.html', 'toolbox.html', 'worldbuilder.html', 'rules.html', 'bestiary.html', 'monster-maker.html', 'handouts.html', 'privacy.html', 'player-view.html', 'battlemap-view.html', 'dm-screen.html', 'screen-view.html', 'character-builder.html', 'dnd-point-buy-calculator.html', 'dnd-backstory-generator.html', 'dnd-multiclass-calculator.html', 'dnd-spell-planner.html', 'dnd-character-cards.html', 'dnd-attack-calculator.html', 'dnd-player-journal.html', 'dnd-character-sheet.html', 'dnd-battlemap-builder.html', 'fantasy-world-map-maker.html', 'edition.html', 'pathfinder.html', 'pathfinder-license.html', 'pathfinder-tavern-name-generator.html', 'pathfinder-calendar-generator.html', 'pathfinder-npc-generator.html', 'pathfinder-player-view.html', 'pathfinder-gm-screen.html', 'pathfinder-screen-view.html', 'pathfinder-attack-calculator.html', 'pathfinder-character-builder.html', 'pathfinder-boost-calculator.html', 'pathfinder-spell-planner.html', 'pathfinder-play-sheet.html', 'pathfinder-archetype-helper.html', 'pathfinder-character-cards.html', 'pathfinder-player-journal.html', 'pathfinder-backstory-generator.html',
   // Styles and scripts
   'style.css', 'homepage.css', 'economy-page.css', 'handouts.css', 'cards.css', 'sw-register.js',
+  'srd52-full-data.js', 'pf2e-items-data.js', 'market-pf2e.js',
   'rules-system.js', 'rules-pf2e.js', 'rules-data-pf2e.js', 'pf2e-creatures-data.js', 'pf2e-character-data.js', 'pf2e-character.js', 'pathfinder-builder.js', 'pathfinder-boosts.js', 'pathfinder-spells.js', 'pathfinder-archetypes.js', 'pathfinder-cards.js', 'backstory-pf2e.js', 'pf2e-play.js', 'pathfinder-sheet.js', 'pf2e-hazards-data.js', 'rng.js', 'tab-pages.js', 'npc-data.js', 'npc-statblock.js', 'npc-statblock-pf2e.js', 'spell-detail.js', 'npc-generator.js', 'loot-data.js', 'loot-engine.js', 'loot-generator.js', 'magic-items-data.js',
   'coins.js', 'market-data.js', 'economy-full.js', 'names-data.js', 'shop-engine.js', 'shop.js', 'handout-engine.js', 'handouts.js',
   'town-crier.js', 'rumor-deck.js', 'rumors.js', 'session-kit.js', 'oneshot-engine.js', 'oneshot-view.js', 'oneshot.js', 'campaign-engine.js', 'campaign.js', 'travel-engine.js', 'dice-engine.js', 'dice-fab.js', 'toolbox.js', 'toolbox-table.js', 'monsters-data.js', 'monster-statblocks.js', 'toolbox-statblock.js', 'encounter-engine.js', 'toolbox-encounter.js', 'tavern-engine.js', 'toolbox-tavern.js', 'downtime-engine.js', 'toolbox-downtime.js', 'quest-engine.js', 'toolbox-quest.js', 'toolbox-clocks.js', 'party.js', 'toolbox-party.js', 'table-engine.js', 'toolbox-tables.js', 'init-view.js', 'player-view.js', 'dm-screen-data.js', 'dm-screen.js', 'screen-view.js', 'rules-data.js', 'rules.js', 'bestiary.js', 'homebrew.js', 'homebrew-magic.js', 'book-monsters.js', 'srd52-data.js', 'srd52.js', 'realms.js', 'monster-maker.js', 'calendar-engine.js', 'pantheon-engine.js', 'worldbuilder.js', 'world-calendar.js', 'world-pantheon.js', 'faction-engine.js', 'world-factions.js', 'history-engine.js', 'world-history.js', 'town-engine.js', 'world-town.js', 'family-tree.js', 'family-engine.js', 'world-family.js', 'site-engine.js', 'world-sites.js', 'continent-engine.js', 'world-pins.js', 'world-continent.js', 'world-maps.js', 'map-export.js', 'map-pins.js', 'map-store.js', 'battlemap-engine.js', 'battlemap-play.js', 'battlemap-table.js', 'battlemap.js', 'battlemap-view.js', 'battlemap.css', 'worldmap-engine.js', 'worldmap.js', 'notebook.js', 'docx.js', 'notebook-sheets.js', 'world-notebook.js', 'web-graph.js', 'world-web.js', 'backup.js', 'spells-data.js', 'character-data.js', 'character-data-2024.js', 'character-engine.js', 'point-buy.js', 'backstory.js', 'multiclass.js', 'spell-summaries.js', 'cards.js', 'spell-planner.js', 'character-cards.js', 'attack-math.js', 'player-journal.js', 'character-builder.js', 'character-play.js', 'character-sheet.js', 'classifieds.js', 'script.js', 'daily.js', 'edition.js', 'raven-form.js', 'nav.js',
@@ -77,6 +78,10 @@ self.addEventListener('activate', event => {
     for (const name of await caches.keys()) {
       if (name.startsWith('gazette-') && !keep.includes(name)) await caches.delete(name);
     }
+    // A tool tab's own page saved under the old version would run its old markup with the new scripts:
+    // drop those copies, so offline the new hub serves the tab until the page is seen online again.
+    const pages = await caches.open(PAGES);
+    await Promise.all(Object.keys(TAB_HUBS).map(p => pages.delete(BASE + p)));
     await self.clients.claim();
   })());
 });
@@ -110,6 +115,8 @@ async function networkFirst(req, key) {
     const res = await fetchWithTimeout(req, 6000);
     // Map art the Worldbuilder saved stays in ART, so that copy is the one kept fresh.
     if (res.ok) (await caches.open(ART_URLS.has(key) ? ART : PAGES)).put(key, res.clone());
+    // A server error (502, 503 …) is no better than being offline: the saved copy, when there is one.
+    if (res.status >= 500) { const hit = await caches.match(key); if (hit) return hit; }
     return res;
   } catch (err) {
     const hit = await caches.match(key);

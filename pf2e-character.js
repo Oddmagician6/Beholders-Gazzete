@@ -365,6 +365,8 @@ function pcProfs(c, level = c.level) {
     });
     // Monk Expertise (9) and Graceful Legend (17) raise a monk's qi spells to expert, then master.
     if (c.cls === 'monk' && r.spell) r.spell = Math.max(r.spell, level >= 17 ? 3 : level >= 9 ? 2 : 1);
+    // A ranger with warden spells: expert spell attacks and DCs at 9th, master at 17th.
+    if (c.cls === 'ranger' && r.spell) { const fo = pcFocusOnly(c); if (fo && fo.from === 'ranger') r.spell = Math.max(r.spell, level >= 17 ? 3 : level >= 9 ? 2 : 1); }
     // Multiclass dedications: martial weapons, armor, and the spell attack and DC (one rank for all your spells).
     pcDedications(c, level).forEach(d => {
         const m = PC_MC[d.cls];
@@ -527,6 +529,11 @@ function pcGrantedFeats(c) {
     if (bg) (bg.ft || []).forEach(n => grant(n, bg.n));
     [ch, ch2].forEach(x => { if (x) (x.ft || []).forEach(n => grant(n, x.n)); });
     if (c.ch === 'warpriest') grant('Shield Block', 'Warpriest');
+    // The doctrines' other feats: a cloistered cleric's Domain Initiate, and a warpriest's Deadly Simplicity
+    // when the deity's favored weapon is simple or unarmed.
+    if (c.ch === 'cloistered-cleric') grant('Domain Initiate', 'Cloistered Cleric');
+    const fav = c.deity && c.deity.weapon && PF2E_ITEMS[c.deity.weapon];
+    if (c.ch === 'warpriest' && fav && ['simple', 'unarmed'].includes(fav.ct)) grant('Deadly Simplicity', 'Warpriest');
     // Class features that are feats by name (a fighter's Shield Block and Reactive Strike).
     const { cls } = pcParts(c);
     if (cls) pcFeatures(c).forEach(f => { if (pcFeatKey(f.name) && !out.some(g => g.name === f.name)) grant(f.name, cls.n); });
@@ -866,6 +873,9 @@ function pcSpeed(c) {
         const strong = Number.isFinite(a.st) && pcAttrs(c).mods.str >= a.st;
         sp += strong ? Math.min(0, a.sp + 5) : a.sp;
     }
+    // A shield's Speed penalty (a tower shield's −5 feet) applies while it's equipped; Strength doesn't lift it.
+    const sh = c.gear.shield && PF2E_ITEMS[c.gear.shield];
+    if (sh && sh.sp) sp += sh.sp;
     // A monk's Incredible Movement, unarmored: +10 feet at 3rd level, 5 more every 4 levels after.
     if (c.cls === 'monk' && !a && c.level >= 3) sp += 10 + 5 * Math.floor((c.level - 3) / 4);
     return sp;
@@ -883,6 +893,9 @@ function pcWeaponRank(c, w, prof) {
     const cat = w.ct === 'unarmed' ? 'unarmed' : w.ct;
     let rank = prof[cat] || 0;
     if (c.deity.weapon && c.deity.weapon === w.key) rank = Math.max(rank, pcFavoredRank(c));
+    // An alchemist is trained in alchemical bombs, expert at 7th, master at 15th: the same steps as simple weapons.
+    const { cls } = pcParts(c);
+    if (cls && cls.atko && /bomb/i.test(cls.atko[0]) && w.g === 'bomb' && (w.tr || []).includes('alchemical')) rank = Math.max(rank, prof.simple || 0);
     return rank;
 }
 
@@ -911,7 +924,10 @@ function pcStrikes(c) {
         else if (tr.some(t => /^thrown/.test(t)) && !tr.includes('splash')) bonus = mods.str;   // a splash weapon adds none
         else if (tr.includes('propulsive')) bonus = mods.str > 0 ? Math.floor(mods.str / 2) : mods.str;
         bonus += pcSpecDamage(c, rank);
-        const dmg = dice ? `${dice}${bonus ? (bonus > 0 ? ' + ' : ' − ') + Math.abs(bonus) : ''} ${m[3] || ''}`.trim() : '';
+        // Flat damage with no dice (a blowgun's 1 P, an acid flask's 1 acid): the bonus adds to it, at least 1.
+        const flat = !m && /^(\d+)\s+(\w+)/.exec(w.dm || '');
+        const dmg = dice ? `${dice}${bonus ? (bonus > 0 ? ' + ' : ' − ') + Math.abs(bonus) : ''} ${m[3] || ''}`.trim()
+            : flat ? `${Math.max(1, Number(flat[1]) + bonus)} ${flat[2]}` : '';
         return { key: w.key, name: w.n + (w.pot ? ` +${w.pot}` : '') + (w.str ? ` (${['', 'striking', 'greater striking', 'major striking'][w.str]})` : ''),
             atk, dmg, traits: tr, rank, ranged, range: w.rg || 0 };
     });

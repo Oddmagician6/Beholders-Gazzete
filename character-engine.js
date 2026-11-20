@@ -931,6 +931,7 @@ function cbClassChoices24(c) {
             if (req.inv && !cbHasInv(c, req.inv)) return;
             if (req.cantrip === 'damage' && !CB24_WARLOCK_DAMAGE.some(n => cantrips.includes(n))) return;
             if (req.cantrip === 'attack' && !CB24_WARLOCK_ATTACK.some(n => cantrips.includes(n))) return;
+            if (req.cantrip === 'range' && !CB24_WARLOCK_RANGED.some(n => cantrips.includes(n))) return;
             opts[id] = v;
         });
         out.push({ key: 'invocations', label: 'Eldritch Invocations', n: CB24_INVOCATIONS_KNOWN[L - 1], options: opts });

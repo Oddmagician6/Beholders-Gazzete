@@ -928,7 +928,7 @@ function siteSwap(cur, old, more) {
 // else whichever came closest. Null = no group (a mix of the habitat's monsters).
 // prefer: groups to try before the kind's own (the campaign generator's villains), any kind.
 function siteChooseBand(K, budget, prefer) {
-    const xpOf = opts => encounterXp(rollThemedEncounter(budget, 'high', opts).list);
+    const xpOf = opts => encounterPickXp(rollThemedEncounter(budget, 'high', opts).list);
     if (prefer && prefer.length) {
         const own = siteShuffle(prefer.filter(k => ENC_BAND_BY_KEY[k])).find(k => xpOf({ band: k }) > budget.moderate);
         if (own) return own;
@@ -938,7 +938,7 @@ function siteChooseBand(K, budget, prefer) {
     if (good) return good[0];
     for (let t = 0; t < 4; t++) {
         const r = rollThemedEncounter(budget, 'high', { habitat: K.habitat });
-        if (r.band && encounterXp(r.list) > budget.moderate) return r.band;
+        if (r.band && encounterPickXp(r.list) > budget.moderate) return r.band;
     }
     const best = tries.reduce((a, b) => (b[1] > a[1] ? b : a), [null, 0]);
     return best[0];
@@ -948,15 +948,15 @@ function siteChooseBand(K, budget, prefer) {
 function siteFight(K, band, budget, diff, seed) {
     let r = band ? rollThemedEncounter(budget, diff, { band }) : { list: [], band: null };
     // The boss gets a few tries at a fight that rates as High.
-    for (let t = 0; diff === 'high' && band && t < 3 && encounterXp(r.list) <= budget.moderate; t++) {
+    for (let t = 0; diff === 'high' && band && t < 3 && encounterPickXp(r.list) <= budget.moderate; t++) {
         const again = rollThemedEncounter(budget, diff, { band });
-        if (encounterXp(again.list) > encounterXp(r.list)) r = again;
+        if (encounterPickXp(again.list) > encounterPickXp(r.list)) r = again;
     }
     // A band too weak for this level (bandits at level 19) leaves the boss fight rating Low or under:
     // the habitat's monsters get a try at it, and the stronger fight stays.
-    for (let t = 0; diff === 'high' && r.list.length && t < 3 && encounterXp(r.list) < budget.moderate; t++) {
+    for (let t = 0; diff === 'high' && r.list.length && t < 3 && encounterPickXp(r.list) < budget.moderate; t++) {
         const wild = rollThemedEncounter(budget, diff, { habitat: K.habitat, band: 'none' });
-        if (encounterXp(wild.list) > encounterXp(r.list)) r = wild;
+        if (encounterPickXp(wild.list) > encounterPickXp(r.list)) r = wild;
     }
     if (!r.list.length) r = rollThemedEncounter(budget, diff, { habitat: K.habitat, band: 'none' });
     if (!r.list.length) return null;
@@ -966,7 +966,7 @@ function siteFight(K, band, budget, diff, seed) {
 
 // What foes like these might be doing: by the mind of the strongest of them ([{ m, count }]).
 function siteDoingPool(K, list) {
-    const lead = list.reduce((a, b) => (b.m.xp > a.m.xp ? b : a)).m;
+    const lead = list.reduce((a, b) => (encPickXp(b.m) > encPickXp(a.m) ? b : a)).m;
     const mind = SITE_MINDS[encSceneType(lead)] || 'beast';
     return SITE_DOING[mind].concat((K.doing && K.doing[mind]) || []);
 }

@@ -12,7 +12,8 @@ function renderScreenView() {
     svQueued = false;
     const L = dsCurrent(dsLoad());
     const ctx = dsContext();
-    const html = L.cards.filter(c => c.show).map(c => dsPlayerCardHtml(c, ctx)).filter(Boolean);
+    // One card that can't draw (bad saved data) is left out; the rest still show and later changes still redraw.
+    const html = L.cards.filter(c => c.show).map(c => { try { return dsPlayerCardHtml(c, ctx); } catch (e) { return ''; } }).filter(Boolean);
     document.getElementById('sv-board').innerHTML = html.join('');
     document.getElementById('sv-empty').hidden = html.length > 0;
 }

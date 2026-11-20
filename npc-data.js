@@ -900,7 +900,7 @@ const NPC_ATTIRE_MORE = {
         magic: ["robe stitched with silver runes", "patched academy gown", "smock full of burn holes", "high-collared mage's coat"],
         criminal: ["dark hood and rag-wrapped boots", "stolen livery", "smuggler's oilcloak", "borrowed priest's robe"],
         noble: ["slashed velvet doublet", "flowing gown with a train", "fencing jacket", "mantle with the family crest"],
-        religious: ["sackcloth robe", "white surplice", "travel-stained cassock", "robe with a stole of office"],
+        religious: ["sackcloth robe", "surplice", "travel-stained cassock", "robe with a stole of office"],
         adventurer: ["leather armor patched with drake hide", "mismatched mail and plate", "weathered cloak over a brigandine", "monk's wrapped traveling clothes"]
     }
 };

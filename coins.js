@@ -16,10 +16,15 @@ function formatCoins(gp, exact = false) {
 // Copper per coin (SRD 5.1: 1 pp = 10 gp = 20 ep = 100 sp = 1,000 cp).
 const COIN_CP = { cp: 1, sp: 10, ep: 50, gp: 100, pp: 1000 };
 
+// gp → whole copper, rounding half up as written: 1.005 gp is 101 cp (1.005 * 100 is 100.49999… in floating point).
+function gpToCp(gp) {
+  return Math.round(Number(((Number(gp) || 0) * 100).toPrecision(12)));
+}
+
 // { cp, sp, ep, gp, pp } (any missing) plus extra treasure in gp → total copper.
 function coinsToCp(coins, extraGp = 0) {
   const fromCoins = Object.entries(COIN_CP).reduce((t, [k, v]) => t + (Math.max(0, Math.floor(coins[k] || 0)) * v), 0);
-  return fromCoins + Math.max(0, Math.round((extraGp || 0) * 100));
+  return fromCoins + Math.max(0, gpToCp(extraGp));
 }
 
 // Equal shares in copper; the leftover is always fewer coppers than the party size.
@@ -40,7 +45,7 @@ function partySize(value) {
 function splitLink(coins, extraGp, ways) {
   const q = new URLSearchParams({ tab: 'split' });
   Object.keys(COIN_CP).forEach(k => { if (coins[k] > 0) q.set(k, Math.floor(coins[k])); });
-  if (extraGp > 0) q.set('other', Math.round(extraGp * 100) / 100);
+  if (extraGp > 0) q.set('other', gpToCp(extraGp) / 100);
   // Always written when given: without n= the splitter takes the saved party's size, not this one.
   if (ways) q.set('n', partySize(ways));
   const moved = typeof TAB_PAGES !== 'undefined' && TAB_PAGES && TAB_PAGES.moves && TAB_PAGES.moves['toolbox?tab=split'];

@@ -26,16 +26,32 @@ function initHealth(c) {
     return c.hp <= c.max / 2 ? 'bloodied' : 'healthy';
 }
 
-// A character at 0 HP who isn't dying any more: 5e three death-save successes, Pathfinder no dying value.
-function initStable(c) {
-    if (c.pc !== true || initHealth(c) !== 'down') return false;
-    if (INIT_VIEW_PF2E) return !(Array.isArray(c.conds) && c.conds.some(x => typeof x === 'string' && /^Dying\b/.test(x)));
-    return Array.isArray(c.ds) && Number(c.ds[0]) >= 3;
-}
-
 // A number from saved data, or null (an object whose toString was overwritten would make Number() throw).
 function initNum(v) {
     return typeof v === 'number' || typeof v === 'string' ? Number(v) : null;
+}
+
+// A condition's value from the saved list ("Dying 2" → 2, "Doomed" → 1); 0 when it isn't there.
+function initCondValue(c, name) {
+    const s = Array.isArray(c.conds) ? c.conds.find(x => typeof x === 'string' && new RegExp(`^${name}\\b`).test(x)) : null;
+    if (!s) return 0;
+    const m = /(\d+)/.exec(s);
+    return m ? Number(m[1]) : 1;
+}
+
+// A character the tracker counts as dead (toolbox-table.js): 5e three failed death saves, Pathfinder
+// dying at 4 less the doomed value.
+function initDead(c) {
+    if (c.pc !== true || initHealth(c) !== 'down') return false;
+    if (INIT_VIEW_PF2E) { const d = initCondValue(c, 'Dying'); return d > 0 && d >= Math.max(1, 4 - initCondValue(c, 'Doomed')); }
+    return Array.isArray(c.ds) && initNum(c.ds[1]) >= 3;
+}
+
+// A character at 0 HP who isn't dying any more: 5e three death-save successes, Pathfinder no dying value.
+function initStable(c) {
+    if (c.pc !== true || initHealth(c) !== 'down' || initDead(c)) return false;
+    if (INIT_VIEW_PF2E) return !initCondValue(c, 'Dying');
+    return Array.isArray(c.ds) && initNum(c.ds[0]) >= 3;
 }
 
 // A, B … Z, AA, AB …
@@ -68,6 +84,7 @@ function initPlayerView(fight) {
             pc: c.pc === true,
             health: initHealth(c),
             stable: initStable(c),
+            dead: initDead(c),
             conds: [...(Array.isArray(c.conds) ? c.conds.filter(x => typeof x === 'string') : []),
                 ...(Array.isArray(c.pd) ? c.pd.filter(p => p && typeof p.type === 'string').map(p => `Persistent ${p.type}`) : [])].map(x => x.slice(0, 24)).slice(0, 15),
             now: c.id === turn
@@ -90,6 +107,7 @@ function initCleanView(v) {
             key: initNum(c.key) || 0, name: c.name.slice(0, 40), hidden: c.hidden === true, pc: c.pc === true,
             health: ['healthy', 'bloodied', 'down'].includes(c.health) ? c.health : null,
             stable: c.stable === true,
+            dead: c.dead === true,
             conds: Array.isArray(c.conds) ? c.conds.filter(x => typeof x === 'string').map(x => x.slice(0, 24)).slice(0, 15) : [],
             now: c.now === true
         }))
@@ -101,7 +119,7 @@ const INIT_HEALTH_WORDS = { healthy: '💚 Healthy', bloodied: INIT_VIEW_PF2E ? 
 // The turn order as a list for the player view (and the DM screen's mini initiative card).
 function initViewListHtml(view) {
     return view.list.map(c => {
-        const word = c.health === 'down' && c.pc ? (c.stable ? '🩹 Down: stable' : INIT_VIEW_PF2E ? '🩸 Down: dying' : '🩸 Down: death saves') : INIT_HEALTH_WORDS[c.health];
+        const word = c.health === 'down' && c.pc ? (c.dead ? '💀 Dead' : c.stable ? '🩹 Down: stable' : INIT_VIEW_PF2E ? '🩸 Down: dying' : '🩸 Down: death saves') : INIT_HEALTH_WORDS[c.health];
         return `<li class="pv-row${c.now ? ' pv-now' : ''}${c.health === 'down' ? ' pv-down' : ''}${c.pc ? ' pv-pc' : ''}${c.hidden ? ' pv-hidden' : ''}"${c.now ? ' aria-current="true"' : ''}>
             <span class="pv-mark" aria-hidden="true">${c.now ? '▶' : ''}</span>
             <span class="pv-who">${c.pc ? '<span class="pv-icon" aria-hidden="true">👤</span>' : c.hidden ? '<span class="pv-icon" aria-hidden="true">❓</span>' : '<span class="pv-icon" aria-hidden="true">👹</span>'}<span class="pv-name">${initViewEsc(c.name)}</span></span>

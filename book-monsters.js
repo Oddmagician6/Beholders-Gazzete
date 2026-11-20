@@ -105,7 +105,7 @@ const BOOK_MONSTERS = [
     ["Orc War Chief", "M", "humanoid", 246],
     ["Orog", "M", "humanoid", 247],
     ["Pentadrone", "L", "construct", 226],
-    ["Peryton", "L", "monstrosity", 251],
+    ["Peryton", "M", "monstrosity", 251],
     ["Piercer", "M", "monstrosity", 252],
     ["Pixie", "T", "fey", 253],
     ["Poltergeist", "M", "undead", 279],

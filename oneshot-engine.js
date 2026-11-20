@@ -648,7 +648,7 @@ function osVillain(site) {
     const last = site.rooms[site.rooms.length - 1];
     const f = last && last.fight;
     const list = f ? siteFightList(f) : [];
-    const lead = list.length ? list.reduce((a, b) => (b.m.xp > a.m.xp ? b : a)).m : null;
+    const lead = list.length ? list.reduce((a, b) => (encPickXp(b.m) > encPickXp(a.m) ? b : a)).m : null;
     const L = site.boss && site.boss.leader;
     const type = lead && encSceneType(lead);
     const mind = lead ? (['beast', 'swarm', 'monstrosity', 'plant'].includes(type) ? 'beast' : SITE_MINDS[type] === 'mindless' ? 'mindless' : 'folk') : 'folk';
@@ -710,10 +710,10 @@ function rollOneShot(seed, opts = {}, set = {}) {
         // else the weakest: the boss fight was already built to the budget before the villain joined.
         // Someone the fight doesn't already have, so the named villain isn't one row among their own kind.
         const have = new Set(lastFight.list.map(e => e.id));
-        const all = gv.stand.map(id => MONSTER_BY_ID[id]).filter(m => m && crValue(m.cr) <= level).sort((a, b) => b.xp - a.xp);
+        const all = gv.stand.map(id => MONSTER_BY_ID[id]).filter(m => m && crValue(m.cr) <= level).sort((a, b) => encPickXp(b) - encPickXp(a));
         const fits = all.some(m => !have.has(m.id)) ? all.filter(m => !have.has(m.id)) : all;
-        const room = budget[ENC_DIFFS[ENC_DIFFS.length - 1]] - encounterXp(siteFightList(lastFight));
-        stood = fits.find(m => m.xp <= room) || fits[fits.length - 1] || null;
+        const room = budget[ENC_DIFFS[ENC_DIFFS.length - 1]] - encounterPickXp(siteFightList(lastFight));
+        stood = fits.find(m => encPickXp(m) <= room) || fits[fits.length - 1] || null;
         if (stood) {
             guard = v0.name;
             lastFight.list.push({ id: stood.id, count: 1 });

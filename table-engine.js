@@ -29,7 +29,8 @@ function tableFind(tables, name) {
 // A table as the tools keep it, or null.
 function tableClean(t) {
     if (!t || typeof t !== 'object' || typeof t.src !== 'string') return null;
-    const die = TABLE_DICE.includes(Number(t.die)) ? Number(t.die) : 'auto';
+    const n = typeof t.die === 'number' || typeof t.die === 'string' ? Number(t.die) : NaN;   // not Number(object): it can throw
+    const die = TABLE_DICE.includes(n) ? n : 'auto';
     return {
         name: typeof t.name === 'string' ? t.name.replace(/\s+/g, ' ').trim().slice(0, TABLE_LIMITS.name) : '',
         src: t.src.slice(0, TABLE_LIMITS.src),

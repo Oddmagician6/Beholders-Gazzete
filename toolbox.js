@@ -365,7 +365,7 @@ function splitOpts() {
     const names = splitNames();
     const sizeEl = document.getElementById('sp-n');
     const n = names.length || Math.min(SPLIT_MAX, Math.max(1, Math.floor(Number(sizeEl.value)) || 1));
-    return { coins, other: Math.round(num('sp-other') * 100) / 100, names, n };
+    return { coins, other: gpToCp(num('sp-other')) / 100, names, n };
 }
 
 // The party size a split starts from: the Party tab's (party.js), or the field's default.

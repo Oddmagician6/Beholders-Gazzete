@@ -510,7 +510,7 @@ const CB_CLASSES = [
         asi: [4, 8, 10, 12, 16, 19],
         features: [
             [1, 'Expertise', x => `Double proficiency bonus in ${x.L >= 6 ? 'four' : 'two'} chosen skills (or thieves' tools).`],
-            [1, 'Sneak Attack', x => `Once per turn, +${Math.ceil(x.L / 2)}d6 damage with a finesse or ranged weapon when you have advantage or an ally is next to the target.`],
+            [1, 'Sneak Attack', x => `Once per turn, +${Math.ceil(x.L / 2)}d6 damage with a finesse or ranged weapon when you have advantage, or when another enemy of the target is within 5 ft. of it and you don't have disadvantage.`],
             [1, "Thieves' Cant", 'A secret mix of jargon and signs that only other rogues understand.'],
             [2, 'Cunning Action', 'Dash, Disengage, or Hide as a bonus action.'],
             [3, 'Fast Hands', 'Use Cunning Action for Sleight of Hand, thieves\' tools, or the Use an Object action.'],

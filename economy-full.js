@@ -79,7 +79,8 @@ function updateOverview(items) {
 }
 
 function updateCountdown() {
-    const msLeft = marketSlotStart(Date.now()) + MARKET_SLOT_MS - Date.now();
+    const now = Date.now();   // one clock reading: two could straddle a slot change (-1:-1)
+    const msLeft = Math.max(0, marketSlotStart(now) + MARKET_SLOT_MS - now);
     const minutes = Math.floor(msLeft / 60000);
     const seconds = Math.floor((msLeft % 60000) / 1000);
     document.getElementById('countdown').textContent =
@@ -112,7 +113,7 @@ function updateAnalysis(items) {
 function filterAndSort(items) {
     let result = [...items];
 
-    const searchTerm = document.getElementById('search-input').value.toLowerCase();
+    const searchTerm = document.getElementById('search-input').value.trim().toLowerCase();
     if (searchTerm) {
         result = result.filter(item => item.name.toLowerCase().includes(searchTerm));
     }

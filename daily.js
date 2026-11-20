@@ -75,13 +75,15 @@ function rollDaily(date, rumors) {
         const rarity = item.rarity.replace('-', ' ');
         return { icon: '✨', kind: 'Magic item', art: 'magic-item', title: item.name,
             text: `${rarity[0].toUpperCase() + rarity.slice(1)} ${item.type}${item.attune ? ', requires attunement' : ''}.`,
-            href: `loot-generator?tab=magic&seed=${seed}`, cta: 'Open in Loot' };
+            // The homepage rolls on the 2014 lists: rules=2014 keeps a 2024 reader's Loot page on the same item.
+            href: `loot-generator?tab=magic&seed=${seed}&rules=2014`, cta: 'Open in Loot' };
     });
 
     tryPart(() => {
         const seed = dailySeed(date, 'quest');
         const q = rollQuest(seed);
-        return { icon: '🗺️', kind: 'Side quest', art: 'side-quest', title: q.title, text: q.task, href: `dnd-side-quest-generator?seed=${seed}`, cta: 'The full job' };
+        // rollQuest's defaults (level 1, party of 4) spelled out: the quest page starts at level 3 or the saved party's.
+        return { icon: '🗺️', kind: 'Side quest', art: 'side-quest', title: q.title, text: q.task, href: `dnd-side-quest-generator?seed=${seed}&lvl=1&n=4&rules=2014`, cta: 'The full job' };
     });
 
     tryPart(() => {

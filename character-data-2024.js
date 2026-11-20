@@ -250,7 +250,7 @@ const CB24_INVOCATIONS = {
     'devouring-blade': ['Devouring Blade', 'Thirsting Blade gives two extra attacks instead of one.', { L: 12, inv: 'thirsting-blade' }],
     'eldritch-mind': ['Eldritch Mind', 'Advantage on CON saves to keep concentration.'],
     'eldritch-smite': ['Eldritch Smite', 'Once a turn on a pact weapon hit, spend a pact slot: +1d8 force plus 1d8 per slot level, and knock a Huge or smaller target prone.', { L: 5, inv: 'pact-of-the-blade' }],
-    'eldritch-spear': ['Eldritch Spear', 'A damaging warlock cantrip with a 10 ft.+ range reaches 30 ft. farther per warlock level.', { L: 2, cantrip: 'damage' }],
+    'eldritch-spear': ['Eldritch Spear', 'A damaging warlock cantrip with a 10 ft.+ range reaches 30 ft. farther per warlock level.', { L: 2, cantrip: 'range' }],
     'fiendish-vigor': ['Fiendish Vigor', 'Cast false life on yourself without a slot, taking the highest roll.', { L: 2 }],
     'gaze-of-two-minds': ['Gaze of Two Minds', 'Bonus action: perceive through a willing creature\'s senses (and cast from its space within 60 ft.).', { L: 5 }],
     'gift-of-the-depths': ['Gift of the Depths', 'Breathe underwater and swim at your speed; water breathing once per long rest without a slot.', { L: 5 }],
@@ -272,7 +272,8 @@ const CB24_INVOCATIONS = {
 const CB24_INVOCATIONS_KNOWN = [1, 3, 3, 3, 5, 5, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10];
 // Warlock cantrips that deal damage, and those that make an attack roll (invocation prerequisites).
 const CB24_WARLOCK_DAMAGE = ['Chill Touch', 'Eldritch Blast', 'Poison Spray'];
-const CB24_WARLOCK_ATTACK = ['Chill Touch', 'Eldritch Blast'];
+const CB24_WARLOCK_ATTACK = ['Chill Touch', 'Eldritch Blast', 'Poison Spray'];   // an attack roll (Chill Touch: melee)
+const CB24_WARLOCK_RANGED = ['Eldritch Blast', 'Poison Spray'];   // damaging, with a range of 10 ft. or more (not Touch)
 
 // Circle of the Land, 2024: the land picked after each long rest (cantrips included), and Nature's Ward.
 const CB24_LANDS = {
@@ -452,7 +453,7 @@ const CB24_CLASSES = [
             [5, 'Extra Attack', 'Attack twice when you take the Attack action.'],
             [5, 'Stunning Strike', x => `Once a turn, spend 1 focus on a hit: DC ${x.dc('wis')} CON save or stunned until your next turn; on a success its speed is halved and the next attack on it has advantage.`],
             [6, 'Empowered Strikes', 'Your unarmed strikes can deal force damage.'],
-            [6, 'Wholeness of Body', x => `Bonus action: regain 1d${x.martial} + ${Math.max(1, x.m.wis)} hit points. ${Math.max(1, x.m.wis)} uses per long rest.`],
+            [6, 'Wholeness of Body', x => `Bonus action: regain 1d${x.martial} ${x.m.wis < 0 ? '−' : '+'} ${Math.abs(x.m.wis)} hit points (at least 1). ${Math.max(1, x.m.wis)} use${Math.max(1, x.m.wis) === 1 ? '' : 's'} per long rest.`],
             [7, 'Evasion', 'A DEX save for half damage deals none on a success and half on a failure.'],
             [9, 'Acrobatic Movement', 'Without armor or shield, run up walls and across liquids on your turn.'],
             [10, 'Self-Restoration', 'End charmed, frightened, or poisoned on yourself at the end of each turn; no exhaustion from going without food and water.'],
@@ -514,7 +515,7 @@ const CB24_CLASSES = [
             [6, 'Roving', '+10 ft. speed when not in heavy armor, and climb and swim speeds equal to your speed.'],
             [7, 'Defensive Tactics', 'Escape the Horde or Multiattack Defense, swapped on a rest: see Choices.'],
             [9, 'Expertise', 'Expertise in two more of your skills.'],
-            [10, 'Tireless', x => `Magic action: gain 1d8 + ${Math.max(1, x.m.wis)} temporary hit points, ${Math.max(1, x.m.wis)} times per long rest; each short rest removes a level of exhaustion.`],
+            [10, 'Tireless', x => `Magic action: gain 1d8 ${x.m.wis < 0 ? '−' : '+'} ${Math.abs(x.m.wis)} temporary hit points (at least 1), ${Math.max(1, x.m.wis)} time${Math.max(1, x.m.wis) === 1 ? '' : 's'} per long rest; each short rest removes a level of exhaustion.`],
             [11, "Superior Hunter's Prey", 'Once a turn, hunter\'s mark damage also hits another creature within 30 ft. of the first.'],
             [14, "Nature's Veil", x => `Bonus action: invisible until the end of your next turn, ${Math.max(1, x.m.wis)} times per long rest.`],
             [15, "Superior Hunter's Defense", 'Reaction: resistance to the damage you just took, and that type, until the end of the turn.'],

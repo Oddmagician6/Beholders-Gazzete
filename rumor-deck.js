@@ -18,7 +18,7 @@ function rumorFits(r) {
 function loadRumorDecks(baseCount) {
     try {
         const saved = JSON.parse(localStorage.getItem(RUMOR_DECK_KEY));
-        if (saved && saved.n === baseCount && saved.decks) return saved;
+        if (saved && saved.n === baseCount && saved.decks && typeof saved.decks === 'object' && !Array.isArray(saved.decks)) return saved;
     } catch (e) {}
     return { n: baseCount, decks: {} };
 }
@@ -44,7 +44,10 @@ function shuffleRumorIndexes(list) {
 // The deck's remaining indexes, dropping any that no longer fit the category
 // (reader-added rumors live only until a refresh).
 function rumorDeckLeft(state, rumors, category) {
-    const left = (state.decks[category] || []).filter(i => rumorFits(rumors[i]) && (category === 'all' || rumors[i].category === category));
+    // A hand-edited or old save: whole-number indexes only (a "2" would read rumors["2"]), each once.
+    const saved = Array.isArray(state.decks[category]) ? state.decks[category] : [];
+    const left = saved.filter((i, n) => Number.isInteger(i) && saved.indexOf(i) === n
+        && rumorFits(rumors[i]) && (category === 'all' || rumors[i].category === category));
     state.decks[category] = left;
     return left;
 }
@@ -56,7 +59,7 @@ function dealRumor(rumors, baseCount, category, avoidIdx = -1) {
     const state = loadRumorDecks(baseCount);
     const pool = rumorCategoryPool(rumors, category);
     if (!pool.length) return { idx: -1, left: 0, total: 0, reshuffled: false };
-    const started = category in state.decks;
+    const started = Object.hasOwn(state.decks, category);
     let left = rumorDeckLeft(state, rumors, category);
     const reshuffled = started && !left.length;
     if (!left.length) {
@@ -75,7 +78,7 @@ function addToRumorDecks(rumors, baseCount, idx) {
     const state = loadRumorDecks(baseCount);
     ['all', rumors[idx].category].forEach(cat => {
         const left = state.decks[cat];
-        if (left) left.splice(Math.floor(rand() * (left.length + 1)), 0, idx);
+        if (Array.isArray(left)) left.splice(Math.floor(rand() * (left.length + 1)), 0, idx);
     });
     saveRumorDecks(state);
 }

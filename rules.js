@@ -30,8 +30,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const box = document.getElementById('rules-q');
     // Print and Copy Link first: they work on the cards already on the page whatever happens below.
     document.getElementById('rules-print').addEventListener('click', () => window.print());
-    document.getElementById('rules-link').addEventListener('click', () =>
-        copyPageLink(ok => rulesFlash(ok ? '🔗 Link copied.' : '⚠️ Copy blocked by the browser.')));
+    document.getElementById('rules-link').addEventListener('click', () => {
+        // Write the search through setUrlParams first: it adds the rules= the page shows (srd52.js),
+        // which an address opened by hand doesn't have yet.
+        if (typeof setUrlParams === 'function') setUrlParams({ q: box.value.trim() || null }, false);
+        copyPageLink(ok => rulesFlash(ok ? '🔗 Link copied.' : '⚠️ Copy blocked by the browser.'));
+    });
     box.value = (urlParams().get('q') || '').slice(0, 40);
     // The 2014/2024 picker (srd52.js): three cards have 2024 versions.
     if (typeof srd52Toggle === 'function') {

@@ -97,8 +97,14 @@ function loot52Info(name) {
   const t = SRD52_FULL.items[loot52Name(name)];
   if (!t) return null;
   const head = String(Array.isArray(t) ? t[0] : t).split('\n')[0];
+  // A header the PDF wrapped carries on at the start of the body: "(Requires Attunement) …", "(+2), or Very Rare (+3) …".
+  const body = Array.isArray(t) ? String(t[1] || '') : '';
+  const more = /^\(/.test(body) ? body.slice(0, 60) : '';
+  const words = new Set(((head + ' ' + more).match(/\b(?:very rare|uncommon|common|rare|legendary|artifact)\b/gi) || []).map(w => w.toLowerCase()));
   const m = /\b(very rare|uncommon|common|rare|legendary|artifact)\b/i.exec(head);
-  return { rarity: m && !/rarity varies/i.test(head) ? m[1].toLowerCase().replace(' ', '-') : null, attune: /requires attunement/i.test(head) };
+  // An item in several rarities (Weapon +1/+2/+3, Horn of Valhalla) keeps its 2014 pool, as "rarity varies" does.
+  const one = m && words.size === 1 && !/rarity varies/i.test(head);
+  return { rarity: one ? m[1].toLowerCase().replace(' ', '-') : null, attune: /requires attunement/i.test(head) || /^\(requires attunement/i.test(body) };
 }
 // A one-to-one 5.2 rename only: a grouped one (Belt of Hill Giant Strength → Belt of Giant Strength) keeps its own name.
 function loot52Display(name) {

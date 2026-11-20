@@ -128,7 +128,13 @@ function diceModeLabel(mode) {
 function loadDiceHistory() {
     try {
         const saved = JSON.parse(localStorage.getItem(DICE_HISTORY_KEY));
-        return Array.isArray(saved) ? saved.filter(h => h && typeof h.f === 'string' && typeof h.total === 'number') : [];
+        // Optional fields from an old or hand-edited save: a mode outside the three, or a label that isn't text, is dropped.
+        return Array.isArray(saved) ? saved.filter(h => h && typeof h.f === 'string' && typeof h.total === 'number').map(h => {
+            const out = { ...h, mode: ['adv', 'dis'].includes(h.mode) ? h.mode : 'normal' };
+            if (typeof out.label !== 'string') delete out.label;
+            if (typeof out.detail !== 'string') delete out.detail;
+            return out;
+        }) : [];
     } catch (e) { return []; }
 }
 
