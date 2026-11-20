@@ -77,7 +77,20 @@ const ENC_HAZARDS = ENC_PF2E && typeof PF2E_HAZARDS !== 'undefined' ? PF2E_HAZAR
 
 function encPf2eHazard(h) {
     return { id: `hz-${h.id}`, name: h.n, level: h.l, cr: String(h.l), type: 'hazard', hz: h, ac: h.ac, hp: h.hp,
-        dex: h.st != null ? h.st - 10 : 0, get xp() { return encPf2eXp(h.l) / (h.cx ? 1 : 5); } };
+        dex: h.st != null ? h.st - 10 : 0, get xp() { return encPf2eHazardXp(h); } };
+}
+
+// GM Core's Hazard XP table: a fifth of a creature (simple) or a whole one (complex), except 4 levels above
+// the party, where it prints 30 and 150 (a creature is 160).
+function encPf2eHazardXp(h) {
+    if (h.l - encPartyLevel === 4) return h.cx ? 150 : 30;
+    return encPf2eXp(h.l) / (h.cx ? 1 : 5);
+}
+
+// Whether a hazard takes turns: a complex one with a routine. The Summoning Rune is complex but has none:
+// the creature it summons rolls initiative instead.
+function encHazardActs(h) {
+    return !!(h.cx && h.ro);
 }
 
 const MONSTER_BY_ID = Object.fromEntries([...ENC_MONSTERS, ...ENC_HAZARDS].map(m => [m.id, m]));
@@ -163,7 +176,9 @@ function encounterNotesPf2e(all, budget) {
     const list = all.filter(e => !e.m.hz), hazards = all.filter(e => e.m.hz);
     const creatures = list.reduce((t, e) => t + e.count, 0);
     if (!all.length || !budget.chars) return notes;
-    const complex = hazards.filter(e => e.m.hz.cx);
+    const complex = hazards.filter(e => encHazardActs(e.m.hz));
+    const summons = hazards.filter(e => e.m.hz.cx && !encHazardActs(e.m.hz));
+    if (summons.length) notes.push(`${summons.map(e => e.m.name).join(', ')} ${summons.length === 1 ? "doesn't take turns itself: the creature it summons rolls initiative, so add that creature" : "don't take turns themselves: the creatures they summon roll initiative, so add those creatures"} to the fight when it appears.`);
     if (complex.length) notes.push(`${complex.map(e => e.m.name).join(', ')} ${complex.length === 1 ? 'is a complex hazard: once triggered, it rolls initiative on Stealth and acts on its turn' : 'are complex hazards: once triggered, they roll initiative on Stealth and act on their turns'}.`);
     const simple = hazards.filter(e => !e.m.hz.cx);
     if (simple.length && !creatures && !complex.length) notes.push(`A simple hazard springs once and is done, so on ${simple.length === 1 ? 'its' : 'their'} own ${simple.length === 1 ? 'it makes' : 'they make'} a challenge, not a fight. Pair ${simple.length === 1 ? 'it' : 'them'} with creatures.`);

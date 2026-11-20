@@ -57,7 +57,7 @@ const RULES_CARDS_PF2E = [
                 ['Step', 'Move 5 feet without triggering reactions that react to moving.'],
                 ['Interact', 'Draw, stow, pick up, open, or use an object.'],
                 ['Raise a Shield', 'The shield\'s bonus to AC until your next turn.'],
-                ['Take Cover', 'Standard cover becomes greater; next to a wall or obstacle, or prone, you get standard cover. It lasts until you leave your space, attack, or fall unconscious.'],
+                ['Take Cover', 'Standard cover becomes greater; next to a wall or obstacle you get standard cover, and prone you get greater cover against ranged attacks. It lasts until you leave your space, attack, or fall unconscious.'],
                 ['Seek', 'A Perception check to find hidden or undetected creatures and objects.'],
                 ['Delay / Ready', 'Delay moves your turn later in the order; Ready (2 actions) sets up a reaction with a trigger.'],
                 ['Stand, Drop Prone, Crawl', 'Get up, go down, or move 5 feet while prone.']
@@ -74,7 +74,7 @@ const RULES_CARDS_PF2E = [
             ] } },
             { list: [
                 'Draw a line between the centers of the two spaces. Through an object or terrain that would block it: standard cover. Through a creature: lesser cover.',
-                'Take Cover turns standard cover into greater (or gives standard cover by a wall or while prone). An extreme obstruction, like an arrow slit, is greater cover too.',
+                'Take Cover turns standard cover into greater (or gives standard cover by a wall, and greater cover against ranged attacks while prone). An extreme obstruction, like an arrow slit, is greater cover too.',
                 'Against an area effect, draw the line from the effect\'s point of origin.',
                 'Entirely behind a wall: no line of effect, so it usually can\'t be targeted at all.'
             ] }
@@ -152,7 +152,7 @@ const RULES_CARDS_PF2E = [
                 ['Avoid Notice', 'Half speed. Roll Stealth for initiative, which also decides whether the foes notice them.'],
                 ['Defend', 'Half speed, shield up: they start the fight with their shield raised.'],
                 ['Detect Magic', 'Half speed or slower, casting detect magic as they go.'],
-                ['Follow the Expert', 'Copy an ally who is at least an expert: add their level to the check even untrained, plus +2 (expert), +3 (master), or +4 (legendary).'],
+                ['Follow the Expert', 'Copy an ally who is at least an expert: add your own level to the check even untrained, plus +2 (expert), +3 (master), or +4 (legendary).'],
                 ['Hustle', 'Double speed, for Constitution modifier × 10 minutes (10 at least); a group uses its lowest.'],
                 ['Investigate', 'Half speed. Secret Recall Knowledge checks for clues along the way.'],
                 ['Scout', 'Half speed. The whole party gets +1 to initiative in the next fight.'],

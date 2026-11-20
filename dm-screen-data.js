@@ -58,14 +58,15 @@ function dsRolls(list, max, clean) {
 }
 
 function dsCleanCard(c) {
-    if (!c || typeof c !== 'object' || !Object.hasOwn(DS_TYPES, c.type)) return null;
+    // String checks first: a non-string key (an object with no toString) would throw and cost every layout.
+    if (!c || typeof c !== 'object' || typeof c.type !== 'string' || !Object.hasOwn(DS_TYPES, c.type)) return null;
     const type = DS_TYPES[c.type];
     const id = v => (typeof v === 'string' && DS_ID.test(v) ? v : '');
     const out = {
         id: id(c.id) || dsNewId(),
         type: c.type,
         w: [1, 2, 3].includes(c.w) ? c.w : 1,
-        h: Object.hasOwn(DS_HEIGHTS, c.h) ? c.h : type.h,
+        h: typeof c.h === 'string' && Object.hasOwn(DS_HEIGHTS, c.h) ? c.h : type.h,
         show: c.show === true && type.show
     };
     if (c.type === 'rules') out.rule = typeof c.rule === 'string' && /^[a-z0-9-]{1,30}$/.test(c.rule) ? c.rule : '';

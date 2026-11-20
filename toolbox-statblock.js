@@ -457,9 +457,11 @@ function sbPf2eHazardParts(h) {
     return {
         level: `${h.cx ? 'Complex hazard' : 'Hazard'} ${String(h.l).replace('-', '−')}`,
         traits: [SB_PF2E_RARITY[h.ra], ...h.tr].filter(Boolean),
-        stealth: h.st != null ? `DC ${h.st}${h.sd ? ` ${h.sd}` : ''}` : h.sd || '',
+        // A complex hazard rolls initiative on its Stealth modifier (the DC − 10), so it shows both.
+        stealth: h.st != null ? `DC ${h.st}${h.cx ? ` (initiative ${sbSigned(h.st - 10)})` : ''}${h.sd ? ` ${h.sd}` : ''}` : h.sd || '',
         defense: h.ac != null ? { ac: h.ac, saves } : null,
-        hp: [h.hd ? ['Hardness', h.hd] : null, h.hp ? ['HP', `${h.hp}${h.hpd ? ` (${h.hpd})` : ''}`] : null,
+        // A hazard with Hardness breaks at half its HP (GM Core prints the BT; the data leaves it out).
+        hp: [h.hd ? ['Hardness', h.hd] : null, h.hp ? ['HP', `${h.hp}${h.hd ? ` (BT ${Math.floor(h.hp / 2)})` : ''}${h.hpd ? ` (${h.hpd})` : ''}`] : null,
             ['Immunities', h.im], ['Weaknesses', h.we], ['Resistances', h.re]].filter(x => x && x[1]),
         before: (h.ab || []).filter(a => !named(a)),
         after: (h.ab || []).filter(named),

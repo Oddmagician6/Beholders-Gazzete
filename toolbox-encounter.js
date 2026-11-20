@@ -358,9 +358,11 @@ function encounterText() {
 // Each monster joins the tracker with its Dex modifier as the initiative bonus (Pathfinder: Perception;
 // a complex hazard: Stealth). A simple hazard takes no turns, so it stays here.
 function sendToInitiative() {
-    const list = enc.list.filter(e => !e.m.hz || e.m.hz.cx);
+    const list = enc.list.filter(e => !e.m.hz || encHazardActs(e.m.hz));
     const simple = enc.list.filter(e => e.m.hz && !e.m.hz.cx).reduce((t, e) => t + e.count, 0);
-    const left = simple ? ` ${simple === 1 ? 'The simple hazard takes' : 'Simple hazards take'} no turns, so ${simple === 1 ? 'it stays' : 'they stay'} off the tracker.` : '';
+    const summons = enc.list.filter(e => e.m.hz && e.m.hz.cx && !encHazardActs(e.m.hz));
+    const left = (simple ? ` ${simple === 1 ? 'The simple hazard takes' : 'Simple hazards take'} no turns, so ${simple === 1 ? 'it stays' : 'they stay'} off the tracker.` : '')
+        + (summons.length ? ` ${summons.map(e => e.m.name).join(', ')}: add the creature it summons when it appears.` : '');
     if (!list.length) { flash('enc-status', `⚠️ Nothing here takes turns.${left}`); return; }
     const want = list.reduce((t, e) => t + e.count, 0);
     const added = list.flatMap(e => addToFight({ name: e.m.name, mod: monsterInit(e.m), hp: e.m.hp, ac: e.m.ac, count: e.count, monster: e.m.id }));

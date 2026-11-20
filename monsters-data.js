@@ -152,7 +152,7 @@ const MONSTERS = [
   ["black-dragon-wyrmling", "Black Dragon Wyrmling", "2", 450, 17, 33, 2, "M", "dragon"],
   ["bronze-dragon-wyrmling", "Bronze Dragon Wyrmling", "2", 450, 17, 32, 0, "M", "dragon"],
   ["centaur", "Centaur", "2", 450, 12, 45, 2, "L", "monstrosity"],
-  ["cult-fanatic", "Cult Fanatic", "2", 450, 13, 22, 2, "M", "humanoid"],
+  ["cult-fanatic", "Cult Fanatic", "2", 450, 13, 33, 2, "M", "humanoid"],
   ["druid", "Druid", "2", 450, 11, 27, 1, "M", "humanoid"],
   ["ettercap", "Ettercap", "2", 450, 13, 44, 2, "M", "monstrosity"],
   ["gargoyle", "Gargoyle", "2", 450, 15, 52, 0, "M", "elemental"],

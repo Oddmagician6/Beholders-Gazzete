@@ -84,7 +84,7 @@ const PF2E_CONDITIONS = {
     'Fleeing': { max: 0, text: 'You spend your actions getting away from the source, and you can\'t Delay or Ready.' },
     'Frightened': { max: 4, text: 'A status penalty equal to the value on all checks and DCs. It drops by 1 at the end of each of your turns (the tracker does this for you).' },
     'Grabbed': { max: 0, text: 'Held in place: off-guard and immobilized, and a manipulate action needs a DC 5 flat check or it\'s lost.' },
-    'Hidden': { max: 0, text: "They know which square you're in but can't see you: you're off-guard to them, and they roll a DC 11 flat check to target you." },
+    'Hidden': { max: 0, text: "They know which square you're in but can't see you: they're off-guard to you, and they roll a DC 11 flat check to target you." },
     'Immobilized': { max: 0, text: "You can't use actions with the move trait." },
     'Invisible': { max: 0, text: "No one can see you: you're undetected until someone works out where you are, and hidden after that." },
     'Off-Guard': { max: 0, text: 'A −2 circumstance penalty to AC.' },

@@ -462,6 +462,15 @@ function repeatsWord(name) {
     return words.some((w, i) => words.some((v, j) => i !== j && (v.length >= 4 ? w.startsWith(v) : w === v)));
 }
 
+// Pathfinder has no beholders (they're D&D's own): a Pathfinder page swaps them for a chimera after the
+// name is picked, so the rolls (and old links) draw the same.
+const NAME_PF2E_SWAPS = [[/Beholder Stalk/g, 'Chimera Horn'], [/Beholder/g, 'Chimera']];
+
+function namePf2e(name) {
+    if (typeof ruleSystemId !== 'function' || ruleSystemId() !== 'pf2e') return name;
+    return NAME_PF2E_SWAPS.reduce((n, [re, to]) => n.replace(re, to), name);
+}
+
 // A shop name for a type ('blacksmith', 'alchemist', …). owner is optional (first name).
 function rollShopName(type, owner) {
     const t = NAME_TABLES.types[type] || NAME_TABLES.types.general;
@@ -471,9 +480,9 @@ function rollShopName(type, owner) {
         let r = randomInt(1, total);
         const pattern = NAME_TABLES.patterns.find(p => (r -= p.weight) <= 0);
         name = pattern.make(t, owner);
-        if (name && (pattern.pun || !repeatsWord(name))) return name;
+        if (name && (pattern.pun || !repeatsWord(name))) return namePf2e(name);
     }
-    return name || randomArray(t.puns);
+    return namePf2e(name || randomArray(t.puns));
 }
 
 // The Toolbox name generator (F21): count different names for a type, or for any

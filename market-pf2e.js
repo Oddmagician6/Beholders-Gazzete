@@ -26,8 +26,9 @@ const MARKET_PF2E_LOCAL = [
     'dragon-scale', 'phoenix-feather', 'unicorn-horn'
 ];
 
-// Player Core's Animals table prices the common mounts: [gp, level] in place of the converted 5e price.
-const MARKET_PF2E_ANIMALS = { 'horse-riding': [8, 0], warhorse: [30, 2], pony: [7, 0], mule: [2, 0] };
+// Player Core's Animals table prices the common mounts and stabling: [gp, level] in place of the converted
+// 5e price (5e stabling's 5 sp would be 5 cp; Pathfinder's is 2 cp).
+const MARKET_PF2E_ANIMALS = { 'horse-riding': [8, 0], warhorse: [30, 2], pony: [7, 0], mule: [2, 0], 'stabling-per-day': [0.02, 0] };
 
 // 5e ids → the Pathfinder item a shop's list means by them.
 const MARKET_PF2E_ALIAS = {
