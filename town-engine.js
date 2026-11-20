@@ -532,6 +532,9 @@ function rollTown(seed, opts = {}) {
         return p >= 1000 ? Math.round(p / 100) * 100 : p >= 100 ? Math.round(p / 10) * 10 : Math.round(p);
     });
     t.known = part('known.' + setting, () => townPick(s.known));
+    // A hamlet has no market and one inn, so it isn't famous for either (B539).
+    const hamletKnown = k => !/market|^inns,/i.test(k);
+    if (size === 'hamlet' && !hamletKnown(t.known)) t.known = part('known.hamlet.' + setting, () => townPick(s.known.filter(hamletKnown)));
     t.folk = part('folk.' + setting, () => {
         const main = rand() < 0.6 ? s.races[0] : townPick(s.races);
         const rest = townShuffle(NPC_RACES.filter(r => r !== main)).sort((a, b) => (s.races.includes(b) ? 1 : 0) - (s.races.includes(a) ? 1 : 0));
@@ -554,7 +557,15 @@ function rollTown(seed, opts = {}) {
     const gov = TOWN_GOVS.find(g => g.key === t.gov);
     // Nobody runs a town at seventeen: a leader is at least an adult.
     const leaderAge = gov.age || part('leader.age', () => townPick(['adult', 'middle', 'middle', 'old']));
-    t.leader = townNpc(sub('leader.' + gov.cat), gov.cat, leaderAge, realms);
+    // No two people in town share a full name: a later one is rolled again from a seed of its own (B540).
+    const fullNames = new Set();
+    const person = (label, cat, age) => {
+        let p = townNpc(sub(label), cat, age, realms);
+        for (let n = 1; fullNames.has(p.npc.name) && n < 8; n++) p = townNpc(sub(`${label}.again${n}`), cat, age, realms);
+        fullNames.add(p.npc.name);
+        return p;
+    };
+    t.leader = person('leader.' + gov.cat, gov.cat, leaderAge);
     t.leader.title = genderedTitle(gov.title, t.leader.npc.gender);
     t.leader.style = part('leader.style', () => townPick(TOWN_LEADER_STYLES));
     t.strings = part('strings', () => townPick(TOWN_STRINGS));
@@ -565,7 +576,7 @@ function rollTown(seed, opts = {}) {
         return { name: townPick(w.names), count, kind: townPick(TOWN_WATCH_KINDS), party: townPick(TOWN_WATCH_PARTY),
             bribe: [1, 2, 5, 10, 25][Math.floor(rand() * 5)] * (wealth === 'prosperous' ? 2 : 1) };
     });
-    t.captain = size === 'hamlet' ? null : townNpc(sub('captain'), 'guard', 'middle', realms);
+    t.captain = size === 'hamlet' ? null : person('captain', 'guard', 'middle');
 
     // The temple: its god (facDeity's way), its look, its priest.
     t.temple = part('temple', () => ({
@@ -573,7 +584,7 @@ function rollTown(seed, opts = {}) {
         look: townPick(size === 'hamlet' ? TOWN_SHRINE_LOOKS : TOWN_TEMPLE_LOOKS),
         offers: townPick(TOWN_TEMPLE_OFFERS)
     }));
-    t.priest = townNpc(sub('priest'), 'religious', null, realms);
+    t.priest = person('priest', 'religious', null);
 
     // Districts: the hamlet is its own; otherwise a deck that fits the size and setting.
     t.districts = part(`districts.${size}.${setting}`, () => {
@@ -604,7 +615,7 @@ function rollTown(seed, opts = {}) {
     const moreShare = TOWN_ROLES_MORE.length / (TOWN_ROLES.length + TOWN_ROLES_MORE.length);
     const roles = part('people', () => townShuffle(TOWN_ROLES)).slice(0, z.people).map((r, k) => more.swaps[k] < moreShare ? more.roles[k] : r);
     t.people = roles.map(([role, cat, age], k) => {
-        const p = townNpc(sub('person.' + k), cat, age, realms);
+        const p = person('person.' + k, cat, age);
         return { ...p, role, want: decks.wants[k], tie: decks.ties[k], ...part('person.' + k + '.more', () => ({ with: rand(), fac: rand(), facPick: rand() })) };
     });
     t.people.forEach((p, k) => {
@@ -619,6 +630,15 @@ function rollTown(seed, opts = {}) {
         return { seed: sub('tavern.' + k), quality: tier, district: Math.floor(rand() * nd) };
     }));
     if (realms) t.taverns.forEach(tv => { tv.realms = true; });
+    // No two taverns in town under one sign: a later one takes a seed of its own (B541).
+    if (typeof rollTavern === 'function') {
+        const signs = new Set();
+        t.taverns.forEach((tv, k) => {
+            let name = townTavern(tv).name;
+            for (let n = 1; signs.has(name) && n < 8; n++) { tv.seed = sub(`tavern.${k}.again${n}`); name = townTavern(tv).name; }
+            signs.add(name);
+        });
+    }
     t.shops = part(`shops.${size}.${setting}.${wealth}`, () => {
         const types = SHOP_TYPE_FIRST.filter(k => k !== 'docks' || ['river', 'coast', 'marsh'].includes(setting));
         const n = townRange(z.shops);
@@ -685,14 +705,19 @@ function townShop(sh) {
 }
 
 // Indexes into rumors.json (count: its length): different rumors, the first a local one when it can be.
+// A Pathfinder page skips the D&D-only ones ("dnd": true), as the Tavern does, so a tavern link
+// never carries a rumor the Tavern would swap out (B534); the D&D picks are unchanged.
 function townRumorIndexes(t, rumors) {
     if (!rumors || !rumors.length) return [];
+    const pf = typeof ruleSystemId === 'function' && ruleSystemId() === 'pf2e';
+    const fits = i => !(pf && rumors[i] && rumors[i].dnd);
+    const usable = rumors.filter((r, i) => fits(i)).length;
     const local = rumors.map((r, i) => i).filter(i => rumors[i].category === 'local');
     const out = [];
-    t.rumorDraws.slice(0, t.rumorCount).forEach((d, k) => {
+    t.rumorDraws.slice(0, Math.min(t.rumorCount, usable)).forEach((d, k) => {
         const pool = k === 0 && local.length ? local : rumors.map((r, i) => i);
         let idx = pool[Math.floor(d * pool.length)];
-        while (out.includes(idx)) idx = (idx + 1) % rumors.length;
+        while (out.includes(idx) || !fits(idx)) idx = (idx + 1) % rumors.length;
         out.push(idx);
     });
     return out;

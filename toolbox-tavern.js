@@ -14,7 +14,8 @@ const TAVERN_RUMOR_CATS = {
     adventures: '⚔️ Adventures', monsters: '🐉 Monsters', magic: '✨ Magic & Weird'
 };
 
-let tavern = { seed: null, data: null, rumorIdx: null, name: '' };
+// town: the Worldbuilder town a Realms tavern stands in (its link's town=), in place of a rolled city (B537).
+let tavern = { seed: null, data: null, rumorIdx: null, name: '', town: '' };
 let tavernRumors = [];
 
 const capWord = s => s.charAt(0).toUpperCase() + s.slice(1);
@@ -22,6 +23,7 @@ const capWord = s => s.charAt(0).toUpperCase() + s.slice(1);
 // The tavern for this seed and quality, under its given name if it has one.
 function tavernRoll(seed, quality) {
     const tv = rollTavern(seed, { quality, world: realmsOn('tv-world') ? 'realms' : '' });
+    if (tv.realms && tavern.town) tv.realms = { ...tv.realms, city: tavern.town };
     return tavern.name ? { ...tv, name: tavern.name } : tv;
 }
 
@@ -47,7 +49,8 @@ function tavParams() {
         world: realmsOn('tv-world') ? 'realms' : null,
         seed: tavern.seed,
         rumor: tavern.rumorIdx !== null ? String(tavern.rumorIdx) : null,
-        name: tavern.name || null
+        name: tavern.name || null,
+        town: tavern.town || null
     });
 }
 
@@ -55,6 +58,7 @@ function tavParams() {
 function rollTavernFor(seed = newSeed(), push = true) {
     tavern.seed = seed;
     tavern.name = '';
+    tavern.town = '';
     tavern.data = tavernRoll(seed, tavernQuality());
     dealTavernRumor();
     renderTavern();
@@ -71,6 +75,7 @@ function applyTavUrl(p) {
     if (!seed) return false;
     tavern.seed = seed;
     tavern.name = npcGiven(p.get('name'));
+    tavern.town = npcGiven(p.get('town'));
     tavern.data = tavernRoll(seed, q.value);
     const idx = /^\d+$/.test(p.get('rumor') || '') ? Number(p.get('rumor')) : null;
     tavern.rumorIdx = idx;

@@ -12,7 +12,8 @@
 
 const QUEST_FIELDS = { lvl: 'qs-level', n: 'qs-size', job: 'qs-job', world: 'qs-world' };
 
-let quest = { seed: null, data: null };
+// town: the Worldbuilder town a Realms job is near (its link's town=), in place of a rolled city (B537).
+let quest = { seed: null, data: null, town: '' };
 
 function questOpts() {
     return {
@@ -30,13 +31,17 @@ function questParams() {
         params[key] = fieldValue(el) === defaultValue(el) ? null : el.value;
     });
     params.seed = quest.seed;
+    params.town = quest.town || null;
     return urlFor('quest', params);
 }
 
 // push: true = new history entry, false = replace, null = leave the URL alone.
-function rollQuestFor(seed = newSeed(), push = true) {
+// town: given by a link; otherwise the same quest keeps its town and a new one drops it.
+function rollQuestFor(seed = newSeed(), push = true, town = null) {
+    quest.town = town !== null ? town : seed === quest.seed ? quest.town : '';
     quest.seed = seed;
     quest.data = rollQuest(seed, questOpts());
+    if (quest.data.realms && quest.town) quest.data.realms = { ...quest.data.realms, city: quest.town };
     renderQuest();
     if (push !== null) setUrlParams(questParams(), push);
 }
@@ -50,7 +55,7 @@ function applyQuestUrl(p) {
     });
     if (!seed && !p.has('lvl') && !p.has('n')) questUseParty();
     if (!seed) return false;
-    rollQuestFor(seed, null);
+    rollQuestFor(seed, null, npcGiven(p.get('town')));
     return true;
 }
 

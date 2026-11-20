@@ -129,7 +129,8 @@ function townPantheonLink(god) {
 
 function townTavernLink(tv, k, rumorIdx) {
     const params = new URLSearchParams({ tab: 'tavern', q: tv.quality, seed: tv.seed });
-    if (tv.realms) params.set('world', 'realms');
+    // A Realms tavern stands in this town, not a city of its own (B537).
+    if (tv.realms) { params.set('world', 'realms'); params.set('town', townState.data.name); }
     // Each tavern overhears one of the town's rumors.
     if (rumorIdx.length) params.set('rumor', rumorIdx[k % rumorIdx.length]);
     return 'toolbox?' + params.toString();
@@ -140,7 +141,7 @@ function townShopLink(sh) {
 }
 
 function townQuestLink(t) {
-    return 'toolbox?' + new URLSearchParams({ tab: 'quest', seed: t.questSeed, ...(t.realms ? { world: 'realms' } : {}) }).toString();
+    return 'toolbox?' + new URLSearchParams({ tab: 'quest', seed: t.questSeed, ...(t.realms ? { world: 'realms', town: t.name } : {}) }).toString();
 }
 
 // ── Render ────────────────────────────────────────────────
@@ -148,8 +149,9 @@ function townDl(lines) {
     return `<dl class="wb-dl">${lines.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>`;
 }
 
-function townNpcBtn(p, label) {
-    return `<a class="btn" href="${esc(facNpcLink(p))}">${facNpcIcon(p)} ${esc(label || p.npc.firstName)}</a>`;
+// faith: the Realms god the person serves (the temple's, for the priest), so the NPC page keeps it (B536).
+function townNpcBtn(p, label, faith = '') {
+    return `<a class="btn" href="${esc(facNpcLink(p, faith))}">${facNpcIcon(p)} ${esc(label || p.npc.firstName)}</a>`;
 }
 
 function townGodsHTML(t, ctx) {
@@ -227,6 +229,7 @@ function renderTown() {
     const rumorIdx = townRumorIndexes(t, townRumorList);
     const q = townQuest(t);
     const people = [t.leader, t.captain, t.priest].filter(Boolean);
+    const temple = townDeity(t, ctx), priestFaith = temple && temple.god && temple.god.realms ? temple.name : '';
     document.getElementById('town-card').innerHTML = `
         <header class="wb-head">
             <p class="wb-kicker">${z.icon} ${esc(z.label)} · ${s.icon} ${esc(s.label)} · ${wl.icon} ${esc(wl.label)}${t.realms ? ' · 🐉 Forgotten Realms' : ''}</p>
@@ -238,7 +241,7 @@ function renderTown() {
         <section class="wb-block wb-wide">
             <h4>🏘️ At a glance</h4>
             ${townDl(townLines(t, ctx))}
-            <p class="pan-links">${people.map(p => townNpcBtn(p)).join(' ')}${t.leader.cat === 'noble'
+            <p class="pan-links">${people.map(p => townNpcBtn(p, '', p === t.priest ? priestFaith : '')).join(' ')}${t.leader.cat === 'noble'
                 ? ` <a class="btn" href="${esc(famRootLink(t.leader, { title: t.leader.title }))}">🌳 The Ruling Family</a>` : ''}</p>
         </section>
         <section class="wb-block wb-wide">

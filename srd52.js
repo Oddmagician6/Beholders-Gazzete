@@ -378,7 +378,8 @@ if (SRD52_OK) {
             rulesRefresh();
         }
     }
-    const ready = () => { srd52Credit(); rulesSyncControls(); };
+    // An address opened with a roll but no rules= gets the version it shows, so Copy Link carries it (B535).
+    const ready = () => { srd52Credit(); rulesSyncControls(); if (!RULES_TEXT_ONLY) rulesDropUrlParam(); };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready); else ready();
     document.addEventListener('change', e => {
         if (!e.target.matches) return;
@@ -395,6 +396,7 @@ if (SRD52_OK) {
         if ((v === '2014' || v === '2024') && v !== rulesVersion()) rulesUse(v, true);
         // An address with no rules= follows the reader's setting again, not the last address's pin.
         else if (!v && rulesPinnedByUrl) rulesUse(null);
+        if (!v && !RULES_TEXT_ONLY) rulesDropUrlParam();
     });
     if (!RULES_TEXT_ONLY) ['click', 'auxclick', 'contextmenu'].forEach(t => document.addEventListener(t, rulesStampLink, true));
 }

@@ -764,8 +764,10 @@ function panCap(s) {
     return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
 }
 
+// "an hourglass", "a unicorn" (B542).
 function panA(word) {
-    return (/^[aeiou]/i.test(word) ? 'an ' : 'a ') + word;
+    const an = /^(hour|honest|hono|heir)/i.test(word) || (/^[aeiou]/i.test(word) && !/^(uni|use|usu|eu|one\b|once)/i.test(word));
+    return (an ? 'an ' : 'a ') + word;
 }
 
 function panList(items) {
@@ -1077,7 +1079,36 @@ function rollPantheon(seed, opts = {}) {
     if (realms) p.name = part('realms.name', () => panPick(['the gods of Faerûn', 'the Faerûnian pantheon', 'the gods of the Realms', 'the powers of Toril']));
     panSecondPass(p, part);
     panThirdPass(p, part);
+    panBondFix(p, part);
     return p;
+}
+
+// Friendships that would contradict the rest of the page (B538): in a family, "twins" who aren't brother and
+// sister there, or "raised {b} after {b}'s own parent fell silent" for a god whose parents rule; and holy days
+// "close together" or kept "with one joint feast" for gods whose holy days fall in different seasons. Each takes
+// a newer line instead, from a draw of its own, so every other pantheon is unchanged.
+const PAN_BOND_KIN = /are twins|own parent fell silent/;
+const PAN_BOND_FEAST = /holy days (fall close together|are kept with one joint feast)/;
+function panBondFix(p, part) {
+    const kinWrong = (x, y, why) => {
+        if (p.shape !== 'family' || !PAN_BOND_KIN.test(why)) return false;
+        if (/twins/.test(why)) return !((x.rank === 'child' && y.rank === 'child')
+            || (x.i === p.leader && y.rank === 'elder') || (y.i === p.leader && x.rank === 'elder'));
+        // "{b}'s own parent fell silent": b is the second god named.
+        return ['child', 'young', 'outcast'].includes(y.rank);
+    };
+    part(`bonds.fix.${p.shape}.${p.gods.length}`, () => p.bonds.forEach(b => {
+        const x = p.gods[b.a], y = p.gods[b.b];
+        if (kinWrong(x, y, b.why)) {
+            const pool = PAN_BOND_WHY_MORE.map(w => panCap(panFill(w, x.name, y.name))).filter(w => !p.bonds.some(o => o.why === w));
+            if (pool.length) b.why = panPick(pool);
+        }
+        if (PAN_BOND_FEAST.test(b.effect) && x.holy.season !== y.holy.season) {
+            const pool = PAN_BOND_EFFECTS_MORE.concat(PAN_BOND_EFFECTS_R1).filter(e => !PAN_BOND_FEAST.test(e))
+                .map(e => panCap(panFill(e, x.name, y.name))).filter(e => !p.bonds.some(o => o.effect === e));
+            if (pool.length) b.effect = panPick(pool);
+        }
+    }));
 }
 
 // One of the newer lines in place of cur, by its share of the whole list (always two draws).
