@@ -288,8 +288,9 @@ function cbSave(c) {
     return [c, ...cbLoadAll().filter(x => x.id !== c.id)];
 }
 
+// The list after, or null when the browser refused (the character is still saved).
 function cbDelete(id) {
-    try { localStorage.setItem(CB_KEY, JSON.stringify(cbRawAll().filter(x => x.id !== id))); } catch (e) {}
+    try { localStorage.setItem(CB_KEY, JSON.stringify(cbRawAll().filter(x => x.id !== id))); } catch (e) { return null; }
     return cbLoadAll();
 }
 
@@ -401,7 +402,9 @@ function cbRaceSpells(c) {
         ((sub && sub.spells) || []).forEach(([lv, n]) => {
             if (c.level < lv) return;
             const sp = cbSpell(n);
-            out.push({ name: n, note: `${race.name}${sp && sp.level ? ', once per long rest without a slot' : ''} (${ab})` });
+            // The Forest Gnome casts Speak with Animals proficiency-bonus times (its trait says so too).
+            const times = sub.id === 'forest-gnome' && n === 'Speak with Animals' ? `${cbProf(c.level)} times per long rest` : 'once per long rest';
+            out.push({ name: n, note: `${race.name}${sp && sp.level ? `, ${times} without a slot` : ''} (${ab})` });
         });
         cbFeatSlots(c).forEach(slot => {
             if (slot.feat !== 'magic-initiate') return;
@@ -759,10 +762,15 @@ function cbTokensToGear(tokens, picksKey, picks, out, c) {
     });
 }
 
+// The same thing: a name alone isn't enough (a custom "Dagger" isn't the catalog dagger with its attack).
+const cbSameGear = (g, item) => g.name === item.name && (g.w || '') === (item.w || '') && (g.a || '') === (item.a || '') && !g.mi === !item.mi;
+
+// Adds or stacks; a new row past CB_MAX_GEAR is left out (the loader would drop it), and the list says so: list.full.
 function cbAddGear(list, item) {
-    const same = list.find(g => g.name === item.name);
+    const same = list.find(g => cbSameGear(g, item));
     if (same) same.qty = Math.min(9999, same.qty + item.qty);
-    else list.push({ ...item });
+    else if (list.length < CB_MAX_GEAR) list.push({ ...item });
+    else list.full = true;
     return list;
 }
 
@@ -996,7 +1004,7 @@ function cbDerive(c) {
     const featIds = v24 ? cbFeats(c) : [];
     const style = v24
         ? id => (cbHasStyleFeature(c) && c.opts.styles.includes(id)) || featIds.includes(id)
-        : id => c.opts.styles.includes(id) && !!CB_CLASS_STYLES[c.cls];
+        : id => c.opts.styles.includes(id) && !!CB_CLASS_STYLES[c.cls] && cbHasStyleFeature(c);
 
     // Saves
     const saveProf = new Set((k && k.saves) || []);
@@ -1065,14 +1073,17 @@ function cbDerive(c) {
     const martial = v24 ? (L >= 17 ? 12 : L >= 11 ? 10 : L >= 5 ? 8 : 6) : (L >= 17 ? 10 : L >= 11 ? 8 : L >= 5 ? 6 : 4);
     const attacks = [];
     const seen = new Set();
+    // Martial Arts works only without armor and without a shield, in both rule sets.
+    const martialArts = c.cls === 'monk' && !armor && !shield;
     c.gear.forEach(g => {
         if (!g.w || seen.has(g.w)) return;
         seen.add(g.w);
         const w = cbWeapon(g.w, c);
-        const monkWeapon = c.cls === 'monk' && (v24
+        const monkWeapon = martialArts && (v24
             ? w.kind === 'melee' && (w.cat === 'simple' || w.props.includes('l'))
             : g.w === 'shortsword' || (w.cat === 'simple' && w.kind === 'melee' && !w.props.includes('h') && !w.props.includes('2')));
-        const a = w.kind === 'ranged' ? 'dex' : (w.props.includes('f') || monkWeapon) ? (m.dex > m.str ? 'dex' : 'str') : 'str';
+        // Finesse first: a dart is ranged and finesse, so it can use STR.
+        const a = (w.props.includes('f') || monkWeapon) ? (m.dex > m.str ? 'dex' : 'str') : w.kind === 'ranged' ? 'dex' : 'str';
         const p = cbWeaponProf(c, g.w);
         let hit = m[a] + (p ? prof : 0);
         if (w.kind === 'ranged' && style('archery')) hit += 2;
@@ -1086,8 +1097,8 @@ function cbDerive(c) {
         if (v24 && w.mastery && c.opts.mastery.includes(g.w) && k && k.mastery) props.push(`mastery: ${CB24_MASTERY_TEXT[w.mastery][0]}`);
         attacks.push({ name: w.name, hit, dmg: die === '1' ? `${1 + bonus}` : `${die}${bonus ? ' ' + cbSign(bonus).replace(/^([+-])/, '$1 ') : ''}`, type: w.type, props: props.join(', '), prof: p, w: g.w });
     });
-    const unarmedDie = c.cls === 'monk' ? `1d${martial}` : '';
-    const ua = c.cls === 'monk' ? Math.max(m.str, m.dex) : m.str;
+    const unarmedDie = martialArts ? `1d${martial}` : '';
+    const ua = martialArts ? Math.max(m.str, m.dex) : m.str;
     attacks.push({ name: 'Unarmed strike', hit: ua + prof, dmg: unarmedDie ? `${unarmedDie}${ua ? ' ' + cbSign(ua).replace(/^([+-])/, '$1 ') : ''}` : `${Math.max(1, 1 + ua)}`, type: has('monk', 6) && v24 ? 'bludgeoning or force' : 'bludgeoning', props: '', prof: true });
 
     // Dragonborn breath
@@ -1102,7 +1113,8 @@ function cbDerive(c) {
     // Spellcasting
     let magic = null;
     const rules = cbSpellRules(c);
-    if (rules) {
+    // A 2014 paladin or ranger at level 1 has the class's casting ability but nothing to cast yet.
+    if (rules && (rules.cantrips || rules.list || rules.slots.length || rules.pact)) {
         const a = rules.ability;
         magic = { ability: a, dc: dc(a), attack: prof + m[a], slots: rules.slots, pact: rules.pact, rules,
             always: cbAlwaysSpells(c) };
@@ -1261,7 +1273,8 @@ function cbTodo(c) {
         if (cantrips > r.cantrips) add('spells', `${cantrips - r.cantrips} cantrip${cantrips - r.cantrips > 1 ? 's' : ''} too many.`);
         const word = r.type === 'prepared' ? 'prepared spell' : r.type === 'book' ? 'spellbook spell' : 'spell';
         if (c.spells.list.length < r.list) add('spells', `Pick ${r.list - c.spells.list.length} more ${word}${r.list - c.spells.list.length > 1 ? 's' : ''}.`);
-        if (c.spells.list.length > r.list) add('spells', `${c.spells.list.length - r.list} ${word}${c.spells.list.length - r.list > 1 ? 's' : ''} too many.`);
+        // A spellbook holds copied spells past the level count; any other list has a hard size.
+        if (c.spells.list.length > r.list && r.type !== 'book') add('spells', `${c.spells.list.length - r.list} ${word}${c.spells.list.length - r.list > 1 ? 's' : ''} too many.`);
         if (r.type === 'book' && c.spells.prepared.length < r.prepared && c.spells.prepared.length < c.spells.list.length) add('spells', `Prepare ${Math.min(r.prepared, c.spells.list.length) - c.spells.prepared.length} more spell${Math.min(r.prepared, c.spells.list.length) - c.spells.prepared.length > 1 ? 's' : ''} from your book.`);
         if (r.type === 'book' && c.spells.prepared.length > r.prepared) add('spells', `${c.spells.prepared.length - r.prepared} prepared too many.`);
         const tooHigh = c.spells.list.filter(n => (cbSpell(n) || {}).level > r.maxLevel);
@@ -1299,6 +1312,7 @@ function cbLevelUp(c) {
     const k = cbClass(c.cls, c);
     c.level += 1;
     if (c.hpMode === 'roll' && k) c.hpRolls[c.level - 2] = cbRollDie(k.hd);
+    cbDropAlways(c);
     const features = k ? k.features.filter(f => f[0] === c.level).map(f => f[1]) : [];
     if (cbAsiLevels(c).includes(c.level) && !features.includes('Epic Boon')) features.push('Ability Score Improvement');
     return { features, todo: cbTodo(c) };
@@ -1307,6 +1321,16 @@ function cbLevelUp(c) {
 function cbRollDie(sides) {
     if (typeof rollDice === 'function') return rollDice('1d' + sides).total;
     return 1 + Math.floor(cbRand() * sides);
+}
+
+// A spell picked by hand that a feature now prepares for free (Bless when a Life cleric reaches 3rd
+// level) leaves the picks, so it isn't listed twice or spending a place.
+function cbDropAlways(c) {
+    const always = new Set(cbAlwaysSpells(c).map(n => n.toLowerCase()));
+    if (!always.size) return;
+    const keep = n => !always.has(String(n).toLowerCase());
+    c.spells.list = c.spells.list.filter(keep);
+    c.spells.prepared = c.spells.prepared.filter(keep);
 }
 
 // Trim picks a lower level no longer allows (level down, or a class change).
@@ -1318,13 +1342,23 @@ function cbFitToLevel(c) {
         if (!ch.single && v.length > ch.n) cbSetChoice(c, ch.key, v.slice(0, ch.n));
     });
     Object.keys(c.opts.hunter).forEach(lv => { if (c.level < Number(lv)) delete c.opts.hunter[lv]; });
+    // A pick the class no longer offers at this level (invocations at warlock 1, say) goes, or the sheet keeps counting it.
+    const offered = new Set(cbClassChoices(c).map(ch => ch.key));
+    Object.keys(c.opts).forEach(key => {
+        if (key === 'hunter' || offered.has(key)) return;
+        c.opts[key] = Array.isArray(c.opts[key]) ? [] : '';
+    });
     if (cbIs24(c)) {
         if (!CB24_STRIKES[c.cls] || c.level < 7) c.opts.strikes = '';
         if (c.cls !== 'sorcerer' || c.level < 6) c.opts.affinity = '';
         if (c.cls !== 'druid' || c.level < 3) c.opts.land = '';
         if (!CB24_ORDERS[c.cls]) c.opts.order = '';
         if (!cbHasStyleFeature(c)) c.opts.styles = [];
-    } else if (c.cls !== 'warlock' || c.level < 3) c.opts.pact = '';
+    } else {
+        if (c.cls !== 'warlock' || c.level < 3) c.opts.pact = '';
+        if (!cbHasStyleFeature(c)) c.opts.styles = [];
+    }
+    cbDropAlways(c);
     if (c.expertise.length > cbExpertiseCount(c)) c.expertise = c.expertise.slice(0, cbExpertiseCount(c));
     const r = cbSpellRules(c);
     if (!r) c.spells = { cantrips: [], list: [], prepared: [], arcanum: {}, fav: [] };

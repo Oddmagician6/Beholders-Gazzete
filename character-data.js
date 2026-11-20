@@ -13,6 +13,9 @@
    ============================================================ */
 
 const CB_ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+
+// "+ 3" or "− 3" after a die in feature text (never "+ -3").
+const cbPlus = n => (n < 0 ? `− ${-n}` : `+ ${n}`);
 const CB_ABILITY_NAMES = { str: 'Strength', dex: 'Dexterity', con: 'Constitution', int: 'Intelligence', wis: 'Wisdom', cha: 'Charisma' };
 
 const CB_SKILLS = {
@@ -428,7 +431,7 @@ const CB_CLASSES = [
             [2, 'Ki', x => `${x.L} ki points per short rest; save DC ${x.dc('wis')}. Flurry of Blows (two bonus unarmed strikes), Patient Defense (Dodge), Step of the Wind (Dash or Disengage, double jump), 1 ki each.`],
             [2, 'Unarmored Movement', x => `+${x.L >= 18 ? 30 : x.L >= 14 ? 25 : x.L >= 10 ? 20 : x.L >= 6 ? 15 : 10} ft. speed without armor or shield${x.L >= 9 ? '; run up walls and across liquids on your turn' : ''}.`],
             [3, 'Open Hand Technique', x => `Flurry hits can knock prone (DEX save), push 15 ft. (STR save), or deny reactions; DC ${x.dc('wis')}.`],
-            [3, 'Deflect Missiles', x => `Reaction: cut a ranged weapon hit's damage by 1d10 + ${x.m.dex + x.L}; at 0, spend 1 ki to throw it back.`],
+            [3, 'Deflect Missiles', x => `Reaction: cut a ranged weapon hit's damage by 1d10 ${cbPlus(x.m.dex + x.L)}; at 0, spend 1 ki to throw it back.`],
             [4, 'Slow Fall', x => `Reaction: reduce falling damage by ${5 * x.L}.`],
             [5, 'Extra Attack', 'Attack twice when you take the Attack action.'],
             [5, 'Stunning Strike', x => `Spend 1 ki on a melee hit: the target makes a DC ${x.dc('wis')} CON save or is stunned until your next turn ends.`],

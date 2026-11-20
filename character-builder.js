@@ -38,10 +38,20 @@ function setPath(o, p, val) {
     t[last] = val;
 }
 
+// True when the browser kept it.
 function save() {
     const list = cbSave(cur);
-    if (!list) { flash('Could not save: this browser\'s storage is full or blocked.', true); return; }
+    if (!list) { flash('Could not save: this browser\'s storage is full or blocked.', true); return false; }
     chars = list;
+    return true;
+}
+
+// The address names the open character, so a reload (or a shared link) opens the same one.
+function setCharUrl() {
+    const p = new URLSearchParams(location.search);
+    if (cur) p.set('char', cur.id); else p.delete('char');
+    const qs = p.toString();
+    history.replaceState(history.state, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
 }
 
 // Change the open character, save, and redraw (keeping focus on the control that was used).
@@ -77,10 +87,20 @@ function charLabel(c) {
 function chips(path, options, selected, max, locked = {}) {
     const full = selected.length >= max;
     return `<div class="cb-chips">${options.map(([id, label, small]) => {
-        if (locked[id]) return `<span class="cb-chip cb-locked" title="Already from ${esc(locked[id])}">✓ ${esc(label)}<small>${esc(locked[id])}</small></span>`;
         const on = selected.includes(id);
-        return `<button type="button" class="cb-chip" data-act="toggle" data-f="${esc(path)}" data-v="${esc(id)}" data-max="${max}" aria-pressed="${on}"${!on && full && max > 1 ? ' disabled' : ''}>${esc(label)}${small ? `<small>${esc(small)}</small>` : ''}</button>`;
+        // Picked here before another choice granted it too: it stays a button, so the wasted pick can be undone.
+        if (locked[id] && !on) return `<span class="cb-chip cb-locked" title="Already from ${esc(locked[id])}">✓ ${esc(label)}<small>${esc(locked[id])}</small></span>`;
+        const note = locked[id] ? `also from ${locked[id]}: pick another` : small;
+        return `<button type="button" class="cb-chip" data-act="toggle" data-f="${esc(path)}" data-v="${esc(id)}" data-max="${max}" aria-pressed="${on}"${!on && full && max > 1 ? ' disabled' : ''}>${esc(label)}${note ? `<small>${esc(note)}</small>` : ''}</button>`;
     }).join('')}</div>`;
+}
+
+// Picks here that the character now has some other way (a race changed after them): { name: 'elsewhere' },
+// shown with chips() as still pickable so they can be swapped.
+function langLocks(known, picked) {
+    const out = {};
+    picked.forEach(x => { if (known.includes(x)) out[x] = 'elsewhere'; });
+    return out;
 }
 
 function countTag(have, need) {
@@ -105,7 +125,9 @@ function stepTodo(id) {
 
 // A homebrew spell (homebrew-magic.js) has no page of its own: its name and a 🧪 (an SRD 5.2 addition, srd52.js: a 📗).
 function spellLink(name) {
-    if (typeof hbmIsHomebrew === 'function' && hbmIsHomebrew(name)) return `${esc(name)} <span title="Homebrew, from your campaign notebook">🧪</span>`;
+    // The row decides: a notebook item that shares a standard spell's name (Light) doesn't make the spell homebrew.
+    const row = cbSpell(name);
+    if (row ? row.hb : typeof hbmIsHomebrew === 'function' && hbmIsHomebrew(name)) return `${esc(name)} <span title="Homebrew, from your campaign notebook">🧪</span>`;
     if (typeof srd52IsSpell === 'function' && srd52IsSpell(name)) return `${esc(name)} <span title="From the SRD 5.2 additions">📗</span>`;
     return `<a href="${spellHref(name)}" target="_blank" rel="noopener" title="Open ${esc(name)} in a new tab">${esc(name)}</a>`;
 }
@@ -270,7 +292,7 @@ function renderBackground() {
             <li><b>${esc(bg.feature[0])}.</b> ${esc(bg.feature[1])}</li>
             <li><b>Gear:</b> ${esc(bg.gear.join(', ').toLowerCase())}, and ${bg.gold} gp.</li></ul>
             <h4>Two languages ${countTag(c.bgOpt.langs.length, 2)}</h4>` +
-            chips('bgOpt.langs', CB_LANGUAGES.filter(l => !known.includes(l)).map(l => [l, l]), c.bgOpt.langs, 2);
+            chips('bgOpt.langs', CB_LANGUAGES.filter(l => !known.includes(l) || c.bgOpt.langs.includes(l)).map(l => [l, l]), c.bgOpt.langs, 2, langLocks(known, c.bgOpt.langs));
     }
     if (c.bg === 'custom') {
         h += `<h3>✍️ Your own background</h3>
@@ -278,8 +300,9 @@ function renderBackground() {
             <h4>Two skills ${countTag(c.bgOpt.skills.length, 2)}</h4>` +
             chips('bgOpt.skills', Object.entries(CB_SKILLS).map(([id, s]) => [id, s[0]]), c.bgOpt.skills, 2, fromRace) +
             `<h4>Two tools or languages ${countTag(c.bgOpt.extras.length, 2)}</h4>` +
-            chips('bgOpt.extras', CB_LANGUAGES.filter(l => !known.includes(l)).map(l => [l, l]), c.bgOpt.extras, 2) +
-            chips('bgOpt.extras', CB_TOOLS.filter(t => !cbTools({ ...c, bg: '' }).includes(t)).map(t => [t, t]), c.bgOpt.extras, 2) +
+            chips('bgOpt.extras', CB_LANGUAGES.filter(l => !known.includes(l) || c.bgOpt.extras.includes(l)).map(l => [l, l]), c.bgOpt.extras, 2, langLocks(known, c.bgOpt.extras)) +
+            chips('bgOpt.extras', CB_TOOLS.filter(t => !cbTools({ ...c, bg: '' }).includes(t) || c.bgOpt.extras.includes(t)).map(t => [t, t]), c.bgOpt.extras, 2,
+                langLocks(cbTools({ ...c, bg: '' }), c.bgOpt.extras)) +
             `<p class="cb-faint">You start with common clothes and 10 gp; add anything your story needs on the Equipment step.</p>`;
     }
     return h + stepTodo('background') + nextButtons();
@@ -301,7 +324,10 @@ function renderSkills() {
     }
     const ex = cbExpertiseCount(c);
     if (ex) {
-        const profs = cbExpertiseChoices(c).map(id => [id, CB_SKILLS[id] ? CB_SKILLS[id][0] : id]);
+        const choices = cbExpertiseChoices(c);
+        // A pick that stopped qualifying (its proficiency came from a race since changed) stays, marked, so it can be undone.
+        const gone = c.expertise.filter(id => !choices.includes(id));
+        const profs = [...choices, ...gone].map(id => [id, CB_SKILLS[id] ? CB_SKILLS[id][0] : id, gone.includes(id) ? 'not proficient now: pick another' : '']);
         h += `<h4>Expertise: double proficiency${cbIs24(c) && c.cls === 'wizard' ? ' (Scholar)' : ''} ${countTag(c.expertise.length, ex)}</h4>` + chips('expertise', profs, c.expertise, ex);
     }
     h += `<h3>All skills</h3><div class="cb-scroll"><table class="cb-table"><thead><tr><th>Skill</th><th>Ability</th><th class="cb-num">Bonus</th><th>From</th></tr></thead><tbody>` +
@@ -398,6 +424,10 @@ function itemPrice(val) {
 function renderSpells() {
     const c = cur, r = cbSpellRules(c), d = cbDerive(c);
     let h = `<h2>Spells</h2>`;
+    // The page still holds the other rules' lists (the 2024 file is loading, or failed to): picking now would mix them.
+    if (typeof rulesUse === 'function' && cbPageRules() !== (cbIs24(c) ? '2024' : '2014')) {
+        return h + `<p class="cb-lead">Loading the ${esc(rulesName(c))} spell lists… If this stays, you may be offline: reload the page to try again.</p>` + nextButtons();
+    }
     const racial = cbRaceSpells(c);
     const racialHtml = racial.length ? `<h4>From your race</h4><ul class="cb-list">${racial.map(s => `<li>${spellLink(s.name)} <span class="cb-tag">${esc(s.note)}</span></li>`).join('')}</ul>` : '';
     if (!r || (!r.cantrips && !r.list && !r.slots.length && !r.pact)) {
@@ -418,7 +448,11 @@ function renderSpells() {
     if (always.length) h += `<h4>Always prepared (${cbIs24(c) ? 'class features' + (c.level >= 3 ? ', ' + esc(cbClass(c.cls, c).sub.name) : '') : esc(cbClass(c.cls, c).sub.name)}${c.cls === 'druid' && c.opts.land ? ', ' + esc(c.opts.land) : ''})</h4><p>${always.map(spellLink).join(', ')}</p>`;
     const k = cbClass(c.cls, c);
     const alwaysLow = always.map(n => n.toLowerCase());
-    const listSpells = (level, kind, chosen, max, offOk) => {
+    const isOff = s => !s.classes.includes(k.name) && !(!cbIs24(c) && k.sub.expanded && Object.values(k.sub.expanded).flat().includes(s.name));
+    // How many picks of a list are from other classes' lists (Magical Secrets and the like have a quota).
+    const offCount = chosen => chosen.filter(n => { const s = cbSpell(n); return s && isOff(s); }).length;
+    // A wizard's book takes copied spells past the level count, so it never locks.
+    const listSpells = (level, kind, chosen, max, offOk, offMax = Infinity) => {
         let pool = cbClassSpells(c, level);
         if (offOk && showAllSpells) {
             const names = new Set(pool.map(s => s.name));
@@ -427,21 +461,25 @@ function renderSpells() {
         }
         pool = pool.filter(s => !alwaysLow.includes(s.name.toLowerCase()));
         const full = chosen.length >= max;
+        const offFull = offOk && offCount(chosen) >= offMax;
         return `<div class="cb-spells">${pool.map(s => {
             const on = chosen.includes(s.name);
-            const off = !s.classes.includes(k.name) && !(!cbIs24(c) && k.sub.expanded && Object.values(k.sub.expanded).flat().includes(s.name));
+            const off = isOff(s);
+            const shut = !on && (full || (off && offFull));
             const tags = [s.school, s.concentration ? 'conc.' : '', s.ritual ? 'ritual' : '', off ? 'other class' : ''].filter(Boolean).join(' · ');
-            return `<label class="cb-spell${on ? ' on' : ''}${!on && full ? ' cb-dim' : ''}" data-name="${esc(s.name.toLowerCase())}"><input type="checkbox" data-sk="${kind}" value="${esc(s.name)}"${on ? ' checked' : ''}${!on && full ? ' disabled' : ''}><span>${esc(s.name)}${s.hb ? ' <span class="hb-tag">🧪 Homebrew</span>' : s.v52 && !cbIs24(c) ? ' ' + srd52Tag() : `<a href="${spellHref(s.name)}" target="_blank" rel="noopener" aria-label="Open ${esc(s.name)} in a new tab">↗</a>`}<small>${esc(tags)}</small></span></label>`;
+            return `<label class="cb-spell${on ? ' on' : ''}${shut ? ' cb-dim' : ''}" data-name="${esc(s.name.toLowerCase())}"><input type="checkbox" data-sk="${kind}" value="${esc(s.name)}"${on ? ' checked' : ''}${shut ? ' disabled' : ''}><span>${esc(s.name)}${s.hb ? ' <span class="hb-tag">🧪 Homebrew</span>' : s.v52 && !cbIs24(c) ? ' ' + srd52Tag() : `<a href="${spellHref(s.name)}" target="_blank" rel="noopener" aria-label="Open ${esc(s.name)} in a new tab">↗</a>`}<small>${esc(tags)}</small></span></label>`;
         }).join('')}</div>`;
     };
-    if (r.cantrips) h += `<h3>Cantrips ${countTag(c.spells.cantrips.length, r.cantrips)}</h3>` + listSpells(0, 'cantrips', c.spells.cantrips, r.cantrips, r.offCantrips > 0);
+    if (r.cantrips) h += `<h3>Cantrips ${countTag(c.spells.cantrips.length, r.cantrips)}</h3>` + listSpells(0, 'cantrips', c.spells.cantrips, r.cantrips, r.offCantrips > 0, r.offCantrips);
     const word = r.type === 'prepared' ? 'Prepared spells' : r.type === 'book' ? 'Spellbook' : 'Spells known';
     if (r.list) {
-        h += `<h3>${word} ${countTag(c.spells.list.length, r.list)}</h3>`;
+        const book = r.type === 'book';
+        h += `<h3>${word} ${book && c.spells.list.length > r.list ? `<span class="cb-count full">${c.spells.list.length} (${r.list} from levels, the rest copied)</span>` : countTag(c.spells.list.length, r.list)}</h3>`;
+        if (r.offList && r.offList < r.list) h += `<p class="cb-lead">Up to ${r.offList} of them may come from other classes' lists (${offCount(c.spells.list)} picked).</p>`;
         if (r.type === 'prepared') h += `<p class="cb-lead">${cbIs24(c) ? (['cleric', 'druid'].includes(c.cls) ? 'You can change these after each long rest.' : ['paladin', 'ranger'].includes(c.cls) ? 'You can swap one after each long rest.' : 'You can swap one each time you gain a level.') : 'You can change these after each long rest.'}</p>`;
         if (r.type === 'book') h += `<p class="cb-lead">Six at 1st level and two more each level; you can also copy spells you find into it.</p>`;
         for (let lv = 1; lv <= r.maxLevel; lv++) {
-            h += `<h4>${cbOrd(lv)} level</h4>` + listSpells(lv, 'list', c.spells.list, r.list, r.offList > 0);
+            h += `<h4>${cbOrd(lv)} level</h4>` + listSpells(lv, 'list', c.spells.list, book ? Infinity : r.list, r.offList > 0, r.offList);
         }
     }
     if (r.type === 'book' && c.spells.list.length) {
@@ -814,14 +852,25 @@ function openChar(c, toStep) {
     showAllSpells = false;
     step = toStep || (c && cbTodo(c).length ? (cbTodo(c)[0].step) : 'sheet');
     render();
+    setCharUrl();
     useCharRules(c);
 }
 
 // The page's spell lists follow the open character's rules (srd52.js rulesUse, this page only).
+// Pinned even when they already match, so another tab's rules switch can't swap the lists under it.
 function useCharRules(c) {
-    if (!c || typeof rulesUse !== 'function' || cbPageRules() === (cbIs24(c) ? '2024' : '2014')) return Promise.resolve();
-    return rulesUse(cbIs24(c) ? '2024' : '2014').then(() => {
+    if (!c || typeof rulesUse !== 'function') return Promise.resolve();
+    const want = cbIs24(c) ? '2024' : '2014';
+    if (cbPageRules() === want) {
+        if (typeof rulesPage !== 'undefined') rulesPage = want;
+        return Promise.resolve();
+    }
+    return rulesUse(want).then(() => {
         if (cur !== c) return;
+        if (cbPageRules() !== want) {
+            flash('The 2024 spell lists would not load (offline?), so the Spells step can\'t be trusted for this character. Reload to try again.', true);
+            return;
+        }
         // Names the other version's list didn't have were kept loosely; check them again now.
         const fresh = cbClean(JSON.parse(JSON.stringify(c)));
         if (fresh) Object.assign(c, fresh);
@@ -838,21 +887,30 @@ function filterSpells(text) {
 // ── Actions ──────────────────────────────────────────────
 function newChar() {
     if (chars.length >= CB_MAX) { flash(`You have ${CB_MAX} characters saved; delete one first.`, true); return; }
+    const prev = cur;
     cur = cbBlank(cbDefaultRules());
-    save();
+    if (!save()) { cur = prev; return; }
     openChar(cur, 'race');
 }
 
 function quickBuild(opts) {
     if (chars.length >= CB_MAX) { flash(`You have ${CB_MAX} characters saved; delete one first.`, true); return; }
     const go = () => {
+        const prev = cur;
         cur = cbQuickBuild(opts);
-        save();
+        if (!save()) { cur = prev; return; }
         openChar(cur, 'sheet');
         flash(`⚡ Rolled ${cur.name}.`);
     };
     if (typeof rulesUse === 'function' && cbPageRules() !== opts.rules) rulesUse(opts.rules).then(go);
     else go();
+}
+
+// True (and says so) when the item needs a new row and the list already has CB_MAX_GEAR (a reload would drop it).
+function gearFull(item) {
+    if (cur.gear.length < CB_MAX_GEAR || cur.gear.some(g => cbSameGear(g, item))) return false;
+    flash(`That's ${CB_MAX_GEAR} different things already; remove something first.`, true);
+    return true;
 }
 
 function rollHp(c, i) {
@@ -881,7 +939,10 @@ function onClick(e) {
             if (v === '111') c.bgOpt.boost = bg.abil ? bg.abil.slice() : [...new Set([...c.bgOpt.boost, ...CB_ABILITIES])].slice(0, 3);
             else c.bgOpt.boost = c.bgOpt.boost.length >= 2 ? c.bgOpt.boost.slice(0, 2) : (bg.abil || CB_ABILITIES).slice(0, 2);
         });
-        case 'take-gold': return change(c => {
+        case 'take-gold':
+            // A 2024 background kit that includes a tool needs the tool picked first, as with class gear.
+            if (cbMissingPicks(cur).includes('tool:bg')) { flash('Pick your background\'s tool first (on the Background step).', true); return; }
+            return change(c => {
             const k = cbClass(c.cls, c);
             const bg = cbBackgroundGear(c);
             c.coins = k.gold + bg.gold;
@@ -891,14 +952,20 @@ function onClick(e) {
         });
         case 'class': return change(c => {
             if (c.cls === v) return;
-            const had = !!c.cls;
+            const had = !!c.cls, oldCls = c.cls;
             c.cls = v;
             c.skills = []; c.tools = []; c.expertise = []; c.asi = {}; c.hpRolls = [];
             c.opts = cbBlank().opts;
             c.equip = { choice: [], picks: {} };
             c.spells = { cantrips: [], list: [], prepared: [], arcanum: {}, fav: [] };
             if (had && c.gearSet && c.equipMode === 'class') { c.gear = []; c.coins = 0; c.gearSet = false; c.wear = { armor: '', shield: false }; }
-            if (c.method === 'array' && c.assigned) assignByClass(c, CB_STANDARD_ARRAY);
+            // Re-sort the array for the new class only if the scores still sit where the old class put them;
+            // scores the player swapped by hand stay.
+            if (c.method === 'array' && c.assigned) {
+                const was = { ...c, cls: oldCls, base: { ...c.base } };
+                assignByClass(was, CB_STANDARD_ARRAY);
+                if (!oldCls || CB_ABILITIES.every(a => was.base[a] === c.base[a])) assignByClass(c, CB_STANDARD_ARRAY);
+            }
             if (had) flash('Class changed: pick its skills, gear, and spells again.');
         });
         case 'toggle': return change(c => {
@@ -940,6 +1007,8 @@ function onClick(e) {
         });
         case 'bg': return change(c => {
             if (c.bg === v) return;
+            // Starting gear taken with the old background holds its kit and gold: ask for it again.
+            if (c.bg && c.gearSet) { c.gearSet = false; flash('Background changed: take your starting gear again on the Equipment step (what you have stays until you do).'); }
             c.bg = v;
             c.bgOpt = { ...cbBlank().bgOpt, name: c.bgOpt.name, langs: cbIs24(c) ? c.bgOpt.langs : [] };
             if (cbIs24(c)) {
@@ -962,7 +1031,9 @@ function onClick(e) {
                 flash('🎒 Gear packed.');
             });
         }
-        case 'roll-gold': return change(c => {
+        case 'roll-gold':
+            if (cbMissingPicks(cur).includes('tool:bg')) { flash('Pick your background\'s tool first (on the Background step).', true); return; }
+            return change(c => {
             const k = cbClass(c.cls, c);
             const r = rollDice(`${k.gold[0]}d4`);
             const bg = cbBackgroundGear(c);
@@ -974,6 +1045,7 @@ function onClick(e) {
             const sel = document.getElementById('cb-buy');
             const { item, cost } = itemPrice(sel.value);
             if (v !== 'free' && cost > cur.coins + 1e-9) { flash(`Not enough coin: ${item.name} costs ${formatCoins(cost)}.`, true); return; }
+            if (gearFull(item)) return;
             const keep = sel.value;
             change(c => {
                 cbAddGear(c.gear, item);
@@ -991,6 +1063,7 @@ function onClick(e) {
             const input = document.getElementById('cb-custom-item');
             const name = input.value.replace(/\s+/g, ' ').trim().slice(0, 80);
             if (!name) { input.focus(); return; }
+            if (gearFull({ name })) return;
             return change(c => { cbAddGear(c.gear, { name, qty: 1 }); c.gearSet = true; });
         }
         case 'gear-del': return change(c => {
@@ -1151,12 +1224,14 @@ function importChar(file) {
         let data;
         try { data = JSON.parse(reader.result); } catch (e) { flash('That file isn\'t JSON.', true); return; }
         const raw = data && data.gazetteCharacter ? data.character : data;
-        const c = cbClean(raw);
+        let c = null;
+        try { c = cbClean(raw); } catch (e) { c = null; }   // a field of the wrong kind (an object for a level)
         if (!c || (!c.race && !c.cls && !c.name)) { flash('That file isn\'t a character from this builder.', true); return; }
         if (chars.length >= CB_MAX) { flash(`You have ${CB_MAX} characters saved; delete one first.`, true); return; }
         if (chars.some(x => x.id === c.id)) c.id = cbNewId();
+        const prev = cur;
         cur = c;
-        save();
+        if (!save()) { cur = prev; return; }
         openChar(cur);
         flash(`⬆️ Imported ${c.name || 'a character'}.`);
     };
@@ -1191,7 +1266,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     chars = cbLoadAll();
     const asked = new URLSearchParams(location.search).get('char'); // from the Spell Planner or the Cards page
-    openChar(chars.find(c => c.id === asked) || chars[0] || null);
+    const found = chars.find(c => c.id === asked);
+    openChar(found || chars[0] || null);
+    if (asked && !found) flash(`That character isn't saved in this browser (deleted, or made on another device)${cur ? '; here is ' + (cur.name || 'your latest one') + ' instead' : ''}.`, true);
 
     const panel = document.getElementById('cb-panel');
     panel.addEventListener('click', onClick);
@@ -1226,8 +1303,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const copy = cbClean(JSON.parse(JSON.stringify(cur)));
         copy.id = cbNewId();
         copy.name = (cur.name || 'Unnamed character').slice(0, 52) + ' (copy)';
+        const prev = cur;
         cur = copy;
-        save();
+        if (!save()) { cur = prev; return; }
         openChar(cur, step);
         flash('⧉ Duplicated.');
     });
@@ -1246,7 +1324,9 @@ document.addEventListener('DOMContentLoaded', () => {
         armed = 0;
         del.textContent = '🗑️ Delete';
         const name = cur.name || 'The character';
-        chars = cbDelete(cur.id);
+        const left = cbDelete(cur.id);
+        if (!left) { flash('Could not delete: this browser\'s storage is full or blocked.', true); return; }
+        chars = left;
         openChar(chars[0] || null);
         flash(`🗑️ ${name} deleted.`);
     });

@@ -54,7 +54,10 @@ function jnNum(v) {
 
 // A date as YYYY-MM-DD, or ''.
 function jnDate(v) {
-    return typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) && !isNaN(new Date(v + 'T00:00:00Z')) ? v : '';
+    if (typeof v !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(v)) return '';
+    const d = new Date(v + 'T00:00:00Z');
+    // 2025-02-30 parses as March 2: only a real day comes back as itself.
+    return !isNaN(d) && d.toISOString().slice(0, 10) === v ? v : '';
 }
 
 // "Waterdeep, Villain , waterdeep" or a list → ['waterdeep', 'villain'].
@@ -69,7 +72,7 @@ function jnTags(v) {
 }
 
 function jnCleanEntry(raw) {
-    if (!raw || typeof raw !== 'object' || Array.isArray(raw) || !Object.hasOwn(JN_KINDS, raw.kind)) return null;
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw) || typeof raw.kind !== 'string' || !Object.hasOwn(JN_KINDS, raw.kind)) return null;
     const e = {
         id: jnIdOk(raw.id, /^e[a-z0-9]{1,16}$/) ? raw.id : jnNewId('e'),
         kind: raw.kind,
@@ -166,7 +169,11 @@ function jnSorted(entries, kind) {
 }
 
 function jnHaystack(e) {
+    // The words the card shows count too: a quest's status, a person's attitude, the date, "gone".
+    const plain = s => (s || '').replace(/^[^A-Za-z]+/, '');
     return [e.title, e.text, e.tags.join(' '), e.giver, e.reward, e.role, e.region, e.value,
+        e.kind === 'quest' ? plain(JN_QUEST[e.status]) : '', e.attitude ? plain(JN_ATTITUDE[e.attitude]) : '',
+        e.date || '', e.date ? jnFmtDate(e.date) : '', e.gone ? 'gone' : '',
         e.kind === 'session' && e.num ? `session ${e.num}` : '', e.sn ? `session ${e.sn}` : ''].filter(Boolean).join('\n').toLowerCase();
 }
 
@@ -247,16 +254,42 @@ function flash(msg, bad = false) {
 
 // Saved journals: the ones with an entry, or that the player started or changed by hand.
 // Returns false (and says so) when the browser won't store them.
+// On a refusal nothing here changes either: the caller puts back what it changed.
 function persist() {
+    const was = { jns, kept: cur && cur.kept, updated: cur && cur.updated };
     if (cur) {
         cur.kept = true;
         cur.updated = Date.now();
         jns = [cur, ...jns.filter(j => j !== cur)];
     }
     const list = jns.filter(j => j.kept || j.entries.length).map(({ kept, ...j }) => j);
+    const undo = () => { jns = was.jns; if (cur) { cur.kept = was.kept; cur.updated = was.updated; } };
+    // A draft saved after another tab filled the last place: storing would push out a saved journal.
+    if (list.length > JN_MAX) { undo(); flash(`You have ${JN_MAX} journals; delete one first.`, true); return false; }
     if (jnStore(list)) return true;
+    undo();
     flash('Your browser would not save that: its storage may be full.', true);
     return false;
+}
+
+// Before any change: take another tab's saves first, so writing this list doesn't erase them.
+function jnFresh() {
+    if (jnStale) jnReload(true);
+}
+
+// The entry editor holds typing that isn't saved yet.
+const jnFormSig = f => Array.from(f.elements).map(el => (el.type === 'checkbox' ? el.checked : el.value)).join('\u0001');
+function editorDirty() {
+    const f = document.querySelector('#jn-editor-slot .jn-editor');
+    return !!f && f.dataset.start !== jnFormSig(f);
+}
+// True (and says so) when leaving now would throw that typing away.
+function editorBlocks() {
+    if (!editorDirty()) return false;
+    flash('Save or cancel the entry you are writing first.', true);
+    const t = document.querySelector('#jn-editor-slot .jn-editor [name="title"]');
+    if (t) t.focus();
+    return true;
 }
 
 // Another tab saved journals while the editor was open here.
@@ -270,6 +303,8 @@ function jnReload(keepCur) {
     jns.forEach(j => { j.kept = true; });
     if (draft && !jns.some(j => j.char === draft.char)) jns.unshift(draft);
     cur = (mine && jns.find(j => j.id === mine.id)) || null;
+    // This tab's draft for a character whose journal another tab has saved meanwhile: write into that one.
+    if (!cur && mine && mine === draft && mine.char) cur = jns.find(j => j.char === mine.char) || null;
     if (!cur && keepCur && mine) { jns.unshift(mine); cur = mine; }
     if (!cur) cur = jns[0] || null;
     jnStale = false;
@@ -286,7 +321,9 @@ function charLine(j) {
 
 function setUrl() {
     const p = new URLSearchParams();
-    if (cur) p.set('j', cur.id);
+    // A draft isn't saved, so its id would open nothing on reload: keep asking for the character.
+    if (cur && !cur.kept && !cur.entries.length && cur.char) p.set('char', cur.char);
+    else if (cur) p.set('j', cur.id);
     if (view.kind) p.set('kind', view.kind);
     if (view.q) p.set('q', view.q);
     if (view.tag) p.set('tag', view.tag);
@@ -298,18 +335,23 @@ function openJournal(j) {
     cur = j;
     editing = null;
     view.tag = '';
+    armedJournal = { id: '', at: 0 };
+    const del = document.getElementById('jn-delete');
+    if (del) del.textContent = '🗑️ Delete Journal';
     render();
     renderEditor();
 }
 
 function newJournal(name, charId) {
+    jnFresh();
     if (jns.filter(j => j.kept || j.entries.length).length >= JN_MAX) { flash(`You have ${JN_MAX} journals; delete one first.`, true); return null; }
+    const before = { jns, cur };
     jns = jns.filter(j => j.kept || j.entries.length);
     const c = chars.find(x => x.id === charId);
     const j = jnBlank(jnLine(name, JN_LIMITS.name) || (c ? c.name : ''), c ? c.id : '');
     jns.unshift(j);
     cur = j;
-    persist();
+    if (!persist()) { jns = before.jns; cur = before.cur; return null; }
     openJournal(j);
     return j;
 }
@@ -360,12 +402,13 @@ function renderBody() {
     document.getElementById('jn-kinds').innerHTML = [['', '📚', 'All'], ...Object.entries(JN_KINDS).map(([k, d]) => [k, d.icon, d.many])]
         .map(([k, icon, label]) => `<button type="button" class="jn-chip${view.kind === k ? ' jn-on' : ''}" data-kind="${k}" aria-pressed="${view.kind === k}">${icon} ${label} <span>${counts[k]}</span></button>`).join('');
 
-    const tagCount = {};
-    cur.entries.forEach(e => e.tags.forEach(t => { tagCount[t] = (tagCount[t] || 0) + 1; }));
-    const tags = Object.keys(tagCount).sort((a, b) => tagCount[b] - tagCount[a] || a.localeCompare(b)).slice(0, 40);
-    if (view.tag && !tagCount[view.tag]) view.tag = '';
+    // A Map, so tags like "constructor" or "__proto__" count like any other word.
+    const tagCount = new Map();
+    cur.entries.forEach(e => e.tags.forEach(t => { tagCount.set(t, (tagCount.get(t) || 0) + 1); }));
+    const tags = [...tagCount.keys()].sort((a, b) => tagCount.get(b) - tagCount.get(a) || a.localeCompare(b)).slice(0, 40);
+    if (view.tag && !tagCount.has(view.tag)) view.tag = '';
     document.getElementById('jn-tags').innerHTML = tags.length
-        ? '<span class="jn-dim">Tags:</span> ' + tags.map(t => `<button type="button" class="jn-tag${view.tag === t ? ' jn-on' : ''}" data-tag="${esc(t)}" aria-pressed="${view.tag === t}">#${esc(t)} <span>${tagCount[t]}</span></button>`).join('')
+        ? '<span class="jn-dim">Tags:</span> ' + tags.map(t => `<button type="button" class="jn-tag${view.tag === t ? ' jn-on' : ''}" data-tag="${esc(t)}" aria-pressed="${view.tag === t}">#${esc(t)} <span>${tagCount.get(t)}</span></button>`).join('')
         : '';
 
     const shown = jnSorted(cur.entries.filter(e => (!view.kind || e.kind === view.kind) && jnMatches(e, view.q, view.tag)), view.kind);
@@ -391,6 +434,7 @@ function renderEditor() {
     slot.innerHTML = editing ? editorHtml(e, e ? e.kind : editing.kind) : '';
     const box = slot.querySelector('.jn-editor');
     if (box) {
+        box.dataset.start = jnFormSig(box);
         box.scrollIntoView({ block: 'nearest' });
         box.querySelector('[name="title"]').focus({ preventScroll: true });
     }
@@ -471,13 +515,14 @@ function newDefaults(kind) {
     if (kind === 'session') {
         const d = new Date();
         const pad = n => String(n).padStart(2, '0');
-        return { num: last + 1, date: `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`, tags: [] };
+        return { num: last < 9999 ? last + 1 : null, date: `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`, tags: [] };
     }
     return { sn: last || null, tags: [] };
 }
 
 // ── Editing ──────────────────────────────────────────────
 function startEntry(kind) {
+    if (editorBlocks()) return;
     if (cur.entries.length >= JN_LIMITS.entries) { flash(`A journal holds ${JN_LIMITS.entries} entries; start another journal for the next chapter.`, true); return; }
     if (view.kind && view.kind !== kind) view.kind = kind;
     setEditing({ kind });
@@ -498,15 +543,19 @@ function saveEditor(form) {
     const e = jnCleanEntry(raw);
     if (!e.title && !e.text && !(kind === 'session' && e.num)) { flash('Give it a title or some notes first.', true); return; }
     // Save onto the newest copy, so another tab's entries aren't written over.
-    if (jnStale) jnReload(true);
+    jnFresh();
     const old = editId ? cur.entries.find(x => x.id === editId) : null;
+    // Another tab may have filled the journal while this entry was being written.
+    if (!old && cur.entries.length >= JN_LIMITS.entries) { render(); flash(`A journal holds ${JN_LIMITS.entries} entries; start another journal for the next chapter.`, true); return; }
+    const had = cur.entries.slice();
     if (old) cur.entries[cur.entries.indexOf(old)] = e;
     else cur.entries.unshift(e);
+    // A refused save keeps the editor and its typing, so nothing is lost.
+    if (!persist()) { cur.entries = had; render(); return; }
     editing = null;
-    const ok = persist();
     render();
     renderEditor();
-    if (ok) flash(`${JN_KINDS[kind].icon} ${old ? 'Saved' : 'Added'}: ${jnTitle(e)}.`);
+    flash(`${JN_KINDS[kind].icon} ${old ? 'Saved' : 'Added'}: ${jnTitle(e)}.`);
 }
 
 let armedDel = { id: '', at: 0 };
@@ -517,28 +566,35 @@ function deleteEntry(id, btn) {
         setTimeout(() => { if (btn.isConnected) btn.textContent = '🗑️'; }, 3000);
         return;
     }
-    const e = cur.entries.find(x => x.id === id);
-    cur.entries = cur.entries.filter(x => x.id !== id);
     armedDel = { id: '', at: 0 };
-    persist();
+    jnFresh();
+    const e = cur.entries.find(x => x.id === id);
+    const had = cur.entries;
+    cur.entries = cur.entries.filter(x => x.id !== id);
+    if (!persist()) { cur.entries = had; render(); return; }
     render();
     if (e) flash(`🗑️ Deleted: ${jnTitle(e)}.`);
 }
 
-let armedJournal = 0;
+// Armed for one journal: switching journals in between starts over (openJournal disarms it).
+let armedJournal = { id: '', at: 0 };
 function deleteJournal(btn) {
-    if (Date.now() - armedJournal > 3000) {
-        armedJournal = Date.now();
+    if (!cur) return;
+    if (armedJournal.id !== cur.id || Date.now() - armedJournal.at > 3000) {
+        armedJournal = { id: cur.id, at: Date.now() };
         btn.textContent = '🗑️ Really delete it?';
-        setTimeout(() => { btn.textContent = '🗑️ Delete Journal'; }, 3000);
+        setTimeout(() => { if (armedJournal.id === '' || Date.now() - armedJournal.at >= 3000) btn.textContent = '🗑️ Delete Journal'; }, 3000);
         return;
     }
-    armedJournal = 0;
+    if (editorBlocks()) return;
+    armedJournal = { id: '', at: 0 };
     btn.textContent = '🗑️ Delete Journal';
+    jnFresh();
     const name = cur.name || 'The journal';
+    const before = { jns, cur };
     jns = jns.filter(j => j !== cur);
     cur = null;
-    persist();
+    if (!persist()) { jns = before.jns; cur = before.cur; render(); return; }
     openJournal(jns[0] || null);
     flash(`🗑️ ${name} deleted.`);
 }
@@ -565,16 +621,22 @@ function importJournal(file) {
     reader.onload = () => {
         let data;
         try { data = JSON.parse(reader.result); } catch (e) { flash('That file isn\'t JSON.', true); return; }
-        const j = jnClean(data && data.gazetteJournal ? data.journal : data);
+        const src = data && data.gazetteJournal ? data.journal : data;
+        const j = jnClean(src);
         if (!j || (!j.entries.length && !j.name)) { flash('That file isn\'t a journal from this page.', true); return; }
+        if (editorBlocks()) return;
+        jnFresh();
         const saved = jns.filter(x => x.kept || x.entries.length);
         if (saved.length >= JN_MAX) { flash(`You have ${JN_MAX} journals; delete one first.`, true); return; }
         if (jns.some(x => x.id === j.id)) j.id = jnNewId('j');
+        const before = { jns, cur };
         jns = [j, ...saved];
         cur = j;
-        persist();
+        if (!persist()) { jns = before.jns; cur = before.cur; render(); return; }
         openJournal(j);
-        flash(`⬆️ Imported ${j.name || 'a journal'} (${j.entries.length} ${j.entries.length === 1 ? 'entry' : 'entries'}).`);
+        const skipped = (Array.isArray(src.entries) ? src.entries.length : 0) - j.entries.length;
+        flash(`⬆️ Imported ${j.name || 'a journal'} (${j.entries.length} ${j.entries.length === 1 ? 'entry' : 'entries'})`
+            + (skipped > 0 ? `; ${skipped} left out (unreadable, or past the ${JN_LIMITS.entries}-entry limit).` : '.'), skipped > 0);
     };
     reader.readAsText(file);
 }
@@ -638,11 +700,14 @@ document.addEventListener('DOMContentLoaded', () => {
             open.kept = false;
             jns.unshift(open);
         }
+        var askedFull = !open && !!c;
     }
     cur = open || jns[0] || null;
     render();
+    if (askedFull) flash(`You have ${JN_MAX} journals, so there's no room for a new one for that character; delete one first.`, true);
 
     document.getElementById('jn-pick').addEventListener('change', e => {
+        if (editorBlocks()) { renderBar(); return; }
         const j = jns.find(x => x.id === e.target.value);
         if (j) openJournal(j);
     });
@@ -658,6 +723,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const name = document.getElementById('jn-new-name');
         const charId = document.getElementById('jn-new-char').value;
         if (!name.value.trim() && !charId) { flash('Give the journal a name, or pick a character.', true); name.focus(); return; }
+        if (editorBlocks()) return;
         if (newJournal(name.value, charId)) {
             name.value = '';
             toggleStart(false);
@@ -666,16 +732,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('jn-name').addEventListener('change', e => {
+        jnFresh();
+        const was = cur.name;
         cur.name = jnLine(e.target.value, JN_LIMITS.name);
-        persist();
+        if (!persist()) cur.name = was;
         renderBar();
         document.getElementById('jn-print-head').innerHTML = `<b>${esc(cur.name || 'Player journal')}</b>${charLine(cur) ? ' · ' + esc(charLine(cur)) : ''}`;
     });
     document.getElementById('jn-char').addEventListener('change', e => {
+        jnFresh();
+        const was = { char: cur.char, name: cur.name };
         cur.char = e.target.value;
         const c = charFor(cur);
         if (c && !cur.name) cur.name = c.name;
-        persist();
+        if (!persist()) Object.assign(cur, was);
         render();
     });
 
@@ -711,14 +781,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const b = e.target.closest('[data-act]');
         if (!b) return;
         const act = b.dataset.act;
-        if (act === 'edit') { setEditing({ id: b.dataset.id }); return; }
+        if (act === 'edit') { if (!editorBlocks()) setEditing({ id: b.dataset.id }); return; }
         if (act === 'del') { deleteEntry(b.dataset.id, b); return; }
         if (act === 'done') {
+            jnFresh();
             const q = cur.entries.find(x => x.id === b.dataset.id);
-            if (!q) return;
+            if (!q) { render(); return; }
+            const was = { status: q.status, updated: q.updated };
             q.status = 'done';
             q.updated = Date.now();
-            persist();
+            if (!persist()) { Object.assign(q, was); render(); return; }
             render();
             flash(`✅ Quest done: ${jnTitle(q)}.`);
         }
@@ -732,7 +804,9 @@ document.addEventListener('DOMContentLoaded', () => {
     slot.addEventListener('keydown', e => {
         if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
             e.preventDefault();
-            saveEditor(e.target.closest('.jn-editor'));
+            // Through the form's own checks (a session number past 9999 is refused there, not dropped).
+            const f = e.target.closest('.jn-editor');
+            if (f && f.requestSubmit) f.requestSubmit(); else if (f) saveEditor(f);
         }
         if (e.key === 'Escape') setEditing(null);
     });

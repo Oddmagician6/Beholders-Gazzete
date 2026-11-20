@@ -86,7 +86,7 @@ const CB24_SPECIES = [
             { id: 'fire-giant', name: "Fire's Burn", traits: [["Fire's Burn", x => `When you hit with an attack roll, deal an extra 1d10 fire. ${x.prof} uses per long rest.`]] },
             { id: 'frost-giant', name: "Frost's Chill", traits: [["Frost's Chill", x => `When you hit with an attack roll, deal an extra 1d6 cold and cut its speed by 10 ft. until your next turn. ${x.prof} uses per long rest.`]] },
             { id: 'hill-giant', name: "Hill's Tumble", traits: [["Hill's Tumble", x => `When you hit a Large or smaller creature with an attack roll, knock it prone. ${x.prof} uses per long rest.`]] },
-            { id: 'stone-giant', name: "Stone's Endurance", traits: [["Stone's Endurance", x => `Reaction when you take damage: reduce it by 1d12 + ${x.m.con}. ${x.prof} uses per long rest.`]] },
+            { id: 'stone-giant', name: "Stone's Endurance", traits: [["Stone's Endurance", x => `Reaction when you take damage: reduce it by 1d12 ${cbPlus(x.m.con)}. ${x.prof} uses per long rest.`]] },
             { id: 'storm-giant', name: "Storm's Thunder", traits: [["Storm's Thunder", x => `Reaction when a creature within 60 ft. damages you: deal it 1d8 thunder. ${x.prof} uses per long rest.`]] }
         ]
     },
@@ -366,7 +366,7 @@ const CB24_CLASSES = [
             [1, 'Spellcasting', x => `Wisdom spells from the cleric list; ${x.prepared} prepared, changed after any long rest.`],
             [1, 'Divine Order', 'Protector or Thaumaturge: see Choices.'],
             [2, 'Channel Divinity', x => `${x.L >= 18 ? 4 : x.L >= 6 ? 3 : 2} uses (one back on a short rest, all on a long rest); DC ${x.dc('wis')}.`],
-            [2, 'Divine Spark', x => `Channel Divinity: ${x.L >= 18 ? 4 : x.L >= 13 ? 3 : x.L >= 7 ? 2 : 1}d8 + ${x.m.wis} healing, or that much necrotic or radiant damage (CON save for half), to a creature within 30 ft.`],
+            [2, 'Divine Spark', x => `Channel Divinity: ${x.L >= 18 ? 4 : x.L >= 13 ? 3 : x.L >= 7 ? 2 : 1}d8 ${cbPlus(x.m.wis)} healing, or that much necrotic or radiant damage (CON save for half), to a creature within 30 ft.`],
             [2, 'Turn Undead', x => `Channel Divinity: undead of your choice within 30 ft. make a DC ${x.dc('wis')} WIS save or are frightened and incapacitated for 1 minute, until damaged.`],
             [3, 'Disciple of Life', 'Spells cast with a slot that heal restore an extra 2 + the slot\'s level.'],
             [3, 'Preserve Life', x => `Channel Divinity: split ${5 * x.L} hit points among bloodied creatures within 30 ft., up to half each one's maximum.`],
@@ -446,7 +446,7 @@ const CB24_CLASSES = [
             [2, "Monk's Focus", x => `${x.L} focus points per short rest; DC ${x.dc('wis')}. Flurry of Blows (${x.L >= 10 ? 'three' : 'two'} bonus unarmed strikes), Patient Defense (Disengage free, or Disengage and Dodge for 1 point${x.L >= 10 ? ', plus temporary hit points' : ''}), Step of the Wind (Dash free, or Disengage and Dash and double jump for 1 point).`],
             [2, 'Unarmored Movement', x => `+${x.L >= 18 ? 30 : x.L >= 14 ? 25 : x.L >= 10 ? 20 : x.L >= 6 ? 15 : 10} ft. speed without armor or shield.`],
             [2, 'Uncanny Metabolism', x => `Once per long rest, when you roll initiative, regain all focus points and 1d${x.martial} + ${x.L} hit points.`],
-            [3, 'Deflect Attacks', x => `Reaction: cut a ${x.L >= 13 ? '' : 'bludgeoning, piercing, or slashing '}hit's damage by 1d10 + ${x.m.dex + x.L}; at 0, spend 1 focus to redirect it (DEX save or 2d${x.martial} + ${x.m.dex}).`],
+            [3, 'Deflect Attacks', x => `Reaction: cut a ${x.L >= 13 ? '' : 'bludgeoning, piercing, or slashing '}hit's damage by 1d10 ${cbPlus(x.m.dex + x.L)}; at 0, spend 1 focus to redirect it (DEX save or 2d${x.martial} ${cbPlus(x.m.dex)}).`],
             [3, 'Open Hand Technique', x => `Flurry hits can deny reactions (Addle), push 15 ft. (STR save), or knock prone (DEX save); DC ${x.dc('wis')}.`],
             [4, 'Slow Fall', x => `Reaction: reduce falling damage by ${5 * x.L}.`],
             [5, 'Extra Attack', 'Attack twice when you take the Attack action.'],
