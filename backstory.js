@@ -669,7 +669,8 @@ function bsCharList() {
     try { list = JSON.parse(localStorage.getItem(PC_KEY)); } catch (e) {}
     if (!Array.isArray(list)) return [];
     return list.filter(c => c && typeof c.id === 'string' && /^[a-z0-9]{1,16}$/.test(c.id)).slice(0, PC_MAX).map(c => {
-        const a = PF2E_ANCESTRIES[c.race], k = PF2E_CLASSES[c.cls];
+        const a = typeof c.race === 'string' && Object.hasOwn(PF2E_ANCESTRIES, c.race) ? PF2E_ANCESTRIES[c.race] : null;
+        const k = typeof c.cls === 'string' && Object.hasOwn(PF2E_CLASSES, c.cls) ? PF2E_CLASSES[c.cls] : null;
         const lv = Number.isInteger(c.level) && c.level >= 1 && c.level <= 20 ? c.level : 1;
         return { id: c.id, name: typeof c.name === 'string' ? c.name.slice(0, 60) : '', about: [a && a.n, k && `${k.n} ${lv}`].filter(Boolean).join(' ') };
     });
@@ -707,11 +708,19 @@ function bsClashes(id, text) {
         : /\. They died\b/.test(bsRoll('mentor')));
 }
 const bsRoll = id => withSeed(bsLineSeed(id), () => BS_ROLL[id](bs));
-function bsLine(id) {
+// The seed of the text a line shows: its own, or the redraw that fits (kept as the line's seed on a lock).
+function bsShownSeed(id) {
+    let seed = bsLineSeed(id);
+    if (bs.lock.includes(id)) return seed;
     let t = bsRoll(id);
-    if (bs.lock.includes(id)) return t;
-    for (let k = 0; k < 12 && bsClashes(id, t); k++) t = withSeed(deriveSeed(bsLineSeed(id), 'fit' + k), () => BS_ROLL[id](bs));
-    return t;
+    for (let k = 0; k < 12 && bsClashes(id, t); k++) {
+        seed = deriveSeed(bsLineSeed(id), 'fit' + k);
+        t = withSeed(seed, () => BS_ROLL[id](bs));
+    }
+    return seed;
+}
+function bsLine(id) {
+    return withSeed(bsShownSeed(id), () => BS_ROLL[id](bs));
 }
 const bsAll = () => Object.fromEntries(BS_IDS.map(id => [id, bsLine(id)]));
 
@@ -896,7 +905,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = b.dataset.lock || b.dataset.reroll;
         if (b.dataset.lock) {
             if (bs.lock.includes(id)) bs.lock = bs.lock.filter(x => x !== id);
-            else { bs.lock.push(id); bs.set[id] = bsLineSeed(id); }
+            else { const seed = bsShownSeed(id); bs.lock.push(id); bs.set[id] = seed; }
         } else {
             bs.set[id] = newSeed();
         }

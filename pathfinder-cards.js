@@ -134,7 +134,7 @@ function pkFeatures(c) {
     const out = { class: [], feat: [], ancestry: [], background: [] };
     if (p.cls) {
         pcFeatures(c).filter(f => !PK_PLAIN_FEATURE.test(f.name)).forEach(f => out.class.push({
-            name: f.name, text: pcText('cf:' + f.key), sub: `${p.cls.n} · level ${f.level}`, color: PK_FEAT_COLORS.class
+            name: f.name, text: pcText('cf:' + f.key + '|' + c.cls), sub: `${p.cls.n} · level ${f.level}`, color: PK_FEAT_COLORS.class
         }));
         [['ch', p.ch], ['ch2', p.ch2]].forEach(([f, x]) => {
             if (!x) return;

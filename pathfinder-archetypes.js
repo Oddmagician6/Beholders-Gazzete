@@ -53,19 +53,25 @@ function paWriteUrl(push = false) {
     setUrlParams({ char: pa.charId, a: pa.arch, k: pa.kind === 'all' ? '' : pa.kind }, push);
 }
 
-// Save the feats and the Free Archetype switch onto the builder character.
-function paSave() {
+// Apply a change (a function of the character) to the builder character as it's saved now (another tab
+// may have changed it), and save it. false: not saved (the character is gone, or storage failed), and
+// pa.c is the stored character again.
+function paSave(change) {
     const fresh = pcLoadAll().find(x => x.id === pa.charId);
     if (!fresh) {
         pa.charId = '';
         pa.c = null;
         flash('That character is gone (deleted in another tab?).', true);
-        return;
+        return false;
     }
-    fresh.feats = { ...pa.c.feats };
-    fresh.fa = pa.c.fa;
-    if (!pcSave(fresh)) flash('Could not save: this browser\'s storage is full or blocked.', true);
+    change(fresh);
+    if (!pcSave(fresh)) {
+        pa.c = pcLoadAll().find(x => x.id === pa.charId) || null;
+        flash('Could not save: this browser\'s storage is full or blocked.', true);
+        return false;
+    }
     pa.c = fresh;
+    return true;
 }
 
 // ── Rules text ───────────────────────────────────────────
@@ -182,7 +188,7 @@ function paMatches(key, a, check) {
     if (pa.kind === 'mine' && !(check && check.list.some(x => x.key === key))) return false;
     const q = pa.q.trim().toLowerCase();
     if (!q) return true;
-    return a.n.toLowerCase().includes(q) || a.feats.some(k => F(k).n.toLowerCase().includes(q));
+    return a.n.toLowerCase().includes(q) || F(a.ded).n.toLowerCase().includes(q) || a.feats.some(k => F(k).n.toLowerCase().includes(q));
 }
 
 function renderList(check, stats) {
@@ -275,10 +281,10 @@ function paPick(key) {
 
 function paTake(key, slot) {
     const before = pcArchetypeCheck(pa.c).issues.length;
-    pa.c.feats[slot] = key;
-    paSave();
-    const after = pa.c ? pcArchetypeCheck(pa.c).issues : [];
+    const ok = paSave(c => { c.feats[slot] = key; });
     render();
+    if (!ok) return;
+    const after = pcArchetypeCheck(pa.c).issues;
     if (after.length > before) flash(`⚠️ ${after[after.length - 1].text}`, true);
     else flash(`✔ ${F(key).n} taken as your ${paSlotName(slot)}.${pcSubFeat(key, paSlotLevel(slot)) ? ' Pick the class feat it gives in the Character Builder.' : ''}`);
 }
@@ -291,11 +297,13 @@ function onClick(e) {
     if (d.kind) { pa.kind = d.kind; paWriteUrl(); return render(); }
     if (d.drop) {
         const name = F(pa.c.feats[d.drop]).n;
-        delete pa.c.feats[d.drop];
-        delete pa.c.feats['x' + d.drop];   // the class feat a Basic or Advanced X feat gave
-        paSave();
+        const ok = paSave(c => {
+            delete c.feats[d.drop];
+            delete c.feats['x' + d.drop];   // the class feat a Basic or Advanced X feat gave
+        });
         render();
-        return flash(`${name} removed. Feats that needed it stay until you change them.`);
+        if (ok) flash(`${name} removed. Feats that needed it stay until you change them.`);
+        return;
     }
     if (b.id === 'pa-link') {
         const p = { a: pa.arch };
@@ -312,9 +320,10 @@ function onChange(e) {
     const el = e.target;
     if (el.dataset.take && el.value) return paTake(el.dataset.take, el.value);
     if (el.id === 'pa-fa') {
-        pa.c.fa = el.checked;
-        paSave();
+        const on = el.checked;
+        const ok = paSave(c => { c.fa = on; });
         render();
+        if (!ok) return;
         return flash(el.checked ? '🔀 Free Archetype on: an archetype feat slot at every even level.' : 'Free Archetype off. Feats in those slots are kept on the character but no longer count.');
     }
 }

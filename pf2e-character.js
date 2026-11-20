@@ -103,26 +103,26 @@ function pcClean(raw) {
     c.boosts.l1 = pcAbilList(b.l1, 4);
     PC_BOOST_LEVELS.forEach(l => { c.boosts[l] = pcAbilList(b[l], 4); });
     const s = raw.skills && typeof raw.skills === 'object' ? raw.skills : {};
-    c.skills.cls = Array.isArray(s.cls) ? [...new Set(s.cls.filter(k => Object.hasOwn(PC_SKILLS, k)))].slice(0, 24) : [];
-    c.skills.ch = Object.hasOwn(PC_SKILLS, s.ch) ? s.ch : '';
+    c.skills.cls = Array.isArray(s.cls) ? [...new Set(s.cls.filter(k => pcId(k, PC_SKILLS)))].slice(0, 24) : [];
+    c.skills.ch = pcId(s.ch, PC_SKILLS);
     if (s.inc && typeof s.inc === 'object') {
-        for (const [lv, k] of Object.entries(s.inc)) if (/^\d{1,2}$/.test(lv) && (Object.hasOwn(PC_SKILLS, k) || /^lore:/.test(k))) c.skills.inc[lv] = pcStr(k, 50);
+        for (const [lv, k] of Object.entries(s.inc)) if (/^\d{1,2}$/.test(lv) && (pcId(k, PC_SKILLS) || (typeof k === 'string' && /^lore:/.test(k)))) c.skills.inc[lv] = pcStr(k, 50);
     }
     c.skills.lore = Array.isArray(s.lore) ? s.lore.map(x => pcStr(x, 40)).filter(Boolean).slice(0, 6) : [];
     if (raw.paths && typeof raw.paths === 'object') {
-        for (const [lv, k] of Object.entries(raw.paths)) if (/^\d{1,2}$/.test(lv) && Object.hasOwn(PC_SAVES, k)) c.paths[lv] = k;
+        for (const [lv, k] of Object.entries(raw.paths)) if (/^\d{1,2}$/.test(lv) && pcId(k, PC_SAVES)) c.paths[lv] = k;
     }
     if (raw.feats && typeof raw.feats === 'object') {
-        for (const [slot, f] of Object.entries(raw.feats)) if (/^[a-z]{2,4}\d{1,2}$/.test(slot) && Object.hasOwn(PF2E_FEATS, f)) c.feats[slot] = f;
+        for (const [slot, f] of Object.entries(raw.feats)) if (/^[a-z]{2,4}\d{1,2}$/.test(slot) && pcId(f, PF2E_FEATS)) c.feats[slot] = f;
     }
     c.langs = Array.isArray(raw.langs) ? raw.langs.map(x => pcStr(x, 30)).filter(Boolean).slice(0, 12) : [];
     const d = raw.deity && typeof raw.deity === 'object' ? raw.deity : {};
-    c.deity = { name: pcStr(d.name, 60), weapon: pcId(d.weapon, PF2E_ITEMS), font: Object.hasOwn(PC_DIVINE_FONTS, d.font) ? d.font : '', skill: Object.hasOwn(PC_SKILLS, d.skill) ? d.skill : '' };
+    c.deity = { name: pcStr(d.name, 60), weapon: pcId(d.weapon, PF2E_ITEMS), font: pcId(d.font, PC_DIVINE_FONTS), skill: pcId(d.skill, PC_SKILLS) };
     const g = raw.gear && typeof raw.gear === 'object' ? raw.gear : {};
     const rune = v => Math.min(3, Math.max(0, Math.round(Number(v)) || 0));
     c.gear = {
         armor: pcId(g.armor, PF2E_ITEMS), arPot: rune(g.arPot), shield: pcId(g.shield, PF2E_ITEMS),
-        weapons: Array.isArray(g.weapons) ? g.weapons.filter(w => w && Object.hasOwn(PF2E_ITEMS, w.id)).slice(0, 8)
+        weapons: Array.isArray(g.weapons) ? g.weapons.filter(w => w && pcId(w.id, PF2E_ITEMS)).slice(0, 8)
             .map(w => ({ id: w.id, pot: rune(w.pot), str: rune(w.str) })) : []
     };
     c.fa = raw.fa === true;
@@ -131,7 +131,7 @@ function pcClean(raw) {
         Object.entries(raw.mc).forEach(([cls, x]) => {
             if (!Object.hasOwn(PC_MC, cls) || !x || typeof x !== 'object') return;
             c.mc[cls] = { ch: PF2E_CHOICES[x.ch] && PF2E_CHOICES[x.ch].c === cls ? x.ch : '', tr: PC_TRADITIONS.includes(x.tr) ? x.tr : '',
-                sk: Array.isArray(x.sk) ? x.sk.slice(0, 4).map(k => (Object.hasOwn(PC_SKILLS, k) ? k : '')) : [] };
+                sk: Array.isArray(x.sk) ? x.sk.slice(0, 4).map(k => pcId(k, PC_SKILLS)) : [] };
         });
     }
     c.notes = typeof raw.notes === 'string' ? raw.notes.replace(/\r\n?/g, '\n').replace(/[\u0000-\u0009\u000b-\u001f]/g, ' ').slice(0, 4000) : '';   // line breaks stay
@@ -624,7 +624,9 @@ function pcPrereqMet(c, text, stats = pcStats(c)) {
         const need = PC_RANKS.indexOf(pcCap(m[1].toLowerCase()));
         const any = /\bor\b/i.test(m[2]);
         const parts = m[2].split(/,\s*(?:and |or )?|\s+(?:and|or)\s+/i).map(x => x.trim().toLowerCase()).filter(Boolean);
-        const ok = parts.map(k => (Object.hasOwn(PC_SKILLS, k) ? stats.ranks[k] >= need : k === 'perception' ? stats.prof.per >= need : null));
+        const save = k => Object.keys(PC_SAVES).find(x => PC_SAVES[x][0].toLowerCase() === k.replace(/ saves?$/, ''));
+        const ok = parts.map(k => (Object.hasOwn(PC_SKILLS, k) ? stats.ranks[k] >= need : k === 'perception' ? stats.prof.per >= need
+            : / saves?$/.test(k) && save(k) ? stats.prof[save(k)] >= need : null));
         if (ok.includes(null)) return null;
         return any ? ok.includes(true) : !ok.includes(false);
     }
@@ -646,11 +648,14 @@ function pcArchetypes() {
         out[key] = { n: f.n.replace(/ Dedication$/, ''), ded: k, l: f.l, mc: f.tr.includes('multiclass') && Object.hasOwn(PF2E_CLASSES, key) ? key : '', feats: [] };
     });
     const owners = {};
-    const names = Object.entries(out).map(([key, a]) => [key, `${a.n} Dedication`.toLowerCase()]);
+    // Longest names first, each cut out of the text once found, so "archer dedication" doesn't match inside
+    // "eldritch archer dedication".
+    const names = Object.entries(out).map(([key, a]) => [key, `${a.n} Dedication`.toLowerCase()]).sort((x, y) => y[1].length - x[1].length);
     const rest = Object.entries(PF2E_FEATS).filter(([, f]) => f.ar && !f.tr.includes('dedication'));
     rest.forEach(([k, f]) => {
-        const pr = (f.pr || []).join('; ').toLowerCase();
-        let own = names.filter(([, n]) => pr.includes(n)).map(([key]) => key);
+        let pr = (f.pr || []).join('; ').toLowerCase();
+        let own = [];
+        names.forEach(([key, n]) => { if (pr.includes(n)) { own.push(key); pr = pr.split(n).join('|'); } });
         if (!own.length) own = f.tr.filter(t => Object.hasOwn(out, t));   // Stunning Appearance: the vigilante trait
         if (own.length) owners[k] = own;
     });
@@ -699,7 +704,10 @@ function pcArchetypeCheck(c) {
         if (f.tr.includes('dedication')) {
             const a = arch[own[0]];
             if (!a) return;
-            if (a.mc && a.mc === c.cls) issues.push({ slot: s.slot, text: `You can't take the ${a.n} Dedication: you're already a ${a.n.toLowerCase()}.` });
+            if (a.mc && a.mc === c.cls) {
+                issues.push({ slot: s.slot, text: `You can't take the ${a.n} Dedication: you're already a ${a.n.toLowerCase()}.` });
+                return;
+            }
             if (current && current.feats.length < 2) issues.push({ slot: s.slot, text: `${a.n} Dedication comes too soon: take ${2 - current.feats.length} more ${arch[current.key].n} feat${current.feats.length === 1 ? '' : 's'} first (two after each dedication).` });
             current = { key: own[0], slot: s.slot, level: s.level, feats: [] };
             list.push(current);
@@ -1335,9 +1343,22 @@ function pcLoadText(done) {
     document.head.appendChild(s);
 }
 
+// key may end in "|<class id>": a class feature text written for several classes ("**Bard** ...",
+// "**Oracle** ...") then shows only that class's part.
 function pcText(key) {
+    let cls = '';
+    if (typeof key === 'string' && key.includes('|')) [key, cls] = key.split('|');
     if (pcTextState !== 2 || !Object.hasOwn(PF2E_CHAR_TEXT, key)) return '';
     const t = PF2E_CHAR_TEXT[key];
+    if (cls && Object.hasOwn(PF2E_CLASSES, cls)) {
+        const head = /^\*\*([A-Z][a-z]+)\*\* /, lines = t.split('\n'), name = PF2E_CLASSES[cls].n;
+        if (head.test(lines[0]) && lines.some(l => (l.match(head) || [])[1] === name)) {
+            const out = [];
+            let on = false;
+            lines.forEach(l => { const m = l.match(head); if (m) on = m[1] === name; if (on) out.push(m ? l.replace(head, '') : l); });
+            return out.join('\n');
+        }
+    }
     // A dedication's text ends with its archetype's name on a line (a link to the archetype's page in the source).
     const m = /^ft:(.+)-dedication$/.exec(key);
     if (m) { const lines = t.split('\n'); if (lines[lines.length - 1].toLowerCase().replace(/[^a-z]+/g, '-') === m[1]) return lines.slice(0, -1).join('\n'); }

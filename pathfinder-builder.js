@@ -258,7 +258,7 @@ function stepClass() {
         const fits = (lv, k) => { const i = lvs.indexOf(lv), a = cur.paths[lvs[0]], b = cur.paths[lvs[1]] !== a ? cur.paths[lvs[1]] : ''; return i === 1 ? k !== a : i === 2 ? !!a && !!b && [a, b].includes(k) : true; };
         h += `<h3>Paths to Perfection</h3><div class="cb-row">${Object.entries(c.pp).map(([lv, rank]) => `<label class="cb-field">Level ${lv} (${PC_RANKS[rank].toLowerCase()})<select data-path="${lv}" data-focus="path-${lv}"${Number(lv) > cur.level ? ' disabled' : ''}><option value="">Pick a save</option>${Object.entries(PC_SAVES).filter(([k]) => fits(lv, k) || cur.paths[lv] === k).map(([k, [n]]) => `<option value="${k}"${cur.paths[lv] === k ? ' selected' : ''}>${n}${fits(lv, k) ? '' : ' (doesn\'t count: pick again)'}</option>`).join('')}</select></label>`).join('')}</div>`;
     }
-    h += `<h3>Class features</h3><div class="pb-feats">${c.f.map(([l, n, key]) => `<div class="${l > cur.level ? 'cb-later' : ''}">${textBox(`cf:${key}`, `<span class="cb-lv">Level ${l}</span>${esc(n)}`)}</div>`).join('')}</div>`;
+    h += `<h3>Class features</h3><div class="pb-feats">${c.f.map(([l, n, key]) => `<div class="${l > cur.level ? 'cb-later' : ''}">${textBox(`cf:${key}|${cur.cls}`, `<span class="cb-lv">Level ${l}</span>${esc(n)}`)}</div>`).join('')}</div>`;
     return h;
 }
 
@@ -472,7 +472,7 @@ function stepSheet() {
     const feats = [...pcGrantedFeats(cur).filter(g => g.key).map(g => ({ level: 1, key: g.key, label: `from ${g.from}` })),
         ...pcFeatSlots(cur).filter(x => cur.feats[x.slot]).map(x => ({ level: x.level, key: cur.feats[x.slot], label: x.label.toLowerCase() }))];
     h += `<h3>Feats</h3>${feats.length ? `<div class="pb-feats">${feats.map(f => `<div>${textBox(`ft:${f.key}`, `<span class="cb-lv">Level ${f.level}</span>${featLine(PF2E_FEATS[f.key])} <span class="cb-tag">${esc(f.label)}</span>`)}</div>`).join('')}</div>` : '<p class="cb-faint">None picked yet.</p>'}`;
-    h += `<h3>Class features</h3><div class="pb-feats">${pcFeatures(cur).map(f => `<div>${textBox(`cf:${f.key}`, `<span class="cb-lv">Level ${f.level}</span>${esc(f.name)}`)}</div>`).join('')}${p.ch ? `<div>${textBox(`ch:${cur.ch}`, `<span class="cb-lv">Level 1</span>${esc(p.ch.n)}`)}</div>` : ''}</div>`;
+    h += `<h3>Class features</h3><div class="pb-feats">${pcFeatures(cur).map(f => `<div>${textBox(`cf:${f.key}|${cur.cls}`, `<span class="cb-lv">Level ${f.level}</span>${esc(f.name)}`)}</div>`).join('')}${p.ch ? `<div>${textBox(`ch:${cur.ch}`, `<span class="cb-lv">Level 1</span>${esc(p.ch.n)}`)}</div>` : ''}</div>`;
     if (p.anc && p.anc.f) h += `<h3>Ancestry</h3><ul class="cb-list">${p.anc.f.map(([n]) => `<li><b>${esc(n)}</b></li>`).join('')}${p.anc.vi ? `<li><b>${pcCap(p.anc.vi.replace(/-/g, ' '))}</b></li>` : ''}</ul>`;
     if (p.her) h += `<details class="pb-text-plain"><summary>${esc(p.her.n)}</summary>${rulesHtml(p.her.x)}</details>`;
     h += '</div></div>';

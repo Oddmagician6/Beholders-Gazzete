@@ -215,8 +215,11 @@ function sbPf2eNpcParts(block) {
     if (!base) return { m, b: null, swap };
     // Flat checks (a firearm's misfire, DC 11 to target a concealed foe) are fixed by the rules, not the creature.
     // A Strike written into an ability ("The Strike has a +15 attack modifier") moves like the block's own.
-    const dc = list => (list || []).map(([name, cost, traits, text]) => [name, cost, traits, d ? text.replace(/DC (\d+)\b(?! flat)/g, (_, n) => `DC ${+n + d}`)
-        .replace(/([+−-])(\d+)(?= attack (?:modifier|bonus))/g, (_, s, n) => sbSigned((s === '+' ? 1 : -1) * +n + d)) : text]);
+    // Elite and weak move ability damage by 2 as well ("2d6 bludgeoning damage", "**Damage** 1d6+5 piercing").
+    const dmg = t => t.replace(/\b\d+d\d+(?:[+−-]\d+)?(?= (?:[a-z]+ ){0,2}damage\b)/g, x => sbPf2eDamage(x, d))
+        .replace(/(\*\*Damage\*\* )(\d+d\d+(?:[+−-]\d+)?)/g, (_, h, x) => h + sbPf2eDamage(x, d));
+    const dc = list => (list || []).map(([name, cost, traits, text]) => [name, cost, traits, d ? dmg(text.replace(/DC (\d+)\b(?! flat)/g, (_, n) => `DC ${+n + d}`)
+        .replace(/([+−-])(\d+)(?= attack (?:modifier|bonus))/g, (_, s, n) => sbSigned((s === '+' ? 1 : -1) * +n + d))) : text]);
     const b = { ...base, pd: sbPf2eShift(base.pd, d), sk: sbPf2eShift(base.sk, d), ia: dc(base.ia), da: dc(base.da), oa: dc(base.oa),
         st: (base.st || []).map(([ranged, name, bonus, traits, dmg]) => [ranged, name, bonus + d, traits, sbPf2eDamage(dmg, d)]),
         sc: (base.sc || []).map(([name, sdc, atk, note, ranks]) => [name, sdc + d, atk ? atk + d : atk, note, ranks]) };
