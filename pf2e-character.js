@@ -232,7 +232,7 @@ function pcCleanPlay(raw) {
     // Persistent damage, coins, and items (the PP_ lists are pf2e-play.js's; pages without it keep what reads right).
     const pdTypes = typeof PP_PD_TYPES === 'undefined' ? null : PP_PD_TYPES;
     const seenPd = new Set();
-    p.pd = Array.isArray(raw.pd) ? raw.pd.filter(x => x && typeof x.f === 'string' && /^(\d{1,2}d(?:[2-9]|[1-9]\d{1,2})|\d{1,3})([+-]\d{1,3})?$/.test(x.f)
+    p.pd = Array.isArray(raw.pd) ? raw.pd.filter(x => x && typeof x.f === 'string' && /^([1-9]\d?d(?:[2-9]|[1-9]\d{1,2})|\d{1,3})([+-]\d{1,3})?$/.test(x.f)
         && typeof x.type === 'string' && /^[a-z]{3,12}$/.test(x.type) && (!pdTypes || pdTypes.includes(x.type)) && !seenPd.has(x.type) && seenPd.add(x.type))
         .slice(0, 6).map(x => ({ f: x.f, type: x.type })) : [];
     const coins = raw.coins && typeof raw.coins === 'object' ? raw.coins : {};
@@ -289,23 +289,36 @@ function pcKey(c) {
 }
 
 // Each boost set as [options, picked]: options are attribute ids (all six for a free boost).
+// A pick counts only when it's one of its set's options and not an attribute the same source
+// boosts already (a saved or imported file could repeat one).
+function pcPickSets(sets, picks) {
+    const out = sets.map(set => {
+        const opts = set[0] === 'free' ? PC_ABILS : set;
+        return [opts, opts.length === 1 ? opts[0] : ''];
+    });
+    const used = new Set(out.map(([, a]) => a).filter(Boolean));
+    return out.map(([opts, a], i) => {
+        if (a) return [opts, a];
+        const p = picks[i] || '';
+        if (!opts.includes(p) || used.has(p)) return [opts, ''];
+        used.add(p);
+        return [opts, p];
+    });
+}
+
+// Distinct picks of a list of free boosts (four at 1st level, four at 5th...).
+const pcUniqBoosts = list => list.filter((a, i) => a && list.indexOf(a) === i);
+
 function pcAncSets(c) {
     const { anc } = pcParts(c);
     if (!anc) return [];
-    if (c.boosts.ancFree) return [[PC_ABILS, c.boosts.anc[0] || ''], [PC_ABILS, c.boosts.anc[1] || '']];
-    return anc.bo.map((set, i) => {
-        const opts = set[0] === 'free' ? PC_ABILS : set;
-        return [opts, opts.length === 1 ? opts[0] : (c.boosts.anc[i] || '')];
-    });
+    return pcPickSets(c.boosts.ancFree ? [['free'], ['free']] : anc.bo, c.boosts.anc);
 }
 
 function pcBgSets(c) {
     const { bg } = pcParts(c);
     if (!bg) return [];
-    return bg.bo.map((set, i) => {
-        const opts = set[0] === 'free' ? PC_ABILS : set;
-        return [opts, opts.length === 1 ? opts[0] : (c.boosts.bg[i] || '')];
-    });
+    return pcPickSets(bg.bo, c.boosts.bg);
 }
 
 // Attribute modifiers at the character's level. Past +4, a boost is partial: two make +1.
@@ -323,8 +336,8 @@ function pcAttrs(c, level = c.level) {
     if (anc && !c.boosts.ancFree) (anc.fl || []).forEach(a => { mods[a] -= 1; });
     pcBgSets(c).forEach(([, a]) => add(a));
     add(pcKey(c));
-    c.boosts.l1.forEach(add);
-    PC_BOOST_LEVELS.filter(l => l <= level).forEach(l => (c.boosts[l] || []).forEach(add));
+    pcUniqBoosts(c.boosts.l1).forEach(add);
+    PC_BOOST_LEVELS.filter(l => l <= level).forEach(l => pcUniqBoosts(c.boosts[l] || []).forEach(add));
     return { mods, partial };
 }
 
@@ -522,7 +535,25 @@ function pcGrantedFeats(c) {
 
 function pcFeatKey(name) {
     const k = String(name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    return Object.hasOwn(PF2E_FEATS, k) ? k : '';
+    if (Object.hasOwn(PF2E_FEATS, k)) return k;
+    return Object.hasOwn(pcFeatAliases(), k) ? pcFeatAliases()[k] : '';
+}
+
+// A feat stored under a qualified name ("Startling Appearance (Vigilante)") found by its plain one,
+// when only one feat carries that plain name.
+let pcFeatAliasCache = null;
+function pcFeatAliases() {
+    if (pcFeatAliasCache) return pcFeatAliasCache;
+    const found = {};
+    Object.entries(PF2E_FEATS).forEach(([k, f]) => {
+        const m = /^(.+?) \([^)]+\)$/.exec(f.n);
+        if (!m) return;
+        const base = m[1].toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        if (!Object.hasOwn(PF2E_FEATS, base)) (found[base] = found[base] || []).push(k);
+    });
+    pcFeatAliasCache = {};
+    Object.entries(found).forEach(([base, keys]) => { if (keys.length === 1) pcFeatAliasCache[base] = keys[0]; });
+    return pcFeatAliasCache;
 }
 
 // The ancestry traits whose feats this character can take.
@@ -643,11 +674,21 @@ function pcArchetypeCheck(c) {
     const list = [];
     const issues = [];
     let current = null;
+    const statsAt = {};
     pcFeatSlots(c).forEach(s => {
         const key = c.feats[s.slot];
         const f = key && PF2E_FEATS[key];
         if (!f || !f.ar) return;
         const own = pcFeatArchetypes(key);
+        // Prerequisites as the character stood when the slot was filled: its level's attributes and
+        // skills, and only the feats in earlier slots. A feat that misses one doesn't count.
+        const at = { ...c, level: s.level, feats: Object.fromEntries(pcFeatSlots(c).slice(0, pcFeatSlots(c).findIndex(x => x.slot === s.slot)).filter(x => c.feats[x.slot]).map(x => [x.slot, c.feats[x.slot]])) };
+        const st = statsAt[s.slot] || (statsAt[s.slot] = pcStats(at));
+        const unmet = (f.pr || []).filter(p => pcPrereqMet(at, p, st) === false);
+        if (unmet.length) {
+            issues.push({ slot: s.slot, text: `${f.n} (level ${s.level}): a prerequisite isn't met there: ${unmet.join('; ')}.` });
+            return;
+        }
         if (f.tr.includes('dedication')) {
             const a = arch[own[0]];
             if (!a) return;
@@ -970,6 +1011,8 @@ function pcSpellRules(c) {
     const out = { ...cast, type, top, ctLimit: cast.cantrips, rep: [], sig: [], book: null };
     if (type === 'rep') {
         out.rep = cast.slots.slice();
+        // 10th rank (Magnum Opus, Bloodline Paragon, Oracular Clarity): two 10th-rank spells for its one slot.
+        if (out.rep[9]) out.rep[9] = 2;
         if (c.level >= 3) out.sig = cast.slots.map((n, i) => i + 1).filter(r => r <= 9);
     }
     if (type === 'book') {
@@ -1146,7 +1189,7 @@ function pcFitSpells(c, grants = pcSpellGrants(c), rare = true) {
     if (r.type === 'rep') {
         for (let n = 1; n <= r.top; n++) {
             const mine = grants.list.filter(g => g.to === 'rep' && g.rank === n);
-            const keep = (s.rep[n] || []).filter(k => S(k).k === 's' && S(k).r <= n && ok(k) && !mine.some(g => g.key === k));
+            const keep = (s.rep[n] || []).filter(k => S(k).k === 's' && (n < 10 ? S(k).r <= n : S(k).r === 10) && ok(k) && !mine.some(g => g.key === k));
             if (keep.length) rep[n] = keep.slice(0, Math.max(0, pcRepLimit(r, grants, n)));
         }
     }
@@ -1222,7 +1265,7 @@ function pcTodo(c) {
         if (c.cls === 'cleric' && !c.deity.font) out.push(['class', 'Pick your divine font.']);
     }
     const sets = [...pcAncSets(c), ...pcBgSets(c)];
-    const boostsLeft = sets.filter(([, a]) => !a).length + (p.cls && !pcKey(c) ? 1 : 0) + (4 - c.boosts.l1.filter(Boolean).length)
+    const boostsLeft = sets.filter(([, a]) => !a).length + (p.cls && !pcKey(c) ? 1 : 0) + (4 - pcUniqBoosts(c.boosts.l1).length)
         + PC_BOOST_LEVELS.filter(l => l <= c.level).reduce((n, l) => n + 4 - (c.boosts[l] || []).filter(Boolean).length, 0);
     if (p.anc || p.bg || p.cls) if (boostsLeft) out.push(['attributes', `${boostsLeft} attribute boost${boostsLeft === 1 ? '' : 's'} to place.`]);
     if (p.cls) {
@@ -1252,7 +1295,12 @@ function pcLine(c) {
 function pcPartyRow(c) {
     const s = pcStats(c);
     return { id: c.id, name: c.name || 'Unnamed hero', player: c.player, cls: s.parts.cls ? s.parts.cls.n : '', level: c.level,
-        ac: s.ac.ac, hp: s.hp || null, init: s.per };
+        ac: s.ac.ac, hp: s.hp || null, init: s.per + pcInitBonus(c) };
+}
+
+// A circumstance bonus to Perception for initiative: the fighter's Battlefield Surveyor (level 7).
+function pcInitBonus(c) {
+    return c.cls === 'fighter' && pcFeatures(c).some(f => f.key === 'battlefield-surveyor') ? 2 : 0;
 }
 
 // The rules text for a feat (ft:), class feature (cf:), or class choice (ch:), once

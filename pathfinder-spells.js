@@ -40,7 +40,7 @@ const PS_DED_FOCUS_HINT = {
 
 // edit: '' | 'ct' | 'book'; before: the spells when editing began (for Cancel).
 // base: the saved character; arc: the archetype being planned ('' = the class), when c is its view.
-const ps = { charId: '', c: null, base: null, arc: '', g: null, m: 4, edit: '', before: null, filter: '', favOnly: false, rare: false, textReady: false };
+const ps = { charId: '', c: null, base: null, arc: '', g: null, m: 4, edit: '', before: null, filter: '', favOnly: false, rare: false, textReady: false, textTried: false };
 const PS_NO_GRANTS = { list: [], curr: {}, focus: [] };
 
 function esc(s) {
@@ -117,7 +117,9 @@ function psFromUrl() {
         ps.arc = '';
         const list = v => (q.get(v) || '').split(',').filter(Boolean);
         const c = pcBlank();
-        c.cls = Object.hasOwn(PF2E_CLASSES, q.get('cls')) && PF2E_CLASSES[q.get('cls')].cast ? q.get('cls') : '';
+        // A caster, or (from a saved character's Copy Link) a focus-only class with its focus spells.
+        const cls = q.get('cls');
+        c.cls = Object.hasOwn(PF2E_CLASSES, cls) && (PF2E_CLASSES[cls].cast || (Object.hasOwn(PC_FOCUS_ONLY, cls) && list('fo').length)) ? cls : '';
         c.level = Math.min(20, Math.max(1, Math.round(Number(q.get('lv'))) || 1));
         c.ch = PF2E_CHOICES[q.get('ch')] && PF2E_CHOICES[q.get('ch')].c === c.cls ? q.get('ch') : '';
         c.ch2 = PF2E_CHOICES[q.get('ch2')] && PF2E_CHOICES[q.get('ch2')].c === c.cls ? q.get('ch2') : '';
@@ -141,24 +143,36 @@ function psWriteUrl() {
     setUrlParams(psParams(), false);
 }
 
-// Save the spells: onto the builder character, or into the address bar.
+// An archetype the saved character no longer has (dropped in the Builder in another tab).
+const psArcGone = (c, arc) => !!arc && !pcArcCastings(c).some(r => r.arc === arc);
+const psArcName = arc => (PC_MC[arc] && PC_MC[arc].n) || (PF2E_CLASSES[arc] ? PF2E_CLASSES[arc].n : arc);
+
+// Save the spells: onto the builder character, or into the address bar. → false when nothing was saved.
 function psSave() {
+    let ok = true;
     if (ps.charId) {
         const fresh = pcLoadAll().find(x => x.id === ps.charId);
         if (!fresh) {
             ps.charId = '';
             flash('That character is gone (deleted in another tab?). Your picks are kept in the address bar instead.', true);
+        } else if (psArcGone(fresh, ps.arc)) {
+            // Its picks have nowhere to go, and must not land on the class's own spells.
+            flash(`${psArcName(ps.arc)} spellcasting is gone from this character (changed in the Builder?), so those picks weren't saved.`, true);
+            psOpen(fresh, '');
+            psGrants();
+            ok = false;
         } else {
             if (ps.arc) {
                 const { ct, rep, book, prep, fav } = psCopy(ps.c.spells);
                 fresh.spells.mc[ps.arc] = { ct, rep, book, prep };
                 fresh.spells.fav = fav;
             } else fresh.spells = { ...psCopy(ps.c.spells), mc: fresh.spells.mc };
-            if (!pcSave(fresh)) flash('Could not save: this browser\'s storage is full or blocked.', true);
+            if (!pcSave(fresh)) { flash('Could not save: this browser\'s storage is full or blocked.', true); ok = false; }
             psOpen(fresh, ps.arc);
         }
     }
     psWriteUrl();
+    return ok;
 }
 
 function psChanged() {
@@ -277,7 +291,7 @@ function renderSetup() {
         return;
     }
     const cls = PF2E_CLASSES[c.cls];
-    const casters = Object.entries(PF2E_CLASSES).filter(([, k]) => k.cast).sort((a, b) => a[1].n.localeCompare(b[1].n));
+    const casters = Object.entries(PF2E_CLASSES).filter(([id, k]) => k.cast || id === c.cls).sort((a, b) => a[1].n.localeCompare(b[1].n));
     const choiceSel = (field, tag) => {
         if (!tag) return '';
         const opts = Object.entries(PF2E_CHOICES).filter(([, x]) => x.c === c.cls && x.t === tag[0]).sort((a, b) => a[1].n.localeCompare(b[1].n));
@@ -373,7 +387,8 @@ function sectionRepertoire(r) {
             + mine.slice().sort(psByRank).map(k => psRow(k, { at: n, extra: sigBtn(k) + rm(k) })).join('') + '</ul>';
         if (mine.length < limit) {
             const taken = new Set([...mine, ...given.map(g => g.key)]);
-            const pool = pcSpellPool(c, n, ps.rare).filter(k => !taken.has(k) && (!ps.favOnly || psFav(k)));
+            // 10th rank takes 10th-rank spells only (no heightened lower ones).
+            const pool = pcSpellPool(c, n, ps.rare).filter(k => !taken.has(k) && (n < 10 || S(k).r === 10) && (!ps.favOnly || psFav(k)));
             h += `<label class="ps-add">Add a spell<select data-rep-add="${n}">${psOptions(pool, '', `Pick a ${psOrd(n)}-rank spell (or a lower one to heighten)…`)}</select></label>`;
         }
     }
@@ -443,7 +458,7 @@ function sectionFocus() {
             extra: manual.has(x.key) && !ps.g.focus.some(g => g.key === x.key) ? `<button type="button" class="ps-x" data-focus-off="${x.key}" aria-label="Take ${esc(S(x.key).n)} off">✕</button>` : ''
         })).join('')}</ul>`;
     } else h += '<p class="ps-hint">No focus spells yet.</p>';
-    if (!ps.textReady) h += '<p class="ps-dim ps-small-text">Reading your class and feats for focus spells…</p>';
+    if (!ps.textReady && !ps.textTried) h += '<p class="ps-dim ps-small-text">Reading your class and feats for focus spells…</p>';
     if (PS_FOCUS_HINT[c.cls]) h += `<p class="ps-dim ps-small-text">${esc(PS_FOCUS_HINT[c.cls])}</p>`;
     pcDedications(c).forEach(d => { if (PS_DED_FOCUS_HINT[d.cls]) h += `<p class="ps-dim ps-small-text">${esc(PS_DED_FOCUS_HINT[d.cls])}</p>`; });
     const have = new Set(f.list.map(x => x.key));
@@ -560,17 +575,21 @@ function psEndEdit(keep) {
     // Done on a saved character: put the edited list (and favorites) onto its newest save, so
     // what another tab prepared meanwhile isn't overwritten by this tab's older copy.
     const fresh = keep && ps.charId && (ps.edit === 'ct' || ps.edit === 'book') && pcLoadAll().find(x => x.id === ps.charId);
+    let gone = false;
     if (fresh) {
         const { [ps.edit]: list, fav } = psCopy(ps.c.spells);
-        psOpen(fresh, ps.arc);
-        ps.c.spells[ps.edit] = list;
+        // The archetype went away meanwhile: its list must not land on the class's own spells.
+        gone = psArcGone(fresh, ps.arc);
+        if (gone) flash(`${psArcName(ps.arc)} spellcasting is gone from this character (changed in the Builder?), so those picks weren't saved.`, true);
+        psOpen(fresh, gone ? '' : ps.arc);
+        if (!gone) ps.c.spells[ps.edit] = list;
         ps.c.spells.fav = fav;
         psGrants();
     }
     ps.edit = '';
     ps.before = null;
     psFit();
-    if (keep) { psSave(); flash('✓ Saved.'); } else psWriteUrl();
+    if (keep && !gone) { if (psSave()) flash('✓ Saved.'); } else psWriteUrl();
     render();
     document.getElementById('ps-plan').scrollIntoView({ block: 'start', behavior: 'smooth' });
 }
@@ -709,7 +728,9 @@ document.addEventListener('DOMContentLoaded', () => {
     psWriteUrl();
     render();
     pcLoadText(ok => {
-        ps.textReady = true;
+        // A failed load leaves the grants (a curriculum, a gift) unknown: picks that need them stay put.
+        ps.textReady = !!ok;
+        ps.textTried = true;
         psGrants();
         if (!ps.edit) psFit();
         render();

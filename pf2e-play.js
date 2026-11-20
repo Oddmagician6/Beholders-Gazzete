@@ -59,9 +59,20 @@ function ppHp(c, s = pcStats(c)) {
     return c.play.hp === null ? max : Math.min(max, c.play.hp);
 }
 
-// You die at dying 4, less your doomed value.
+// Diehard (the feat, or a heritage or background that gives it): you die at dying 5 instead of 4.
+const PP_DIEHARD_HERITAGES = ['hold-scarred-orc', 'nine-lives-catfolk'];
+function ppDiehard(c) {
+    return PP_DIEHARD_HERITAGES.includes(c.her) || pcHasFeat(c, 'diehard');
+}
+
+// You die at dying 4 (5 with Diehard), less your doomed value.
 function ppDeathAt(c) {
-    return Math.max(1, 4 - ppCond(c, 'Doomed'));
+    return Math.max(1, (ppDiehard(c) ? 5 : 4) - ppCond(c, 'Doomed'));
+}
+
+// A recovery check's DC: 10 + dying (a nine lives catfolk leaves the dying value out).
+function ppRecoveryDc(c) {
+    return 10 + (c.her === 'nine-lives-catfolk' ? 0 : ppCond(c, 'Dying'));
 }
 
 function ppDead(c) {
@@ -82,11 +93,13 @@ function ppEndDying(c, wound = true) {
     if (wound) ppSetCond(c, 'Wounded', ppCond(c, 'Wounded') + 1);
 }
 
-// → { temp: absorbed by temporary HP, hp: lost, down, dead, dying: value after, massive }
+// → { temp: absorbed by temporary HP, hp: lost, down, dead, dying: value after, massive,
+// heroic: dying went up to death with a Hero Point left, so Heroic Recovery could have stopped it }
 function ppDamage(c, s, n, crit = false) {
     const p = c.play, max = ppMax(c, s);
     n = Math.max(0, Math.round(n));
-    const out = { temp: Math.min(p.temp, n), hp: 0, down: false, dead: false, dying: ppCond(c, 'Dying'), massive: false };
+    const was = ppCond(c, 'Dying');
+    const out = { temp: Math.min(p.temp, n), hp: 0, down: false, dead: false, dying: was, massive: false, heroic: false };
     if (!n) return out;
     p.temp -= out.temp;
     const rest = n - out.temp;
@@ -109,6 +122,7 @@ function ppDamage(c, s, n, crit = false) {
     }
     out.dying = ppCond(c, 'Dying');
     out.dead = ppDead(c);
+    out.heroic = out.dead && out.dying > was && p.hero > 0;
     return out;
 }
 
@@ -141,20 +155,23 @@ function ppDegree(total, dc, nat) {
 }
 const PP_DEGREES = ['Critical failure', 'Failure', 'Success', 'Critical success'];
 
-// A recovery check (flat check, DC 10 + dying) from the d20 → { degree, dying, dead, stable }.
+// A recovery check (flat check, DC ppRecoveryDc) from the d20 → { degree, dying, dead, stable, heroic }.
 // Critical success: dying 2 less; success 1 less; failure 1 more; critical failure 2 more.
 function ppRecovery(c, v) {
     const dying = ppCond(c, 'Dying');
-    const degree = ppDegree(v, 10 + dying, v);
+    const degree = ppDegree(v, ppRecoveryDc(c), v);
     const next = dying + [2, 1, -1, -2][degree];
     if (next <= 0) ppEndDying(c);
     else ppSetCond(c, 'Dying', next);
-    return { degree, dying: ppCond(c, 'Dying'), dead: ppDead(c), stable: next <= 0 };
+    const dead = ppDead(c);
+    return { degree, dying: ppCond(c, 'Dying'), dead, stable: next <= 0, heroic: dead && c.play.hero > 0 };
 }
 
 // Heroic Recovery: spend every Hero Point (at least 1) to lose dying, at 0 HP, with no wounded for it.
-function ppHeroicRecovery(c) {
-    if (!c.play.hero || !ppCond(c, 'Dying') || ppDead(c)) return false;
+// You can spend them when your dying value would go up, so fatal: the increase that just killed
+// (ppDamage's or ppRecovery's heroic) still lets it happen instead.
+function ppHeroicRecovery(c, fatal = false) {
+    if (!c.play.hero || !ppCond(c, 'Dying') || (ppDead(c) && !fatal)) return false;
     c.play.hero = 0;
     ppEndDying(c, false);
     return true;
@@ -225,7 +242,7 @@ const PP_PD_TYPES = ['bleed', 'fire', 'acid', 'cold', 'electricity', 'sonic', 'p
 const PP_PD_ICON = { bleed: '🩸', fire: '🔥', acid: '🧪', cold: '❄️', electricity: '⚡', poison: '☠️', mental: '🌀' };
 const PP_PD_MAX = 6;
 // Dice need 2 sides or more (the dice roller turns down a d1).
-const PP_PD_RE = /^(\d{1,2}d(?:[2-9]|[1-9]\d{1,2})|\d{1,3})([+-]\d{1,3})?$/;
+const PP_PD_RE = /^([1-9]\d?d(?:[2-9]|[1-9]\d{1,2})|\d{1,3})([+-]\d{1,3})?$/;
 
 // A dice formula's average ("2d6+1" → 8), to tell which of two is higher.
 function ppAvg(f) {
@@ -250,13 +267,14 @@ function ppAddPersistent(c, f, type) {
 // Each type is its own damage (so each raises dying while you're dying), then its flat check.
 // → { total, ended: [types], going: [types], down, dead, dying }
 function ppPersistentTick(c, s, rolls) {
-    const out = { total: 0, ended: [], going: [], down: false, dead: false, dying: 0 };
+    const out = { total: 0, ended: [], going: [], down: false, dead: false, dying: 0, heroic: false };
     c.play.pd = c.play.pd.filter((p, i) => {
         const r = rolls[i];
         if (!ppDead(c)) {
             const hit = ppDamage(c, s, r.dmg);
             out.total += r.dmg;
             out.down = out.down || hit.down;
+            out.heroic = hit.heroic;
         }
         (r.flat >= 15 ? out.ended : out.going).push(p.type);
         return r.flat < 15;

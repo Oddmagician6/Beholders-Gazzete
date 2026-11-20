@@ -76,7 +76,7 @@ const PF2E_CONDITIONS = {
     'Deafened': { max: 0, text: "Can't hear. Perception checks that need hearing critically fail, Perception for initiative and checks that mix sound with sight take a −2 status penalty, and auditory actions need a DC 5 flat check." },
     'Doomed': { max: 3, text: 'You die at dying 4 minus this value. It drops by 1 after a full night\'s rest.' },
     'Drained': { max: 4, text: 'A status penalty on Constitution-based rolls and DCs (Fortitude saves), and your HP and maximum HP drop by your level times the value. It drops by 1 after a full night\'s rest.' },
-    'Dying': { max: 4, text: "At 0 HP, unconscious, and close to death. Roll a recovery check (flat check, DC 10 + the value) at the start of each turn. You die at dying 4, less your doomed value." },
+    'Dying': { max: 5, text: "At 0 HP, unconscious, and close to death. Roll a recovery check (flat check, DC 10 + the value) at the start of each turn. You die at dying 4 (5 with Diehard), less your doomed value." },
     'Encumbered': { max: 0, text: 'Carrying too much: clumsy 1 and a 10-foot penalty to all your Speeds.' },
     'Enfeebled': { max: 4, text: 'A status penalty equal to the value on Strength-based rolls and DCs: melee attacks and their damage, and Athletics.' },
     'Fascinated': { max: 0, text: "A −2 status penalty to Perception and skill checks, and no concentrate actions except about what holds your attention. Ends when anyone turns hostile toward you or your allies." },

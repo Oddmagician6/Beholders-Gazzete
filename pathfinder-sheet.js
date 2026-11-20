@@ -19,6 +19,7 @@ let mode = 'normal';         // fortune / misfortune for d20 rolls; stays until 
 let amount = '';             // the damage/heal box, kept across redraws
 let lastRoll = null;         // { label, f, mode, d20, r, hero } shown in the roll bar
 let notice = null;           // { text, ok } after damage, a recovery check, or a rest
+let heroicNow = false;       // the last damage or recovery check took dying to death with a Hero Point left
 let restArmed = 0;
 let addForm = { n: '', max: '1', day: true };   // the Counters box, kept across redraws
 let target = '';             // the roll bar's DC: d20 rolls show their degree of success against it
@@ -116,10 +117,12 @@ function dmgParts(dmg) {
     return { f, type: m ? m[2] : '' };
 }
 
-// A Strike's damage with the enfeebled penalty on Strength-based damage.
+// A Strike's damage with the enfeebled penalty on Strength-based damage. A thief's finesse melee
+// Strike adds Dexterity instead when it's higher (as pcStrikes does), and then enfeebled stays out.
 function strikeDamage(c, d, x) {
     const { f, type } = dmgParts(x.dmg);
-    const strDmg = !x.ranged || (!x.traits.includes('splash') && x.traits.some(t => /^thrown/.test(t) || t === 'propulsive'));
+    const thiefDex = !x.ranged && x.traits.includes('finesse') && c.cls === 'rogue' && c.ch === 'thief' && d.s.mods.dex > d.s.mods.str;
+    const strDmg = !thiefDex && (!x.ranged || (!x.traits.includes('splash') && x.traits.some(t => /^thrown/.test(t) || t === 'propulsive')));
     const pen = strDmg ? ppPenalty(c, { kind: 'damage', abil: 'str' }) : { n: 0, why: [] };
     return { f: f + (pen.n ? String(pen.n) : ''), type, pen };
 }
@@ -178,7 +181,8 @@ function renderRollbar() {
         const tag = r.crit === 'nat20' ? ' <span class="cs-crit">Natural 20!</span>' : r.crit === 'nat1' ? ' <span class="cs-fumble">Natural 1</span>' : '';
         last = `<b>${r.total}</b><span>${esc(lastRoll.label)}${r.mode !== 'normal' ? ' (' + diceModeLabel(r.mode) + ')' : ''}${lastRoll.hero ? ' (Hero Point reroll)' : ''}${tag}</span><small>${esc(r.detail || diceDetail(r))}</small>`;
     }
-    const reroll = lastRoll && lastRoll.d20 && !lastRoll.hero && p.hero > 0
+    // The Hero Point reroll is a fortune effect: not on a roll that already had one (Fortune).
+    const reroll = lastRoll && lastRoll.d20 && !lastRoll.hero && lastRoll.mode !== 'adv' && p.hero > 0
         ? `<button type="button" class="cs-btn cs-mini" data-act="reroll" title="Spend a Hero Point to roll it again and take the new result">⭐ Reroll (Hero Point)</button>` : '';
     el.innerHTML = `<div class="cs-modes" role="group" aria-label="Roll d20s with">${[['normal', 'Normal'], ['adv', 'Fortune'], ['dis', 'Misfortune']].map(([v, t]) => `<button type="button" class="cs-btn cs-mini" data-act="mode" data-v="${v}" aria-pressed="${mode === v}">${t}</button>`).join('')}</div>
         <div class="cs-last" aria-live="polite">${last}<span id="pp-deg">${degreeHtml()}</span></div>
@@ -210,9 +214,10 @@ function hpPanel(c, d) {
         const bits = [wounded ? `wounded ${wounded}` : '', doomed ? `doomed ${doomed}: you die at dying ${ppDeathAt(c)}` : ''].filter(Boolean).join(' · ');
         h += `<div class="cs-banner${!dying && !dead ? ' cs-ok' : ''}">
             <p><b>${dead ? '💀 Dead.' : dying ? `🩸 Dying ${dying}.` : '😮‍💨 Stable at 0 Hit Points.'}</b>
-            ${dead ? 'Magic that returns the dead can bring you back: heal what it gives.' : dying ? `Roll a recovery check at the start of each turn: a DC ${10 + dying} flat check. Any healing brings you back (and adds 1 to wounded).` : 'You stay unconscious until healed, or wake after 10 minutes to an hour with 1 Hit Point.'}</p>
+            ${dead ? 'Magic that returns the dead can bring you back: heal what it gives.' : dying ? `Roll a recovery check at the start of each turn: a DC ${ppRecoveryDc(c)} flat check. Any healing brings you back (and adds 1 to wounded).` : 'You stay unconscious until healed, or wake after 10 minutes to an hour with 1 Hit Point.'}</p>
             ${bits ? `<p class="cs-dim">${esc(bits)}</p>` : ''}
-            ${dying && !dead ? `<div class="cs-btnrow"><button type="button" class="cs-btn cs-gold" data-act="recovery">🎲 Recovery Check (DC ${10 + dying})</button>
+            ${dead && heroicNow && p.hero ? `<div class="cs-btnrow"><button type="button" class="cs-btn cs-gold" data-act="heroic" title="You can spend your Hero Points when your dying value would go up: lose dying and stay at 0 HP instead">⭐ Heroic Recovery instead (all ${p.hero} Hero Point${p.hero > 1 ? 's' : ''})</button></div>` : ''}
+            ${dying && !dead ? `<div class="cs-btnrow"><button type="button" class="cs-btn cs-gold" data-act="recovery">🎲 Recovery Check (DC ${ppRecoveryDc(c)})</button>
               ${p.hero ? `<button type="button" class="cs-btn" data-act="heroic" title="Spend all your Hero Points: lose dying and stay at 0 HP, without adding to wounded">⭐ Heroic Recovery (all ${p.hero} Hero Point${p.hero > 1 ? 's' : ''})</button>` : ''}</div>` : ''}</div>`;
     }
     const restHp = Math.max(1, s.mods.con) * c.level;
@@ -501,6 +506,7 @@ function renderBar() {
 function openChar(c) {
     cur = c;
     notice = null;
+    heroicNow = false;
     lastRoll = null;
     if (cur) {
         const before = JSON.stringify(cur.play);
@@ -535,7 +541,7 @@ function onClick(e) {
     if (act === 'mode') { mode = v; renderRollbar(); return; }
     if (act === 'print') { window.print(); return; }
     if (act === 'party') { addToParty(); return; }
-    if (act === 'init') { doRoll(`1d20${plus(adj(cur, s.per, { kind: 'per', init: true }).v)}`, 'initiative (Perception)'); return; }
+    if (act === 'init') { doRoll(`1d20${plus(adj(cur, s.per + pcInitBonus(cur), { kind: 'per', init: true }).v)}`, 'initiative (Perception)'); return; }
     if (act === 'save') { doRoll(`1d20${plus(adj(cur, s.saves[v], { kind: v }).v)}`, `${PC_SAVES[v][0]} save`); return; }
     if (act === 'skill') {
         const lore = v.startsWith('lore:') ? v.slice(5) : '';
@@ -559,12 +565,13 @@ function onClick(e) {
     if (act === 'dmg') { const x = s.strikes[i], dm = strikeDamage(cur, d, x); doRoll(dm.f, `${x.name} damage${dm.type ? ` (${dm.type})` : ''}`, false); return; }
     if (act === 'crit') { critRoll(cur, d, s.strikes[i]); return; }
     if (act === 'reroll') {
-        if (!lastRoll || !cur.play.hero) return;
-        const { f, label, mode: m } = lastRoll;
+        if (!lastRoll || !cur.play.hero || lastRoll.mode === 'adv') return;
+        const { f, label } = lastRoll;
         cur.play.hero -= 1;
         save();
+        // Its fortune cancels a misfortune the first roll had: one d20 either way.
         const keep = mode;
-        mode = m;
+        mode = 'normal';
         doRoll(f, label, true, true);
         mode = keep;
         render();
@@ -576,6 +583,7 @@ function onClick(e) {
         const amt = readAmount();
         if (!amt) { flash('Type an amount first.', true); document.getElementById('cs-amt').focus(); return; }
         amount = '';
+        heroicNow = false;
         change(() => {
             if (act === 'temp') { ppTempHp(cur, amt); notice = null; return; }
             if (act === 'heal') {
@@ -584,12 +592,13 @@ function onClick(e) {
                 return;
             }
             const r = ppDamage(cur, s, amt, v === 'crit');
+            heroicNow = r.heroic;
             const bits = [];
             if (r.temp) bits.push(`${r.temp} taken by temporary HP`);
             if (r.hp) bits.push(`−${r.hp} HP`);
             let text = `🗡️ ${amt} damage${bits.length ? ': ' + bits.join(', ') : ''}.`;
             if (r.massive) text += ' Massive damage (double your maximum in one blow): dead.';
-            else if (r.dead) text += ` Dying ${r.dying}: dead.`;
+            else if (r.dead) text += ` Dying ${r.dying}: dead.${r.heroic ? ' Heroic Recovery can still stop it.' : ''}`;
             else if (r.down) text += ` Knocked out: dying ${r.dying}, unconscious.`;
             else if (r.dying) text += ` Hurt while dying: dying ${r.dying}.`;
             notice = { text, ok: false };
@@ -597,17 +606,18 @@ function onClick(e) {
         return;
     }
     if (act === 'recovery') {
-        const roll = doRoll('1d20', `recovery check (DC ${10 + ppCond(cur, 'Dying')})`, false);
+        const roll = doRoll('1d20', `recovery check (DC ${ppRecoveryDc(cur)})`, false);
         if (!roll) return;
         change(() => {
             const r = ppRecovery(cur, roll.total);
-            const what = r.dead ? 'dead.' : r.stable ? `stable at 0 HP, wounded ${ppCond(cur, 'Wounded')}.` : `dying ${r.dying}.`;
+            heroicNow = r.heroic;
+            const what = r.dead ? `dead.${r.heroic ? ' Heroic Recovery can still stop it.' : ''}` : r.stable ? `stable at 0 HP, wounded ${ppCond(cur, 'Wounded')}.` : `dying ${r.dying}.`;
             notice = { text: `🎲 ${roll.total}: ${PP_DEGREES[r.degree].toLowerCase()}, ${what}`, ok: r.stable };
         });
         return;
     }
     if (act === 'heroic') {
-        change(() => { if (ppHeroicRecovery(cur)) notice = { text: '⭐ Heroic Recovery: no longer dying, stable at 0 HP. Wounded didn\'t go up.', ok: true }; });
+        change(() => { if (ppHeroicRecovery(cur, heroicNow)) notice = { text: '⭐ Heroic Recovery: no longer dying, stable at 0 HP. Wounded didn\'t go up.', ok: true }; heroicNow = false; });
         return;
     }
     if (act === 'refocus') { change(() => { ppRefocus(cur); }); flash('🧘 Refocused: 1 Focus Point back.'); return; }
@@ -633,8 +643,9 @@ function onClick(e) {
             rolls.push({ dmg: Math.max(0, dmg.total), flat: flat.total });
         }
         let what = '', tick = null;
+        heroicNow = false;
         change(() => {
-            if (rolls.length) tick = ppPersistentTick(cur, s, rolls);
+            if (rolls.length) { tick = ppPersistentTick(cur, s, rolls); heroicNow = tick.heroic && tick.dead; }
             what = ppEndTurn(cur);
         });
         if (tick) {
@@ -642,7 +653,7 @@ function onClick(e) {
             let text = `${(types.length === 1 && PP_PD_ICON[types[0]]) || '💥'} Persistent damage: ${rolls.map(r => r.dmg).join(' + ')}${rolls.length > 1 ? ` = ${tick.total}` : ''}.`;
             if (tick.ended.length) text += ` Ended: ${tick.ended.join(', ')}.`;
             if (tick.going.length) text += ` Still burning on: ${tick.going.join(', ')}.`;
-            if (tick.dead) text += ` Dying ${tick.dying}: dead.`;
+            if (tick.dead) text += ` Dying ${tick.dying}: dead.${heroicNow ? ' Heroic Recovery can still stop it.' : ''}`;
             else if (tick.down) text += ` Knocked out: dying ${tick.dying}, unconscious.`;
             else if (tick.dying) text += ` Dying ${tick.dying}.`;
             if (what) text += ` And ${what}.`;

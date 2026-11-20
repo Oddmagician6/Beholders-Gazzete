@@ -17,7 +17,7 @@
    ============================================ */
 
 const SP_LEVELS = ['Cantrips', '1st level', '2nd level', '3rd level', '4th level', '5th level', '6th level', '7th level', '8th level', '9th level'];
-const SP_SLUG = {};
+const SP_SLUG = Object.create(null);   // no inherited keys: ?arc=constructor finds nothing
 // SPELLS_DATA swaps in place with the rules version, so the slug index is rebuilt after a switch.
 function spIndex() {
     Object.keys(SP_SLUG).forEach(k => { delete SP_SLUG[k]; });
@@ -32,10 +32,12 @@ const spLandAt = c => (cbIs24(c) ? 3 : 2);
 // switch in another tab can't change the pool under it), then draws again with its spells. Back to
 // "a caster of my own": the page goes back to the address's version, or the setting.
 // After a failed 2024 load (rulesFailed) it doesn't ask again on its own.
-const SP_URL_RULES = typeof rulesPage !== 'undefined' ? rulesPage : null;
+// A switch on the rules picker (rulesSet leaves no page version) replaces the address's version.
+let SP_URL_RULES = typeof rulesPage !== 'undefined' ? rulesPage : null;
 function spFollow() {
     const c = sp.c;
     if (typeof rulesUse !== 'function') return;
+    if (rulesPage === null) SP_URL_RULES = null;
     if (!sp.charId || !c) {
         if (rulesPage !== SP_URL_RULES && !rulesFailed) rulesUse(SP_URL_RULES, !!SP_URL_RULES);
         return;
@@ -552,7 +554,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // A rules switch (the picker, a character's version, or another tab): new spell list, new index.
     if (typeof srd52OnChange === 'function') srd52OnChange(() => {
         spIndex();
-        if (!sp.edit) spFromUrl();
+        if (sp.edit && sp.charId) spFollow();   // a saved character keeps its own version, picker open or not
+        else if (sp.edit) {
+            // A caster of my own takes the new version: the picks so far go to the address, then
+            // come back on that version's list (the open picker's limits were the old version's).
+            sp.edit = '';
+            sp.before = null;
+            spWriteUrl();
+            spFromUrl();
+        } else spFromUrl();
         render();
     });
     window.addEventListener('storage', e => {

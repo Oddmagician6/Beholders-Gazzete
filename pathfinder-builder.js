@@ -32,10 +32,12 @@ function flash(msg, bad = false) {
     flashTimer = setTimeout(() => { el.textContent = ''; }, 4000);
 }
 
+// → false when the browser refused it (the warning stays up).
 function save() {
     const list = pcSave(cur);
-    if (!list) { flash('Could not save: this browser\'s storage is full or blocked.', true); return; }
+    if (!list) { flash('Could not save: this browser\'s storage is full or blocked.', true); return false; }
     chars = list;
+    return true;
 }
 
 // Change the open character, save, and redraw (keeping focus on the control that was used).
@@ -503,10 +505,11 @@ function openChar(c) {
 function newChar() {
     if (chars.length >= PC_MAX) { flash(`You have ${PC_MAX} characters already: delete one first.`, true); return; }
     cur = pcBlank();
-    save();
+    const ok = save();
     step = 'ancestry';
     openChar(cur);
-    flash('➕ New character. Start with an ancestry.');
+    if (ok) flash('➕ New character. Start with an ancestry.');
+    else flash('Could not save the new character: this browser\'s storage is full or blocked.', true);
 }
 
 function addToParty() {
@@ -535,17 +538,18 @@ function importChar(file) {
     if (file.size > 200000) { flash('That file is too big to be a character.', true); return; }
     const reader = new FileReader();
     reader.onload = () => {
-        let data = null;
-        try { data = JSON.parse(reader.result); } catch (e) {}
-        const c = pcClean(data && data.character);
+        let data = null, c = null;
+        // A file that parses but won't clean (odd values in its fields) is turned down the same way.
+        try { data = JSON.parse(reader.result); c = pcClean(data && data.character); } catch (e) {}
         if (!c || !(data && data.gazettePf2eCharacter)) { flash('That isn\'t a Pathfinder character file from this builder.', true); return; }
         if (chars.some(x => x.id === c.id)) c.id = pcNewId();
         if (chars.length >= PC_MAX) { flash(`You have ${PC_MAX} characters already: delete one first.`, true); return; }
         cur = c;
-        save();
+        const ok = save();
         step = 'sheet';
         openChar(cur);
-        flash(`⬆️ Imported ${c.name || 'a character'}.`);
+        if (ok) flash(`⬆️ Imported ${c.name || 'a character'}.`);
+        else flash('Could not save the imported character: this browser\'s storage is full or blocked.', true);
     };
     reader.readAsText(file);
 }
