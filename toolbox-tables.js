@@ -78,10 +78,18 @@ function loadTables() {
     tables.forEach(t => { while (ids.has(t.id)) t.id = newTableId(); ids.add(t.id); });
 }
 
+// False (with a warning) when the browser wouldn't keep them.
 function saveTables() {
-    try { localStorage.setItem(TABLES_KEY, JSON.stringify(tables)); } catch (e) {
+    try { localStorage.setItem(TABLES_KEY, JSON.stringify(tables)); return true; } catch (e) {
         flash('tables-status', "⚠️ This browser wouldn't save the tables (storage full or blocked).");
+        return false;
     }
+}
+
+// Call off a Delete armed for the table that was on screen.
+function disarmTableDelete() {
+    const del = document.getElementById('tbl-delete');
+    if (del && del.dataset.armed) { clearTimeout(del._t); delete del.dataset.armed; del.textContent = '🗑️ Delete'; }
 }
 
 function curTable() {
@@ -191,8 +199,7 @@ function renderTables() {
 // ── Actions ───────────────────────────────────────────────
 function selectTable(id) {
     // A Delete armed for the table that was on screen doesn't carry over to this one.
-    const del = document.getElementById('tbl-delete');
-    if (id !== tblCur && del.dataset.armed) { clearTimeout(del._t); delete del.dataset.armed; del.textContent = '🗑️ Delete'; }
+    if (id !== tblCur) disarmTableDelete();
     tblCur = id;
     renderTableList();
     renderTableEditor();
@@ -264,7 +271,8 @@ function deleteTable() {
     if (!t) return;
     const i = tables.indexOf(t);
     tables.splice(i, 1);
-    saveTables();
+    // Not kept: put it back, so the list shows what a reload will.
+    if (!saveTables()) { tables.splice(i, 0, t); return; }
     tblCur = tables.length ? tables[Math.min(i, tables.length - 1)].id : null;
     renderTableList();
     renderTableEditor();
@@ -425,7 +433,8 @@ function setupTables() {
         // The open table was deleted there: show another one now, even mid-typing, or the next
         // keystroke would save this table's text over the one picked in its place.
         const gone = !curTable();
-        if (gone) tblCur = tables.length ? tables[0].id : null;
+        // A Delete armed for the table that went doesn't carry over to the one shown in its place.
+        if (gone) { disarmTableDelete(); tblCur = tables.length ? tables[0].id : null; }
         renderTableList();
         const typing = document.activeElement && document.activeElement.closest && document.activeElement.closest('#tbl-main');
         if (gone || !typing) renderTableEditor();

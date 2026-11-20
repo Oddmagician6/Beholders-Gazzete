@@ -49,14 +49,17 @@ function weFlash(msg, keep = false) {
 // ── Saving and undo ───────────────────────────────────────
 function weSaveNow() {
     clearTimeout(WE.saveTimer);
-    WE.dirty = false;
     WE.store.cur = WE.m.id;
-    if (wmSaveStore(WE.store)) return true;
+    // Still unsaved when the browser said no, so the next change, a map switch, or leaving tries again.
+    WE.dirty = !wmSaveStore(WE.store);
+    if (!WE.dirty) return true;
     weFlash('⚠️ This browser would not save the map (storage full or turned off). Copy a link to keep it.', true);
     return false;
 }
 
 function weSave() {
+    // Something dragged or nudged too far off the edge stops where a reload would put it, now rather than then.
+    if (wmKeepOn(WE.m)) weDrawAll();
     WE.m.t = Date.now();
     WE.dirty = true;
     clearTimeout(WE.saveTimer);
@@ -66,7 +69,8 @@ function weSave() {
 // Call before a change.
 function weMark() {
     WE.undo.push(wmCopy(WE.m));
-    if (WE.undo.length > WE_UNDO_MAX) WE.undo.shift();
+    // The oldest step is held, not lost, until the change turns out to be one (weUnmark puts it back).
+    WE.undoHeld = WE.undo.length > WE_UNDO_MAX ? WE.undo.shift() : null;
     WE.redoHeld = WE.redo;
     WE.redo = [];
     weUndoButtons();
@@ -75,6 +79,8 @@ function weMark() {
 // A change that came to nothing (a stroke over what was already there): Redo comes back too.
 function weUnmark() {
     WE.undo.pop();
+    if (WE.undoHeld) WE.undo.unshift(WE.undoHeld);
+    WE.undoHeld = null;
     if (WE.redoHeld) WE.redo = WE.redoHeld;
     WE.redoHeld = null;
     weUndoButtons();
@@ -809,6 +815,8 @@ function weNudge(dx, dy) {
 function weKey(e) {
     const typing = /^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName) || e.target.isContentEditable;
     if (typing) return;
+    // Mid-drag (moving, turning, painting…), keys wait: the drag's end still needs what it was working on.
+    if (WE.drag) return;
     const k = e.key.toLowerCase(), ctrl = e.ctrlKey || e.metaKey;
     if (ctrl && k === 'z') { e.preventDefault(); if (e.shiftKey) weSwap(WE.redo, WE.undo); else weSwap(WE.undo, WE.redo); return; }
     if (ctrl && k === 'y') { e.preventDefault(); weSwap(WE.redo, WE.undo); return; }

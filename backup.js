@@ -202,6 +202,8 @@ const BACKUP_KEYS = [
         clean: v => {
             if (!bkObj(v) || !Array.isArray(v.maps)) throw new Error("isn't in the shape this tool saves");
             const { cur, maps } = bmCleanStore(v);
+            // Maps in the file but none of them readable: don't offer to swap what's here for nothing.
+            if (!maps.length && v.maps.length) throw new Error('holds no map this tool can open');
             return { value: { v: 1, cur, maps: maps.map(bmPack) }, dropped: v.maps.length - maps.length };
         },
         count: v => bkN(v.maps.length, 'map')
@@ -211,7 +213,12 @@ const BACKUP_KEYS = [
         // Typed names and labels, escaped by the page. Cleaned the way the page loads them (wmCleanStore).
         clean: v => {
             if (!bkObj(v) || !Array.isArray(v.maps)) throw new Error("isn't in the shape this tool saves");
-            const { cur, maps } = wmCleanStore(v);
+            // A map whose painted land or terrain won't unpack is dropped (and counted), not loaded as open sea.
+            const grid = (s, p, max) => s === undefined || !!wmUnRle(s, p.w * p.h, max);
+            const readable = v.maps.filter(p => !bkObj(p) || !Number.isInteger(p.w) || !Number.isInteger(p.h)
+                || (grid(p.l, p, 1) && grid(p.b, p, WM_BIOMES.length)));
+            const { cur, maps } = wmCleanStore({ ...v, maps: readable });
+            if (!maps.length && v.maps.length) throw new Error('holds no map this tool can open');
             return { value: { v: 1, cur, maps: maps.map(wmPack) }, dropped: v.maps.length - maps.length };
         },
         count: v => bkN(v.maps.length, 'map')

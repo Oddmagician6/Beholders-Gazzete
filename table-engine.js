@@ -47,9 +47,10 @@ function tableNum(s, d100) {
     return n === 0 && /^0+$/.test(s) && d100 ? 100 : n;
 }
 
-// The text of a range line: the rest of a markdown row's cells, joined.
+// The text of a range line: the rest of a markdown row's cells, joined. A | inside [[Table name]]
+// is part of the name, not a cell edge.
 function tableCells(rest) {
-    return rest.replace(/\|\s*$/, '').split('|').map(c => c.trim()).filter(Boolean).join(' — ');
+    return rest.replace(/\|\s*$/, '').split(/\|(?![^\[\]\n]*\]\])/).map(c => c.trim()).filter(Boolean).join(' — ');
 }
 
 // → { entries: [{ lo, hi, text }], die, ranged, header (ranged: a first line without a range, or null),

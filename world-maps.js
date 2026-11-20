@@ -452,11 +452,14 @@ function setupMapsPins(card) {
 }
 
 // ── Upload, replace, delete ───────────────────────────────
+// replace: true for the map on screen, or the id of the map the picker was opened for.
 async function mapsUpload(file, replace = false) {
     if (!file) return;
     if (!mapsState.db) { flash('maps-status', "⚠️ This browser won't keep map pictures here."); return; }
     const nb = nbLoad(), e = replace ? mapsEntry(nb) : null;
     if (replace && !e) return;
+    // That map was removed (or another put on screen) while the file was being picked: no other map gets the picture.
+    if (typeof replace === 'string' && e.id !== replace) { flash('maps-status', '⚠️ That map is gone from the notebook, so the picture went nowhere.'); return; }
     if (!replace && mapsEntries(nb).length >= MAP_LIMITS.maps) { flash('maps-status', `⚠️ The notebook holds ${MAP_LIMITS.maps} maps at most. Delete one first.`); return; }
     if (!replace && nb.entries.length >= NB_LIMITS.entries) { flash('maps-status', '⚠️ The notebook is full. Remove an entry first.'); return; }
     flash('maps-status', '🖼️ Checking the picture…');
@@ -643,7 +646,7 @@ function setupMaps() {
     const file = document.getElementById('maps-file');
     let replacing = false;
     document.getElementById('maps-upload').addEventListener('click', () => { replacing = false; file.click(); });
-    document.getElementById('maps-replace').addEventListener('click', () => { replacing = true; file.click(); });
+    document.getElementById('maps-replace').addEventListener('click', () => { const e = mapsEntry(); replacing = e ? e.id : false; if (e) file.click(); });
     file.addEventListener('change', () => { mapsUpload(file.files[0], replacing); file.value = ''; });
     // Drop a picture on the card: a new map, or this map's missing picture.
     card.addEventListener('dragover', ev => {

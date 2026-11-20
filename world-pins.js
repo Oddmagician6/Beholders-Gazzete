@@ -204,9 +204,18 @@ function pinBoard(o) {
         if (!box) return;
         const id = box.dataset.pin, k = box.classList.contains('wb-pin-name') ? 'name' : 'note', key = id + '|' + k;
         if (timers[key]) clearTimeout(timers[key].t);
+        // The map this was typed on: if another takes its place first (new options, a new roll), it still goes there.
+        const at = o.entry(nbLoad()), atId = at ? at.id : '';
         const run = () => {
             delete timers[key];
-            if (o.edit(pins => { const p = pins.find(q => q.id === id); if (!p) return false; p[k] = box.value; }, true)) renderMap();
+            const nb = nbLoad(), cur = o.entry(nb), set = pins => { const p = pins.find(q => q.id === id); if (!p) return false; p[k] = box.value; };
+            if (!atId || (cur && cur.id === atId)) { if (o.edit(set, true)) renderMap(); return; }
+            const e = nbFind(nb, atId);
+            if (!e) return;
+            const pins = (e.pins || []).map(p => ({ ...p }));
+            if (set(pins) === false) return;
+            nbSetPins(e, pins, new Set(nb.entries.map(x => x.id)));
+            nbStore(nb, true);
         };
         timers[key] = { t: setTimeout(run, 400), run };
     });
@@ -217,6 +226,8 @@ function pinBoard(o) {
     function flush() {
         Object.values(timers).forEach(({ t, run }) => { clearTimeout(t); run(); });
     }
+    // Leaving the page (or reloading) inside the typing pause keeps what was typed.
+    window.addEventListener('pagehide', flush);
 
     return { state, render, renderMap, place, flush, line: wpLine };
 }

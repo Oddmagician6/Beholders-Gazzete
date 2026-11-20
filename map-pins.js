@@ -109,8 +109,16 @@ function pinWire(host, o) {
         drag.moved = true;
         if (!drag.el) return;
         const frame = o.frame(), { W, H } = o.size();
-        const pt = frame && pinPoint(frame, ev, W, H);
-        if (!pt) return;
+        const at = frame && pinPoint(frame, ev, W, H);
+        if (!at) return;
+        // Where on the pin it was grabbed (its head sits above its spot): the spot keeps that offset, so it
+        // doesn't jump to the pointer.
+        if (!drag.off) {
+            const grab = pinPoint(frame, { clientX: drag.x0, clientY: drag.y0 }, W, H);
+            const t = (drag.el.getAttribute('transform') || '').match(/translate\(([-\d.]+)[ ,]+([-\d.]+)\)/);
+            drag.off = grab && t ? { x: Number(t[1]) / W - grab.x, y: Number(t[2]) / H - grab.y } : { x: 0, y: 0 };
+        }
+        const pt = { x: pinCoord(at.x + drag.off.x), y: pinCoord(at.y + drag.off.y) };
         drag.pt = pt;
         drag.el.setAttribute('transform', `translate(${(pt.x * W).toFixed(1)} ${(pt.y * H).toFixed(1)})`);
     });

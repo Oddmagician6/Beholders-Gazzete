@@ -291,6 +291,17 @@ function wmClean(p) {
     };
 }
 
+// Icons, labels, and line points pulled back inside the bounds wmClean keeps them in (60 units past
+// each edge), so what the editor saves is what comes back on reload. True when anything moved.
+function wmKeepOn(m) {
+    const W = m.w * WM_CELL, H = m.h * WM_CELL;
+    let moved = false;
+    const fit = (v, hi) => { const c = Math.min(hi + 60, Math.max(-60, v)); if (c !== v) moved = true; return c; };
+    m.ic.concat(m.tx).forEach(o => { o.x = fit(o.x, W); o.y = fit(o.y, H); });
+    m.ln.forEach(l => l.p.forEach(q => { q[0] = fit(q[0], W); q[1] = fit(q[1], H); }));
+    return moved;
+}
+
 // ── Saving ────────────────────────────────────────────────
 function wmLoadStore() {
     let raw = null;
