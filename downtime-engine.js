@@ -104,6 +104,15 @@ function dtLevel(c) {
     return Math.min(20, Math.max(1, Math.floor(Number(c.lvl) || 1)));
 }
 
+// Player Core's skill increases: master from 7th level, legendary from 15th (expert isn't checked: some
+// classes start expert in Crafting). A Craft rank the crafter's level can't have yet, or ''.
+// (Earn Income's pay reads the task's level, which isn't the character's, so it isn't checked there.)
+const DT_PF2E_RANK_LEVEL = { master: 7, legendary: 15 };
+function dtRankTooHigh(lvl, rank) {
+    const need = DT_PF2E_RANK_LEVEL[rank];
+    return need && lvl < need ? `A level ${lvl} character can't be ${rank} in Crafting yet: that rank comes at level ${need} at the soonest.` : '';
+}
+
 // SRD 5.1 Lifestyle Expenses, per day. Aristocratic is "10 gp minimum".
 const DOWNTIME_LIFESTYLES = DT_PF2E ? DOWNTIME_PF2E_LIFESTYLES : {
     wretched:     { label: 'Wretched',     icon: '🥀', gp: 0 },
@@ -679,6 +688,8 @@ function downtimeFor(c, days, seed, i = 0, opts = {}) {
                     : `The item is finished${workDays ? ` after ${setup + workDays} days` : ''}, with nothing more to pay.`, src: 'PC' });
             }
             lines.push({ text: 'The item must be your level or lower: 9th level and up needs master Crafting, 17th legendary.', src: 'PC' });
+            const tooHigh = dtRankTooHigh(lvl, c.work);
+            if (tooHigh) lines.push({ text: tooHigh, src: 'PC' });
         }
     } else if (DT_PF2E && c.act === 'earn') {
         const task = c.val === '' || c.val === undefined ? null : Math.min(20, Math.max(0, Math.floor(Number(c.val) || 0)));
@@ -727,7 +738,7 @@ function downtimeFor(c, days, seed, i = 0, opts = {}) {
         out.busy = used;
         lines.push({ text: `${kind.label}${n > 1 ? ` ×${n}` : ''}: ${kind.days === 7 ? 'a week' : 'at least a month'} each, and no other downtime meanwhile. No set price; an instructor may charge (the GM's call).`, src: 'PC' });
         lines.push({ text: out.train.finished
-            ? `Retraining done: ${need} of ${need} days${used < days ? `, finished on day ${used}` : ''}.`
+            ? (used ? `Retraining done: ${need} of ${need} days${used < days ? `, finished on day ${used}` : ''}.` : `Retraining already done: ${need} of ${need} days before this downtime.`)
             : `${had + used} of ${need} days: ${need - had - used} more to go.`, src: 'PC' });
     } else if (DT_PF2E && c.act === 'rest') {
         const lvl = dtLevel(c);

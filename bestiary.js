@@ -25,8 +25,11 @@ const BST_SORTS = {
     ac: (a, b) => b.ac - a.ac || a.name.localeCompare(b.name)
 };
 
-let open = new Set();   // ids whose stat block is open
+let open = new Set();   // row ids whose stat block is open
+let openIds = [];       // the ids asked for (the address's m=), kept while this edition lacks them
 let picks = [];         // [{ id, count }]
+let parked = [];        // saved picks this edition has no row for (a 2024 monster under 2014): kept, not shown
+const PICKS_SAVED_MAX = PICKS_MAX * 2;
 let blocksFailed = false;
 
 function esc(text) {
@@ -115,7 +118,7 @@ function rowHtml(m) {
 }
 
 function blockHtml(m) {
-    const body = blocksFailed ? '<p class="sb-note">The stat blocks didn\'t load. Check your connection, then close and open this one again.</p>'
+    const body = blocksFailed && !m.block ? '<p class="sb-note">The stat blocks didn\'t load. Check your connection, then close and open this one again.</p>'
         : monsterBlockHtml(m);
     return `<div class="sb-box" id="sb-${m.id}">
         <div class="bst-art" aria-hidden="true"><img src="${typeArt(m, false)}" alt="" width="960" height="640" decoding="async"></div>
@@ -162,7 +165,7 @@ function bstParams() {
     const f = filters();
     const cr = f.min && f.max ? (f.min === f.max ? f.min : `${f.min}-${f.max}`) : f.min ? `${f.min}-` : f.max ? `-${f.max}` : null;
     return { q: f.q || null, cr, type: f.type || null, size: f.size || null, hab: f.hab || null,
-        sort: f.sort === 'name' ? null : f.sort, m: [...open] };
+        sort: f.sort === 'name' ? null : f.sort, m: openIds };
 }
 
 function applyUrl() {
@@ -173,14 +176,27 @@ function applyUrl() {
     set('bst-cr-min', min || null);
     set('bst-cr-max', max || null);
     ['type', 'size', 'hab', 'sort'].forEach(k => set('bst-' + k, p.get(k)));
-    // By the row's own id: in 2024 ?m=goblin opens the Goblin Warrior's row.
-    open = new Set(p.getAll('m').filter(id => Object.hasOwn(MONSTER_BY_ID, id)).map(id => MONSTER_BY_ID[id].id).slice(0, 12));
+    openIds = [...new Set(p.getAll('m').filter(id => /^[a-z0-9-]{1,60}$/.test(id)))].slice(0, PICKS_MAX);
+    resolveOpen();
     render();
 }
 
+// The rows the asked-for ids open, by the row's own id: in 2024 ?m=goblin opens the Goblin Warrior's row.
+// An id this edition lacks stays in openIds (and the address), so it opens again on the way back.
+function resolveOpen() {
+    open = new Set(openIds.filter(id => Object.hasOwn(MONSTER_BY_ID, id)).map(id => MONSTER_BY_ID[id].id));
+}
+
 function toggleRow(id) {
-    if (open.has(id)) open.delete(id);
-    else open.add(id);
+    if (open.has(id)) {
+        open.delete(id);
+        openIds = openIds.filter(x => !Object.hasOwn(MONSTER_BY_ID, x) || MONSTER_BY_ID[x].id !== id);
+    } else {
+        // The address holds 12 at most: a 13th wouldn't come back on a reload.
+        if (openIds.length >= PICKS_MAX) { bstFlash(`⚠️ ${PICKS_MAX} stat blocks open at most. Close one first.`); return; }
+        open.add(id);
+        openIds.push(id);
+    }
     if (open.has(id) && blocksFailed) blocksFailed = false;   // try the load again
     setUrlParams(bstParams(), false);
     render();
@@ -205,19 +221,32 @@ function onListClick(e) {
 }
 
 // ── The encounter list ────────────────────────────────────
+// The row a pick shows as (in 2024 a saved 'goblin' is the Goblin Warrior's row).
+const pickRow = id => MONSTER_BY_ID[id].id;
+
 function loadPicks() {
     picks = [];
-    try {
-        const saved = JSON.parse(localStorage.getItem(PICKS_KEY));
-        if (Array.isArray(saved)) saved.forEach(p => {
-            if (p && typeof p.id === 'string' && Object.hasOwn(MONSTER_BY_ID, p.id) && picks.length < PICKS_MAX && !picks.some(x => x.id === p.id))
-                picks.push({ id: p.id, count: Math.max(1, Math.min(PICK_MAX_COUNT, Math.round(Number(p.count)) || 1)) });
-        });
-    } catch (e) {}
+    parked = [];
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(PICKS_KEY)); } catch (e) {}
+    if (!Array.isArray(saved)) return;
+    saved.forEach(p => {
+        if (!p || typeof p.id !== 'string' || !/^[a-z0-9-]{1,60}$/.test(p.id)) return;
+        // One damaged count (an object with no toString) costs that pick its count, not the rest of the list.
+        const n = typeof p.count === 'number' || typeof p.count === 'string' ? Number(p.count) : 1;
+        const count = Math.max(1, Math.min(PICK_MAX_COUNT, Math.round(n) || 1));
+        if (!Object.hasOwn(MONSTER_BY_ID, p.id)) {
+            if (!parked.some(x => x.id === p.id)) parked.push({ id: p.id, count });
+            return;
+        }
+        const same = picks.find(x => pickRow(x.id) === pickRow(p.id));
+        if (same) same.count = Math.min(PICK_MAX_COUNT, same.count + count);
+        else if (picks.length < PICKS_MAX) picks.push({ id: p.id, count });
+    });
 }
 
 function savePicks() {
-    try { localStorage.setItem(PICKS_KEY, JSON.stringify(picks)); } catch (e) {
+    try { localStorage.setItem(PICKS_KEY, JSON.stringify([...picks, ...parked].slice(0, PICKS_SAVED_MAX))); } catch (e) {
         // After the caller's own message ("➕ Orc ×1"), so this one stays on screen.
         queueMicrotask(() => bstFlash("⚠️ This browser wouldn't save the encounter list (storage full or blocked)."));
     }
@@ -225,7 +254,7 @@ function savePicks() {
 
 function addPick(id) {
     const m = MONSTER_BY_ID[id];
-    const p = picks.find(x => x.id === id);
+    const p = picks.find(x => pickRow(x.id) === pickRow(id));
     if (p) {
         if (p.count >= PICK_MAX_COUNT) { bstFlash(`⚠️ ${PICK_MAX_COUNT} is the most of one monster.`); return; }
         p.count++;
@@ -290,6 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('bst-picks').addEventListener('click', onPicksClick);
     document.getElementById('bst-clear').addEventListener('click', () => {
         picks = [];
+        parked = [];
         savePicks();
         renderPicks();
         bstFlash('🧹 The encounter list is empty.');
@@ -299,7 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof srd52Toggle === 'function') {
         document.getElementById('bst-v52').innerHTML = srd52Toggle();
         srd52OnChange(() => {
-            open = new Set([...open].filter(id => Object.hasOwn(MONSTER_BY_ID, id)));
+            resolveOpen();
             fillListFilters();
             loadPicks();
             renderPicks();

@@ -27,8 +27,16 @@ function hoLoad() {
     };
 }
 
+// Only the open type's form is written from this tab: the other types take what storage holds now,
+// so a second tab's typing on another type (missed here while this tab had focus) isn't written over.
 function hoSave() {
-    try { localStorage.setItem(HO_KEY, JSON.stringify(ho)); } catch (e) {
+    try {
+        let saved = null;
+        try { saved = JSON.parse(localStorage.getItem(HO_KEY)); } catch (e) { saved = null; }
+        const forms = saved && typeof saved === 'object' && saved.forms && typeof saved.forms === 'object' ? saved.forms : {};
+        HO_TYPES.forEach(t => { if (t !== ho.t && Object.hasOwn(forms, t)) ho.forms[t] = handoutClean(t, forms[t]); });
+        localStorage.setItem(HO_KEY, JSON.stringify(ho));
+    } catch (e) {
         // The page still works; say the typing won't survive a refresh (after any message of the caller's).
         queueMicrotask(() => hoFlash("⚠️ This browser wouldn't save your handouts (storage full or blocked)."));
     }
@@ -211,9 +219,13 @@ function hoCopy() {
 
 function hoCopyLink() {
     const filled = !!hoForm().src;
-    copyPageLink(ok => hoFlash(!ok ? '⚠️ Copy blocked by the browser.'
+    const done = ok => hoFlash(!ok ? '⚠️ Copy blocked by the browser.'
         : filled ? (hoIsEdited() ? '🔗 Link copied. It opens this handout as it was filled from the roll; your edits stay here.' : '🔗 Link copied. It opens this same handout.')
-        : '🔗 Link copied, but this one was typed by hand, so the link opens a blank one. Use 📋 Copy Text to share the words.'));
+        : '🔗 Link copied, but this one was typed by hand, so the link opens a blank one. Use 📋 Copy Text to share the words.');
+    // While a link's roll waits behind Replace / Keep, the address bar still holds that link: copy the handout on screen.
+    if (!(hoPending && hoPending.t === ho.t)) { copyPageLink(done); return; }
+    if (!navigator.clipboard || !navigator.clipboard.writeText) { done(false); return; }
+    navigator.clipboard.writeText(`${location.origin}${location.pathname}?${paramsQuery(hoParams())}`).then(() => done(true), () => done(false));
 }
 
 function hoIsEdited() {

@@ -82,6 +82,7 @@ const HANDOUT_LISTS = {
 };
 
 const HANDOUT_GP_MAX = 10000000;
+const HANDOUT_SRC_MAX = 2000;
 
 function hoEsc(text) {
     return String(text ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -93,7 +94,8 @@ const hoCap = s => String(s || '').charAt(0).toUpperCase() + String(s || '').sli
 function hoField(f, v) {
     if (f.check) return v === true;
     if (f.gp) {
-        const n = Math.round(Number(v) * 100) / 100;
+        // A number or the text of one only (an object with no toString would throw); rounded to the copper half up.
+        const n = typeof v === 'number' || typeof v === 'string' ? gpToCp(v) / 100 : 0;
         return Number.isFinite(n) && n > 0 ? Math.min(HANDOUT_GP_MAX, n) : 0;
     }
     if (f.options) return f.options.some(([o]) => o === v) ? v : f.options[0][0];
@@ -116,7 +118,8 @@ function handoutClean(t, o) {
         while (rows.length < list.min) rows.push(hoRow(list.fields, {}));
         h[list.key] = rows;
     }
-    if (typeof o.src === 'string' && o.src.length <= 600 && /^[\w.=&%+-]*$/.test(o.src)) h.src = o.src;
+    // An NPC with all its parts locked and a long given name and role makes a link of about 850 characters.
+    if (typeof o.src === 'string' && o.src.length <= HANDOUT_SRC_MAX && /^[\w.=&%+-]*$/.test(o.src)) h.src = o.src;
     return h;
 }
 
@@ -137,9 +140,17 @@ function handoutBlank(t) {
 // text: keys that take one free-text value (a given name, a shop's sign), checked again by the roll that reads them.
 const HANDOUT_SOURCES = {
     npc: { icon: '🎭', label: 'NPC', fills: ['wanted', 'letter'], keys: ['race', 'profession', 'age', 'gender', 'cls', 'level', 'lock', 'world'], text: ['name', 'role', 'faith'], page: 'npc-generator' },
-    quest: { icon: '📜', label: 'quest', fills: ['board', 'letter'], keys: ['lvl', 'n', 'job', 'world', 'rules'], text: [], page: 'toolbox?tab=quest' },
-    shop: { icon: '🏪', label: 'shop', fills: ['prices'], keys: ['type', 'wealth'], text: ['name'], page: 'shop' }
+    quest: { icon: '📜', label: 'quest', fills: ['board', 'letter'], keys: ['lvl', 'n', 'job', 'world', 'rules'], text: ['town'], page: 'toolbox?tab=quest' },
+    // at: the market's 15-minute slot the price list was filled in (added when the link has none), so the
+    // list reopens with the prices it was made with, as the shop showed them then.
+    shop: { icon: '🏪', label: 'shop', fills: ['prices'], keys: ['type', 'wealth', 'at'], text: ['name'], page: 'shop' }
 };
+
+// The market slot a shop's price list reads: the link's at=, else now's.
+function hoMarketSlot(v) {
+    const n = /^\d{1,9}$/.test(v || '') ? Number(v) : NaN;
+    return n > 0 ? n : Math.floor(Date.now() / MARKET_SLOT_MS);
+}
 
 // A free-text link value: one line, no markup, at most 80 characters, or ''.
 function hoTextParam(v) {
@@ -150,11 +161,12 @@ function hoTextParam(v) {
 // URLSearchParams -> { from, seed, query } with the source's own keys only, or null.
 // query is the canonical link (from=…&seed=…&…), which a filled handout keeps as src.
 function handoutSourceParams(p) {
-    const from = p.get('from'), def = HANDOUT_SOURCES[from], seed = parseSeed(p.get('seed'));
+    const from = p.get('from'), def = Object.hasOwn(HANDOUT_SOURCES, from) ? HANDOUT_SOURCES[from] : null, seed = parseSeed(p.get('seed'));
     if (!def || !seed) return null;
     const q = new URLSearchParams({ from, seed });
-    def.keys.forEach(k => p.getAll(k).slice(0, NPC_PARTS.length).forEach(v => { if (/^[\w.-]{1,40}$/.test(v)) q.append(k, v); }));
+    def.keys.forEach(k => k !== 'at' && p.getAll(k).slice(0, NPC_PARTS.length).forEach(v => { if (/^[\w.-]{1,40}$/.test(v)) q.append(k, v); }));
     def.text.forEach(k => { const v = hoTextParam(p.get(k)); if (v) q.set(k, v); });
+    if (from === 'shop') q.set('at', hoMarketSlot(p.get('at')));
     return { from, seed, p: q, query: q.toString() };
 }
 
@@ -181,6 +193,9 @@ function handoutSource(src) {
                 level: Number(p.get('lvl')) || 3, size: Number(p.get('n')) || 4,
                 job: Object.hasOwn(QUEST_JOBS, job) ? job : 'random', world: p.get('world')
             });
+            // The Worldbuilder town a Realms job is near (the Quest tab's town=, B537), in place of the rolled city.
+            const town = npcGiven(p.get('town'));
+            if (quest.realms && town) quest.realms = { ...quest.realms, city: town };
             return { ...src, quest, title: quest.title };
         }
         if (src.from === 'shop') {
@@ -188,6 +203,7 @@ function handoutSource(src) {
             const shop = { ...withSeed(src.seed, () => rollShop({ ...opts, seed: src.seed })), seed: src.seed };
             const sign = p.get('name');   // the shop page's own sign (?name=, at most 60 characters)
             if (sign && sign.length <= 60) shop.name = sign;
+            shop.at = hoMarketSlot(p.get('at'));
             return { ...src, shop, title: shop.name };
         }
     } catch (e) {
@@ -200,6 +216,7 @@ function handoutSource(src) {
 function handoutSourceLink(src) {
     const q = new URLSearchParams(src.p);
     q.delete('from');
+    q.delete('at');   // the shop page shows today's prices
     const page = HANDOUT_SOURCES[src.from].page;
     return page + (page.includes('?') ? '&' : '?') + q.toString();
 }
@@ -428,7 +445,7 @@ function handoutFromSource(t, src) {
             const s = src.shop, def = SHOP_TYPES[s.type];
             h = {
                 name: s.name, sub: `${def.label} · Prop. ${s.keeper.name}`, note: `"${s.greeting}"`, foot: randomArray(HANDOUT_SHOP_FOOT),
-                items: shopPrices(s).slice(0, HANDOUT_LISTS.prices.max).map(p => ({ name: p.name, price: p.price, note: p.sale ? 'Today only' : '' }))
+                items: shopPrices(s, s.at * MARKET_SLOT_MS).slice(0, HANDOUT_LISTS.prices.max).map(p => ({ name: p.name, price: p.price, note: p.sale ? 'Today only' : '' }))
             };
         }
         return h;

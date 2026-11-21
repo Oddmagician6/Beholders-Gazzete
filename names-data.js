@@ -427,7 +427,9 @@ function possessive(t) {
     if (noun.includes("'")) return '';
     const of = headEnd(noun);
     if (of > 0) noun = noun.slice(0, of);
-    return `The ${noun}'s ${randomArray(NAME_TABLES.belongings)}`;
+    // A plural noun takes the apostrophe alone ("The Crossed Axes' Song"); Pegasus, Abacus, Chorus, Lens keep 's.
+    const plural = /[^s]s$/.test(noun) && !/(?:us|Lens)$/.test(noun);
+    return `The ${noun}${plural ? "'" : "'s"} ${randomArray(NAME_TABLES.belongings)}`;
 }
 
 // "The Three Drunken Hogs" or "The Seven Barrels" (skips nouns that can't be counted,

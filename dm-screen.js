@@ -195,7 +195,7 @@ function initBody(ctx) {
     if (!list.length) return `<p class="ds-faint">No fight yet. Add combatants on the Toolbox's Initiative tab, and they show up here.</p>${blank}${links}`;
     const turn = list.some(c => c.id === f.turn) ? f.turn : null;
     const rows = list.map(c => {
-        const hp = typeof c.hp === 'number' ? `${c.hp}${typeof c.max === 'number' ? `/${c.max}` : ''}${c.temp > 0 ? ` +${Math.round(c.temp)}` : ''}` : '';
+        const hp = typeof c.hp === 'number' ? `${c.hp}${typeof c.max === 'number' ? `/${c.max}` : ''}${typeof c.temp === 'number' && c.temp > 0 ? ` +${Math.round(c.temp)}` : ''}` : '';
         const health = initHealth(c);
         const conds = Array.isArray(c.conds) ? c.conds.filter(x => typeof x === 'string').slice(0, 15) : [];
         return `<tr class="${c.id === turn ? 'ds-now' : ''}${health === 'down' ? ' ds-down' : ''}">
@@ -206,7 +206,7 @@ function initBody(ctx) {
             <td>${typeof c.ac === 'number' ? c.ac : ''}</td>
         </tr>`;
     }).join('');
-    return `<p class="ds-init-head">Round ${Math.max(1, Math.round(Number(f.round)) || 1)}${turn === null ? ' · not started' : ''}</p>
+    return `<p class="ds-init-head">Round ${Math.max(1, Math.round(initNum(f.round)) || 1)}${turn === null ? ' · not started' : ''}</p>
         <table class="ds-table"><thead><tr><th>Init</th><th>Name</th><th>HP</th><th>AC</th></tr></thead><tbody>${rows}</tbody></table>${links}`;
 }
 
@@ -371,12 +371,11 @@ function renderBoardKeepingFocus() {
     const again = document.querySelector(`.ds-card[data-card="${cardEl.dataset.card}"] ${sel}`);
     if (!again) return;
     again.focus({ preventScroll: true });
-    // The other tab saved before this one's last keystroke: keep the keystroke.
-    if (again.value !== keep.value) {
-        again.value = keep.value;
-        again.dispatchEvent(new Event('input', { bubbles: true }));
-    }
-    try { again.setSelectionRange(keep.start, keep.end); } catch (e) {}
+    // Every keystroke here saves at once, so storage already holds this tab's typing: a different value
+    // is another tab's newer edit, and it stays (writing the old text back would undo it). The cursor
+    // stays where it was when the text is the same, and goes to the end when it changed.
+    const same = again.value === keep.value;
+    try { if (same) again.setSelectionRange(keep.start, keep.end); else again.setSelectionRange(again.value.length, again.value.length); } catch (e) {}
     again.scrollTop = keep.scroll;
 }
 

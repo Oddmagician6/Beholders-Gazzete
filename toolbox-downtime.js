@@ -56,7 +56,8 @@ function dtNum(v, max, min = 0) {
 // A character as stored and shared: unknown keys fall back to the defaults.
 // done can be a negative check bonus (Earn Income, gambling); the engine floors it per activity.
 function dtClean(c) {
-    c = c && typeof c === 'object' ? c : {};
+    // Strings and numbers only: a saved object with no toString would throw and cost the whole tab.
+    c = c && typeof c === 'object' ? Object.fromEntries(Object.entries(c).filter(([, v]) => typeof v === 'string' || typeof v === 'number')) : {};
     const b = dtBlankChar();
     const out = {
         name: String(c.name || '').slice(0, 40),
@@ -258,11 +259,21 @@ function dtUseParty(list) {
 
 function applyDownUrl(p) {
     const cs = p.getAll('c');
-    if (!cs.length) { initDowntime(false); return true; }
+    if (!cs.length) {
+        // No party in the link: the saved one (or the Party tab's), with the link's own weeks, days, events, and seed on top.
+        const base = loadDowntime() || { chars: dtPartyChars() };
+        const keys = { wk: 'weeks', d: 'days', seed: 'seed' };
+        const state = { ...base };
+        Object.entries(keys).forEach(([k, s]) => { if (p.has(k)) state[s] = p.get(k); });
+        if (p.has('ev')) state.events = p.get('ev') !== '0';
+        setDowntime(state);
+        showDowntime(false);
+        return true;
+    }
     setDowntime({ weeks: p.get('wk'), days: p.get('d'), chars: cs.map(dtDecode), seed: p.get('seed'), events: p.get('ev') !== '0' });
     showDowntime(null);
-    // A link without a seed (or from before F28's weekly log) gets one now, so it replays.
-    if (!p.get('seed') && dtRolls()) setUrlParams(downParams(), false);
+    // A link without a seed, or with one the page can't read (or from before F28's weekly log), gets one now, so it replays.
+    if (!parseSeed(p.get('seed')) && dtRolls()) setUrlParams(downParams(), false);
     return true;
 }
 
