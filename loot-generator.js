@@ -34,8 +34,11 @@ function changedFields(tab) {
 
 function lootParams() {
   if (!currentLoot || !currentLoot.seed) return {};
-  return { tab: currentLoot.tab === 'individual' ? null : currentLoot.tab, ...currentLoot.fields, seed: currentLoot.seed };
+  return { tab: currentLoot.tab === 'individual' ? null : currentLoot.tab, ...currentLoot.fields, seed: currentLoot.seed, kept: currentLoot.kept || null };
 }
+
+// A hoard opened from a site (world-sites.js) says where the site's key put it: { seed, text } until another roll.
+let lootKept = null;
 
 // Roll the treasure named in the address bar. Returns false when there's no seed in it.
 function applyUrl(push) {
@@ -46,6 +49,10 @@ function applyUrl(push) {
   tabFields(currentTab).forEach(el => {
     if (!setFieldValue(el, p.get(el.id))) setFieldValue(el, defaultValue(el));
   });
+  const kept = (p.get('kept') || '').replace(/[\u0000-\u001f<>]/g, ' ').trim().slice(0, 160);
+  lootKept = kept && currentTab === 'hoard' ? { seed, text: kept } : null;
+  const pcs = parseInt(p.get('pcs'), 10);
+  if (!LOOT_PF2E && pcs >= 1) document.getElementById('party-size').value = partySize(pcs);
   generateLoot(seed, push);
   return true;
 }
@@ -142,6 +149,12 @@ function generateLoot(seed = newSeed(), push = true) {
       if (found) { found.magic = magic; found.totalValue = totalGP(coins, gems, art, magic, found.goods || []); }
     }
   }
+  // The site's container in place of the rolled one (the draws stay as rolled); a lock it can't hold goes.
+  if (found && lootKept && lootKept.seed === seed && currentTab === 'hoard') {
+    found.holder = lootKept.text;
+    found.kept = lootKept.text;
+    if (!LOCKABLE.test(lootKept.text)) { found.lock = null; found.trap = null; }
+  } else lootKept = null;
   currentLoot = {
     ...(found || {}),
     coins, gems, art, magic, magicNote,

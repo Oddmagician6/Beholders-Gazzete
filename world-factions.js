@@ -57,7 +57,10 @@ function rollFactionsFor(seed = newSeed(), push = true, keepView = false) {
 function applyFacUrl(p) {
     Object.entries(FAC_FIELDS).forEach(([key, id]) => {
         const el = document.getElementById(id);
-        if (!setFieldValue(el, p.get(key))) el.value = defaultValue(el);
+        // A visit with no roll keeps the World picker on the reader's last choice (realmsPicker); a link with a
+        // seed but no world= is the Gazette's own world, as it was rolled.
+        if (setFieldValue(el, p.get(key)) || (key === 'world' && !p.get('seed'))) return;
+        el.value = defaultValue(el);
     });
     const gods = parseSeed(p.get('gods'));
     const g = gods ? { seed: gods } : null;

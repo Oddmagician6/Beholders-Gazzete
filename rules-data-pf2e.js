@@ -43,7 +43,7 @@ const RULES_CARDS_PF2E = [
         ]
     },
     {
-        id: 'actions', icon: '⚡', title: 'Actions & Attacks', keys: 'turn three actions reaction free map multiple attack penalty agile stride step strike',
+        id: 'actions', icon: '⚡', title: 'Actions & Attacks', keys: 'turn three actions reaction free map multiple attack penalty agile stride step strike flank flanking off-guard',
         blocks: [
             { p: 'Each turn you get 3 actions, and 1 reaction to use before your next turn. Free actions cost nothing.' },
             { table: { head: ['Attack this turn', 'Penalty', 'Agile weapon'], rows: [
@@ -60,6 +60,7 @@ const RULES_CARDS_PF2E = [
                 ['Take Cover', 'Standard cover becomes greater; next to a wall or obstacle you get standard cover, and prone you get greater cover against ranged attacks. It lasts until you leave your space, attack, or fall unconscious.'],
                 ['Seek', 'A Perception check to find hidden or undetected creatures and objects.'],
                 ['Delay / Ready', 'Delay moves your turn later in the order; Ready (2 actions) sets up a reaction with a trigger.'],
+                ['Flanking', 'You and an ally on opposite sides or corners of a foe, both able to act and to attack it in melee, and both with it in reach: it\'s off-guard (−2 AC) to your melee attacks.'],
                 ['Stand, Drop Prone, Crawl', 'Get up, go down, or move 5 feet while prone.']
             ] }
         ]
@@ -73,7 +74,7 @@ const RULES_CARDS_PF2E = [
                 ['Greater', '+4 to AC, Reflex saves against areas, and Stealth', 'Yes']
             ] } },
             { list: [
-                'Draw a line between the centers of the two spaces. Through an object or terrain that would block it: standard cover. Through a creature: lesser cover.',
+                'Draw a line between the centers of the two spaces. Through an object or terrain that would block it: standard cover. Through a creature: lesser cover, or standard cover when that creature is at least two sizes larger than both of you.',
                 'Take Cover turns standard cover into greater (or gives standard cover by a wall, and greater cover against ranged attacks while prone). An extreme obstruction, like an arrow slit, is greater cover too.',
                 'Against an area effect, draw the line from the effect\'s point of origin.',
                 'Entirely behind a wall: no line of effect, so it usually can\'t be targeted at all.'
@@ -109,9 +110,10 @@ const RULES_CARDS_PF2E = [
             { list: [
                 'At 0 HP a character is knocked out: their initiative moves to just before the turn that dropped them, and they gain dying 1 (dying 2 from a critical hit or their own critical failure), plus their wounded value.',
                 'Nonlethal damage leaves them unconscious at 0 HP instead, with no dying.',
+                'Damage taken while dying raises dying by 1, or by 2 from a critical hit or their own critical failure.',
                 'Dying 4 is death (dying 4 minus doomed, for the doomed).',
                 'Healing to 1 HP or more ends dying and wakes them; they act normally on their next turn.',
-                'Losing dying, any way at all, gives wounded 1, or raises wounded by 1.'
+                'Losing dying gives wounded 1, or raises wounded by 1 (not when Hero Points end it).'
             ] },
             { table: { head: ['Recovery check (start of turn)', 'Flat check, DC 10 + dying value'], rows: [
                 ['Critical success', 'Dying −2'],
@@ -122,7 +124,7 @@ const RULES_CARDS_PF2E = [
             { defs: [
                 ['Hero Points', ['Each character usually starts a session with 1, earns more for heroic deeds, and holds 3 at most; the rest are lost at the session\'s end.',
                     'Spend 1 to reroll a check and keep the second result (a fortune effect).',
-                    'Spend all of them (1 at least) when dying would go up: dying ends, they stabilize at 0 HP, and wounded doesn\'t rise.']]
+                    'Spend all of them (1 at least) at the start of their turn or when dying would go up: dying ends, they stabilize at 0 HP, and wounded doesn\'t rise (wounded they already had stays).']]
             ] }
         ]
     },

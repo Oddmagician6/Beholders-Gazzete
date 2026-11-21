@@ -18,6 +18,16 @@
 const SITE_FIELDS = { kind: 'site-kind', size: 'site-size', level: 'site-level', party: 'site-party' };
 // The linked history's URL keys → its option names (the same keys the History tab uses).
 const SITE_HIS_KEYS = { hages: 'ages', hspan: 'span', hstart: 'start' };
+// The history's own links (its pantheon and factions, as the History tab's address holds them) ride along with
+// an 'h' in front, untouched, so "Read about that age" goes back to the same gods and factions.
+function siteHisLinkKeys() {
+    return ['gods', ...Object.keys(HIS_GOD_KEYS), 'facs', ...Object.keys(HIS_FAC_KEYS), 'fgods', ...Object.keys(HIS_FGOD_KEYS)];
+}
+function siteHisLinksFrom(get) {
+    const out = {};
+    siteHisLinkKeys().forEach(k => { const v = get(k); if (v !== null && v !== undefined && v !== '') out[k] = String(v); });
+    return out;
+}
 // The kinds with a picture (img/site/<kind>.webp, from page-art.py); the rest show none until theirs is made.
 const SITE_ART = ['crypt', 'mine', 'tower', 'temple', 'fort', 'lair', 'keep', 'sewer', 'seacave', 'shipwreck', 'lighthouse', 'manor', 'barrow'];
 
@@ -49,6 +59,7 @@ function siteParams() {
     params.his = h ? h.seed : null;
     Object.entries(SITE_HIS_KEYS).forEach(([key, opt]) => { params[key] = h && h[opt] !== 'random' ? h[opt] : null; });
     params.hage = h && siteState.hage >= 0 ? siteState.hage + 1 : null;
+    siteHisLinkKeys().forEach(k => { params['h' + k] = h && h.links && h.links[k] ? h.links[k] : null; });
     return worldUrlFor('sites', params);
 }
 
@@ -71,11 +82,12 @@ function applySiteUrl(p) {
         const el = document.getElementById(id);
         if (!setFieldValue(el, p.get(key))) el.value = defaultValue(el);
     });
-    document.getElementById('site-style').value = SITE_STYLES[p.get('style')] ? p.get('style') : 'art';
+    document.getElementById('site-style').value = Object.hasOwn(SITE_STYLES, p.get('style') || '') ? p.get('style') : 'art';
     siteState.hold = Object.hasOwn(ENC_BAND_BY_KEY, p.get('hold') || '') ? p.get('hold') : '';
     const his = parseSeed(p.get('his'));
     const h = his ? { seed: his } : null;
     if (h) Object.entries(SITE_HIS_KEYS).forEach(([key, opt]) => { h[opt] = p.get(key) || 'random'; });
+    if (h) h.links = siteHisLinksFrom(k => p.get('h' + k));
     siteSetHistory(h, (parseInt(p.get('hage'), 10) || 0) - 1);
     const seed = parseSeed(p.get('seed'));
     if (!seed && !p.has('level') && !p.has('party')) siteUseParty();
@@ -93,7 +105,8 @@ function siteUseParty() {
 function siteLinkHistory(on) {
     if (on) {
         if (!WORLD_TABS.history.rolled()) WORLD_TABS.history.fresh(null);
-        siteSetHistory({ seed: hisState.seed, ...hisOpts() });
+        const hp = hisParams();
+        siteSetHistory({ seed: hisState.seed, ...hisOpts(), links: siteHisLinksFrom(k => hp[k]) });
     } else {
         siteSetHistory(null);
     }
@@ -113,14 +126,16 @@ function siteFightLink(s, f) {
 
 // Pathfinder's hoard tab takes the party's level and size in place of a CR band.
 function siteHoardLink(s) {
-    const at = SITE_PF2E ? { 'hoard-cr': s.level, 'hoard-pcs': s.party } : { 'hoard-cr': s.hoard.tier };
-    return 'loot-generator?' + new URLSearchParams({ tab: 'hoard', ...at, 'hoard-source': s.hoard.source, seed: s.hoard.seed }).toString();
+// kept: where the site's key says the hoard lies; pcs: the D&D split's party size (Pathfinder's hoard-pcs does both).
+    const at = SITE_PF2E ? { 'hoard-cr': s.level, 'hoard-pcs': s.party } : { 'hoard-cr': s.hoard.tier, pcs: s.party };
+    return 'loot-generator?' + new URLSearchParams({ tab: 'hoard', ...at, 'hoard-source': s.hoard.source, seed: s.hoard.seed, kept: s.hoard.container }).toString();
 }
 
 function siteHistoryLink(ai) {
     const h = siteState.his;
     const params = new URLSearchParams({ tab: 'history', seed: h.seed });
     Object.entries(SITE_HIS_KEYS).forEach(([key, opt]) => { if (h[opt] !== 'random') params.set(opt, h[opt]); });
+    Object.entries(h.links || {}).forEach(([k, v]) => params.set(k, v));
     params.set('age', ai + 1);
     return 'worldbuilder?' + params.toString();
 }
@@ -292,7 +307,8 @@ async function siteEditMap() {
         await worldScript('battlemap-engine.js');
         const m = bmFromSite(s, siteStyle());
         // Too big for one battle map: say what gets cut, and go on the second click.
-        const sure = `${siteState.seed}|${siteStyle()}`;
+        // The map the warning described: seed, style and every option (a new size is a new map).
+        const sure = m.cut ? `${paramsQuery(siteParams())}|${m.cut.w}x${m.cut.h}` : '';
         if (m.cut && btn.dataset.sure !== sure) {
             btn.dataset.sure = sure;
             btn.disabled = false;

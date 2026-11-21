@@ -568,6 +568,18 @@ function hisFitYears(list, st) {
             }
         }
         if (len < 50) x.text = x.text.replace('paid tribute for fifty years', 'paid tribute for years');
+        // Three generations is about 75 years: a shorter war just lasted years.
+        if (len < 75) x.text = x.text.replace('It lasted three generations, and', 'It lasted for years, and');
+        // A library sealed "when the age ended", in the age still going on: sealed, and still sealed.
+        if (x.ongoing) (x.legacies || []).forEach(l => { l.text = l.text.replace(', sealed when the age ended, with', ', sealed and never opened since, with'); });
+        // The burned ships belong to the peoples who came by sea: overland, they're the camp they first made.
+        if (x.kind === 'migration' && !/\bboats?\b|\bships?\b/.test(x.text)) (x.legacies || []).forEach(l => {
+            const m = /^The burned ships, still lying in the sand at (.+)\.$/.exec(l.text);
+            if (m) {
+                l.text = `The first camp at ${m[1]}, its ring of hearthstones still standing.`;
+                l.hook = 'Someone has been sleeping in the ring, and leaving offerings.';
+            }
+        });
         // An empire that "became" the same name (the realms' newer names can give two empires of one root the same
         // one): it grew instead (B514).
         if (x.kind === 'empire') {

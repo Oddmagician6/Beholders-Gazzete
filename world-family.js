@@ -361,8 +361,9 @@ function famSetField(id, key, value) {
         const p = famPerson(fam, id);
         if (!p) return false;
         if (key === 'dead') {
+            // Brought back: their age is the years since they were born (counted while still dead).
+            if (!value && p.dead) { p.age = famBorn(p); p.ago = 0; p.cause = ''; }
             p.dead = !!value;
-            if (!p.dead) { p.age = famBorn(p); p.ago = 0; p.cause = ''; }
             p.npc = '';
         } else if (key === 'age' || key === 'ago') {
             p[key] = famAge(value);
@@ -386,6 +387,18 @@ function famAddPerson(rel) {
         const u = rel === 'child' && (famIsBlood(f, a) ? uid && famUnion(f, uid) : famMarriedInto(f, a.id));
         const other = u ? famPerson(f, u.a === a.id ? u.b : u.a) : null;
         const np = famNewPerson(f, a, rel, other);
+        // Born before a dead parent died can mean older than the living one: no child fits those dates.
+        if (rel === 'child') {
+            const parents = [a, other].filter(Boolean);
+            const young = parents.reduce((y, p) => (famBorn(p) < famBorn(y) ? p : y));
+            const R = NPC_AGE_RANGES[young.race];
+            const grown = Math.max(0, famBorn(young) - (R ? R.young[0] : 0));   // how long ago they came of age
+            const gone = parents.filter(p => p !== young && p.dead && p.ago > grown);
+            if (gone.length) {
+                why = `No child fits those dates: ${gone[0].name} died ${gone[0].ago} years ago, before ${young.name} was born or grown. Change an age or the years since death first.`;
+                return false;
+            }
+        }
         const partner = rel === 'parent' ? famNewPerson(f, { ...np, id: '' }, 'spouse') : null;
         if (rel === 'parent') { partner.age = np.age; }
         const r = famAdd(f, a.id, rel, np, uid, partner);

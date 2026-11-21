@@ -238,8 +238,9 @@ function renderEncounter() {
 
 // ── Stat blocks (toolbox-statblock.js) ────────────────────
 // Open blocks say "Loading…" until the data arrives, then draw again.
+// The spell text can fail on its own after the blocks came in: reopening a block tries it again.
 function showBlocks() {
-    if (blocksReady()) return;
+    if (blocksReady() && sbSpellsReady()) return;
     loadMonsterBlocks().then(renderEncounter)
         .catch(() => flash('enc-status', '⚠️ The stat blocks did not load. Check the connection and try again.'));
 }

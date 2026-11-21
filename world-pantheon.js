@@ -53,12 +53,15 @@ function rollPantheonFor(seed = newSeed(), push = true, keepGod = false) {
 function applyPanUrl(p) {
     Object.entries(PAN_FIELDS).forEach(([key, id]) => {
         const el = document.getElementById(id);
-        if (!setFieldValue(el, p.get(key))) el.value = defaultValue(el);
+        // A visit with no roll keeps the World picker on the reader's last choice (realmsPicker); a link with a
+        // seed but no world= is the Gazette's own world, as it was rolled.
+        if (setFieldValue(el, p.get(key)) || (key === 'world' && !p.get('seed'))) return;
+        el.value = defaultValue(el);
     });
     const seed = parseSeed(p.get('seed'));
     if (!seed) return false;
     rollPantheonFor(seed, null);
-    const god = parseInt(p.get('god'), 10);
+    const god = /^\d+$/.test(p.get('god') || '') ? Number(p.get('god')) : 0;   // not "3junk"
     if (god >= 1 && god <= panState.data.gods.length) {
         panState.god = god - 1;
         renderPantheon();

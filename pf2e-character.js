@@ -51,7 +51,7 @@ function pcBlank() {
     return {
         id: pcNewId(), name: '', player: '', level: 1, race: '', her: '', bg: '', cls: '', ch: '', ch2: '', sub: '',
         boosts: { anc: [], ancFree: false, bg: [], key: '', l1: [], 5: [], 10: [], 15: [], 20: [] },
-        skills: { cls: [], ch: '', inc: {}, lore: [] }, paths: {}, feats: {}, langs: [],
+        skills: { cls: [], ch: '', inc: {}, lore: [] }, bgc: { sk: '', lo: '' }, paths: {}, feats: {}, langs: [],
         deity: { name: '', weapon: '', font: '', skill: '' },
         fa: false, mc: {}, gear: { armor: '', arPot: 0, shield: '', weapons: [] }, notes: '', spells: pcBlankSpells(), play: pcBlankPlay(), updated: Date.now()
     };
@@ -109,6 +109,8 @@ function pcClean(raw) {
         for (const [lv, k] of Object.entries(s.inc)) if (/^\d{1,2}$/.test(lv) && (pcId(k, PC_SKILLS) || (typeof k === 'string' && /^lore:/.test(k)))) c.skills.inc[lv] = pcStr(k, 50);
     }
     c.skills.lore = Array.isArray(s.lore) ? s.lore.map(x => pcStr(x, 40)).filter(Boolean).slice(0, 6) : [];
+    const bc = raw.bgc && typeof raw.bgc === 'object' ? raw.bgc : {};
+    c.bgc = { sk: pcId(bc.sk, PC_SKILLS), lo: pcStr(bc.lo, 40) };
     if (raw.paths && typeof raw.paths === 'object') {
         for (const [lv, k] of Object.entries(raw.paths)) if (/^\d{1,2}$/.test(lv) && pcId(k, PC_SAVES)) c.paths[lv] = k;
     }
@@ -424,6 +426,7 @@ function pcGivenSkills(c) {
         if (ch.tr === 'choice' && c.sub) give({ arcane: 'arcana', divine: 'religion', occult: 'occultism', primal: 'nature' }[c.sub], ch.n);
     }
     if (bg) bg.sk.forEach(k => give(k, bg.n));
+    if (pcBgSkill(c)) give(pcBgSkill(c), bg.n);
     if ((c.cls === 'cleric' || c.cls === 'champion') && c.deity.skill) give(c.deity.skill, 'Deity');
     return given;
 }
@@ -473,7 +476,26 @@ function pcRankCap(level) {
 
 function pcLores(c) {
     const { bg } = pcParts(c);
-    return [...new Set([...(bg ? bg.lo : []), ...c.skills.lore])];
+    return [...new Set([...(bg ? bg.lo : []), pcBgLore(c), ...c.skills.lore].filter(Boolean))];
+}
+
+// A background's own picks (Player Core): the skill of its skc list, and its Lore, one of loc or one
+// the player names for lof ("Cave" or "Cave Lore" → "Cave Lore").
+function pcBgSkill(c) {
+    const { bg } = pcParts(c);
+    return bg && bg.skc && bg.skc.includes(c.bgc.sk) ? c.bgc.sk : '';
+}
+function pcBgLore(c) {
+    const { bg } = pcParts(c);
+    if (!bg) return '';
+    if (bg.loc) return bg.loc.includes(c.bgc.lo) ? c.bgc.lo : '';
+    return bg.lof ? pcLoreName(c.bgc.lo) : '';
+}
+function pcLoreName(v) {
+    v = String(v || '').trim().replace(/\s+/g, ' ').slice(0, 40);
+    if (!v || /^lore$/i.test(v)) return '';
+    v = v[0].toUpperCase() + v.slice(1);
+    return /\blore$/i.test(v) ? v.replace(/lore$/i, 'Lore') : `${v.slice(0, 35).trim()} Lore`;
 }
 
 // ── Feats ───────────────────────────────────────────────
@@ -526,7 +548,13 @@ function pcGrantedFeats(c) {
     const { bg, ch, ch2 } = pcParts(c);
     const out = [];
     const grant = (name, from) => out.push({ name, key: pcFeatKey(name), from });
-    if (bg) (bg.ft || []).forEach(n => grant(n, bg.n));
+    if (bg) {
+        // A background's Assurance names its skill (Farmhand: Athletics; Scholar: the skill picked).
+        const asSkill = bg.as === 'skc' ? pcBgSkill(c) : bg.as || '';
+        (bg.ft || []).forEach(n => grant(n, n === 'Assurance' && asSkill ? `${bg.n} (${pcCap(asSkill)})` : bg.n));
+        const byPick = bg.fts && pcBgSkill(c) && bg.fts[pcBgSkill(c)];
+        if (byPick) grant(byPick, bg.n);
+    }
     [ch, ch2].forEach(x => { if (x) (x.ft || []).forEach(n => grant(n, x.n)); });
     if (c.ch === 'warpriest') grant('Shield Block', 'Warpriest');
     // The doctrines' other feats: a cloistered cleric's Domain Initiate, and a warpriest's Deadly Simplicity
@@ -583,8 +611,14 @@ function pcFeatsFor(c, slot, { archetype = false } = {}) {
     pcGrantedFeats(c).forEach(g => { if (g.key) taken.add(g.key); });
     const traits = pcAncestryTraits(c);
     const sub = kind.startsWith('x') ? pcSubFeat(c.feats[slot.slice(1)], level) : null;
+    // Another class's feats an archetype taken lists as its own (Archer: Assisting Shot at 4), in its slots.
+    const extra = (kind === 'cls' && archetype) || kind === 'arc' ? pcArchExtraFor(c) : {};
     const out = [];
     for (const [key, f] of Object.entries(PF2E_FEATS)) {
+        if (Object.hasOwn(extra, key) && extra[key] <= level && !f.tr.includes(c.cls)) {
+            out.push({ key, feat: f, taken: taken.has(key) && !(f.mx > 1), arc: extra[key] });
+            continue;
+        }
         if (f.l > level) continue;
         let fits = false;
         if (sub) fits = f.c === 'class' && !f.ar && f.tr.includes(sub.cls) && f.l <= sub.cap;
@@ -597,7 +631,7 @@ function pcFeatsFor(c, slot, { archetype = false } = {}) {
         if (kind === 'cls' && f.ar && f.c === 'class' && !archetype) continue;
         out.push({ key, feat: f, taken: taken.has(key) && !(f.mx > 1) });
     }
-    return out.sort((a, b) => b.feat.l - a.feat.l || a.feat.n.localeCompare(b.feat.n));
+    return out.sort((a, b) => (b.arc || b.feat.l) - (a.arc || a.feat.l) || a.feat.n.localeCompare(b.feat.n));
 }
 
 // The feats in slots the character has at their level (a level-down leaves later picks saved but asleep).
@@ -668,8 +702,32 @@ function pcArchetypes() {
         });
     }
     Object.entries(owners).forEach(([k, own]) => own.forEach(a => out[a].feats.push(k)));
-    Object.values(out).forEach(a => a.feats.sort((x, y) => PF2E_FEATS[x].l - PF2E_FEATS[y].l || PF2E_FEATS[x].n.localeCompare(PF2E_FEATS[y].n)));
+    Object.values(out).forEach(a => { a.extra = {}; });
+    Object.entries(PC_ARCH_EXTRA).forEach(([a, list]) => {
+        if (!out[a]) return;
+        Object.entries(list).forEach(([k, l]) => { if (Object.hasOwn(PF2E_FEATS, k) && !PF2E_FEATS[k].ar) { out[a].extra[k] = l; out[a].feats.push(k); } });
+    });
+    Object.values(out).forEach(a => {
+        const lv = k => a.extra[k] || PF2E_FEATS[k].l;
+        a.feats.sort((x, y) => lv(x) - lv(y) || PF2E_FEATS[x].n.localeCompare(PF2E_FEATS[y].n));
+    });
     pcArchCache = out;
+    return out;
+}
+
+// An archetype's Additional Feats (Player Core 2): other classes' feats it offers, at the level they
+// count as in it. Only those in the Gazette's data show.
+const PC_ARCH_EXTRA = {
+    archer: { 'assisting-shot': 4, 'crossbow-ace': 4, 'point-blank-stance': 4, 'double-shot': 6, 'parting-shot': 6,
+        'running-reload': 6, 'triple-shot': 8, 'mobile-shot-stance': 10, 'multishot-stance': 18, 'impossible-volley': 20 }
+};
+
+// The Additional Feats of the dedications the character has taken: { feat key: level }.
+function pcArchExtraFor(c) {
+    const out = {};
+    Object.values(pcArchetypes()).forEach(a => {
+        if (Object.keys(a.extra).length && pcActiveFeats(c).includes(a.ded)) Object.entries(a.extra).forEach(([k, l]) => { out[k] = Math.min(out[k] || 99, l); });
+    });
     return out;
 }
 
@@ -690,8 +748,10 @@ function pcArchetypeCheck(c) {
     pcFeatSlots(c).forEach(s => {
         const key = c.feats[s.slot];
         const f = key && PF2E_FEATS[key];
-        if (!f || !f.ar) return;
-        const own = pcFeatArchetypes(key);
+        // An Additional Feat counts as the archetype's when the class can't take it as its own.
+        const extraOf = f && !f.ar && !f.tr.includes(c.cls) ? Object.entries(arch).filter(([, a]) => Object.hasOwn(a.extra, key)).map(([k]) => k) : [];
+        if (!f || (!f.ar && !extraOf.length)) return;
+        const own = f.ar ? pcFeatArchetypes(key) : extraOf;
         // Prerequisites as the character stood when the slot was filled: its level's attributes and
         // skills, and only the feats in earlier slots. A feat that misses one doesn't count.
         const at = { ...c, level: s.level, feats: Object.fromEntries(pcFeatSlots(c).slice(0, pcFeatSlots(c).findIndex(x => x.slot === s.slot)).filter(x => c.feats[x.slot]).map(x => [x.slot, c.feats[x.slot]])) };
@@ -713,7 +773,11 @@ function pcArchetypeCheck(c) {
             list.push(current);
             return;
         }
-        const mine = list.filter(x => own.includes(x.key));
+        const mine = list.filter(x => own.includes(x.key) && !(arch[x.key].extra[key] > s.level));
+        if (!f.ar && !mine.length && list.some(x => own.includes(x.key))) {
+            issues.push({ slot: s.slot, text: `${f.n} counts as a level ${Math.min(...own.map(k => arch[k].extra[key]))} ${own.map(k => arch[k].n).join(' or ')} feat: too soon at level ${s.level}.` });
+            return;
+        }
         if (!mine.length) {
             if (own.length) issues.push({ slot: s.slot, text: `${f.n} needs the ${own.map(k => arch[k].n).join(' or ')} Dedication first.` });
             return;
@@ -1278,6 +1342,11 @@ function pcTodo(c) {
     if (!p.anc) out.push(['ancestry', 'Pick an ancestry.']);
     else if (!p.her) out.push(['ancestry', 'Pick a heritage.']);
     if (!p.bg) out.push(['background', 'Pick a background.']);
+    else {
+        if (p.bg.skc && !pcBgSkill(c)) out.push(['background', `Pick the trained skill from your ${p.bg.n} background.`]);
+        if (p.bg.loc && !pcBgLore(c)) out.push(['background', `Pick the Lore from your ${p.bg.n} background.`]);
+        if (p.bg.lof && !p.bg.loc && !pcBgLore(c)) out.push(['background', `Name the Lore from your ${p.bg.n} background.`]);
+    }
     if (!p.cls) out.push(['class', 'Pick a class.']);
     else {
         if (p.cls.ch && !p.ch) out.push(['class', `Pick your ${p.cls.ch[1].toLowerCase()}.`]);

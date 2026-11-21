@@ -387,8 +387,10 @@ if (SRD52_OK) {
         if (e.target.matches('[data-rules]')) rulesSet(e.target.value);
     });
     // Another tab's switch: the version only when this page isn't pinned; the additions whenever it shows 2014.
+    // A page that follows the setting keeps its address in step: a rules= it wrote names the version now shown.
     window.addEventListener('storage', e => {
-        if ((e.key === RULES_KEY && !rulesPage) || (e.key === SRD52_KEY && (!rulesPage || rulesVersion() === '2014'))) rulesRefresh();
+        if (e.key === RULES_KEY && !rulesPage) rulesRefresh().then(() => { if (new URLSearchParams(location.search).has('rules')) rulesDropUrlParam(); });
+        else if (e.key === SRD52_KEY && (!rulesPage || rulesVersion() === '2014')) rulesRefresh();
     });
     // Back/Forward to an address with its own rules=: that version, before the page redraws the roll.
     window.addEventListener('popstate', () => {

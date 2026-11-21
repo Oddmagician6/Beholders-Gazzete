@@ -99,7 +99,7 @@ function applyHisUrl(p) {
     const seed = parseSeed(p.get('seed'));
     if (!seed) return false;
     rollHistoryFor(seed, null);
-    const n = parseInt(p.get('age'), 10);
+    const n = /^\d+$/.test(p.get('age') || '') ? Number(p.get('age')) : 0;   // not "3junk"
     if (n >= 1 && n <= hisState.data.list.length) {
         hisState.view = n - 1;
         renderHistory();
@@ -157,6 +157,9 @@ function hisSiteLink(h, i) {
         const el = document.getElementById(id);
         if (fieldValue(el) !== defaultValue(el)) params.set('h' + key, el.value);
     });
+    // The history's gods and factions go along (world-sites.js siteHisLinkKeys), so the way back keeps them.
+    const hp = hisParams();
+    siteHisLinkKeys().forEach(k => { if (hp[k] !== null && hp[k] !== undefined && hp[k] !== '') params.set('h' + k, hp[k]); });
     params.set('hage', i + 1);
     return 'worldbuilder?' + params.toString();
 }

@@ -32,7 +32,7 @@ function getSparkline(history) {
     const first = history[0], last = history[history.length - 1];
     const dir = last > first * 1.005 ? 'up' : last < first * 0.995 ? 'down' : 'stable';
     const pct = ((last - first) / first * 100).toFixed(1);
-    return `<svg class="sparkline ${dir}" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img" aria-label="7-day change ${pct}%">
+    return `<svg class="sparkline ${dir}" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img" aria-label="Change across the 7 daily prices (since 6 days ago) ${pct}%">
         <polyline points="${points}" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
     </svg>`;
 }

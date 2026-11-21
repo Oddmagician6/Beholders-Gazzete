@@ -183,7 +183,9 @@ function saveWorldTab(tab, statusId) {
     const t = WORLD_TABS[tab];
     if (!t.rolled()) return;
     if (t.save) { t.save(statusId); return; }
-    const r = nbAdd({ kind: tab, ...t.entry(), href: 'worldbuilder?' + paramsQuery(t.params()) });
+    // A tab that rolls 5e monsters or loot (Sites) keeps the rules version it was rolled under, as its address does.
+    const params = WORLD_ENGINES[tab].includes('srd52.js') && typeof rulesLinkParams === 'function' ? rulesLinkParams(t.params()) : t.params();
+    const r = nbAdd({ kind: tab, ...t.entry(), href: 'worldbuilder?' + paramsQuery(params) });
     if (!r) flash(statusId, "⚠️ This browser won't keep a notebook (storage is full or off).");
     else if (r.full) flash(statusId, '⚠️ The notebook is full. Remove an entry first.');
     else if (r.existed) flash(statusId, '📓 This one is already in the notebook.');

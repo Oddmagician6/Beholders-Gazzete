@@ -196,15 +196,21 @@ function stepAncestry() {
 function stepBackground() {
     const p = pcParts(cur);
     let h = `<h2>Background</h2><p class="cb-lead">What you did before adventuring: two attribute boosts, a trained skill and a Lore, and a skill feat.</p>${todoBox('background')}`;
-    h += `<input type="search" class="cb-filter" id="pb-bg-filter" placeholder="Filter backgrounds…" aria-label="Filter backgrounds" data-focus="bg-filter"><div class="cb-cards pb-wide" id="pb-bg-cards">${Object.entries(PF2E_BACKGROUNDS).map(([id, b]) => card(`data-set="bg" data-val="${id}" data-focus="bg-${id}" data-name="${esc(b.n.toLowerCase())} ${esc(b.sk.join(' '))}"`, cur.bg === id, b.n,
-        `${boostSetText(b.bo)}<br>${b.sk.map(skillName).join(', ')}${b.ra ? ` · <i>${{ u: 'uncommon', r: 'rare' }[b.ra] || ''}</i>` : ''}`)).join('')}</div>`;
+    h += `<input type="search" class="cb-filter" id="pb-bg-filter" placeholder="Filter backgrounds…" aria-label="Filter backgrounds" data-focus="bg-filter"><div class="cb-cards pb-wide" id="pb-bg-cards">${Object.entries(PF2E_BACKGROUNDS).map(([id, b]) => card(`data-set="bg" data-val="${id}" data-focus="bg-${id}" data-name="${esc(b.n.toLowerCase())} ${esc([...b.sk, ...(b.skc && !b.skn ? b.skc : [])].join(' '))}"`, cur.bg === id, b.n,
+        `${boostSetText(b.bo)}<br>${[...b.sk.map(skillName), ...(b.skc ? [b.skn ? esc(b.skn) : b.skc.map(skillName).join(' or ')] : [])].join(', ')}${b.ra ? ` · <i>${{ u: 'uncommon', r: 'rare' }[b.ra] || ''}</i>` : ''}`)).join('')}</div>`;
     if (!p.bg) return h;
     const b = p.bg;
     h += `<div class="pb-chosen"><b>${esc(b.n)}</b>${rulesHtml(b.x)}<ul class="cb-list">
         <li><b>Attribute boosts</b> ${boostSetText(b.bo)} <span class="cb-tag">(placed on the Attributes step)</span></li>
-        <li><b>Trained in</b> ${[...b.sk.map(skillName), ...b.lo].join(', ') || 'none'}</li>
-        <li><b>Skill feat</b> ${(b.ft || []).map(n => esc(n) + (pcFeatKey(n) ? '' : ' <span class="cb-tag">(from another book)</span>')).join(', ') || 'none'}</li></ul>
-        ${(b.ft || []).filter(pcFeatKey).map(n => textBox(`ft:${pcFeatKey(n)}`, `📖 ${esc(n)}`)).join('')}</div>`;
+        <li><b>Trained in</b> ${[...b.sk.map(skillName), ...(b.skc ? [b.skn ? esc(b.skn) : b.skc.map(skillName).join(' or ')] : []), ...b.lo.map(esc),
+            ...(b.loc ? [b.loc.map(esc).join(' or ')] : b.lof ? [`a Lore for ${esc(b.lof)}`] : [])].join(', ') || 'none'}</li>
+        <li><b>Skill feat</b> ${[...(b.ft || []).map(n => esc(n) + (n === 'Assurance' && b.as ? ` (${b.as === 'skc' ? 'the skill you pick' : skillName(b.as)})` : '') + (pcFeatKey(n) ? '' : ' <span class="cb-tag">(from another book)</span>')),
+            ...(b.fts ? [Object.entries(b.fts).map(([k, n]) => `${esc(n)} (${skillName(k)})`).join(' or ')] : [])].join(', ') || 'none'}</li></ul>`;
+    if (b.skc) h += `<h4>Trained skill from ${esc(b.n)}${b.skn ? ` <small>(${esc(b.skn)})</small>` : ''}</h4><div class="cb-chips">${b.skc.map(k => `<button type="button" class="cb-chip" data-bgskill="${k}" aria-pressed="${cur.bgc.sk === k}" data-focus="bgs-${k}">${skillName(k)}${b.fts && b.fts[k] ? ` <small>${esc(b.fts[k])}</small>` : ''}</button>`).join('')}</div>`;
+    if (b.loc) h += `<h4>Lore from ${esc(b.n)}</h4><div class="cb-chips">${b.loc.map(n => `<button type="button" class="cb-chip" data-bglore="${esc(n)}" aria-pressed="${cur.bgc.lo === n}" data-focus="bgl-${esc(n)}">${esc(n)}</button>`).join('')}</div>`;
+    else if (b.lof) h += `<label class="cb-field">Lore from ${esc(b.n)}: ${esc(b.lof)}<input type="text" maxlength="40" data-f="bgc.lo" value="${esc(cur.bgc.lo)}" placeholder="e.g. Swamp Lore" data-focus="bg-lore"></label>`;
+    const feats = [...(b.ft || []), ...(b.fts && b.fts[pcBgSkill(cur)] ? [b.fts[pcBgSkill(cur)]] : [])];
+    h += `${feats.filter(pcFeatKey).map(n => textBox(`ft:${pcFeatKey(n)}`, `📖 ${esc(n)}`)).join('')}</div>`;
     return h;
 }
 
@@ -280,7 +286,7 @@ function stepAttributes() {
         h += boostRow(`Ancestry: ${esc(p.anc.n)}`, pcAncSets(cur), 'anc', cur.boosts.ancFree ? 'two free boosts, no flaw' : p.anc.fl ? `flaw: ${p.anc.fl.map(abilShort).join(', ')}` : '');
         h += `<label class="pb-check"><input type="checkbox" data-anc-free data-focus="anc-free"${cur.boosts.ancFree ? ' checked' : ''}> Take two free boosts instead of the ancestry's boosts and flaw</label>`;
     } else h += '<p class="cb-faint">Pick an ancestry for its boosts.</p>';
-    if (p.bg) h += boostRow(`Background: ${esc(p.bg.n)}`, pcBgSets(cur), 'bg');
+    if (p.bg) h += boostRow(`Background: ${esc(p.bg.n)}${cur.bg === 'amnesiac' ? ' <small>(the third boost is your GM\'s pick)</small>' : ''}`, pcBgSets(cur), 'bg');
     else h += '<p class="cb-faint">Pick a background for its boosts.</p>';
     const keys = pcKeyOptions(cur);
     if (keys.length) h += boostRow(`Class: ${esc(p.cls.n)}`, [[keys, pcKey(cur)]], 'key', 'key attribute');
@@ -354,8 +360,8 @@ function stepFeats() {
         const pickedKey = cur.feats[s.slot];
         const picked = pickedKey ? PF2E_FEATS[pickedKey] : null;
         const byLevel = {};
-        list.forEach(x => { (byLevel[x.feat.l] = byLevel[x.feat.l] || []).push(x); });
-        const opts = Object.keys(byLevel).sort((a, b) => b - a).map(l => `<optgroup label="Level ${l}">${byLevel[l].map(x => `<option value="${x.key}"${x.key === pickedKey ? ' selected' : ''}${x.taken ? ' disabled' : ''}>${esc(x.feat.n)}${x.feat.ar ? ' (archetype)' : ''}${x.taken ? ' (taken)' : ''}</option>`).join('')}</optgroup>`).join('');
+        list.forEach(x => { const l = x.arc || x.feat.l; (byLevel[l] = byLevel[l] || []).push(x); });
+        const opts = Object.keys(byLevel).sort((a, b) => b - a).map(l => `<optgroup label="Level ${l}">${byLevel[l].map(x => `<option value="${x.key}"${x.key === pickedKey ? ' selected' : ''}${x.taken ? ' disabled' : ''}>${esc(x.feat.n)}${x.feat.ar || x.arc ? ' (archetype)' : ''}${x.taken ? ' (taken)' : ''}</option>`).join('')}</optgroup>`).join('');
         const missing = pickedKey && !list.some(x => x.key === pickedKey) ? `<option value="${pickedKey}" selected>${esc(picked.n)} (doesn't fit this slot now)</option>` : '';
         h += `<div class="pb-slot"><label class="cb-field"><span><span class="cb-lv">Level ${s.level}</span>${s.label}</span><select data-feat="${s.slot}" data-focus="feat-${s.slot}"><option value="">Pick a feat (${list.filter(x => !x.taken).length})</option>${missing}${opts}</select></label>`;
         if (picked) h += `<div class="pb-feat-pick">${prereqHtml(cur, picked, stats)}${textBox(`ft:${pickedKey}`, `${featLine(picked)}${picked.tr.length ? ` <span class="cb-tag">${esc(picked.tr.join(', '))}</span>` : ''}`)}</div>`;
@@ -568,13 +574,15 @@ function onClick(e) {
             if (c[field] === val) return;
             c[field] = val;
             if (field === 'race') { c.boosts.anc = []; if (PF2E_HERITAGES[c.her] && PF2E_HERITAGES[c.her].a) c.her = ''; }
-            if (field === 'bg') c.boosts.bg = [];
+            if (field === 'bg') { c.boosts.bg = []; c.bgc = { sk: '', lo: '' }; }
             if (field === 'cls') { c.ch = ''; c.ch2 = ''; c.sub = ''; c.skills.ch = ''; c.boosts.key = ''; c.paths = {}; Object.keys(c.feats).filter(s => /^x?cls/.test(s)).forEach(s => delete c.feats[s]); }
             if (field === 'ch') { c.skills.ch = ''; c.sub = ''; }
         });
     }
     if (d.key) return change(c => { c.boosts.key = d.key; });
     if (d.chskill) return change(c => { c.skills.ch = d.chskill; });
+    if (d.bgskill) return change(c => { c.bgc.sk = d.bgskill; });
+    if (d.bglore) return change(c => { c.bgc.lo = d.bglore; });
     if (d.sub) return change(c => { c.sub = d.sub; });
     if (d.boost) {
         return change(c => {
@@ -621,6 +629,7 @@ function onChange(e) {
     if (el.id === 'pb-level') return change(c => { c.level = Number(el.value); });
     if (!cur) return;
     if (d.sel) return change(c => { const [a, b] = d.sel.split('.'); c[a][b] = el.value; });
+    if (d.f === 'bgc.lo') return change(c => { c.bgc.lo = el.value.slice(0, 40); });   // the Lore counts once it's named
     if (d.inc) return change(c => { if (el.value) c.skills.inc[d.inc] = el.value; else delete c.skills.inc[d.inc]; });
     if (d.feat) return change(c => {
         if (c.feats[d.feat] !== el.value) delete c.feats['x' + d.feat];   // a Basic X feat's own pick goes with it

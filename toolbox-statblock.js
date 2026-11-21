@@ -447,7 +447,8 @@ function sbPf2eHazardStrike([ranged, name, bonus, traits, dmg, note, map]) {
     const kind = ranged ? 'Ranged' : 'Melee';
     const atk = map ? sbPf2eMap(bonus, traits) : sbSigned(bonus);
     const extra = [...traits, ...(note && !/^no multiple attack penalty$/i.test(note) ? [note] : [])];
-    return { kind, text: `${name.toLowerCase()} ${atk}${extra.length ? ` (${extra.join(', ')})` : ''}`, dmg };
+    // A Strike that deals no damage of its own prints "Effect devour" (Titanic Flytrap).
+    return { kind, text: `${name.toLowerCase()} ${atk}${extra.length ? ` (${extra.join(', ')})` : ''}`, label: /\d/.test(dmg) ? 'Damage' : 'Effect', dmg: /\d/.test(dmg) ? dmg : dmg.toLowerCase() };
 }
 
 // Its parts in the book's order: the abilities a Strike names (a poison) come after the Strikes.
@@ -460,9 +461,10 @@ function sbPf2eHazardParts(h) {
         // A complex hazard rolls initiative on its Stealth modifier (the DC − 10), so it shows both.
         stealth: h.st != null ? `DC ${h.st}${h.cx ? ` (initiative ${sbSigned(h.st - 10)})` : ''}${h.sd ? ` ${h.sd}` : ''}` : h.sd || '',
         defense: h.ac != null ? { ac: h.ac, saves } : null,
-        // A hazard with Hardness breaks at half its HP (GM Core prints the BT; the data leaves it out).
-        hp: [h.hd ? ['Hardness', h.hd] : null, h.hp ? ['HP', `${h.hp}${h.hd ? ` (BT ${Math.floor(h.hp / 2)})` : ''}${h.hpd ? ` (${h.hpd})` : ''}`] : null,
-            ['Immunities', h.im], ['Weaknesses', h.we], ['Resistances', h.re]].filter(x => x && x[1]),
+        // A hazard breaks at half its HP (GM Core prints the BT, with or without Hardness; the data leaves it out).
+        // Hardness 0 is printed too (Hallucination Powder Trap); 1 HP has no BT.
+        hp: [h.hd != null ? ['Hardness', h.hd] : null, h.hp ? ['HP', `${h.hp}${h.hp >= 2 ? ` (BT ${Math.floor(h.hp / 2)})` : ''}${h.hpd ? ` (${h.hpd})` : ''}`] : null,
+            ['Immunities', h.im], ['Weaknesses', h.we], ['Resistances', h.re]].filter(x => x && (x[1] || x[1] === 0)),
         before: (h.ab || []).filter(a => !named(a)),
         after: (h.ab || []).filter(named),
         strikes: (h.sk || []).map(sbPf2eHazardStrike)
@@ -486,7 +488,7 @@ function sbPf2eHazardHtml(h) {
         </div>${h.ro || p.strikes.length || p.after.length || h.rs ? `
         <div class="sb-props">
             ${line('Routine', h.ro)}
-            ${p.strikes.map(s => `<p class="sb-feat"><strong>${s.kind}</strong>${sbPf2eCost('1')} ${esc(s.text)}, <strong>Damage</strong> ${esc(s.dmg)}</p>`).join('')}
+            ${p.strikes.map(s => `<p class="sb-feat"><strong>${s.kind}</strong>${sbPf2eCost('1')} ${esc(s.text)}, <strong>${s.label}</strong> ${esc(s.dmg)}</p>`).join('')}
             ${p.after.map(sbPf2eAbility).join('')}
             ${line('Reset', h.rs)}
         </div>` : ''}`;
@@ -504,7 +506,7 @@ function sbPf2eHazardText(h) {
         p.hp.length && p.hp.map(([k, v]) => `${k} ${v}`).join('; '),
         ...p.before.map(ability),
         h.ro && `Routine ${flat(h.ro)}`,
-        ...p.strikes.map(s => `${s.kind} [one action] ${s.text}, Damage ${s.dmg}`),
+        ...p.strikes.map(s => `${s.kind} [one action] ${s.text}, ${s.label} ${s.dmg}`),
         ...p.after.map(ability),
         h.rs && `Reset ${flat(h.rs)}`
     ].filter(Boolean).join('\n');

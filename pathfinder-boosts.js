@@ -58,7 +58,8 @@ function bcRows() {
     const rows = [];
     const anc = PF2E_ANCESTRIES[bc.race], bg = PF2E_BACKGROUNDS[bc.bg], cls = PF2E_CLASSES[bc.cls];
     if (anc) rows.push({ field: 'anc', label: `Ancestry: ${anc.n}`, note: bc.boosts.ancFree ? 'two free boosts, no flaw' : anc.fl ? `flaw: ${anc.fl.map(abilShort).join(', ')}` : '', sets: pcAncSets(bc) });
-    if (bg) rows.push({ field: 'bg', label: `Background: ${bg.n}`, note: '', sets: pcBgSets(bc) });
+    // Amnesiac (Player Core 2): you pick two of its three free boosts, the GM the third.
+    if (bg) rows.push({ field: 'bg', label: `Background: ${bg.n}`, note: bc.bg === 'amnesiac' ? 'the third boost is your GM\'s pick' : '', sets: pcBgSets(bc) });
     if (cls) {
         const opts = bcKeyOptions(), racket = PF2E_CHOICES[bc.ch];
         rows.push({ field: 'key', label: `Class: ${cls.n}`, note: racket ? `key attribute (${racket.n} racket)` : 'key attribute', sets: [[opts, bcKey()]] });
@@ -101,6 +102,7 @@ function bcSuggest() {
         const arr = (bc.boosts[field] || []).slice();
         sets.forEach(([opts, picked], i) => {
             if (picked || opts.length === 1) return;
+            if (field === 'bg' && bc.bg === 'amnesiac' && i === 2) return;   // the GM's boost stays open
             const taken = sets.map((s, j) => (j === i ? '' : (arr[j] || s[1])));
             arr[i] = prio.find(a => opts.includes(a) && !taken.includes(a)) || '';
         });

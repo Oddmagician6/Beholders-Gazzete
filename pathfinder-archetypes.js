@@ -126,7 +126,7 @@ function paOpenSlots() {
     const out = {};
     if (!pa.c) return out;
     pcFeatSlots(pa.c).filter(s => !pa.c.feats[s.slot]).forEach(s => {
-        out[s.slot] = new Set(pcFeatsFor(pa.c, s.slot, { archetype: true }).filter(x => x.feat.ar && !x.taken).map(x => x.key));
+        out[s.slot] = new Set(pcFeatsFor(pa.c, s.slot, { archetype: true }).filter(x => (x.feat.ar || x.arc) && !x.taken).map(x => x.key));
     });
     return out;
 }
@@ -214,6 +214,8 @@ const featLine = f => `${f.a ? `<span class="pa-act">${PA_ACTION[f.a]}</span> ` 
 function featRow(key, ctx) {
     const f = F(key);
     const c = pa.c;
+    const a = pcArchetypes()[pa.arch];
+    const xl = a && a.extra[key];   // an Additional Feat: the level it counts as here
     let act = '';
     if (c && pcParts(c).cls) {
         const at = pcFeatSlots(c).filter(s => c.feats[s.slot] === key);
@@ -223,11 +225,11 @@ function featRow(key, ctx) {
             if (slots.length) {
                 act += `<label class="pa-take">Take it in<select data-take="${key}"><option value="">Pick a slot</option>${slots.map(s => `<option value="${s}">${esc(paSlotName(s))}</option>`).join('')}</select></label>`;
             } else if (!at.length) {
-                act += `<span class="pa-dim pa-small">${f.l > c.level ? `From level ${f.l}.` : 'No open slot fits it.'}</span>`;
+                act += `<span class="pa-dim pa-small">${(xl || f.l) > c.level ? `From level ${xl || f.l}.` : 'No open slot fits it.'}</span>`;
             }
         }
     }
-    return `<li class="pa-feat">${paPrereqs(f, ctx.stats)}${textBox(`ft:${key}`, `${featLine(f)}${f.tr.filter(t => !['archetype', 'dedication', 'multiclass'].includes(t)).length ? ` <span class="pa-tag">${esc(f.tr.filter(t => !['archetype', 'dedication', 'multiclass'].includes(t)).join(', '))}</span>` : ''}`, ctx.openText)}${act ? `<div class="pa-act-row">${act}</div>` : ''}</li>`;
+    return `<li class="pa-feat">${paPrereqs(f, ctx.stats)}${textBox(`ft:${key}`, `${featLine(f)}${f.tr.filter(t => !['archetype', 'dedication', 'multiclass'].includes(t)).length ? ` <span class="pa-tag">${esc(f.tr.filter(t => !['archetype', 'dedication', 'multiclass'].includes(t)).join(', '))}</span>` : ''}${xl ? ` <span class="pa-tag">additional feat: level ${xl} here</span>` : ''}`, ctx.openText)}${act ? `<div class="pa-act-row">${act}</div>` : ''}</li>`;
 }
 
 function renderDetail(check, stats) {
@@ -247,7 +249,7 @@ function renderDetail(check, stats) {
     if (mine) h += `<p class="pa-rule">✔ You took the dedication at level ${mine.level}, and ${mine.feats.length} feat${mine.feats.length === 1 ? '' : 's'} after it.</p>`;
     h += `<h3 class="pa-lvh">Dedication</h3><ul class="pa-feats">${featRow(a.ded, { ...ctx, openText: true })}</ul>`;
     const byLevel = {};
-    a.feats.forEach(k => { (byLevel[F(k).l] = byLevel[F(k).l] || []).push(k); });
+    a.feats.forEach(k => { const l = a.extra[k] || F(k).l; (byLevel[l] = byLevel[l] || []).push(k); });
     Object.keys(byLevel).sort((x, y) => x - y).forEach(l => {
         h += `<h3 class="pa-lvh">Level ${l}</h3><ul class="pa-feats">${byLevel[l].map(k => featRow(k, ctx)).join('')}</ul>`;
     });

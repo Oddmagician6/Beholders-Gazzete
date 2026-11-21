@@ -28,7 +28,10 @@ const MARKET_PF2E_LOCAL = [
 
 // Player Core's Animals table prices the common mounts and stabling: [gp, level] in place of the converted
 // 5e price (5e stabling's 5 sp would be 5 cp; Pathfinder's is 2 cp).
-const MARKET_PF2E_ANIMALS = { 'horse-riding': [8, 0], warhorse: [30, 2], pony: [7, 0], mule: [2, 0], 'stabling-per-day': [0.02, 0] };
+// Also the book's prices for a few goods the 5e conversion gets wrong: a GM Core carriage (100 gp, vehicle 2)
+// and a Player Core bottle of wine (1 sp).
+const MARKET_PF2E_ANIMALS = { 'horse-riding': [8, 0], warhorse: [30, 2], pony: [7, 0], mule: [2, 0], 'stabling-per-day': [0.02, 0],
+    carriage: [100, 2], 'wine-bottle': [0.1, 0] };
 
 // 5e ids → the Pathfinder item a shop's list means by them.
 const MARKET_PF2E_ALIAS = {
@@ -79,7 +82,7 @@ function marketPf2eCategory(it, id) {
     const magic = tr.includes('magical') || tr.includes('divine') || tr.includes('occult') || tr.includes('primal') || tr.includes('arcane');
     switch (it.k) {
         case 't': return it.ct === 'gem' || it.ct === 'art-object' ? 'trade-goods' : null;
-        case 'w': return tr.includes('bomb') ? 'consumables' : magic ? 'magic-items' : 'weapons';
+        case 'w': return tr.includes('bomb') || tr.includes('consumable') ? 'consumables' : magic ? 'magic-items' : 'weapons';
         case 'm': return magic || tr.includes('consumable') || tr.includes('alchemical') ? 'consumables' : 'weapons';
         case 'a': case 's': return magic ? 'magic-items' : 'armor';
         case 'r': return 'magic-items';

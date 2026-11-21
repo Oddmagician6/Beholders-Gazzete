@@ -25,9 +25,14 @@ function spellByName(name) {
         return PF2E_SPELLS[PF2E_SPELL_ALIAS[bare] || spellSlug(bare)] || null;
     }
     if (typeof SPELLS_DATA === 'undefined') return null;
-    const key = name.toLowerCase();
-    const renamed = typeof rulesRename === 'function' && rulesRename('spells', name);   // Feeblemind -> Befuddlement in 2024
-    return SPELLS_DATA.find(s => s.name.toLowerCase() === key || (renamed && s.name === renamed)) || null;
+    const find = n => {
+        const key = n.toLowerCase();
+        const renamed = typeof rulesRename === 'function' && rulesRename('spells', n);   // Feeblemind -> Befuddlement in 2024
+        return SPELLS_DATA.find(s => s.name.toLowerCase() === key || (renamed && s.name === renamed)) || null;
+    };
+    // The exact name first; then without a note ("Fireball (at will)") and with a plain apostrophe ("Hunter’s Mark").
+    const plain = spellBareName(name.replace(/[‘’]/g, "'"));
+    return find(name) || (plain && plain !== name ? find(plain) : null);
 }
 
 // Spell text: paragraphs, ***bold*** run-ins, and "| a | b |" tables (same format as the Spellbook).

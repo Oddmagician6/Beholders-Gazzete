@@ -1218,6 +1218,11 @@ function panHolyDate(god, cal) {
     if (spec.kind === 'turn') {
         if (spec.at === 'first') return at(0);
         if (spec.at === 'last') return at(days.length - 1);
+        // Midsummer or Midwinter in a year that begins on that solstice: the year's first day (calendar-engine.js
+        // holds its midsummer festival there too), not the middle of the season split by the new year.
+        if ((spec.season === 'summer' && cal.start === 'midsummer') || (spec.season === 'winter' && cal.start === 'midwinter')) {
+            if (cal.months[0] && cal.months[0].season === spec.season) return { month: 0, day: 1 };
+        }
         return at(Math.floor(days.length / 2));
     }
     if (spec.kind === 'moon' && cal.moons && cal.moons.length && typeof calMoonPhase === 'function') {
