@@ -111,7 +111,9 @@ function loot52Display(name) {
   const n51 = (typeof MAGIC_ITEM_ALIASES !== 'undefined' && MAGIC_ITEM_ALIASES[name]) || name;
   const to = SRD52_FULL.renames.items[n51];
   if (!to) return name;
-  return Object.values(SRD52_FULL.renames.items).filter(v => v === to).length === 1 ? to : name;
+  // A pool's own note on the name stays: "Deck of Many Things (abridged)" → "Mysterious Deck (abridged)".
+  const note = name !== n51 && name.startsWith(n51) ? name.slice(n51.length) : '';
+  return Object.values(SRD52_FULL.renames.items).filter(v => v === to).length === 1 ? to + note : name;
 }
 let lootPools24 = null;
 function lootPools() {

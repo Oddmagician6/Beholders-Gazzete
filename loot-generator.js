@@ -34,7 +34,9 @@ function changedFields(tab) {
 
 function lootParams() {
   if (!currentLoot || !currentLoot.seed) return {};
-  return { tab: currentLoot.tab === 'individual' ? null : currentLoot.tab, ...currentLoot.fields, seed: currentLoot.seed, kept: currentLoot.kept || null };
+  // D&D: the split's party size (pcs=) rides along when it isn't four; it changes no roll.
+  const pcs = !LOOT_PF2E && lootPartySize() !== 4 ? lootPartySize() : null;
+  return { tab: currentLoot.tab === 'individual' ? null : currentLoot.tab, ...currentLoot.fields, seed: currentLoot.seed, kept: currentLoot.kept || null, pcs };
 }
 
 // A hoard opened from a site (world-sites.js) says where the site's key put it: { seed, text } until another roll.
@@ -530,6 +532,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   // A system with no splitter page hides the button.
   if (!ruleLinkOk('toolbox?tab=split')) document.getElementById('split-btn').hidden = true;
+  if (!LOOT_PF2E) document.getElementById('party-size').addEventListener('change', () => {
+    if (currentLoot && currentLoot.seed) setUrlParams(lootParams(), false);
+  });
   applyUrl(false);
   // Back/Forward step through earlier rolls.
   window.addEventListener('popstate', () => { if (!applyUrl(null)) showUnlinkedLoot(); });

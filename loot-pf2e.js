@@ -42,6 +42,9 @@ const pf2eIsStaff = i => (i.tr || []).includes('staff');
 const pf2eIsWand = i => i.ct === 'wand' || (i.tr || []).includes('wand');
 // Bombs are filed as weapons but are used up when thrown.
 const pf2eConsumable = i => (i.k === 'c' && i.ct !== 'wand') || i.k === 'm' || (i.k === 'w' && (i.tr || []).includes('bomb'));
+// Holy and Unholy Water are filed as simple weapons too, with the consumable trait. They stay in the
+// pools where they sat (a pool's length is part of every old link), but a permanent slot that draws one draws again.
+const pf2eUsedUp = i => i.k === 'w' && (i.tr || []).includes('consumable');
 
 // Item kinds the Items tab filters by: a test on an item record (pf2e-items-data.js keys).
 const PF2E_KINDS = {
@@ -98,13 +101,34 @@ function pf2eItemKind(i) {
 const PF2E_RARITY = { u: 'uncommon', r: 'rare', q: 'unique' };
 const pf2eOrdinal = n => n + (n % 10 === 1 && n !== 11 ? 'st' : n % 10 === 2 && n !== 12 ? 'nd' : n % 10 === 3 && n !== 13 ? 'rd' : 'th');
 
-// A scroll or wand of "Nth-rank Spell" gets a common spell of that rank. A specialty wand (Crackling
-// Lightning, Widening) says its own spell, so it keeps its name; it still draws, so old links keep the rest.
+// GM Core's craft requirements for the wands that hold a spell of the GM's choosing: Widening a
+// 1- or 2-action spell with no duration and a burst (10 feet or more), cone, or line; Continuation a
+// 1- or 2-action spell lasting 10 minutes to an hour.
+const PF2E_WAND_SPELLS = {
+  'Wand of Widening': s => {
+    const burst = /(\d+)-foot burst/.exec(s.ar || '');
+    return ['1', '2'].includes(s.t) && !s.du && (burst ? Number(burst[1]) >= 10 : /\b(?:cone|line)\b/.test(s.ar || ''));
+  },
+  'Wand of Continuation': s => {
+    const d = /^(\d+) (minute|hour)s?$/.exec(s.du || '');
+    const min = d ? Number(d[1]) * (d[2] === 'hour' ? 60 : 1) : 0;
+    return ['1', '2'].includes(s.t) && min >= 10 && min <= 60;
+  }
+};
+
+// A scroll or wand of "Nth-rank Spell" gets a common spell of that rank (Widening and Continuation one
+// that fits them). A specialty wand (Crackling Lightning) says its own spell, so it keeps its name; every
+// one draws once, so old links keep the rest.
 function pf2eSpellFor(i) {
   const m = /(\d+)(?:st|nd|rd|th)-Rank Spell/i.exec(i.n);
   if (!m || typeof PF2E_SPELLS === 'undefined') return null;
   const rank = Number(m[1]);
   const pool = Object.keys(PF2E_SPELLS).filter(k => { const s = PF2E_SPELLS[k]; return s.k === 's' && s.r === rank && !s.ra; });
+  const fits = PF2E_WAND_SPELLS[i.n.replace(/\s*\(.*$/, '')];
+  if (fits) {
+    const want = pool.filter(k => fits(PF2E_SPELLS[k]));
+    if (want.length) return lootPick(want);
+  }
   const pick = pool.length ? lootPick(pool) : null;
   return /^(?:Magic Wand \(|Scroll of )\d/i.test(i.n) ? pick : null;
 }
@@ -148,12 +172,18 @@ function pf2eRollItem(level, kind = 'any', rarity = 'any') {
   const want = rarity === 'any' ? (rand() < 0.1 ? 'uncommon' : 'common') : rarity;
   const ra = { common: undefined, uncommon: 'u', rare: 'r' };
   const levels = level === 'any' ? ['any'] : Array.from({ length: level + 1 }, (_, k) => level - k);
+  const pick = pool => {
+    const it = lootPick(pool);
+    if (kind !== 'permanent' || !pf2eUsedUp(it)) return pf2eEntry(it);
+    const rest = pool.filter(i => !pf2eUsedUp(i));
+    return pf2eEntry(rest.length ? lootPick(rest) : it);
+  };
   for (const l of levels) {
     const fits = PF2E_ITEM_LIST.filter(i => pf2eRollable(i) && test(i) && (l === 'any' || i.l === l));
     if (!fits.length) continue;
     const pool = fits.filter(i => i.ra === ra[want]);
-    if (pool.length) return pf2eEntry(lootPick(pool));
-    if (rarity === 'any') { const common = fits.filter(i => !i.ra); return pf2eEntry(lootPick(common.length ? common : fits)); }
+    if (pool.length) return pick(pool);
+    if (rarity === 'any') { const common = fits.filter(i => !i.ra); return pick(common.length ? common : fits); }
   }
   return null;
 }

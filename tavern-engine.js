@@ -658,13 +658,18 @@ function rollTavern(seed, opts = {}) {
         const list = habits.map(habit => ({ ...rollNPC(npcOpts), habit }));
         const firsts = list.map(r => r.firstName || r.name.split(' ')[0]);
         const ties = pickSome(TAVERN_TIES, count);
+        // A first name two people here share (the owner and a regular, two regulars) is told apart:
+        // "the owner", or the regular's full name. No extra draws.
+        const shared = f => f === ownerFirst || firsts.filter(x => x === f).length > 1;
+        const ownerRef = firsts.includes(ownerFirst) ? 'the owner' : ownerFirst;
         list.forEach((r, i) => {
-            const others = firsts.filter((f, j) => j !== i && f !== firsts[i]);
-            const other = others[Math.floor(rand() * others.length)];
+            const others = firsts.map((f, j) => j).filter(j => j !== i && firsts[j] !== firsts[i]);
+            const pick = others[Math.floor(rand() * others.length)];
+            const other = pick === undefined ? undefined : shared(firsts[pick]) ? list[pick].name : firsts[pick];
             const keep = rand() < 0.7;
             // A tie names someone else: skip it when that would be the regular's own first name.
             const needs = ties[i].includes('{other}') ? other : firsts[i] !== ownerFirst;
-            if (keep && needs) r.tie = tavernFill(ties[i], { owner: ownerFirst, other });
+            if (keep && needs) r.tie = tavernFill(ties[i], { owner: ownerRef, other });
         });
         return list;
     });
@@ -759,9 +764,14 @@ function tavernNpcLine(n) {
     return `${n.name} (${race.charAt(0).toUpperCase() + race.slice(1)}, ${n.age})`;
 }
 
-// "on the docks", or "on the docks in Waterdeep" for a Forgotten Realms tavern.
+// The kinds of place that stand out on the road or in the wilds, not inside a town.
+const TAVERN_OUT_OF_TOWN = ['roadside inn', 'coaching inn', 'mountain lodge', 'woodland lodge', 'halfling burrow-inn', 'dwarven alehall'];
+
+// "on the docks", or "on the docks in Waterdeep" for a Forgotten Realms tavern
+// ("at a crossroads two days from anywhere, outside Mulmaster" for one out on the road).
 function tavernWhere(tv) {
-    return tv.kind.where + (tv.realms ? ` in ${tv.realms.city}` : '');
+    if (!tv.realms) return tv.kind.where;
+    return tv.kind.where + (TAVERN_OUT_OF_TOWN.includes(tv.kind.label) ? `, outside ${tv.realms.city}` : ` in ${tv.realms.city}`);
 }
 
 // A Realms regular's quiet faction, as a sentence (or '').

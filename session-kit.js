@@ -48,7 +48,7 @@ function loadKit() {
         const saved = JSON.parse(localStorage.getItem(KIT_KEY));
         if (saved && typeof saved === 'object') {
             kit = { ...kit, ...saved, seeds: { ...(saved.seeds || {}) } };
-            kit.locks = Array.isArray(saved.locks) ? saved.locks.filter(p => p in ROLLERS) : [];
+            kit.locks = Array.isArray(saved.locks) ? saved.locks.filter(p => Object.hasOwn(ROLLERS, p)) : [];
         }
     } catch (e) {}
     OPTION_IDS.forEach(id => {
@@ -150,10 +150,16 @@ function kitParams() {
         if (fieldValue(el) !== defaultValue(el)) p[id] = el.value;
     });
     if (kit.crier) p.crier = kit.crier.id;
+    else if (lostPins.crier) p.crier = lostPins.crier;
     if (kit.rumor && rumorPool[kit.rumorIdx] && rumorPool[kit.rumorIdx].text === kit.rumor.text) p.rumor = kit.rumorIdx;
+    else if (!kit.rumor && lostPins.rumor) p.rumor = lostPins.rumor;
     SEEDED.forEach(k => { if (kit[k] && kit.seeds[k]) p[k] = kit.seeds[k]; });
     return p;
 }
+
+// A headline or rumor a link pins that didn't load (a failed fetch): kept in the address through
+// other panels' rerolls, so a refresh once the files load still shows it.
+let lostPins = {};
 
 function syncUrl(push) {
     setUrlParams(kitParams(), push);
@@ -168,6 +174,7 @@ function applyUrl(p) {
     });
     kit.crier = null;
     kit.rumor = null;
+    lostPins = {};
     rollCrier(p.get('crier'));
     rollRumor(/^\d+$/.test(p.get('rumor') || '') ? Number(p.get('rumor')) : -1);
     SEEDED.forEach(k => ROLLERS[k](parseSeed(p.get(k)) || undefined));
@@ -182,15 +189,43 @@ function copyLink() {
 }
 
 // ── Render ────────────────────────────────────────────────
+const PANEL_HTML = { crier: crierHTML, rumor: rumorHTML, npc: npcHTML, loot: lootHTML, shop: shopHTML };
+
+// A saved panel's rough shape, so a damaged one doesn't print "undefined" everywhere.
+const PANEL_SHAPE = {
+    crier: c => typeof c.id === 'string' && typeof c.title === 'string',
+    rumor: r => typeof r.text === 'string',
+    npc: n => typeof n.name === 'string' && !!n.stats && typeof n.stats === 'object',
+    loot: l => !!l.coins && typeof l.coins === 'object' && [l.gems, l.art, l.magic].every(Array.isArray),
+    shop: s => !!SHOP_TYPES[s.type] && !!SHOP_WEALTH[s.wealth] && Array.isArray(s.stock)
+};
+
+// Can this saved panel be shown and copied? (Every other panel left out of the copy test.)
+function kitPanelOk(part) {
+    const keep = { ...kit };
+    try {
+        if (typeof kit[part] !== 'object' || !PANEL_SHAPE[part](kit[part])) return false;
+        PANEL_HTML[part]();
+        Object.keys(ROLLERS).forEach(k => { if (k !== part) kit[k] = null; });
+        kitText();
+        return true;
+    } catch (e) {
+        return false;
+    } finally {
+        Object.assign(kit, keep);
+    }
+}
+
 function render(part) {
     const out = document.getElementById(part + '-out');
-    const html = { crier: crierHTML, rumor: rumorHTML, npc: npcHTML, loot: lootHTML, shop: shopHTML }[part]();
+    const html = PANEL_HTML[part]();
     if (html) out.innerHTML = html;
     out.animate?.([{ opacity: 0.2 }, { opacity: 1 }], { duration: 300 });
 }
 
 function truthText(truth) {
-    return truth === null || truth === undefined ? 'Truth: unknown (roll Investigation)' : `Truth: ${truth}%`;
+    return truth === null || truth === undefined || truth === '' || !Number.isFinite(Number(truth))
+        ? 'Truth: unknown (roll Investigation)' : `Truth: ${Number(truth)}%`;
 }
 
 function crierHTML() {
@@ -206,7 +241,7 @@ function rumorHTML() {
     if (!r) return rumorPool.length ? '' : '<p class="muted">The tavern is quiet. Rumors failed to load; try refreshing.</p>';
     return `<p class="rumor-quote">"${esc(r.text)}"</p>
         <div class="kit-tags">
-            <span class="kit-tag">${RUMOR_CATEGORIES[r.category] || esc(r.category)}</span>
+            <span class="kit-tag">${Object.hasOwn(RUMOR_CATEGORIES, r.category) ? RUMOR_CATEGORIES[r.category] : esc(r.category)}</span>
             <span class="kit-tag">${truthText(r.truth)}</span>
         </div>
         ${r.followup ? `<details class="rumor-next"><summary>📜 What happened next…</summary><p>${esc(r.followup)}</p></details>` : ''}`;
@@ -221,7 +256,7 @@ function npcHTML() {
     const n = kit.npc;
     if (!n) return '';
     const stats = ['str', 'dex', 'con', 'int', 'wis', 'cha']
-        .map(k => `<div>${k.toUpperCase()}<b>${n.stats[k]}</b></div>`).join('');
+        .map(k => `<div>${k.toUpperCase()}<b>${esc(n.stats[k])}</b></div>`).join('');
     const hair = hairText(n);
     return `<div class="npc-title">
             <span class="npc-icon" aria-hidden="true">${npcFaceHtml(n)}</span>
@@ -231,7 +266,7 @@ function npcHTML() {
             </div>
         </div>
         <div class="npc-stats">${stats}</div>
-        <div class="npc-combat">❤️ HP ${n.hp} · 🛡️ AC ${n.ac} · 👟 ${esc(n.speed)}</div>
+        <div class="npc-combat">❤️ HP ${esc(n.hp)} · 🛡️ AC ${esc(n.ac)} · 👟 ${esc(n.speed)}</div>
         ${n.doing ? `<span class="kit-label">When you meet them</span>
         <p>${esc(n.doing)}</p>` : ''}
         <span class="kit-label">Looks</span>
@@ -265,7 +300,8 @@ function lootHTML() {
     const odds = (l.trinkets || []).map(t => esc(t)).join('; ');
     // SRD items (magic-items-data.js) open to their text; the rest are name-only.
     const magic = l.magic.map(m => {
-        const row = `<span>${esc(m.name)}${m.attune ? ' <span class="val">(attunement)</span>' : ''}</span><span class="rarity rarity-${m.rarity}">${m.rarity.replace('-', ' ')}</span>`;
+        const rarity = String(m.rarity);
+        const row = `<span>${esc(m.name)}${m.attune ? ' <span class="val">(attunement)</span>' : ''}</span><span class="rarity rarity-${esc(rarity.replace(/[^a-z-]/g, ''))}">${esc(rarity.replace('-', ' '))}</span>`;
         const info = magicItemInfo(m.name);
         if (!info) return `<li>${row}</li>`;
         return `<li class="magic-li"><details><summary>${row}</summary>
@@ -344,7 +380,7 @@ function kitText() {
         lines.push('TOWN CRIER', `${c.opener} ${c.title}`, `(${new URL(crierHref(c.id), location.href).href})`, '');
     }
     if (r) {
-        lines.push('RUMOR', `"${r.text}"`, `${(RUMOR_CATEGORIES[r.category] || r.category).replace(/^\S+\s/, '')} · ${truthText(r.truth)}`);
+        lines.push('RUMOR', `"${r.text}"`, `${String((Object.hasOwn(RUMOR_CATEGORIES, r.category) ? RUMOR_CATEGORIES[r.category] : r.category) ?? '').replace(/^\S+\s/, '')} · ${truthText(r.truth)}`);
         if (r.followup) lines.push(`What happened next: ${r.followup}`);
         lines.push('');
     }
@@ -424,13 +460,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     // A shared link wins over the saved kit.
     const fromLink = applyUrl(opened);
     if (!fromLink) {
+        // A damaged saved panel rolls again (a seeded one from its saved seed) instead of breaking the page.
+        Object.keys(ROLLERS).forEach(part => {
+            if (kit[part] == null || kitPanelOk(part)) return;
+            kit[part] = null;
+            if (SEEDED.includes(part)) ROLLERS[part](parseSeed(kit.seeds[part]) || undefined);
+        });
         // First visit (or nothing saved): roll a fresh kit.
         if (!kit.npc) rollKitNPC();
         if (!kit.loot) rollKitLoot();
         if (!kit.shop || !SHOP_TYPES[kit.shop.type]) rollKitShop();
         if (!kit.rumor) rollRumor();
-        // A new edition (or a vanished article) brings a fresh headline.
-        if (crier.pool.length && (!kit.crier || kit.crier.edition !== crier.edition || !crier.pool.some(a => a.id === kit.crier.id))) {
+        // A new edition (or a vanished article) brings a fresh headline, unless it's locked and still published.
+        const keep = kit.crier && kit.locks.includes('crier') && crierById(crier.all || crier.pool, kit.crier.id);
+        if (keep) kit.crier = { ...keep, edition: crier.edition };
+        else if (crier.pool.length && (!kit.crier || kit.crier.edition !== crier.edition || !crier.pool.some(a => a.id === kit.crier.id))) {
             kit.crier = null;
             rollCrier();
         }
@@ -440,10 +484,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // and out of the saved kit, so a refresh once the files load shows it.
     const lost = fromLink && ((opened.has('crier') && !kit.crier) || (opened.has('rumor') && !kit.rumor));
     if (lost) {
-        const p = kitParams();
-        if (opened.has('crier') && !kit.crier) p.crier = opened.get('crier');
-        if (opened.has('rumor') && !kit.rumor) p.rumor = opened.get('rumor');
-        setUrlParams(p, false);
+        if (opened.has('crier') && !kit.crier) lostPins.crier = opened.get('crier');
+        if (opened.has('rumor') && !kit.rumor) lostPins.rumor = opened.get('rumor');
+        syncUrl(false);
     } else {
         saveKit();
         syncUrl(false);

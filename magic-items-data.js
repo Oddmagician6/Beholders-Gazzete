@@ -385,6 +385,7 @@ const MAGIC_ITEM_ALIASES = {
   "Belt of Giant Strength (Storm)": "Belt of Storm Giant Strength",
   "Crystal Ball (Standard)": "Crystal Ball",
   "Deck of Many Things (abridged)": "Deck of Many Things",
+  "Mysterious Deck (abridged)": "Mysterious Deck",
   "Figurine of Wondrous Power (Bronze Griffon)": "Bronze Griffon Figurine of Wondrous Power",
   "Figurine of Wondrous Power (Ebony Fly)": "Ebony Fly Figurine of Wondrous Power",
   "Figurine of Wondrous Power (Golden Lions)": "Golden Lions Figurine of Wondrous Power",
