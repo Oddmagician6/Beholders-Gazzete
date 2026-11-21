@@ -36,7 +36,8 @@ function lootParams() {
   if (!currentLoot || !currentLoot.seed) return {};
   // D&D: the split's party size (pcs=) rides along when it isn't four; it changes no roll.
   const pcs = !LOOT_PF2E && lootPartySize() !== 4 ? lootPartySize() : null;
-  return { tab: currentLoot.tab === 'individual' ? null : currentLoot.tab, ...currentLoot.fields, seed: currentLoot.seed, kept: currentLoot.kept || null, pcs };
+  return { tab: currentLoot.tab === 'individual' ? null : currentLoot.tab, ...currentLoot.fields, seed: currentLoot.seed, kept: currentLoot.kept || null, pcs,
+    hb: currentLoot.hb ? '1' : null };
 }
 
 // A hoard opened from a site (world-sites.js) says where the site's key put it: { seed, text } until another roll.
@@ -55,6 +56,9 @@ function applyUrl(push) {
   lootKept = kept && currentTab === 'hoard' ? { seed, text: kept } : null;
   const pcs = parseInt(p.get('pcs'), 10);
   if (!LOOT_PF2E && pcs >= 1) document.getElementById('party-size').value = partySize(pcs);
+  // The link's own homebrew choice for this roll (not saved as the browser's setting): no hb= means none.
+  const hbBox = document.getElementById('hb-loot');
+  if (hbBox && !LOOT_PF2E) hbBox.checked = p.get('hb') === '1';
   generateLoot(seed, push);
   return true;
 }
@@ -164,6 +168,8 @@ function generateLoot(seed = newSeed(), push = true) {
     tab: currentTab,
     seed,
     fields: changedFields(currentTab),
+    // The homebrew swap was on for this roll: the link says so (hb=1), so it replays the same way.
+    hb: !LOOT_PF2E && lootHomebrewOn(),
     generatedAt: new Date().toISOString()
   };
 
@@ -338,6 +344,7 @@ function displayLoot() {
       <p><strong>Valuables:</strong> ${loot.gems.length} gems, ${loot.art.length} art objects${goods.length ? `, ${goods.length} lot${goods.length === 1 ? '' : 's'} of trade goods` : ''}</p>
       <p><strong>Magic Items:</strong> ${loot.magic.length} items found</p>
       <p><strong>Total Value:</strong> ${formatCoins(loot.totalValue)}${hasArtifact ? ' (plus artifacts, which have no market price)' : ''}</p>
+      ${!LOOT_PF2E && typeof loot24 === 'function' && loot24() ? `<p><strong>2024 rules:</strong> magic items at their SRD 5.2.1 rarity and value (common 100 gp, uncommon 400, rare 4,000, very rare 40,000, legendary 200,000; a consumable half, a spell scroll twice its scribing cost). SRD 5.2.1 has no treasure tables, so coins, gems, and art objects still roll on SRD 5.1's.</p>` : ''}
     `;
   }
 

@@ -218,15 +218,15 @@ function mcFromUrl() {
     let total = 0;
     (q.get('c') || '').split(',').forEach(part => {
         const [cls, lvText] = part.split('.');
-        const lv = Math.round(Number(lvText));
-        if (!cbClass(cls, mcR()) || rows.some(r => r.cls === cls) || !(lv >= 1)) return;
+        const lv = /^\d{1,2}$/.test(lvText || '') ? Number(lvText) : 0;
+        if (!cbClass(cls, mcR()) || rows.some(r => r.cls === cls) || !(lv >= 1 && lv <= 20)) return;
         const fit = Math.min(lv, 20 - total);
         if (fit < 1) return;
         rows.push({ cls, lv: fit });
         total += fit;
     });
     mc.rows = rows.length ? rows : [{ cls: '', lv: 1 }];
-    const s = (q.get('s') || '').split('.').map(Number);
+    const s = (q.get('s') || '').split('.').map(v => (/^\d{1,2}$/.test(v) ? Number(v) : NaN));
     CB_ABILITIES.forEach((a, i) => { mc.s[a] = s.length === 6 && Number.isInteger(s[i]) ? Math.min(30, Math.max(1, s[i])) : 10; });
     mc.tough = q.get('t') === '1' ? 1 : 0;
 }
@@ -320,7 +320,7 @@ function renderProfs() {
         const bits = [];
         if (p.saves.length) bits.push(`saves: ${p.saves.map(a => CB_ABILITY_NAMES[a]).join(', ')}`);
         const armor = mcArmorText(p.armor);
-        if (armor.length) bits.push(armor.join(', ') + (p.first && p.k.armorNote ? ` (${p.k.armorNote})` : ''));
+        if (armor.length) bits.push(armor.join(', ') + (p.k.armorNote ? ` (${p.k.armorNote})` : ''));
         const weapons = mcWeaponText(p.weapons);
         if (weapons.length) bits.push(weapons.join(', '));
         if (p.tools.length) bits.push(p.tools.join(', '));
@@ -357,7 +357,7 @@ function renderMagic() {
     if (slots.length) {
         const how = one
             ? `${cbClass(one.cls, mcR()).name} is your only class with the Spellcasting feature, so its own table applies.`
-            : `Spellcaster level <b>${casterLevel}</b>: ${mcCasters().map(r => { const k = cbClass(r.cls, mcR()); return k.cast.prog === 'full' ? `${k.name} ${r.lv}` : `half of ${k.name} ${r.lv} (rounded down) = ${Math.floor(r.lv / 2)}`; }).join(' + ')}.`;
+            : `Spellcaster level <b>${casterLevel}</b>: ${mcCasters().map(r => { const k = cbClass(r.cls, mcR()); const up = mcR() === '2024'; return k.cast.prog === 'full' ? `${k.name} ${r.lv}` : `half of ${k.name} ${r.lv} (rounded ${up ? 'up' : 'down'}) = ${up ? Math.ceil(r.lv / 2) : Math.floor(r.lv / 2)}`; }).join(' + ')}.`;
         h += `<p class="mc-all">${how}</p>`
             + `<div class="mc-slots-wrap"><table class="mc-slots"><caption>Spell slots</caption><thead><tr>${MC_LEVEL_NAMES.map(n => `<th scope="col">${n}</th>`).join('')}</tr></thead>`
             + `<tbody><tr>${MC_LEVEL_NAMES.map((n, i) => `<td>${slots[i] || '—'}</td>`).join('')}</tr></tbody></table></div>`;

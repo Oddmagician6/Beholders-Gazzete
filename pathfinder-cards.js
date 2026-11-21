@@ -170,7 +170,7 @@ function pkFeatures(c) {
 function pkSpells(c) {
     const arcs = pcArcCastings(c);
     if (!pcCasting(c) && !arcs.length) return [];
-    const s = c.spells;
+    const s = typeof pcTextState !== 'undefined' && pcTextState === 2 ? pcFittedSpells(c) : c.spells;
     const grants = pcSpellGrants(c);
     const out = new Map();
     const add = (k, how) => { if (Object.hasOwn(PF2E_SPELLS, k) && !out.has(k)) out.set(k, how); };

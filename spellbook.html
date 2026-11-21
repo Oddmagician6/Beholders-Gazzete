@@ -712,6 +712,7 @@
         if (!rows.length) return;
         const cells = rows.filter(r => !/^\|[\s|:-]+\|$/.test(r))
           .map(r => r.replace(/^\||\|$/g, '').split('|').map(c => esc(c.trim())));
+        if (!cells.length) { out.push(`<p>${esc(rows.join(' '))}</p>`); rows = []; return; }
         const [head, ...body] = cells;
         out.push('<table><tr>' + head.map(c => `<th>${c}</th>`).join('') + '</tr>' +
           body.map(r => '<tr>' + r.map(c => `<td>${c}</td>`).join('') + '</tr>').join('') + '</table>');

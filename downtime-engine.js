@@ -16,6 +16,10 @@
    Learn a Spell, Retraining, and Long-Term Rest (tagged 'PC'). Carousing and gambling stay
    house rules, gambling on Pathfinder's degrees of success against a DC by the character's level.
    The lodging and weekly tables read a lifestyle's flavor (the 5e lifestyle it lives like).
+   Under the 2024 rules (srd52.js rulesVersion() '2024', read when it works the numbers) crafting follows
+   SRD 5.2.1 p. 103: 10 gp of progress a day, helpers split the time, and no lifestyle paid for while
+   crafting (lifestyle prices are the same in both). Old 2024 links that craft finish sooner, so the
+   weekly log after the item is done can differ.
    ============================================ */
 
 const DT_PF2E = ruleSystemId() === 'pf2e';
@@ -157,6 +161,8 @@ const DOWNTIME_WORK = DT_PF2E ? DOWNTIME_PF2E_RANKS : {
 };
 
 const CRAFT_GP_PER_DAY = 5;      // SRD 5.1: 5 gp of progress per crafter per day
+const CRAFT_GP_PER_DAY_2024 = 10; // SRD 5.2.1 p. 103: a day's work per 10 gp of the item's cost
+const dtCraft2024 = () => !DT_PF2E && typeof rulesVersion === 'function' && rulesVersion() === '2024';
 const RESEARCH_GP_PER_DAY = 1;   // SRD 5.1: 1 gp of expenses per day of research
 const DOWNTIME_MAX_DAYS = 365;
 const CAROUSE_SHOWN = 8;         // outcomes listed (one per week)
@@ -749,13 +755,14 @@ function downtimeFor(c, days, seed, i = 0, opts = {}) {
         const value = Math.max(0, Number(c.val) || 0);
         const done = Math.min(value, Math.max(0, Number(c.done) || 0));
         const helpers = Math.max(0, Math.floor(Number(c.help) || 0));
-        const perDay = CRAFT_GP_PER_DAY * (1 + helpers);
+        const v24 = dtCraft2024();
+        const perDay = (v24 ? CRAFT_GP_PER_DAY_2024 : CRAFT_GP_PER_DAY) * (1 + helpers);
         const left = value - done;
         const craftDays = left > 0 ? Math.min(days, Math.ceil(left / perDay)) : 0;
         const made = Math.min(left, craftDays * perDay);
         const finished = value > 0 && done + made >= value;
-        // SRD 5.1: while crafting, a modest lifestyle is free and a comfortable one costs half.
-        const rate = lifeIndex(life) <= lifeIndex('modest') ? 0 : life === 'comfortable' ? full / 2 : full;
+        // SRD 5.1: while crafting, a modest lifestyle is free and a comfortable one costs half (5.2.1: no such rule).
+        const rate = v24 ? full : lifeIndex(life) <= lifeIndex('modest') ? 0 : life === 'comfortable' ? full / 2 : full;
         lifeGp = craftDays * rate + (days - craftDays) * full;
         const materials = made / 2;
         out.extraGp += materials;
@@ -769,8 +776,9 @@ function downtimeFor(c, days, seed, i = 0, opts = {}) {
             if (made) lines.push({ text: `Raw materials: ${formatCoins(materials)} (half the value of the progress made).`, src: 'SRD' });
         }
         if (craftDays && rate < full) lines.push({ text: life === 'comfortable' ? 'Comfortable lifestyle at half cost while crafting.' : 'Lifestyle paid for while crafting (modest or less is free).', src: 'SRD' });
-        else if (craftDays && lifeIndex(life) > lifeIndex('comfortable')) lines.push({ text: 'Crafting doesn\'t cover a lifestyle this lavish, so it costs full price.', src: 'ruling' });
-        if (helpers) lines.push({ text: 'Helpers need the right tool proficiency and must work in the same place.', src: 'SRD' });
+        else if (craftDays && !v24 && lifeIndex(life) > lifeIndex('comfortable')) lines.push({ text: 'Crafting doesn\'t cover a lifestyle this lavish, so it costs full price.', src: 'ruling' });
+        if (v24 && value) lines.push({ text: 'SRD 5.2.1: a day of work per 10 gp of the item\'s cost, split among those working on it; the lifestyle is paid as usual.', src: 'SRD' });
+        if (helpers) lines.push({ text: v24 ? `Helpers need the tool proficiency too. Normally only one other character can help${helpers > 1 ? ' (more is the GM\'s call)' : ''}.` : 'Helpers need the right tool proficiency and must work in the same place.', src: 'SRD' });
     } else if (c.act === 'work') {
         const w = DOWNTIME_WORK[c.work] || DOWNTIME_WORK.trade;
         const cov = DOWNTIME_LIFESTYLES[w.covers];

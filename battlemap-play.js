@@ -121,6 +121,21 @@ function bpDmToken(t, fight, sel = false) {
     return out;
 }
 
+// What the players may know of the map: the revealed squares as drawn, and a ring of plain floor round them
+// (so the fog's edge shows no false walls); under the fog nothing else (floor kinds, walls, furniture,
+// labels), so the shape of an unexplored room never reaches their screen. B751.
+function bpSeenMap(m, fog) {
+    const w = m.w, h = m.h, seen = (x, y) => x >= 0 && y >= 0 && x < w && y < h && !!fog[y * w + x];
+    const near = (x, y) => { for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if (seen(x + dx, y + dy)) return true; return false; };
+    const fl = m.fl.map((f, i) => { const x = i % w, y = (i - x) / w; return seen(x, y) ? f : f && near(x, y) ? 1 : 0; });
+    const hw = m.hw.map((e, i) => { const x = i % w, y = (i - x) / w; return e && (seen(x, y) || seen(x, y - 1)) ? e : 0; });
+    const vw = m.vw.map((e, i) => { const x = i % (w + 1), y = (i - x) / (w + 1); return e && (seen(x, y) || seen(x - 1, y)) ? e : 0; });
+    const over = (x0, y0, x1, y1) => { for (let y = Math.floor(y0); y < Math.ceil(y1); y++) for (let x = Math.floor(x0); x < Math.ceil(x1); x++) if (seen(x, y)) return true; return false; };
+    const ob = m.ob.filter(o => o.k !== 'secret' && over(o.x, o.y, o.x + Math.max(1, o.w), o.y + Math.max(1, o.h)));
+    const lb = m.lb.filter(l => seen(Math.min(w - 1, Math.floor(l.x)), Math.min(h - 1, Math.floor(l.y))));
+    return { ...m, fl, hw, vw, ob, lb };
+}
+
 // The players' copy of the table. A map never opened in Play mode counts as all hidden.
 // ruler: { a, b } in squares and its text, while the DM measures.
 function bpPlayerState(m, fight, opts, ruler = null) {
@@ -144,7 +159,8 @@ function bpPlayerState(m, fight, opts, ruler = null) {
         }
         return out;
     });
-    const map = bmPack({ ...m, ob: m.ob.filter(o => o.k !== 'secret'), lb: opts.labels ? m.lb : [], tk: [], fog: null });
+    const shown = bpSeenMap(m, fog);
+    const map = bmPack({ ...shown, lb: opts.labels ? shown.lb : [], tk: [], fog: null });
     delete map.t;
     return {
         v: 1, map, fog: bmRle(fog), tokens, view, names: opts.names, show: opts.show,

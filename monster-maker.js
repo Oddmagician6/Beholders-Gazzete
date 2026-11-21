@@ -100,7 +100,9 @@ function hasWork(mon) {
 // ── The draft ─────────────────────────────────────────────
 function cleanDraftPart(d) {
     const mon = d && hbClean(d.mon);
-    return mon ? { mon, nb: typeof d.nb === 'string' && /^[a-z0-9]{1,16}$/.test(d.nb) ? d.nb : null, dirty: d.dirty === true } : null;
+    // base: the notebook entry as it was when opened or last saved here, to catch another tab's save in between.
+    return mon ? { mon, nb: typeof d.nb === 'string' && /^[a-z0-9]{1,16}$/.test(d.nb) ? d.nb : null, dirty: d.dirty === true,
+        base: typeof d.base === 'string' && d.base.length < 200000 ? d.base : null } : null;
 }
 
 function loadDraft() {
@@ -134,9 +136,11 @@ function draftEntry(nb = nbLoad()) {
 }
 
 // Put a new monster in the form. Unsaved work goes to `prev`, so it can come back.
-function replaceDraft(mon, nb, said) {
+let mmSure = false;   // a Save over another tab's newer save was warned about once: the next click saves
+function replaceDraft(mon, nb, said, base = null) {
     if (draft.dirty && hasWork(draft.mon)) prev = { ...draft };
-    draft = { mon, nb, dirty: false };
+    draft = { mon, nb, dirty: false, base };
+    mmSure = false;
     storeDraft();
     fillForm();
     renderAll();
@@ -442,7 +446,7 @@ function renderSaved() {
 function openEntry(id, said = true) {
     const e = nbFind(nbLoad(), id);
     if (!e || e.kind !== 'monster' || !e.mon) { mmFlash("⚠️ That monster isn't in this browser's notebook."); return false; }
-    replaceDraft(hbClean(e.mon), e.id, said ? `✏️ Opened ${e.title} from your notebook.` : '');
+    replaceDraft(hbClean(e.mon), e.id, said ? `✏️ Opened ${e.title} from your notebook.` : '', JSON.stringify(e.mon));
     return true;
 }
 
@@ -483,11 +487,18 @@ function saveToNotebook(asCopy = false) {
     const nb = nbLoad();
     const old = !asCopy && draftEntry(nb);
     if (old) {
+        if (draft.base && JSON.stringify(old.mon) !== draft.base && !mmSure) {
+            mmSure = true;
+            mmFlash(`⚠️ ${old.title} was saved again somewhere else (another tab?) since you opened it. Click 💾 Save again to put your version over it, or 📑 save yours as a copy.`);
+            return null;
+        }
+        mmSure = false;
         old.title = nbText(mon.name, NB_LIMITS.title);
         old.sub = hbSummary(mon);
         old.mon = mon;
         if (!nbStore(nb)) { mmFlash('⚠️ This browser would not save it.'); return null; }
         draft.dirty = false;
+        draft.base = JSON.stringify(mon);
         storeDraft();
         renderAll();
         mmFlash(`💾 Saved the changes to ${old.title}.`);
@@ -498,6 +509,7 @@ function saveToNotebook(asCopy = false) {
     if (res.full) { mmFlash(`⚠️ The notebook is full (${NB_LIMITS.entries} entries). Remove some in the Worldbuilder first.`); return null; }
     draft.nb = res.entry.id;
     draft.dirty = false;
+    draft.base = JSON.stringify(mon);
     storeDraft();
     renderAll();
     mmFlash(asCopy ? `📑 Saved a copy of ${res.entry.title} to the notebook.` : `💾 Saved ${res.entry.title} to the notebook. It's in the Toolbox now too.`);

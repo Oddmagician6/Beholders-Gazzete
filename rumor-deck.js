@@ -65,6 +65,10 @@ function dealRumor(rumors, baseCount, category, avoidIdx = -1) {
     if (!left.length) {
         left = shuffleRumorIndexes(pool);
         if (left.length > 1 && left[left.length - 1] === avoidIdx) left.unshift(left.pop());
+    } else if (left.length > 1 && left[left.length - 1] === avoidIdx) {
+        // A started deck too: the one on screen goes under the next.
+        const t = left.length - 1;
+        [left[t], left[t - 1]] = [left[t - 1], left[t]];
     }
     const idx = left.pop();
     state.decks[category] = left;

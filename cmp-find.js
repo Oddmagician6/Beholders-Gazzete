@@ -2,15 +2,19 @@
   // The Pathfinder lists' find box: hide links that don't match, and the sections left empty
   var q = document.getElementById('cmp-q');
   if (!q) return;
+  // Accents, curly apostrophes and dashes don't count: "deja vu" finds Déjà Vu, "reaper’s" reaper's.
+  function fold(s) {
+    return s.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[\u2018\u2019\u02bc`]/g, "'").replace(/[\u2010-\u2015]/g, '-');
+  }
   var sections = [].slice.call(document.querySelectorAll('section.cmp-more[id]')).map(function (sec) {
     var count = sec.querySelector('.cmp-count');
     return { sec: sec, count: count, total: count ? count.textContent : '', items: [].slice.call(sec.querySelectorAll('.cmp-links li')).map(function (li) {
-      return { li: li, text: (li.textContent + ' ' + (li.getAttribute('data-q') || '')).toLowerCase() };
+      return { li: li, text: fold(li.textContent + ' ' + (li.getAttribute('data-q') || '')) };
     }) };
   });
   var jump = document.querySelector('.cmp-jump'), jumpLabel = document.querySelector('.cmp-jump-label');
   function run() {
-    var words = q.value.toLowerCase().split(/\s+/).filter(Boolean), any = false;
+    var words = fold(q.value).split(/\s+/).filter(Boolean), any = false;
     sections.forEach(function (g) {
       var shown = 0;
       g.items.forEach(function (it) {

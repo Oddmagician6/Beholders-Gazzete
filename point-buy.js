@@ -125,8 +125,8 @@ function pbFromUrl() {
         const ch = r && r.choose && r.choose.abil;
         pb.abil = ch ? plus.filter(a => CB_ABILITIES.includes(a) && a !== r.choose.abilNot).slice(0, ch) : [];
     }
-    const pool = (q.get('pool') || '').split('.').map(Number).filter(n => Number.isInteger(n) && n >= 3 && n <= 18);
-    pb.pool = pool.length === 6 ? pool : [];
+    const raw = (q.get('pool') || '').split('.');
+    pb.pool = raw.length === 6 && raw.every(x => /^\d{1,2}$/.test(x) && +x >= 3 && +x <= 18) ? raw.map(Number) : [];
     pb.dice = null;
     pbReset(pb.method);
     const s = (q.get('s') || '').split('.').map(Number);

@@ -319,6 +319,8 @@ async function siteEditMap() {
         const p = bmPack(m);
         delete p.id;
         delete p.t;
+        // A Pathfinder dungeon opens as a map to draw on: the builder's Play mode runs D&D rules.
+        if (document.documentElement.dataset.system === 'pf2e') p.p = 1;
         // After the #, so a big site never makes the address too long for the server.
         location.href = 'dnd-battlemap-builder#m=' + await packShareCode(p);
     } catch (err) {

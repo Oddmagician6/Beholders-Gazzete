@@ -285,6 +285,8 @@ function bmPack(m) {
     };
     if (m.tk.length) p.k = m.tk.map(t => [t.id, t.n, bmR2(t.x), bmR2(t.y), t.s, t.c, t.a, t.f, t.hid ? 1 : 0]);
     if (m.fog) p.g = bmRle(m.fog);
+    // Opened from a Pathfinder dungeon: Play mode (D&D rules) stays off for it.
+    if (m.pf) p.p = 1;
     return p;
 }
 
@@ -331,7 +333,8 @@ function bmClean(p) {
         name: text(p.n, BM_LIMITS.name) || 'Untitled battlemap', w, h,
         style: bmHas(BM_STYLES, p.s) ? p.s : 'art',
         t: num(p.t, 0, 1e15) || 0,
-        fl, hw: e.slice(0, nh), vw: e.slice(nh), ob, lb, tk, fog: bmUnRle(p.g, w * h, 1)
+        fl, hw: e.slice(0, nh), vw: e.slice(nh), ob, lb, tk, fog: bmUnRle(p.g, w * h, 1),
+        ...(p.p === 1 ? { pf: 1 } : {})
     };
 }
 
@@ -372,7 +375,7 @@ function bmFloorAt(m, x, y) {
 
 // The map at a new size, cut or grown at the right and bottom. Things left off it go.
 function bmResize(m, w, h) {
-    const n = { ...bmBlank(w, h, m.name, m.style), id: m.id, t: m.t };
+    const n = { ...bmBlank(w, h, m.name, m.style), id: m.id, t: m.t, ...(m.pf ? { pf: 1 } : {}) };
     // New squares come in hidden.
     if (m.fog) {
         n.fog = new Array(w * h).fill(0);

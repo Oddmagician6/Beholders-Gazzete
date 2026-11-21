@@ -15,6 +15,9 @@
    and its people get Realms names, from draws of their own (the rest stays the same).
    On Pathfinder pages (TAVERN_PF2E) the tiers keep their names, and the prices come from
    Player Core's Food and Lodging (tagged 'Player Core'); the rest is priced to match.
+   Under the 2024 rules (srd52.js rulesVersion() '2024', read at roll time) the menu follows SRD 5.2.1's
+   Food, Drink, and Lodging table (p. 101-102: a meal is one meal, not a day's; wine by the bottle), and
+   only the prices and SRD lines change: the draws are the same, so the people and the rest stay.
    ============================================ */
 
 const TAVERN_PF2E = ruleSystemId() === 'pf2e';
@@ -41,7 +44,18 @@ const TAVERN_SRD_ITEMS = [
     { name: 'Meat, a chunk', gp: 0.3, kind: 'food', from: 'poor', to: 'wealthy' },
     { name: 'Banquet (per person)', gp: 10, kind: 'food', from: 'wealthy', to: 'aristocratic' }
 ];
-const TAVERN_STABLING = TAVERN_PF2E ? 0.02 : 0.5;   // stabling, per day (SRD 5.1; Player Core)
+const TAVERN_STABLING = TAVERN_PF2E ? 0.02 : 0.5;   // stabling, per day (SRD 5.1 and 5.2.1; Player Core)
+
+// SRD 5.2.1 (p. 101-102): one meal per tier (Squalid 1 cp … Aristocratic 6 sp), and its own table lines.
+const TAVERN_MEAL_2024 = { squalid: 0.01, poor: 0.02, modest: 0.1, comfortable: 0.2, wealthy: 0.3, aristocratic: 0.6 };
+const TAVERN_SRD_ITEMS_2024 = [
+    { name: 'Ale (mug)', gp: 0.04, kind: 'drink', from: 'squalid', to: 'comfortable' },
+    { name: 'Wine, common (bottle)', gp: 0.2, kind: 'drink', from: 'poor', to: 'wealthy' },
+    { name: 'Wine, fine (bottle)', gp: 10, kind: 'drink', from: 'comfortable', to: 'aristocratic' },
+    { name: 'Bread (loaf)', gp: 0.02, kind: 'food', from: 'squalid', to: 'modest' },
+    { name: 'Cheese (wedge)', gp: 0.1, kind: 'food', from: 'poor', to: 'comfortable' }
+];
+const tavern2024 = () => !TAVERN_PF2E && typeof rulesVersion === 'function' && rulesVersion() === '2024';
 
 // Pathfinder (Player Core): floor space 3 cp, a bed 1 sp, a private room 8 sp, an extravagant suite
 // 10 gp a night; a poor meal 1 cp, a square meal 3 cp, fine dining 1 gp. The tiers between are ours.
@@ -645,6 +659,9 @@ function rollTavern(seed, opts = {}) {
     const t = TAVERN_TIERS[tier];
     const ti = TAVERN_TIER_KEYS.indexOf(tier);
     const band = TAVERN_BAND[tier];
+    // 2024: dishes priced off three of the tier's 5.2.1 meals (5.1's meal price is a day's).
+    const v24 = tavern2024();
+    const dayMeals = v24 ? TAVERN_MEAL_2024[tier] * 3 : t.meal;
 
     // The kind follows the tier: a flophouse is never aristocratic.
     const kind = part('kind', () => {
@@ -692,13 +709,13 @@ function rollTavern(seed, opts = {}) {
 
     const menu = part('menu', () => {
         const sells = i => TAVERN_TIER_KEYS.indexOf(i.from) <= ti && ti <= TAVERN_TIER_KEYS.indexOf(i.to);
-        const srd = TAVERN_SRD_ITEMS.filter(sells).map(i => ({ name: i.name, gp: i.gp, kind: i.kind, src: TAVERN_SRC }));
+        const srd = (v24 ? TAVERN_SRD_ITEMS_2024 : TAVERN_SRD_ITEMS).filter(sells).map(i => ({ name: i.name, gp: i.gp, kind: i.kind, src: TAVERN_SRC }));
         // Three plates, each fixed or composed; the first is the house special.
         const fixed = pickSome(TAVERN_DISHES[tier], 3);
         const dishes = fixed.map(d => { const c = tavernDish(band); return rand() < 0.45 ? c : d; })
             .filter((d, i, a) => a.indexOf(d) === i);
-        const food = dishes.map((d, i) => ({ name: d, gp: tavernPrice(t.meal / (i === 0 ? 2 : 3)), kind: 'food', src: 'house', special: i === 0 }));
-        if (kind.dish) food.push({ name: kind.dish, gp: tavernPrice(t.meal / 3), kind: 'food', src: 'house', known: true });
+        const food = dishes.map((d, i) => ({ name: d, gp: tavernPrice(dayMeals / (i === 0 ? 2 : 3)), kind: 'food', src: 'house', special: i === 0 }));
+        if (kind.dish) food.push({ name: kind.dish, gp: tavernPrice(dayMeals / 3), kind: 'food', src: 'house', known: true });
 
         // Two house drinks; one may be the owner's own brew.
         const drinks = pickSome(TAVERN_DRINKS[tier], 2);
@@ -710,7 +727,9 @@ function rollTavern(seed, opts = {}) {
         return {
             food: [...food, ...srd.filter(i => i.kind === 'food')],
             drink: [...drink, ...srd.filter(i => i.kind === 'drink')],
-            meals: t.meal
+            // 5.1 prices a day's meals; 5.2.1 a single meal (meal: set only under 2024).
+            meals: dayMeals,
+            ...(v24 ? { meal: TAVERN_MEAL_2024[tier] } : {})
         };
     });
 
@@ -801,7 +820,7 @@ function tavernText(tv, rumor) {
         '',
         'Food:', ...tv.menu.food.map(i => '  ' + price(i)),
         'Drink:', ...tv.menu.drink.map(i => '  ' + price(i)),
-        `A day's meals here: ${formatCoins(tv.menu.meals)}`,
+        tv.menu.meal ? `A meal here: ${formatCoins(tv.menu.meal)}` : `A day's meals here: ${formatCoins(tv.menu.meals)}`,
         `Rooms (per night, ${tv.rooms.vacant ? tv.rooms.vacant + ' free tonight' : 'full tonight'}):`, ...tv.rooms.list.map(i => '  ' + price(i)),
         '',
         `Quirk: ${tv.quirk}`,

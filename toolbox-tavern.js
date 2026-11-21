@@ -164,7 +164,7 @@ function renderTavern() {
                 <ul class="tv-prices">${priceRows(tv.menu.food)}</ul>
                 <h4 class="tv-h-gap">🍺 Drink</h4>
                 <ul class="tv-prices">${priceRows(tv.menu.drink)}</ul>
-                <p class="tv-small">A day's meals here run about ${esc(formatCoins(tv.menu.meals))}.</p>
+                <p class="tv-small">${tv.menu.meal ? `A meal here runs about ${esc(formatCoins(tv.menu.meal))}` : `A day's meals here run about ${esc(formatCoins(tv.menu.meals))}`}.</p>
             </section>
             <section class="tv-block">
                 <h4>🛏️ Rooms, per night</h4>
@@ -206,6 +206,12 @@ function setupTavern() {
         setUrlParams(tavParams(), false);
     }));
     document.getElementById('tv-roll').addEventListener('click', () => rollTavernFor());
+    // The 2014/2024 switch changes the menu's prices: the same tavern, priced again.
+    if (typeof srd52OnChange === 'function') srd52OnChange(() => {
+        if (!tavern.seed) return;
+        tavern.data = tavernRoll(tavern.seed, sel.value);
+        renderTavern();
+    });
     document.getElementById('tv-rumor').addEventListener('click', () => {
         dealTavernRumor();
         document.getElementById('tavern-rumor').innerHTML = rumorBlock();

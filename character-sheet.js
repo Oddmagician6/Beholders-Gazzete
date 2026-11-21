@@ -58,7 +58,7 @@ function portraitSrc(c) {
 
 // A homebrew spell (homebrew-magic.js) has no page of its own: its name and a 🧪 (an SRD 5.2 addition, srd52.js: a 📗).
 function spellLink(name) {
-    if (typeof hbmIsHomebrew === 'function' && hbmIsHomebrew(name)) return `${esc(name)} <span title="Homebrew, from your campaign notebook">🧪</span>`;
+    if (typeof hbmIsHomebrew === 'function' && hbmIsHomebrew(name, 'spell')) return `${esc(name)} <span title="Homebrew, from your campaign notebook">🧪</span>`;
     if (typeof srd52IsSpell === 'function' && srd52IsSpell(name)) return `${esc(name)} <span title="From the SRD 5.2 additions">📗</span>`;
     const href = cur && cbIs24(cur) ? `spellbook?spells=${spellSlug(name)}&list=${encodeURIComponent(name)}&rules=2024` : `spell/${spellSlug(name)}`;
     return `<a href="${href}" target="_blank" rel="noopener" title="Open ${esc(name)} in a new tab">${esc(name)}</a>`;
@@ -326,7 +326,8 @@ function inventoryPanel(c, d) {
     const load = cbLoad(c, d), str = d.s.str, id = encodeURIComponent(c.id), att = cbAttuned(c);
     const state = load.state === 'over' ? ' cs-over' : load.state ? ' cs-low' : '';
     const say = {
-        over: `Over your carrying capacity: you can push or drag up to ${lbs(str * 30)} lb., but your speed drops to 5 feet.`,
+        over: load.stuck ? `Over ${lbs(load.push)} lb., twice your carrying capacity: too heavy to push, drag, or lift, so you can't move it.`
+            : `Over your carrying capacity: you can push or drag up to ${lbs(load.push)} lb., but your speed drops to 5 feet.`,
         heavy: `Heavily encumbered (over ${lbs(str * 10)} lb.): speed −20 ft., and disadvantage on ability checks, attack rolls, and saving throws that use Strength, Dexterity, or Constitution.`,
         encumbered: `Encumbered (over ${lbs(str * 5)} lb.): speed −10 ft.`,
         '': c.play.enc ? `Encumbered past ${lbs(str * 5)} lb., heavily past ${lbs(str * 10)} lb.` : 'Capacity is STR × 15. Coins aren\'t counted.'
@@ -502,6 +503,8 @@ function onClick(e) {
             const r = cbDamage(cur, d2, n);
             const parts = [`🗡️ ${n} damage`];
             if (r.temp) parts.push(`${r.temp} came off temporary hit points`);
+            // SRD 5.2.1: damage interrupts a short rest (its benefits are lost).
+            if (restOpen && cbIs24(cur) && n > 0) { restOpen = false; parts.push('the short rest is interrupted'); }
             flash(parts.join('; ') + '.');
             const res = cbResources(cur, d2).find(x => x.id === 'relentless-endurance');
             notice = null;
@@ -542,15 +545,17 @@ function onClick(e) {
         return;
     }
     if (act === 'deathsave') {
-        const r = doRoll('1d20', 'death save', true, false);
+        const exh = cbIs24(cur) ? 2 * cur.play.exh : 0;
+        const r = doRoll('1d20', 'death save', true, true);
         if (!r) return;
+        const nat = r.total + exh;
         let out;
         change((p, d2) => {
-            out = cbDeathSave(cur, d2, r.total);
+            out = cbDeathSave(cur, d2, nat, r.total);
             if (out === 'revived') setCond('Unconscious', false);
             notice = null;
         });
-        flash({ revived: '✨ Natural 20: back up with 1 hit point!', stable: '😮‍💨 Third success: stable.', dead: '💀 Third failure: dead.', success: `✔️ ${r.total}: a success.`, fail: r.total === 1 ? '✖️ Natural 1: two failures.' : `✖️ ${r.total}: a failure.` }[out], out === 'dead' || out === 'fail');
+        flash({ revived: '✨ Natural 20: back up with 1 hit point!', stable: '😮‍💨 Third success: stable.', dead: '💀 Third failure: dead.', success: `✔️ ${r.total}: a success.`, fail: nat === 1 ? '✖️ Natural 1: two failures.' : `✖️ ${r.total}: a failure.` }[out], out === 'dead' || out === 'fail');
         return;
     }
     if (act === 'ds') { change(p => { p.ds[Number(v)] = Math.max(0, Math.min(3, p.ds[Number(v)] + (filled ? -1 : 1))); }); return; }
@@ -561,6 +566,12 @@ function onClick(e) {
         restOpen = !restOpen; render(); return;
     }
     if (act === 'short-cancel') { restOpen = false; render(); return; }
+    if ((act === 'hitdie' || act === 'short-done') && cbRestBlock(cur, d, false)) {
+        restOpen = false;
+        flash(cbRestBlock(cur, d, false), true);
+        render();
+        return;
+    }
     if (act === 'hitdie') {
         let got;
         change((p, d2) => { got = cbSpendHitDie(cur, d2, f => doRoll(f, 'hit die', false)); if (got && got.healed && cbPlayHp(cur, d2) > 0) setCond('Unconscious', false); });
@@ -661,7 +672,7 @@ function onClick(e) {
         const r = cbResources(cur, d).find(x => x.id === b.dataset.id);
         if (!r || (cur.play.res[r.id] || 0) >= r.max) return;
         const roll = /d/.test(r.heal) ? doRoll(r.heal, r.name, false) : null;
-        const n = roll ? roll.total : Number(r.heal);
+        const n = Math.max(r.healMin || 0, roll ? roll.total : Number(r.heal));
         let got = 0;
         change((p, d2) => {
             p.res[r.id] = (p.res[r.id] || 0) + 1;

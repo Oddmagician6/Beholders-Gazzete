@@ -135,7 +135,7 @@ function renderDiceHistory() {
     document.getElementById('dice-count').textContent = list.length;
     document.getElementById('dice-empty').hidden = list.length > 0;
     document.getElementById('dice-log').innerHTML = list.map((h, i) => {
-        const time = new Date(h.t).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const time = Number.isFinite(h.t) ? new Date(h.t).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
         const what = (h.label ? `${h.label} (${h.f})` : h.f) + (h.mode && h.mode !== 'normal' ? `, ${diceModeLabel(h.mode)}` : '');
         return `<li><button type="button" data-i="${i}" title="Roll this again">
             <time>${esc(time)}</time>
@@ -268,6 +268,9 @@ function num(v) {
 }
 
 function loadFight() {
+    // No saved fight (cleared in another tab, or storage wiped): none here either, so an open tracker
+    // can't hand the Player View a fight that's gone.
+    fight = { round: 1, turn: null, nextId: 1, nextTag: 1, list: [] };
     try {
         const saved = JSON.parse(localStorage.getItem(INIT_KEY));
         if (saved && Array.isArray(saved.list)) {
@@ -868,6 +871,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Another tab of the site changed the history or the fight.
     window.addEventListener('storage', e => {
         if (e.key === DICE_HISTORY_KEY) renderDiceHistory();
-        if (e.key === INIT_KEY) { loadFight(); renderFight(); }
+        if (e.key === INIT_KEY || e.key === null) { loadFight(); renderFight(); }
     });
 });

@@ -33,7 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('rules-link').addEventListener('click', () => {
         // Write the search through setUrlParams first: it adds the rules= the page shows (srd52.js),
         // which an address opened by hand doesn't have yet.
-        if (typeof setUrlParams === 'function') setUrlParams({ q: box.value.trim() || null }, false);
+        // A bare address would open in the reader's own setting: name the version shown.
+        const rules = typeof rulesVersion === 'function' && typeof SRD52_OK !== 'undefined' && SRD52_OK ? rulesVersion() : null;
+        if (typeof setUrlParams === 'function') setUrlParams({ q: box.value.trim() || null, rules }, false);
         copyPageLink(ok => rulesFlash(ok ? '🔗 Link copied.' : '⚠️ Copy blocked by the browser.'));
     });
     box.value = (urlParams().get('q') || '').slice(0, 40);

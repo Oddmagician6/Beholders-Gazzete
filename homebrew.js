@@ -428,6 +428,7 @@ function hbFeatHit(mon, f, pb) {
         toHit: toHit ? Number(toHit[1].replace('−', '-')) : null,
         dc: dc ? Number(dc[1]) : null,
         limited: /recharge|\/day|\/ day|per day/i.test(f.name),
+        uses: Math.max(1, Number((f.name.match(/(\d+)\s*\/\s*day|(\d+)\s*per day/i) || [])[1] || (f.name.match(/(\d+)\s*per day/i) || [])[1]) || 1),
         multi: /^multiattack/i.test(f.name), text
     };
 }
@@ -466,13 +467,15 @@ function hbReadOffense(mon, pb) {
     const lim = acts.filter(a => a.limited && a.dmg > 0).reduce((b, a) => (!b || a.dmg > b.dmg ? a : b), null);
     let dpr = regular;
     if (lim && lim.dmg > regular) {
-        dpr = Math.round((lim.dmg + 2 * regular) / 3);
-        steps.push(`${lim.name} (${lim.dmg}) once in the first three rounds: (${lim.dmg} + 2 × ${regular}) ÷ 3 = ${dpr}.`);
-        used = [[lim, lim.dmg], ...used.map(([a, d]) => [a, d * 2])];
+        const k = Math.min(3, lim.uses || 1);
+        dpr = Math.round((k * lim.dmg + (3 - k) * regular) / 3);
+        steps.push(k === 1 ? `${lim.name} (${lim.dmg}) once in the first three rounds: (${lim.dmg} + 2 × ${regular}) ÷ 3 = ${dpr}.`
+            : `${lim.name} (${lim.dmg}) ${k} times in the first three rounds: (${k} × ${lim.dmg}${k < 3 ? ` + ${3 - k} × ${regular}` : ''}) ÷ 3 = ${dpr}.`);
+        used = [[lim, lim.dmg * k], ...used.map(([a, d]) => [a, d * (3 - k)])].filter(([, d]) => d > 0);
     }
     const bonus = mon.ba.filter(f => f.name || f.text || f.atk).map(f => hbFeatHit(mon, f, pb)).filter(a => a.dmg > 0 && !a.limited)
         .reduce((b, a) => (!b || a.dmg > b.dmg ? a : b), null);
-    if (bonus) { dpr += bonus.dmg; steps.push(`Bonus action ${bonus.name}: +${bonus.dmg}.`); }
+    if (bonus) { dpr += bonus.dmg; steps.push(`Bonus action ${bonus.name}: +${bonus.dmg}.`); used.push([bonus, bonus.dmg]); }
     // Legendary actions: the option that deals the most in a round (as often as the actions
     // allow, by its cost), whether its own damage or one of the monster's attacks.
     const leg = mon.le.filter(f => f.name || f.text || f.atk).map(f => {
@@ -489,7 +492,8 @@ function hbReadOffense(mon, pb) {
     if (leg) { dpr += leg.total; steps.push(`Legendary ${leg.name} ${leg.uses > 1 ? `${leg.uses} × ${leg.dmg}` : leg.dmg}: +${leg.total}.`); }
     // The best to-hit; the DC of the save effects that deal the damage (any action's when none
     // does); and whether most of the damage comes from save effects (then the DC counts).
-    const hits = acts.map(a => a.toHit).filter(x => x !== null);
+    const usedHits = used.map(([a]) => a.toHit).filter(x => x !== null);
+    const hits = usedHits.length ? usedHits : acts.map(a => a.toHit).filter(x => x !== null);
     const saveActs = used.map(([a]) => a).filter(a => a.toHit === null);
     const dcs = (saveActs.length ? saveActs : acts).map(a => a.dc).filter(x => x !== null);
     const sum = test => used.filter(([a]) => test(a)).reduce((t, [, d]) => t + d, 0);

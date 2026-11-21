@@ -142,14 +142,21 @@ function hbmSaved(nb, kind) {
     return nb.entries.filter(e => e.kind === kind && e[kind]);
 }
 
-function hbmIsHomebrew(name) {
-    return hbmNames.has(String(name).toLowerCase());
+// kind 'spell' or 'item' asks about that kind only (a homebrew spell named like an SRD item doesn't make the
+// item homebrew); no kind: either (B774).
+const hbmKindNames = { spell: new Set(), item: new Set() };
+const hbmKey = name => String(name).normalize('NFC').toLowerCase();
+function hbmIsHomebrew(name, kind) {
+    return kind ? hbmKindNames[kind] ? hbmKindNames[kind].has(hbmKey(name)) : false : hbmNames.has(hbmKey(name));
 }
 
 // Whether a name is already an SRD spell / item (then the homebrew one is skipped).
 function hbmSrdHas(kind, name) {
     return !!hbmSrd && hbmSrd[kind === 'spell' ? 'spells' : 'items'].has(String(name).trim().toLowerCase());
 }
+
+// The text rows this file put in MAGIC_ITEM_TEXT, by name, so it only ever takes out its own.
+const hbmItemRows = new Map();
 
 function hbmRegister(nb) {
     if (!HBM_ON || typeof nbLoad !== 'function') return;
@@ -162,12 +169,13 @@ function hbmRegister(nb) {
     }
     // Take out the last ones, in place (other scripts hold these objects).
     if (typeof SPELLS_DATA !== 'undefined') for (let i = SPELLS_DATA.length - 1; i >= 0; i--) if (SPELLS_DATA[i].hb) SPELLS_DATA.splice(i, 1);
-    if (typeof MAGIC_ITEM_TEXT !== 'undefined') hbmItems.forEach(it => { delete MAGIC_ITEM_TEXT[it.name]; });
+    if (typeof MAGIC_ITEM_TEXT !== 'undefined') hbmItems.forEach(it => { if (MAGIC_ITEM_TEXT[it.name] === hbmItemRows.get(it.name)) delete MAGIC_ITEM_TEXT[it.name]; });
+    hbmItemRows.clear();
     hbmNames.clear();
     // One of each name per kind (a spell and an item may share one). A name like __proto__
     // can't be a key of MAGIC_ITEM_TEXT, so an item with one is left out.
     const fresh = seen => name => {
-        const k = name.toLowerCase();
+        const k = hbmKey(name);
         if (seen.has(k)) return false;
         seen.add(k);
         return true;
@@ -178,8 +186,10 @@ function hbmRegister(nb) {
     hbmItems = hbmSaved(nb, 'item').filter(e => !(e.item.name in Object.prototype) && !hbmSrd.items.has(e.item.name.toLowerCase()) && fresh(itemSeen)(e.item.name))
         .map(e => ({ id: e.id, ...e.item })).sort((a, b) => a.name.localeCompare(b.name));
     if (typeof SPELLS_DATA !== 'undefined') SPELLS_DATA.push(...hbmSpells);
-    if (typeof MAGIC_ITEM_TEXT !== 'undefined') hbmItems.forEach(it => { MAGIC_ITEM_TEXT[it.name] = [hbmItemLine(it), hbmItemText(it)]; });
+    if (typeof MAGIC_ITEM_TEXT !== 'undefined') hbmItems.forEach(it => { const row = [hbmItemLine(it), hbmItemText(it)]; hbmItemRows.set(it.name, row); MAGIC_ITEM_TEXT[it.name] = row; });
     [...spellSeen, ...itemSeen].forEach(k => hbmNames.add(k));
+    hbmKindNames.spell = new Set(spellSeen);
+    hbmKindNames.item = new Set(itemSeen);
     hbmListeners.forEach(fn => fn());
 }
 
@@ -192,7 +202,8 @@ function hbmItemText(it) {
 // homebrew spell or item that now shares an SRD name steps aside (and one that no longer does comes back).
 function hbmRulesChanged() {
     if (!HBM_ON || typeof nbLoad !== 'function') return;
-    const mine = new Set(hbmItems.map(it => it.name));
+    // Ours: the names whose text is still the homebrew row (an official item the switch put there isn't).
+    const mine = new Set(hbmItems.filter(it => typeof MAGIC_ITEM_TEXT !== 'undefined' && MAGIC_ITEM_TEXT[it.name] === hbmItemRows.get(it.name)).map(it => it.name));
     hbmSrd = {
         spells: new Set(typeof SPELLS_DATA !== 'undefined' ? SPELLS_DATA.filter(s => !s.hb).map(s => s.name.toLowerCase()) : []),
         items: new Set(typeof MAGIC_ITEM_TEXT !== 'undefined' ? Object.keys(MAGIC_ITEM_TEXT).filter(n => !mine.has(n)).map(n => n.toLowerCase()) : [])

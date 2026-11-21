@@ -387,3 +387,17 @@ const lootData = {
     }
   }
 };
+
+// SRD items the pools lacked (hunt 11), by edition: 'both', and '2024' only (SRD 5.2.1). getMagicItem
+// swaps one in from a seed made of its own pick's draw, by its share of the pool, so it takes no new
+// draws and every other part of an old hoard stays; only some items change.
+const LOOT_MAGIC_MORE = {
+  both: {
+    uncommon:    [{name:'+1 Shield',type:'armor',attune:false}],
+    rare:        [{name:'+2 Shield',type:'armor',attune:false}],
+    'very-rare': [{name:'+3 Shield',type:'armor',attune:false}]
+  },
+  '2024': {
+    common:      [{name:'Bead of Nourishment',type:'wondrous',attune:false}]
+  }
+};

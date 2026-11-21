@@ -700,13 +700,14 @@ function rollStatBlock(npc, force = null) {
         if (vers && !useShield) text += `, or ${sbDamage(vers, style === 'Dueling' ? dmgMod - 2 : dmgMod)} ${type} damage if used with two hands`;
         if (cls === 'Druid' && (name === 'quarterstaff' || name === 'club') && spellcasting && spellcasting.lines.some(l => l.spells.includes('Shillelagh')))
             text += `, or ${sbDamage('1d8', m.wis + plus)} bludgeoning damage (+${m.wis + prof + plus} to hit) with shillelagh`;
-        if (cls === 'Barbarian' && !isRanged) text += `, plus ${rageDmg} while raging`;
+        if (cls === 'Barbarian' && !isRanged) text += `, plus ${rageDmg} while raging${thrown ? ' (in melee)' : ''}`;
         return { name: label, text: text + '.' };
     };
     const actions = [];
     const extraAttacks = (cls === 'Fighter' && level >= 20) ? 4 : (cls === 'Fighter' && level >= 11) ? 3 : (['Fighter', 'Paladin', 'Ranger', 'Barbarian', 'Monk'].includes(cls) && level >= 5) ? 2 : 1;
     const mainLabel = (magicPlus ? `+${magicPlus} ` : '') + mainName;
-    if (extraAttacks > 1) actions.push({ name: 'Multiattack', text: `${who} makes ${['', '', 'two', 'three', 'four'][extraAttacks]} attacks with ${his} ${mainLabel}${kitName === 'dexMartial' ? ` or ${rangedName}` : ''}.` });
+    const reload = kitName === 'dexMartial' && sbProp(rangedName, 'l');
+    if (extraAttacks > 1) actions.push({ name: 'Multiattack', text: `${who} makes ${['', '', 'two', 'three', 'four'][extraAttacks]} attacks with ${his} ${mainLabel}${kitName === 'dexMartial' ? (reload ? `, or one with ${his} ${rangedName} (it needs reloading)` : ` or ${rangedName}`) : ''}.` });
     if (cls === 'Monk') {
         const abil = m.dex >= m.str ? 'dex' : 'str';
         actions.push({ name: 'Unarmed Strike', text: `Melee Weapon Attack: ${sbSigned(m[abil] + prof)} to hit, reach 5 ft., one target. Hit: ${sbDamage(maDie, m[abil])} bludgeoning damage.` });
@@ -903,7 +904,7 @@ function rollStatBlock(npc, force = null) {
         cls, level, sub: level >= C.sub[1] ? C.sub[0] : '',
         title: `Level ${level} ${cls}${level >= C.sub[1] ? ` (${C.sub[0]})` : ''}`,
         typeLine: `${R.size} ${R.type}, ${(npc.alignment || 'any alignment').toLowerCase()}`,
-        stats, baseStats: base, ac, acText: acParts.join(', '), hp, hitDice: `${level}d${C.hd}`, speed: `${speed} ft.`,
+        stats, baseStats: base, ac, acText: acParts.join(', '), hp, hitDice: `${level}d${C.hd}${level * (m.con + hpPer) ? ` ${level * (m.con + hpPer) > 0 ? '+' : '−'} ${Math.abs(level * (m.con + hpPer))}` : ''}`, speed: `${speed} ft.`,
         saves, skills, resist, senses, langs, prof,
         cr: cr[1], xp: cr[2],
         traits, actions, bonusActions, reactions, spellcasting,
@@ -923,7 +924,7 @@ function statBlockText(b) {
     if (b.resist.length) L.push(`Damage Resistances: ${b.resist.join(', ')}`);
     L.push(`Senses: ${b.senses.join(', ')}`);
     L.push(`Languages: ${b.langs.join(', ')}`);
-    L.push(`Challenge ≈ ${b.cr} (${b.xp} XP) | Proficiency Bonus +${b.prof}`);
+    L.push(`Challenge ≈ ${b.cr} (${b.xp} XP) | Proficiency Bonus +${b.prof} (class level)`);
     const section = (title, list) => { if (list.length) { L.push('', title); list.forEach(f => L.push(`${f.name}. ${f.text}`)); } };
     section('TRAITS', b.traits);
     if (b.spellcasting) {

@@ -465,7 +465,7 @@ function btTokenAct(act) {
 
 // ── Set up ────────────────────────────────────────────────
 function btSetMode(mode) {
-    BB.mode = mode === 'play' ? 'play' : 'build';
+    BB.mode = mode === 'play' && !(BB.m && BB.m.pf) ? 'play' : 'build';
     const play = BB.mode === 'play';
     document.querySelectorAll('[data-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === BB.mode)));
     $('bb-playbar').hidden = !play;

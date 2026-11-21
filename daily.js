@@ -105,7 +105,7 @@ function dailyHtml(parts) {
           ${p.text ? `<p>${esc(p.text)}</p>` : ''}
           ${p.href ? `<a class="daily-more" href="${esc(p.href)}">${esc(p.cta)} →</a>` : ''}
         </div>`).join('') +
-        '<p class="classified-note">The same for every reader. A new package every morning.</p>';
+        '<p class="classified-note">The same for every reader on the same day. A new package every morning.</p>';
 }
 
 async function renderDaily() {

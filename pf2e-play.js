@@ -66,13 +66,14 @@ function ppDiehard(c) {
 }
 
 // You die at dying 4 (5 with Diehard), less your doomed value.
+// Doomed as high as that kills outright (death at dying 0).
 function ppDeathAt(c) {
-    return Math.max(1, (ppDiehard(c) ? 5 : 4) - ppCond(c, 'Doomed'));
+    return Math.max(0, (ppDiehard(c) ? 5 : 4) - ppCond(c, 'Doomed'));
 }
 
-// A recovery check's DC: 10 + dying (a nine lives catfolk leaves the dying value out).
+// A recovery check's DC: 10 + dying (a nine lives catfolk leaves the dying value out; Toughness: 9 + dying).
 function ppRecoveryDc(c) {
-    return 10 + (c.her === 'nine-lives-catfolk' ? 0 : ppCond(c, 'Dying'));
+    return 10 - (pcHasFeat(c, 'toughness') ? 1 : 0) + (c.her === 'nine-lives-catfolk' ? 0 : ppCond(c, 'Dying'));
 }
 
 function ppDead(c) {
@@ -100,6 +101,7 @@ function ppDamage(c, s, n, crit = false) {
     n = Math.max(0, Math.round(n));
     const was = ppCond(c, 'Dying');
     const out = { temp: Math.min(p.temp, n), hp: 0, down: false, dead: false, dying: was, massive: false, heroic: false };
+    if (ppDead(c)) return { ...out, temp: 0, dead: true };
     if (!n) return out;
     p.temp -= out.temp;
     const rest = n - out.temp;
@@ -359,6 +361,7 @@ function ppRefocus(c) {
 function ppRest(c, s = pcStats(c)) {
     if (ppDead(c)) return null;
     const p = c.play, back = [];
+    if (ppCond(c, 'Wounded') && ppHp(c, s) >= ppMax(c, s)) { back.push(`wounded ${ppCond(c, 'Wounded')} → gone`); ppSetCond(c, 'Wounded', 0); }
     ['Drained', 'Doomed'].forEach(n => { const v = ppCond(c, n); if (v) { ppSetCond(c, n, v - 1); back.push(`${n.toLowerCase()} ${v} → ${v - 1 || 'gone'}`); } });
     if (ppCond(c, 'Fatigued')) { ppSetCond(c, 'Fatigued', 0); back.push('fatigue'); }
     if (!ppDead(c)) {

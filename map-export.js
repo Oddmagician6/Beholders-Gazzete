@@ -87,15 +87,44 @@ function mapDownload(blob, name) {
     setTimeout(() => URL.revokeObjectURL(a.href), 10000);
 }
 
-// "The Sunken Vault of Orr" → "the-sunken-vault-of-orr"
+// "The Sunken Vault of Orr" → "the-sunken-vault-of-orr". Windows' reserved names (con, nul, com1…) get "-map".
 function mapFileSlug(name) {
-    return String(name).toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '')
+    const s = String(name).toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '')
         .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'map';
+    return /^(con|prn|aux|nul|com[1-9]|lpt[1-9])$/.test(s) ? s + '-map' : s;
+}
+
+// The page's Google web fonts that the CSS names (Cinzel, IM Fell English…), Latin letters only, as
+// @font-face rules with the font files inside them: an SVG drawn as an image can't fetch them, so without
+// this the picture falls back to the computer's own fonts. '' when offline or nothing matches.
+async function mapFontCss(css) {
+    const used = new Set([...css.matchAll(/font-family:\s*([^;}]+)/g)].flatMap(m => m[1].split(',').map(f => f.trim().replace(/^['"]|['"]$/g, ''))));
+    const link = document.querySelector('link[href*="fonts.googleapis.com/css"]');
+    if (!link || !used.size) return '';
+    try {
+        const sheet = await (await fetch(link.href)).text();
+        const faces = (sheet.match(/@font-face\s*\{[^}]*\}/g) || []).filter(f => {
+            const fam = (/font-family:\s*['"]?([^;'"]+)/.exec(f) || [])[1];
+            const range = (/unicode-range:\s*([^;]+)/.exec(f) || [])[1] || '';
+            return used.has(fam) && (!range || /U\+0000-00FF/i.test(range));
+        });
+        const out = await Promise.all(faces.map(async f => {
+            const url = (/url\(([^)]+)\)/.exec(f) || [])[1];
+            if (!url) return '';
+            const blob = await (await fetch(url.replace(/['"]/g, ''))).blob();
+            const data = await new Promise(ok => { const r = new FileReader(); r.onload = () => ok(r.result); r.onerror = () => ok(''); r.readAsDataURL(blob); });
+            return data ? f.replace(/url\([^)]+\)/, () => `url(${data})`) : '';
+        }));
+        return out.join('\n');
+    } catch (e) {
+        return '';
+    }
 }
 
 // The whole export: svg string → PNG download (opts: see mapSvgToPng). Resolves to true, or false if it failed.
 async function mapExportPng(svg, w, h, css, fileName, opts = {}) {
-    const blob = await mapSvgToPng(mapSvgForExport(svg, w, h, css), w, h, opts);
+    const fonts = await mapFontCss(css);
+    const blob = await mapSvgToPng(mapSvgForExport(svg, w, h, fonts ? fonts + '\n' + css : css), w, h, opts);
     if (!blob) return false;
     mapDownload(blob, fileName);
     return true;

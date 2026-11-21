@@ -19,6 +19,9 @@ const CB_EXHAUSTION = ['', 'Disadvantage on ability checks.', 'Speed halved.', '
 // pool: spent a point at a time (ki, sorcery points, lay on hands).
 // heal: a formula the resource heals the character by when used.
 // dc: counts uses that raise a DC (Relentless Rage) rather than spending a charge.
+// Relentless Rage counts tries (DC 10, +5 a try) until a rest; no real fight runs past this.
+const CB_RELENTLESS_MAX = 20;
+
 function cbResources(c, d = cbDerive(c)) {
     if (cbIs24(c)) return cbResources24(c, d);
     const L = c.level, m = d.m, out = [];
@@ -26,7 +29,7 @@ function cbResources(c, d = cbDerive(c)) {
     const at = (cls, lv) => c.cls === cls && L >= lv;
 
     if (at('barbarian', 1) && L < 20) add('rage', 'Rage', d.x.rages, 'long', `+${d.x.rageDmg} melee damage, 1 minute`);
-    if (at('barbarian', 11)) add('relentless', 'Relentless Rage', 6, 'short', 'CON save at 0 hit points while raging', { dc: true });
+    if (at('barbarian', 11)) add('relentless', 'Relentless Rage', CB_RELENTLESS_MAX, 'short', 'CON save at 0 hit points while raging', { dc: true });
     if (at('bard', 1)) add('inspiration', 'Bardic Inspiration', Math.max(1, m.cha), L >= 5 ? 'short' : 'long', `d${L >= 15 ? 12 : L >= 10 ? 10 : L >= 5 ? 8 : 6}`);
     if (at('cleric', 2)) add('channel', 'Channel Divinity', L >= 18 ? 3 : L >= 6 ? 2 : 1, 'short', `Turn Undead (DC ${d.x.dc('wis')}) or Preserve Life (${5 * L} HP)`);
     if (at('cleric', 10)) add('intervention', 'Divine Intervention', 1, 'none', L >= 20 ? 'Always works; once per 7 days' : `${L}% chance; 7 days if it works, a long rest if not`);
@@ -37,7 +40,7 @@ function cbResources(c, d = cbDerive(c)) {
     if (at('fighter', 9)) add('indomitable', 'Indomitable', L >= 17 ? 3 : L >= 13 ? 2 : 1, 'long', 'Reroll a failed save');
     if (at('monk', 2)) add('ki', 'Ki Points', L, 'short', `Save DC ${d.x.dc('wis')}`, { pool: true });
     if (at('monk', 6)) add('wholeness', 'Wholeness of Body', 1, 'long', `Action: regain ${3 * L} HP`, { heal: String(3 * L) });
-    if (at('paladin', 1)) add('divine-sense', 'Divine Sense', 1 + Math.max(0, m.cha), 'long', 'Sense celestials, fiends, and undead within 60 ft.');
+    if (at('paladin', 1)) add('divine-sense', 'Divine Sense', 1 + m.cha, 'long', 'Sense celestials, fiends, and undead within 60 ft.');
     if (at('paladin', 1)) add('lay-on-hands', 'Lay on Hands', 5 * L, 'long', 'Heal by touch; 5 points cure a disease or poison', { pool: true });
     if (at('paladin', 3)) add('channel', 'Channel Divinity', 1, 'short', `Sacred Weapon (+${Math.max(1, m.cha)} to hit) or Turn the Unholy (DC ${d.x.dc('cha')})`);
     if (at('paladin', 14)) add('cleansing', 'Cleansing Touch', Math.max(1, m.cha), 'long', 'End one spell on a willing creature');
@@ -66,7 +69,7 @@ function cbResources24(c, d) {
     const pb = d.prof;
 
     if (at('barbarian', 1)) add('rage', 'Rage', d.x.rages, 'one', `+${d.x.rageDmg} damage on STR attacks${L >= 15 ? '; all back once per long rest when you roll initiative' : ''}`);
-    if (at('barbarian', 11)) add('relentless', 'Relentless Rage', 6, 'short', 'CON save at 0 hit points while raging', { dc: true });
+    if (at('barbarian', 11)) add('relentless', 'Relentless Rage', CB_RELENTLESS_MAX, 'short', 'CON save at 0 hit points while raging', { dc: true });
     if (at('barbarian', 14)) add('presence', 'Intimidating Presence', 1, 'long', `Frighten foes within 30 ft. (DC ${d.x.dc('str')}); a rage buys it back`);
     if (at('bard', 1)) add('inspiration', 'Bardic Inspiration', Math.max(1, m.cha), L >= 5 ? 'short' : 'long', `d${L >= 15 ? 12 : L >= 10 ? 10 : L >= 5 ? 8 : 6}`);
     if (at('cleric', 2)) add('channel', 'Channel Divinity', L >= 18 ? 4 : L >= 6 ? 3 : 2, 'one', `Divine Spark, Turn Undead${L >= 3 ? ', or Preserve Life' : ''} (DC ${d.x.dc('wis')})`);
@@ -80,7 +83,7 @@ function cbResources24(c, d) {
     if (at('fighter', 9)) add('indomitable', 'Indomitable', L >= 17 ? 3 : L >= 13 ? 2 : 1, 'long', `Reroll a failed save with +${L}`);
     if (at('monk', 2)) add('ki', 'Focus Points', L, 'short', `Save DC ${d.x.dc('wis')}`, { pool: true });
     if (at('monk', 2)) add('metabolism', 'Uncanny Metabolism', 1, 'long', `On initiative: all focus back and 1d${d.x.martial} + ${L} HP`, { heal: `1d${d.x.martial}+${L}` });
-    if (at('monk', 6)) add('wholeness', 'Wholeness of Body', Math.max(1, m.wis), 'long', `Bonus action: regain 1d${d.x.martial} + ${Math.max(1, m.wis)} HP`, { heal: `1d${d.x.martial}+${Math.max(1, m.wis)}` });
+    if (at('monk', 6)) add('wholeness', 'Wholeness of Body', Math.max(1, m.wis), 'long', `Bonus action: regain 1d${d.x.martial} ${m.wis < 0 ? '−' : '+'} ${Math.abs(m.wis)} HP (at least 1)`, { heal: `1d${d.x.martial}${m.wis < 0 ? '' : '+'}${m.wis}`, healMin: 1 });
     if (at('paladin', 1)) add('lay-on-hands', 'Lay On Hands', 5 * L, 'long', 'Heal by touch; 5 points end poisoned', { pool: true });
     if (at('paladin', 2)) add('free-smite', "Paladin's Smite", 1, 'long', 'Divine smite without a slot');
     if (at('paladin', 3)) add('channel', 'Channel Divinity', L >= 11 ? 3 : 2, 'one', `Divine Sense, Sacred Weapon${L >= 9 ? ', or Abjure Foes' : ''} (DC ${d.x.dc('cha')})`);
@@ -150,7 +153,8 @@ function cbPlaySpeed(c, d) {
     // 2014 Stunned can't move; 2024 Stunned is Incapacitated, which leaves Speed alone.
     const stop = ['Grappled', 'Restrained', 'Paralyzed', 'Petrified', 'Unconscious', ...(v24 ? [] : ['Stunned'])];
     if ((p.exh >= 5 && !v24) || p.exh >= 6 || stop.some(n => p.cond.includes(n))) return 0;
-    const load = cbLoad(c, d).state;
+    const L = cbLoad(c, d), load = L.state;
+    if (L.stuck) return 0;
     const speed = load === 'over' ? Math.min(5, d.speed) : Math.max(0, d.speed - (load === 'heavy' ? 20 : load === 'encumbered' ? 10 : 0));
     if (v24) return Math.max(0, speed - 5 * p.exh);
     return p.exh >= 2 ? Math.floor(speed / 2) : speed;
@@ -172,12 +176,13 @@ function cbItemWeight(g) {
 // goliath's Powerful Build carries as Large, twice that).
 // The variant rule (c.play.enc): over STR × 5 is encumbered (−10 ft.), over STR × 10 heavily (−20 ft.
 // and disadvantage on STR, DEX, and CON rolls and on attacks). Past capacity you can only push or drag it.
-// → { lb, cap, state: '' | 'encumbered' | 'heavy' | 'over' }
+// You can push, drag, or lift twice your capacity (speed 5 ft. past capacity); past that (stuck) it doesn't move.
+// → { lb, cap, push, stuck, state: '' | 'encumbered' | 'heavy' | 'over' }
 function cbLoad(c, d) {
     const lb = Math.round(c.gear.reduce((t, g) => t + cbItemWeight(g) * g.qty, 0) * 100) / 100;
-    const str = d.s.str, cap = str * 15 * (d.race && d.race.carryAs ? 2 : 1);
+    const str = d.s.str, cap = str * 15 * (d.race && d.race.carryAs ? 2 : 1), push = cap * 2;
     const state = lb > cap ? 'over' : c.play.enc && lb > str * 10 ? 'heavy' : c.play.enc && lb > str * 5 ? 'encumbered' : '';
-    return { lb, cap, state };
+    return { lb, cap, push, stuck: lb > push, state };
 }
 
 // Every gear name the add box knows, for its suggestions.
@@ -272,7 +277,7 @@ function cbDamage(c, d, n) {
     if (before === 0) {
         // Damage at 0 hit points is a failed death save (massive damage kills outright). A stable
         // character starts dying again: the three successes go, and the saves start over.
-        if (p.ds[0] >= 3 && p.ds[1] < 3) p.ds = [0, 0];
+        if (rest > 0 && p.ds[0] >= 3 && p.ds[1] < 3) p.ds = [0, 0];
         if (rest >= max) { out.dead = true; p.ds = [0, 3]; }
         else if (rest > 0) { p.ds[1] = Math.min(3, p.ds[1] + 1); out.failed = true; }
         if (p.ds[1] >= 3) out.dead = true;
@@ -309,15 +314,22 @@ function cbTempHp(c, n) {
     c.play.temp = Math.max(c.play.temp, Math.min(9999, Math.max(0, Math.round(n))));
 }
 
-// A death save from a rolled d20 → 'revived' | 'stable' | 'dead' | 'success' | 'fail'
-function cbDeathSave(c, d, v) {
+// A death save from a rolled d20 (v: the die; total: after a 2024 exhaustion penalty)
+// → 'revived' | 'stable' | 'dead' | 'success' | 'fail'
+function cbDeathSave(c, d, v, total = v) {
     const p = c.play;
     if (v === 20) { p.ds = [0, 0]; p.hp = Math.min(1, cbPlayMax(c, d)); return 'revived'; }
-    if (v >= 10) p.ds[0] = Math.min(3, p.ds[0] + 1);
+    const ok = v !== 1 && total >= 10;
+    if (ok) p.ds[0] = Math.min(3, p.ds[0] + 1);
     else p.ds[1] = Math.min(3, p.ds[1] + (v === 1 ? 2 : 1));
     if (p.ds[1] >= 3) return 'dead';
     if (p.ds[0] >= 3) return 'stable';
-    return v >= 10 ? 'success' : 'fail';
+    return ok ? 'success' : 'fail';
+}
+
+// Dead: three failed death saves at 0 hit points, or exhaustion 6 (both rules).
+function cbDead(c, d) {
+    return c.play.exh >= 6 || (cbPlayHp(c, d) === 0 && c.play.ds[1] >= 3);
 }
 
 // ── Rests ────────────────────────────────────────────────
@@ -335,9 +347,10 @@ function cbSpendHitDie(c, d, roll = f => rollDice(f)) {
 // A long rest (both rules) and a 2024 short rest need at least 1 hit point to start.
 // → '' or why not
 function cbRestBlock(c, d, long) {
+    if (cbDead(c, d)) return c.play.exh >= 6 ? "Exhaustion 6 is death, and the dead don't rest: bring the character back first (then take the exhaustion off)."
+        : "The dead don't rest: bring the character back first (heal the hit points the spell gives).";
     if (cbPlayHp(c, d) > 0 || (!long && !cbIs24(c))) return '';
-    return c.play.ds[1] >= 3 ? "The dead don't rest: bring the character back first (heal the hit points the spell gives)."
-        : `A ${long ? 'long' : 'short'} rest needs at least 1 hit point to start: heal first.`;
+    return `A ${long ? 'long' : 'short'} rest needs at least 1 hit point to start: heal first.`;
 }
 
 // → the names of what came back

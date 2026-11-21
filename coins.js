@@ -6,8 +6,9 @@
 
 // 52 gp 3 sp 7 cp, 1,250 gp, 4 sp 6 cp, 6 cp. exact keeps sp/cp past 1,000 gp (a party share).
 function formatCoins(gp, exact = false) {
+  if (gp < 0) { const t = formatCoins(-gp, exact); return t === '0 cp' ? t : '−' + t; }
   if (gp >= 1000 && !exact) return Math.round(gp).toLocaleString('en-US') + ' gp';
-  const total = Math.round(gp * 100);
+  const total = gpToCp(gp);
   const g = Math.floor(total / 100), s = Math.floor(total / 10) % 10, c = total % 10;
   const parts = [g ? g.toLocaleString('en-US') + ' gp' : '', s ? s + ' sp' : '', c ? c + ' cp' : ''].filter(Boolean);
   return parts.length ? parts.join(' ') : '0 cp';

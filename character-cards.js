@@ -19,8 +19,12 @@ const CC_ITEM_SLUG = Object.create(null);
 let CC_ITEMS = [];
 function ccIndex() {
     Object.keys(CC_ITEM_SLUG).forEach(k => { delete CC_ITEM_SLUG[k]; });
-    CC_ITEMS = Object.keys(MAGIC_ITEM_TEXT).sort((a, b) => a.localeCompare(b));
-    CC_ITEMS.forEach(n => { CC_ITEM_SLUG[magicItemSlug(n)] = n; });
+    const all = Object.keys(MAGIC_ITEM_TEXT).sort((a, b) => a.localeCompare(b));
+    all.forEach(n => { CC_ITEM_SLUG[magicItemSlug(n)] = n; });
+    // 2024: a 5.1 name kept only so old links find the 5.2 item (Deck of Many Things → Mysterious Deck)
+    // still opens from a link, but the picker lists the item once, under its 5.2 name.
+    const ren = typeof SRD52_FULL !== 'undefined' && cbPageRules() === '2024' ? SRD52_FULL.renames.items : {};
+    CC_ITEMS = all.filter(n => !(Object.hasOwn(ren, n) && ren[n] !== n && MAGIC_ITEM_TEXT[ren[n]] === MAGIC_ITEM_TEXT[n]));
 }
 ccIndex();
 
@@ -50,17 +54,20 @@ function ccFromUrl() {
     cc.c = (id && ccChars().find(c => c.id === id)) || null;
     cc.charId = cc.c ? id : '';
     const slugs = [...new Set((q.get('items') || '').split(',').filter(s => /^[a-z0-9-]{1,80}$/.test(s)))];
+    // The character's rules first: a switch that finishes at once reads the address again itself (ccRulesChanged).
+    const c = cc.c, switching = ccUseRules();
+    if (switching && c && cbPageRules() === (cbIs24(c) ? '2024' : '2014')) return;
     cc.items = slugs.map(s => CC_ITEM_SLUG[s]).filter(Boolean).slice(0, CC_MAX_ITEMS);
-    cc.pend = ccUseRules() ? slugs.filter(s => !CC_ITEM_SLUG[s]) : [];
+    cc.pend = switching ? slugs.filter(s => !CC_ITEM_SLUG[s]) : [];
 }
 
-// After a rules switch: the new index, the waiting slugs, and no item the version lacks.
+// After a rules switch: the new index, then the address read again under it (its waiting slugs found,
+// and no item the version lacks). Back can switch the rules before this page's own popstate runs, so the
+// address is the truth here, never the state from before.
 function ccRulesChanged() {
     ccIndex();
-    const more = cc.pend.map(s => CC_ITEM_SLUG[s]).filter(Boolean);
-    cc.pend = [];
-    cc.items = [...new Set([...cc.items, ...more])].filter(n => MAGIC_ITEM_TEXT[n]).slice(0, CC_MAX_ITEMS);
     ccCache.clear();
+    ccFromUrl();
     ccWriteUrl();
 }
 
@@ -96,6 +103,7 @@ const CC_PROP_NOTES = {
 };
 
 const CC_HEAVY_2024 = 'Heavy: disadvantage on attacks with it unless your Strength (melee) or Dexterity (ranged) is 13 or higher.';
+const CC_LIGHT_2024 = 'Light: after you attack with it on the Attack action, one extra attack as a bonus action with a different light weapon (no ability bonus to its damage unless that bonus is negative).';
 
 function ccAttacks(c, d) {
     const out = d.attacks.map(a => {
@@ -104,7 +112,7 @@ function ccAttacks(c, d) {
         const range = props.find(p => p.startsWith('range '));
         const vers = props.find(p => p.startsWith('versatile'));
         const plain = props.filter(p => p !== range && p !== vers);
-        const notes = plain.map(p => (p === 'heavy' && cbIs24(c) ? CC_HEAVY_2024 : CC_PROP_NOTES[p])).filter(Boolean);
+        const notes = plain.map(p => (p === 'heavy' && cbIs24(c) ? CC_HEAVY_2024 : p === 'light' && cbIs24(c) ? CC_LIGHT_2024 : CC_PROP_NOTES[p])).filter(Boolean);
         if (vers) notes.unshift(`Versatile: ${a.dmg.replace(/^\d+d\d+/, vers.match(/\((.+)\)/)[1])} ${a.type} with two hands.`);
         if (!a.prof) notes.unshift('**Not proficient:** no proficiency bonus on the attack roll.');
         const reach = w && w[2] === 'melee' ? (plain.includes('reach') ? '10 ft.' : '5 ft.') : '';
@@ -173,7 +181,7 @@ function ccCards() {
         }));
     }
     if (on('items')) cc.items.filter(n => MAGIC_ITEM_TEXT[n]).forEach(n => {
-        ccCached('item:' + n, () => itemCards(host, n, MAGIC_ITEM_TEXT[n], typeof hbmIsHomebrew === 'function' && hbmIsHomebrew(n) ? 'Homebrew item' : typeof srd52IsItem === 'function' && srd52IsItem(n) ? 'SRD 5.2 item' : 'Magic item')).forEach(html => out.push({ set: 'items', html }));
+        ccCached('item:' + n, () => itemCards(host, n, MAGIC_ITEM_TEXT[n], typeof hbmIsHomebrew === 'function' && hbmIsHomebrew(n, 'item') ? 'Homebrew item' : typeof srd52IsItem === 'function' && srd52IsItem(n) ? 'SRD 5.2 item' : 'Magic item')).forEach(html => out.push({ set: 'items', html }));
     });
     return out;
 }
@@ -222,7 +230,7 @@ function renderItems() {
         const has = cc.items.includes(n);
         const r = gcRarity(MAGIC_ITEM_TEXT[n][0]);
         return `<li><button type="button" class="cc-item${has ? ' on' : ''}" data-item="${esc(n)}"${!has && full ? ' disabled' : ''} aria-pressed="${has}">
-            <span class="cc-plus" aria-hidden="true">${has ? '✓' : '＋'}</span><span class="cc-item-name">${esc(n)}${typeof hbmIsHomebrew === 'function' && hbmIsHomebrew(n) ? ' <span class="hb-tag">🧪 Homebrew</span>' : typeof srd52IsItem === 'function' && srd52IsItem(n) ? ' ' + srd52Tag() : ''}</span><span class="cc-rarity" style="--r:${GC_RARITY_COLORS[r] || '#8a6a2a'}">${esc(r || 'varies')}</span></button></li>`;
+            <span class="cc-plus" aria-hidden="true">${has ? '✓' : '＋'}</span><span class="cc-item-name">${esc(n)}${typeof hbmIsHomebrew === 'function' && hbmIsHomebrew(n, 'item') ? ' <span class="hb-tag">🧪 Homebrew</span>' : typeof srd52IsItem === 'function' && srd52IsItem(n) ? ' ' + srd52Tag() : ''}</span><span class="cc-rarity" style="--r:${GC_RARITY_COLORS[r] || '#8a6a2a'}">${esc(r || 'varies')}</span></button></li>`;
     }).join('') || '<li class="cc-hint">No magic item matches.</li>';
     document.getElementById('cc-more').textContent = hits.length > 60 ? `Showing 60 of ${hits.length}; type to narrow it down.` : `${hits.length} item${hits.length === 1 ? '' : 's'}`;
     document.getElementById('cc-chosen').innerHTML = cc.items.length

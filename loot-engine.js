@@ -132,6 +132,27 @@ function magicPool(rarity, type = 'any') {
   return type === 'any' ? pool : pool.filter(i => i.type === type);
 }
 
+// The items added later (LOOT_MAGIC_MORE) at this rarity and type, for this edition.
+function magicMorePool(rarity, type = 'any') {
+  if (typeof LOOT_MAGIC_MORE === 'undefined') return [];
+  const pool = [...(LOOT_MAGIC_MORE.both[rarity] || []), ...(loot24() ? LOOT_MAGIC_MORE['2024'][rarity] || [] : [])];
+  return type === 'any' ? pool : pool.filter(i => i.type === type);
+}
+
+// SRD 5.2.1 p. 206: Magic Item Rarities and Values. A consumable is worth half (potions, oils, dusts,
+// beads, ammunition…); a Spell Scroll twice its scribing cost (p. 103: cantrip 15 gp … 9th 50,000 gp).
+const LOOT_GP_2024 = { common:100, uncommon:400, rare:4000, 'very-rare':40000, legendary:200000, artifact:0 };
+const LOOT_SCROLL_GP_2024 = [30, 50, 200, 300, 2000, 3000, 20000, 25000, 30000, 100000];
+const LOOT_CONSUMABLE_2024 = /Ammunition|^(Oil|Dust|Bead) of|Elemental Gem|^Feather Token|^Sovereign Glue|^Universal Solvent|Ointment/;
+function loot52Value(rarity, type, name) {
+  if (type === 'scroll') {
+    const m = /\((?:Cantrip|(\d)\w* Level)\)/.exec(name);
+    if (m) return LOOT_SCROLL_GP_2024[m[1] ? +m[1] : 0];
+  }
+  const v = LOOT_GP_2024[rarity] || 0;
+  return type === 'potion' || LOOT_CONSUMABLE_2024.test(name) ? v / 2 : v;
+}
+
 // Returns null when no item of that type exists at that rarity.
 function getMagicItem(rarity, type = 'any') {
   if (rarity === 'random') {
@@ -143,16 +164,28 @@ function getMagicItem(rarity, type = 'any') {
   }
   const pool = magicPool(rarity, type);
   if (!pool.length) return null;
-  const item = lootPick(pool);
-  // A generic item ("Potion of Resistance") comes out as one of its SRD kinds.
-  const name = item.variants ? lootPick(item.variants) : item.name;
-  return {
+  // lootPick, with its draw kept: a later item (magicMorePool) may take the slot, decided from a seed
+  // made of that draw, so the hoard takes no extra draws.
+  const u = rand();
+  let item = pool[Math.floor(u * pool.length)];
+  // A generic item ("Potion of Resistance") comes out as one of its SRD kinds (drawn even if swapped below).
+  let name = item.variants ? lootPick(item.variants) : item.name;
+  const more = magicMorePool(rarity, type), side = Math.floor(u * 4294967296).toString(36);
+  let was = null;
+  if (more.length) withSeed(side, () => {
+    if (rand() < more.length / (pool.length + more.length)) { was = item.type; item = lootPick(more); name = item.name; }
+  });
+  const out = {
     name:      loot24() ? loot52Display(name) : name,
     rarity,
     type:      item.type,
     attune:    item.attune || false,
-    value:     magicItemGP(rarity)
+    value:     loot24() ? loot52Value(rarity, item.type, name) : magicItemGP(rarity)
   };
+  // A swapped-in item's flavor text takes the draws the item it replaced would have (magicFlavor);
+  // kept off the saved hoard (not enumerable).
+  if (was) Object.defineProperty(out, 'drawAs', { value: { type: was, seed: side } });
+  return out;
 }
 
 function generateMagicItems(tableCode, count = 1) {
@@ -612,6 +645,11 @@ function composeArt(value) {
 
 // Looks for a magic item: potions and scrolls always, most other items, never artifacts.
 function magicFlavor(m) {
+  if (m.drawAs) {
+    // Added later (getMagicItem): spend the draws of the item it replaced, then roll its own text aside.
+    magicFlavor({ rarity: m.rarity, type: m.drawAs.type });
+    return withSeed(m.drawAs.seed, () => magicFlavor({ ...m }));
+  }
   if (m.rarity === 'artifact') return '';
   const kind = m.img || m.type; // a Pathfinder item's picture names its kind
   if (kind === 'potion') {

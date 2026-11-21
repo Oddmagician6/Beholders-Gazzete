@@ -182,7 +182,7 @@ function renderStatBlock(npc) {
             ${prop('Saving Throws', b.saves)}${prop('Skills', b.skills)}${prop('Damage Resistances', b.resist)}
             ${prop('Senses', b.senses)}${prop('Languages', b.langs)}
             <p><strong>Challenge</strong> <span class="sb-cr" title="A rough guide for a classed NPC, not an official rating">≈ ${esc(b.cr)} (${b.xp.toLocaleString()} XP)</span>
-                &nbsp; <strong>Proficiency Bonus</strong> +${b.prof}</p>
+                &nbsp; <strong>Proficiency Bonus</strong> +${b.prof} <span class="sb-cr" title="From the NPC's class level, as a player character's">(class level)</span></p>
         </div>
         ${section('Traits', b.traits)}
         ${spellcastingHtml(npc)}
@@ -630,6 +630,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('print-saved').addEventListener('click', printSelected);
     window.addEventListener('afterprint', () => document.body.classList.remove('printing-sheet'));
     applyUrl(false);
+    // The 2014/2024 switch (here or another tab): the same NPC again, its spells from the version now shown.
+    if (typeof srd52OnChange === 'function') srd52OnChange(() => { if (urlParams().get('seed')) applyUrl(null); });
     // Back/Forward step through earlier rolls.
     window.addEventListener('popstate', () => { if (!applyUrl(null)) showUnlinkedNPC(); });
 });

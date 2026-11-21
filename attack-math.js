@@ -89,6 +89,39 @@ const amDieAvg = (z, gwf) => (z < 2 || !gwf ? (z + 1) / 2
         : (z * (z + 1) / 2 - 3 + (z + 1)) / z);
 const amGwfTitle = () => (am24() ? "Treat a 1 or 2 on the weapon's damage dice as a 3" : "Reroll a 1 or 2 on the weapon's damage dice");
 
+// The exact average of max(floor, dice + flat), for when the floor can bite (a penalty bigger than the
+// dice): the plain average counts the totals under the floor as less than nothing. dice: [[count, sides,
+// gwf]] with positive counts; dbl: dice and flat doubled (a Pathfinder crit); extra: dice added after.
+function amFloorAvg(dice, flat, floor, dbl = false, extra = []) {
+    const face = (z, g) => {
+        const p = new Array(Math.max(z, 3) + 1).fill(0);
+        for (let f = 1; f <= z; f++) p[f] = 1 / z;
+        if (g && z >= 2) {
+            if (am24()) { p[3] += p[1] + p[2]; p[1] = p[2] = 0; }
+            else for (let f = 1; f <= z; f++) p[f] = (f > 2 ? 1 / z : 0) + 2 / z / z;
+        }
+        return p;
+    };
+    const conv = (a, b) => {
+        const o = new Array(a.length + b.length - 1).fill(0);
+        a.forEach((x, i) => { if (x) b.forEach((y, j) => { o[i + j] += x * y; }); });
+        return o;
+    };
+    let dist = [1];
+    dice.forEach(([c, z, g]) => { const p = face(z, g); for (let k = 0; k < c; k++) dist = conv(dist, p); });
+    if (dbl) {
+        const d2 = new Array(dist.length * 2 - 1).fill(0);
+        dist.forEach((x, i) => { d2[2 * i] = x; });
+        dist = d2;
+        flat *= 2;
+    }
+    extra.forEach(([c, z, g]) => { const p = face(z, g); for (let k = 0; k < c; k++) dist = conv(dist, p); });
+    return dist.reduce((s, x, t) => s + x * Math.max(floor, t + flat), 0);
+}
+// The rolls can come in under the floor: positive dice only (subtracted dice keep the plain average).
+const amFloorBites = (roll, flat, floor) => roll.dice.length > 0 && roll.dice.every(([c]) => c > 0)
+    && flat + roll.dice.reduce((s, [c]) => s + c, 0) < floor;
+
 // Average damage on a hit and on a crit: a crit doubles the dice (not the flat bonus)
 // and adds xcrit more of the first weapon die (Brutal Critical, Savage Attacks; melee rows only).
 function amAverages(roll, gwf, extraFlat, xcrit) {
@@ -97,6 +130,11 @@ function amAverages(roll, gwf, extraFlat, xcrit) {
     const flat = roll.flat + extraFlat;
     const first = roll.dice.find(([c]) => c > 0);
     const more = first && xcrit ? xcrit * amDieAvg(first[1], gwf) : 0;
+    if (amFloorBites(roll, flat, 0)) {
+        // 1d6 − 3 does 1 on average (0, 0, 0, 1, 2, 3), not 0.5.
+        const ds = roll.dice.map(([c, z]) => [c, z, gwf]);
+        return { hit: amFloorAvg(ds, flat, 0), crit: amFloorAvg(ds.map(([c, z, g]) => [2 * c, z, g]), flat, 0, false, first && xcrit ? [[xcrit, first[1], gwf]] : []) };
+    }
     return { hit: Math.max(0, dice + flat), crit: Math.max(0, 2 * dice + flat + more) };
 }
 
@@ -187,6 +225,12 @@ function amAveragesPf(roll, deadly, fatal) {
     const count = first < 0 ? 0 : roll.dice[first][0];
     const extra = fatal && first >= 0 ? amDieAvg(fatal, false)
         : deadly && first >= 0 ? (count >= 4 ? 3 : count === 3 ? 2 : 1) * amDieAvg(deadly, false) : 0;
+    if (amFloorBites(roll, roll.flat, 1)) {
+        // Penalties never take a Pathfinder hit below 1 damage.
+        const fd = roll.dice.map(([c, z], i) => [c, fatal && i === first ? fatal : z, false]);
+        const ex = fatal && first >= 0 ? [[1, fatal, false]] : deadly && first >= 0 ? [[count >= 4 ? 3 : count === 3 ? 2 : 1, deadly, false]] : [];
+        return { hit: amFloorAvg(roll.dice.map(([c, z]) => [c, z, false]), roll.flat, 1), crit: amFloorAvg(fd, roll.flat, 1, true, ex) };
+    }
     return { hit: Math.max(0, dice + roll.flat), crit: Math.max(0, 2 * (fdice + roll.flat) + extra) };
 }
 
@@ -347,7 +391,7 @@ function amFromCharacter(c) {
     const tips = [];
     if (c.cls === 'barbarian') tips.push(`Raging? Add + ${L >= 16 ? 4 : L >= 9 ? 3 : 2} to a Strength melee row's damage.`);
     if (c.cls === 'barbarian' && v24 && L >= 9) tips.push(`Brutal Strike: give up a Reckless Attack's advantage on one Strength attack for + ${L >= 17 ? 2 : 1}d10 damage on a hit (add it to that row).`);
-    if (c.cls === 'monk' && L >= 2) tips.push('Flurry of Blows: set the Unarmed strike row to 2 more times.');
+    if (c.cls === 'monk' && L >= 2) tips.push(`Flurry of Blows: set the Unarmed strike row to ${v24 && L >= 10 ? 3 : 2} more times.`);
     if (c.cls === 'rogue') tips.push('Sneak Attack needs advantage or an ally next to the target, and a finesse or ranged weapon.');
     return { said, tips };
 }
@@ -449,7 +493,7 @@ function renderResults() {
     for (let a = lo; a <= hi; a++) {
         const on = amRound(am, a, true), off = trading ? amRound(am, a, false) : on;
         const firstOff = off.rows.find(x => x.n) || off.rows[0];
-        const better = trading ? (on.total > off.total + 1e-9 ? 'on' : 'off') : '';
+        const better = !trading ? '' : on.total > off.total + 1e-9 ? 'on' : off.total > on.total + 1e-9 ? 'off' : '';
         rowsAc.push(`<tr${a === ac ? ' class="am-now"' : ''}><th scope="row">${a}</th><td>${amPct(firstOff.odds.hit)}</td><td${better === 'off' ? ' class="am-best"' : ''}>${amNum(off.total)}</td>${trading ? `<td${better === 'on' ? ' class="am-best"' : ''}>${amNum(on.total)}</td>` : ''}</tr>`);
     }
     out.push(`<h3 class="am-h3">By armor class</h3>

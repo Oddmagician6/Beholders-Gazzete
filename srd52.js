@@ -93,7 +93,7 @@ function rulesSnapshot() {
     if (!RULES51.spells && typeof SPELLS_DATA !== 'undefined') RULES51.spells = SPELLS_DATA.filter(s => !s.hb && !s.v52);
     if (!RULES51.items && typeof MAGIC_ITEM_TEXT !== 'undefined') {
         const full = typeof SRD52_FULL !== 'undefined' ? SRD52_FULL.items : {};
-        const hb = n => typeof hbmIsHomebrew === 'function' && hbmIsHomebrew(n);
+        const hb = n => typeof hbmIsHomebrew === 'function' && hbmIsHomebrew(n, 'item');
         RULES51.items = Object.fromEntries(Object.entries(MAGIC_ITEM_TEXT).filter(([n, v]) => SRD52_ITEMS[n] !== v && full[n] !== v && !hb(n)));
     }
     if (!RULES51.monsters && typeof MONSTERS !== 'undefined') RULES51.monsters = MONSTERS.filter(m => !m.v52 && !m.hb);
@@ -200,6 +200,13 @@ function rulesSwap(v) {
     return true;
 }
 
+// The 2024 file failed to load (offline): the page stays in 2014, pinned, and says so; the address follows.
+function rulesFullFailed() {
+    rulesFailed = true;
+    rulesPage = '2014';
+    rulesPinnedByUrl = false;
+}
+
 // Called at the end of srd52-full-data.js once it has run.
 function rulesFullLoaded() {
     if (rulesVersion() === '2024') rulesSwap('2024');
@@ -228,7 +235,7 @@ function rulesRefresh() {
     const go = () => { rulesSwap(rulesVersion() === '2024' && (RULES_TEXT_ONLY || typeof SRD52_FULL !== 'undefined') ? '2024' : '2014'); srd52Changed(); };
     if (want === '2024' && !RULES_TEXT_ONLY && typeof SRD52_FULL === 'undefined') {
         document.documentElement.classList.add('rules-loading');
-        return rulesLoadFull().then(() => { rulesFailed = false; go(); }, () => { rulesFailed = true; rulesPage = '2014'; rulesPinnedByUrl = false; go(); })
+        return rulesLoadFull().then(() => { rulesFailed = false; go(); }, () => { rulesFullFailed(); go(); if (!RULES_TEXT_ONLY) rulesDropUrlParam(); })
             .finally(() => document.documentElement.classList.remove('rules-loading'));
     }
     go();
@@ -352,7 +359,7 @@ function srd52IsSpell(name) {
 }
 
 function srd52IsItem(name) {
-    return srd52Added && rulesShown === '2014' && !!SRD52_ITEMS[name];
+    return srd52Added && rulesShown === '2014' && !!SRD52_ITEMS[name] && !(RULES51.items && RULES51.items[name]);
 }
 
 function srd52Tag() {
@@ -373,7 +380,7 @@ if (SRD52_OK) {
     if (rulesVersion() === '2024' && !RULES_TEXT_ONLY) {
         if (document.readyState === 'loading') {
             // Parser-blocking, so the page's own scripts start with 2024 data (it calls rulesFullLoaded).
-            document.write(`<script src="${RULES_FULL_SRC}"><\/script>`);
+            document.write(`<script src="${RULES_FULL_SRC}" onerror="rulesFullFailed()"><\/script>`);
         } else {
             rulesRefresh();
         }
@@ -396,6 +403,7 @@ if (SRD52_OK) {
     window.addEventListener('popstate', () => {
         const v = new URLSearchParams(location.search).get('rules');
         if ((v === '2014' || v === '2024') && v !== rulesVersion()) rulesUse(v, true);
+        else if ((v === '2014' || v === '2024') && !rulesPinnedByUrl) { rulesPage = v; rulesPinnedByUrl = true; }
         // An address with no rules= follows the reader's setting again, not the last address's pin.
         else if (!v && rulesPinnedByUrl) rulesUse(null);
         if (!v && !RULES_TEXT_ONLY) rulesDropUrlParam();

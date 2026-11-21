@@ -283,6 +283,10 @@ function clearDowntime() {
 }
 
 function setupDowntime() {
+    // The 2014/2024 switch changes crafting (10 gp a day in 2024): work the same party out again.
+    if (typeof srd52OnChange === 'function') srd52OnChange(() => {
+        if (dt.chars.length) showDowntime(typeof currentTab === 'function' && currentTab() === 'down' ? false : null);
+    });
     partyChip(document.getElementById('dt-party-chip'), { label: 'Use the Party', title: "Name the rows after the Party tab's characters", act: dtUseParty });
     const box = document.getElementById('dt-chars');
     box.addEventListener('input', () => showDowntime(false));

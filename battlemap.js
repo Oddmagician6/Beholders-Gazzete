@@ -169,6 +169,9 @@ function bbOpen(id) {
     BB.ruler = null;
     BB.tsel = null;
     BB.placing = null;
+    // A Pathfinder dungeon's map has no Play mode (it runs D&D rules): back to Build.
+    if (BB.mode === 'play' && BB.m.pf) btSetMode('build');
+    else bbToolButtons();
     if (BB.mode === 'play') btEnsureFog();
     bbUndoButtons();
     bbFillMapFields();
@@ -922,8 +925,8 @@ async function bbFromLink() {
 function bbToolButtons() {
     $('bb-tools').innerHTML = `<div class="bb-mode" role="group" aria-label="Mode">
             <button type="button" data-mode="build" aria-pressed="${BB.mode === 'build'}" title="Draw the map">🧱 Build</button>
-            <button type="button" data-mode="play" aria-pressed="${BB.mode === 'play'}" title="Run the fight on it: tokens, fog of war, and a Player View for the TV">🎲 Play</button>
-        </div>` + Object.entries(bbTools()).map(([t, v]) =>
+            <button type="button" data-mode="play" aria-pressed="${BB.mode === 'play'}" ${BB.m && BB.m.pf ? 'disabled title="Play mode runs D&amp;D rules, so it is off for a Pathfinder map"' : 'title="Run the fight on it: tokens, fog of war, and a Player View for the TV"'}>🎲 Play</button>
+        </div>${BB.m && BB.m.pf ? '<p class="bb-hint">A Pathfinder map: draw on it, download or print it. 🎲 Play runs D&amp;D rules, so it stays off.</p>' : ''}` + Object.entries(bbTools()).map(([t, v]) =>
         `<button type="button" data-tool="${t}" aria-pressed="${t === BB.tool}" title="${esc(v.label.replace(/^\S+ /, ''))} (${v.key.toUpperCase()})">${v.label}</button>`).join('');
 }
 

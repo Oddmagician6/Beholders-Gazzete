@@ -22,6 +22,8 @@ function truthLabel(truth) {
     return truth === null || truth === undefined ? 'Unknown' : `${truth}% True`;
 }
 
+let rumorsFailed = false;
+
 // Load rumors from JSON
 async function loadRumors() {
     try {
@@ -32,6 +34,7 @@ async function loadRumors() {
         baseCount = allRumors.rumors.length;
         console.log(`Loaded ${allRumors.rumors.length} rumors`);
     } catch (error) {
+        rumorsFailed = true;
         console.error('Error loading rumors:', error);
         document.getElementById('rumor-display').innerHTML = 
             '<p style="color: #f44336;">Failed to load rumors. Check console.</p>';
@@ -44,8 +47,9 @@ function generateRumor() {
     if (realmsOn('rumor-world')) { generateRealmsRumor(); return; }
 
     if (!allRumors.rumors.length) {
-        document.getElementById('rumor-display').innerHTML =
-            '<p style="color: #f44336;">Rumors not loaded yet. Please wait...</p>';
+        document.getElementById('rumor-display').innerHTML = rumorsFailed
+            ? '<p style="color: #f44336;">The rumors didn\'t load. Check your connection and reload the page.</p>'
+            : '<p style="color: #f44336;">Rumors not loaded yet. Please wait...</p>';
         return;
     }
 

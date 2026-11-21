@@ -624,9 +624,29 @@ function contDistance(m, src, pass) {
     return d;
 }
 
-// A cell's map point (jittered a little, so nothing sits on a grid).
+// A cell's map point (jittered a little, so nothing sits on a grid). A land cell by the water keeps its
+// center: the drawn coast is the sea-level line through the cell centers, and a jitter could put a town in
+// the sea. The one cell right at sea level (the coast runs through its center) leans a third of a cell
+// toward its highest neighbor.
 function contPt(m, i) {
     const x = i % m.cols, y = (i - x) / m.cols;
+    if (m.h && m.h[i] >= m.sea) {
+        if (!m.shoreLean) {
+            m.shoreLean = new Int32Array(m.n).fill(-1);
+            for (let k = 0; k < m.n; k++) {
+                if (m.h[k] < m.sea) continue;
+                let wet = false, top = -1;
+                contEach8(m, k, nb => { if (m.h[nb] < m.sea || (nb !== k && m.h[nb] === m.sea && m.h[k] === m.sea)) wet = true; if (top < 0 || m.h[nb] > m.h[top]) top = nb; });
+                if (wet && top >= 0) m.shoreLean[k] = top;
+            }
+        }
+        const t = m.shoreLean[i];
+        if (t >= 0 && m.h[i] > m.sea) return { x: (x + 0.5) * CONT_CELL, y: (y + 0.5) * CONT_CELL };
+        if (t >= 0) {
+            const tx = t % m.cols, ty = (t - tx) / m.cols, d = Math.hypot(tx - x, ty - y) || 1;
+            return { x: (x + 0.5 + (tx - x) / d / 3) * CONT_CELL, y: (y + 0.5 + (ty - y) / d / 3) * CONT_CELL };
+        }
+    }
     return { x: (x + 0.5 + (contHash(x, y, m.jit) - 0.5) * 0.5) * CONT_CELL, y: (y + 0.5 + (contHash(y, x, m.jit) - 0.5) * 0.5) * CONT_CELL };
 }
 
@@ -1231,6 +1251,12 @@ function rollContinent(seed, opts = {}) {
     c.pois.forEach(p => {
         const P = CONT_POIS[p.kind];
         if (p.place) p.name = p.place = rename(p.place, `poi.rename.${p.id}`, () => contPick(P.names).replace('{r}', hisRoot(used)).replace('{Adj}', contPick(P.adj)));
+        else if (taken.has(p.name.toLowerCase())) {
+            const x = p.cell % m.cols, y = (p.cell - x) / m.cols;
+            const side = `${y < m.rows / 3 ? 'north' : y > m.rows * 2 / 3 ? 'south' : ''}${x < m.cols / 3 ? 'west' : x > m.cols * 2 / 3 ? 'east' : ''}` || 'middle';
+            p.name = `${p.name} (${side})`;
+            for (let k = 2; taken.has(p.name.toLowerCase()); k++) p.name = p.name.replace(/(?: \d+)?\)$/, ` ${k})`);
+        }
         taken.add(p.name.toLowerCase());
     });
     c.seas.forEach((s, i) => {
@@ -1540,7 +1566,7 @@ function contRiverPaths(m) {
             if (p < 0) break;
             if (ocean[p] || lake[p]) {
                 const a = contPt(m, cur), b = contPt(m, p);
-                pts.push({ x: a.x + (b.x - a.x) * 0.7, y: a.y + (b.y - a.y) * 0.7 });
+                pts.push({ x: a.x + (b.x - a.x) * 0.9, y: a.y + (b.y - a.y) * 0.9 });
                 break;
             }
             pts.push(contPt(m, p));
@@ -1767,7 +1793,12 @@ function contArtOrnaments(c, W, H, boxes, title) {
 function contPlace(boxes, cands, W, H, pad = 2) {
     const hits = b => boxes.some(o => b.x < o.x + o.w && b.x + b.w > o.x && b.y < o.y + o.h && b.y + b.h > o.y)
         || b.x < pad || b.y < pad || b.x + b.w > W - pad || b.y + b.h > H - pad;
-    const pick = cands.find(b => !hits(b)) || cands[0];
+    const inside = b => b.x >= pad && b.y >= pad && b.x + b.w <= W - pad && b.y + b.h <= H - pad;
+    let pick = cands.find(b => !hits(b)) || cands.find(inside);
+    if (!pick) {
+        const b = cands[0];
+        pick = { ...b, x: Math.max(pad, Math.min(W - pad - b.w, b.x)), y: Math.max(pad, Math.min(H - pad - b.h, b.y)) };
+    }
     boxes.push(pick);
     return pick;
 }

@@ -445,7 +445,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         fetch('rumors.json').then(r => r.json()),
         loadCrierPool()
     ]);
-    if (rumors.status === 'fulfilled') rumorPool = rumors.value.rumors || [];
+    if (rumors.status === 'fulfilled') rumorPool = rumors.value && Array.isArray(rumors.value.rumors) ? rumors.value.rumors : [];
     else console.error('Error loading rumors:', rumors.reason);
     if (headlines.status === 'fulfilled') crier = headlines.value;
     else console.error('Error loading headlines:', headlines.reason);

@@ -59,7 +59,7 @@ function applyContinentUrl(p) {
         const el = document.getElementById(id);
         if (!setFieldValue(el, p.get(key))) el.value = defaultValue(el);
     });
-    document.getElementById('cont-style').value = CONT_STYLES[p.get('style')] ? p.get('style') : 'atlas';
+    document.getElementById('cont-style').value = Object.hasOwn(CONT_STYLES, p.get('style') || '') ? p.get('style') : 'atlas';
     const seed = parseSeed(p.get('seed'));
     if (!seed) return false;
     rollContinentFor(seed, null);

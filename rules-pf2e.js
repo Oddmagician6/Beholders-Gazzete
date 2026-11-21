@@ -74,7 +74,7 @@ const PF2E_CONDITIONS = {
     'Controlled': { max: 0, text: 'Someone else chooses your actions.' },
     'Dazzled': { max: 0, text: 'Your eyes are overwhelmed: everything you see is concealed to you.' },
     'Deafened': { max: 0, text: "Can't hear. Perception checks that need hearing critically fail, Perception for initiative and checks that mix sound with sight take a −2 status penalty, and auditory actions need a DC 5 flat check." },
-    'Doomed': { max: 3, text: 'You die at dying 4 minus this value. It drops by 1 after a full night\'s rest.' },
+    'Doomed': { max: 5, text: 'You die at dying 4 minus this value. It drops by 1 after a full night\'s rest.' },
     'Drained': { max: 4, text: 'A status penalty on Constitution-based rolls and DCs (Fortitude saves), and your HP and maximum HP drop by your level times the value. It drops by 1 after a full night\'s rest.' },
     'Dying': { max: 5, text: "At 0 HP, unconscious, and close to death. Roll a recovery check (flat check, DC 10 + the value) at the start of each turn. You die at dying 4 (5 with Diehard), less your doomed value." },
     'Encumbered': { max: 0, text: 'Carrying too much: clumsy 1 and a 10-foot penalty to all your Speeds.' },
@@ -99,7 +99,7 @@ const PF2E_CONDITIONS = {
     'Stupefied': { max: 4, text: 'A status penalty equal to the value on Intelligence-, Wisdom-, and Charisma-based rolls and DCs (Will saves, spell attacks and DCs), and casting a spell needs a DC 5 + value flat check.' },
     'Unconscious': { max: 0, text: "Asleep or knocked out: you can't act, you're blinded and off-guard, you take a −4 status penalty to AC, Perception, and Reflex saves, and you fall prone and drop what you hold." },
     'Undetected': { max: 0, text: "They don't know which square you're in: they have to guess, and even a right guess needs a DC 11 flat check." },
-    'Wounded': { max: 3, text: "You've come back from dying. The next time you're dying, add this value. Treat Wounds that heals you, or full HP and 10 minutes' rest, ends it." }
+    'Wounded': { max: 4, text: "You've come back from dying. The next time you're dying, add this value. Treat Wounds that heals you, or full HP and 10 minutes' rest, ends it." }
 };
 
 // The rest of Player Core's and Player Core 2's conditions, for the Conditions page only (the tracker leaves them out).

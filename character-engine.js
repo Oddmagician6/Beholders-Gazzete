@@ -217,7 +217,8 @@ function cbClean(raw) {
         const lb = Math.round(Number(g.lb) * 100) / 100;
         if (g.lb !== undefined && g.lb !== null && g.lb !== '' && Number.isFinite(lb)) item.lb = Math.min(9999, Math.max(0, lb));
         if (g.mi && (typeof MAGIC_ITEM_TEXT === 'undefined' || !itemsOwn || MAGIC_ITEM_TEXT[item.name])) item.mi = true;
-        if (item.mi && g.att) item.att = true;
+        if (item.mi && g.att && !(itemsOwn && typeof MAGIC_ITEM_TEXT !== 'undefined' && MAGIC_ITEM_TEXT[item.name]
+            && !/requires attunement/i.test(MAGIC_ITEM_TEXT[item.name][0]))) item.att = true;
         return item.name ? item : null;
     }).filter(Boolean) : [];
     let attuned = 0;
@@ -228,7 +229,23 @@ function cbClean(raw) {
     const w = raw.wear || {};
     c.wear = { armor: CB_ARMOR[w.armor] ? w.armor : '', shield: !!w.shield };
     const sp = raw.spells || {};
-    c.spells = { cantrips: cbIds(sp.cantrips, spellOk, 12), list: cbIds(sp.list, spellOk, 80), prepared: cbIds(sp.prepared, spellOk, 40), arcanum: {}, fav: cbIds(sp.fav, spellOk, 80) };
+    // Picks this page can't find (a homebrew spell deleted from the notebook or kept in another browser, an
+    // addition switched off) wait in spells.away, so a save here doesn't erase them, and go back in their list
+    // once they can be found again (B773).
+    const away = [];
+    const keep = (key, v, max) => {
+        const all = Array.isArray(v) ? v.filter(x => typeof x === 'string' && x.length <= 60) : [];
+        all.forEach(n => { if (!spellOk(n)) away.push([key, n]); });
+        return cbIds(all, spellOk, max);
+    };
+    c.spells = { cantrips: keep('cantrips', sp.cantrips, 12), list: keep('list', sp.list, 80), prepared: keep('prepared', sp.prepared, 40), arcanum: {}, fav: keep('fav', sp.fav, 80) };
+    (Array.isArray(sp.away) ? sp.away : []).forEach(a => {
+        if (!Array.isArray(a) || !['cantrips', 'list', 'prepared', 'fav'].includes(a[0]) || typeof a[1] !== 'string' || a[1].length > 60) return;
+        if (!spellOk(a[1])) away.push([a[0], a[1]]);
+        else if (!c.spells[a[0]].includes(a[1])) c.spells[a[0]].push(a[1]);
+    });
+    const awaySeen = new Set();
+    c.spells.away = away.filter(([k, n]) => !awaySeen.has(k + '|' + n) && awaySeen.add(k + '|' + n)).slice(0, 80);
     [6, 7, 8, 9].forEach(lv => { const n = sp.arcanum && sp.arcanum[lv]; if (spellOk(n)) c.spells.arcanum[lv] = n; });
     c.play = cbPlayClean(raw.play, c);
     c.updated = Number(raw.updated) || Date.now();
@@ -244,15 +261,18 @@ function cbAttuneMax(c) {
 function cbPlayClean(raw, c) {
     const p = cbPlayBlank();
     if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return p;
-    const int = (v, max) => { const n = Math.round(Number(v)); return Number.isFinite(n) ? Math.min(max, Math.max(0, n)) : 0; };
-    p.hp = raw.hp === null || raw.hp === undefined ? null : int(raw.hp, 9999);
+    // Numbers and number strings only: anything else (an object, "bad") is the field's default.
+    const num = v => (typeof v === 'number' || (typeof v === 'string' && v.trim() !== '') ? Math.round(Number(v)) : NaN);
+    const int = (v, max) => { const n = num(v); return Number.isFinite(n) ? Math.min(max, Math.max(0, n)) : 0; };
+    // Hit points that aren't a number are full (null), not 0.
+    p.hp = Number.isFinite(num(raw.hp)) ? int(raw.hp, 9999) : null;
     p.temp = int(raw.temp, 9999);
     if (Array.isArray(raw.ds)) p.ds = [int(raw.ds[0], 3), int(raw.ds[1], 3)];
     p.hd = int(raw.hd, 20);
     if (Array.isArray(raw.slots)) p.slots = p.slots.map((_, i) => int(raw.slots[i], 4));
     p.pact = int(raw.pact, 4);
     if (raw.res && typeof raw.res === 'object') Object.keys(raw.res).slice(0, 40).forEach(k => { if (/^[a-z0-9-]{1,24}$/.test(k)) p.res[k] = int(raw.res[k], 999); });
-    p.cond = cbIds(raw.cond, n => typeof SRD_CONDITION_TEXT === 'undefined' ? /^[A-Z][a-z]{2,15}$/.test(n) : !!SRD_CONDITION_TEXT[n] && n !== 'Exhaustion', 15);
+    p.cond = cbIds(raw.cond, n => typeof SRD_CONDITION_TEXT === 'undefined' ? /^[A-Z][a-z]{2,15}$/.test(n) : Object.hasOwn(SRD_CONDITION_TEXT, n) && n !== 'Exhaustion', 15);
     p.exh = int(raw.exh, 6);
     p.insp = !!raw.insp;
     p.conc = (c ? cbSpellOkFor(c) : cbSpellOk)(raw.conc) ? raw.conc : '';
@@ -1065,7 +1085,7 @@ function cbDerive(c) {
     if (has('barbarian', 5) && !heavy) speed += 10;
     if (has('monk', 2) && !armor && !shield) speed += L >= 18 ? 30 : L >= 14 ? 25 : L >= 10 ? 20 : L >= 6 ? 15 : 10;
     if (v24 && has('ranger', 6) && !heavy) speed += 10;
-    if (armor && armor.str && s.str < armor.str && !strExempt) speed -= 10;
+    if (armor && armor.str && s.str < armor.str && !strExempt && !(c.play && c.play.enc)) speed -= 10;
 
     // Initiative
     const init = m.dex + (v24 ? (featIds.includes('alert') ? prof : 0) : Math.max(jack, athlete));

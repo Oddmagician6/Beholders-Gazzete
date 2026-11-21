@@ -163,7 +163,7 @@ function edStart(data, g) {
     edDesks = (g.writers || []).filter(w => !w.desk_real).map(w => ({ icon: w.desk_icon || w.avatar || '', categories: w.categories || [] }));
     // File order within a day, as on the homepage: the first story filed leads
     (data.articles || []).forEach(a => {
-        if (a.real || !/^\d{4}-\d{2}-\d{2}$/.test(a.date || '')) return;
+        if (a.real || !/^\d{4}-\d{2}-\d{2}$/.test(a.date || '') || !edRealDate(a.date)) return;
         if (!edByDate.has(a.date)) edByDate.set(a.date, []);
         edByDate.get(a.date).push(a);
     });
@@ -175,7 +175,7 @@ function edStart(data, g) {
 
     const wanted = new URLSearchParams(location.search).get('date');
     // A day with no edition says so (with a link to the newest) rather than quietly showing another day
-    if (wanted && /^\d{4}-\d{2}-\d{2}$/.test(wanted) && edDates.length) {
+    if (wanted && edDates.length) {
         edRender(wanted);
         if (!edByDate.has(wanted)) pick.selectedIndex = -1;
         return;

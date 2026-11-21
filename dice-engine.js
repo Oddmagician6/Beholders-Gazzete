@@ -129,10 +129,11 @@ function loadDiceHistory() {
     try {
         const saved = JSON.parse(localStorage.getItem(DICE_HISTORY_KEY));
         // Optional fields from an old or hand-edited save: a mode outside the three, or a label that isn't text, is dropped.
-        return Array.isArray(saved) ? saved.filter(h => h && typeof h.f === 'string' && typeof h.total === 'number').map(h => {
+        return Array.isArray(saved) ? saved.filter(h => h && typeof h.f === 'string' && Number.isFinite(h.total)).slice(0, DICE_HISTORY_MAX).map(h => {
             const out = { ...h, mode: ['adv', 'dis'].includes(h.mode) ? h.mode : 'normal' };
             if (typeof out.label !== 'string') delete out.label;
             if (typeof out.detail !== 'string') delete out.detail;
+            if (!Number.isFinite(out.t)) delete out.t;
             return out;
         }) : [];
     } catch (e) { return []; }
@@ -146,7 +147,8 @@ function saveDiceHistory(list) {
 // Roll and put it at the top of the history. label: optional ("Goblin 2 initiative").
 function rollAndRecord(formula, mode = 'normal', label = '') {
     const r = rollDice(formula, mode);
-    const entry = { f: r.formula, mode: r.mode, total: r.total, detail: diceDetail(r), crit: r.crit, t: Date.now() };
+    const typed = String(formula).toLowerCase().replace(/[−–]/g, '-').replace(/\s+/g, '');
+    const entry = { f: r.formula.length <= DICE_LIMITS.length ? r.formula : typed, mode: r.mode, total: r.total, detail: diceDetail(r), crit: r.crit, t: Date.now() };
     if (label) entry.label = String(label).slice(0, 60);
     saveDiceHistory([entry, ...loadDiceHistory()]);
     return r;

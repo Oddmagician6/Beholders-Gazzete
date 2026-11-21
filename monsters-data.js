@@ -146,7 +146,7 @@ const MONSTERS = [
   ["tiger", "Tiger", "1", 200, 12, 37, 2, "L", "beast"],
   ["ankheg", "Ankheg", "2", 450, 14, 39, 0, "L", "monstrosity"],
   ["awakened-tree", "Awakened Tree", "2", 450, 13, 59, -2, "H", "plant"],
-  ["azer", "Azer", "2", 450, 15, 39, 1, "M", "elemental"],
+  ["azer", "Azer", "2", 450, 17, 39, 1, "M", "elemental"],
   ["bandit-captain", "Bandit Captain", "2", 450, 15, 65, 3, "M", "humanoid"],
   ["berserker", "Berserker", "2", 450, 13, 67, 1, "M", "humanoid"],
   ["black-dragon-wyrmling", "Black Dragon Wyrmling", "2", 450, 17, 33, 2, "M", "dragon"],

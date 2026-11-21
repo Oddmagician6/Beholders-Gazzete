@@ -23,7 +23,9 @@ const ENC_MAX_COUNT = ENC_MAX_GROUPS * 10 * 2;
 const ENC_PICKER_ROWS = 40;
 const ENC_DEFAULT_PARTY = [{ count: 4, level: 3 }];
 
-let enc = { party: encDefaultParty(), list: [], seed: null, band: null, lead: null, open: new Set() };
+// parked: [{ id, count }] rows this rules version (or the additions switch) lacks, kept in the link and
+// brought back when the version that has them is shown again.
+let enc = { party: encDefaultParty(), list: [], parked: [], seed: null, band: null, lead: null, open: new Set() };
 let encTouched = false;   // false until the builder changes or opens a link
 
 // A first visit to the tab, untouched since the page loaded: start from the party as it is now.
@@ -325,6 +327,7 @@ function rollEncounterFor() {
     const res = withSeed(seed, () => rollThemedEncounter(encBudget(), diff, opts));
     if (!res.list.length) { flash('enc-status', ENC_PF2E ? '⚠️ No creatures fit those choices and this budget. Try another type, group, or habitat, or another difficulty.' : '⚠️ No monsters fit those choices and this budget. Try another type, group, or habitat, or a higher difficulty.'); return; }
     enc.list = res.list;
+    enc.parked = [];
     enc.band = res.band;
     enc.seed = seed;
     enc.lead = null;
@@ -378,7 +381,7 @@ function sendToInitiative() {
 }
 
 function clearEncounter() {
-    enc = { party: encDefaultParty(), list: [], seed: null, band: null, lead: null, open: new Set() };
+    enc = { party: encDefaultParty(), list: [], parked: [], seed: null, band: null, lead: null, open: new Set() };
     renderParty();
     encChanged(true);
 }
@@ -389,7 +392,7 @@ function encParams() {
     const type = document.getElementById('en-roll-type');
     return urlFor('enc', {
         party: enc.party.map(g => `${g.count}x${g.level}`),
-        m: enc.list.map(e => `${e.m.id}.${e.count}`),
+        m: [...enc.list.map(e => `${e.m.id}.${e.count}`), ...enc.parked.map(e => `${e.id}.${e.count}`)],
         diff: fieldValue(diff) === defaultValue(diff) ? null : diff.value,
         type: type.value || null,
         env: document.getElementById('en-env').value || null,
@@ -407,10 +410,16 @@ function applyEncUrl(p) {
         .filter(g => g.count && g.level).slice(0, ENC_MAX_GROUPS);
     enc.party = party.length ? party : encDefaultParty();
     enc.list = [];
+    enc.parked = [];
     p.getAll('m').forEach(s => {
         const [id, n] = s.split('.');
         const m = Object.hasOwn(MONSTER_BY_ID, id) ? MONSTER_BY_ID[id] : null;
-        if (!m) return;
+        // Not in this version's list (a 2024-only monster under 2014, an addition with the switch off): kept.
+        if (!m) {
+            if (!ENC_PF2E && /^[a-z0-9-]{1,60}$/.test(id || '') && enc.list.length + enc.parked.length < ENC_MAX_KINDS && !enc.parked.some(e => e.id === id))
+                enc.parked.push({ id, count: clampInt(n, 1, ENC_MAX_COUNT, 1) });
+            return;
+        }
         // Two ids for one monster (goblin and goblin-warrior in 2024): one row, counts added.
         const had = enc.list.find(e => e.m === m);
         if (had) had.count = Math.min(ENC_MAX_COUNT, had.count + clampInt(n, 1, ENC_MAX_COUNT, 1));
@@ -452,18 +461,25 @@ function setupEncounter() {
         document.getElementById('en-type').addEventListener('change', e => { if (e.target.value === 'v52' && !srd52On()) srd52Set(true); });
         // A rules switch: every row becomes that version's monster (goblin <-> goblin-warrior), rows
         // that land on one monster merge, and one the version doesn't have goes.
+        // A row the version lacks is parked (kept in the link) and comes back on the way back.
         srd52OnChange(() => {
-            const rows = [];
-            enc.list.forEach(e => {
-                const m = e.m.hb ? e.m : MONSTER_BY_ID[e.m.id] || (typeof rulesOldId === 'function' && MONSTER_BY_ID[rulesOldId(e.m.id)]);
-                if (!m) return;
+            const rows = [], parked = [];
+            const find = id => MONSTER_BY_ID[id] || (typeof rulesOldId === 'function' && MONSTER_BY_ID[rulesOldId(id)]) || null;
+            const put = (m, e) => {
                 const had = rows.find(r => r.m === m);
                 if (had) had.count = Math.min(ENC_MAX_COUNT, had.count + e.count);
                 else rows.push({ ...e, m });
+            };
+            enc.list.forEach(e => {
+                const m = e.m.hb ? e.m : find(e.m.id);
+                if (m) put(m, e); else parked.push({ id: e.m.id, count: e.count });
             });
+            enc.parked.forEach(e => { const m = find(e.id); if (m) put(m, { count: e.count }); else parked.push(e); });
             enc.list = rows;
+            enc.parked = parked;
             renderPicker();
             encChanged(null);
+            if (parked.length) flash('enc-status', `${parked.length} monster${parked.length === 1 ? '' : 's'} in this encounter ${parked.length === 1 ? 'is' : 'are'} kept for the other rules version (or the SRD 5.2 additions): switch back to see ${parked.length === 1 ? 'it' : 'them'}.`);
         });
     }
     partyChip(document.getElementById('en-party-chip'), { label: 'Use the Party', title: "Set the groups above to the Party tab's characters", act: encUseParty });

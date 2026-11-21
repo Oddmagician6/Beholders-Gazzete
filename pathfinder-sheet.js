@@ -88,6 +88,8 @@ function change(fn) {
     if (!cur) return;
     const d = derive(cur);
     fn(cur.play, d);
+    // An open Heroic Recovery choice is saved with the character, so a reload still offers it (B738).
+    if (heroicNow && ppDead(cur)) cur.play.heroic = true; else delete cur.play.heroic;
     ppFit(cur, pcStats(cur), pcTextState === 2 ? d.focus.points : null);
     save();
     render();
@@ -416,7 +418,7 @@ function slotRows(r, sp, st, grants, arc = '') {
 function spellsPanel(c, d) {
     const { s, r, grants, focus } = d;
     if (!spellsReady() || (!s.cast && !focus.list.length && !s.arcs.length)) return '';
-    const p = c.play, sp = c.spells;
+    const p = c.play, sp = pcTextState === 2 ? pcFittedSpells(c, grants) : c.spells;
     const top = Math.ceil(c.level / 2);
     let h = `<section class="cs-panel" aria-labelledby="cs-sp-h"><h2 id="cs-sp-h">🔮 Spells</h2>`;
     if (r && r.type !== 'focus') {
@@ -506,7 +508,7 @@ function renderBar() {
 function openChar(c) {
     cur = c;
     notice = null;
-    heroicNow = false;
+    heroicNow = !!(c && c.play.heroic && ppDead(c));
     lastRoll = null;
     if (cur) {
         const before = JSON.stringify(cur.play);
@@ -515,10 +517,11 @@ function openChar(c) {
         else pushLive();
         try { history.replaceState(null, '', location.pathname + '?char=' + encodeURIComponent(cur.id)); } catch (e) {}
         // Granted spells (bloodline, mystery, school...) come from the rules text: load it, then redraw.
-        if (pcCasting(cur) || Object.keys(cur.feats).length) pcLoadText(() => {
+        if (pcCasting(cur) || Object.keys(cur.feats).length) pcLoadText(ok => {
             if (!cur) return;
+            // Without the text the granted focus spells are unknown: keep what's spent as it was.
             const fp = derive(cur).focus.points;
-            if (cur.play.focus > fp) { cur.play.focus = fp; save(); }
+            if (ok && cur.play.focus > fp) { cur.play.focus = fp; save(); }
             render();
         });
     }

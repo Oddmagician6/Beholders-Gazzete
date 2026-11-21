@@ -38,6 +38,8 @@ const PC_TRADITIONS = ['arcane', 'divine', 'occult', 'primal'];
 // The elemental bloodline's influences (c.sub holds the one picked, as a tradition for the others).
 const PC_ELEMENTS = ['air', 'earth', 'fire', 'metal', 'water', 'wood'];
 // The level-19 features that give one 10th-rank slot.
+// Level-20 class feats that add a second 10th-rank slot (Player Core / Player Core 2).
+const PC_TENTH_MORE = ['archwizard-s-might', 'bloodline-perfection', 'hierophant-s-power', 'maker-of-miracles', 'oracular-providence', 'perfect-encore'];
 const PC_TENTH = ['Archwizard\'s Spellcraft', 'Miraculous Spell', 'Primal Hierophant', 'Patron\'s Gift', 'Magnum Opus', 'Bloodline Paragon', 'Oracular Clarity'];
 
 const pcCap = s => String(s).replace(/(^|[\s-])([a-z])/g, (m, a, b) => a + b.toUpperCase());
@@ -185,7 +187,8 @@ function pcCleanSpells(raw, arc = false) {
 function pcCleanPlay(raw) {
     const p = pcBlankPlay();
     if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return p;
-    const int = (v, lo, hi, def) => { const n = Math.round(Number(v)); return v !== null && v !== '' && Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : def; };
+    // Numbers and number strings only: anything else (an object that won't become a number) is the default.
+    const int = (v, lo, hi, def) => { const n = typeof v === 'number' || (typeof v === 'string' && v.trim() !== '') ? Math.round(Number(v)) : NaN; return Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : def; };
     p.hp = raw.hp === null ? null : int(raw.hp, 0, 9999, null);
     p.temp = int(raw.temp, 0, 9999, 0);
     if (Array.isArray(raw.cond)) {
@@ -243,6 +246,8 @@ function pcCleanPlay(raw) {
         n: pcStr(x.n, 40).trim(), q: int(x.q, 1, 999, 1), bu: /^(—|L|\d{1,2})$/.test(x.bu) ? x.bu : '—'
     })) : [];
     p.tw = Array.isArray(raw.tw) ? ['friend', 'me'].filter(k => raw.tw.includes(k)) : [];
+    // A Heroic Recovery still open from the last blow (pathfinder-sheet.js), so a reload keeps the choice.
+    if (raw.heroic === true) p.heroic = true;
     return p;
 }
 
@@ -255,24 +260,30 @@ function pcLoadAll() {
     return [];
 }
 
+// The stored list as it is: a record this page can't clean (a damaged one) is kept, not written away.
+function pcRawAll() {
+    try { const saved = JSON.parse(localStorage.getItem(PC_KEY)); return Array.isArray(saved) ? saved : []; } catch (e) { return []; }
+}
+
 function pcSave(c) {
     c.updated = Date.now();
-    const list = [c, ...pcLoadAll().filter(x => x.id !== c.id)].slice(0, PC_MAX);
-    try { localStorage.setItem(PC_KEY, JSON.stringify(list)); } catch (e) { return null; }
-    return list;
+    const raw = [c, ...pcRawAll().filter(x => !x || typeof x !== 'object' || x.id !== c.id)].slice(0, PC_MAX);
+    try { localStorage.setItem(PC_KEY, JSON.stringify(raw)); } catch (e) { return null; }
+    return pcLoadAll();
 }
 
 function pcDelete(id) {
-    const list = pcLoadAll().filter(x => x.id !== id);
-    try { localStorage.setItem(PC_KEY, JSON.stringify(list)); } catch (e) {}
-    return list;
+    const raw = pcRawAll().filter(x => !x || typeof x !== 'object' || x.id !== id);
+    try { localStorage.setItem(PC_KEY, JSON.stringify(raw)); } catch (e) {}
+    return pcLoadAll();
 }
 
 // ── What the character is made of ────────────────────────
 function pcParts(c) {
     const cls = PF2E_CLASSES[c.cls] || null;
-    const ch = PF2E_CHOICES[c.ch] && cls && PF2E_CHOICES[c.ch].c === c.cls ? PF2E_CHOICES[c.ch] : null;
-    const ch2 = PF2E_CHOICES[c.ch2] && cls && PF2E_CHOICES[c.ch2].c === c.cls ? PF2E_CHOICES[c.ch2] : null;
+    const fits = (id, tag) => Object.hasOwn(PF2E_CHOICES, id || '') && cls && PF2E_CHOICES[id].c === c.cls && (!tag || PF2E_CHOICES[id].t === tag[0]);
+    const ch = fits(c.ch, cls && cls.ch) ? PF2E_CHOICES[c.ch] : null;
+    const ch2 = fits(c.ch2, cls && cls.ch2) ? PF2E_CHOICES[c.ch2] : null;
     const her = PF2E_HERITAGES[c.her] && (!PF2E_HERITAGES[c.her].a || PF2E_HERITAGES[c.her].a === c.race) ? PF2E_HERITAGES[c.her] : null;
     return { anc: PF2E_ANCESTRIES[c.race] || null, her, bg: PF2E_BACKGROUNDS[c.bg] || null, cls, ch, ch2 };
 }
@@ -1022,7 +1033,7 @@ function pcCasting(c) {
     }
     const [trad0, kind] = cls.cast;
     let trad = trad0;
-    if (ch && ch.tr) trad = ch.tr === 'choice' ? c.sub : ch.tr;
+    if (ch && ch.tr) trad = ch.tr === 'choice' ? (PC_TRADITIONS.includes(c.sub) ? c.sub : '') : ch.tr;
     const attr = PC_SPELL_ATTR[c.cls] || pcKey(c);
     if (kind === 'focus') return { trad, kind, attr, cantrips: 0, slots: [], curr: false, font: null };
     const curr = c.cls === 'wizard' && !!ch && c.ch !== 'school-of-unified-magical-theory';
@@ -1034,8 +1045,11 @@ function pcCasting(c) {
         if (curr) n += 1;
         slots.push(n);
     }
-    if (c.level >= 19 && pcFeatures(c).some(f => PC_TENTH.includes(f.name))) slots.push(...Array(10 - slots.length - 1).fill(0), 1);
-    const font = c.cls === 'cleric' ? { n: c.level >= 15 ? 6 : c.level >= 5 ? 5 : 4, rank: top, spell: c.deity.font } : null;
+    if (c.level >= 19 && pcFeatures(c).some(f => PC_TENTH.includes(f.name))) {
+        slots.push(...Array(10 - slots.length - 1).fill(0), 1);
+        if (c.level >= 20 && PC_TENTH_MORE.some(k => pcHasFeat(c, k))) slots[9] = 2;
+    }
+    const font = c.cls === 'cleric' ? { n: c.level >= 15 ? 6 : c.level >= 5 ? 5 : 4, rank: slots[9] ? 10 : top, spell: c.deity.font } : null;
     return { trad, kind, attr, cantrips: 5 + (curr ? 1 : 0), slots, curr, font };
 }
 
@@ -1258,12 +1272,21 @@ function pcFocus(c, grants = pcSpellGrants(c)) {
     return { list, points: Math.min(3, list.filter(f => PF2E_SPELLS[f.key].k === 'f').length) };
 }
 
+// The picks as the Spell Planner keeps them (what no longer fits the class and level left out), for the
+// Play Sheet and Cards to show; the save keeps the original until the player edits the spells. B748.
+function pcFittedSpells(c, grants = pcSpellGrants(c)) {
+    const copy = { ...c, spells: JSON.parse(JSON.stringify(c.spells)) };
+    pcFitSpells(copy, grants);
+    return copy.spells;
+}
+
 // Drop picks that no longer fit the class, level, and tradition (rare: uncommon spells allowed).
 function pcFitSpells(c, grants = pcSpellGrants(c), rare = true) {
     const r = pcSpellRules(c);
     const s = c.spells;
     const S = k => PF2E_SPELLS[k];
-    s.focus = s.focus.filter(pcIsFocus);
+    const fpool = new Set(pcFocusPool(c));
+    s.focus = s.focus.filter(k => pcIsFocus(k) && (fpool.has(k) || grants.focus.some(f => f.key === k)));
     if (!r || r.type === 'focus') { Object.assign(s, { ct: [], rep: {}, book: [], prep: {}, sig: {}, dy: [] }); return; }
     s.dy = pcDeitySpells(c);
     const onList = k => S(k) && (S(k).td || []).includes(r.trad) && (rare || !S(k).ra);
@@ -1273,6 +1296,8 @@ function pcFitSpells(c, grants = pcSpellGrants(c), rare = true) {
     const bookHas = k => s.book.includes(k) || grants.list.some(g => g.key === k && g.to === 'book');
     const ctGiven = grants.list.filter(g => g.to === 'rep' && g.rank === 0).map(g => g.key);
     s.ct = s.ct.filter(k => S(k).k === 'c' && !ctGiven.includes(k) && (!r.ctAtk || pcAttackSpell(k)) && (r.type === 'book' ? bookHas(k) : ok(k))).slice(0, pcCantripLimit(r, grants));
+    const currSet = r.curr && grants.curr ? new Set(Object.values(grants.curr).flat()) : null;
+    if (currSet && currSet.size) { let free = 0; const cap = pcCantripLimit(r, grants) - 1; s.ct = s.ct.filter(k => currSet.has(k) || ++free <= cap); }
     const rep = {};
     if (r.type === 'rep') {
         for (let n = 1; n <= r.top; n++) {
@@ -1311,7 +1336,7 @@ function pcStats(c) {
     const prof = pcProfs(c);
     const L = c.level;
     const key = pcKey(c);
-    const hp = (parts.anc ? parts.anc.hp : 0) + (parts.cls ? (parts.cls.hp + mods.con) * L : 0);
+    const hp = (parts.anc ? parts.anc.hp : 0) + (parts.cls ? (parts.cls.hp + mods.con) * L : 0) + (pcHasFeat(c, 'toughness') ? L : 0);
     const saves = Object.fromEntries(Object.entries(PC_SAVES).map(([k, [, a]]) => [k, mods[a] + pcBonus(prof[k], L)]));
     const cast = pcCasting(c);
     const spellAtk = cast ? mods[cast.attr || 'cha'] + pcBonus(prof.spell, L) : null;

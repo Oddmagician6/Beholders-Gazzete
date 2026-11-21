@@ -773,7 +773,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Player View shows the rules version this screen shows (a rules= this page was opened with included).
     document.getElementById('ds-view').addEventListener('click', e => {
         const a = e.currentTarget;
-        const r = typeof rulesLinkParams === 'function' ? rulesLinkParams({}).rules : null;
+        const r = typeof rulesPage !== 'undefined' && rulesPage ? rulesPage : null;
         const base = a.getAttribute('href').split('?')[0];
         a.setAttribute('href', r ? `${base}?rules=${r}` : base);
     });
