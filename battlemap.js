@@ -1006,7 +1006,8 @@ function bbSetup() {
     $('bb-erase-what').addEventListener('change', e => { BB.erase = e.target.value; });
     $('bb-label-text').addEventListener('input', e => { BB.label = e.target.value.replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, BM_LIMITS.label); });
     $('bb-label-count').addEventListener('change', e => { BB.count = e.target.checked; });
-    $('bb-rule').addEventListener('change', e => { BB.rule = e.target.value; bbDrawUi(); });
+    // A ruler on the map: the Player View's distance changes with it.
+    $('bb-rule').addEventListener('change', e => { BB.rule = e.target.value; bbDrawUi(); btPost(); });
 
     const svgHost = $('bb-canvas');
     svgHost.addEventListener('pointerdown', bbDown);

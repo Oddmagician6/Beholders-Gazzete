@@ -63,7 +63,11 @@ function btPost() {
     if (btPostTimer || !btChannel()) return;
     btPostTimer = setTimeout(() => {
         btPostTimer = 0;
-        const r = BB.mode === 'play' && BB.ruler ? { ...BB.ruler, text: bbRulerText(BB.ruler) } : null;
+        // A dragged token's ruler only while the players can see the token: one hidden by the DM or under
+        // the fog would give away where it went.
+        const tok = BB.ruler && BB.ruler.tok ? btToken(BB.ruler.tok) : null;
+        const shown = !tok || (!tok.hid && bmTokenSeen({ ...BB.m, fog: BB.m.fog || new Array(BB.m.w * BB.m.h).fill(0) }, tok));
+        const r = BB.mode === 'play' && BB.ruler && shown ? { ...BB.ruler, text: bbRulerText(BB.ruler) } : null;
         try { BB.chan.postMessage({ type: 'state', from: btSession(), state: bpPlayerState(BB.m, BB.fight, BB.popts, r) }); } catch (e) {}
     }, 16);
 }
@@ -258,7 +262,8 @@ function btMove(d, p, e) {
         btDraw();
         btPost();
     } else if (d.kind === 'btbox') {
-        d.b = { x: Math.max(0, Math.min(m.w - 1, Math.floor(p.x))), y: Math.max(0, Math.min(m.h - 1, Math.floor(p.y))) };
+        // Not clamped to the map: a box drawn in the margin beside it touches no square (btUp skips squares off the map).
+        d.b = { x: Math.max(-1, Math.min(m.w, Math.floor(p.x))), y: Math.max(-1, Math.min(m.h, Math.floor(p.y))) };
         bbDrawUi();
     } else if (d.kind === 'btmove') {
         const t = btToken(d.id);
@@ -270,7 +275,7 @@ function btMove(d, p, e) {
         t.x = at.x;
         t.y = at.y;
         // How far it has gone, on the ruler, for the DM and the players.
-        BB.ruler = { a: d.from, b: { x: t.x + n / 2, y: t.y + n / 2 } };
+        BB.ruler = { a: d.from, b: { x: t.x + n / 2, y: t.y + n / 2 }, tok: t.id };
         btDraw();
         bbDrawUi();
         btPost();

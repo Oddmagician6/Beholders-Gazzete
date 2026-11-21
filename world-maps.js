@@ -131,6 +131,8 @@ function renderMaps(nb = nbLoad()) {
         return;
     }
     if (!e) {
+        // No picture on screen: the last one's object URL goes too.
+        if (mapsState.url) { URL.revokeObjectURL(mapsState.url); mapsState.url = ''; mapsState.urlKey = ''; }
         card.innerHTML = `<div class="um-empty um-dropzone">
             <p>🗺️ No maps yet. Upload one, or drop a picture here.</p>
             <p class="wb-small">A PNG, JPEG, or WebP up to ${mapMb(MAP_LIMITS.bytes)}: a world map from Inkarnate or Wonderdraft, a battle map from Dungeondraft, a photo or scan of one you drew. It stays in this browser; nothing is uploaded anywhere.</p>

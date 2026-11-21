@@ -409,8 +409,10 @@ async function bkRestoreMaps(list, ids, k) {
             const pic = await mapCheck(blob);
             const nb = nbLoad(k.nb);
             const id = mapFileEntry(nb, { id: ids[m.id] || m.id, name: m.name, w: pic.w, h: pic.h });
-            if (!id || !nbStore(nb, false, k.nb)) throw new Error('notebook');
+            if (!id) throw new Error('notebook');
+            // The picture first: a store that refuses it leaves no map entry without a picture behind.
             await mapPut({ id, name: m.name, ...pic }, k.db);
+            if (!nbStore(nb, false, k.nb)) throw new Error('notebook');
             put++;
         } catch (e) {
             bad++;
@@ -567,7 +569,10 @@ function setupBackup() {
         setTimeout(() => URL.revokeObjectURL(url), 10000);
         const size = withMaps ? ` (${mapMb(blob.size)})` : '';
         const left = out.left.length ? ` ${bkN(out.left.length, 'map picture')} didn't fit and ${out.left.length === 1 ? 'was' : 'were'} left out.` : '';
-        bkStatus(`💾 Exported ${bkN(out.count, 'item')}${size}. Keep the file somewhere safe, or import it in another browser.${left}`);
+        // A picture store this browser wouldn't open, while its notebook has maps: those pictures aren't in the file.
+        const unread = bkWithMaps ? BK_MAPS.filter(k => bkMapsHere[k.db] === null && nbLoad(k.nb).entries.some(e => e.kind === 'map')) : [];
+        const miss = unread.length ? ` ⚠️ This browser wouldn't open the ${unread.map(k => k.pf2e ? 'Pathfinder' : 'D&D').join(' and ')} map pictures, so they aren't in this backup: try again, or reload the page.` : '';
+        bkStatus(`💾 Exported ${bkN(out.count, 'item')}${size}. Keep the file somewhere safe, or import it in another browser.${left}${miss}`);
     });
     document.getElementById('bk-summary').addEventListener('change', e => { if (e.target.id === 'bk-maps') bkWithMaps = e.target.checked; });
     const file = document.getElementById('bk-file');

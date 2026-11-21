@@ -28,7 +28,8 @@ const PARTY_INIT_MAX = PARTY_PF2E ? 40 : 20;
 const PARTY_AC_MAX = PARTY_PF2E ? 60 : 40;
 
 function partyInt(v, lo, hi, def) {
-    if (v === '' || v === null || v === undefined) return def;
+    // Numbers and text only: an object from a damaged save can make Number() throw (and lose the whole party).
+    if (v === '' || (typeof v !== 'number' && typeof v !== 'string')) return def;
     const n = Math.round(Number(v));
     return Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : def;
 }
@@ -90,7 +91,15 @@ function newPartyId() {
 function loadParty() {
     try {
         const saved = JSON.parse(localStorage.getItem(PARTY_KEY));
-        if (Array.isArray(saved)) return saved.map(cleanPartyMember).filter(Boolean).slice(0, PARTY_MAX);
+        if (Array.isArray(saved)) {
+            // Two characters with one id (a damaged save) would share every edit: the second gets its own.
+            const ids = new Set();
+            return saved.map(cleanPartyMember).filter(Boolean).slice(0, PARTY_MAX).map(c => {
+                while (ids.has(c.id)) c.id = newPartyId();
+                ids.add(c.id);
+                return c;
+            });
+        }
     } catch (e) {}
     return [];
 }

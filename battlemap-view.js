@@ -8,7 +8,8 @@
    It frames what the players have seen (or the whole map, as the DM picks) and fits the window.
    ============================================ */
 
-const BV = { key: '', state: null, heard: 0 };
+// mapId: the map the Builder this window follows last sent (its fallback reads that map, not another tab's).
+const BV = { key: '', state: null, heard: 0, from: '', mapId: '' };
 const $ = id => document.getElementById(id);
 
 // The squares to frame: the revealed ones and one around them, or all of it.
@@ -37,7 +38,7 @@ function bvRender(st) {
         svg.insertAdjacentHTML('beforeend', '<g class="bv-ruler"></g>');
     }
     const svg = stage.querySelector('svg');
-    svg.querySelector('.bm-tokens').innerHTML = bmTokenSvg(st.tokens, { uid: 'pv', names: st.names });
+    svg.querySelector('.bm-tokens').innerHTML = bmTokenSvg(st.tokens, { uid: 'pv', names: st.names, tipNames: st.names });
     svg.querySelector('.bm-fog').innerHTML = bmFogSvg(st.m, true);
     const f = bvFrame(st), S = SITE_SQUARE;
     svg.querySelector('.bv-ruler').innerHTML = bpRulerSvg(st.ruler, Math.max(4.5, (f ? Math.max(f.w, f.h) : 20) * 0.22));
@@ -55,7 +56,8 @@ function bvRender(st) {
 
 // The same copy, from this browser's saves: the map the Builder has open, the fight, the options.
 function bvFromSaves() {
-    const store = bmLoadStore(), m = store.maps.find(x => x.id === store.cur);
+    // Opened from a Builder: the map it last sent, even when another tab has saved a different one since.
+    const store = bmLoadStore(), want = BV.from && BV.mapId ? BV.mapId : store.cur, m = store.maps.find(x => x.id === want);
     if (!m) {
         // Nothing saved (or the saves cleared since): none of the last map stays up.
         BV.key = '';
@@ -76,7 +78,7 @@ function bvSetup() {
     let channel = null;
     try { channel = new BroadcastChannel(BP_CHANNEL); } catch (e) {}
     // Opened from a Builder (its 📺 button): follow that tab only, not another tab's map.
-    const from = new URLSearchParams(location.hash.slice(1)).get('from');
+    const from = BV.from = new URLSearchParams(location.hash.slice(1)).get('from') || '';
     if (channel) {
         channel.addEventListener('message', e => {
             if (!e.data || e.data.type !== 'state') return;
@@ -84,6 +86,7 @@ function bvSetup() {
             const st = bpCleanState(e.data.state);
             if (!st) return;
             BV.heard = Date.now();
+            BV.mapId = st.m.id;
             bvRender(st);
             sync.textContent = '🟢 Following the DM';
         });

@@ -42,7 +42,8 @@ function bpLoadFight() {
     try { raw = JSON.parse(localStorage.getItem(BP_FIGHT_KEY) || 'null'); } catch (e) {}
     if (!raw || typeof raw !== 'object' || !Array.isArray(raw.list)) raw = null;
     // As the tracker reads them (its num()): numbers, or numbers written as text.
-    const n = v => v === '' || v === null || v === undefined || typeof v === 'boolean' || !Number.isFinite(Number(v)) ? null : Math.round(Number(v));
+    // (Only numbers and text: an object from a damaged save can make Number() throw.)
+    const n = v => (typeof v !== 'number' && typeof v !== 'string') || v === '' || !Number.isFinite(Number(v)) ? null : Math.round(Number(v));
     const list = raw ? raw.list.filter(c => c && typeof c.id === 'number' && typeof c.name === 'string').slice(0, 60) : [];
     return {
         raw,
@@ -125,13 +126,17 @@ function bpDmToken(t, fight, sel = false) {
 function bpPlayerState(m, fight, opts, ruler = null) {
     const fog = m.fog || new Array(m.w * m.h).fill(0);
     const seen = { ...m, fog };
-    const view = initPlayerView(fight);
+    // In the tracker's order (it keeps its list sorted; a save that isn't still turns the same way here).
+    const view = initPlayerView({ ...fight, list: bpOrder(fight.list) });
     const pv = new Map(view.list.map(v => [v.key, v]));
     const tokens = m.tk.filter(t => !t.hid && bmTokenSeen(seen, t)).map(t => {
         const c = bpCombatant(t, fight), v = c ? pv.get(c.id) : null;
         // "Unknown creature A" in the turn order; shorter under a token.
         // An unknown creature's picture would give away what it is (creature/dragon): initials until revealed.
-        const out = { x: t.x, y: t.y, s: t.s, c: t.c, a: v && v.hidden ? '' : t.a, n: v ? v.name.replace(/^Unknown creature /, 'Unknown ') : t.n };
+        // A creature's token whose row has left the tracker (removed, or the fight cleared) stays unknown too:
+        // its name is the creature's real one.
+        const gone = !c && t.f && t.c !== 'pc';
+        const out = { x: t.x, y: t.y, s: t.s, c: t.c, a: (v && v.hidden) || gone ? '' : t.a, n: v ? v.name.replace(/^Unknown creature /, 'Unknown ') : gone ? 'Unknown' : t.n };
         if (v) {
             out.now = v.now;
             out.conds = v.conds;

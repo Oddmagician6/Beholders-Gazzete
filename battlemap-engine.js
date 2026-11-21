@@ -270,7 +270,8 @@ function bmUnRle(s, n, max) {
         for (let k = 0; k < c; k++) out.push(v);
         if (re.lastIndex === s.length) break;
     }
-    return out.length === n ? out : null;
+    // Junk after the last run ("b!") makes it no map, not a shorter one.
+    return out.length === n && re.lastIndex === s.length ? out : null;
 }
 
 const bmR2 = v => Math.round(v * 100) / 100;
@@ -328,7 +329,7 @@ function bmClean(p) {
     return {
         id: typeof p.id === 'string' && /^[a-z0-9]{1,16}$/.test(p.id) ? p.id : bmId(),
         name: text(p.n, BM_LIMITS.name) || 'Untitled battlemap', w, h,
-        style: BM_STYLES[p.s] ? p.s : 'art',
+        style: bmHas(BM_STYLES, p.s) ? p.s : 'art',
         t: num(p.t, 0, 1e15) || 0,
         fl, hw: e.slice(0, nh), vw: e.slice(nh), ob, lb, tk, fog: bmUnRle(p.g, w * h, 1)
     };
@@ -682,9 +683,10 @@ function bmInitials(name) {
 // now (its turn), bar (hit points, 0 to 1, or null), health ('bloodied' | 'down' | null),
 // conds (names), hp (hit points as text, for the hover tip), hid (hidden from the players: drawn
 // faint), sel (picked up) }.
-// opts: uid (the SVG's), names (a name under each token).
+// opts: uid (the SVG's), names (a name under each token), tipNames (the name in the hover tip too:
+// the players' map leaves it out when names are off).
 function bmTokenSvg(list, opts = {}) {
-    const { uid = 'bm', names = true } = opts, S = SITE_SQUARE;
+    const { uid = 'bm', names = true, tipNames = true } = opts, S = SITE_SQUARE;
     return list.map(t => {
         const n = BM_TOKEN_SIZES[t.s] || 1, r = (t.s === 'T' ? 0.3 : n * 0.44) * S;
         const cls = `bm-tok bm-tok-${t.c}${t.now ? ' bm-tok-now' : ''}${t.health ? ' bm-tok-' + t.health : ''}${t.hid ? ' bm-tok-hid' : ''}${t.sel ? ' bm-tok-sel' : ''}`;
@@ -706,7 +708,7 @@ function bmTokenSvg(list, opts = {}) {
             body += `<circle class="bm-tok-cond" cx="${bx}" cy="${by}" r="2"/><text class="bm-tok-condn" x="${bx}" y="${by}">${t.conds.length}</text>`;
         }
         if (names) body += `<text class="bm-tok-name" y="${bmF1(r + 3.6)}">${siteAttr(t.n)}</text>`;
-        const tip = [t.n, t.hp || '', t.conds && t.conds.length ? t.conds.join(', ') : ''].filter(Boolean).join(' · ');
+        const tip = [tipNames ? t.n : '', t.hp || '', t.conds && t.conds.length ? t.conds.join(', ') : ''].filter(Boolean).join(' · ');
         return `<g class="${cls}" transform="translate(${bmF1((t.x + n / 2) * S)} ${bmF1((t.y + n / 2) * S)})"><title>${siteAttr(tip)}</title>${body}</g>`;
     }).join('');
 }

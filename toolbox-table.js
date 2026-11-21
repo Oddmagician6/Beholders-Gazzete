@@ -807,7 +807,9 @@ function addPartyToFight(list = loadParty()) {
     if (!list.length) { flash('init-status', 'No party is saved yet. Enter it on the 👥 Party tab.'); return; }
     // A stat-block monster called Goblin doesn't keep out a PC called Goblin (a PC typed in by hand still does).
     const here = new Set(fight.list.filter(c => !c.monster).map(c => c.name.toLowerCase()));
-    const todo = list.map((m, i) => ({ m, name: partyMemberName(m, i).slice(0, 36) })).filter(x => !here.has(x.name.toLowerCase()));
+    // A Play Sheet character already has its row (by its id), even when renamed on the Party tab since.
+    const linked = new Set(fight.list.map(c => c.party).filter(Boolean));
+    const todo = list.map((m, i) => ({ m, name: partyMemberName(m, i).slice(0, 36) })).filter(x => !here.has(x.name.toLowerCase()) && !linked.has(x.m.id));
     const skipped = list.length - todo.length;
     if (!todo.length) { flash('init-status', '👥 The whole party is already in the fight.'); return; }
     const added = todo.flatMap(x => addToFight({ name: x.name, mod: x.m.init, hp: x.m.hp, ac: x.m.ac, pc: true, pp: x.m.pp }).map(c => {
