@@ -1,5 +1,5 @@
 {
-    "generated":  "2026-11-20",
+    "generated":  "2026-11-21",
     "writers":  [
                     {
                         "id":  "ottoline-vex",
@@ -85,8 +85,13 @@
                                            "name":  "Sterling Vanmoor"
                                        }
                                    ],
-                        "article_count":  38,
+                        "article_count":  39,
                         "articles":  [
+                                         {
+                                             "id":  "yeti-fur-coats-300-percent-first-snow",
+                                             "title":  "Yeti Fur Coats Up 300% After First Snow; Yetis Unimpressed",
+                                             "date":  "2026-11-21"
+                                         },
                                          {
                                              "id":  "major-image-gold-audit-party-loan-ledgerhall",
                                              "title":  "Major Image Gold Vanishes in Audit; Party Had Borrowed on It",
@@ -106,11 +111,6 @@
                                              "id":  "adventuring-party-gems-winter-inn-bill-pretty",
                                              "title":  "Party Pays Winter Inn Bill in Gems; Keeper Rates Them \u0027Pretty\u0027",
                                              "date":  "2026-11-12"
-                                         },
-                                         {
-                                             "id":  "feast-budget-900-gp-goose-600-plumbrook",
-                                             "title":  "Feast Menu Costs 4,300 gp on a 900 gp Budget; Goose Is 600",
-                                             "date":  "2026-11-10"
                                          }
                                      ]
                     },
@@ -253,8 +253,13 @@
                                            "name":  "Brother Wendell Tumbleberry"
                                        }
                                    ],
-                        "article_count":  37,
+                        "article_count":  38,
                         "articles":  [
+                                         {
+                                             "id":  "find-steed-ride-share-paladin-one-star",
+                                             "title":  "Paladin\u0027s Find Steed Ride-Share Vanishes Mid-River Over 1 Star",
+                                             "date":  "2026-11-21"
+                                         },
                                          {
                                              "id":  "salamander-oven-subscription-lapses-40-pies",
                                              "title":  "Salamander Oven Subscription Lapses Mid-Bake; 40 Pies Half-Done",
@@ -274,11 +279,6 @@
                                              "id":  "salamander-oven-30-gp-heat-subscription-feast",
                                              "title":  "Salamander Oven Rents for 30 gp a Day; Heat Costs Extra",
                                              "date":  "2026-11-13"
-                                         },
-                                         {
-                                             "id":  "carpet-of-flying-surge-pricing-rain-hailrug",
-                                             "title":  "Carpet of Flying Surge Pricing Hits 40x as the Rain Worsens",
-                                             "date":  "2026-11-12"
                                          }
                                      ]
                     },
@@ -307,8 +307,13 @@
                                            "name":  "Ottoline Vex"
                                        }
                                    ],
-                        "article_count":  35,
+                        "article_count":  36,
                         "articles":  [
+                                         {
+                                             "id":  "giant-eagles-refuse-updraft-company-escort-duke",
+                                             "title":  "Giant Eagles Refuse Party\u0027s Escort Plan: \u0027Not a Coach Service\u0027",
+                                             "date":  "2026-11-21"
+                                         },
                                          {
                                              "id":  "feast-seating-chart-treaty-baronies-turnips",
                                              "title":  "Rival Baronies RSVP to Feast; Seating Chart Is Now a Treaty",
@@ -328,11 +333,6 @@
                                              "id":  "sahuagin-underwater-trade-parley-varnholt-water-breathing",
                                              "title":  "Sahuagin Demand Underwater Trade Talks; Envoys Hold Breath",
                                              "date":  "2026-11-11"
-                                         },
-                                         {
-                                             "id":  "hooded-stranger-same-quest-14-adventuring-parties",
-                                             "title":  "Hooded Stranger Gave Same Quest to 14 Adventuring Parties",
-                                             "date":  "2026-11-08"
                                          }
                                      ]
                     },
@@ -481,8 +481,13 @@
                                            "name":  "Skritch Mudwhistle"
                                        }
                                    ],
-                        "article_count":  34,
+                        "article_count":  35,
                         "articles":  [
+                                         {
+                                             "id":  "giant-crab-feast-stuck-town-gate",
+                                             "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
+                                             "date":  "2026-11-21"
+                                         },
                                          {
                                              "id":  "carrion-crawler-skeleton-guardpost-level-two",
                                              "title":  "Carrion Crawler Takes Post After Party Evicts Skeleton Guards",
@@ -502,11 +507,6 @@
                                              "id":  "prophecies-contradict-all-come-true-fourth-attempt",
                                              "title":  "13 Prophecies Contradict Each Other. All 13 Come True.",
                                              "date":  "2026-11-13"
-                                         },
-                                         {
-                                             "id":  "giant-boar-feast-alive-fourth-attempt",
-                                             "title":  "Giant Boar Brought Back Alive for Feast. Nobody Said Dead.",
-                                             "date":  "2026-11-11"
                                          }
                                      ]
                     },
@@ -598,32 +598,32 @@
                       "short":  "Brindlemoor",
                       "type":  "place",
                       "blurb":  "A frontier market town built on top of the entrance to the Undermaw. Its economy runs on adventurers, and so does its hospital.",
-                      "appearances":  120,
+                      "appearances":  124,
                       "articles":  [
+                                       {
+                                           "id":  "find-steed-ride-share-paladin-one-star",
+                                           "title":  "Paladin\u0027s Find Steed Ride-Share Vanishes Mid-River Over 1 Star",
+                                           "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "giant-crab-feast-stuck-town-gate",
+                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
+                                           "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "giant-eagles-refuse-updraft-company-escort-duke",
+                                           "title":  "Giant Eagles Refuse Party\u0027s Escort Plan: \u0027Not a Coach Service\u0027",
+                                           "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "yeti-fur-coats-300-percent-first-snow",
+                                           "title":  "Yeti Fur Coats Up 300% After First Snow; Yetis Unimpressed",
+                                           "date":  "2026-11-21"
+                                       },
                                        {
                                            "id":  "giant-boar-duchess-9-piglets-feast",
                                            "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
                                            "date":  "2026-11-20"
-                                       },
-                                       {
-                                           "id":  "gust-of-wind-market-leaves-14-stalls",
-                                           "title":  "Wizard\u0027s Gust of Wind Clears Market Leaves and 14 Stalls",
-                                           "date":  "2026-11-20"
-                                       },
-                                       {
-                                           "id":  "unlimited-tiny-hut-10-feet-voidpocket-mule",
-                                           "title":  "\u0027Unlimited\u0027 Tiny Hut Is 10 Feet Wide. Six Heroes, One Mule Tried",
-                                           "date":  "2026-11-20"
-                                       },
-                                       {
-                                           "id":  "bard-suggestion-spell-900-voters-goat-rally",
-                                           "title":  "Bard\u0027s Suggestion Spell Makes 900 Voters Agree With a Goat",
-                                           "date":  "2026-11-19"
-                                       },
-                                       {
-                                           "id":  "salamander-oven-subscription-lapses-40-pies",
-                                           "title":  "Salamander Oven Subscription Lapses Mid-Bake; 40 Pies Half-Done",
-                                           "date":  "2026-11-19"
                                        }
                                    ]
                   },
@@ -700,8 +700,13 @@
                       "short":  "Chapter 9",
                       "type":  "organization",
                       "blurb":  "The guild chapter that licenses parties to enter the Undermaw, sells the maps, and insists the maps are accurate.",
-                      "appearances":  72,
+                      "appearances":  73,
                       "articles":  [
+                                       {
+                                           "id":  "giant-crab-feast-stuck-town-gate",
+                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
+                                           "date":  "2026-11-21"
+                                       },
                                        {
                                            "id":  "carrion-crawler-skeleton-guardpost-level-two",
                                            "title":  "Carrion Crawler Takes Post After Party Evicts Skeleton Guards",
@@ -721,11 +726,6 @@
                                            "id":  "roper-stalagmite-ranger-fourth-attempt",
                                            "title":  "Roper Was the Stalagmite the Ranger Leaned On",
                                            "date":  "2026-11-15"
-                                       },
-                                       {
-                                           "id":  "prophecies-contradict-all-come-true-fourth-attempt",
-                                           "title":  "13 Prophecies Contradict Each Other. All 13 Come True.",
-                                           "date":  "2026-11-13"
                                        }
                                    ]
                   },
@@ -870,8 +870,13 @@
                       "short":  "the Company",
                       "type":  "organization",
                       "blurb":  "A Brindlemoor adventuring party that brought a sack of shrieker mushrooms home from the Undermaw to sell, and kept Tanner\u0027s Row awake for four nights.",
-                      "appearances":  42,
+                      "appearances":  43,
                       "articles":  [
+                                       {
+                                           "id":  "giant-eagles-refuse-updraft-company-escort-duke",
+                                           "title":  "Giant Eagles Refuse Party\u0027s Escort Plan: \u0027Not a Coach Service\u0027",
+                                           "date":  "2026-11-21"
+                                       },
                                        {
                                            "id":  "gust-of-wind-market-leaves-14-stalls",
                                            "title":  "Wizard\u0027s Gust of Wind Clears Market Leaves and 14 Stalls",
@@ -891,11 +896,6 @@
                                            "id":  "major-image-gold-audit-party-loan-ledgerhall",
                                            "title":  "Major Image Gold Vanishes in Audit; Party Had Borrowed on It",
                                            "date":  "2026-11-19"
-                                       },
-                                       {
-                                           "id":  "piercers-mine-guild-sends-hats-not-helmets",
-                                           "title":  "Piercers Fall in Mine; Guild Sends Party Hats, Not Helmets",
-                                           "date":  "2026-11-19"
                                        }
                                    ]
                   },
@@ -904,8 +904,13 @@
                       "short":  "the Fourth Attempt",
                       "type":  "organization",
                       "blurb":  "An adventuring party named in honor of the first three. Licensed by Chapter 9, popular with bards, unpopular with insurers.",
-                      "appearances":  40,
+                      "appearances":  41,
                       "articles":  [
+                                       {
+                                           "id":  "giant-crab-feast-stuck-town-gate",
+                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
+                                           "date":  "2026-11-21"
+                                       },
                                        {
                                            "id":  "roper-stalagmite-ranger-fourth-attempt",
                                            "title":  "Roper Was the Stalagmite the Ranger Leaned On",
@@ -925,11 +930,6 @@
                                            "id":  "giant-boar-feast-alive-fourth-attempt",
                                            "title":  "Giant Boar Brought Back Alive for Feast. Nobody Said Dead.",
                                            "date":  "2026-11-11"
-                                       },
-                                       {
-                                           "id":  "fourth-attempt-copper-pieces-59-percent-changers",
-                                           "title":  "Fourth Attempt Sells Last Copper Pieces at 59% of Value",
-                                           "date":  "2026-11-08"
                                        }
                                    ]
                   },
@@ -972,8 +972,13 @@
                       "short":  "Pottage",
                       "type":  "person",
                       "blurb":  "Steward of the Fourth Attempt\u0027s hirelings. Reads contracts all the way to the end, which is more than the party can say.",
-                      "appearances":  30,
+                      "appearances":  31,
                       "articles":  [
+                                       {
+                                           "id":  "giant-crab-feast-stuck-town-gate",
+                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
+                                           "date":  "2026-11-21"
+                                       },
                                        {
                                            "id":  "roper-stalagmite-ranger-fourth-attempt",
                                            "title":  "Roper Was the Stalagmite the Ranger Leaned On",
@@ -993,11 +998,6 @@
                                            "id":  "skeleton-guards-walk-off-undermaw-level-two",
                                            "title":  "Skeleton Guards Walk Off Level Two After 400 Years on Post",
                                            "date":  "2026-11-08"
-                                       },
-                                       {
-                                           "id":  "secret-door-search-empty-room-fourth-attempt",
-                                           "title":  "Secret Door Hunt Eats Six Hours in Empty Undermaw Room",
-                                           "date":  "2026-11-07"
                                        }
                                    ]
                   },
@@ -1036,6 +1036,40 @@
                                    ]
                   },
                   {
+                      "name":  "The Sleeping Mule Tavern",
+                      "short":  "the Sleeping Mule",
+                      "type":  "place",
+                      "blurb":  "A Tanner\u0027s Row tavern in Brindlemoor with a deep cellar, a loyal clientele of adventurers, and until recently a very clean walk-in cooler.",
+                      "appearances":  29,
+                      "articles":  [
+                                       {
+                                           "id":  "giant-crab-feast-stuck-town-gate",
+                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
+                                           "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "carrion-crawler-skeleton-guardpost-level-two",
+                                           "title":  "Carrion Crawler Takes Post After Party Evicts Skeleton Guards",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "giant-boar-duchess-9-piglets-feast",
+                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "bard-suggestion-spell-900-voters-goat-rally",
+                                           "title":  "Bard\u0027s Suggestion Spell Makes 900 Voters Agree With a Goat",
+                                           "date":  "2026-11-19"
+                                       },
+                                       {
+                                           "id":  "thunderwave-tavern-brawl-sleeping-mule-wall",
+                                           "title":  "Thunderwave Ends Tavern Brawl; Tavern Gains a Room",
+                                           "date":  "2026-11-18"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Senate Chamber",
                       "short":  "the Chamber",
                       "type":  "institution",
@@ -1070,12 +1104,17 @@
                                    ]
                   },
                   {
-                      "name":  "The Sleeping Mule Tavern",
-                      "short":  "the Sleeping Mule",
-                      "type":  "place",
-                      "blurb":  "A Tanner\u0027s Row tavern in Brindlemoor with a deep cellar, a loyal clientele of adventurers, and until recently a very clean walk-in cooler.",
-                      "appearances":  28,
+                      "name":  "Keeper Bess Harrowgate",
+                      "short":  "Harrowgate",
+                      "type":  "person",
+                      "blurb":  "Keeper of the Sleeping Mule tavern. Extends credit to adventurers and, it turns out, to cubes.",
+                      "appearances":  21,
                       "articles":  [
+                                       {
+                                           "id":  "giant-crab-feast-stuck-town-gate",
+                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
+                                           "date":  "2026-11-21"
+                                       },
                                        {
                                            "id":  "carrion-crawler-skeleton-guardpost-level-two",
                                            "title":  "Carrion Crawler Takes Post After Party Evicts Skeleton Guards",
@@ -1087,19 +1126,14 @@
                                            "date":  "2026-11-20"
                                        },
                                        {
-                                           "id":  "bard-suggestion-spell-900-voters-goat-rally",
-                                           "title":  "Bard\u0027s Suggestion Spell Makes 900 Voters Agree With a Goat",
-                                           "date":  "2026-11-19"
-                                       },
-                                       {
                                            "id":  "thunderwave-tavern-brawl-sleeping-mule-wall",
                                            "title":  "Thunderwave Ends Tavern Brawl; Tavern Gains a Room",
                                            "date":  "2026-11-18"
                                        },
                                        {
-                                           "id":  "griffon-egg-feast-geese-adventuring-party",
-                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
-                                           "date":  "2026-11-17"
+                                           "id":  "feast-2000-tiered-seating-heroes-feast-bid",
+                                           "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
+                                           "date":  "2026-11-15"
                                        }
                                    ]
                   },
@@ -1134,40 +1168,6 @@
                                            "id":  "reserve-meeting-opens-stocks-rise-hold-priced",
                                            "title":  "Stocks Rise as Reserve Meeting Opens, Hold Priced at 90%",
                                            "date":  "2026-10-27"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Keeper Bess Harrowgate",
-                      "short":  "Harrowgate",
-                      "type":  "person",
-                      "blurb":  "Keeper of the Sleeping Mule tavern. Extends credit to adventurers and, it turns out, to cubes.",
-                      "appearances":  20,
-                      "articles":  [
-                                       {
-                                           "id":  "carrion-crawler-skeleton-guardpost-level-two",
-                                           "title":  "Carrion Crawler Takes Post After Party Evicts Skeleton Guards",
-                                           "date":  "2026-11-20"
-                                       },
-                                       {
-                                           "id":  "giant-boar-duchess-9-piglets-feast",
-                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
-                                           "date":  "2026-11-20"
-                                       },
-                                       {
-                                           "id":  "thunderwave-tavern-brawl-sleeping-mule-wall",
-                                           "title":  "Thunderwave Ends Tavern Brawl; Tavern Gains a Room",
-                                           "date":  "2026-11-18"
-                                       },
-                                       {
-                                           "id":  "feast-2000-tiered-seating-heroes-feast-bid",
-                                           "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
-                                           "date":  "2026-11-15"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-gems-winter-inn-bill-pretty",
-                                           "title":  "Party Pays Winter Inn Bill in Gems; Keeper Rates Them \u0027Pretty\u0027",
-                                           "date":  "2026-11-12"
                                        }
                                    ]
                   },
@@ -1236,6 +1236,40 @@
                                            "id":  "cryptocurrency-falls-2-percent-lamp-oil-bitgold",
                                            "title":  "Cryptocurrency Falls 2% to 82,423 gp as Lamp Oil Soars",
                                            "date":  "2026-10-23"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Gravelstep Five",
+                      "short":  "the Five",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor adventuring party that took 30 gp from Chapter 9 to clear six striking skeletons off Undermaw Level 2, and cleared them.",
+                      "appearances":  16,
+                      "articles":  [
+                                       {
+                                           "id":  "giant-crab-feast-stuck-town-gate",
+                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
+                                           "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "carrion-crawler-skeleton-guardpost-level-two",
+                                           "title":  "Carrion Crawler Takes Post After Party Evicts Skeleton Guards",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "nothic-sells-party-heist-plan-rivals",
+                                           "title":  "Nothic Sells Party\u0027s Heist Plan to Rivals for 5 Gold",
+                                           "date":  "2026-11-17"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-3000-potatoes-exposure-plumbrook",
+                                           "title":  "Adventuring Party Peels 3,000 Potatoes, Paid in Exposure",
+                                           "date":  "2026-11-14"
+                                       },
+                                       {
+                                           "id":  "reincarnate-spell-upgrade-fighter-badger-second-spring",
+                                           "title":  "Party Pays 450 gp Reincarnate Upgrade; Fighter Is a Badger",
+                                           "date":  "2026-11-10"
                                        }
                                    ]
                   },
@@ -1342,36 +1376,36 @@
                                    ]
                   },
                   {
-                      "name":  "the Gravelstep Five",
-                      "short":  "the Five",
-                      "type":  "organization",
-                      "blurb":  "A Brindlemoor adventuring party that took 30 gp from Chapter 9 to clear six striking skeletons off Undermaw Level 2, and cleared them.",
-                      "appearances":  15,
+                      "name":  "Ashenfold",
+                      "short":  "Ashenfold",
+                      "type":  "place",
+                      "blurb":  "A barony on the near side of the Quillmarch Bridge, forever in talks with its neighbor Brackwater.",
+                      "appearances":  14,
                       "articles":  [
                                        {
-                                           "id":  "carrion-crawler-skeleton-guardpost-level-two",
-                                           "title":  "Carrion Crawler Takes Post After Party Evicts Skeleton Guards",
-                                           "date":  "2026-11-20"
+                                           "id":  "find-steed-ride-share-paladin-one-star",
+                                           "title":  "Paladin\u0027s Find Steed Ride-Share Vanishes Mid-River Over 1 Star",
+                                           "date":  "2026-11-21"
                                        },
                                        {
-                                           "id":  "nothic-sells-party-heist-plan-rivals",
-                                           "title":  "Nothic Sells Party\u0027s Heist Plan to Rivals for 5 Gold",
-                                           "date":  "2026-11-17"
+                                           "id":  "feast-seating-chart-treaty-baronies-turnips",
+                                           "title":  "Rival Baronies RSVP to Feast; Seating Chart Is Now a Treaty",
+                                           "date":  "2026-11-18"
                                        },
                                        {
-                                           "id":  "adventuring-party-3000-potatoes-exposure-plumbrook",
-                                           "title":  "Adventuring Party Peels 3,000 Potatoes, Paid in Exposure",
+                                           "id":  "winter-wolves-baronies-hire-same-party",
+                                           "title":  "Winter Wolves Block Road; Both Baronies Hire Same Party",
+                                           "date":  "2026-11-16"
+                                       },
+                                       {
+                                           "id":  "griffon-air-route-teleportation-circle-hopwell",
+                                           "title":  "Griffon Air Route Runs Straight Into a Teleportation Circle",
                                            "date":  "2026-11-14"
                                        },
                                        {
-                                           "id":  "reincarnate-spell-upgrade-fighter-badger-second-spring",
-                                           "title":  "Party Pays 450 gp Reincarnate Upgrade; Fighter Is a Badger",
+                                           "id":  "feast-budget-900-gp-goose-600-plumbrook",
+                                           "title":  "Feast Menu Costs 4,300 gp on a 900 gp Budget; Goose Is 600",
                                            "date":  "2026-11-10"
-                                       },
-                                       {
-                                           "id":  "kenku-witness-robbery-adventuring-party-suspects",
-                                           "title":  "Kenku Witness Reenacts Robbery, Frames Adventuring Party",
-                                           "date":  "2026-11-09"
                                        }
                                    ]
                   },
@@ -1410,40 +1444,6 @@
                                    ]
                   },
                   {
-                      "name":  "Ashenfold",
-                      "short":  "Ashenfold",
-                      "type":  "place",
-                      "blurb":  "A barony on the near side of the Quillmarch Bridge, forever in talks with its neighbor Brackwater.",
-                      "appearances":  13,
-                      "articles":  [
-                                       {
-                                           "id":  "feast-seating-chart-treaty-baronies-turnips",
-                                           "title":  "Rival Baronies RSVP to Feast; Seating Chart Is Now a Treaty",
-                                           "date":  "2026-11-18"
-                                       },
-                                       {
-                                           "id":  "winter-wolves-baronies-hire-same-party",
-                                           "title":  "Winter Wolves Block Road; Both Baronies Hire Same Party",
-                                           "date":  "2026-11-16"
-                                       },
-                                       {
-                                           "id":  "griffon-air-route-teleportation-circle-hopwell",
-                                           "title":  "Griffon Air Route Runs Straight Into a Teleportation Circle",
-                                           "date":  "2026-11-14"
-                                       },
-                                       {
-                                           "id":  "feast-budget-900-gp-goose-600-plumbrook",
-                                           "title":  "Feast Menu Costs 4,300 gp on a 900 gp Budget; Goose Is 600",
-                                           "date":  "2026-11-10"
-                                       },
-                                       {
-                                           "id":  "halfling-feastwarden-feast-2000-brindlemoor",
-                                           "title":  "Halfling Feastwarden Promises Feast for 2,000, Has No Menu",
-                                           "date":  "2026-11-09"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Examiner Odalys Brackenmoor",
                       "short":  "Brackenmoor",
                       "type":  "person",
@@ -1474,6 +1474,40 @@
                                            "id":  "adventuring-party-fealty-dropped-coins-lord-hask",
                                            "title":  "Adventuring Party Sworn to Lord After Coin Pickup Mishap",
                                            "date":  "2026-11-04"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Feastwarden Odo Plumbrook",
+                      "short":  "Plumbrook",
+                      "type":  "person",
+                      "blurb":  "A Brindlemoor halfling appointed Feastwarden of the Grand Feast. He has promised to feed 2,000 people and has never once doubted it.",
+                      "appearances":  13,
+                      "articles":  [
+                                       {
+                                           "id":  "giant-crab-feast-stuck-town-gate",
+                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
+                                           "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "giant-boar-duchess-9-piglets-feast",
+                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "salamander-oven-subscription-lapses-40-pies",
+                                           "title":  "Salamander Oven Subscription Lapses Mid-Bake; 40 Pies Half-Done",
+                                           "date":  "2026-11-19"
+                                       },
+                                       {
+                                           "id":  "feast-seating-chart-treaty-baronies-turnips",
+                                           "title":  "Rival Baronies RSVP to Feast; Seating Chart Is Now a Treaty",
+                                           "date":  "2026-11-18"
+                                       },
+                                       {
+                                           "id":  "griffon-egg-feast-geese-adventuring-party",
+                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
+                                           "date":  "2026-11-17"
                                        }
                                    ]
                   },
@@ -1512,21 +1546,21 @@
                                    ]
                   },
                   {
-                      "name":  "Feastwarden Odo Plumbrook",
-                      "short":  "Plumbrook",
-                      "type":  "person",
-                      "blurb":  "A Brindlemoor halfling appointed Feastwarden of the Grand Feast. He has promised to feed 2,000 people and has never once doubted it.",
+                      "name":  "Brackwater",
+                      "short":  "Brackwater",
+                      "type":  "place",
+                      "blurb":  "A barony across the Quillmarch Bridge from Ashenfold. The two have been negotiating a lasting peace for longer than anyone remembers.",
                       "appearances":  12,
                       "articles":  [
+                                       {
+                                           "id":  "giant-crab-feast-stuck-town-gate",
+                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
+                                           "date":  "2026-11-21"
+                                       },
                                        {
                                            "id":  "giant-boar-duchess-9-piglets-feast",
                                            "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
                                            "date":  "2026-11-20"
-                                       },
-                                       {
-                                           "id":  "salamander-oven-subscription-lapses-40-pies",
-                                           "title":  "Salamander Oven Subscription Lapses Mid-Bake; 40 Pies Half-Done",
-                                           "date":  "2026-11-19"
                                        },
                                        {
                                            "id":  "feast-seating-chart-treaty-baronies-turnips",
@@ -1534,14 +1568,14 @@
                                            "date":  "2026-11-18"
                                        },
                                        {
-                                           "id":  "griffon-egg-feast-geese-adventuring-party",
-                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
-                                           "date":  "2026-11-17"
+                                           "id":  "winter-wolves-baronies-hire-same-party",
+                                           "title":  "Winter Wolves Block Road; Both Baronies Hire Same Party",
+                                           "date":  "2026-11-16"
                                        },
                                        {
-                                           "id":  "red-dragon-lich-feast-invites-fire-marshal",
-                                           "title":  "Red Dragon and Lich Demand Feast Invites; Fire Marshal Says No",
-                                           "date":  "2026-11-16"
+                                           "id":  "potion-of-invisibility-envoy-parley-three-days",
+                                           "title":  "Potion of Invisibility Envoy Sits Through 3-Day Parley",
+                                           "date":  "2026-11-07"
                                        }
                                    ]
                   },
@@ -1610,40 +1644,6 @@
                                            "id":  "unidentified-ring-5-gp-ring-of-protection",
                                            "title":  "Party Sells Unknown Ring for 5 gp; It\u0027s a Ring of Protection",
                                            "date":  "2026-11-06"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Brackwater",
-                      "short":  "Brackwater",
-                      "type":  "place",
-                      "blurb":  "A barony across the Quillmarch Bridge from Ashenfold. The two have been negotiating a lasting peace for longer than anyone remembers.",
-                      "appearances":  11,
-                      "articles":  [
-                                       {
-                                           "id":  "giant-boar-duchess-9-piglets-feast",
-                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
-                                           "date":  "2026-11-20"
-                                       },
-                                       {
-                                           "id":  "feast-seating-chart-treaty-baronies-turnips",
-                                           "title":  "Rival Baronies RSVP to Feast; Seating Chart Is Now a Treaty",
-                                           "date":  "2026-11-18"
-                                       },
-                                       {
-                                           "id":  "winter-wolves-baronies-hire-same-party",
-                                           "title":  "Winter Wolves Block Road; Both Baronies Hire Same Party",
-                                           "date":  "2026-11-16"
-                                       },
-                                       {
-                                           "id":  "potion-of-invisibility-envoy-parley-three-days",
-                                           "title":  "Potion of Invisibility Envoy Sits Through 3-Day Parley",
-                                           "date":  "2026-11-07"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-shortcut-border-nine-hours-incident",
-                                           "title":  "Adventuring Party\u0027s Shortcut Turns 2-Hour Road Into 9",
-                                           "date":  "2026-11-05"
                                        }
                                    ]
                   },
@@ -2022,6 +2022,40 @@
                                    ]
                   },
                   {
+                      "name":  "Duchess",
+                      "short":  "Duchess",
+                      "type":  "creature",
+                      "blurb":  "The giant boar brought back alive from the Thornwood to be the Grand Feast\u0027s centerpiece. She now rents the big stall at the Sleeping Mule and keeps the pigeons off the roof.",
+                      "appearances":  9,
+                      "articles":  [
+                                       {
+                                           "id":  "giant-crab-feast-stuck-town-gate",
+                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
+                                           "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "giant-boar-duchess-9-piglets-feast",
+                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "salamander-oven-subscription-lapses-40-pies",
+                                           "title":  "Salamander Oven Subscription Lapses Mid-Bake; 40 Pies Half-Done",
+                                           "date":  "2026-11-19"
+                                       },
+                                       {
+                                           "id":  "thunderwave-tavern-brawl-sleeping-mule-wall",
+                                           "title":  "Thunderwave Ends Tavern Brawl; Tavern Gains a Room",
+                                           "date":  "2026-11-18"
+                                       },
+                                       {
+                                           "id":  "griffon-egg-feast-geese-adventuring-party",
+                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
+                                           "date":  "2026-11-17"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Ministry of Humours \u0026 Healing",
                       "short":  "the Ministry",
                       "type":  "agency",
@@ -2120,40 +2154,6 @@
                                            "id":  "airline-buyout-union-pushback-apollyon-easywyvern",
                                            "title":  "5.7B-Gold Wyvern Airline Buyout Hits Union Turbulence",
                                            "date":  "2026-10-16"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Duchess",
-                      "short":  "Duchess",
-                      "type":  "creature",
-                      "blurb":  "The giant boar brought back alive from the Thornwood to be the Grand Feast\u0027s centerpiece. She now rents the big stall at the Sleeping Mule and keeps the pigeons off the roof.",
-                      "appearances":  8,
-                      "articles":  [
-                                       {
-                                           "id":  "giant-boar-duchess-9-piglets-feast",
-                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
-                                           "date":  "2026-11-20"
-                                       },
-                                       {
-                                           "id":  "salamander-oven-subscription-lapses-40-pies",
-                                           "title":  "Salamander Oven Subscription Lapses Mid-Bake; 40 Pies Half-Done",
-                                           "date":  "2026-11-19"
-                                       },
-                                       {
-                                           "id":  "thunderwave-tavern-brawl-sleeping-mule-wall",
-                                           "title":  "Thunderwave Ends Tavern Brawl; Tavern Gains a Room",
-                                           "date":  "2026-11-18"
-                                       },
-                                       {
-                                           "id":  "griffon-egg-feast-geese-adventuring-party",
-                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
-                                           "date":  "2026-11-17"
-                                       },
-                                       {
-                                           "id":  "feast-2000-tiered-seating-heroes-feast-bid",
-                                           "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
-                                           "date":  "2026-11-15"
                                        }
                                    ]
                   },
@@ -3552,6 +3552,40 @@
                                    ]
                   },
                   {
+                      "name":  "Varnholt",
+                      "short":  "Varnholt",
+                      "type":  "place",
+                      "blurb":  "A harbor kingdom with strict customs rules and a berth fee for everything that floats, including some things that should not.",
+                      "appearances":  5,
+                      "articles":  [
+                                       {
+                                           "id":  "giant-eagles-refuse-updraft-company-escort-duke",
+                                           "title":  "Giant Eagles Refuse Party\u0027s Escort Plan: \u0027Not a Coach Service\u0027",
+                                           "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "sahuagin-underwater-trade-parley-varnholt-water-breathing",
+                                           "title":  "Sahuagin Demand Underwater Trade Talks; Envoys Hold Breath",
+                                           "date":  "2026-11-11"
+                                       },
+                                       {
+                                           "id":  "rogue-pickpockets-envoy-whistle-varnholt-pellam-incident",
+                                           "title":  "Rogue Picks Envoy\u0027s Pocket, Starts Varnholt-Pellam Incident",
+                                           "date":  "2026-11-06"
+                                       },
+                                       {
+                                           "id":  "gelatinous-cube-conference-room-varnholt-pellam-parley",
+                                           "title":  "Gelatinous Cube Hosted Varnholt-Pellam Parley as \u0027Glass Room\u0027",
+                                           "date":  "2026-11-04"
+                                       },
+                                       {
+                                           "id":  "ghost-ship-varnholt-harbor-visa-pellam-parley",
+                                           "title":  "Ghost Ship Docks in Varnholt; Customs Demands a Visa",
+                                           "date":  "2026-10-27"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Amazoom Caravans",
                       "short":  "Amazoom",
                       "type":  "company",
@@ -4070,35 +4104,6 @@
                                            "id":  "orcrange-county-wagonmasters-down-tools-bosses-raises",
                                            "title":  "Orcrange County Wagonmasters Set to Down Tools Over Supervisors\u0027 Fat Raises",
                                            "date":  "2026-10-11"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Varnholt",
-                      "short":  "Varnholt",
-                      "type":  "place",
-                      "blurb":  "A harbor kingdom with strict customs rules and a berth fee for everything that floats, including some things that should not.",
-                      "appearances":  4,
-                      "articles":  [
-                                       {
-                                           "id":  "sahuagin-underwater-trade-parley-varnholt-water-breathing",
-                                           "title":  "Sahuagin Demand Underwater Trade Talks; Envoys Hold Breath",
-                                           "date":  "2026-11-11"
-                                       },
-                                       {
-                                           "id":  "rogue-pickpockets-envoy-whistle-varnholt-pellam-incident",
-                                           "title":  "Rogue Picks Envoy\u0027s Pocket, Starts Varnholt-Pellam Incident",
-                                           "date":  "2026-11-06"
-                                       },
-                                       {
-                                           "id":  "gelatinous-cube-conference-room-varnholt-pellam-parley",
-                                           "title":  "Gelatinous Cube Hosted Varnholt-Pellam Parley as \u0027Glass Room\u0027",
-                                           "date":  "2026-11-04"
-                                       },
-                                       {
-                                           "id":  "ghost-ship-varnholt-harbor-visa-pellam-parley",
-                                           "title":  "Ghost Ship Docks in Varnholt; Customs Demands a Visa",
-                                           "date":  "2026-10-27"
                                        }
                                    ]
                   },
@@ -4924,6 +4929,30 @@
                                    ]
                   },
                   {
+                      "name":  "the Rimeback Pass",
+                      "short":  "the Rimeback",
+                      "type":  "place",
+                      "blurb":  "The mountain pass north of Brindlemoor that carries the town\u0027s winter salt, lamp oil, and flour, with a stone toll house at its foot.",
+                      "appearances":  3,
+                      "articles":  [
+                                       {
+                                           "id":  "giant-eagles-refuse-updraft-company-escort-duke",
+                                           "title":  "Giant Eagles Refuse Party\u0027s Escort Plan: \u0027Not a Coach Service\u0027",
+                                           "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "yeti-fur-coats-300-percent-first-snow",
+                                           "title":  "Yeti Fur Coats Up 300% After First Snow; Yetis Unimpressed",
+                                           "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "frost-giant-wages-rimeback-pass-ninefathom",
+                                           "title":  "Frost Giant Clearing Snowed-In Pass Wants Giant-Sized Wages",
+                                           "date":  "2026-11-17"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Stingmantas of Tampering Bay",
                       "short":  "the Stingmantas",
                       "type":  "company",
@@ -5457,6 +5486,25 @@
                                    ]
                   },
                   {
+                      "name":  "Gatekeeper Oswin Hask",
+                      "short":  "Hask",
+                      "type":  "person",
+                      "blurb":  "Keeper of Brindlemoor\u0027s East Gate for nineteen years. Has had a hay wagon and an ogre stuck in it.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "giant-crab-feast-stuck-town-gate",
+                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
+                                           "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-fealty-dropped-coins-lord-hask",
+                                           "title":  "Adventuring Party Sworn to Lord After Coin Pickup Mishap",
+                                           "date":  "2026-11-04"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "General Mounts",
                       "short":  "General Mounts",
                       "type":  "company",
@@ -5586,6 +5634,25 @@
                                            "id":  "griffon-air-route-teleportation-circle-hopwell",
                                            "title":  "Griffon Air Route Runs Straight Into a Teleportation Circle",
                                            "date":  "2026-11-14"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Hobb Fernsley, owner of Fernsley\u0027s Outfitters",
+                      "short":  "Hobb Fernsley",
+                      "type":  "person",
+                      "blurb":  "Owner of Fernsley\u0027s Outfitters on the far bank of the Tumblebrook, known for his winter sales and fine print.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "yeti-fur-coats-300-percent-first-snow",
+                                           "title":  "Yeti Fur Coats Up 300% After First Snow; Yetis Unimpressed",
+                                           "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "harpy-jingle-adventuring-party-river-fernsley",
+                                           "title":  "Harpy Jingle Walks Party Into River; Shop Calls It Foot Traffic",
+                                           "date":  "2026-11-18"
                                        }
                                    ]
                   },
@@ -7739,6 +7806,20 @@
                                    ]
                   },
                   {
+                      "name":  "Duke Osgar Wendmoor of Varnholt",
+                      "short":  "Duke Wendmoor",
+                      "type":  "person",
+                      "blurb":  "A Varnholt duke traveling to Brindlemoor\u0027s Grand Feast with eleven courtiers and nineteen trunks, one of which is shoes.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "giant-eagles-refuse-updraft-company-escort-duke",
+                                           "title":  "Giant Eagles Refuse Party\u0027s Escort Plan: \u0027Not a Coach Service\u0027",
+                                           "date":  "2026-11-21"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Durrock",
                       "short":  "Durrock",
                       "type":  "city",
@@ -8099,6 +8180,20 @@
                                            "id":  "armorican-express-earnings-542-gp-share-squireri",
                                            "title":  "Armorican Express Earnings Leap 31% to 5.42 gp a Share",
                                            "date":  "2026-10-24"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Grandmother Hulda Whitebrow",
+                      "short":  "Hulda Whitebrow",
+                      "type":  "creature",
+                      "blurb":  "Eldest of the yetis of the Rimeback Pass, about nine feet tall. She can tell yeti fur from goat by touch and says the clan has never sold a hair.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "yeti-fur-coats-300-percent-first-snow",
+                                           "title":  "Yeti Fur Coats Up 300% After First Snow; Yetis Unimpressed",
+                                           "date":  "2026-11-21"
                                        }
                                    ]
                   },
@@ -8537,20 +8632,6 @@
                                    ]
                   },
                   {
-                      "name":  "Hobb Fernsley, owner of Fernsley\u0027s Outfitters",
-                      "short":  "Hobb Fernsley",
-                      "type":  "person",
-                      "blurb":  "Owner of Fernsley\u0027s Outfitters on the far bank of the Tumblebrook, known for his winter sales and fine print.",
-                      "appearances":  1,
-                      "articles":  [
-                                       {
-                                           "id":  "harpy-jingle-adventuring-party-river-fernsley",
-                                           "title":  "Harpy Jingle Walks Party Into River; Shop Calls It Foot Traffic",
-                                           "date":  "2026-11-18"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Honeyed Bay Preserve",
                       "short":  "Honeyed Bay",
                       "type":  "place",
@@ -8813,6 +8894,20 @@
                                            "id":  "city-council-unqualified-innkeeper-wins-12635-votes",
                                            "title":  "Unqualified Innkeeper Wins City Council Seat, 12,635 Votes",
                                            "date":  "2026-10-20"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Kelpmouth",
+                      "short":  "Kelpmouth",
+                      "type":  "place",
+                      "blurb":  "A fishing village at the river\u0027s mouth, a morning\u0027s barge ride downstream from Brindlemoor, with tide pools that grow their crabs large.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "giant-crab-feast-stuck-town-gate",
+                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
+                                           "date":  "2026-11-21"
                                        }
                                    ]
                   },
@@ -9909,6 +10004,20 @@
                                    ]
                   },
                   {
+                      "name":  "Ser Wynna Brackenridge",
+                      "short":  "Ser Wynna",
+                      "type":  "person",
+                      "blurb":  "Paladin of the Thistledown Oath and founder of Steedshare, a ride-hire service run on a single Find Steed spell.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "find-steed-ride-share-paladin-one-star",
+                                           "title":  "Paladin\u0027s Find Steed Ride-Share Vanishes Mid-River Over 1 Star",
+                                           "date":  "2026-11-21"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Shop Steward Kevan Callinhorn",
                       "short":  "Callinhorn",
                       "type":  "person",
@@ -10003,6 +10112,20 @@
                                            "id":  "volvoth-job-cuts-2500-record-low-shares",
                                            "title":  "Volvoth Job Cuts: 2,500 More as Shares Hit Record Low",
                                            "date":  "2026-10-27"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Skyreeve Aethra",
+                      "short":  "Aethra",
+                      "type":  "creature",
+                      "blurb":  "The eldest giant eagle of the Talonspire roost, who speaks for the eagles in any parley and does not carry luggage.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "giant-eagles-refuse-updraft-company-escort-duke",
+                                           "title":  "Giant Eagles Refuse Party\u0027s Escort Plan: \u0027Not a Coach Service\u0027",
+                                           "date":  "2026-11-21"
                                        }
                                    ]
                   },
@@ -10311,6 +10434,20 @@
                                            "id":  "oil-117-barrel-dwarven-jones-falls-653",
                                            "title":  "Oil Hits 117 a Barrel as Dwarven Jones Sheds 653",
                                            "date":  "2026-10-25"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Admiral",
+                      "short":  "the Admiral",
+                      "type":  "creature",
+                      "blurb":  "A fourteen-foot giant crab brought back from Kelpmouth as the Grand Feast\u0027s second centerpiece. Wedged in the East Gate.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "giant-crab-feast-stuck-town-gate",
+                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
+                                           "date":  "2026-11-21"
                                        }
                                    ]
                   },
@@ -11365,20 +11502,6 @@
                                    ]
                   },
                   {
-                      "name":  "the Rimeback Pass",
-                      "short":  "the Rimeback",
-                      "type":  "place",
-                      "blurb":  "The mountain pass north of Brindlemoor that carries the town\u0027s winter salt, lamp oil, and flour, with a stone toll house at its foot.",
-                      "appearances":  1,
-                      "articles":  [
-                                       {
-                                           "id":  "frost-giant-wages-rimeback-pass-ninefathom",
-                                           "title":  "Frost Giant Clearing Snowed-In Pass Wants Giant-Sized Wages",
-                                           "date":  "2026-11-17"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "the Rosy Socialists",
                       "short":  "the Rosy Socialists",
                       "type":  "party",
@@ -11617,6 +11740,20 @@
                                    ]
                   },
                   {
+                      "name":  "the Talonspire",
+                      "short":  "the Talonspire",
+                      "type":  "place",
+                      "blurb":  "A needle of rock above the Rimeback Pass where a roost of giant eagles nests and turns down offers.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "giant-eagles-refuse-updraft-company-escort-duke",
+                                           "title":  "Giant Eagles Refuse Party\u0027s Escort Plan: \u0027Not a Coach Service\u0027",
+                                           "date":  "2026-11-21"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Tankard and Wellness Survey",
                       "short":  "the Tankard Survey",
                       "type":  "ip",
@@ -11627,6 +11764,20 @@
                                            "id":  "alcohol-study-two-ales-day-risk-wendell",
                                            "title":  "Alcohol Study: Two Ales a Day, 1-in-25 Death Risk",
                                            "date":  "2026-10-25"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Thistledown Oath",
+                      "short":  "Thistledown Oath",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor adventuring party whose paladin runs a steed-for-hire service on the side and whose wizard is free with his ratings.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "find-steed-ride-share-paladin-one-star",
+                                           "title":  "Paladin\u0027s Find Steed Ride-Share Vanishes Mid-River Over 1 Star",
+                                           "date":  "2026-11-21"
                                        }
                                    ]
                   },
@@ -11767,6 +11918,20 @@
                                            "id":  "strike-vote-97-percent-stellantern-wagonworks-marches",
                                            "title":  "Strike Vote Passes 97.3% at Stellantern Wagonworks",
                                            "date":  "2026-10-23"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Updraft Company",
+                      "short":  "the Updraft Company",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor adventuring party, led by Bryn Ostley, that took an escort contract over the Rimeback Pass on the strength of giant eagles it had never asked.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "giant-eagles-refuse-updraft-company-escort-duke",
+                                           "title":  "Giant Eagles Refuse Party\u0027s Escort Plan: \u0027Not a Coach Service\u0027",
+                                           "date":  "2026-11-21"
                                        }
                                    ]
                   },
@@ -12243,6 +12408,16 @@
                       "short":  "Marrow \u0026 Finch",
                       "type":  "organization",
                       "blurb":  "A Brindlemoor curio shop that buys unidentified loot cheap and sells cursed goods as-is, no refunds.",
+                      "appearances":  0,
+                      "articles":  [
+
+                                   ]
+                  },
+                  {
+                      "name":  "pelt notes",
+                      "short":  "pelt notes",
+                      "type":  "item",
+                      "blurb":  "Paper slips sold outside Fernsley\u0027s Outfitters promising one yeti fur coat \u0027upon delivery of yeti.\u0027 Peaked at 140 gp, closed at 12.",
                       "appearances":  0,
                       "articles":  [
 

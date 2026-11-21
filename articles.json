@@ -9345,6 +9345,142 @@
         "rumor": "Somebody on the feast committee told the cook to roast the runt and call it a suckling special, and the cook has not been seen since."
       },
       "fiction": true
+    },
+    {
+      "id": "yeti-fur-coats-300-percent-first-snow",
+      "title": "Yeti Fur Coats Up 300% After First Snow; Yetis Unimpressed",
+      "category": "Economy",
+      "author": "Barnaby Tallowmere",
+      "date": "2026-11-21",
+      "excerpt": "Brindlemoor's first snow sent yeti fur coats from 45 gp to 180 gp in two days. The yetis came down from the pass to say they are still wearing theirs.",
+      "social": "Brindlemoor got its first snow and a yeti fur coat now costs 180 gp, up from 45. Traders are buying paper claims on coats nobody has sewn yet. Then a yeti grandmother walked into town and felt the sleeve. Would you pay 180 gold for a coat a yeti calls goat?",
+      "content": "<p>Yeti fur coats rose 300% in Brindlemoor this week, from 45 gp to 180 gp, after the town's first snow fell on Tuesday night. By Thursday the yetis of the Rimeback Pass had walked down to the toll house to say, through a very patient interpreter, that they are still wearing all of their fur and would like to know whose coats these are.</p>\n\n<p>Let me put the price in plain terms. At 4 copper a loaf, the old coat was 1,125 loaves. The new coat is 4,500 loaves. (I have checked this four times. I checked it a fifth time out of pure dread.) A family of four could eat bread for three years on one sleeve.</p>\n\n<p>The rise started at Fernsley's Outfitters, where Hobb Fernsley chalked the new price on his window before the snow had finished settling. \"Demand is up,\" he told me, warming his hands on the cash box. \"Cold weather is foot traffic for the shoulders.\" By Wednesday the coats had sold out, so Fernsley started selling paper. A \"pelt note\" is a slip promising one yeti fur coat \"upon delivery of yeti.\" Notes changed hands on the bench outside his shop at 60 gp, then 90, then 140, among people who own no coat and in several cases no yeti.</p>\n\n<p>Somebody should explain the economics, so I will. When a price rises because people expect to resell at a higher price, rather than because anyone needs more warmth, it is a bubble. It holds as long as the next buyer believes. One speculator, a cooper named Dunstan Rook, holds 31 notes and could not tell me what color a yeti is. \"White,\" he guessed. \"Or brown. It goes up either way.\"</p>\n\n<p>Then Grandmother Hulda Whitebrow arrived. She is the eldest of the Rimeback's yetis, about nine feet tall, and she smelled of pine and old snow. In Fernsley's doorway she rubbed a display coat between two enormous fingers and said it was goat. Her grandson translated the rest: yetis shed in spring, not when merchants feel chilly, and the clan has not sold a single hair to anyone in living memory. \"We are using it,\" she said. \"It is snowing.\"</p>\n\n<p>Fernsley pointed out that his tag reads \"Yeti-Style Fur.\" The fine print says \"yeti\" refers to the cut. Note prices fell to 12 gp by sundown. Rook paid an average of 90 gp a note, so he is down 2,418 gp, or 60,450 loaves. He is a cooper, at least, so he has a barrel to live in.</p>\n\n<p>My colleague Sterling Vanmoor called the episode \"a healthy outerwear moment\" and bought four notes at the top. My aunt Marigold keeps her savings in a boot, and the boot is lined with an honest wool sock that has never pretended to be anything else. I have never respected a sock more.</p>\n\n<p>What this means for your pantry: buy flour, buy a goat-fur coat at goat-fur prices, and do not buy a promise of a yeti from a man on a bench.</p>\n\n<p><em>— B.T. (Loaf Index: see sidebar)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "Delivery of Yeti",
+          "text": "A desperate speculator holding thirty pelt notes hires the party to bring back real yeti fur before the notes hit zero. The clan in the high pass sheds nothing until spring and will not sell, so the party can steal, bargain, or tell their employer the truth. Use the ape's stats, with resistance to cold, for an angry yeti."
+        },
+        "npc": {
+          "name": "Corva Lintmarsh",
+          "role": "Pelt Note Broker",
+          "want": "She wants to sell her last forty pelt notes before anyone else hears the coats are goat.",
+          "secret": "She printed half the notes herself on the back of old feed receipts.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Note Bench",
+          "text": "A snow-dusted bench outside a winter outfitter where traders swap paper claims on coats all day. Nobody sitting on it is wearing a coat.",
+          "tavern": false
+        },
+        "rumor": "My cousin says the yetis are sewing coats out of merchant beards to sell back to us next winter."
+      },
+      "fiction": true
+    },
+    {
+      "id": "giant-eagles-refuse-updraft-company-escort-duke",
+      "title": "Giant Eagles Refuse Party's Escort Plan: 'Not a Coach Service'",
+      "category": "Travel",
+      "author": "Grashka Ironjaw",
+      "date": "2026-11-21",
+      "excerpt": "The Updraft Company planned its whole escort job around riding giant eagles over the pass. Nobody asked the eagles. The eagles said no. Twelve siege-days.",
+      "social": "An adventuring party took 900 gold to fly a duke, eleven courtiers and nineteen trunks over a snowed-in pass on giant eagles. They never asked the eagles. The eldest eagle told them, \"We are not a coach service.\" The duke is now walking. What does your party do when the eagles say no?",
+      "content": "<p>The adventuring party hired to escort Duke Osgar Wendmoor of Varnholt to Brindlemoor's Grand Feast built its entire plan around giant eagles. On Thirdday the giant eagles of the Talonspire said no. The Updraft Company had never asked them. Tension holds at twelve siege-days.</p>\n\n<p>The contract paid 900 gold to get the duke, eleven courtiers, and nineteen trunks across the Rimeback Pass, which is shut by snow and, last I checked, by a <a href=\"/a/frost-giant-wages-rimeback-pass-ninefathom\">frost giant arguing about his wages</a>. The party's wizard drew the plan on the back of the contract. Walk to the Talonspire. Whistle. Fly. That was the whole plan. I have seen it. It has a drawing of a bird.</p>\n\n<p>\"Eagles show up,\" said Bryn Ostley, who leads the Updraft Company and named it after the plan. \"That's what eagles do. Everyone knows the eagles show up.\"</p>\n\n<p>They did not show up. The party climbed the Talonspire instead and asked for a parley on the top ledge. Skyreeve Aethra, eldest of the roost, came out to meet them. The talon-shake lasted two seconds. Firm. No hidden dagger detected. One hidden mouse, which she ate.</p>\n\n<p>\"We are not a coach service,\" the Skyreeve said. \"We have eggs. We have a winter. Did you write ahead?\" They had not. She asked if the duke knew her name. The duke, who had come up the cliff in a litter carried by four courtiers, called her \"the big one.\" Tension climbed four siege-days in one sentence. I have seen border wars start slower.</p>\n\n<p>The duke's chamberlain offered gold. Eagles carry no purses and said so. He offered fish, and the roost counted the fish twice and came back with a counteroffer of more fish. Then a courtier opened trunk number seven to prove its contents were light. It was shoes. Forty pairs. The trunk outweighs the party's cleric. Aethra said the eagles fly for causes, and footwear is not a cause. The parley ended there.</p>\n\n<p>The delegation is now walking. The pass is forty miles of snow, the courtiers wear silk slippers, and the Feast is in nine days. The party handed out field rations at the bottom of the cliff. The duke refused his hardtack. I ate it. Excellent hardtack. Dense. Honest. It does not need to be flown anywhere.</p>\n\n<p>Ottoline Vex covered the same parley from a heated tent at the foot of the Talonspire and called it \"a frank exchange between partners.\" It was frank. I was on the ledge. An eagle took my hat, and she got a cup of mulled cider.</p>\n\n<p>Ostley says the party has moved to Plan B. I asked to see Plan B. It is the same drawing with a second bird. The eagles have not been asked about that one either.</p>\n\n<p><em>Ironjaw, filed from the front.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "Ask the Eagles First",
+          "text": "A nervous noble has paid in advance for a flight over a snowbound pass, and the party's employer promised giant eagles without ever asking them. The party must climb to the roost and win the eagles over with a real cause, a fair trade, or a favor, before the noble arrives at the cliff's foot expecting to fly."
+        },
+        "npc": {
+          "name": "Ferris Coldbrook",
+          "role": "Chamberlain to a traveling duke",
+          "want": "He wants his duke over the pass on time so he keeps his post.",
+          "secret": "He packed the forty pairs of shoes himself and would gladly see the trunk left behind if nobody blames him.",
+          "race": "human",
+          "gender": "male",
+          "kind": "noble"
+        },
+        "location": {
+          "name": "The Talonspire",
+          "text": "A needle of rock above a snowbound pass where a roost of giant eagles nests on ledges too narrow for a mule. The eagles keep a pile of rejected offerings at the base, including saddles, purses, and one engraved invitation.",
+          "tavern": false
+        },
+        "rumor": "My cousin says the eagles will carry anyone who brings them a good enough story, but they've heard every story twice and they yawn at anything involving a dragon."
+      },
+      "fiction": true
+    },
+    {
+      "id": "giant-crab-feast-stuck-town-gate",
+      "title": "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
+      "category": "Adventurers",
+      "author": "Hollis Delvewright",
+      "date": "2026-11-21",
+      "excerpt": "The Fourth Attempt brought a giant crab home for the Grand Feast. It is 14 feet across, the East Gate is 10, and the crab is now stuck halfway through.",
+      "social": "The Fourth Attempt brought home a giant crab for the Grand Feast. It is fourteen feet across. The East Gate is ten. The wizard shrank it to get it through, the crab pinched the rogue under the arch, and it grew back wedged against both gateposts. How would your party get it through?",
+      "content": "<p>THE EAST GATE, BRINDLEMOOR, STREET LEVEL, HALFWAY UNDER A CRAB — The Fourth Attempt came home Friday night with a new centerpiece for the Grand Feast: one giant crab, fourteen feet from claw to claw, caught in the tide pools below Kelpmouth. The East Gate is ten feet wide. As of this morning the crab is stuck in it, about halfway, and the adventuring party that caught it is on the wrong side of it.</p>\n\n<p>For anyone just arriving: Feastwarden Odo Plumbrook promised a feast for 2,000 on the Town Green on the 26th, on 900 gp. The first centerpiece, Duchess, <a href=\"/a/giant-boar-duchess-9-piglets-feast\">gave birth to nine piglets on Thursday</a>, and the town will not hear of eating her. Plumbrook had a new job notice up by Friday breakfast. The Fourth Attempt, who <a href=\"/a/giant-boar-feast-alive-fourth-attempt\">brought Duchess in</a>, took it for 40 gp and caught the morning barge.</p>\n\n<p>Ansel Pottage, steward of the party's hirelings, read me the clause by lantern light. \"Bring back one (1) centerpiece fit to feed two thousand, to the Town Green, by Saturday.\" He folded the paper. \"I measured the crab. Nobody asked me to measure the gate. Nobody ever does.\"</p>\n\n<p>The trouble is the walk. A crab goes sideways, which brings the widest part of it to the gate first. The fighter tried four times to turn it face-on, and four times it turned back. Then the wizard cast Enlarge/Reduce, the crab shrank to the size of a cart, and the party hurried it under the arch. That spell lasts only as long as the wizard keeps her mind on it. Halfway through, the crab pinched the rogue, the wizard looked round, and the crab came back to full size with its shell jammed against both gateposts.</p>\n\n<p>Box score at the gate: fighter 14 hit points (of 38), rogue 6 (of 24), wizard 22 (of 22), crab at full health and dug in. I lost my fourteenth ten-foot pole of the season trying to lever a claw off the left post. The pole is in two pieces now. I rolled poorly on that.</p>\n\n<p>Gatekeeper Oswin Hask, who has kept the East Gate for nineteen years, has closed it to carts. \"I've had a hay wagon stuck in this gate, and once an ogre,\" he said. \"Neither one pinched.\" The fish carts are going round by the North Gate, an hour out of their way. Hask is charging the crab the livestock toll of two copper a leg, and he counts ten legs.</p>\n\n<p>Plumbrook spoke from a chair on the town side. \"A strong start,\" he said. \"Our centerpiece is already halfway to the Green.\" Asked how one crab feeds 2,000, he said it was \"a very big crab\" and that the committee was \"looking into butter.\" Keeper Bess Harrowgate sent word from the Sleeping Mule that she has no stall that size and would want a deposit. The party's bard, who asked to be named, says the crab \"chose us.\"</p>\n\n<p>The wizard is resting and will try again at dawn. Chapter 9 has offered the loan of a crowbar at five silver an hour. Five days remain. By noon, a boy from Fish Street had started calling the crab the Admiral, and I have asked him to stop. Hilde Brackwater has already been by with a blanket.</p>\n\n<p><em>— H.D., filing from below</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Crab in the Gate",
+          "text": "A giant crab bought for the harvest fair is wedged in the town gate, and the market carts are backed up down the road. The gatekeeper wants the gate clear by dawn without a scratch on it, and the fair's organizer wants the crab delivered alive. Use the giant crab's stats; a cast of enlarge/reduce, a team of horses, or a lot of butter might do it."
+        },
+        "npc": {
+          "name": "Tobin Saltmarsh",
+          "role": "Harvest Fair Provisioner",
+          "want": "He needs the crab on the fairground before the gates open for the crowds.",
+          "secret": "He sold tickets to the crab's roasting and to its release back into the sea, to two different crowds.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Sea Gate",
+          "text": "The town's narrow stone gate onto the coast road, built for handcarts. Its gateposts are scored with old claw marks, and the gatekeeper will not say whose.",
+          "tavern": false
+        },
+        "rumor": "They say the crab in the gate isn't stuck at all, it's just waiting for the tide to come up the high street."
+      },
+      "fiction": true
+    },
+    {
+      "id": "find-steed-ride-share-paladin-one-star",
+      "title": "Paladin's Find Steed Ride-Share Vanishes Mid-River Over 1 Star",
+      "category": "Transport",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-11-21",
+      "excerpt": "A paladin rented her Find Steed warhorse to her own party at 3 sp a head, then dismissed it mid-ford over a one-star rating. Nyx was aboard.",
+      "social": "Our paladin cast Find Steed and rented the warhorse to her own party for 3 silver a head. Halfway across the ford, the wizard rated the ride one star. She dismissed the horse on the spot, and all four riders went into the river. How many stars would your character have given?",
+      "content": "<p>Ser Wynna Brackenridge, paladin of the Thistledown Oath, cast Find Steed on Tuesday morning and rented the warhorse to her own adventuring party as a ride-share, 3 silver a head, from Brindlemoor to Ashenfold. Halfway across the Millrace ford, the party's wizard rated the ride one star. Ser Wynna dismissed the steed as an action, the horse disappeared, and its passengers fell into the river. I was one of them!</p>\n\n<p>Okay. OKAY. Before the river, let me tell you about the launch, because the launch was beautiful. Ser Wynna calls the service Steedshare, and the pitch is gorgeous: one 10-minute cast, a celestial warhorse with an Intelligence of 6, and no hay, no stable fees, no subscription. NO SUBSCRIPTION. Do you know how long I have waited for a mount without a monthly plan? She even offered telepathic route updates to the driver within a mile. Runic latency: zero. Mana throughput: one 2nd-level slot, unlimited miles.</p>\n\n<p>The seating chart was aggressive. Orrin Pegwhistle, the wizard, rode up front. Dabble Fenn, the rogue, sat behind him. I was wedged on the saddlebags with my familiar Byte on my head. Ser Wynna walked alongside holding the fare ledger, because, as she put it, \"the driver's seat was the most profitable seat, so I sold it.\" That made four riders on one warhorse, if you count Byte, which Byte insists you do.</p>\n\n<p>Steedshare also has ratings. Riders score each trip from one to five stars, and the score goes straight to the driver. Orrin's score came in at the deepest part of the ford. He cited \"the trot\" and \"a faint smell of sulfur,\" which is fair, since Ser Wynna had picked fiend as the steed's type. She told me fiend was the only option with heated seats.</p>\n\n<p>\"The spell is very clear,\" Ser Wynna said afterward, wringing out her tabard. \"I may dismiss my steed at any time as an action. I took that action.\" Orrin, still in the water, said he would give the river two stars.</p>\n\n<p>Recasting the spell would have summoned the same horse at full hit points, which is a lovely feature! Ser Wynna had no 2nd-level slots left, though, having spent her last one that morning smiting a goose that hissed at the Steedshare banner. So we walked the last nine miles to Ashenfold. At the gate she charged each of us a 1 sp cancellation fee, because the ride had technically been cancelled by the driver.</p>\n\n<p>I already know Brother Tumbleberry will write that this proves we should all walk and touch grass. Wendell, I touched riverweed. That counts. This is also the second time this month a ride-hire service has billed me for its own disaster, after the <a href=\"/a/carpet-of-flying-surge-pricing-rain-hailrug\">carpet of flying surge pricing</a> mess, and I will keep riding them all.</p>\n\n<p>Byte surfaced, spat out a minnow, and said, \"Your journey, your way.\" Four out of five beholder eyes. A celestial warhorse for 3 silver is a miracle, right up until somebody rates it.</p>\n\n<p>Damage Report: Passengers dunked: 3, plus one pseudodragon. Stars given: 1. Cancellation fees paid: 3 sp. Eyebrows: wet, but present.</p>\n\n<p><em>— Nyx (they/them). Damage Report below.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Ford of Lost Saddles",
+          "text": "A paladin's steed-for-hire service keeps vanishing mid-ford, dumping paying riders and their cargo into the river. The town's merchants want the service fixed or shut down before the spring caravan, and someone may be rating rides badly on purpose to make the paladin dismiss her steed at the worst moment."
+        },
+        "npc": {
+          "name": "Hesper Lowmarrow",
+          "role": "Ferryman of the Millrace",
+          "want": "He wants the steed service gone so travelers go back to paying for his ferry.",
+          "secret": "He has been paying a bored wizard 2 sp a trip to give every steed ride one star while it is over deep water.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Millrace Ford",
+          "text": "A shallow river crossing whose bed is littered with abandoned saddles, fare ledgers, and one waterlogged banner. Anything dropped in the deep middle stretch seems to wash up at the ferryman's dock by morning.",
+          "tavern": false
+        },
+        "rumor": "They say the paladin's horse only vanishes when someone gives it one star, so tip well or learn to swim."
+      },
+      "fiction": true
     }
   ]
 }
