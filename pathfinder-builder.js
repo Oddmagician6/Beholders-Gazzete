@@ -179,7 +179,7 @@ function stepAncestry() {
     if (!p.anc) return h;
     const a = p.anc;
     h += `<h3>${esc(a.n)}</h3><ul class="cb-list">
-        <li><b>Hit Points</b> ${a.hp} · <b>Size</b> ${PC_SIZES[a.sz]} · <b>Speed</b> ${a.sp} feet${a.vi ? ` · <b>${pcCap(a.vi.replace(/-/g, ' '))}</b>` : ''}</li>
+        <li><b>Hit Points</b> ${pcAncHp(cur)}${pcAncHp(cur) !== a.hp ? ` (${esc(p.her.n)})` : ''} · <b>Size</b> ${PC_SIZES[pcSize(cur)]}${pcSize(cur) !== a.sz ? ` (${esc(p.her.n)})` : ''} ·<b>Speed</b> ${a.sp} feet${a.vi ? ` · <b>${pcCap(a.vi.replace(/-/g, ' '))}</b>` : ''}</li>
         <li><b>Attribute boosts</b> ${boostSetText(a.bo)}${a.fl ? ` · <b>flaw</b> ${a.fl.map(a2 => PC_ABIL_NAMES[a2]).join(', ')}` : ''} <span class="cb-tag">(placed on the Attributes step)</span></li>
         <li><b>Languages</b> ${a.la.map(pcCap).join(', ')}${a.lo.length ? ` · <b>more from</b> ${a.lo.map(pcCap).join(', ')}` : ''}</li>
         <li><b>Traits</b> ${a.tr.join(', ')}</li>

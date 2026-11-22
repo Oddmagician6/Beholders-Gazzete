@@ -443,13 +443,15 @@ function sbPf2eText(m, block = null) {
 }
 
 // ── Pathfinder hazards (pf2e-hazards-data.js) ─────────────
-// A hazard's Strike: no multiple attack penalty unless the hazard has one.
-function sbPf2eHazardStrike([ranged, name, bonus, traits, dmg, note, map]) {
+// A hazard's Strike: no multiple attack penalty unless the hazard has one. A simple hazard's Strike is part
+// of its triggered reaction (Poisoned Lock's spine), so GM Core prints it with no action and no penalty line;
+// a complex hazard's Strikes come in its routine, one action each.
+function sbPf2eHazardStrike([ranged, name, bonus, traits, dmg, note, map], cx) {
     const kind = ranged ? 'Ranged' : 'Melee';
-    const atk = map ? sbPf2eMap(bonus, traits) : sbSigned(bonus);
+    const atk = map && cx ? sbPf2eMap(bonus, traits) : sbSigned(bonus);
     const extra = [...traits, ...(note && !/^no multiple attack penalty$/i.test(note) ? [note] : [])];
     // A Strike that deals no damage of its own prints "Effect devour" (Titanic Flytrap).
-    return { kind, text: `${name.toLowerCase()} ${atk}${extra.length ? ` (${extra.join(', ')})` : ''}`, label: /\d/.test(dmg) ? 'Damage' : 'Effect', dmg: /\d/.test(dmg) ? dmg : dmg.toLowerCase() };
+    return { kind, act: !!cx, text: `${name.toLowerCase()} ${atk}${extra.length ? ` (${extra.join(', ')})` : ''}`, label: /\d/.test(dmg) ? 'Damage' : 'Effect', dmg: /\d/.test(dmg) ? dmg : dmg.toLowerCase() };
 }
 
 // Its parts in the book's order: the abilities a Strike names (a poison) come after the Strikes.
@@ -459,8 +461,9 @@ function sbPf2eHazardParts(h) {
     return {
         level: `${h.cx ? 'Complex hazard' : 'Hazard'} ${String(h.l).replace('-', '−')}`,
         traits: [SB_PF2E_RARITY[h.ra], ...h.tr].filter(Boolean),
-        // A complex hazard rolls initiative on its Stealth modifier (the DC − 10), so it shows both.
-        stealth: h.st != null ? `DC ${h.st}${h.cx ? ` (initiative ${sbSigned(h.st - 10)})` : ''}${h.sd ? ` ${h.sd}` : ''}` : h.sd || '',
+        // A complex hazard that takes turns rolls initiative on its Stealth modifier (the DC − 10), so it shows
+        // both (the Summoning Rune has no routine: the creature it summons rolls instead).
+        stealth: h.st != null ? `DC ${h.st}${h.cx && h.ro ? ` (initiative ${sbSigned(h.st - 10)})` : ''}${h.sd ? ` ${h.sd}` : ''}` : h.sd || '',
         defense: h.ac != null ? { ac: h.ac, saves } : null,
         // A hazard breaks at half its HP (GM Core prints the BT, with or without Hardness; the data leaves it out).
         // Hardness 0 is printed too (Hallucination Powder Trap); 1 HP has no BT.
@@ -468,7 +471,7 @@ function sbPf2eHazardParts(h) {
             ['Immunities', h.im], ['Weaknesses', h.we], ['Resistances', h.re]].filter(x => x && (x[1] || x[1] === 0)),
         before: (h.ab || []).filter(a => !named(a)),
         after: (h.ab || []).filter(named),
-        strikes: (h.sk || []).map(sbPf2eHazardStrike)
+        strikes: (h.sk || []).map(s => sbPf2eHazardStrike(s, h.cx))
     };
 }
 
@@ -489,7 +492,7 @@ function sbPf2eHazardHtml(h) {
         </div>${h.ro || p.strikes.length || p.after.length || h.rs ? `
         <div class="sb-props">
             ${line('Routine', h.ro)}
-            ${p.strikes.map(s => `<p class="sb-feat"><strong>${s.kind}</strong>${sbPf2eCost('1')} ${esc(s.text)}, <strong>${s.label}</strong> ${esc(s.dmg)}</p>`).join('')}
+            ${p.strikes.map(s => `<p class="sb-feat"><strong>${s.kind}</strong>${s.act ? sbPf2eCost('1') : ''} ${esc(s.text)}, <strong>${s.label}</strong> ${esc(s.dmg)}</p>`).join('')}
             ${p.after.map(sbPf2eAbility).join('')}
             ${line('Reset', h.rs)}
         </div>` : ''}`;
@@ -507,7 +510,7 @@ function sbPf2eHazardText(h) {
         p.hp.length && p.hp.map(([k, v]) => `${k} ${v}`).join('; '),
         ...p.before.map(ability),
         h.ro && `Routine ${flat(h.ro)}`,
-        ...p.strikes.map(s => `${s.kind} [one action] ${s.text}, ${s.label} ${s.dmg}`),
+        ...p.strikes.map(s => `${s.kind}${s.act ? ' [one action]' : ''} ${s.text}, ${s.label} ${s.dmg}`),
         ...p.after.map(ability),
         h.rs && `Reset ${flat(h.rs)}`
     ].filter(Boolean).join('\n');

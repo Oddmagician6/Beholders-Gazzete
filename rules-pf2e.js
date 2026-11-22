@@ -67,14 +67,14 @@ RULE_SYSTEMS.pf2e = {
 // The conditions the Initiative tab tracks (Player Core), in the Gazette's own short words.
 // max: the highest value a condition takes (frightened 2); 0 for one with no value.
 const PF2E_CONDITIONS = {
-    'Blinded': { max: 0, text: "Can't see. What you could only see is undetected to you, Perception checks that need sight fail, other Perception checks take a −4 status penalty, and visual effects can't touch you." },
+    'Blinded': { max: 0, text: "Can't see. All normal terrain is difficult terrain to you, what you could only see is undetected to you, Perception checks that need sight critically fail, other Perception checks take a −4 status penalty if sight is your only precise sense, and visual effects can't touch you." },
     'Clumsy': { max: 4, text: 'A status penalty equal to the value on Dexterity-based rolls and DCs: AC, Reflex saves, ranged attacks, Acrobatics, Stealth, and Thievery.' },
     'Concealed': { max: 0, text: 'Hard to make out (fog, dim light). Anyone targeting you rolls a DC 5 flat check; on a failure the attack or effect misses you.' },
     'Confused': { max: 0, text: "Off-guard, no reactions, no Delay or Ready. You spend your actions attacking whoever the dice pick. Damage from an attack or spell gives a DC 11 flat check to snap out of it." },
     'Controlled': { max: 0, text: 'Someone else chooses your actions.' },
     'Dazzled': { max: 0, text: 'Your eyes are overwhelmed: everything you see is concealed to you.' },
     'Deafened': { max: 0, text: "Can't hear. Perception checks that need hearing critically fail, Perception for initiative and checks that mix sound with sight take a −2 status penalty, and auditory actions need a DC 5 flat check." },
-    'Doomed': { max: 5, text: 'You die at dying 4 minus this value. It drops by 1 after a full night\'s rest.' },
+    'Doomed': { max: 5, text: 'You die at dying 4 (5 with Diehard) minus this value. It drops by 1 after a full night\'s rest.' },
     'Drained': { max: 4, text: 'A status penalty on Constitution-based rolls and DCs (Fortitude saves), and your HP and maximum HP drop by your level times the value. It drops by 1 after a full night\'s rest.' },
     'Dying': { max: 5, text: "At 0 HP, unconscious, and close to death. Roll a recovery check (flat check, DC 10 + the value) at the start of each turn. You die at dying 4 (5 with Diehard), less your doomed value." },
     'Encumbered': { max: 0, text: 'Carrying too much: clumsy 1 and a 10-foot penalty to all your Speeds.' },

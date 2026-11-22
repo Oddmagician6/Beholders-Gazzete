@@ -220,7 +220,7 @@ function featRow(key, ctx) {
     if (c && pcParts(c).cls) {
         const at = pcFeatSlots(c).filter(s => c.feats[s.slot] === key);
         act = at.map(s => `<span class="pa-taken">✔ Taken: ${esc(paSlotName(s.slot))} <button type="button" class="pa-x" data-drop="${s.slot}" aria-label="Remove ${esc(f.n)} from the ${esc(paSlotName(s.slot))}" title="Remove">✕</button></span>`).join('');
-        if (!at.length || f.mx > 1) {
+        if (at.length < (f.mx || 1)) {
             const slots = Object.entries(ctx.open).filter(([, set]) => set.has(key)).map(([slot]) => slot);
             if (slots.length) {
                 act += `<label class="pa-take">Take it in<select data-take="${key}"><option value="">Pick a slot</option>${slots.map(s => `<option value="${s}">${esc(paSlotName(s))}</option>`).join('')}</select></label>`;

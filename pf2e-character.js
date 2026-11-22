@@ -26,6 +26,32 @@ const PC_SAVES = { fort: ['Fortitude', 'con'], ref: ['Reflex', 'dex'], will: ['W
 const PC_SIZES = { tiny: 'Tiny', sm: 'Small', med: 'Medium', lg: 'Large' };
 // Versatile heritages that open a second ancestry's feats (Player Core: aiuvarin, dromaar).
 const PC_EXTRA_FEATS = { aiuvarin: 'elf', dromaar: 'orc' };
+// Heritages that change the sheet's numbers (Player Core 1 and 2): hp ancestry Hit Points instead of the
+// ancestry's, sz size, sk trained skills (one already trained gives a free pick instead), ft feats granted.
+const PC_HERITAGE = {
+    'dragonscaled-kobold': { hp: 10 }, 'great-kholo': { hp: 10 }, 'root-leshy': { hp: 10 }, 'thickskin-tripkee': { hp: 8 },
+    'unbreakable-goblin': { hp: 10 }, 'hold-scarred-orc': { hp: 12, ft: ['Diehard'] },
+    'ant-kholo': { sz: 'sm', sk: ['deception'] }, 'sweetbreath-kholo': { sk: ['diplomacy'] },
+    'battle-ready-orc': { sk: ['intimidation'], ft: ['Intimidating Glare'] }, 'winter-orc': { sk: ['survival'] },
+    'nine-lives-catfolk': { ft: ['Diehard'] }, 'runtboss-hobgoblin': { ft: ['Group Coercion'] },
+    'shortshanks-hobgoblin': { ft: ['Ride'] }, 'tunnel-rat': { ft: ['Quick Squeeze'] },
+    'cliffscale-lizardfolk': { ft: ['Combat Climber'] }, 'deep-orc': { ft: ['Terrain Expertise', 'Combat Climber'] },
+    'woodstalker-lizardfolk': { ft: ['Terrain Stalker'] }
+};
+// The character's heritage's changes ({} for none, or a heritage that doesn't fit the ancestry).
+function pcHeritageFx(c) {
+    const { her } = pcParts(c);
+    return (her && PC_HERITAGE[c.her]) || {};
+}
+// Ancestry Hit Points and size, after the heritage.
+function pcAncHp(c) {
+    const { anc } = pcParts(c);
+    return anc ? pcHeritageFx(c).hp || anc.hp : 0;
+}
+function pcSize(c) {
+    const { anc } = pcParts(c);
+    return anc ? pcHeritageFx(c).sz || anc.sz : '';
+}
 // Casters whose spells use another attribute than their key one.
 const PC_SPELL_ATTR = { champion: 'cha' };
 // The cleric's deity's favored weapon: rank by level for each doctrine.
@@ -454,6 +480,7 @@ function pcGivenSkills(c) {
     }
     if (bg) bg.sk.forEach(k => give(k, bg.n));
     if (pcBgSkill(c)) give(pcBgSkill(c), bg.n);
+    (pcHeritageFx(c).sk || []).forEach(k => give(k, PF2E_HERITAGES[c.her].n));
     if ((c.cls === 'cleric' || c.cls === 'champion') && c.deity.skill) give(c.deity.skill, 'Deity');
     return given;
 }
@@ -640,6 +667,7 @@ function pcGrantedFeats(c) {
         if (byPick) grant(byPick, bg.n);
     }
     [ch, ch2].forEach(x => { if (x) (x.ft || []).forEach(n => grant(n, x.n)); });
+    (pcHeritageFx(c).ft || []).forEach(n => grant(n, PF2E_HERITAGES[c.her].n));
     if (c.ch === 'warpriest') grant('Shield Block', 'Warpriest');
     // The doctrines' other feats: a cloistered cleric's Domain Initiate, and a warpriest's Deadly Simplicity
     // when the deity's favored weapon is simple or unarmed.
@@ -648,7 +676,9 @@ function pcGrantedFeats(c) {
     if (c.ch === 'warpriest' && fav && ['simple', 'unarmed'].includes(fav.ct)) grant('Deadly Simplicity', 'Warpriest');
     // Class features that are feats by name (a fighter's Shield Block and Reactive Strike).
     const { cls } = pcParts(c);
-    if (cls) pcFeatures(c).forEach(f => { if (pcFeatKey(f.name) && !out.some(g => g.name === f.name)) grant(f.name, cls.n); });
+    // An archetype feat that shares a feature's name is another thing (the rogue's Surprise Attack isn't the
+    // level-4 archetype feat), so it isn't granted.
+    if (cls) pcFeatures(c).forEach(f => { const k = pcFeatKey(f.name); if (k && !PF2E_FEATS[k].ar && !out.some(g => g.name === f.name)) grant(f.name, cls.n); });
     return out;
 }
 
@@ -691,8 +721,11 @@ function pcAncestryTraits(c) {
 function pcFeatsFor(c, slot, { archetype = false } = {}) {
     const kind = slot.replace(/\d+$/, '');
     const level = Number(slot.replace(/^\D+/, ''));
-    const taken = new Set(Object.entries(c.feats).filter(([s]) => s !== slot).map(([, f]) => f));
-    pcGrantedFeats(c).forEach(g => { if (g.key) taken.add(g.key); });
+    // How many times each feat is taken elsewhere: a feat is used up at its limit (mx, 1 by default).
+    const times = {};
+    Object.entries(c.feats).forEach(([s, f]) => { if (s !== slot && f) times[f] = (times[f] || 0) + 1; });
+    pcGrantedFeats(c).forEach(g => { if (g.key) times[g.key] = (times[g.key] || 0) + 1; });
+    const used = (key, f) => (times[key] || 0) >= (f.mx || 1);
     const traits = pcAncestryTraits(c);
     const sub = kind.startsWith('x') ? pcSubFeat(c.feats[slot.slice(1)], level) : null;
     // Another class's feats an archetype taken lists as its own (Archer: Assisting Shot at 4), in its slots.
@@ -701,7 +734,7 @@ function pcFeatsFor(c, slot, { archetype = false } = {}) {
     const out = [];
     for (const [key, f] of Object.entries(PF2E_FEATS)) {
         if (Object.hasOwn(extra, key) && extra[key] <= level && !f.tr.includes(c.cls)) {
-            out.push({ key, feat: f, taken: taken.has(key) && !(f.mx > 1), arc: extra[key] });
+            out.push({ key, feat: f, taken: used(key, f), arc: extra[key] });
             continue;
         }
         if (f.l > level) continue;
@@ -714,7 +747,7 @@ function pcFeatsFor(c, slot, { archetype = false } = {}) {
         else if (kind === 'gen') fits = f.c === 'general' || f.c === 'skill';
         if (!fits) continue;
         if (kind === 'cls' && f.ar && f.c === 'class' && !archetype) continue;
-        out.push({ key, feat: f, taken: taken.has(key) && !(f.mx > 1) });
+        out.push({ key, feat: f, taken: used(key, f) });
     }
     return out.sort((a, b) => (b.arc || b.feat.l) - (a.arc || a.feat.l) || a.feat.n.localeCompare(b.feat.n));
 }
@@ -749,8 +782,24 @@ function pcPrereqMet(c, text, stats = pcStats(c)) {
         if (ok.includes(null)) return null;
         return any ? ok.includes(true) : !ok.includes(false);
     }
-    const key = pcFeatKey(t);
-    return key ? pcActiveFeats(c).includes(key) || pcGrantedFeats(c).some(g => g.key === key) : null;
+    // A feat's name: any feat of that name counts, its class versions too ("Animal Companion" is met by the
+    // ranger's "Animal Companion (Ranger)", "Incredible Companion" by either class's).
+    const keys = pcFeatKeysNamed(t);
+    if (!keys.length) return null;
+    const have = new Set([...pcActiveFeats(c), ...pcGrantedFeats(c).map(g => g.key)]);
+    return keys.some(k => have.has(k));
+}
+
+// The feats a prerequisite's name can mean: its own key, plus every "Name (Something)" version.
+function pcFeatKeysNamed(name) {
+    const own = pcFeatKey(name);
+    const low = String(name).trim().toLowerCase();
+    const out = own ? [own] : [];
+    Object.entries(PF2E_FEATS).forEach(([k, f]) => {
+        const m = /^(.+?) \([^)]+\)$/.exec(f.n);
+        if (m && m[1].toLowerCase() === low && !out.includes(k)) out.push(k);
+    });
+    return out;
 }
 
 // ── Archetypes ──────────────────────────────────────────
@@ -1437,7 +1486,7 @@ function pcStats(c) {
     const prof = pcProfs(c);
     const L = c.level;
     const key = pcKey(c);
-    const hp = (parts.anc ? parts.anc.hp : 0) + (parts.cls ? (parts.cls.hp + mods.con) * L : 0) + (pcHasFeat(c, 'toughness') ? L : 0);
+    const hp = pcAncHp(c) +(parts.cls ? (parts.cls.hp + mods.con) * L : 0) + (pcHasFeat(c, 'toughness') ? L : 0);
     const saves = Object.fromEntries(Object.entries(PC_SAVES).map(([k, [, a]]) => [k, mods[a] + pcBonus(prof[k], L)]));
     const cast = pcCasting(c);
     const spellAtk = cast ? mods[cast.attr || 'cha'] + pcBonus(prof.spell, L) : null;

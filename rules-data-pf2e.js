@@ -111,7 +111,7 @@ const RULES_CARDS_PF2E = [
                 'At 0 HP a character is knocked out: their initiative moves to just before the turn that dropped them, and they gain dying 1 (dying 2 from a critical hit or their own critical failure), plus their wounded value.',
                 'Nonlethal damage leaves them unconscious at 0 HP instead, with no dying.',
                 'Damage taken while dying raises dying by 1, or by 2 from a critical hit or their own critical failure.',
-                'Dying 4 is death (dying 4 minus doomed, for the doomed).',
+                'Dying 4 is death (dying 5 with Diehard), minus the doomed value.',
                 'Healing to 1 HP or more ends dying and wakes them; they act normally on their next turn.',
                 'Losing dying gives wounded 1, or raises wounded by 1 (not when Hero Points end it).'
             ] },
@@ -132,9 +132,9 @@ const RULES_CARDS_PF2E = [
         id: 'rest', icon: '🛏️', title: 'Rest & Healing', keys: 'sleep night treat wounds medicine heal hp fatigued drained doomed',
         blocks: [
             { defs: [
-                ['A night\'s rest', ['8 hours, once a day: regain Constitution modifier (at least 1) × level HP; half without shelter or comfort, at the GM\'s call.',
+                ['A night\'s rest', ['8 hours, once a day: regain Constitution modifier (at least 1) × level HP; half (at least 1) without shelter or comfort, at the GM\'s call.',
                     'Ends fatigued, and lowers doomed and drained by 1. Sleeping in armor wakes you fatigued.',
-                    '16 hours or more without sleep: fatigued.']],
+                    'More than 16 hours without rest: fatigued.']],
                 ['Treat Wounds', '10 minutes with a healer\'s toolkit and a Medicine check; the patient can\'t be treated again for an hour. Treating them for a full hour doubles the healing.']
             ] },
             { table: { head: ['Rank', 'DC', 'Success', 'Critical success'], rows: [
@@ -158,7 +158,7 @@ const RULES_CARDS_PF2E = [
                 ['Hustle', 'Double speed, for Constitution modifier × 10 minutes (10 at least); a group uses its lowest.'],
                 ['Investigate', 'Half speed. Secret Recall Knowledge checks for clues along the way.'],
                 ['Scout', 'Half speed. The whole party gets +1 to initiative in the next fight.'],
-                ['Search', 'Half speed. The GM rolls a secret check when they pass something hidden.']
+                ['Search', 'Half speed (300 feet a minute at most, 150 to check everything before stepping into it). The GM rolls a secret check when they pass something hidden.']
             ] }
         ]
     },

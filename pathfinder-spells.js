@@ -324,7 +324,8 @@ function renderStats() {
     const f = pcFocus(c, ps.g);
     const stats = [
         ['Class', ps.arc ? `${esc(r.n)} archetype` : `${esc(PF2E_CLASSES[c.cls].n)} ${c.level}`],
-        ['Tradition', r.trad ? pcCap(r.trad) : '—'],
+        // A monk's qi spells are divine or occult, the player's call when they take the first one.
+        ['Tradition', r.trad ? pcCap(r.trad) : c.cls === 'monk' && !ps.arc ? 'Divine or occult (your pick)' : '—'],
         ['Spell DC', num.dc],
         ['Spell attack', pcSign(num.atk)],
         ['Proficiency', PC_RANKS[num.rank]],

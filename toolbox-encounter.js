@@ -356,7 +356,8 @@ function encounterText() {
         lines.push('', s.title.toUpperCase());
         encSceneLines(s).forEach(([label, text]) => lines.push(`${label}: ${text}`));
     }
-    if (blocksReady()) enc.list.forEach(e => lines.push('', monsterBlockText(e.m)));
+    // A hazard's block comes from its own data, so it's copied even when the creature blocks didn't load.
+    enc.list.forEach(e => { if (e.m.hz || blocksReady()) lines.push('', monsterBlockText(e.m)); });
     return lines.join('\n');
 }
 
