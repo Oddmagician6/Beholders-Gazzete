@@ -3,7 +3,7 @@
    One setting for the whole site, kept in this browser (localStorage gazette_rules_version,
    '2014' by default). 5e only: on another system's page (ruleSystemId) it does nothing.
    - 2014: the site's SRD 5.1 data. The old opt-in "📗 SRD 5.2 additions" (gazette_srd52) still
-     works here: it adds srd52-data.js's 20 spells, 17 monsters, and 17 magic items.
+     works here: it adds srd52-data.js's 20 spells, 17 monsters, and 16 magic items.
    - 2024: srd52-full-data.js (all of SRD 5.2.1, ~1 MB) is loaded and swapped into SPELLS_DATA,
      MAGIC_ITEM_TEXT, MONSTERS, and MONSTER_BY_ID in place, so every page script keeps working.
      A 5.1 name that 5.2 renamed or grouped still finds its 5.2 entry (MONSTER_BY_ID.goblin is the
@@ -115,7 +115,8 @@ const RULES_HAB_KIN = {
 };
 
 // The 5.1 monsters 5.2 dropped -> the 5.2 one a 2024 page uses instead (B493). 5.2 folded the rat and the
-// insect swarms into its own; the rest keep their name with the stand-in's stats ("Orc (Tough)").
+// insect swarms into its own; the rest keep their name with the stand-in's stats ("Orc (Tough)"), and `from`
+// holds the 5.1 id, so a switch back (and a link) finds the Orc, not the Tough's 5.1 twin, the Thug (B903).
 const RULES_STAND_IN = {
     'giant-rat-diseased': 'giant-rat', 'swarm-of-beetles': 'swarm-of-insects', 'swarm-of-centipedes': 'swarm-of-insects',
     'swarm-of-spiders': 'swarm-of-insects', 'swarm-of-wasps': 'swarm-of-insects',
@@ -127,7 +128,7 @@ function rulesStandIn(id, m, v52) {
     const s = v52[RULES_STAND_IN[id]];
     if (!s) return null;
     if (RULES_FOLDED.has(id)) return s;
-    if (!rulesStandIns[id] || rulesStandIns[id].standIn !== s.name) rulesStandIns[id] = { ...s, name: `${m.name} (${s.name})`, standIn: s.name };
+    if (!rulesStandIns[id] || rulesStandIns[id].standIn !== s.name) rulesStandIns[id] = { ...s, name: `${m.name} (${s.name})`, standIn: s.name, from: id };
     return rulesStandIns[id];
 }
 
@@ -376,7 +377,7 @@ function srd52Toggle() {
     if (!SRD52_OK) return '';
     const v = rulesShown;
     return `<span class="rules-switch"><label class="rules-pick" title="Which D&amp;D 5e rules the site follows: its rules cards, spells, monsters, and magic items. One setting for the whole site, saved in this browser.">Rules <select data-rules aria-label="Rules version"><option value="2014"${v === '2014' ? ' selected' : ''}>2014 (SRD 5.1)</option><option value="2024"${v === '2024' ? ' selected' : ''}>2024 (SRD 5.2)</option></select></label>`
-        + `<label class="v52-switch" title="20 spells, 17 monsters, and 17 magic items from the 2024 rules (SRD 5.2) that SRD 5.1 doesn't have, mixed into the 2014 lists."${v === '2024' || RULES_TEXT_ONLY ? ' hidden' : ''}><input type="checkbox" data-srd52${srd52Added ? ' checked' : ''}> 📗 SRD 5.2 additions</label></span>`;
+        + `<label class="v52-switch" title="20 spells, 17 monsters, and 16 magic items from the 2024 rules (SRD 5.2) that SRD 5.1 doesn't have, mixed into the 2014 lists."${v === '2024' || RULES_TEXT_ONLY ? ' hidden' : ''}><input type="checkbox" data-srd52${srd52Added ? ' checked' : ''}> 📗 SRD 5.2 additions</label></span>`;
 }
 
 if (SRD52_OK) {

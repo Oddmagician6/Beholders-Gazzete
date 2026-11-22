@@ -309,7 +309,8 @@ function encChanged(push) {
     encTouched = true;
     if (enc.band && !encBandFits(ENC_BAND_BY_KEY[enc.band], enc.list)) enc.band = null;
     if (enc.list.length && !enc.seed) enc.seed = newSeed();
-    if (!enc.list.length) { enc.seed = null; enc.band = null; enc.lead = null; }
+    // A link whose monsters are all parked (an addition with the switch off) keeps its scene seed for the way back (B904).
+    if (!enc.list.length && !enc.parked.length) { enc.seed = null; enc.band = null; enc.lead = null; }
     enc.open = new Set([...enc.open].filter(id => enc.list.some(e => e.m.id === id)));
     renderEncounter();
     if (document.getElementById('en-cr').value === 'party') renderPicker();
@@ -392,7 +393,7 @@ function encParams() {
     const type = document.getElementById('en-roll-type');
     return urlFor('enc', {
         party: enc.party.map(g => `${g.count}x${g.level}`),
-        m: [...enc.list.map(e => `${e.m.id}.${e.count}`), ...enc.parked.map(e => `${e.id}.${e.count}`)],
+        m: [...enc.list.map(e => `${e.m.from || e.m.id}.${e.count}`),...enc.parked.map(e => `${e.id}.${e.count}`)],
         diff: fieldValue(diff) === defaultValue(diff) ? null : diff.value,
         type: type.value || null,
         env: document.getElementById('en-env').value || null,
@@ -400,7 +401,7 @@ function encParams() {
         pack: enc.band,
         lead: enc.lead ? enc.lead.name : null,
         stand: enc.lead && enc.lead.stand ? enc.lead.stand : null,
-        seed: enc.list.length ? enc.seed : null
+        seed: enc.list.length || enc.parked.length ? enc.seed : null
     });
 }
 
@@ -473,8 +474,9 @@ function setupEncounter() {
                 else rows.push({ ...e, m });
             };
             enc.list.forEach(e => {
-                const m = e.m.hb ? e.m : find(e.m.id);
-                if (m) put(m, e); else parked.push({ id: e.m.id, count: e.count });
+                // A stand-in ("Orc (Tough)") goes back by the id it stands for (B903).
+                const m = e.m.hb ? e.m : find(e.m.from || e.m.id);
+                if (m) put(m, e); else parked.push({ id: e.m.from || e.m.id, count: e.count });
             });
             enc.parked.forEach(e => { const m = find(e.id); if (m) put(m, { count: e.count }); else parked.push(e); });
             enc.list = rows;

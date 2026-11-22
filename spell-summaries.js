@@ -95,7 +95,7 @@ const SPELL_SUMMARIES = {
     'Blindness/Deafness': 'A creature makes a CON save or is blinded or deafened (your pick); it saves again at the end of each turn.',
     'Blur': 'Your body blurs: attackers have disadvantage against you unless they don\'t rely on sight.',
     'Branding Smite': 'Bonus action: your next weapon hit deals an extra 2d6 radiant, and the target glows and can\'t be invisible.',
-    'Calm Emotions': 'Humanoids in a 20-ft sphere make CHA saves or lose charm and fear effects, or stop being hostile.',
+    'Calm Emotions': 'Humanoids in a 20-ft sphere make CHA saves or have charm and fear effects held off (they resume when the spell ends), or stop being hostile.',
     'Continual Flame': 'A torch-bright flame that gives no heat and burns until it\'s dispelled.',
     'Darkness': 'Magical darkness fills a 15-ft sphere; darkvision can\'t see through it and ordinary light can\'t light it.',
     'Darkvision': 'A willing creature gains darkvision out to 60 ft for 8 hours.',
@@ -156,7 +156,7 @@ const SPELL_SUMMARIES = {
     'Fly': 'A willing creature gains a flying speed of 60 ft for up to 10 minutes.',
     'Gaseous Form': 'A willing creature becomes a slow-flying misty cloud that can slip through cracks.',
     'Glyph of Warding': 'A hidden glyph that sets off an explosion or a stored spell when triggered.',
-    'Haste': 'A creature gets double speed, +2 AC, advantage on DEX saves, and an extra action; it loses a turn when the spell ends.',
+    'Haste': 'A creature gets double speed, +2 AC, advantage on DEX saves, and an extra action (one weapon attack, Dash, Disengage, Hide, or Use an Object); it loses a turn when the spell ends.',
     'Hypnotic Pattern': 'Creatures in a 30-ft cube that see the pattern and fail a WIS save are charmed and incapacitated.',
     'Lightning Bolt': 'A 100-ft line of lightning: DEX save or 8d6 lightning, half on a success.',
     'Magic Circle': 'A 10-ft cylinder that keeps a creature type (fey, fiends, undead, and so on) out, or traps one inside.',
@@ -176,7 +176,7 @@ const SPELL_SUMMARIES = {
     'Speak with Plants': 'Plants within 30 ft talk with you, and can be persuaded to move aside or to tangle your foes.',
     'Spirit Guardians': 'Spirits in a 15-ft radius around you: foes there move at half speed and make a WIS save or take 3d8.',
     'Stinking Cloud': 'A 20-ft sphere of nauseating gas: creatures inside that fail a CON save waste their action retching.',
-    'Tiny Hut': 'A 10-ft dome that keeps out the weather and any creatures you choose, for 8 hours.',
+    'Tiny Hut': 'A 10-ft-radius dome for 8 hours: whoever is inside when you cast it passes freely, everyone else and the weather stay out.',
     'Tongues': 'A creature understands any spoken language and anyone can understand it, for an hour.',
     'Vampiric Touch': 'Melee spell attack for 3d6 necrotic, and you heal half the damage; attack again each turn.',
     'Water Breathing': 'Up to ten willing creatures can breathe underwater for 24 hours.',
@@ -199,7 +199,7 @@ const SPELL_SUMMARIES = {
     'Dominate Beast': 'A beast that fails a WIS save is charmed and follows your commands.',
     'Fabricate': 'Turn raw materials into a finished product: wood into a bridge, flax into clothes.',
     'Faithful Hound': 'An invisible watchdog that barks at intruders and bites for 4d8 piercing.',
-    'Fire Shield': 'Flames wrap you: resistance to cold or fire, and anyone who hits you in melee takes 2d8.',
+    'Fire Shield': 'Flames wrap you: resistance to cold or fire, and anyone within 5 ft who hits you in melee takes 2d8.',
     'Freedom of Movement': 'A creature ignores difficult terrain and magic that slows or paralyzes it, and slips grapples and bonds.',
     'Giant Insect': 'Turn up to ten centipedes, three spiders, five wasps, or one scorpion into giant ones that obey you.',
     'Greater Invisibility': 'A creature stays invisible for up to a minute, even while it attacks and casts spells.',
@@ -208,10 +208,10 @@ const SPELL_SUMMARIES = {
     'Ice Storm': 'Hail pounds a 20-ft cylinder: DEX save or 2d8 bludgeoning and 4d6 cold; the ground becomes difficult terrain.',
     'Locate Creature': 'Sense the direction of a creature you know within 1,000 ft; running water blocks the spell.',
     'Phantasmal Killer': 'A creature that fails a WIS save is frightened; at the end of each of its turns it saves again, taking 4d10 psychic on a failure (the spell ends on a success).',
-    'Polymorph': 'Turn a creature into a beast of CR up to its own level; an unwilling one makes a WIS save.',
+    'Polymorph': 'Turn a creature into a beast of CR up to its own CR (or level); an unwilling one makes a WIS save.',
     'Private Sanctum': 'Ward an area against scrying, teleportation, planar travel, sound, and sight.',
     'Resilient Sphere': 'A sphere of force traps a creature that fails a DEX save; nothing gets in or out.',
-    'Secret Chest': 'Hide a chest on the Ethereal Plane and call it back whenever you need it.',
+    'Secret Chest': 'Hide a chest on the Ethereal Plane and call it back when you need it; after 60 days the spell may end and the chest is lost.',
     'Stone Shape': 'Reshape a piece of stone up to 5 ft across: a weapon, a door, a passage.',
     'Stoneskin': 'A creature gains resistance to nonmagical bludgeoning, piercing, and slashing damage.',
     'Wall of Fire': 'A 60-ft wall of flame; 5d8 fire to anyone near its hot side or who passes through.',
@@ -236,7 +236,7 @@ const SPELL_SUMMARIES = {
     'Geas': 'A creature that fails a WIS save must obey your command or take 5d10 psychic damage.',
     'Greater Restoration': 'Ends a charm, petrification, curse, ability or hit point maximum reduction, or one level of exhaustion.',
     'Hallow': 'Consecrate an area against celestials, elementals, fey, fiends, and undead, with an extra effect you choose.',
-    'Hold Monster': 'A creature that fails a WIS save is paralyzed; it saves again at the end of each of its turns.',
+    'Hold Monster': 'A creature (not undead) that fails a WIS save is paralyzed; it saves again at the end of each of its turns.',
     'Insect Plague': 'A 20-ft sphere of biting locusts: CON save or 4d10 piercing, half on a success.',
     'Legend Lore': 'Learn the legends of a famous person, place, or object.',
     'Mass Cure Wounds': 'Up to six creatures in a 30-ft sphere each regain 3d8 + your spellcasting modifier hit points.',
@@ -270,7 +270,7 @@ const SPELL_SUMMARIES = {
     'Freezing Sphere': 'A frigid globe bursts in a 60-ft sphere: CON save or 10d6 cold; it can freeze water solid.',
     'Globe of Invulnerability': 'A 10-ft barrier that stops spells of 5th level or lower from reaching anyone inside.',
     'Guards and Wards': 'Ward a building against intruders with fog, locked doors, webs, and confusing corridors.',
-    'Harm': 'A creature makes a CON save: 14d6 necrotic on a failure, half on a success (never below 1 HP), and its hit point maximum drops by the damage taken.',
+    'Harm': 'A creature makes a CON save: 14d6 necrotic on a failure, half on a success (never below 1 HP); on a failure its hit point maximum also drops by the damage for an hour.',
     'Heal': 'A creature regains 70 hit points and is cured of blindness, deafness, and any disease.',
     'Heroes\' Feast': 'A feast for twelve: cures disease and poison, gives immunity to poison and fear, and more hit points for a day.',
     'Instant Summons': 'Mark an object so you can call it to your hand from anywhere.',
@@ -311,7 +311,7 @@ const SPELL_SUMMARIES = {
     'Teleport': 'Instantly move yourself and up to eight creatures to a place you know.',
 
     // 8th level
-    'Animal Shapes': 'Turn any number of willing creatures into beasts of CR 4 or lower.',
+    'Animal Shapes': 'Turn any number of willing creatures into Large or smaller beasts of CR 4 or lower.',
     'Antimagic Field': 'A 10-ft sphere around you where magic doesn\'t work.',
     'Antipathy/Sympathy': 'Make a place or object repel or draw in a kind of creature you name.',
     'Clone': 'Grow an inert copy of a living creature; its soul moves into the copy if it dies.',
@@ -321,7 +321,7 @@ const SPELL_SUMMARIES = {
     'Earthquake': 'Shake the ground in a 100-ft radius: creatures fall prone, fissures open, and buildings fall.',
     'Feeblemind': 'A creature takes 4d6 psychic, and if it fails an INT save its INT and CHA drop to 1.',
     'Glibness': 'Your CHA checks can\'t roll lower than 15, and magic that detects lies always finds you truthful.',
-    'Holy Aura': 'Chosen creatures get advantage on saves, attacks against them have disadvantage, and fiends or undead that hit them are blinded.',
+    'Holy Aura': 'Chosen creatures get advantage on saves, attacks against them have disadvantage, and a fiend or undead that hits one in melee makes a CON save or is blinded.',
     'Incendiary Cloud': 'A 20-ft sphere of burning smoke that drifts: DEX save or 10d8 fire, half on a success.',
     'Maze': 'Banish a creature into a labyrinth on another plane until it finds its way out.',
     'Mind Blank': 'A creature is immune to psychic damage, mind reading, and charm for 24 hours.',
@@ -346,11 +346,18 @@ const SPELL_SUMMARIES = {
     'Wish': 'Copy any spell of 8th level or lower, or wish for something greater, at a risk.'
 };
 
+// 2024 spells whose first sentence leaves out what they do (B906).
+const SPELL_SUMMARIES_2024 = {
+    'Power Word Kill': 'A creature you can see within 60 ft with 100 HP or fewer dies; one with more takes 12d12 psychic.'
+};
+
 // The line for a card: the summary above, else the spell's first sentence (cut at a word).
 function spellSummary(s) {
     if (!s) return '';
     // 5.2 text changed many (Sleep); a homebrew spell that shares a name has its own text.
     if (SPELL_SUMMARIES[s.name] && !s.v52 && !s.hb) return SPELL_SUMMARIES[s.name];
-    const first = String(s.desc || '').split('\n')[0].split(/(?<=\.)\s/)[0];
+    if (SPELL_SUMMARIES_2024[s.name] && s.v52 && !s.hb) return SPELL_SUMMARIES_2024[s.name];
+    // A homebrew description's lead ***Heading.*** goes and other ** marks come off (spell-detail.js bolds them, B907).
+    const first = String(s.desc || '').split('\n')[0].replace(/^\s*\*{3}.+?\*{3}\s*/, '').replace(/\*{2,3}(.+?)\*{2,3}/g, '$1').split(/(?<=\.)\s/)[0];
     return first.length > 160 ? first.slice(0, 159).replace(/\s+\S*$/, '') + '…' : first;
 }
