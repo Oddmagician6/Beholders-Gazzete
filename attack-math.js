@@ -110,10 +110,11 @@ function amFloorAvg(dice, flat, floor, dbl = false, extra = []) {
     let dist = [1];
     dice.forEach(([c, z, g]) => { const p = face(z, g); for (let k = 0; k < c; k++) dist = conv(dist, p); });
     if (dbl) {
-        const d2 = new Array(dist.length * 2 - 1).fill(0);
-        dist.forEach((x, i) => { d2[2 * i] = x; });
-        dist = d2;
-        flat *= 2;
+        // Pathfinder: the 1-damage minimum applies to the roll, and then the crit doubles it (1d6 − 2 crits for 2 at the least).
+        const d2 = [];
+        dist.forEach((x, t) => { if (!x) return; const v = 2 * Math.max(floor, t + flat); d2[v] = (d2[v] || 0) + x; });
+        dist = Array.from(d2, x => x || 0);
+        flat = 0;
     }
     extra.forEach(([c, z, g]) => { const p = face(z, g); for (let k = 0; k < c; k++) dist = conv(dist, p); });
     return dist.reduce((s, x, t) => s + x * Math.max(floor, t + flat), 0);
@@ -174,7 +175,8 @@ function amRound(o, ac, tradeOn) {
     if (AM_PF2E) return amRoundPf(o, ac);
     const once = amParse(o.once);
     const onceAvg = once ? amAverages(once, false, 0, 0) : null;
-    let total = 0, none = 1, hits = 0, rider = 0, attacks = 0;
+    // noneR: no rider-eligible attack has hit yet (a row marked norider, like a club for Sneak Attack, can't carry it).
+    let total = 0, none = 1, noneR = 1, hits = 0, rider = 0, attacks = 0;
     const rows = o.rows.map(r => {
         const roll = amParse(r.dmg);
         const trade = tradeOn && r.trade;
@@ -184,7 +186,7 @@ function amRound(o, ac, tradeOn) {
         const each = (odds.hit - odds.crit) * avg.hit + odds.crit * avg.crit;
         const n = roll ? r.n : 0;
         for (let i = 0; i < n; i++) {
-            if (onceAvg) rider += none * ((odds.hit - odds.crit) * onceAvg.hit + odds.crit * onceAvg.crit);
+            if (onceAvg && !r.norider) { rider += noneR * ((odds.hit - odds.crit) * onceAvg.hit + odds.crit * onceAvg.crit); noneR *= 1 - odds.hit; }
             none *= 1 - odds.hit;
         }
         total += n * each;
@@ -192,7 +194,7 @@ function amRound(o, ac, tradeOn) {
         attacks += n;
         return { r, roll, trade, bonus, odds, avg, each, n };
     });
-    return { rows, rider, onceAvg, total: total + rider, any: attacks ? 1 - none : 0, hits, attacks };
+    return { rows, rider, onceAvg, total: total + rider, any: attacks ? 1 - none : 0, anyR: 1 - noneR, hits, attacks };
 }
 
 // ── Pathfinder Strikes ───────────────────────────────────
@@ -225,6 +227,11 @@ function amAveragesPf(roll, deadly, fatal) {
     const count = first < 0 ? 0 : roll.dice[first][0];
     const extra = fatal && first >= 0 ? amDieAvg(fatal, false)
         : deadly && first >= 0 ? (count >= 4 ? 3 : count === 3 ? 2 : 1) * amDieAvg(deadly, false) : 0;
+    if (!roll.dice.length) {
+        // Flat damage ("1 − 2") still does at least 1, doubled on a crit.
+        const base = Math.max(1, roll.flat);
+        return { hit: base, crit: 2 * base };
+    }
     if (amFloorBites(roll, roll.flat, 1)) {
         // Penalties never take a Pathfinder hit below 1 damage.
         const fd = roll.dice.map(([c, z], i) => [c, fatal && i === first ? fatal : z, false]);
@@ -285,11 +292,14 @@ function amTradeRanges() {
 
 function amTradeVerdict() {
     const ranges = amTradeRanges();
-    if (!ranges.length) return 'It costs damage at every AC: leave it off.';
+    // Where it doesn't add damage, it can still cost nothing (no penalty and no bonus, or nothing that hits).
+    let worse = false;
+    for (let ac = 1; ac <= AM_TOP && !worse; ac++) worse = amRound(am, ac, true).total < amRound(am, ac, false).total - 1e-9;
+    if (!ranges.length) return worse ? 'It costs damage at every AC: leave it off.' : 'It makes no difference at any AC.';
     if (ranges.length === 1 && ranges[0][0] === 1 && ranges[0][1] === AM_TOP) return 'It adds damage at every AC.';
     const text = ranges.map(([lo, hi]) => (lo === 1 ? `AC ${hi} or lower` : hi === AM_TOP ? `AC ${lo} or higher` : lo === hi ? `AC ${lo}` : `AC ${lo}–${hi}`));
     const crit = ranges.length > 1 && ranges[ranges.length - 1][1] === AM_TOP ? ' (up there only the crit range hits, and a crit lands whatever the penalty)' : '';
-    return `It adds damage against ${text.join(' and ')}${crit}, and costs damage everywhere else.`;
+    return `It adds damage against ${text.join(' and ')}${crit}, and ${worse ? 'costs damage everywhere else' : 'makes no difference anywhere else'}.`;
 }
 
 // ── Address bar ──────────────────────────────────────────
@@ -308,7 +318,7 @@ function amParams() {
     if (am.offGuard) p.og = 1;
     if (am.status) p.sb = am.status;
     if (am.every) p.ev = 1;
-    const flags = r => (AM_PF2E ? (r.map || '') + amTraitKey(r) : (r.gwf ? 'g' : '') + (r.trade ? 't' : '') + (r.ranged ? 'r' : ''));
+    const flags = r => (AM_PF2E ? (r.map || '') + amTraitKey(r) : (r.gwf ? 'g' : '') + (r.trade ? 't' : '') + (r.ranged ? 'r' : '') + (r.norider ? 'x' : ''));
     const rows = am.rows.map(r => [r.hit, r.dmg.replace(/\|/g, '').trim(), r.n, flags(r), r.name].join('|'));
     const def = amDefaultRow();
     if (rows.length !== 1 || rows[0] !== [def.hit, def.dmg, def.n, '', def.name].join('|')) p.a = rows;
@@ -334,12 +344,12 @@ function amFromUrl() {
         const [hit, dmg, n, flags, ...name] = v.split('|');
         const row = {
             name: amName(name.join(' ')), hit: amClamp(hit, -10, AM_HIT_MAX, 0), dmg: String(dmg || '').trim().slice(0, 40),
-            n: amClamp(n, 0, 10, 1), gwf: /g/.test(flags || ''), trade: /t/.test(flags || ''), ranged: /r/.test(flags || '')
+            n: amClamp(n, 0, 10, 1), gwf: /g/.test(flags || ''), trade: /t/.test(flags || ''), ranged: /r/.test(flags || ''), norider: /x/.test(flags || '')
         };
         if (!AM_PF2E) return row;
         const f = flags || '', trait = (f.match(/[dx]\d+/) || [''])[0];
         return {
-            ...row, gwf: false, trade: false, ranged: false,
+            ...row, gwf: false, trade: false, ranged: false, norider: false,
             map: (/a/.test(f) ? 'a' : '') + (/f/.test(f) ? 'f' : ''),
             deadly: AM_TRAITS.includes(trait) && trait[0] === 'd' ? Number(trait.slice(1)) : 0,
             fatal: AM_TRAITS.includes(trait) && trait[0] === 'x' ? Number(trait.slice(1)) : 0
@@ -367,12 +377,14 @@ function amFromCharacter(c) {
     am.rows = d.attacks.slice(0, AM_MAX_ROWS).map((a, i) => {
         const w = Object.values(CB_WEAPONS).find(x => x[0] === a.name);
         const melee = !!w && w[2] === 'melee';
-        // 2024's Radiant Strikes also counts an Unarmed Strike; 2014's Improved Divine Smite is weapons only.
-        const smites = smite && (melee || (v24 && !w && /^unarmed/i.test(a.name)));
+        // 2024's Radiant Strikes also counts an Unarmed Strike; 2014's Improved Divine Smite is weapons only (character-engine.js).
+        const x = cbAttackExtra(c, a);
         return {
             name: amName(a.name), n: i ? 0 : extra, hit: a.hit,
-            dmg: a.dmg + (smites ? ' + 1d8' : ''),
-            gwf: gwf && melee && /two-handed/.test(a.props), trade: false, ranged: !!w && !melee
+            dmg: a.dmg + (x ? ' + ' + x : ''),
+            gwf: gwf && melee && /two-handed/.test(a.props), trade: false, ranged: !!w && !melee,
+            // Sneak Attack needs a finesse or ranged weapon: a club (or an unarmed strike) can't carry it.
+            norider: c.cls === 'rogue' && !(/finesse/.test(a.props) || (!!w && !melee))
         };
     });
     if (extra > 1) said.push(c.cls === 'warlock' ? `${inv('devouring-blade') ? 'Devouring' : 'Thirsting'} Blade (${extra} on the first row; make that row the pact weapon)` : `Extra Attack (${extra} on the first row)`);
@@ -430,7 +442,8 @@ function renderRows() {
           <label class="am-field am-f-trait" title="Deadly and fatal add damage on a critical hit">Crit trait<select data-i="${i}" data-k="trait">${opts(AM_TRAITS, amTraitLabel, amTraitKey(r))}</select></label>` : `
           <label class="am-check" title="${amGwfTitle()}"><input type="checkbox" data-i="${i}" data-k="gwf"${r.gwf ? ' checked' : ''}> Great Weapon Fighting</label>
           <label class="am-check" title="Take the penalty to hit for the extra damage"><input type="checkbox" data-i="${i}" data-k="trade"${r.trade ? ' checked' : ''}> ${trade}</label>
-          <label class="am-check" title="Brutal Critical and Savage Attacks add no dice to a ranged attack"><input type="checkbox" data-i="${i}" data-k="ranged"${r.ranged ? ' checked' : ''}> Ranged</label>`);
+          <label class="am-check" title="Brutal Critical and Savage Attacks add no dice to a ranged attack"><input type="checkbox" data-i="${i}" data-k="ranged"${r.ranged ? ' checked' : ''}> Ranged</label>
+          <label class="am-check" title="The once-per-turn extra damage can't land with this attack (Sneak Attack needs a finesse or ranged weapon)"><input type="checkbox" data-i="${i}" data-k="norider"${r.norider ? ' checked' : ''}> No extra damage</label>`);
     document.getElementById('am-rows').innerHTML = am.rows.map((r, i) => `<div class="am-row">
         <label class="am-field am-f-name">${AM_PF2E ? 'Strike' : 'Attack'}<input type="text" maxlength="40" value="${esc(r.name)}" data-i="${i}" data-k="name" placeholder="Name"></label>
         <label class="am-field am-f-n">Times<input type="number" min="0" max="10" inputmode="numeric" value="${r.n}" data-i="${i}" data-k="n"></label>
@@ -472,7 +485,7 @@ function renderResults() {
 
     out.push(`<div class="am-scroll"><table class="am-table"><thead><tr><th scope="col">${AM_PF2E ? 'Strike' : 'Attack'}</th><th scope="col">Times</th><th scope="col">To hit</th><th scope="col">Hit</th><th scope="col">Crit</th><th scope="col">On a hit</th><th scope="col">On a crit</th><th scope="col">Per round</th></tr></thead><tbody>
         ${AM_PF2E ? round.rows.map(pfRows).join('') : round.rows.map(x => `<tr${x.n ? '' : ' class="am-off"'}><td>${esc(x.r.name || 'Attack')}${x.trade ? ` <span class="am-tag">${amSign(-am.pen)}/${amSign(am.bon)}</span>` : ''}${x.r.gwf ? ' <span class="am-tag">GWF</span>' : ''}</td><td>×${x.n}</td><td>${amSign(x.bonus)}</td><td>${amPct(x.odds.hit)}</td><td>${amPct(x.odds.crit)}</td><td>${amNum(x.avg.hit)}</td><td>${amNum(x.avg.crit)}</td><td><b>${amNum(x.n * x.each)}</b></td></tr>`).join('')}
-        ${round.onceAvg ? `<tr><td>${riderLabel}: ${esc(am.once)}</td><td colspan="2" class="am-dim">${every ? 'each hit' : 'first hit'}</td><td>${every ? `${amNum(round.hits)} hits` : amPct(round.any)}</td><td></td><td>${amNum(round.onceAvg.hit)}</td><td>${amNum(round.onceAvg.crit)}</td><td><b>${amNum(round.rider)}</b></td></tr>` : ''}
+        ${round.onceAvg ? `<tr><td>${riderLabel}: ${esc(am.once)}</td><td colspan="2" class="am-dim">${every ? 'each hit' : 'first hit'}</td><td>${every ? `${amNum(round.hits)} hits` : amPct(round.anyR === undefined ? round.any : round.anyR)}</td><td></td><td>${amNum(round.onceAvg.hit)}</td><td>${amNum(round.onceAvg.crit)}</td><td><b>${amNum(round.rider)}</b></td></tr>` : ''}
     </tbody></table></div>`);
 
     const modes = Object.keys(AM_MODES).map(m => {

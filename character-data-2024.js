@@ -181,6 +181,28 @@ const CB24_BOON_FOR = { barbarian: 'boon-irresistible-offense', bard: 'boon-spel
     rogue: 'boon-night-spirit', sorcerer: 'boon-dimensional-travel', warlock: 'boon-fate', wizard: 'boon-spell-recall' };
 const CB24_MAGIC_LISTS = { cleric: 'Cleric', druid: 'Druid', wizard: 'Wizard' };
 
+// ── Packs (SRD 5.2.1 Adventuring Gear) ───────────────────
+// [price in gp, contents] and the Play Sheet's Unpack list, as character-data.js has them for 2014.
+// The contents' CB_WEIGHTS (with the weights below) add up to the 2024 table's pack weights (Dungeoneer's 55 lb., Entertainer's 58.5 lb.).
+const CB24_PACKS = {
+    "Burglar's pack": [16, 'backpack, ball bearings, bell, 10 candles, crowbar, hooded lantern, 7 flasks of oil, 5 days of rations, rope, tinderbox, waterskin'],
+    "Diplomat's pack": [39, 'chest, fine clothes, ink, 5 ink pens, lamp, 2 map or scroll cases, 4 flasks of oil, 5 sheets of paper, 5 sheets of parchment, perfume, tinderbox'],
+    "Dungeoneer's pack": [12, 'backpack, caltrops, crowbar, 2 flasks of oil, 10 days of rations, rope, tinderbox, 10 torches, waterskin'],
+    "Entertainer's pack": [40, 'backpack, bedroll, bell, bullseye lantern, 3 costumes, mirror, 8 flasks of oil, 9 days of rations, tinderbox, waterskin'],
+    "Explorer's pack": [10, 'backpack, bedroll, 2 flasks of oil, 10 days of rations, rope, tinderbox, 10 torches, waterskin'],
+    "Priest's pack": [33, 'backpack, blanket, holy water, lamp, 7 days of rations, robe, tinderbox'],
+    "Scholar's pack": [40, 'backpack, book, ink, ink pen, lamp, 10 flasks of oil, 10 sheets of parchment, tinderbox']
+};
+const CB24_PACK_ITEMS = {
+    "Burglar's pack": [['Backpack', 1], ['Ball bearings (bag of 1,000)', 1], ['Bell', 1], ['Candle', 10], ['Crowbar', 1], ['Lantern, hooded', 1], ['Oil (flask)', 7], ['Rations (1 day)', 5], ['Rope (50 ft.)', 1], ['Tinderbox', 1], ['Waterskin', 1]],
+    "Diplomat's pack": [['Chest', 1], ['Clothes, fine', 1], ['Ink (1 ounce bottle)', 1], ['Ink pen', 5], ['Lamp', 1], ['Map or scroll case', 2], ['Oil (flask)', 4], ['Paper (one sheet)', 5], ['Parchment (one sheet)', 5], ['Perfume (vial)', 1], ['Tinderbox', 1]],
+    "Dungeoneer's pack": [['Backpack', 1], ['Caltrops (bag of 20)', 1], ['Crowbar', 1], ['Oil (flask)', 2], ['Rations (1 day)', 10], ['Rope (50 ft.)', 1], ['Tinderbox', 1], ['Torch', 10], ['Waterskin', 1]],
+    "Entertainer's pack": [['Backpack', 1], ['Bedroll', 1], ['Bell', 1], ['Lantern, bullseye', 1], ['Costume clothes', 3], ['Mirror, steel', 1], ['Oil (flask)', 8], ['Rations (1 day)', 9], ['Tinderbox', 1], ['Waterskin', 1]],
+    "Explorer's pack": [['Backpack', 1], ['Bedroll', 1], ['Oil (flask)', 2], ['Rations (1 day)', 10], ['Rope (50 ft.)', 1], ['Tinderbox', 1], ['Torch', 10], ['Waterskin', 1]],
+    "Priest's pack": [['Backpack', 1], ['Blanket', 1], ['Holy water (flask)', 1], ['Lamp', 1], ['Rations (1 day)', 7], ['Robe', 1], ['Tinderbox', 1]],
+    "Scholar's pack": [['Backpack', 1], ['Book', 1], ['Ink (1 ounce bottle)', 1], ['Ink pen', 1], ['Lamp', 1], ['Oil (flask)', 10], ['Parchment (one sheet)', 10], ['Tinderbox', 1]]
+};
+
 // ── Weapons (2024 changes) and weapon mastery ────────────
 // The SRD 5.2 weapon table matches 5.1's but for these, and every weapon has a mastery property.
 const CB24_WEAPON_FIX = {
@@ -293,7 +315,9 @@ const CB24_FEATURE_SPELLS = {
 
 // Weights for gear the 2024 kits add (pounds; character-data.js's CB_WEIGHTS has the rest).
 Object.assign(CB_WEIGHTS, { Quiver: 1, Robe: 4, 'Book (prayers)': 5, 'Book (history)': 5, 'Book (occult lore)': 5, 'Arcane focus (orb)': 3,
-    'Parchment (10 sheets)': 0, 'Parchment (8 sheets)': 0, Pouch: 1, "Traveler's clothes": 4 });
+    'Parchment (10 sheets)': 0, 'Parchment (8 sheets)': 0, Pouch: 1, "Traveler's clothes": 4,
+    // The 2024 packs' gear (CB24_PACK_ITEMS): SRD 5.2.1 rope weighs 5 lb.
+    'Rope (50 ft.)': 5, Book: 5, 'Lantern, bullseye': 2 });
 
 // ── Classes ──────────────────────────────────────────────
 // kit: the A gear (kitGold coins with it), or kits: [{ label, gear, gold }] when there are two; gold:

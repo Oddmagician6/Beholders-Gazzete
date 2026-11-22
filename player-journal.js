@@ -65,7 +65,8 @@ function jnTags(v) {
     const list = Array.isArray(v) ? v : typeof v === 'string' ? v.split(',') : [];
     const out = [];
     list.forEach(t => {
-        const tag = jnLine(t, JN_LIMITS.tag).replace(/^#/, '').toLowerCase();
+        // "# bell" is the tag "bell": the # and the spaces after it go in one pass, so a tag reads the same after a reload.
+        const tag = jnLine(t, JN_LIMITS.tag).replace(/^#\s*/, '').toLowerCase();
         if (tag && !out.includes(tag) && out.length < JN_LIMITS.tags) out.push(tag);
     });
     return out;
@@ -87,13 +88,14 @@ function jnCleanEntry(raw) {
         e.sn = jnNum(raw.sn);
     }
     if (e.kind === 'quest') {
-        e.status = Object.hasOwn(JN_QUEST, raw.status) ? raw.status : 'open';
+        // A string first: a saved {"toString": null} would throw in the lookup and hide every journal.
+        e.status = typeof raw.status === 'string' && Object.hasOwn(JN_QUEST, raw.status) ? raw.status : 'open';
         e.giver = jnLine(raw.giver, JN_LIMITS.field);
         e.reward = jnLine(raw.reward, JN_LIMITS.field);
     }
     if (e.kind === 'person') {
         e.role = jnLine(raw.role, JN_LIMITS.field);
-        e.attitude = Object.hasOwn(JN_ATTITUDE, raw.attitude) ? raw.attitude : '';
+        e.attitude = typeof raw.attitude === 'string' && Object.hasOwn(JN_ATTITUDE, raw.attitude) ? raw.attitude : '';
     }
     if (e.kind === 'place') e.region = jnLine(raw.region, JN_LIMITS.field);
     if (e.kind === 'loot') {
@@ -131,7 +133,8 @@ function jnBlank(name = '', char = '') {
 function jnLoadAll() {
     try {
         const saved = JSON.parse(localStorage.getItem(JN_KEY));
-        if (Array.isArray(saved)) return saved.map(jnClean).filter(Boolean).slice(0, JN_MAX);
+        // One journal that can't be read is skipped, not every journal with it.
+        if (Array.isArray(saved)) return saved.map(j => { try { return jnClean(j); } catch (e) { return null; } }).filter(Boolean).slice(0, JN_MAX);
     } catch (e) {}
     return [];
 }
@@ -431,6 +434,8 @@ function renderEditor() {
     const slot = document.getElementById('jn-editor-slot');
     const e = editing && editing.id ? cur.entries.find(x => x.id === editing.id) : null;
     if (editing && editing.id && !e) editing = null;
+    // The entry as the editor opened it: a save keeps another tab's changes to the fields left alone here.
+    if (e && !editing.base) editing.base = JSON.parse(JSON.stringify(e));
     slot.innerHTML = editing ? editorHtml(e, e ? e.kind : editing.kind) : '';
     const box = slot.querySelector('.jn-editor');
     if (box) {
@@ -543,8 +548,17 @@ function saveEditor(form) {
     const e = jnCleanEntry(raw);
     if (!e.title && !e.text && !(kind === 'session' && e.num)) { flash('Give it a title or some notes first.', true); return; }
     // Save onto the newest copy, so another tab's entries aren't written over.
+    const base = editId && editing && editing.id === editId ? editing.base : null;
+    const journalGone = jnStale && !!cur && !jnLoadAll().some(j => j.id === cur.id);
     jnFresh();
     const old = editId ? cur.entries.find(x => x.id === editId) : null;
+    // A field left as it opened takes what another tab saved meanwhile (their new title stays when only the notes changed here).
+    if (old && base) Object.keys(e).forEach(k => {
+        if (k === 'id' || k === 'added' || k === 'updated') return;
+        if (JSON.stringify(e[k]) === JSON.stringify(base[k]) && Object.hasOwn(old, k)) e[k] = old[k];
+    });
+    // Deleted in another tab while it was open here: saving puts it back (the typing isn't lost), and says so.
+    const back = journalGone ? 'the journal was deleted in another tab, so saving brought it back' : base && !old ? 'it was deleted in another tab, so it was added again' : '';
     // Another tab may have filled the journal while this entry was being written.
     if (!old && cur.entries.length >= JN_LIMITS.entries) { render(); flash(`A journal holds ${JN_LIMITS.entries} entries; start another journal for the next chapter.`, true); return; }
     const had = cur.entries.slice();
@@ -555,7 +569,7 @@ function saveEditor(form) {
     editing = null;
     render();
     renderEditor();
-    flash(`${JN_KINDS[kind].icon} ${old ? 'Saved' : 'Added'}: ${jnTitle(e)}.`);
+    flash(`${JN_KINDS[kind].icon} ${old ? 'Saved' : 'Added'}: ${jnTitle(e)}${back ? ` (${back})` : ''}.`, !!back);
 }
 
 let armedDel = { id: '', at: 0 };

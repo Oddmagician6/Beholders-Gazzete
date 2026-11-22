@@ -22,7 +22,7 @@
 .gc-stats dt { font-family: 'Lato', Arial, sans-serif; font-size: 5.3pt; text-transform: uppercase; letter-spacing: 0.04em; color: #6b6253; }
 .gc-stats dd { margin: 0; font-size: 7pt; line-height: 1.2; }
 .gc-mat { font-size: 6.2pt; font-style: italic; color: #4a4338; margin: 0 0 1.2mm; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-.gc-text { flex: 1 1 auto; margin: 0; font-size: 7.6pt; overflow: hidden; }
+.gc-text { flex: 1 1 auto; margin: 0; font-size: 7.6pt; overflow: hidden; overflow-wrap: break-word; }
 .gc-up { margin: 1mm 0 0; font-size: 6.4pt; color: #4a4338; }
 .gc-foot { display: flex; justify-content: space-between; gap: 2mm; margin: 1.2mm 0 0; padding-top: 1mm; border-top: 0.25mm solid #d3ccbc; font-family: 'Lato', Arial, sans-serif; font-size: 5.2pt; color: #6b6253; white-space: nowrap; }
 .gc-foot span { overflow: hidden; text-overflow: ellipsis; }

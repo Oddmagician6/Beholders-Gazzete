@@ -28,6 +28,12 @@ function ccIndex() {
 }
 ccIndex();
 
+// The name the picker lists an item under (a 5.1 name kept for old links → its 5.2 name).
+function ccCanon(n) {
+    if (!n || CC_ITEMS.includes(n)) return n;
+    return CC_ITEMS.find(m => MAGIC_ITEM_TEXT[m] === MAGIC_ITEM_TEXT[n]) || n;
+}
+
 // pend: a link's item slugs this version lacks, kept (and left in the address) while the
 // character's own rules load, then looked up again.
 const cc = { charId: '', c: null, items: [], pend: [], off: new Set(), paper: 'letter', backs: false, q: '', rarity: '' };
@@ -57,7 +63,8 @@ function ccFromUrl() {
     // The character's rules first: a switch that finishes at once reads the address again itself (ccRulesChanged).
     const c = cc.c, switching = ccUseRules();
     if (switching && c && cbPageRules() === (cbIs24(c) ? '2024' : '2014')) return;
-    cc.items = slugs.map(s => CC_ITEM_SLUG[s]).filter(Boolean).slice(0, CC_MAX_ITEMS);
+    // A renamed item's old slug opens the same item (Deck of Many Things → Mysterious Deck): one card, not two.
+    cc.items = [...new Set(slugs.map(s => ccCanon(CC_ITEM_SLUG[s])).filter(Boolean))].slice(0, CC_MAX_ITEMS);
     cc.pend = switching ? slugs.filter(s => !CC_ITEM_SLUG[s]) : [];
 }
 
@@ -76,6 +83,9 @@ function ccRulesChanged() {
 function ccUseRules() {
     const c = cc.c;
     if (!c || typeof rulesUse !== 'function' || cbPageRules() === (cbIs24(c) ? '2024' : '2014')) return false;
+    // The 2024 file already failed to load: stay on 2014 (srd52.js says so) rather than asking again on every redraw.
+    // The rules switch on the page tries again when the reader asks.
+    if (cbIs24(c) && typeof rulesFailed !== 'undefined' && rulesFailed) return false;
     rulesUse(cbIs24(c) ? '2024' : '2014').then(() => { if (cc.c === c) render(); });
     return true;
 }
@@ -93,7 +103,7 @@ function ccTag(c) {
 
 const CC_PROP_NOTES = {
     finesse: 'Finesse: uses Strength or Dexterity, whichever is better (already counted).',
-    light: 'Light: when you attack with a light weapon, a bonus action attack with a light weapon in your other hand (no ability bonus to its damage).',
+    light: 'Light: when you take the Attack action with a light melee weapon in one hand, a bonus action attack with a different light melee weapon in the other (no ability bonus to its damage unless that bonus is negative).',
     heavy: 'Heavy: Small creatures attack with it at disadvantage.',
     thrown: 'Thrown: throw it for a ranged attack, using the same ability.',
     'two-handed': 'Two-handed: needs both hands to attack.',
@@ -103,6 +113,7 @@ const CC_PROP_NOTES = {
 };
 
 const CC_HEAVY_2024 = 'Heavy: disadvantage on attacks with it unless your Strength (melee) or Dexterity (ranged) is 13 or higher.';
+const CC_LIGHT_RANGED_2014 = 'Light: no two-weapon fighting with it; that takes two light melee weapons.';
 const CC_LIGHT_2024 = 'Light: after you attack with it on the Attack action, one extra attack as a bonus action with a different light weapon (no ability bonus to its damage unless that bonus is negative).';
 
 function ccAttacks(c, d) {
@@ -112,7 +123,12 @@ function ccAttacks(c, d) {
         const range = props.find(p => p.startsWith('range '));
         const vers = props.find(p => p.startsWith('versatile'));
         const plain = props.filter(p => p !== range && p !== vers);
-        const notes = plain.map(p => (p === 'heavy' && cbIs24(c) ? CC_HEAVY_2024 : p === 'light' && cbIs24(c) ? CC_LIGHT_2024 : CC_PROP_NOTES[p])).filter(Boolean);
+        // 2014 two-weapon fighting is for light melee weapons only: a hand crossbow is light but ranged.
+        const ranged2014 = !cbIs24(c) && !!w && w[2] !== 'melee';
+        const notes = plain.map(p => (p === 'heavy' && cbIs24(c) ? CC_HEAVY_2024 : p === 'light' && cbIs24(c) ? CC_LIGHT_2024
+            : p === 'light' && ranged2014 ? CC_LIGHT_RANGED_2014 : CC_PROP_NOTES[p])).filter(Boolean);
+        const x = cbAttackExtra(c, a);
+        if (x) notes.push(`${cbIs24(c) ? 'Radiant Strikes' : 'Improved Divine Smite'}: the + ${x} is radiant damage, on every hit.`);
         if (vers) notes.unshift(`Versatile: ${a.dmg.replace(/^\d+d\d+/, vers.match(/\((.+)\)/)[1])} ${a.type} with two hands.`);
         if (!a.prof) notes.unshift('**Not proficient:** no proficiency bonus on the attack roll.');
         const reach = w && w[2] === 'melee' ? (plain.includes('reach') ? '10 ft.' : '5 ft.') : '';
@@ -120,7 +136,7 @@ function ccAttacks(c, d) {
         if (plain.length) more.push(['Properties', plain.join(', ')]);
         return {
             name: a.name, sub: w ? `${w[1] === 'simple' ? 'Simple' : 'Martial'} ${w[2]} weapon` : 'Melee attack',
-            hit: cbSign(a.hit), dmg: a.dmg, dmgType: a.type, more, notes
+            hit: cbSign(a.hit), dmg: a.dmg + (x ? ` + ${x}` : ''), dmgType: a.type + (x ? ' + radiant' : ''), more, notes
         };
     });
     if (d.breath) {

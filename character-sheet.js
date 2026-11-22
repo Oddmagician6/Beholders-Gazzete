@@ -20,6 +20,7 @@ let amount = '';             // the damage/heal box, kept across redraws
 let lastRoll = null;         // { label, r } shown in the roll bar
 let notice = null;           // { text, ok, conc: DC, endurance, kept: { spell, dc } } after damage or a death save
 let restOpen = false;
+let restSnap = null;         // { hp, hd } as the 2024 short rest began: an interrupted one gives back what it gave (SRD 5.2.1)
 let longArmed = 0;
 let addForm = { name: '', qty: '1', lb: '', mi: '', n: '', coin: 'gp' };   // the Inventory boxes, kept across redraws
 
@@ -172,7 +173,7 @@ function hpPanel(c, d) {
           <button type="button" class="cs-btn" data-act="temp">🛡️ Temp HP</button></div>`;
     if (notice) {
         h += `<div class="cs-banner${notice.ok ? ' cs-ok' : ''}"><p>${esc(notice.text)}</p>
-            ${notice.conc && p.conc === notice.spell ? `<p>Concentrating on <b>${esc(p.conc)}</b>: make a DC ${notice.conc} Constitution save.</p>` : ''}
+            ${notice.conc && p.conc === notice.spell ? `<p>Concentrating on <b>${esc(p.conc)}</b>: make a DC ${notice.conc} Constitution save.${notice.more && notice.more.length ? ` Then ${notice.more.length === 1 ? 'one more' : notice.more.length + ' more'} for the other hit${notice.more.length === 1 ? '' : 's'} (DC ${notice.more.join(', ')}).` : ''}</p>` : ''}
             <div class="cs-btnrow">
               ${notice.conc && p.conc === notice.spell ? `<button type="button" class="cs-btn cs-gold cs-mini" data-act="conc-save">🎲 Roll CON Save</button>` : ''}
               ${notice.endurance ? `<button type="button" class="cs-btn cs-gold cs-mini" data-act="endurance">💪 Use Relentless Endurance (stay at 1 HP)</button>` : ''}
@@ -220,7 +221,7 @@ function statusPanel(c, d) {
     if (p.exh) effects.unshift(`<li><b>Exhaustion ${p.exh}:</b> ${esc(cbExhaustionText(c, p.exh))}</li>`);
     return `<section class="cs-panel" aria-labelledby="cs-st-h"><h2 id="cs-st-h">✨ Status</h2>
         <ul class="cs-rows">
-          <li><span class="cs-name">Inspiration<small>From the DM; spend it for advantage on one roll.</small></span>
+          <li><span class="cs-name">${cbIs24(c) ? 'Heroic Inspiration' : 'Inspiration'}<small>${cbIs24(c) ? `Spend it to reroll any one die you just rolled and use the new roll.${c.race === 'human' ? ' Resourceful: you get it back on every long rest.' : ''}` : 'From the DM; spend it for advantage on one roll.'}</small></span>
             <button type="button" class="cs-btn" data-act="insp" aria-pressed="${p.insp}">${p.insp ? '⭐ Inspired' : '☆ None'}</button></li>
           <li><span class="cs-name">Exhaustion<small>${p.exh ? esc(cbIs24(c) ? cbExhaustionText(c, p.exh) : CB_EXHAUSTION[p.exh]) : 'None. A long rest takes off one level.'}</small></span>
             <span class="cs-step"><button type="button" class="cs-btn" data-act="exh" data-n="-1" aria-label="One level less"${p.exh ? '' : ' disabled'}>−</button><span aria-label="Exhaustion level">${p.exh}</span><button type="button" class="cs-btn" data-act="exh" data-n="1" aria-label="One level more"${p.exh >= 6 ? ' disabled' : ''}>＋</button></span></li>
@@ -256,10 +257,10 @@ function rollsPanel(c, d) {
 }
 
 function attacksPanel(c, d) {
-    const rows = d.attacks.map((a, i) => `<tr><td>${esc(a.name)}${a.props || !a.prof ? `<small>${esc(a.props)}${a.prof ? '' : (a.props ? ', ' : '') + 'not proficient'}</small>` : ''}</td>
+    const rows = d.attacks.map((a, i) => { const x = cbAttackExtra(c, a); return `<tr><td>${esc(a.name)}${a.props || !a.prof ? `<small>${esc(a.props)}${a.prof ? '' : (a.props ? ', ' : '') + 'not proficient'}</small>` : ''}</td>
         <td class="cs-acts"><button type="button" class="cs-btn cs-mini" data-act="atk" data-i="${i}" aria-label="${esc(a.name)} attack roll">🎯 ${cbSign(a.hit)}</button></td>
-        <td class="cs-acts"><button type="button" class="cs-btn cs-mini" data-act="dmg" data-i="${i}" aria-label="${esc(a.name)} damage">💥 ${esc(a.dmg)} ${esc(a.type)}</button>
-        ${/d/.test(a.dmg) ? `<button type="button" class="cs-btn cs-mini" data-act="crit" data-i="${i}" aria-label="${esc(a.name)} critical damage">Crit</button>` : ''}</td></tr>`);
+        <td class="cs-acts"><button type="button" class="cs-btn cs-mini" data-act="dmg" data-i="${i}" aria-label="${esc(a.name)} damage">💥 ${esc(a.dmg)} ${esc(a.type)}${x ? ` + ${x} radiant` : ''}</button>
+        ${/d/.test(a.dmg) || x ? `<button type="button" class="cs-btn cs-mini" data-act="crit" data-i="${i}" aria-label="${esc(a.name)} critical damage">Crit</button>` : ''}</td></tr>`; });
     if (d.breath) rows.push(`<tr><td>Breath weapon<small>${esc(d.breath.area)}, DC ${d.x.dc('con')} ${d.breath.save.toUpperCase()} save for half</small></td><td class="cs-acts"></td>
         <td class="cs-acts"><button type="button" class="cs-btn cs-mini" data-act="breath">💥 ${esc(d.breath.dice)} ${esc(d.breath.dmg)}</button></td></tr>`);
     if (d.magic) rows.push(`<tr><td>Spell attack<small>Save DC ${d.magic.dc} (${d.magic.ability.toUpperCase()})</small></td>
@@ -333,7 +334,7 @@ function inventoryPanel(c, d) {
         '': c.play.enc ? `Encumbered past ${lbs(str * 5)} lb., heavily past ${lbs(str * 10)} lb.` : 'Capacity is STR × 15. Coins aren\'t counted.'
     }[load.state];
     const rows = c.gear.map((g, i) => {
-        const pack = cbOwn(CB_PACKS, g.name), mi =g.mi && typeof MAGIC_ITEM_TEXT !== 'undefined' ? MAGIC_ITEM_TEXT[g.name] : null;
+        const pack = cbPackInfo(c, g.name), mi = g.mi && typeof MAGIC_ITEM_TEXT !== 'undefined' ? MAGIC_ITEM_TEXT[g.name] : null;
         const notes = [];
         if (pack) notes.push(esc(pack[1]));
         if (mi) notes.push(`${esc(mi[0])} · <a href="dnd-character-cards?char=${id}&amp;items=${magicItemSlug(g.name)}">🎴 card</a>`);
@@ -345,7 +346,7 @@ function inventoryPanel(c, d) {
         acts.push(`<button type="button" class="cs-btn cs-mini cs-red" data-act="drop" data-i="${i}" aria-label="Remove ${esc(g.name)}">✕</button>`);
         return `<tr><td>${esc(g.name)}${notes.length ? `<small>${notes.join(' · ')}</small>` : ''}</td>
             <td><span class="cs-step"><button type="button" class="cs-btn" data-act="qty" data-i="${i}" data-n="-1" aria-label="One fewer ${esc(g.name)}"${g.qty > 1 ? '' : ' disabled'}>−</button><span>${g.qty}</span><button type="button" class="cs-btn" data-act="qty" data-i="${i}" data-n="1" aria-label="One more ${esc(g.name)}"${g.qty < 9999 ? '' : ' disabled'}>＋</button></span></td>
-            <td><input type="number" class="cs-lb" min="0" max="9999" step="0.25" data-gear-lb="${i}" value="${cbItemWeight(g)}" aria-label="Weight of one ${esc(g.name)} in pounds"></td>
+            <td><input type="number" class="cs-lb" min="0" max="9999" step="0.25" data-gear-lb="${i}" value="${cbItemWeight(g, c)}" aria-label="Weight of one ${esc(g.name)} in pounds"></td>
             <td class="cs-acts">${acts.join(' ')}</td></tr>`;
     });
     const coins = Object.keys(COIN_CP);
@@ -442,6 +443,7 @@ function openChar(c) {
     cur = c;
     notice = null;
     restOpen = false;
+    restSnap = null;
     lastRoll = null;
     if (cur) {
         const before = JSON.stringify(cur.play);
@@ -458,6 +460,19 @@ function openChar(c) {
     }
 }
 
+// A 2024 short rest that's interrupted gives back nothing: the hit points and hit dice go back to
+// where they were when it began (only what it changed: hit points it couldn't have healed stay lost).
+function restInterrupted() {
+    const p = cur.play, s = restSnap;
+    restOpen = false;
+    restSnap = null;
+    if (!s) return;
+    const spent = Math.max(0, p.hd - s.hd);
+    if (!spent) return;
+    p.hd = s.hd;
+    p.hp = s.hp;
+}
+
 function readAmount() {
     const n = Math.round(Number(amount));
     return Number.isFinite(n) && n > 0 ? Math.min(999, n) : 0;
@@ -472,15 +487,21 @@ function onClick(e) {
     const filled = b.dataset.f === '1';
 
     if (act === 'mode') { mode = v; renderRollbar(); return; }
-    if (act === 'init') { doRoll(`1d20${plus(d.init)}`, 'initiative'); return; }
+    if (act === 'init') {
+        const r = doRoll(`1d20${plus(d.init)}`, 'initiative');
+        // SRD 5.2.1: rolling initiative interrupts a short rest, and an interrupted one confers no benefits.
+        if (r && restOpen && cbIs24(cur)) { change(() => { restInterrupted(); }); flash('The short rest is interrupted: its hit dice and their healing are undone.', true); }
+        return;
+    }
     if (act === 'check') { doRoll(`1d20${plus(d.checks[v])}`, `${CB_ABILITY_NAMES[v]} check`); return; }
     if (act === 'save') { doRoll(`1d20${plus(d.saves.find(x => x.a === v).total)}`, `${CB_ABILITY_NAMES[v]} save`); return; }
     if (act === 'skill') { const s = d.skills.find(x => x.id === v); doRoll(`1d20${plus(s.total)}`, s.name); return; }
     if (act === 'atk') { const a = d.attacks[i]; doRoll(`1d20${plus(a.hit)}`, `${a.name} attack`); return; }
     if (act === 'dmg' || act === 'crit') {
         const a = d.attacks[i];
-        const f = dmgFormula(a.dmg);
-        doRoll(act === 'crit' ? critDice(f) : f, `${a.name} ${act === 'crit' ? 'critical ' : ''}damage (${a.type})`, false);
+        const x = cbAttackExtra(cur, a);
+        const f = dmgFormula(a.dmg + (x ? ' + ' + x : ''));
+        doRoll(act === 'crit' ? critDice(f) : f, `${a.name} ${act === 'crit' ? 'critical ' : ''}damage (${a.type}${x ? ` + ${x} radiant` : ''})`, false);
         return;
     }
     if (act === 'breath') { doRoll(d.breath.dice, `breath weapon (${d.breath.dmg})`, false); return; }
@@ -491,6 +512,8 @@ function onClick(e) {
         const n = readAmount();
         if (!n) { flash('Type an amount first.', true); document.getElementById('cs-amt').focus(); return; }
         amount = '';
+        // Saves still owed for hits before this one (each hit is its own save).
+        const owed = notice && notice.conc && notice.spell === cur.play.conc ? [notice.conc, ...(notice.more || [])] : [];
         change((p, d2) => {
             if (act === 'temp') { cbTempHp(cur, n); flash(`🛡️ ${p.temp} temporary hit points.`); return; }
             if (act === 'heal') {
@@ -500,11 +523,14 @@ function onClick(e) {
                 flash(got ? `💚 +${got} hit points.` : 'Already at full hit points.');
                 return;
             }
+            // SRD 5.2.1: damage interrupts a short rest, and an interrupted one confers no benefits:
+            // the hit dice spent in it come back unspent, and their healing goes, before the damage lands.
+            const broke = restOpen && cbIs24(cur) && n > 0;
+            if (broke) restInterrupted();
             const r = cbDamage(cur, d2, n);
             const parts = [`🗡️ ${n} damage`];
             if (r.temp) parts.push(`${r.temp} came off temporary hit points`);
-            // SRD 5.2.1: damage interrupts a short rest (its benefits are lost).
-            if (restOpen && cbIs24(cur) && n > 0) { restOpen = false; parts.push('the short rest is interrupted'); }
+            if (broke) parts.push('the short rest is interrupted (its hit dice and their healing are undone)');
             flash(parts.join('; ') + '.');
             const res = cbResources(cur, d2).find(x => x.id === 'relentless-endurance');
             notice = null;
@@ -518,18 +544,23 @@ function onClick(e) {
                 setCond('Unconscious', true);
                 notice = { text: `🩸 Down to 0 hit points: unconscious and dying.${spell ? ` Concentration on ${spell} ends.` : ''}`, endurance };
                 // Relentless Endurance means never going down, so the spell comes back (with its save).
-                if (endurance && spell) notice.kept = { spell, dc: r.conc };
+                if (endurance && spell) { notice.kept = { spell, dc: r.conc }; notice.keptMore = owed; }
             } else if (r.failed) notice = { text: '🩸 Damage at 0 hit points: one death save failure (two for a critical hit; tap another failure).' };
-            if (r.conc && p.conc) notice = Object.assign(notice || { text: `Took ${n} damage.` }, { conc: r.conc, spell: p.conc });
+            if (r.conc && p.conc) {
+                const dcs = [...owed, r.conc];
+                notice = Object.assign(notice || { text: `Took ${n} damage.` }, { conc: dcs[0], more: dcs.slice(1), spell: p.conc });
+            } else if (owed.length && p.conc && !r.down && !r.dead) notice = Object.assign(notice || { text: `Took ${n} damage.` }, { conc: owed[0], more: owed.slice(1), spell: p.conc });
         });
         return;
     }
     if (act === 'endurance') {
         const kept = notice && notice.kept;
+        const keptMore = (notice && notice.keptMore) || [];
         change(p => {
             p.hp = 1; p.res['relentless-endurance'] = 1; p.ds = [0, 0]; setCond('Unconscious', false);
             if (kept) p.conc = kept.spell;
-            notice = kept && kept.dc ? { text: '💪 Still up.', conc: kept.dc, spell: kept.spell } : null;
+            const dcs = kept ? [...keptMore, ...(kept.dc ? [kept.dc] : [])] : [];
+            notice = dcs.length ? { text: '💪 Still up.', conc: dcs[0], more: dcs.slice(1), spell: kept.spell } : null;
         });
         flash('💪 Relentless Endurance: you stay up at 1 hit point.');
         return;
@@ -539,8 +570,11 @@ function onClick(e) {
         const dc = notice.conc;
         const r = doRoll(`1d20${plus(d.saves.find(x => x.a === 'con').total)}`, `CON save to keep concentration (DC ${dc})`);
         if (!r) return;
-        const spell = cur.play.conc;
-        change(p => { if (r.total < dc) p.conc = ''; notice = null; });
+        const spell = cur.play.conc, more = notice.more || [];
+        change(p => {
+            if (r.total < dc) { p.conc = ''; notice = null; }
+            else notice = more.length ? { text: `🧠 Held against DC ${dc}.`, conc: more[0], more: more.slice(1), spell } : null;
+        });
         flash(r.total >= dc ? `🧠 ${r.total}: concentration on ${spell} holds.` : `💫 ${r.total}: concentration on ${spell} is broken.`, r.total < dc);
         return;
     }
@@ -563,11 +597,14 @@ function onClick(e) {
     if (act === 'short') {
         const no = restOpen ? '' : cbRestBlock(cur, d, false);
         if (no) { flash(no, true); return; }
-        restOpen = !restOpen; render(); return;
+        restOpen = !restOpen;
+        restSnap = restOpen ? { hp: cur.play.hp, hd: cur.play.hd } : null;
+        render(); return;
     }
-    if (act === 'short-cancel') { restOpen = false; render(); return; }
+    if (act === 'short-cancel') { restOpen = false; restSnap = null; render(); return; }
     if ((act === 'hitdie' || act === 'short-done') && cbRestBlock(cur, d, false)) {
         restOpen = false;
+        restSnap = null;
         flash(cbRestBlock(cur, d, false), true);
         render();
         return;
@@ -581,6 +618,7 @@ function onClick(e) {
     if (act === 'short-done') {
         let back;
         restOpen = false;
+        restSnap = null;
         change((p, d2) => { back = cbShortRest(cur, d2); });
         flash(`☕ Short rest done.${back.length ? ' Back: ' + back.join(', ') + '.' : ''}`);
         return;
@@ -597,6 +635,7 @@ function onClick(e) {
         longArmed = 0;
         let back;
         restOpen = false;
+        restSnap = null;
         notice = null;
         change((p, d2) => { back = cbLongRest(cur, d2); setCond('Unconscious', false); });
         flash(`🛌 Long rest done.${back.length ? ' Back: ' + back.join(', ') + '.' : ''}`);
@@ -671,6 +710,12 @@ function onClick(e) {
     if (act === 'res-heal') {
         const r = cbResources(cur, d).find(x => x.id === b.dataset.id);
         if (!r || (cur.play.res[r.id] || 0) >= r.max) return;
+        // Second Wind and Wholeness of Body take an action or bonus action, which an unconscious character
+        // can't take (Uncanny Metabolism comes with rolling initiative instead).
+        if (r.id !== 'metabolism' && (cbPlayHp(cur, d) === 0 || cur.play.cond.includes('Unconscious'))) {
+            flash(`${r.name} takes an action, and you're unconscious. Healing from someone else goes in the Heal box.`, true);
+            return;
+        }
         const roll = /d/.test(r.heal) ? doRoll(r.heal, r.name, false) : null;
         const n = Math.max(r.healMin || 0, roll ? roll.total : Number(r.heal));
         let got = 0;

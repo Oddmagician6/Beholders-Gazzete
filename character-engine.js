@@ -1715,3 +1715,14 @@ function cbSeedSafe24(s) {
 function cbSpellsFor(className, level) {
     return typeof SPELLS_DATA === 'undefined' ? [] : SPELLS_DATA.filter(s => s.level === level && s.classes.includes(className));
 }
+
+// Damage an attack always adds on a hit, which the builder's damage line leaves out:
+// a paladin's Improved Divine Smite (2014, melee weapons) or Radiant Strikes (2024, melee weapons
+// and Unarmed Strikes) from level 11. a: a cbDerive attack. → '1d8' or ''.
+// The Play Sheet, Cards, and Attack Math all read it.
+function cbAttackExtra(c, a) {
+    if (c.cls !== 'paladin' || c.level < 11) return '';
+    const w = Object.values(CB_WEAPONS).find(x => x[0] === a.name);
+    const melee = !!w && w[2] === 'melee';
+    return melee || (cbIs24(c) && !w && /^unarmed/i.test(a.name)) ? '1d8' : '';
+}

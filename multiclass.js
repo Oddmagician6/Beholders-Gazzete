@@ -190,7 +190,9 @@ function mcNotes() {
     const out = [];
     const extra = rows.filter(r => ['barbarian', 'fighter', 'monk', 'paladin', 'ranger'].includes(r.cls) && r.lv >= 5);
     if (extra.length > 1) out.push(`<b>Extra Attack</b> doesn't add up: ${extra.map(r => cbClass(r.cls, mcR()).name).join(' and ')} each give it, but they don't add up: you attack ${lvOf('fighter') >= 20 ? 'four times' : lvOf('fighter') >= 11 ? 'three times' : 'twice'} when you take the Attack action.`);
-    if (lvOf('barbarian') && lvOf('monk')) out.push('<b>Unarmored Defense</b>: barbarian and monk each have one, and you can only use one of them. Once you have it, you can\'t gain it again from the other class.');
+    if (lvOf('barbarian') && lvOf('monk')) out.push(mc24()
+        ? '<b>Unarmored Defense</b>: barbarian and monk each give you one. With more than one way to work out your Armor Class, you use one at a time (SRD 5.2.1), so pick whichever is better.'
+        : '<b>Unarmored Defense</b>: barbarian and monk each have one, and you can only use one of them. Once you have it, you can\'t gain it again from the other class.');
     if (lvOf('cleric') >= 2 && lvOf('paladin') >= 3) out.push(mc24()
         ? '<b>Channel Divinity</b>: the 2024 rules have no multiclass rule for it, so the cleric and the paladin each keep their own feature, with its own uses and options.'
         : '<b>Channel Divinity</b>: the cleric and paladin options are all yours, but taking the feature a second time doesn\'t give you more uses.');
@@ -329,9 +331,20 @@ function renderProfs() {
     };
     const armor = mcArmorText(list.flatMap(p => p.armor));
     const weapons = mcWeaponText(list.flatMap(p => p.weapons));
+    // Starting saves come only from the first class; class features at higher levels add more:
+    // Diamond Soul (2014) / Disciplined Survivor (2024) at monk 14 gives all six, Slippery Mind at rogue 15
+    // gives Wisdom (2014) or Wisdom and Charisma (2024).
+    const saves = [...list[0].saves], from = [];
+    const gain = (ids, why) => { const add = ids.filter(a => !saves.includes(a)); if (add.length) { saves.push(...add); from.push(why); } };
+    const lv = id => (mcPicked().find(r => r.cls === id) || { lv: 0 }).lv;
+    if (lv('monk') >= 14) gain(['str', 'dex', 'con', 'int', 'wis', 'cha'], mc24() ? 'Disciplined Survivor' : 'Diamond Soul');
+    if (lv('rogue') >= 15) gain(mc24() ? ['wis', 'cha'] : ['wis'], 'Slippery Mind');
+    const order = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+    saves.sort((a, b) => order.indexOf(a) - order.indexOf(b));
+    const saveText = `saving throws in ${esc(saves.map(a => CB_ABILITY_NAMES[a]).join(', ').replace(/, ([^,]*)$/, ' and $1'))} (${from.length ? `the starting class's, plus ${esc(from.join(' and '))}` : 'only the starting class gives saves'})`;
     el.innerHTML = '<h2 class="mc-h">Proficiencies</h2>'
         + `<ul class="mc-list">${list.map(item).join('')}</ul>`
-        + `<p class="mc-all"><b>Altogether:</b> saving throws in ${esc(list[0].saves.map(a => CB_ABILITY_NAMES[a]).join(' and '))} (only the starting class gives saves); ${esc(armor.length ? armor.join(', ') : 'no armor')}; ${esc(weapons.length ? weapons.join(', ') : 'no weapons')}.</p>`;
+        + `<p class="mc-all"><b>Altogether:</b> ${saveText}; ${esc(armor.length ? armor.join(', ') : 'no armor')}; ${esc(weapons.length ? weapons.join(', ') : 'no weapons')}.</p>`;
 }
 
 function renderMagic() {

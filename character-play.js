@@ -90,7 +90,8 @@ function cbResources24(c, d) {
     if (at('paladin', 5)) add('free-steed', 'Faithful Steed', 1, 'long', 'Find steed without a slot');
     if (at('paladin', 20)) add('nimbus', 'Holy Nimbus', 1, 'long', '10 minutes of sunlight; a 5th-level slot buys it back');
     if (at('ranger', 1)) add('favored-enemy', "Hunter's Mark (free)", L >= 17 ? 6 : L >= 13 ? 5 : L >= 9 ? 4 : L >= 5 ? 3 : 2, 'long', 'Cast it without a slot');
-    if (at('ranger', 10)) add('tireless', 'Tireless', Math.max(1, m.wis), 'long', `Gain 1d8 + ${Math.max(1, m.wis)} temporary HP`);
+    // SRD 5.2.1: 1d8 + WIS temporary HP (at least 1); the minimum is on the total, not the modifier.
+    if (at('ranger', 10)) add('tireless', 'Tireless', Math.max(1, m.wis), 'long', `Gain 1d8 ${m.wis < 0 ? '−' : '+'} ${Math.abs(m.wis)} temporary HP (at least 1)`);
     if (at('ranger', 14)) add('natures-veil', "Nature's Veil", Math.max(1, m.wis), 'long', 'Invisible until the end of your next turn');
     if (at('rogue', 20)) add('stroke-of-luck', 'Stroke of Luck', 1, 'short', 'A failed D20 Test becomes a 20');
     if (at('sorcerer', 1)) add('innate', 'Innate Sorcery', 2, 'long', `1 minute: spell DC ${d.x.dc('cha') + 1}, advantage on spell attacks`);
@@ -165,9 +166,17 @@ function cbPlaySpeed(c, d) {
 // A gear table's entry for a typed name, never an inherited one (gear named "constructor").
 const cbOwn = (table, name) => (Object.hasOwn(table, name) ? table[name] : undefined);
 
-function cbItemWeight(g) {
+// A pack's contents and its [price, description] follow the character's rules (2024: character-data-2024.js).
+function cbPackItems(c, name) {
+    return (c && cbIs24(c) && typeof CB24_PACK_ITEMS !== 'undefined' && cbOwn(CB24_PACK_ITEMS, name)) || cbOwn(CB_PACK_ITEMS, name);
+}
+function cbPackInfo(c, name) {
+    return (c && cbIs24(c) && typeof CB24_PACKS !== 'undefined' && cbOwn(CB24_PACKS, name)) || cbOwn(CB_PACKS, name);
+}
+
+function cbItemWeight(g, c) {
     if (g.lb !== undefined) return g.lb;
-    const pack = cbOwn(CB_PACK_ITEMS, g.name);
+    const pack = cbPackItems(c, g.name);
     if (pack) return Math.round(pack.reduce((t, [n, q]) => t + (cbOwn(CB_WEIGHTS, n) || 0) * q, 0) * 100) / 100;
     return cbOwn(CB_WEIGHTS, g.name) || 0;
 }
@@ -179,7 +188,7 @@ function cbItemWeight(g) {
 // You can push, drag, or lift twice your capacity (speed 5 ft. past capacity); past that (stuck) it doesn't move.
 // → { lb, cap, push, stuck, state: '' | 'encumbered' | 'heavy' | 'over' }
 function cbLoad(c, d) {
-    const lb = Math.round(c.gear.reduce((t, g) => t + cbItemWeight(g) * g.qty, 0) * 100) / 100;
+    const lb = Math.round(c.gear.reduce((t, g) => t + cbItemWeight(g, c) * g.qty, 0) * 100) / 100;
     const str = d.s.str, cap = str * 15 * (d.race && d.race.carryAs ? 2 : 1), push = cap * 2;
     const state = lb > cap ? 'over' : c.play.enc && lb > str * 10 ? 'heavy' : c.play.enc && lb > str * 5 ? 'encumbered' : '';
     return { lb, cap, push, stuck: lb > push, state };
@@ -219,7 +228,7 @@ const cbAttuned = c => c.gear.filter(g => g.att).length;
 
 // Open the pack at c.gear[i] into its contents (merged with what's already there). → false if it can't.
 function cbUnpack(c, i) {
-    const g = c.gear[i], items = g && cbOwn(CB_PACK_ITEMS, g.name);
+    const g = c.gear[i], items = g && cbPackItems(c, g.name);
     if (!items || c.gear.length + items.length > CB_MAX_GEAR) return false;
     if (g.qty > 1) g.qty -= 1;
     else c.gear.splice(i, 1);
@@ -275,11 +284,12 @@ function cbDamage(c, d, n) {
     const before = cbPlayHp(c, d);
     if (p.conc && !cbConcSafe(c, p.conc)) out.conc = Math.min(cbIs24(c) ? 30 : Infinity, Math.max(10, Math.floor(n / 2)));
     if (before === 0) {
-        // Damage at 0 hit points is a failed death save (massive damage kills outright). A stable
-        // character starts dying again: the three successes go, and the saves start over.
-        if (rest > 0 && p.ds[0] >= 3 && p.ds[1] < 3) p.ds = [0, 0];
+        // Damage at 0 hit points is a failed death save (massive damage kills outright), even when
+        // temporary hit points soak it up: it's still damage taken. A stable character starts dying
+        // again: the three successes go, and the saves start over.
+        if (p.ds[0] >= 3 && p.ds[1] < 3) p.ds = [0, 0];
         if (rest >= max) { out.dead = true; p.ds = [0, 3]; }
-        else if (rest > 0) { p.ds[1] = Math.min(3, p.ds[1] + 1); out.failed = true; }
+        else { p.ds[1] = Math.min(3, p.ds[1] + 1); out.failed = true; }
         if (p.ds[1] >= 3) out.dead = true;
         return out;
     }
@@ -380,6 +390,8 @@ function cbLongRest(c, d = cbDerive(c)) {
     p.slots = p.slots.map(() => 0);
     p.pact = 0;
     cbResources(c, d).forEach(r => { if (p.res[r.id] && r.recharge !== 'none') { delete p.res[r.id]; back.push(r.name); } });
+    // SRD 5.2.1 human, Resourceful: Heroic Inspiration whenever you finish a long rest.
+    if (cbIs24(c) && c.race === 'human' && !p.insp) { p.insp = true; back.push('Heroic Inspiration (Resourceful)'); }
     p.conc = '';
     return back;
 }
