@@ -405,8 +405,8 @@ function famAddPerson(rel) {
                 return false;
             }
         }
+        // Born the same year as the new parent; its NPC link was built for that age, so it stays (B882).
         const partner = rel === 'parent' ? famNewPerson(f, { ...np, id: '' }, 'spouse') : null;
-        if (rel === 'parent') { partner.age = np.age; }
         const r = famAdd(f, a.id, rel, np, uid, partner);
         if (typeof r !== 'string') { why = r.why; return false; }
         added = r;

@@ -362,7 +362,7 @@ const CAL_FESTIVALS = ruleTable({
             'The town\'s doors are left unlatched all night, and nobody asks who came in.'
         ],
         party: [
-            { t: 'Keep the graveyard vigil until dawn: a {dc:13} {save:wis} saving throw against the cold and the whispers, or be frightened until sunrise.', prize: 'the temple\'s blessing and a silver coin from each family', gp: 3 },
+            { t: 'Keep the graveyard vigil until dawn: a {dc:13} {save:wis} saving throw against the cold and the whispers, or {alt:be frightened until sunrise|become frightened 1, which doesn\'t go down until sunrise}.', prize: 'the temple\'s blessing and a silver coin from each family', gp: 3 },
             { t: 'Listen for the truth in a ghost story told by an old woman: a {dc:14} {skill:int:history} check finds where the treasure in it was really buried.', prize: null, gp: 0 },
             { t: 'Find a lost child among the lanterns before midnight: a {dc:12} {skill:wis:perception} check.', prize: 'a family\'s gratitude', gp: 0 }
         ],
@@ -566,7 +566,7 @@ const CAL_FESTIVALS = ruleTable({
             'The boar is carried in on a pole, roasted whole in the square, and the hunter who killed it gets the head.'
         ],
         party: [
-            { t: 'Join the hunt and track the quarry: a {dc:14} {skill:wis:survival} check, and a ranged attack against AC 13 to bring it down.', prize: 'the head of the boar, a hero\'s seat at the feast', gp: 10 },
+            { t: 'Join the hunt and track the quarry: a {dc:14} {skill:wis:survival} check, and a ranged attack against the boar\'s {alt:AC 11|AC 15} to bring it down.', prize: 'the head of the boar, a hero\'s seat at the feast', gp: 10 },
             { t: 'Find the white stag with a {dc:16} {skill:wis:perception} check. Shooting it is a terrible idea.', prize: 'a year of luck, or a curse', gp: 0 },
             { t: 'Keep the lord\'s hounds in hand: a {dc:13} {skill:wis:animal-handling} check.', prize: 'the huntsman\'s favor', gp: 2 }
         ],
@@ -964,16 +964,27 @@ function calConjunctions(cal, max = 3) {
     if (cal.moons.length < 2) return [];
     const out = [];
     let prev = false;
+    const night = (abs, at) => {
+        const full = cal.moons.filter(mo => calMoonPhase(mo, abs) === 4);
+        const on = full.length >= 2;
+        if (on && !prev && out.length < max) out.push({ ...at, moons: full.map(mo => mo.name) });
+        prev = on;
+    };
     cal.months.forEach((m, i) => {
-        for (let d = 1; d <= m.days; d++) {
-            const abs = calAbsDay(cal, cal.year, i, d);
-            const full = cal.moons.filter(mo => calMoonPhase(mo, abs) === 4);
-            const on = full.length >= 2;
-            if (on && !prev && out.length < max) out.push({ month: i, day: d, moons: full.map(mo => mo.name) });
-            prev = on;
+        for (let d = 1; d <= m.days; d++) night(calAbsDay(cal, cal.year, i, d), { month: i, day: d });
+        // The days outside the months count too (B886): { gap: true, month (the one before), day (of the gap) }.
+        if (cal.gap && cal.gap.after === i) {
+            const end = calAbsDay(cal, cal.year, i, m.days);
+            for (let d = 1; d <= cal.gap.days; d++) night(end + d, { month: i, day: d, gap: true });
         }
     });
     return out;
+}
+
+// A conjunction's night in words: "the 3rd of Shearing", or a day outside the months.
+function calConjunctionDay(cal, c) {
+    if (!c.gap) return `the ${calOrdinal(c.day)} of ${cal.months[c.month].name}`;
+    return cal.gap.days === 1 ? cal.gap.name : `the ${calOrdinal(c.day)} day of ${cal.gap.name}`;
 }
 
 // ── The roll ─────────────────────────────────────────────
@@ -1192,7 +1203,7 @@ function calendarText(cal) {
     out.push(cal.moons.length === 1 ? 'The moon:' : 'Moons:');
     cal.moons.forEach(mo => out.push(`- ${calMoonLine(cal, mo)} ${mo.lore} When it's full: ${mo.full}`));
     const conj = calConjunctions(cal);
-    if (conj.length) out.push(`- Full together this year: ${conj.map(c => `the ${calOrdinal(c.day)} of ${cal.months[c.month].name} (${c.moons.join(' and ')})`).join('; ')}.`);
+    if (conj.length) out.push(`- Full together this year: ${conj.map(c => `${calConjunctionDay(cal, c)} (${c.moons.join(' and ')})`).join('; ')}.`);
     out.push('');
     out.push('Months:');
     cal.months.forEach((m, i) => {

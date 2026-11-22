@@ -156,7 +156,7 @@ function calMoonsHTML(c) {
             <p><b>When it's full:</b> ${esc(mo.full)}</p>
         </div>`;
     }).join('')}</div>
-    ${conj.length ? `<p class="wb-small">Full together this year: ${conj.map(x => `the ${calOrdinal(x.day)} of ${esc(c.months[x.month].name)} (${x.moons.map(esc).join(' and ')})`).join('; ')}.</p>` : ''}`;
+    ${conj.length ? `<p class="wb-small">Full together this year: ${conj.map(x => `${esc(calConjunctionDay(c, x))} (${x.moons.map(esc).join(' and ')})`).join('; ')}.</p>` : ''}`;
 }
 
 function calMonthsHTML(c) {

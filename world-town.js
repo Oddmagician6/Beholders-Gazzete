@@ -232,7 +232,7 @@ function renderTown() {
     const rumorIdx = townRumorIndexes(t, townRumorList);
     const q = townQuest(t);
     const people = [t.leader, t.captain, t.priest].filter(Boolean);
-    const temple = townDeity(t, ctx), priestFaith = temple && temple.god && temple.god.realms ? temple.name : '';
+    const temple = townDeity(t, ctx), priestFaith = temple && temple.god && (temple.god.realms || temple.linked) ? temple.name : '';   // a linked pantheon's god too (B883)
     document.getElementById('town-card').innerHTML = `
         <header class="wb-head">
             <p class="wb-kicker">${z.icon} ${esc(z.label)} · ${s.icon} ${esc(s.label)} · ${wl.icon} ${esc(wl.label)}${t.realms ? ' · 🐉 Forgotten Realms' : ''}</p>

@@ -1155,8 +1155,9 @@ function rollNpcPinned(fields, seed, pinned = {}) {
     const name = npcGiven(fields.name), role = npcGiven(fields.role, 80);
     if (name) Object.assign(npc, { name, firstName: name.split(' ')[0], surname: '', nickname: '', given: { ...npc.given, name } });
     if (role) Object.assign(npc, { profession: role, given: { ...npc.given, role } });
-    // A Realms NPC given a god in the link (?faith=, a Pantheon tab priest) prays to that one.
-    const faith = npc.realms && typeof realmsGod === 'function' && realmsGod(fields.faith) ? fields.faith : '';
+    // A Realms NPC given a god in the link (?faith=, a Pantheon tab priest) prays to that one: a Realms god,
+    // or one of a pantheon linked on the Town or Factions tab (B883), kept as plain words.
+    const faith = !npc.realms ? '' : typeof realmsGod === 'function' && realmsGod(fields.faith) ? fields.faith : npcGiven(fields.faith);
     if (faith) Object.assign(npc, { realms: { ...npc.realms, faith }, given: { ...npc.given, faith } });
     return npc;
 }

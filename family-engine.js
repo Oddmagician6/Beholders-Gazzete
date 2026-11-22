@@ -97,16 +97,17 @@ function famAgeOf(seed, race, bucket) {
 // An identity seed whose name fits: a first name not in the family yet, and the family name (surname null = any,
 // but never avoid: someone marrying in doesn't already carry the family's name).
 function famFindName(base, race, gender, surname, used, avoid = null) {
-    let last = null;
+    let last = null, fits = null;
     for (let k = 0; k < 3000; k++) {
         const seed = k ? deriveSeed(base, String(k)) : base;
         last = { seed, n: famIdentity(seed, race, gender) };
-        if (used.has(last.n.first)) continue;
         if (surname !== null && last.n.surname !== surname) continue;
         if (avoid && last.n.surname === avoid) continue;
+        if (used.has(last.n.first)) { fits = fits || last; continue; }
         return last;
     }
-    return last;
+    // Every first name is taken (a big family): one already used, with the family name, keeps their NPC link (B881).
+    return fits || last;
 }
 
 // An age seed that rolls exactly this age, or null (too young for the NPC page, or none found).
@@ -514,10 +515,13 @@ function rollFamily(seed, opts = {}) {
         });
     }
 
-    function marry(label, p, minW = 0, kind = 'wed', kidW = null) {
+    // maxAgo: the partner was alive then (B879); by default, when p came of age.
+    function marry(label, p, minW = 0, kind = 'wed', kidW = null, maxAgo = Math.max(0, p._w - Y0)) {
         if (fam.people.length >= S.cap) return null;
         const s = spouse(label, p, minW, kidW);
-        return union(p, person(label, { ...s, surname: null, minAge: NPC_AGE_RANGES[s.race].young[0] }), kind);
+        // Born late enough to be alive then within their race's longest life (a human wed to an old gnome).
+        s.w = Math.min(s.w, maxAgo + NPC_AGE_RANGES[s.race].ancient[1]);
+        return union(p, person(label, { ...s, surname: null, minAge: NPC_AGE_RANGES[s.race].young[0], maxAgo }), kind);
     }
 
     // A child born into the family. maxAgo: they died after their own eldest was born, if they have one later.
@@ -570,10 +574,16 @@ function rollFamily(seed, opts = {}) {
         if (!u1) return;
         haveKids(item.label + '.u0', u1, item.row, item.main);
         const s1 = famPerson(fam, u1.b);
-        const ended = u1.kind === 'apart' ? Math.max(0, Math.floor((p.dead ? p.ago : 0) + (life - Y0) / 3)) : s1.dead ? s1.ago : -1;
-        // A second marriage, after the first partner died (or the two parted), while they lived.
+        let ended = u1.kind === 'apart' ? Math.max(0, Math.floor((p.dead ? p.ago : 0) + (life - Y0) / 3)) : s1.dead ? s1.ago : -1;
+        // Two who parted did so while both lived and after their last child was born (B880).
+        if (u1.kind === 'apart') {
+            if (s1.dead) ended = Math.max(ended, s1.ago);
+            famKids(fam, u1.id).forEach(k => { ended = Math.min(ended, k._w); });
+        }
+        // A second marriage, after the first partner died (or the two parted), while they lived:
+        // the new partner grown and alive by then (B880).
         if (ended > (p.dead ? p.ago : 0) + space && plan.again && life >= Y0) {
-            const u2 = marry(item.label + '.s1', p);
+            const u2 = marry(item.label + '.s1', p, ended + Y0, 'wed', null, ended - 1);
             if (u2) haveKids(item.label + '.u1', u2, item.row, false, ended - 1);
         }
     }

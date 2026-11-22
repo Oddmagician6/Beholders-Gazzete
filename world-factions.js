@@ -153,7 +153,7 @@ function facFamilyLink(w, i, ctx) {
 
 function facPeopleLinks(f) {
     const people = [f.leader, ...f.lieutenants];
-    const d = facDeity(f, facState.pantheon), faith = d && d.god && d.god.realms ? d.name : '';
+    const d = facDeity(f, facState.pantheon), faith = d && d.god && (d.god.realms || d.linked) ? d.name : '';   // a linked pantheon's god too (B883)
     return `<p class="pan-links">${people.map(p => `<a class="btn" href="${esc(facNpcLink(p, faith))}">${facNpcIcon(p)} ${esc(p.npc.firstName)}</a>`).join(' ')}</p>`;
 }
 

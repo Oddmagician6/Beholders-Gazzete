@@ -16,7 +16,7 @@
    Every part rolls from deriveSeed(seed, part), so changing one option keeps the rest:
    a new size keeps the name, the temple, the laws, and the first people; a new
    setting keeps the size, the people, and the laws; a new wealth changes only the
-   taverns' quality and the shops' stock.
+   taverns and shops (how many, their quality, their stock), the bribes, and the fines.
    Needs rng.js, coins.js, npc-data.js, names-data.js, pantheon-engine.js,
    faction-engine.js, tavern-engine.js, market-data.js, shop-engine.js, quest-engine.js
    (with monsters-data.js and encounter-engine.js). The tables are the Gazette's own.
@@ -622,6 +622,12 @@ function rollTown(seed, opts = {}) {
         const others = t.people.map((q, j) => j).filter(j => j !== k && t.people[j].npc.firstName !== p.npc.firstName);
         p.tieTo = others.length ? others[Math.floor(p.with * others.length)] : null;
     });
+    // "The oldest resident" next to an older elf or dwarf on the same list: the oldest of their own folk (B885).
+    const yearsOf = p => parseInt(p.npc.age, 10) || 0;
+    const named = [t.leader, t.captain, t.priest, ...t.people].filter(Boolean);
+    t.people.forEach(p => {
+        if (p.role === 'The oldest resident' && named.some(q => q !== p && yearsOf(q) > yearsOf(p))) p.role = `The oldest ${p.npc.race} in town`;
+    });
 
     // Taverns and shops: seeds, plus the quality and type picked for each, placed in a district.
     const nd = t.districts.length;
@@ -663,7 +669,9 @@ function rollTown(seed, opts = {}) {
         if (b[0] === 'Shops and stalls') b[1] = Math.max(b[1], t.shops.length);
     });
 
-    t.laws = part('laws', () => townShuffle(TOWN_LAWS).slice(0, 2).map(([text, fine]) => ({ text, fine: fine * (wealth === 'prosperous' ? 2 : 1) })));
+    // A hamlet has no market, walls, watch, guild, or town hall, so it skips the laws about them (B884).
+    const lawFits = ([text]) => size !== 'hamlet' || !/market|walls|at the gate|the watch|guild|town hall|counting house/.test(text);
+    t.laws = part('laws', () => townShuffle(TOWN_LAWS).filter(lawFits).slice(0, 2).map(([text, fine]) => ({ text, fine: fine * (wealth === 'prosperous' ? 2 : 1) })));
     t.customs = part('customs.' + setting, () => townShuffle(TOWN_CUSTOMS.concat(s.customs)).slice(0, 2));
     t.trouble = part('trouble', () => ({ text: townPick(TOWN_TROUBLES), district: rand(), faction: rand() }));
     // Drawn after the rest: sometimes a trouble only this kind of place has, and who is behind it.
