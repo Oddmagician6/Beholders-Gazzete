@@ -489,6 +489,34 @@
       "hashtags": "#FindSteed #Steedshare #OneStar #MillraceFord",
       "publishAt": "2026-11-22T02:00:00Z",
       "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "earth-elemental-snow-shovellers-picket-party",
+      "release_tag": "reel-stage-nov22-earth-ig-20261122",
+      "hashtags": "#EarthElemental #SnowShovellers #LeanWinter #MissingFence",
+      "publishAt": "2026-11-22T17:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "arcane-lock-council-chamber-password-goat",
+      "release_tag": "reel-stage-nov22-lock-ig-20261122",
+      "hashtags": "#ArcaneLock #GoatPassword #BurgessCouncil #FairlatchCompany",
+      "publishAt": "2026-11-22T20:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "kobolds-120-feast-pies-thank-you-notes",
+      "release_tag": "reel-stage-nov22-pies-ig-20261122",
+      "hashtags": "#Kobolds #GrandFeast #Clatterhole #ThankYouForPie",
+      "publishAt": "2026-11-22T23:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "unidentified-potions-identify-fee-pinchpenny-company",
+      "release_tag": "reel-stage-nov22-potions-ig-20261122",
+      "hashtags": "#UnidentifiedPotions #PinchpennyCompany #BrotherWendell #Identify",
+      "publishAt": "2026-11-23T02:00:00Z",
+      "custom_artwork_confirmed": true
     }
   ]
 }
