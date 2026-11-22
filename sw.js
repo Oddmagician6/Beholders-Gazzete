@@ -8,7 +8,7 @@
 // Cache keys drop the query string (?seed=, ?t=, ?id= ...): pages rebuild their state from the URL.
 // Links use clean addresses (about, a/<id>); keyFor maps each one to its file's key (about.html).
 
-const VERSION = 'd06b34cc5caa';
+const VERSION = '666f26bb90b9';
 const STATIC = 'gazette-static-' + VERSION;
 const PAGES = 'gazette-pages';
 const FONTS = 'gazette-fonts';
@@ -180,6 +180,9 @@ async function cacheMapArt() {
     try {
       const res = await fetch(url, { cache: fresh ? 'default' : 'no-cache' });
       if (res.ok) await cache.put(url, res);
+      // A failed refresh mustn't leave the old revision's copy to pass as current once the marker is
+      // written: drop it, so the next run fetches it again.
+      else if (!fresh) await cache.delete(url);
     } catch (e) {
       return;
     }

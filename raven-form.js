@@ -18,6 +18,14 @@ document.querySelectorAll('form[data-raven]').forEach(form => {
   form.addEventListener('submit', async e => {
     e.preventDefault();
     if (form.querySelector('input[name="_gotcha"]')?.value) return; // bots fill the hidden field
+    // `required` lets spaces through: ask again for a required text field that's only blanks.
+    const blank = [...form.querySelectorAll('input[required], textarea[required]')]
+      .find(f => f.type !== 'email' && !f.value.trim());
+    if (blank) {
+      blank.value = '';
+      blank.focus();
+      if (!form.reportValidity()) return;
+    }
     const label = button?.textContent;
     if (button) { button.disabled = true; button.textContent = 'Sending raven…'; }
     try {

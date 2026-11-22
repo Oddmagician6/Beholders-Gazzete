@@ -343,7 +343,8 @@ function renderEconomySidebar() {
   if (!el || typeof marketSnapshot !== 'function') return;
 
   const now = Date.now();
-  const byId = Object.fromEntries(marketSnapshot(now).map(i => [i.id, i]));
+  const all = marketSnapshot(now);
+  const byId = Object.fromEntries(all.map(i => [i.id, i]));
   const items = SIDEBAR_ITEMS.map(([id, icon]) => byId[id] && { ...byId[id], icon }).filter(Boolean);
 
   const rows = items.map(item => {
@@ -354,12 +355,13 @@ function renderEconomySidebar() {
         <div class="item-name">${item.icon} ${item.name}</div>
         <div class="item-price">
           ${formatCoins(item.currentPrice)}
-          <span class="price-change ${dir}" title="24h change">${arrow} ${Math.abs(item.changePercent).toFixed(1)}%</span>
+          <span class="price-change ${dir}" title="24h change">${arrow} ${pctText(item.changePercent, dir)}</span>
         </div>
       </div>`;
   }).join('');
 
-  const avg = items.reduce((sum, i) => sum + i.changePercent, 0) / (items.length || 1);
+  // The whole market's trend, as the exchange page works it out (not just these eight).
+  const avg = all.reduce((sum, i) => sum + i.changePercent, 0) / (all.length || 1);
   const trend = avg > 1 ? 'up' : avg < -1 ? 'down' : 'stable';
   const trendLabel = trend === 'up' ? 'Bullish Market' : trend === 'down' ? 'Bearish Market' : 'Stable Trading';
   const posted = new Date(marketSlotStart(now)).toLocaleTimeString([], { hour:'numeric', minute:'2-digit' });
@@ -375,6 +377,12 @@ function renderEconomySidebar() {
       ${trendLabel} · Posted ${posted} · 24h change
     </div>
   `;
+}
+
+// The arrow carries the sign of a move; a stable price keeps its own sign (−0.3%, as the exchange shows it).
+function pctText(pct, dir) {
+  const t = Math.abs(pct).toFixed(1);
+  return (dir === 'stable' && t !== '0.0' ? (pct < 0 ? '−' : '+') : '') + t + '%';
 }
 
 // Re-render when a new 15-minute price slot starts.
