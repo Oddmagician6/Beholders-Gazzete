@@ -155,7 +155,7 @@ const NB_SHEETS = {
         const cs = nbUrlLink(p, 'cont', TOWN_CONT_KEYS);
         let realm = null;
         if (cs) {
-            const c = contCached(cs.seed, cs), t = c.towns[(parseInt(p.get('ctown'), 10) || 0) - 1];
+            const c = contCached(cs.seed, cs), t = c.towns[(/^\d+$/.test(p.get('ctown') || '') ? Number(p.get('ctown')) : 0) - 1];
             realm = t ? { c, t, nat: c.nations[t.nation] } : null;
         }
         const t = rollTown(seed, { ...nbUrlOpts(p, TOWN_FIELDS), govs: realm ? realm.t.govs : null });
@@ -184,10 +184,18 @@ const NB_SHEETS = {
     },
 
     sites(p, seed) {
-        const s = rollSite(seed, nbUrlOpts(p, SITE_FIELDS));
+        // As the Sites tab reads its address: a level or party it can't pick means level 3, 4 characters, and
+        // hold= (a Continent dragon lair) picks who holds it.
+        const o = nbUrlOpts(p, SITE_FIELDS);
+        const int = (key, max, d) => { const v = p.get(key); return v && /^[1-9]\d*$/.test(v) && +v <= max ? v : d; };
+        o.level = int('level', 20, '3');
+        o.party = int('party', 8, '4');
+        const hold = p.get('hold') || '';
+        o.bands = typeof ENC_BAND_BY_KEY !== 'undefined' && Object.hasOwn(ENC_BAND_BY_KEY, hold) ? [hold] : null;
+        const s = rollSite(seed, o);
         const h = nbUrlLink(p, 'his', SITE_HIS_KEYS);
         const history = h ? rollHistory(h.seed, h) : null;
-        const hage = (parseInt(p.get('hage'), 10) || 0) - 1;
+        const hage = (/^\d+$/.test(p.get('hage') || '') ? Number(p.get('hage')) : 0) - 1;
         const ctx = { history, hage: history && hage >= 0 && hage < history.list.length ? hage : -1 };
         // The summary names who holds it now, so the players get only what it is.
         return [{ head: '', lines: nbLinesOf('', [['What it is', siteSummary(s)], ['Kind', siteCap(SITE_KINDS[s.kind].label) + '.'], ...siteStoryLines(s, ctx)], ['What it is', 'Lost', 'Now']) }];
@@ -243,18 +251,41 @@ const NB_SHEETS = {
     }
 };
 
-// The roll's parts for an entry, or null when its link can't be rolled here. Cached by link.
+// The 5e rules version a saved link rolls under: its rules= (as the tab would open it), when this page
+// can show that version now; else the page's own. A 2024 link on a 2014 page fetches the 2024 data and
+// redraws the player sheets once it's in.
+function nbSheetRules(href) {
+    if (typeof SRD52_OK === 'undefined' || !SRD52_OK || RULES_TEXT_ONLY) return null;
+    let want;
+    try { want = nbQuery(href).get('rules'); } catch (err) { return null; }
+    if (want !== '2014' && want !== '2024') return rulesShown;
+    if (want === '2024' && typeof SRD52_FULL === 'undefined') {
+        rulesLoadFull().then(() => {
+            if (typeof nbView !== 'undefined' && nbView.players && typeof renderPlayers === 'function') renderPlayers(nbLoad());
+        }, () => {});
+        return rulesShown;
+    }
+    return want;
+}
+
+// The roll's parts for an entry, or null when its link can't be rolled here. Cached by link and rules version.
 function nbRolledParts(e) {
     if (!e.href || !NB_SHEETS[e.kind]) return [];
-    if (nbSheetCache.has(e.href)) return nbSheetCache.get(e.href);
+    const rules = nbSheetRules(e.href);
+    const key = (rules || '') + '|' + e.href;
+    if (nbSheetCache.has(key)) return nbSheetCache.get(key);
     let parts = null;
+    const back = rules && rules !== rulesShown ? rulesShown : null;
     try {
+        if (back) rulesSwap(rules);
         const p = nbQuery(e.href), seed = parseSeed(p.get('seed'));
         if (seed) parts = NB_SHEETS[e.kind](p, seed).filter(part => part.lines.length);
     } catch (err) {
         parts = null;
+    } finally {
+        if (back) rulesSwap(back);
     }
-    nbSheetCache.set(e.href, parts);
+    nbSheetCache.set(key, parts);
     return parts;
 }
 
@@ -304,8 +335,10 @@ function nbSheet(e) {
         // Anyone in a secret union (a hidden child, a secret partner) starts DM-only: their line gives it away.
         const secret = new Set(fam.unions.filter(u => u.kind === 'secret').flatMap(u => [u.a, u.b]));
         const hidden = p => secret.has(p.id) || (!!p.of && (famUnion(fam, p.of) || {}).kind === 'secret');
+        // A shown line names no one whose own line is kept from the players (a hidden child's child, a secret's spouse).
+        const named = q => nbShown(e, { key: `The family|${q.id}`, dm: hidden(q) });
         parts.push({ head: 'The family', lines: fam.people.flatMap(p => [
-            { key: `The family|${p.id}`, label: p.name, text: famPersonLine(fam, p), dm: hidden(p) },
+            { key: `The family|${p.id}`, label: p.name, text: famPersonLine(fam, p, nbShown(e, { key: `The family|${p.id}`, dm: hidden(p) }) ? named : null), dm: hidden(p) },
             ...(p.note ? [{ key: `The family|${p.id}|note`, label: `About ${p.name.split(' ')[0]}`, text: p.note, dm: true }] : [])
         ]) });
         if (fam.scandals.length) {

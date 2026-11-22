@@ -515,7 +515,10 @@ function renderNotebook(nb = nbLoad()) {
     // A redraw keeps keyboard focus on the same control (a quest's status, a link picker).
     const active = document.activeElement;
     const refocus = active && active.closest('#nb-list') && active.dataset.id
-        ? `.${active.classList[0]}[data-id="${active.dataset.id}"]${active.dataset.f ? `[data-f="${active.dataset.f}"]` : ''}` : null;
+        ? `.${active.classList[0]}[data-id="${active.dataset.id}"]${active.dataset.f ? `[data-f="${active.dataset.f}"]` : ''}${active.dataset.k ? `[data-k="${active.dataset.k}"]` : ''}` : null;
+    // A box being typed in keeps its words and cursor, even ones not saved yet (a redraw from another tab).
+    const draft = refocus && /^(TEXTAREA|INPUT)$/.test(active.tagName) && active.type !== 'checkbox'
+        ? { value: active.value, start: active.selectionStart, end: active.selectionEnd } : null;
     const kind = document.getElementById('nb-kind').value;
     const status = document.getElementById('nb-qstatus').value;
     const q = document.getElementById('nb-search').value.trim().toLowerCase();
@@ -537,7 +540,16 @@ function renderNotebook(nb = nbLoad()) {
     } else {
         list.innerHTML = shown.map(e => nbEntryHTML(nb, e)).join('');
     }
-    if (refocus) { const el = list.querySelector(refocus); if (el) el.focus(); }
+    if (refocus) {
+        const el = list.querySelector(refocus);
+        if (el) {
+            if (draft && el.value !== draft.value) {
+                el.value = draft.value;
+                try { el.setSelectionRange(draft.start, draft.end); } catch (e) { /* not a text box */ }
+            }
+            el.focus();
+        }
+    }
     document.getElementById('nb-clear').textContent = nbView.clearing ? '⚠️ Click again to clear everything' : '🗑️ Clear';
     ['nb-export', 'nb-copy', 'nb-word', 'nb-clear'].forEach(id => { document.getElementById(id).disabled = !nb.entries.length; });
     renderLast(nb);

@@ -69,7 +69,7 @@ function applyFacUrl(p) {
     const seed = parseSeed(p.get('seed'));
     if (!seed) return false;
     rollFactionsFor(seed, null);
-    const n = parseInt(p.get('faction'), 10);
+    const n = (/^\d+$/.test(p.get('faction') || '') ? Number(p.get('faction')) : 0);   // not "2junk"
     if (n >= 1 && n <= facState.data.factions.length) {
         facState.view = n - 1;
         renderFactions();

@@ -84,7 +84,7 @@ function applyTownUrl(p) {
     if (g) Object.entries(TOWN_GOD_KEYS).forEach(([key, opt]) => { g[opt] = p.get(key) || 'random'; });
     townSetPantheon(g);
     const cont = parseSeed(p.get('cont'));
-    const cs = cont ? { seed: cont, town: (parseInt(p.get('ctown'), 10) || 0) - 1 } : null;
+    const cs = cont ? { seed: cont, town: (/^\d+$/.test(p.get('ctown') || '') ? Number(p.get('ctown')) : 0) - 1 } : null;
     if (cs) Object.entries(TOWN_CONT_KEYS).forEach(([key, opt]) => { cs[opt] = p.get(key) || 'random'; });
     townSetRealm(cs && cs.town >= 0 ? cs : null);
     const seed = parseSeed(p.get('seed'));

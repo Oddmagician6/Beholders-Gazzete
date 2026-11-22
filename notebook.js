@@ -310,6 +310,16 @@ function nbEntryUses(e) {
     });
 }
 
+// A site names its history's gods and factions too (h + the History tab's keys, world-sites.js): one seed saved
+// twice with different gods is two histories, and the site belongs to the one whose gods and factions it carries.
+const NB_HIS_LINK_KEYS = ['gods', 'gsize', 'gshape', 'gnaming', 'gworld', 'facs', 'fcount', 'ffocus', 'fscale', 'fworld', 'fgods', 'fgsize', 'fgshape', 'fgnaming', 'fgworld'];
+function nbHisLinksAgree(a, b) {
+    const [site, his] = a.kind === 'sites' ? [a, b] : b.kind === 'sites' ? [b, a] : [null, null];
+    if (!site || his.kind !== 'history' || !site.href || !his.href) return true;
+    const qs = nbQuery(site.href), qh = nbQuery(his.href);
+    return NB_HIS_LINK_KEYS.every(k => (qs.get('h' + k) || '') === (qh.get(k) || ''));
+}
+
 function nbLink(nb, a, b) {
     const x = nbFind(nb, a), y = nbFind(nb, b);
     if (!x || !y || a === b) return false;
@@ -421,7 +431,7 @@ function nbAdd(item) {
     let linked = 0;
     nb.entries.forEach(e => {
         if (e === entry) return;
-        if (uses.includes(nbEntrySig(e)) || (sig && nbEntryUses(e).includes(sig))) linked += nbLink(nb, entry.id, e.id) ? 1 : 0;
+        if ((uses.includes(nbEntrySig(e)) || (sig && nbEntryUses(e).includes(sig))) && nbHisLinksAgree(entry, e)) linked += nbLink(nb, entry.id, e.id) ? 1 : 0;
     });
     return nbStore(nb) ? { entry, existed: false, linked } : null;
 }
@@ -444,6 +454,26 @@ function nbParseFile(text) {
     return nbClean(raw);
 }
 
+// A hand-written session's or quest's fields from an imported copy of it (nbMerge).
+const NB_FIELD_LABELS = {
+    session: { date: 'Played on', recap: 'What happened', npcs: 'NPCs met', loot: 'Loot handed out', threads: 'Open threads' },
+    quest: { sub: 'The job', giver: 'Giver', reward: 'Reward' }
+};
+function nbMergeFields(same, e, differs, toDm) {
+    const labels = NB_FIELD_LABELS[e.kind] || {};
+    const limit = { recap: NB_LIMITS.notes, npcs: 1000, loot: 1000, threads: 2000, giver: 200, reward: 400, sub: NB_LIMITS.sub };
+    Object.entries(labels).forEach(([k, label]) => {
+        const mine = same[k] || '', theirs = e[k] || '';
+        if (!theirs || mine === theirs || mine.includes(theirs)) return;
+        if (differs('|' + label)) { toDm(label, theirs); return; }
+        if (k === 'date') { if (!mine) same.date = theirs; return; }
+        const join = k === 'threads' ? '\n' : k === 'recap' ? '\n\n' : '; ';
+        same[k] = nbText(!mine || theirs.includes(mine) ? theirs : `${mine}${join}${theirs}`, limit[k]);
+    });
+    if (e.kind === 'session' && same.num == null && e.num != null) same.num = e.num;
+    if (e.kind === 'quest' && same.status === 'open' && e.status && e.status !== 'open' && Object.hasOwn(NB_QUEST_STATUS, e.status)) same.status = e.status;
+}
+
 // Fold an imported notebook into this one. An entry whose link is already here keeps
 // the one here (and gains the imported notes, DM notes, and reworded lines, but keeps its own switches); so does a hand-written entry with the same
 // id and kind (the same notebook imported twice). The rest come in under fresh ids.
@@ -455,15 +485,31 @@ function nbMerge(nb, incoming) {
         const same = nb.entries.find(x => (e.href ? x.href === e.href : !x.href && x.id === e.id && x.kind === e.kind));
         if (same) {
             map[e.id] = same.id;
-            if (e.notes && !same.notes.includes(e.notes)) same.notes = nbText(same.notes ? `${same.notes}\n\n${e.notes}` : e.notes, NB_LIMITS.notes);
-            if (e.dm && !(same.dm || '').includes(e.dm)) same.dm = nbText(same.dm ? `${same.dm}\n\n${e.dm}` : e.dm, NB_LIMITS.notes);
             // The 👁️/🔒 switches stay as this copy has them: merging both sets would turn a line made DM-only here
-            // public again (B388).
-            // Reworded lines come along where this copy still has the rolled wording.
+            // public again (B388). So text the other copy kept from the players (a line it switched that this
+            // copy didn't) doesn't land on a line the players see here: it goes to the DM-only notes instead.
+            const theirs = e.flip || [], ours = same.flip || [];
+            const differs = key => theirs.includes(key) !== ours.includes(key);
+            const toDm = (label, text) => {
+                const line = `${label} (from an imported copy, where the players didn't see it): ${text}`;
+                if (!(same.dm || '').includes(text)) same.dm = nbText(same.dm ? `${same.dm}\n\n${line}` : line, NB_LIMITS.notes);
+            };
+            if (e.notes && !same.notes.includes(e.notes)) {
+                if (theirs.includes('|Notes') && !ours.includes('|Notes')) toDm('Notes', e.notes);
+                else same.notes = nbText(same.notes ? `${same.notes}\n\n${e.notes}` : e.notes, NB_LIMITS.notes);
+            }
+            if (e.dm && !(same.dm || '').includes(e.dm)) same.dm = nbText(same.dm ? `${same.dm}\n\n${e.dm}` : e.dm, NB_LIMITS.notes);
+            // Reworded lines come along where this copy still has the rolled wording, unless the two copies
+            // switched that line differently (the other copy may have hidden it).
             if (e.edits) {
-                const edits = nbEdits({ ...e.edits, ...(same.edits || {}) });
+                const fresh = Object.fromEntries(Object.entries(e.edits).filter(([k]) => !differs(k)));
+                const edits = nbEdits({ ...fresh, ...(same.edits || {}) });
                 if (Object.keys(edits).length) same.edits = edits;
             }
+            // A session or quest written by hand (the same notebook, imported back after play elsewhere):
+            // its fields come along. An empty field takes the imported one, a field that grew takes the longer
+            // text, two different texts are both kept, and a quest finished in the other copy is finished here.
+            if (!e.href && NB_FIELDS[e.kind] && e.kind !== 'monster') nbMergeFields(same, e, differs, toDm);
             // A family keeps whichever copy was edited last.
             if (e.fam && same.fam && (e.fam.edited || '') > (same.fam.edited || '')) { same.fam = e.fam; same.sub = e.sub; }
             merged++;

@@ -88,7 +88,7 @@ function applySiteUrl(p) {
     const h = his ? { seed: his } : null;
     if (h) Object.entries(SITE_HIS_KEYS).forEach(([key, opt]) => { h[opt] = p.get(key) || 'random'; });
     if (h) h.links = siteHisLinksFrom(k => p.get('h' + k));
-    siteSetHistory(h, (parseInt(p.get('hage'), 10) || 0) - 1);
+    siteSetHistory(h, (/^\d+$/.test(p.get('hage') || '') ? Number(p.get('hage')) : 0) - 1);
     const seed = parseSeed(p.get('seed'));
     if (!seed && !p.has('level') && !p.has('party')) siteUseParty();
     if (!seed) return false;

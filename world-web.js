@@ -625,6 +625,12 @@ function setupWeb() {
         if (webShownTab()) renderWeb(nb);
         else webState.drawn = false;
     });
+    // So does an entry moved in another tab's web (its layout is stored, not the notebook).
+    window.addEventListener('storage', e => {
+        if (e.key !== WEB_KEY) return;
+        if (webShownTab()) renderWeb(nbLoad());
+        else webState.drawn = false;
+    });
 }
 
 WORLD_TABS.web = {

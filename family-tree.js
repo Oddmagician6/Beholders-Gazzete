@@ -221,16 +221,17 @@ function famSummary(fam) {
 }
 
 // One line about a person: who they are to the family, their age or death, their partners and parents.
-function famPersonLine(fam, p) {
+// named(q): false leaves q out (a player sheet names no one whose own line the players can't see).
+function famPersonLine(fam, p, named = null) {
     const bits = [];
     if (p.title) bits.push(p.title + '.');
     if (p.race !== famRace(fam)) bits.push(famCapital(ruleWord('race', p.race)) + '.');
     bits.push(famAgeText(p));
-    const partners = famPartners(fam, p).filter(x => x.other);
+    const partners = famPartners(fam, p).filter(x => x.other && (!named || named(x.other)));
     if (partners.length) {
         bits.push(partners.map(({ u, other }) => `${u.kind === 'apart' ? 'Once married to' : u.kind === 'secret' ? 'Secretly with' : 'Married to'} ${other.name}.`).join(' '));
     }
-    const parents = famParents(fam, p);
+    const parents = famParents(fam, p).filter(x => !named || named(x));
     if (parents.length) bits.push(`Child of ${parents.map(x => x.name).join(' and ')}.`);
     return bits.join(' ');
 }

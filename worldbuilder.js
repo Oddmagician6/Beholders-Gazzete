@@ -78,12 +78,15 @@ function worldScript(src) {
 
 // Once srd52.js is in (D&D): wait for the 2024 data when that's the version, and from then on roll the open tab
 // again when the version changes (Back/Forward to a rules= address, another tab's switch).
+// Tabs opened earlier but not on screen roll again from their own address when next shown (worldStale).
 let worldRulesHooked = false;
+const worldStale = new Set();
 function worldRules() {
     if (typeof SRD52_OK === 'undefined' || !SRD52_OK) return null;
     if (!worldRulesHooked) {
         worldRulesHooked = true;
         srd52OnChange(() => {
+            worldOpened.forEach(o => { if (o !== worldShown && WORLD_ENGINES[o].includes('srd52.js')) worldStale.add(o); });
             const t = worldShown;
             if (!worldOpened.has(t) || !WORLD_ENGINES[t].includes('srd52.js')) return;
             if (WORLD_TABS[t].apply(urlParams())) setUrlParams(WORLD_TABS[t].params(), false);
@@ -170,6 +173,7 @@ async function switchWorldTab(tab) {
     const was = worldShown;
     showWorldTab(tab);
     if (!await readyWorldTab(tab) || tab !== worldShown) return false;
+    if (worldStale.delete(tab) && WORLD_TABS[tab].rolled()) WORLD_TABS[tab].apply(new URLSearchParams(paramsQuery(WORLD_TABS[tab].params())));
     if (tab !== was || !worldOpened.has(tab)) {
         if (!WORLD_TABS[tab].rolled()) WORLD_TABS[tab].fresh(null);
         setUrlParams(WORLD_TABS[tab].params(), true);

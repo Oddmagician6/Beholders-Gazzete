@@ -629,6 +629,14 @@ const SITE_AWARE = ruleTable({
     unaware: "{alt:They haven't noticed the party. Sneak in with Stealth against their passive Perception, and anyone who isn't noticed gets the jump on them.|They haven't noticed the party. Characters who sneak in roll Stealth for initiative, and start the fight undetected by any foe whose Perception DC their roll beats.}",
     ambush: "{alt:They're hidden. Roll their Stealth against each character's passive Perception: anyone who doesn't notice them is surprised in the first round.|They're hidden, and roll Stealth for initiative. A foe whose roll beats a character's Perception DC starts the fight undetected by that character.}"
 });
+// The 2024 rules (SRD 5.2.1, Surprise): a surprised character rolls initiative with disadvantage.
+const SITE_AWARE_2024 = {
+    ambush: "They're hidden. Roll their Stealth against each character's passive Perception: anyone who doesn't notice them is surprised, and rolls initiative with disadvantage."
+};
+function siteAware(seen) {
+    const v24 = typeof rulesShown !== 'undefined' && rulesShown === '2024' && (typeof ruleSystemId !== 'function' || ruleSystemId() === '5e');
+    return (v24 && SITE_AWARE_2024[seen]) || SITE_AWARE[seen];
+}
 
 // Room traps. trigger: what sets it off. effect: {dc} {dmg} filled by the site's level.
 // kinds: only in these kinds (absent = anywhere). disarm: how to stop it ({dc}).
@@ -1248,7 +1256,7 @@ function siteRoomLines(s, i) {
     if (r.event) lines.push(['Also here', r.event.text]);
     if (r.fight) {
         lines.push(['Foes', `${siteMonsterText(r.fight)} (${siteFightRating(s, r.fight)}).`]);
-        lines.push(['Doing', `${siteCap(r.fight.doing)}. ${SITE_AWARE[r.fight.seen]}`]);
+        lines.push(['Doing', `${siteCap(r.fight.doing)}. ${siteAware(r.fight.seen)}`]);
     }
     if (i === s.rooms.length - 1 && s.boss) {
         const L = s.boss.leader;
