@@ -30,6 +30,15 @@ const PC_EXTRA_FEATS = { aiuvarin: 'elf', dromaar: 'orc' };
 const PC_SPELL_ATTR = { champion: 'cha' };
 // The cleric's deity's favored weapon: rank by level for each doctrine.
 const PC_FAVORED = { 'cloistered-cleric': { 1: 1, 11: 2 }, warpriest: { 1: 1, 7: 2, 19: 3 } };
+// Fighter Weapon Mastery (5th) and Weapon Legend (13th): a weapon group of the player's choice each (c.wg),
+// with [simple, martial and unarmed rank, advanced rank] in it. Weapon Legend's is the 5th-level group unless changed.
+const PC_WEAPON_GROUPS = ['axe', 'bomb', 'bow', 'brawling', 'club', 'crossbow', 'dart', 'flail', 'hammer', 'knife', 'pick', 'polearm', 'shield', 'sling', 'spear', 'sword'];
+const PC_FIGHTER_GROUP = { 5: [3, 2], 13: [4, 3] };
+// Archetype dedications that raise a skill (Player Core 2): the skill and its rank from a level on (0 = the feat's own).
+const PC_DED_SKILL = { 'acrobat-dedication': ['acrobatics', { 0: 2, 7: 3, 15: 4 }], 'medic-dedication': ['medicine', { 0: 2 }] };
+// The swashbuckler's Stylish Tricks levels: a skill feat for Acrobatics or the style's skill, and one more skill
+// increase for those (saved as c.skills.inc['3s']).
+const PC_STYLISH = [3, 7, 15];
 const PC_DIVINE_FONTS = { heal: 'Healing font (heal)', harm: 'Harmful font (harm)' };
 // A deity adds spells to its clerics' list (Player Core lists three: a 1st-rank one and two higher).
 // Only the cleric class gets them; the Cleric Dedication says it gains nothing else from the deity.
@@ -57,7 +66,7 @@ function pcBlank() {
     return {
         id: pcNewId(), name: '', player: '', level: 1, race: '', her: '', bg: '', cls: '', ch: '', ch2: '', sub: '',
         boosts: { anc: [], ancFree: false, bg: [], key: '', l1: [], 5: [], 10: [], 15: [], 20: [] },
-        skills: { cls: [], ch: '', inc: {}, lore: [] }, bgc: { sk: '', lo: '' }, paths: {}, feats: {}, langs: [],
+        skills: { cls: [], ch: '', inc: {}, lore: [] }, bgc: { sk: '', lo: '' }, paths: {}, wg: {}, feats: {}, langs: [],
         deity: { name: '', weapon: '', font: '', skill: '' },
         fa: false, mc: {}, gear: { armor: '', arPot: 0, shield: '', weapons: [] }, notes: '', spells: pcBlankSpells(), play: pcBlankPlay(), updated: Date.now()
     };
@@ -112,13 +121,16 @@ function pcClean(raw) {
     c.skills.cls = Array.isArray(s.cls) ? [...new Set(s.cls.filter(k => pcId(k, PC_SKILLS)))].slice(0, 24) : [];
     c.skills.ch = pcId(s.ch, PC_SKILLS);
     if (s.inc && typeof s.inc === 'object') {
-        for (const [lv, k] of Object.entries(s.inc)) if (/^\d{1,2}$/.test(lv) && (pcId(k, PC_SKILLS) || (typeof k === 'string' && /^lore:/.test(k)))) c.skills.inc[lv] = pcStr(k, 50);
+        for (const [lv, k] of Object.entries(s.inc)) if (/^\d{1,2}s?$/.test(lv) && (pcId(k, PC_SKILLS) || (typeof k === 'string' && /^lore:/.test(k)))) c.skills.inc[lv] = pcStr(k, 50);
     }
     c.skills.lore = Array.isArray(s.lore) ? s.lore.map(x => pcStr(x, 40)).filter(Boolean).slice(0, 6) : [];
     const bc = raw.bgc && typeof raw.bgc === 'object' ? raw.bgc : {};
     c.bgc = { sk: pcId(bc.sk, PC_SKILLS), lo: pcStr(bc.lo, 40) };
     if (raw.paths && typeof raw.paths === 'object') {
         for (const [lv, k] of Object.entries(raw.paths)) if (/^\d{1,2}$/.test(lv) && pcId(k, PC_SAVES)) c.paths[lv] = k;
+    }
+    if (raw.wg && typeof raw.wg === 'object') {
+        for (const lv of Object.keys(PC_FIGHTER_GROUP)) if (PC_WEAPON_GROUPS.includes(raw.wg[lv])) c.wg[lv] = raw.wg[lv];
     }
     if (raw.feats && typeof raw.feats === 'object') {
         for (const [slot, f] of Object.entries(raw.feats)) if (/^[a-z]{2,4}\d{1,2}$/.test(slot) && pcId(f, PF2E_FEATS)) c.feats[slot] = f;
@@ -466,21 +478,53 @@ function pcPickedSkills(c) {
     return c.skills.cls.filter(k => !given.has(k)).slice(0, pcSkillPicks(c));
 }
 
-// Each skill's rank (and the Lores), from training and the skill increases taken so far.
-function pcSkillRanks(c, level = c.level) {
+// The trained skills a class choice gives (a methodology's or a style's, with its pick from a list).
+function pcChoiceSkills(c) {
+    const { ch } = pcParts(c);
+    if (!ch) return [];
+    return [...(ch.sk || []), ...(ch.skc && ch.skc.includes(c.skills.ch) ? [c.skills.ch] : [])];
+}
+
+// The skill increases up to a level: { key (its place in c.skills.inc), level, only (the skills it can raise, or null) }.
+function pcIncSlots(c, level = c.level) {
+    const { cls } = pcParts(c);
+    const out = [];
+    (cls ? cls.lv.inc : []).filter(l => l <= level).forEach(l => {
+        out.push({ key: String(l), level: l, only: null });
+        if (c.cls === 'swashbuckler' && PC_STYLISH.includes(l)) out.push({ key: l + 's', level: l, only: [...new Set(['acrobatics', ...pcChoiceSkills(c)])] });
+    });
+    return out;
+}
+
+// The ranks an archetype dedication gives (Acrobat, Medic), as [level, skill, rank].
+function pcDedSkillGrants(c, level = c.level) {
+    const out = [];
+    pcFeatSlots(c, level).forEach(s => {
+        const g = PC_DED_SKILL[c.feats[s.slot]];
+        if (g) Object.entries(g[1]).forEach(([lv, r]) => { const at = Math.max(s.level, Number(lv)); if (at <= level) out.push([at, g[0], r]); });
+    });
+    return out;
+}
+
+// Each skill's rank (and the Lores), from training, dedications, and the skill increases taken so far.
+// stop: an increase's key, to get the ranks just before it (a dedication's ranks at its level come first).
+function pcSkillRanks(c, level = c.level, stop = '') {
     const ranks = Object.fromEntries(Object.keys(PC_SKILLS).map(k => [k, 0]));
     pcGivenSkills(c).forEach(([k]) => { ranks[k] = 1; });
     pcPickedSkills(c).forEach(k => { ranks[k] = 1; });
     pcDedications(c, level).forEach(d => d.skills.forEach(k => { ranks[k] = 1; }));
     const lores = {};
     pcLores(c).forEach(l => { lores[l] = 1; });
-    const { cls } = pcParts(c);
-    (cls ? cls.lv.inc : []).filter(l => l <= level).forEach(l => {
-        const k = c.skills.inc[l];
-        if (!k) return;
+    const steps = [...pcDedSkillGrants(c, level).map(g => ({ level: g[0], grant: g })), ...pcIncSlots(c, level).map(s => ({ level: s.level, slot: s }))]
+        .sort((a, b) => a.level - b.level || (a.grant ? 0 : 1) - (b.grant ? 0 : 1));
+    for (const e of steps) {
+        if (e.grant) { ranks[e.grant[1]] = Math.max(ranks[e.grant[1]], e.grant[2]); continue; }
+        if (e.slot.key === stop) break;
+        const k = c.skills.inc[e.slot.key], l = e.slot.level;
+        if (!k || (e.slot.only && !e.slot.only.includes(k))) continue;
         if (k.startsWith('lore:')) { const n = k.slice(5); if (Object.hasOwn(lores, n)) lores[n] = Math.min(pcRankCap(l), lores[n] + 1); }
         else if (ranks[k] < pcRankCap(l)) ranks[k] += 1;
-    });
+    }
     return { ranks, lores };
 }
 
@@ -538,8 +582,33 @@ function pcFeatSlots(c, level = c.level) {
         const sub = pcSubFeat(c.feats[s.slot], s.level);
         if (sub) out.push({ slot: 'x' + s.slot, kind: 'sub', level: s.level, label: `${PF2E_CLASSES[sub.cls].n} feat (${PF2E_FEATS[c.feats[s.slot]].n})`, parent: s.slot });
     });
+    out.forEach(s => { const lim = s.kind === 'skf' && pcSkillFeatLimit(c, s.level); if (lim) s.label = `Skill feat (${lim.name})`; });
     const order = { anc: 0, cls: 1, arc: 2, sub: 2.5, skf: 3, mcs: 3, gen: 4 };
     return out.sort((a, b) => a.level - b.level || order[a.kind] - order[b.kind]);
+}
+
+// A bonus skill feat slot with a limit: the investigator's Skillful Lessons (odd levels from 3rd: an Intelligence,
+// Wisdom, or Charisma skill, or the methodology's) and the swashbuckler's Stylish Tricks. { name, skills } or null.
+function pcSkillFeatLimit(c, level) {
+    if (c.cls === 'investigator' && level >= 3 && level % 2) return { name: 'Skillful Lessons', skills: [...Object.keys(PC_SKILLS).filter(k => ['int', 'wis', 'cha'].includes(PC_SKILLS[k])), 'lore', ...pcChoiceSkills(c)] };
+    if (c.cls === 'swashbuckler' && PC_STYLISH.includes(level)) return { name: 'Stylish Tricks', skills: ['acrobatics', ...pcChoiceSkills(c)] };
+    return null;
+}
+
+// The skills a skill feat is for, from its prerequisites ("trained in Athletics"); none named (Assurance) fits any.
+function pcFeatSkills(f) {
+    const out = [];
+    (f.pr || []).forEach(p => {
+        const m = /\b(?:trained|expert|master|legendary) in (.+)/i.exec(p);
+        if (!m) return;
+        Object.keys(PC_SKILLS).forEach(k => { if (new RegExp(`\\b${k}\\b`, 'i').test(m[1])) out.push(k); });
+        if (/\bLore\b/.test(m[1])) out.push('lore');
+    });
+    return out;
+}
+function pcSkillFeatFits(f, skills) {
+    const own = pcFeatSkills(f);
+    return !own.length || own.some(k => skills.includes(k));
 }
 
 // The archetype feats that give a feat of the class (Player Core 1 and 2): Basic X a 1st- or
@@ -628,6 +697,7 @@ function pcFeatsFor(c, slot, { archetype = false } = {}) {
     const sub = kind.startsWith('x') ? pcSubFeat(c.feats[slot.slice(1)], level) : null;
     // Another class's feats an archetype taken lists as its own (Archer: Assisting Shot at 4), in its slots.
     const extra = (kind === 'cls' && archetype) || kind === 'arc' ? pcArchExtraFor(c) : {};
+    const lim = kind === 'skf' ? pcSkillFeatLimit(c, level) : null;
     const out = [];
     for (const [key, f] of Object.entries(PF2E_FEATS)) {
         if (Object.hasOwn(extra, key) && extra[key] <= level && !f.tr.includes(c.cls)) {
@@ -640,7 +710,7 @@ function pcFeatsFor(c, slot, { archetype = false } = {}) {
         if (kind === 'anc') fits = f.c === 'ancestry' && f.tr.some(t => traits.includes(t));
         else if (kind === 'cls') fits = f.c === 'class' && (f.ar ? archetype : f.tr.includes(c.cls));
         else if (kind === 'arc') fits = f.ar === 1;
-        else if (kind === 'skf' || kind === 'mcs') fits = f.c === 'skill';
+        else if (kind === 'skf' || kind === 'mcs') fits = f.c === 'skill' && (!lim || pcSkillFeatFits(f, lim.skills));
         else if (kind === 'gen') fits = f.c === 'general' || f.c === 'skill';
         if (!fits) continue;
         if (kind === 'cls' && f.ar && f.c === 'class' && !archetype) continue;
@@ -976,6 +1046,25 @@ function pcSpecDamage(c, rank) {
     return greater ? base * 2 : base;
 }
 
+// The fighter's weapon group for Fighter Weapon Mastery (5) or Weapon Legend (13, the 5th-level one if unset).
+function pcFighterGroup(c, lv) {
+    const wg = c.wg || {};
+    return wg[lv] || (String(lv) === '13' ? wg[5] || '' : '');
+}
+
+// A specific magic weapon's own runes, from its text ("This +2 striking longbow..."), or an alchemical bomb's
+// item bonus to attack rolls: { pot, str }. Saved rune picks only count above these.
+const PC_BUILT_IN = {};
+function pcBuiltInRunes(key) {
+    if (Object.hasOwn(PC_BUILT_IN, key)) return PC_BUILT_IN[key];
+    const it = PF2E_ITEMS[key] || {}, x = it.x || '';
+    let r = { pot: 0, str: 0 };
+    const m = /(?<!example, )\+([1-3]) (?!(?:item|circumstance|status) )(?:(greater|major) )?(striking )?/.exec(x);
+    if ((it.tr || []).includes('bomb')) { const b = /\+([1-3]) item bonus to attack rolls/.exec(x); if (b) r = { pot: Number(b[1]), str: 0 }; }
+    else if (m && it.l) r = { pot: Number(m[1]), str: m[3] ? ['', 'greater', 'major'].indexOf(m[2] || '') + 1 : 0 };
+    return (PC_BUILT_IN[key] = r);
+}
+
 function pcWeaponRank(c, w, prof) {
     const cat = w.ct === 'unarmed' ? 'unarmed' : w.ct;
     let rank = prof[cat] || 0;
@@ -983,6 +1072,10 @@ function pcWeaponRank(c, w, prof) {
     // An alchemist is trained in alchemical bombs, expert at 7th, master at 15th: the same steps as simple weapons.
     const { cls } = pcParts(c);
     if (cls && cls.atko && /bomb/i.test(cls.atko[0]) && w.g === 'bomb' && (w.tr || []).includes('alchemical')) rank = Math.max(rank, prof.simple || 0);
+    // A fighter's weapon group: master (expert for advanced weapons) at 5th, legendary (master) at 13th.
+    if (c.cls === 'fighter' && w.g) Object.entries(PC_FIGHTER_GROUP).forEach(([lv, [base, adv]]) => {
+        if (c.level >= Number(lv) && pcFighterGroup(c, lv) === w.g) rank = Math.max(rank, cat === 'advanced' ? adv : base);
+    });
     return rank;
 }
 
@@ -990,10 +1083,12 @@ function pcWeaponRank(c, w, prof) {
 function pcStrikes(c) {
     const { mods } = pcAttrs(c);
     const prof = pcProfs(c);
-    const rows = c.gear.weapons.map(w => ({ ...PF2E_ITEMS[w.id], key: w.id, pot: w.pot, str: w.str }))
-        .filter(w => w.k === 'w');
+    const rows = c.gear.weapons.map(w => {
+        const b = pcBuiltInRunes(w.id);
+        return { ...PF2E_ITEMS[w.id], key: w.id, pot: Math.max(w.pot || 0, b.pot), str: Math.max(w.str || 0, b.str), own: (w.pot || 0) > b.pot || (w.str || 0) > b.str };
+    }).filter(w => w.k === 'w');
     // A monk's Powerful Fist makes it a d6.
-    rows.push({ n: 'Fist', key: '', ct: 'unarmed', dm: c.cls === 'monk' ? '1d6 B' : '1d4 B', tr: ['agile', 'finesse', 'nonlethal', 'unarmed'], pot: 0, str: 0 });
+    rows.push({ n: 'Fist', key: '', ct: 'unarmed', g: 'brawling', dm: c.cls === 'monk' ? '1d6 B' : '1d4 B', tr: ['agile', 'finesse', 'nonlethal', 'unarmed'], pot: 0, str: 0 });
     return rows.map(w => {
         const tr = w.tr || [];
         const ranged = !!w.rg;
@@ -1015,7 +1110,7 @@ function pcStrikes(c) {
         const flat = !m && /^(\d+)\s+(\w+)/.exec(w.dm || '');
         const dmg = dice ? `${dice}${bonus ? (bonus > 0 ? ' + ' : ' − ') + Math.abs(bonus) : ''} ${m[3] || ''}`.trim()
             : flat ? `${Math.max(1, Number(flat[1]) + bonus)} ${flat[2]}` : '';
-        return { key: w.key, name: w.n + (w.pot ? ` +${w.pot}` : '') + (w.str ? ` (${['', 'striking', 'greater striking', 'major striking'][w.str]})` : ''),
+        return { key: w.key, name: w.n + (w.own && w.pot ? ` +${w.pot}` : '') + (w.own && w.str ? ` (${['', 'striking', 'greater striking', 'major striking'][w.str]})` : ''),
             atk, dmg, traits: tr, rank, ranged, range: w.rg || 0 };
     });
 }
@@ -1399,7 +1494,14 @@ function pcTodo(c) {
         if (left) out.push(['skills', `${left} trained skill${left === 1 ? '' : 's'} to pick.`]);
         const or = PC_SKILL_OR[c.cls];
         if (or && !left && !or.some(k => pcSkillRanks(c, 1).ranks[k])) out.push(['skills', `A ${p.cls.n.toLowerCase()} is trained in ${or.map(pcCap).join(' or ')}: make one of your picks one of those.`]);
-        const inc = p.cls.lv.inc.filter(l => l <= c.level && !c.skills.inc[l]).length;
+        const incs = pcIncSlots(c);
+        const inc = incs.filter(s => !c.skills.inc[s.key]).length;
+        incs.filter(s => s.only && c.skills.inc[s.key] && !s.only.includes(c.skills.inc[s.key])).forEach(s => out.push(['skills', `Your level ${s.level} Stylish Tricks increase has to go to ${s.only.map(pcCap).join(' or ')}: pick again.`]));
+        pcFeatSlots(c).forEach(s => {
+            const lim = s.kind === 'skf' && c.feats[s.slot] && pcSkillFeatLimit(c, s.level);
+            if (lim && !pcSkillFeatFits(PF2E_FEATS[c.feats[s.slot]], lim.skills)) out.push(['feats', `${PF2E_FEATS[c.feats[s.slot]].n} doesn't fit your level ${s.level} ${lim.name} slot: pick again.`]);
+        });
+        if (c.cls === 'fighter' && c.level >= 5 && !pcFighterGroup(c, 5)) out.push(['class', 'Pick the weapon group for Fighter Weapon Mastery.']);
         if (inc) out.push(['skills', `${inc} skill increase${inc === 1 ? '' : 's'} to place.`]);
         const feats = pcFeatSlots(c).filter(s => !c.feats[s.slot]).length;
         if (feats) out.push(['feats', `${feats} feat${feats === 1 ? '' : 's'} to pick.`]);

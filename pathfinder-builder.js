@@ -265,6 +265,10 @@ function stepClass() {
         const fits = (lv, k) => { const i = lvs.indexOf(lv), a = cur.paths[lvs[0]], b = cur.paths[lvs[1]] !== a ? cur.paths[lvs[1]] : ''; return i === 1 ? k !== a : i === 2 ? !!a && !!b && [a, b].includes(k) : true; };
         h += `<h3>Paths to Perfection</h3><div class="cb-row">${Object.entries(c.pp).map(([lv, rank]) => `<label class="cb-field">Level ${lv} (${PC_RANKS[rank].toLowerCase()})<select data-path="${lv}" data-focus="path-${lv}"${Number(lv) > cur.level ? ' disabled' : ''}><option value="">Pick a save</option>${Object.entries(PC_SAVES).filter(([k]) => fits(lv, k) || cur.paths[lv] === k).map(([k, [n]]) => `<option value="${k}"${cur.paths[lv] === k ? ' selected' : ''}>${n}${fits(lv, k) ? '' : ' (doesn\'t count: pick again)'}</option>`).join('')}</select></label>`).join('')}</div>`;
     }
+    if (cur.cls === 'fighter') {
+        const wg = cur.wg || {};
+        h += `<h3>Weapon group</h3><p class="cb-lead">Fighter Weapon Mastery (level 5) makes you a master with the simple and martial weapons and unarmed attacks of one weapon group, and expert with its advanced weapons. Weapon Legend (level 13) takes a group to legendary (master for advanced weapons): the same one unless you pick another.</p><div class="cb-row">${Object.keys(PC_FIGHTER_GROUP).map(lv => `<label class="cb-field">Level ${lv}<select data-wg="${lv}" data-focus="wg-${lv}"${Number(lv) > cur.level ? ' disabled' : ''}><option value="">${lv === '13' ? 'Same as level 5' : 'Pick a group'}</option>${PC_WEAPON_GROUPS.map(g => `<option value="${g}"${wg[lv] === g ? ' selected' : ''}>${pcCap(g)}</option>`).join('')}</select></label>`).join('')}</div>`;
+    }
     h += `<h3>Class features</h3><div class="pb-feats">${c.f.map(([l, n, key]) => `<div class="${l > cur.level ? 'cb-later' : ''}">${textBox(`cf:${key}|${cur.cls}`, `<span class="cb-lv">Level ${l}</span>${esc(n)}`)}</div>`).join('')}</div>`;
     return h;
 }
@@ -319,15 +323,14 @@ function stepSkills() {
         : `<button type="button" class="cb-chip" data-skill="${k}" aria-pressed="${cur.skills.cls.includes(k)}" data-focus="sk-${k}"${!cur.skills.cls.includes(k) && n >= picks ? ' disabled' : ''}>${skillName(k)}</button>`).join('')}</div>`;
     h += `<h4>Lores</h4><p class="cb-lead">${Object.keys(lores).length ? Object.keys(lores).map(esc).join(', ') : 'None yet.'} Add a Lore if a feat or your GM gives you one.</p>
         <div class="cb-row"><label class="cb-field">New Lore<input type="text" id="pb-lore" maxlength="40" placeholder="e.g. Sailing Lore" data-focus="lore-new"></label><button type="button" class="cb-btn" data-act="add-lore">➕ Add Lore</button>${cur.skills.lore.map((l, i) => `<button type="button" class="cb-btn cb-mini" data-del-lore="${i}">✕ ${esc(l)}</button>`).join('')}</div>`;
-    const inc = p.cls.lv.inc;
     h += `<h3>Skill increases</h3><p class="cb-lead">Each one trains a skill you're untrained in, or raises a trained one a rank: to expert at any level, to master from level 7, to legendary from level 15.</p><div class="cb-row">`;
-    inc.forEach(l => {
-        const later = l > cur.level;
-        const before = pcSkillRanks({ ...cur, skills: { ...cur.skills, inc: Object.fromEntries(Object.entries(cur.skills.inc).filter(([lv]) => Number(lv) < l)) } }, l - 1);
-        const opts = [...Object.keys(PC_SKILLS).filter(k => before.ranks[k] < pcRankCap(l)).map(k => [k, `${skillName(k)} → ${PC_RANKS[before.ranks[k] + 1].toLowerCase()}`]),
-            ...Object.entries(before.lores).filter(([, r]) => r < pcRankCap(l)).map(([name, r]) => [`lore:${name}`, `${name} → ${PC_RANKS[r + 1].toLowerCase()}`])];
-        const v = cur.skills.inc[l] || '';
-        h += `<label class="cb-field pb-inc${later ? ' cb-later' : ''}">Level ${l}<select data-inc="${l}" data-focus="inc-${l}"${later ? ' disabled' : ''}><option value="">Pick a skill</option>${opts.map(([k, t]) => `<option value="${esc(k)}"${v === k ? ' selected' : ''}>${esc(t)}</option>`).join('')}${v && !opts.some(o => o[0] === v) ? `<option value="${esc(v)}" selected>${esc(v.replace(/^lore:/, ''))} (can't go higher)</option>` : ''}</select></label>`;
+    pcIncSlots(cur, 20).forEach(s => {
+        const l = s.level, later = l > cur.level;
+        const before = pcSkillRanks(cur, l, s.key);
+        const opts = [...Object.keys(PC_SKILLS).filter(k => (!s.only || s.only.includes(k)) && before.ranks[k] < pcRankCap(l)).map(k => [k, `${skillName(k)} → ${PC_RANKS[before.ranks[k] + 1].toLowerCase()}`]),
+            ...(s.only ? [] : Object.entries(before.lores).filter(([, r]) => r < pcRankCap(l)).map(([name, r]) => [`lore:${name}`, `${name} → ${PC_RANKS[r + 1].toLowerCase()}`]))];
+        const v = cur.skills.inc[s.key] || '';
+        h += `<label class="cb-field pb-inc${later ? ' cb-later' : ''}">Level ${l}${s.only ? ' (Stylish Tricks)' : ''}<select data-inc="${s.key}" data-focus="inc-${s.key}"${later ? ' disabled' : ''}><option value="">Pick a skill</option>${opts.map(([k, t]) => `<option value="${esc(k)}"${v === k ? ' selected' : ''}>${esc(t)}</option>`).join('')}${v && !opts.some(o => o[0] === v) ? `<option value="${esc(v)}" selected>${esc(v.replace(/^lore:/, ''))} (${s.only && !s.only.includes(v) ? 'doesn\'t count here' : 'can\'t go higher'})</option>` : ''}</select></label>`;
     });
     h += '</div>';
     h += `<h3>Your skills at level ${cur.level}</h3>${stats.acp ? `<p class="cb-faint">Your armor's check penalty (${pcSign(stats.acp)}) is in the Strength and Dexterity skills below, since your Strength is under its threshold. It doesn't apply to checks with the attack trait (Grapple, Shove, Trip...).</p>` : ''}<ul class="cb-skill-list">${Object.keys(PC_SKILLS).map(k => `<li class="${ranks[k] ? 'p' : ''}">${rankTag(ranks[k])}<span class="cb-val">${pcSign(stats.skills[k])}</span> ${skillName(k)} <small>${abilShort(PC_SKILLS[k])}</small></li>`).join('')}
@@ -421,7 +424,7 @@ function stepGear() {
     h += `<p>AC <b>${ac.ac}</b> = 10 + Dex ${pcSign(ac.dex)} + ${PC_RANKS[ac.rank].toLowerCase()} ${pcSign(pcBonus(ac.rank, cur.level))} + item ${pcSign(ac.item)}${ac.armor && prof[ac.cat] === 0 ? ' <span class="cb-warn">(untrained in this armor)</span>' : ''}${cur.gear.shield ? ` · raised shield +${PF2E_ITEMS[cur.gear.shield].ac || 0}` : ''}</p>`;
     h += `<h3>Weapons</h3><div class="cb-row"><label class="cb-field">Add a weapon<select id="pb-add-weapon" data-focus="add-weapon"><option value="">Pick one</option>${['simple', 'martial', 'advanced', 'unarmed'].map(cat => `<optgroup label="${pcCap(cat)} (${PC_RANKS[prof[cat]].toLowerCase()})">${weapons.filter(([, w]) => w.ct === cat).map(([id, w]) => `<option value="${id}">${esc(w.n)} (${esc(w.dm || '')}${w.l ? `, level ${w.l}` : ''})</option>`).join('')}</optgroup>`).join('')}</select></label><button type="button" class="cb-btn" data-act="add-weapon">➕ Add</button></div>`;
     if (cur.gear.weapons.length) {
-        h += `<div class="cb-scroll"><table class="cb-table"><thead><tr><th>Weapon</th><th>Potency</th><th>Striking</th><th></th></tr></thead><tbody>${cur.gear.weapons.map((w, i) => `<tr><td>${esc(PF2E_ITEMS[w.id].n)}</td><td>${potency('pot', w.pot, i)}</td><td><select data-rune="str" data-i="${i}" data-focus="rune-str-${i}">${['none', 'striking', 'greater', 'major'].map((t, n) => `<option value="${n}"${w.str === n ? ' selected' : ''}>${t}</option>`).join('')}</select></td><td><button type="button" class="cb-btn cb-mini" data-del-weapon="${i}" aria-label="Remove ${esc(PF2E_ITEMS[w.id].n)}">✕</button></td></tr>`).join('')}</tbody></table></div>`;
+        h += `<div class="cb-scroll"><table class="cb-table"><thead><tr><th>Weapon</th><th>Potency</th><th>Striking</th><th></th></tr></thead><tbody>${cur.gear.weapons.map((w, i) => `<tr><td>${esc(PF2E_ITEMS[w.id].n)}${builtIn(w.id)}</td><td>${potency('pot', w.pot, i)}</td><td><select data-rune="str" data-i="${i}" data-focus="rune-str-${i}">${['none', 'striking', 'greater', 'major'].map((t, n) => `<option value="${n}"${w.str === n ? ' selected' : ''}>${t}</option>`).join('')}</select></td><td><button type="button" class="cb-btn cb-mini" data-del-weapon="${i}" aria-label="Remove ${esc(PF2E_ITEMS[w.id].n)}">✕</button></td></tr>`).join('')}</tbody></table></div>`;
     } else h += '<p class="cb-faint">No weapons yet: the sheet shows your fist.</p>';
     return h;
 }
@@ -576,7 +579,7 @@ function onClick(e) {
             c[field] = val;
             if (field === 'race') { c.boosts.anc = []; if (PF2E_HERITAGES[c.her] && PF2E_HERITAGES[c.her].a) c.her = ''; }
             if (field === 'bg') { c.boosts.bg = []; c.bgc = { sk: '', lo: '' }; }
-            if (field === 'cls') { c.ch = ''; c.ch2 = ''; c.sub = ''; c.skills.ch = ''; c.boosts.key = ''; c.paths = {}; Object.keys(c.feats).filter(s => /^x?cls/.test(s)).forEach(s => delete c.feats[s]); }
+            if (field === 'cls') { c.ch = ''; c.ch2 = ''; c.sub = ''; c.skills.ch = ''; c.boosts.key = ''; c.paths = {}; c.wg = {}; Object.keys(c.feats).filter(s => /^x?cls/.test(s)).forEach(s => delete c.feats[s]); }
             if (field === 'ch') { c.skills.ch = ''; c.sub = ''; }
         });
     }
@@ -623,6 +626,13 @@ function onClick(e) {
     }
 }
 
+// A specific magic weapon's own runes, shown by its name ("built in: +2 striking"); picks only count above them.
+function builtIn(id) {
+    const b = pcBuiltInRunes(id);
+    if (!b.pot && !b.str) return '';
+    return ` <small class="cb-faint">(built in: +${b.pot}${b.str ? ' ' + ['', 'striking', 'greater striking', 'major striking'][b.str] : ''})</small>`;
+}
+
 function onChange(e) {
     const el = e.target;
     const d = el.dataset;
@@ -636,6 +646,7 @@ function onChange(e) {
         if (c.feats[d.feat] !== el.value) delete c.feats['x' + d.feat];   // a Basic X feat's own pick goes with it
         if (el.value) c.feats[d.feat] = el.value; else delete c.feats[d.feat];
     });
+    if (d.wg) return change(c => { c.wg = c.wg || {}; if (el.value) c.wg[d.wg] = el.value; else delete c.wg[d.wg]; });
     if (d.path) return change(c => { if (el.value) c.paths[d.path] = el.value; else delete c.paths[d.path]; });
     if (d.rune) {
         return change(c => {

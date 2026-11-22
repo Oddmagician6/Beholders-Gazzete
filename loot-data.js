@@ -122,6 +122,7 @@ const lootData = {
       {name:'Winged Boots',type:'wondrous',attune:true},
       {name:'Restorative Ointment',type:'wondrous',attune:false},
       {name:'Oil of Slipperiness',type:'potion',attune:false},
+      {name:'Staff of the Python',type:'staff',attune:true},
     ],
     rare: [
       {name:'+2 Weapon',type:'weapon',attune:false},
@@ -232,6 +233,7 @@ const lootData = {
       {name:'Potion of Mind Reading',type:'potion',attune:false},
       {name:'Helm of Teleportation',type:'wondrous',attune:true},
       {name:'Horn of Valhalla (Silver)',type:'wondrous',attune:false},
+      {name:'Staff of Swarming Insects',type:'staff',attune:true},
     ],
     'very-rare': [
       {name:'+3 Weapon',type:'weapon',attune:false},
@@ -289,7 +291,6 @@ const lootData = {
       {name:'Oil of Sharpness',type:'potion',attune:false},
       {name:'Potion of Speed',type:'potion',attune:false},
       {name:'Potion of Invisibility',type:'potion',attune:false},
-      {name:'Staff of the Python',type:'staff',attune:true},
       {name:'Animated Shield',type:'armor',attune:true},
       {name:'Dancing Sword',type:'weapon',attune:true},
       {name:'Demon Armor',type:'armor',attune:true},
@@ -299,7 +300,6 @@ const lootData = {
       {name:'Efreeti Bottle',type:'wondrous',attune:false},
       {name:'Frost Brand',type:'weapon',attune:true},
       {name:'Oathbow',type:'weapon',attune:true},
-      {name:'Staff of Swarming Insects',type:'staff',attune:true},
       {name:'Ioun Stone (Agility)',type:'wondrous',attune:true},
       {name:'Ioun Stone (Fortitude)',type:'wondrous',attune:true},
       {name:'Ioun Stone (Insight)',type:'wondrous',attune:true},
