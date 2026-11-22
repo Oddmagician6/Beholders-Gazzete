@@ -161,13 +161,14 @@ function partyPushLive(id, raw) {
         // and no other member without a row of their own shares it (two Bobs stay apart).
         const name = partyMemberName(m, at).slice(0, 36).toLowerCase();
         const rows = fight.list.filter(c => c && typeof c === 'object');
-        const linked = new Set(rows.map(c => c.party).filter(Boolean));
+        // pid: the member a row was added for (toolbox-table.js), kept through a rename before the sheet's first push.
+        const linked = new Set(rows.flatMap(c => [c.party, c.pid]).filter(Boolean));
         const byName = rows.filter(c => c.pc === true && !c.party && typeof c.name === 'string' && c.name.toLowerCase() === name);
         const twin = list.some((o, i) => i !== at && !linked.has(o.id) && partyMemberName(o, i).slice(0, 36).toLowerCase() === name);
         const guess = !linked.has(id) && byName.length === 1 && !twin ? byName[0] : null;
         let changed = false;
         rows.forEach(c => {
-            if (c.party !== id && c !== guess) return;
+            if (c.party !== id && c.pid !== id && c !== guess) return;
             const before = JSON.stringify(c);
             c.party = id;
             partyLiveToCombatant(c, live);

@@ -260,7 +260,9 @@ function dsPlayerCardHtml(c, ctx) {
         const e = nbFind(ctx.nb(), c.entry);
         if (!e) return '';
         // Only the notes the players may see: never the DM-only notes or the rolled details.
-        body = e.notes ? dsPre(e.notes) : '<p class="sv-faint">Nothing to read yet.</p>';
+        // (The Notebook's Print for Players switch can make the notes DM-only: its line key is '|Notes', as nbShown reads it.)
+        const notes = e.notes && !(Array.isArray(e.flip) && e.flip.includes('|Notes')) ? e.notes : '';
+        body = notes ? dsPre(notes) : '<p class="sv-faint">Nothing to read yet.</p>';
         title = e.title;
     } else if (c.type === 'notes') {
         body = c.text ? dsPre(c.text) : '<p class="sv-faint">Nothing written yet.</p>';

@@ -284,6 +284,7 @@ function loadFight() {
                 conds: Array.isArray(c.conds) ? c.conds.filter(condOk) : [],
                 pd: INIT_PF2E && Array.isArray(c.pd) ? c.pd.filter(pdOk).map(p => ({ dice: p.dice.replace(/\s+/g, ''), type: p.type })).slice(0, PD_MAX) : [],
                 party: typeof c.party === 'string' && /^[a-z0-9]{1,16}$/.test(c.party) ? c.party : null,
+                pid: typeof c.pid === 'string' && /^[a-z0-9]{1,16}$/.test(c.pid) ? c.pid : null,
                 temp: Math.max(0, num(c.temp) ?? 0), exh: Math.min(6, Math.max(0, num(c.exh) ?? 0)),
                 conc: typeof c.conc === 'string' ? c.conc.slice(0, 40) : '',
                 ds: Array.isArray(c.ds) ? [0, 1].map(i => Math.min(3, Math.max(0, num(c.ds[i]) ?? 0))) : [0, 0]
@@ -350,7 +351,7 @@ function addToFight({ name, mod = 0, fixed = null, hp = null, ac = null, count =
             init: fixed !== null && count === 1 ? fixed : rollInit(mod), mod,
             hp: hp !== null ? Math.max(0, hp) : null, max: hp !== null ? Math.max(0, hp) : null, ac, monster, pc, pp, shown: false,
             tag: pc ? null : fight.nextTag++, conds: [], pd: [],
-            party: null, temp: 0, exh: 0, conc: '', ds: [0, 0]
+            party: null, pid: null, temp: 0, exh: 0, conc: '', ds: [0, 0]
         };
         fight.list.push(c);
         added.push(c);
@@ -811,13 +812,15 @@ function addPartyToFight(list = loadParty()) {
     // A stat-block monster called Goblin doesn't keep out a PC called Goblin (a PC typed in by hand still does).
     const here = new Set(fight.list.filter(c => !c.monster).map(c => c.name.toLowerCase()));
     // A Play Sheet character already has its row (by its id), even when renamed on the Party tab since.
-    const linked = new Set(fight.list.map(c => c.party).filter(Boolean));
+    const linked = new Set(fight.list.flatMap(c => [c.party, c.pid]).filter(Boolean));
     const todo = list.map((m, i) => ({ m, name: partyMemberName(m, i).slice(0, 36) })).filter(x => !here.has(x.name.toLowerCase()) && !linked.has(x.m.id));
     const skipped = list.length - todo.length;
     if (!todo.length) { flash('init-status', '👥 The whole party is already in the fight.'); return; }
     const added = todo.flatMap(x => addToFight({ name: x.name, mod: x.m.init, hp: x.m.hp, ac: x.m.ac, pc: true, pp: x.m.pp }).map(c => {
+        // Every row keeps its member's id (pid), so a Play Sheet that hasn't pushed yet still finds it after a rename.
         // A character from the Play Sheet comes in as the sheet stands (F68).
-        // (One typed in on the Party tab has no sheet; its row is the name match partyPushLive falls back on.)
+        // (One typed in on the Party tab has no sheet, so no party id: that would promise a 🔗 sheet.)
+        c.pid = x.m.id;
         if (x.m.live) { c.party = x.m.id; partyLiveToCombatant(c, x.m.live); }
         return c;
     }));
@@ -870,7 +873,7 @@ document.addEventListener('DOMContentLoaded', () => {
     applyInitAdds();
     // Another tab of the site changed the history or the fight.
     window.addEventListener('storage', e => {
-        if (e.key === DICE_HISTORY_KEY) renderDiceHistory();
+        if (e.key === DICE_HISTORY_KEY || e.key === null) renderDiceHistory();
         if (e.key === INIT_KEY || e.key === null) { loadFight(); renderFight(); }
     });
 });
