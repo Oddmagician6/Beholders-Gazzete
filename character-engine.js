@@ -209,6 +209,9 @@ function cbClean(raw) {
     });
     // lb: the player's own weight for one (F60); mi: an SRD magic item; att: attuned to it.
     const itemsOwn = (c.rules === '2024' ? '2024' : '2014') === cbPageRules();
+    // An SRD 5.2 item the page's list doesn't hold right now (the additions switched off) keeps its flags as saved.
+    const elsewhere = n => (typeof SRD52_ITEMS !== 'undefined' && Object.hasOwn(SRD52_ITEMS, n))
+        || (typeof SRD52_FULL !== 'undefined' && SRD52_FULL.items && Object.hasOwn(SRD52_FULL.items, n));
     c.gear = Array.isArray(raw.gear) ? raw.gear.slice(0, CB_MAX_GEAR).map(g => {
         if (!g || typeof g !== 'object') return null;
         const item = { name: cbStr(g.name, 80), qty: Math.min(9999, Math.max(1, Math.round(Number(g.qty)) || 1)) };
@@ -216,7 +219,7 @@ function cbClean(raw) {
         if (CB_ARMOR[g.a]) item.a = g.a;
         const lb = Math.round(Number(g.lb) * 100) / 100;
         if (g.lb !== undefined && g.lb !== null && g.lb !== '' && Number.isFinite(lb)) item.lb = Math.min(9999, Math.max(0, lb));
-        if (g.mi && (typeof MAGIC_ITEM_TEXT === 'undefined' || !itemsOwn || MAGIC_ITEM_TEXT[item.name])) item.mi = true;
+        if (g.mi && (typeof MAGIC_ITEM_TEXT === 'undefined' || !itemsOwn || MAGIC_ITEM_TEXT[item.name] || elsewhere(item.name))) item.mi = true;
         if (item.mi && g.att && !(itemsOwn && typeof MAGIC_ITEM_TEXT !== 'undefined' && MAGIC_ITEM_TEXT[item.name]
             && !/requires attunement/i.test(MAGIC_ITEM_TEXT[item.name][0]))) item.att = true;
         return item.name ? item : null;
@@ -240,13 +243,19 @@ function cbClean(raw) {
     };
     c.spells = { cantrips: keep('cantrips', sp.cantrips, 12), list: keep('list', sp.list, 80), prepared: keep('prepared', sp.prepared, 40), arcanum: {}, fav: keep('fav', sp.fav, 80) };
     (Array.isArray(sp.away) ? sp.away : []).forEach(a => {
-        if (!Array.isArray(a) || !['cantrips', 'list', 'prepared', 'fav'].includes(a[0]) || typeof a[1] !== 'string' || a[1].length > 60) return;
+        if (!Array.isArray(a) || !['cantrips', 'list', 'prepared', 'fav', 'arc6', 'arc7', 'arc8', 'arc9'].includes(a[0]) || typeof a[1] !== 'string' || a[1].length > 60) return;
         if (!spellOk(a[1])) away.push([a[0], a[1]]);
+        else if (/^arc\d$/.test(a[0])) { if (!c.spells.arcanum[a[0][3]]) c.spells.arcanum[a[0][3]] = a[1]; }
         else if (!c.spells[a[0]].includes(a[1])) c.spells[a[0]].push(a[1]);
+    });
+    // A Mystic Arcanum pick waits the same way, by its level (arc6 ... arc9).
+    [6, 7, 8, 9].forEach(lv => {
+        const n = sp.arcanum && sp.arcanum[lv];
+        if (typeof n !== 'string' || n.length > 60 || !n) return;
+        if (spellOk(n)) c.spells.arcanum[lv] = n; else away.push(['arc' + lv, n]);
     });
     const awaySeen = new Set();
     c.spells.away = away.filter(([k, n]) => !awaySeen.has(k + '|' + n) && awaySeen.add(k + '|' + n)).slice(0, 80);
-    [6, 7, 8, 9].forEach(lv => { const n = sp.arcanum && sp.arcanum[lv]; if (spellOk(n)) c.spells.arcanum[lv] = n; });
     c.play = cbPlayClean(raw.play, c);
     c.updated = Number(raw.updated) || Date.now();
     return c;
@@ -1266,6 +1275,10 @@ function cbTodo(c) {
         const langN = cbLanguageSlots(c).bg;
         if (c.bgOpt.langs.length < langN) add('background', `Pick ${langN - c.bgOpt.langs.length} more language${langN - c.bgOpt.langs.length > 1 ? 's' : ''}.`);
         if (c.bgOpt.langs.length > langN) add('background', `${c.bgOpt.langs.length - langN} language${c.bgOpt.langs.length - langN > 1 ? 's' : ''} too many.`);
+        // The two every character starts with are standard languages (SRD 5.2.1 p. 20); a rare one fits only
+        // the rogue's Thieves' Cant extra or the ranger's Deft Explorer pair.
+        const rare = c.bgOpt.langs.filter(l => CB24_LANGUAGES.indexOf(l) >= CB24_STANDARD_LANGS);
+        if (rare.length > Math.max(0, langN - 2)) add('background', `Your two starting languages are standard ones: ${rare.join(', ')} ${rare.length === 1 ? 'is a rare language' : 'are rare languages'}${langN > 2 ? ` (only ${langN - 2} extra may be rare)` : ''}.`);
     } else if (c.bg === 'acolyte' && c.bgOpt.langs.length < 2) add('background', `Pick ${2 - c.bgOpt.langs.length} more language${c.bgOpt.langs.length === 1 ? '' : 's'}.`);
     else if (c.bg === 'custom') {
         if (c.bgOpt.skills.length < 2) add('background', 'Pick two background skills.');

@@ -12,8 +12,10 @@
       if (localStorage.getItem('gazette-sw-dev') !== '1') {
         // Clear caches after load: until then the old worker still serves (and refills) this page
         window.addEventListener('load', async () => {
+          // Only the Gazette's own worker: another app on this local port keeps its own.
+          const mine = new URL('sw.js', document.baseURI).href;
           const regs = await navigator.serviceWorker.getRegistrations();
-          await Promise.all(regs.map(r => r.unregister()));
+          await Promise.all(regs.filter(r => [r.active, r.waiting, r.installing].some(w => w && w.scriptURL === mine)).map(r => r.unregister()));
           for (const k of await caches.keys()) if (k.startsWith('gazette-')) await caches.delete(k);
         });
         return;

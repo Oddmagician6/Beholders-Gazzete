@@ -119,7 +119,7 @@ function handoutClean(t, o) {
         h[list.key] = rows;
     }
     // An NPC with all its parts locked and a long given name and role makes a link of about 850 characters.
-    if (typeof o.src === 'string' && o.src.length <= HANDOUT_SRC_MAX && /^[\w.=&%+-]*$/.test(o.src)) h.src = o.src;
+    if (typeof o.src === 'string' && o.src.length <= HANDOUT_SRC_MAX && /^[\w.=&%+*-]*$/.test(o.src)) h.src = o.src;
     return h;
 }
 
@@ -569,7 +569,7 @@ function handoutSheetHtml(h, ink = false) {
             ${h.sub ? `<div class="ho-prices-sub">${hoEsc(h.sub)}</div>` : ''}
             ${h.note ? `<p class="ho-prices-note">${hoEsc(h.note)}</p>` : ''}
             <ul class="ho-prices-list">${h.items.filter(i => i.name || i.price).map(i => `
-                <li><span class="ho-item">${hoEsc(i.name)}${i.note ? ` <em>${hoEsc(i.note)}</em>` : ''}</span><span class="ho-dots"></span><span class="ho-price">${i.price ? hoEsc(formatCoins(i.price)) : ''}</span></li>`).join('')}
+                <li><span class="ho-item">${hoEsc(i.name)}${i.note ? ` <em>${hoEsc(i.note)}</em>` : ''}</span><span class="ho-dots"></span><span class="ho-price">${i.price ? hoEsc(formatCoins(i.price, true)) : ''}</span></li>`).join('')}
             </ul>
             ${h.foot ? `<div class="ho-prices-foot">${hoEsc(h.foot)}</div>` : ''}`);
     }
@@ -604,7 +604,7 @@ function handoutText(h) {
         if (h.sub) lines.push(h.sub);
         if (h.note) lines.push(h.note);
         lines.push('');
-        h.items.filter(i => i.name || i.price).forEach(i => lines.push(`- ${i.name}${i.note ? ` (${i.note})` : ''}${i.price ? `: ${formatCoins(i.price)}` : ''}`));
+        h.items.filter(i => i.name || i.price).forEach(i => lines.push(`- ${i.name}${i.note ? ` (${i.note})` : ''}${i.price ? `: ${formatCoins(i.price, true)}` : ''}`));
         if (h.foot) lines.push('', h.foot);
     }
     return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();

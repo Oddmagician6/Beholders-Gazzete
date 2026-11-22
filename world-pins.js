@@ -80,6 +80,8 @@ function pinBoard(o) {
         const active = document.activeElement;
         const refocus = active && o.card.contains(active)
             ? (active.dataset && active.dataset.pin ? `.${active.classList[0]}[data-pin="${active.dataset.pin}"]` : active.id ? '#' + active.id : null) : null;
+        const typing = refocus && active.matches('.wb-pin-name, .wb-pin-note') && timers[active.dataset.pin + '|' + (active.classList.contains('wb-pin-name') ? 'name' : 'note')]
+            ? { value: active.value, a: active.selectionStart, b: active.selectionEnd } : null;
 
         o.drawMap(pins, state.sel, state.mode);
         bar.innerHTML = `
@@ -93,7 +95,14 @@ function pinBoard(o) {
             <p class="wb-small wb-pin-foot">${o.foot(nb, self)}</p>
             <p class="pan-links"><button type="button" class="btn wb-pin-clear">${state.clearing === self.id ? '⚠️ Click again to remove every pin' : '🗑️ Remove All Pins'}</button></p>` : '';
 
-        if (refocus) { const el = o.card.querySelector(refocus); if (el) el.focus({ preventScroll: true }); }
+        if (refocus) {
+            const el = o.card.querySelector(refocus);
+            if (el) {
+                // A name or note being typed (another tab saved meanwhile): keep what's typed and where the caret was.
+                if (typing && el.matches('.wb-pin-name, .wb-pin-note')) { el.value = typing.value; try { el.setSelectionRange(typing.a, typing.b); } catch (e) { /* not a text box */ } }
+                el.focus({ preventScroll: true });
+            }
+        }
     }
 
     // Redraw only the pins on the map and the printed key (a name being typed).

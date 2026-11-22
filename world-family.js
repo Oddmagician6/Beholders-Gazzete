@@ -393,6 +393,12 @@ function famAddPerson(rel) {
             const young = parents.reduce((y, p) => (famBorn(p) < famBorn(y) ? p : y));
             const R = NPC_AGE_RANGES[young.race];
             const grown = Math.max(0, famBorn(young) - (R ? R.young[0] : 0));   // how long ago they came of age
+            // A parent who never came of age (a baby, or one who died a child) can't have one.
+            const child = parents.find(p => { const r = NPC_AGE_RANGES[p.race]; return r && p.age < r.young[0]; });
+            if (child) {
+                why = `No child fits those dates: ${child.name} ${child.dead ? `died at ${child.age}` : `is ${child.age}`}, too young to be a parent. Change their age first.`;
+                return false;
+            }
             const gone = parents.filter(p => p !== young && p.dead && p.ago > grown);
             if (gone.length) {
                 why = `No child fits those dates: ${gone[0].name} died ${gone[0].ago} years ago, before ${young.name} was born or grown. Change an age or the years since death first.`;

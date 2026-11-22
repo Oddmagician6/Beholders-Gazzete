@@ -362,14 +362,17 @@ function wmResize(m, w, h) {
     // Lines are cut at the edge, so a road across the part that's kept stays (in pieces, if it
     // leaves and comes back); a closed region is cut to the edge as a shape.
     const box = [-60, -60, W + 60, H + 60];
-    n.ln = n.ln.flatMap(l => {
+    const cut = n.ln.flatMap(l => {
         const pts = l.p.map(q => [q[0] + dx, q[1] + dy]);
         if (l.cl) {
             const p = wmClipPoly(pts, box);
             return p.length >= 3 ? [{ ...l, p }] : p.length === 2 ? [{ ...l, p, cl: 0 }] : [];
         }
         return wmClipRuns(pts, box).map(p => ({ ...l, p, cl: 0 }));
-    }).slice(0, WM_LIMITS.lines);
+    });
+    n.ln = cut.slice(0, WM_LIMITS.lines);
+    // Lines cut into more pieces than a map holds: how many didn't fit (kept off the saved map; the page says so).
+    if (cut.length > WM_LIMITS.lines) Object.defineProperty(n, 'dropped', { value: cut.length - WM_LIMITS.lines });
     return n;
 }
 

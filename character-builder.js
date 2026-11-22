@@ -738,7 +738,7 @@ function renderBackground24() {
     // Languages
     const langN = cbLanguageSlots(c).bg;
     h += `<h4>Languages: Common plus ${langN} ${countTag(c.bgOpt.langs.length, langN)}</h4>` +
-        (langN > 2 ? `<p class="cb-faint">${c.cls === 'rogue' ? 'One extra for your Thieves\' Cant' : 'Two extra from Deft Explorer'}.</p>` : '') +
+        `<p class="cb-faint">The first two are standard languages (${CB24_LANGUAGES.slice(0, CB24_STANDARD_LANGS).join(', ')}).${langN > 2 ? ` ${c.cls === 'rogue' ? 'One extra for your Thieves\' Cant' : 'Two extra from Deft Explorer'} can be any.` : ''}</p>` +
         chips('bgOpt.langs', CB24_LANGUAGES.map(l => [l, l]), c.bgOpt.langs, langN);
     return h + stepTodo('background') + nextButtons();
 }

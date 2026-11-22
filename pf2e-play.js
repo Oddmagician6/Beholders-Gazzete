@@ -95,12 +95,13 @@ function ppEndDying(c, wound = true) {
 }
 
 // → { temp: absorbed by temporary HP, hp: lost, down, dead, dying: value after, massive,
-// heroic: dying went up to death with a Hero Point left, so Heroic Recovery could have stopped it }
-function ppDamage(c, s, n, crit = false) {
+// heroic: dying went up to death with a Hero Point left, so Heroic Recovery could have stopped it,
+// ko: nonlethal damage knocked you out (unconscious and prone, not dying: Player Core, Knocked Out) }
+function ppDamage(c, s, n, crit = false, nonlethal = false) {
     const p = c.play, max = ppMax(c, s);
     n = Math.max(0, Math.round(n));
     const was = ppCond(c, 'Dying');
-    const out = { temp: Math.min(p.temp, n), hp: 0, down: false, dead: false, dying: was, massive: false, heroic: false };
+    const out = { temp: Math.min(p.temp, n), hp: 0, down: false, dead: false, dying: was, massive: false, heroic: false, ko: false };
     if (ppDead(c)) return { ...out, temp: 0, dead: true };
     if (!n) return out;
     p.temp -= out.temp;
@@ -119,7 +120,11 @@ function ppDamage(c, s, n, crit = false) {
     if (p.hp === 0) {
         // Hurt while dying: 1 more (2 on a critical hit). At 0 HP but stable: knocked out again.
         if (before === 0 && ppCond(c, 'Dying')) ppSetCond(c, 'Dying', ppCond(c, 'Dying') + (crit ? 2 : 1));
-        else ppKnockOut(c, crit);
+        else if (nonlethal) {
+            ppSetCond(c, 'Unconscious', 1);
+            ppSetCond(c, 'Prone', 1);
+            out.ko = true;
+        } else ppKnockOut(c, crit);
         out.down = before > 0;
     }
     out.dying = ppCond(c, 'Dying');

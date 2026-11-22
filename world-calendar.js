@@ -148,7 +148,7 @@ function calMoonsHTML(c) {
     const conj = calConjunctions(c);
     return `<div class="wb-moons">${c.moons.map(mo => {
         const ph = MOON_PHASES[calMoonPhase(mo, abs)];
-        const every = mo.cycle === 29.5 ? 'Full every 29 or 30 days; each month begins at its new moon.' : `Full every ${mo.cycle} days.`;
+        const every = mo.cycle === 29.5 ? 'Full every 29 or 30 days; this year each month begins at its new moon (in other years the months drift from it a little).' : `Full every ${mo.cycle} days.`;
         return `<div class="wb-moon">
             <div class="wb-moon-name">${moonArtHtml(calMoonPhase(mo, abs))} ${esc(mo.name)} <small>${esc(mo.epithet)}</small></div>
             <p class="wb-small">${esc(calCap(mo.color))}, ${esc(mo.size)}. ${every} Tonight: ${esc(ph.label.toLowerCase())}.</p>

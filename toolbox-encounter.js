@@ -441,6 +441,8 @@ function applyEncUrl(p) {
     // A link without a scene seed (older links, quest links) gets one, so it can be shared.
     if (enc.list.length && !enc.seed) encChanged(false);
     else encChanged(null);
+    // A shared link whose monsters this page's rules (or the SRD 5.2 additions switch) leave out: say why the list is short.
+    if (enc.parked.length) flash('enc-status', `${enc.parked.length} monster${enc.parked.length === 1 ? '' : 's'} in this link ${enc.parked.length === 1 ? 'is' : 'are'} kept for the other rules version or the SRD 5.2 additions (${enc.parked.map(e => e.id).join(', ')}): switch to see ${enc.parked.length === 1 ? 'it' : 'them'}.`);
 }
 
 function setupEncounter() {

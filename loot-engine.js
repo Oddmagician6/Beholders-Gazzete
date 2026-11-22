@@ -163,7 +163,15 @@ function getMagicItem(rarity, type = 'any') {
     rarity = options.find(([, w]) => (r -= w) < 0)?.[0] || options[options.length - 1][0];
   }
   const pool = magicPool(rarity, type);
-  if (!pool.length) return null;
+  if (!pool.length) {
+    // Only the added items have one (2024 common wondrous: Bead of Nourishment). This combination came up
+    // empty before, so drawing here moves no older roll.
+    const more = magicMorePool(rarity, type);
+    if (!more.length) return null;
+    const item = lootPick(more);
+    return { name: loot24() ? loot52Display(item.name) : item.name, rarity, type: item.type, attune: item.attune || false,
+      value: loot24() ? loot52Value(rarity, item.type, item.name) : magicItemGP(rarity) };
+  }
   // lootPick, with its draw kept: a later item (magicMorePool) may take the slot, decided from a seed
   // made of that draw, so the hoard takes no extra draws.
   const u = rand();

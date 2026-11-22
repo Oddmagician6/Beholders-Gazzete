@@ -73,7 +73,7 @@ const SPELL_SUMMARIES = {
     'Mage Armor': 'A willing creature in no armor has AC 13 + its DEX modifier for 8 hours.',
     'Magic Missile': 'Three darts that never miss, 1d4 + 1 force each, split among targets as you like.',
     'Protection from Evil and Good': 'Aberrations, celestials, elementals, fey, fiends, and undead attack the creature at disadvantage and can\'t charm, frighten, or possess it.',
-    'Purify Food and Drink': 'Makes all food and drink in a 5-ft sphere free of poison and disease.',
+    'Purify Food and Drink': 'Makes all nonmagical food and drink within a 5-ft radius free of poison and disease.',
     'Sanctuary': 'Bonus action: anyone who attacks the warded creature must make a WIS save or pick another target.',
     'Shield': 'Reaction: +5 AC until your next turn, including against the attack that triggered it, and no damage from magic missile.',
     'Shield of Faith': 'Bonus action: a creature gains +2 AC for up to 10 minutes.',
@@ -207,7 +207,7 @@ const SPELL_SUMMARIES = {
     'Hallucinatory Terrain': 'Make natural terrain up to a 150-ft cube look, sound, and smell like another kind.',
     'Ice Storm': 'Hail pounds a 20-ft cylinder: DEX save or 2d8 bludgeoning and 4d6 cold; the ground becomes difficult terrain.',
     'Locate Creature': 'Sense the direction of a creature you know within 1,000 ft; running water blocks the spell.',
-    'Phantasmal Killer': 'A creature that fails a WIS save is frightened and takes 4d10 psychic at the end of each of its turns.',
+    'Phantasmal Killer': 'A creature that fails a WIS save is frightened; at the end of each of its turns it saves again, taking 4d10 psychic on a failure (the spell ends on a success).',
     'Polymorph': 'Turn a creature into a beast of CR up to its own level; an unwilling one makes a WIS save.',
     'Private Sanctum': 'Ward an area against scrying, teleportation, planar travel, sound, and sight.',
     'Resilient Sphere': 'A sphere of force traps a creature that fails a DEX save; nothing gets in or out.',
@@ -270,7 +270,7 @@ const SPELL_SUMMARIES = {
     'Freezing Sphere': 'A frigid globe bursts in a 60-ft sphere: CON save or 10d6 cold; it can freeze water solid.',
     'Globe of Invulnerability': 'A 10-ft barrier that stops spells of 5th level or lower from reaching anyone inside.',
     'Guards and Wards': 'Ward a building against intruders with fog, locked doors, webs, and confusing corridors.',
-    'Harm': 'A creature makes a CON save or takes 14d6 necrotic, and its hit point maximum drops by as much.',
+    'Harm': 'A creature makes a CON save: 14d6 necrotic on a failure, half on a success (never below 1 HP), and its hit point maximum drops by the damage taken.',
     'Heal': 'A creature regains 70 hit points and is cured of blindness, deafness, and any disease.',
     'Heroes\' Feast': 'A feast for twelve: cures disease and poison, gives immunity to poison and fear, and more hit points for a day.',
     'Instant Summons': 'Mark an object so you can call it to your hand from anywhere.',
@@ -342,14 +342,15 @@ const SPELL_SUMMARIES = {
     'Time Stop': 'Take 1d4 + 1 turns in a row while time stands still for everyone else.',
     'True Polymorph': 'Turn a creature into another creature or an object, or an object into a creature.',
     'True Resurrection': 'Brings back a creature dead up to 200 years, even with no body. Uses 25,000 gp of diamonds.',
-    'Weird': 'Creatures in a 30-ft sphere that fail a WIS save are frightened and take 4d10 psychic each turn.',
+    'Weird': 'Creatures in a 30-ft sphere that fail a WIS save are frightened; each saves again at the end of its turns, taking 4d10 psychic on a failure (the spell ends for it on a success).',
     'Wish': 'Copy any spell of 8th level or lower, or wish for something greater, at a risk.'
 };
 
 // The line for a card: the summary above, else the spell's first sentence (cut at a word).
 function spellSummary(s) {
     if (!s) return '';
-    if (SPELL_SUMMARIES[s.name] && !s.v52) return SPELL_SUMMARIES[s.name];   // 5.2 text changed many (Sleep)
+    // 5.2 text changed many (Sleep); a homebrew spell that shares a name has its own text.
+    if (SPELL_SUMMARIES[s.name] && !s.v52 && !s.hb) return SPELL_SUMMARIES[s.name];
     const first = String(s.desc || '').split('\n')[0].split(/(?<=\.)\s/)[0];
     return first.length > 160 ? first.slice(0, 159).replace(/\s+\S*$/, '') + '…' : first;
 }

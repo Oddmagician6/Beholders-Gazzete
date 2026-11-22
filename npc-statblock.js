@@ -313,8 +313,62 @@ const SB_KNOWN = {
     Warlock: [0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15],
     Ranger: [0, 0, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11]
 };
-// Cantrips known at levels 1 / 4 / 10.
+// Cantrips known at levels 1 / 4 / 10 (the same under the 2024 rules).
 const SB_CANTRIPS = { Bard: [2, 3, 4], Cleric: [3, 4, 5], Druid: [2, 3, 4], Sorcerer: [4, 5, 6], Warlock: [2, 3, 4], Wizard: [3, 4, 5] };
+
+// ── 2024 rules (SRD 5.2.1 class tables) ──
+// Spells prepared by class level (index = level). Every caster prepares from a table now.
+const SB24_PREP_FULL = [0, 4, 5, 6, 7, 9, 10, 11, 12, 14, 15, 16, 16, 17, 17, 18, 18, 19, 20, 21, 22];
+const SB24_PREP_HALF = [0, 2, 3, 4, 5, 6, 6, 7, 7, 9, 9, 10, 10, 11, 11, 12, 12, 14, 14, 15, 15];
+const SB24_PREPARED = {
+    Bard: SB24_PREP_FULL, Cleric: SB24_PREP_FULL, Druid: SB24_PREP_FULL, Paladin: SB24_PREP_HALF, Ranger: SB24_PREP_HALF,
+    Sorcerer: [0, 2, 4, 6, 7, 9, 10, 11, 12, 14, 15, 16, 16, 17, 17, 18, 18, 19, 20, 21, 22],
+    Warlock: [0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15],
+    Wizard: [0, 4, 5, 6, 7, 9, 10, 11, 12, 14, 15, 16, 16, 17, 18, 19, 21, 22, 23, 24, 25]
+};
+// Spells a class or subclass always has prepared, by class level (every subclass arrives at 3).
+const SB24_BONUS_SPELLS = {
+    Cleric: { 3: ['Aid', 'Bless', 'Cure Wounds', 'Lesser Restoration'], 5: ['Mass Healing Word', 'Revivify'], 7: ['Aura of Life', 'Death Ward'],
+        9: ['Greater Restoration', 'Mass Cure Wounds'] },
+    Druid: { 1: ['Speak with Animals'] },
+    Paladin: { 2: ['Divine Smite'], 3: ['Protection from Evil and Good', 'Shield of Faith'], 5: ['Aid', 'Zone of Truth', 'Find Steed'],
+        9: ['Beacon of Hope', 'Dispel Magic'], 13: ['Freedom of Movement', 'Guardian of Faith'], 17: ['Commune', 'Flame Strike'] },
+    Ranger: { 1: ['Hunter\'s Mark'] },
+    Sorcerer: { 3: ['Alter Self', 'Chromatic Orb', 'Command', 'Dragon\'s Breath'], 5: ['Fear', 'Fly'], 7: ['Arcane Eye', 'Charm Monster'],
+        9: ['Legend Lore', 'Summon Dragon'] },
+    Warlock: { 3: ['Burning Hands', 'Command', 'Scorching Ray', 'Suggestion'], 5: ['Fireball', 'Stinking Cloud'], 7: ['Fire Shield', 'Wall of Fire'],
+        9: ['Geas', 'Insect Plague'] }
+};
+// Spell levels for the lists above, when the page's spell list doesn't have one.
+const SB24_SPELL_LEVEL = { 'Aura of Life': 4, 'Mass Healing Word': 3, 'Dragon\'s Breath': 2, 'Charm Monster': 4, 'Summon Dragon': 5, 'Divine Smite': 1, 'Find Steed': 2 };
+// Circle of the Land: the four 2024 lands (cantrips included), and which one a 2014 land roll becomes.
+const SB24_LANDS = {
+    Arid: { ward: 'fire', spells: { 3: ['Blur', 'Burning Hands', 'Fire Bolt'], 5: ['Fireball'], 7: ['Blight'], 9: ['Wall of Stone'] } },
+    Polar: { ward: 'cold', spells: { 3: ['Fog Cloud', 'Hold Person', 'Ray of Frost'], 5: ['Sleet Storm'], 7: ['Ice Storm'], 9: ['Cone of Cold'] } },
+    Temperate: { ward: 'lightning', spells: { 3: ['Misty Step', 'Shocking Grasp', 'Sleep'], 5: ['Lightning Bolt'], 7: ['Freedom of Movement'], 9: ['Tree Stride'] } },
+    Tropical: { ward: 'poison', spells: { 3: ['Acid Splash', 'Ray of Sickness', 'Web'], 5: ['Stinking Cloud'], 7: ['Polymorph'], 9: ['Insect Plague'] } }
+};
+const SB24_LAND_OF = { Arctic: 'Polar', Coast: 'Temperate', Desert: 'Arid', Forest: 'Temperate', Grassland: 'Temperate', Mountain: 'Polar', Swamp: 'Tropical', Underdark: 'Arid' };
+const SB24_SUBCLASS = { Cleric: 'Life Domain', Druid: 'Circle of the Land', Monk: 'Warrior of the Open Hand', Sorcerer: 'Draconic Sorcery', Warlock: 'Fiend Patron', Wizard: 'Evoker' };
+// Invocations known by warlock level (the pact boon is one of them), and the ones an NPC takes: [name, text, level].
+const SB24_INVOCATIONS_KNOWN = [0, 1, 3, 3, 3, 5, 5, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10];
+const SB24_INVOCATIONS = [
+    ['Agonizing Blast', 'Adds their Charisma modifier to eldritch blast damage.', 2],
+    ['Armor of Shadows', 'Can cast mage armor on themselves without a spell slot.', 1],
+    ['Devil\'s Sight', 'Sees normally in dim light and darkness, magical or not, out to 120 feet.', 2],
+    ['Repelling Blast', 'An eldritch blast beam that hits pushes a Large or smaller target 10 feet away.', 2],
+    ['Mask of Many Faces', 'Can cast disguise self without a spell slot.', 2],
+    ['Fiendish Vigor', 'Can cast false life on themselves without a spell slot, taking the highest roll.', 2],
+    ['Eldritch Spear', 'Eldritch blast reaches 30 feet farther per warlock level.', 2],
+    ['Misty Visions', 'Can cast silent image without a spell slot.', 2],
+    ['Eldritch Mind', 'Advantage on Constitution saves to keep concentration.', 1],
+    ['Otherworldly Leap', 'Can cast jump on themselves without a spell slot.', 2],
+    ['Ascendant Step', 'Can cast levitate on themselves without a spell slot.', 5],
+    ['One with Shadows', 'In dim light or darkness, can cast invisibility on themselves without a spell slot.', 5],
+    ['Whispers of the Grave', 'Can cast speak with dead without a spell slot.', 7],
+    ['Witch Sight', 'Truesight out to 30 feet.', 15]
+];
+const SB24_METAMAGIC_MORE = ['Seeking Spell', 'Transmuted Spell'];
 
 const SB_INVOCATIONS = [
     ['Agonizing Blast', 'Adds their Charisma modifier to eldritch blast damage.'],
@@ -416,6 +470,11 @@ function rollStatBlock(npc, force = null) {
     const cls = force && SB_CLASSES[force.cls] ? force.cls : rolledCls;
     const level = force && force.level >= 1 && force.level <= 20 ? Math.floor(force.level) : rolledLevel;
     const C = SB_CLASSES[cls];
+    // 2024 rules: SRD 5.2.1 class features. Everything still draws as it does under 2014, so the
+    // same seed gives the same person, gear, and picks; only the class numbers and features differ.
+    const v24 = typeof rulesShown === 'string' && rulesShown === '2024';
+    const subName = (v24 && SB24_SUBCLASS[cls]) || C.sub[0];
+    const subAt = v24 ? 3 : C.sub[1];
     const R = SB_RACES[npc.race] || SB_RACES.human;
     const [he, his, him] = sbPronouns(npc.gender);
     const has = he === 'they' ? 'have' : 'has';
@@ -486,6 +545,7 @@ function rollStatBlock(npc, force = null) {
     const potions = Math.floor(next() * (wealth + 1 + (cat === 'adventurer' ? 1 : 0)));
     const extraLang = pick(SB_EXTRA_LANGS.filter(l => !R.langs.includes(l)));
     const land = pick(Object.keys(SB_LANDS));
+    const land24 = SB24_LAND_OF[land], landName = v24 ? land24 : land;
     const favored = pick(SB_FAVORED), terrain = pick(SB_TERRAIN);
     const pactRoll = next();
 
@@ -506,20 +566,24 @@ function rollStatBlock(npc, force = null) {
     }
     if (cls === 'Barbarian' && 10 + m.dex + m.con >= ac) { armor = ''; ac = 10 + m.dex + m.con; acNote = 'Unarmored Defense'; }
     if (cls === 'Monk') { ac = 10 + m.dex + m.wis; acNote = 'Unarmored Defense'; }
-    if (cls === 'Sorcerer') { ac = 13 + m.dex; acNote = 'Draconic Resilience'; }
+    if (cls === 'Sorcerer' && !v24) { ac = 13 + m.dex; acNote = 'Draconic Resilience'; }
+    // 2024: Draconic Resilience arrives with the subclass at 3 and is 10 + DEX + CHA.
+    if (cls === 'Sorcerer' && v24 && level >= 3 && 10 + m.dex + m.cha > ac) { ac = 10 + m.dex + m.cha; acNote = 'Draconic Resilience'; }
     if (useShield) ac += 2;
     if (style === 'Defense' && armor) ac += 1;
     if (item === 'Cloak of Protection' || item === 'Ring of Protection') ac += 1;
     const acParts = [armor, useShield && 'shield', acNote, (item === 'Cloak of Protection' || item === 'Ring of Protection') && item.toLowerCase()].filter(Boolean);
 
     // ---------- Hit points ----------
-    const hpPer = cls === 'Sorcerer' ? 1 : 0;
+    // Draconic Resilience: +1 per level (2024: from 3rd level, +3 then +1 a level, the same total).
+    const hpPer = cls === 'Sorcerer' && (!v24 || level >= 3) ? 1 : 0;
     const hp = Math.max(level, C.hd + (level - 1) * (C.hd / 2 + 1) + level * (m.con + hpPer));
 
     // ---------- Speed ----------
     let speed = parseInt(npc.speed, 10) || 30;
     if (cls === 'Barbarian' && level >= 5 && SB_ARMOR[armor]?.[2] !== 'heavy') speed += 10;
     if (cls === 'Monk' && level >= 2) speed += level >= 18 ? 30 : level >= 14 ? 25 : level >= 10 ? 20 : level >= 6 ? 15 : 10;
+    if (cls === 'Ranger' && v24 && level >= 6 && SB_ARMOR[armor]?.[2] !== 'heavy') speed += 10;   // Roving
 
     // ---------- Saves and skills ----------
     const saveBonus = (item === 'Cloak of Protection' || item === 'Ring of Protection') ? 1 : 0;
@@ -531,12 +595,15 @@ function rollStatBlock(npc, force = null) {
         .map(s => [s, m[SB_SKILL_ABILITY[s]] + next() * 2]).sort((a, b) => b[1] - a[1]);
     classPool.slice(0, C.skills[1]).forEach(([s]) => skillSet.add(s));
     const expertise = new Set();
-    const expertCount = cls === 'Rogue' ? (level >= 6 ? 4 : 2) : cls === 'Bard' ? (level >= 10 ? 4 : level >= 3 ? 2 : 0) : 0;
+    const expertCount = cls === 'Rogue' ? (level >= 6 ? 4 : 2)
+        : cls === 'Bard' ? (v24 ? (level >= 9 ? 4 : level >= 2 ? 2 : 0) : (level >= 10 ? 4 : level >= 3 ? 2 : 0))
+            : cls === 'Ranger' && v24 ? (level >= 9 ? 3 : level >= 2 ? 1 : 0) : 0;
     [...skillSet].sort((a, b) => m[SB_SKILL_ABILITY[b]] - m[SB_SKILL_ABILITY[a]]).slice(0, expertCount).forEach(s => expertise.add(s));
     const skillBonus = s => m[SB_SKILL_ABILITY[s]] + prof * (expertise.has(s) ? 2 : 1);
 
     // ---------- Spells ----------
-    const maDie = level >= 17 ? '1d10' : level >= 11 ? '1d8' : level >= 5 ? '1d6' : '1d4';
+    const maDie = v24 ? (level >= 17 ? '1d12' : level >= 11 ? '1d10' : level >= 5 ? '1d8' : '1d6')
+        : (level >= 17 ? '1d10' : level >= 11 ? '1d8' : level >= 5 ? '1d6' : '1d4');
     const rageDmg = level >= 16 ? 4 : level >= 9 ? 3 : 2;
     const spellMod = m[C.key];
     const spellDC = 8 + prof + spellMod;
@@ -545,7 +612,7 @@ function rollStatBlock(npc, force = null) {
     const usedSpells = new Set();
     const spellPool = (klass, lvl) => {
         const curated = (SB_SPELL_PICKS[klass] && SB_SPELL_PICKS[klass][lvl]) || [];
-        const all = typeof SPELLS_DATA !== 'undefined' ? SPELLS_DATA.filter(s => s.level === lvl && s.classes.includes(klass) && !s.hb && !s.v52).map(s => s.name) : [];
+        const all = typeof SPELLS_DATA !== 'undefined' ? SPELLS_DATA.filter(s => s.level === lvl && s.classes.includes(klass) && !s.hb && (v24 || !s.v52)).map(s => s.name) : [];
         const names = [...new Set([...curated, ...all])].filter(n => !usedSpells.has(n));
         const school = klass === 'Wizard' && SB_SCHOOLS[npc.profession];
         return names.map(n => {
@@ -588,7 +655,11 @@ function rollStatBlock(npc, force = null) {
         withSeed(seed, () => add.forEach((n, i) => { if (n) lineFor(i).push(...drawSpells(klass, i + 1, n)); }));
     };
 
-    if (C.cast && (C.cast !== 'half' || level >= 2)) {
+    // casts14: whether the 2014 rules cast at this level (2024 paladins and rangers cast from 1st).
+    // A 2024 block draws the 2014 block's spells, then tops up or trims to its own count, so the
+    // draws after the spells (gear and features) land as before.
+    const casts14 = C.cast && (C.cast !== 'half' || level >= 2);
+    if (casts14 || (C.cast && v24)) {
         const cantripCount = SB_CANTRIPS[cls] ? SB_CANTRIPS[cls][level >= 10 ? 2 : level >= 4 ? 1 : 0] : 0;
         const cantrips = [];
         if (cls === 'Warlock') { cantrips.push('Eldritch Blast'); usedSpells.add('Eldritch Blast'); }
@@ -602,27 +673,32 @@ function rollStatBlock(npc, force = null) {
         const bonus = {}; // spell level -> [names], always prepared
         const addBonus = (name, why) => {
             const s = sbSpell(name);
-            const lvl = s ? s.level : 1;
+            const lvl = s ? s.level : SB24_SPELL_LEVEL[name] ?? 1;
             (bonus[lvl] = bonus[lvl] || []).push({ name, why });
             usedSpells.add(name);
         };
-        if (SB_BONUS_SPELLS[cls]) Object.entries(SB_BONUS_SPELLS[cls]).forEach(([l, names]) => {
-            if (level >= +l) names.forEach(n => addBonus(n, C.sub[0]));
+        const bonusSpells = v24 ? SB24_BONUS_SPELLS : SB_BONUS_SPELLS;
+        if (bonusSpells[cls]) Object.entries(bonusSpells[cls]).forEach(([l, names]) => {
+            if (level >= +l) names.forEach(n => addBonus(n, subName));
         });
-        if (cls === 'Druid' && level >= 3) Object.entries(SB_LANDS[land]).forEach(([l, names]) => {
-            if (level >= +l) names.forEach(n => addBonus(n, `Circle of the Land (${land})`));
+        if (cls === 'Druid' && level >= 3) Object.entries(v24 ? SB24_LANDS[land24].spells : SB_LANDS[land]).forEach(([l, names]) => {
+            if (level >= +l) names.forEach(n => addBonus(n, `Circle of the Land (${landName})`));
         });
+        // 2024 land cantrips join the cantrip line, always prepared.
+        if (bonus[0]) bonus[0].forEach(b => { if (!cantrips.includes(b.name)) cantrips.push(b.name); });
 
         let lines = [], slotsText = '';
         if (cls === 'Warlock') {
             const slotLevel = Math.min(5, Math.ceil(level / 2));
             const slots = level >= 17 ? 4 : level >= 11 ? 3 : level >= 2 ? 2 : 1;
-            const known = SB_KNOWN.Warlock[level];
+            const known = SB_KNOWN.Warlock[level];   // the 2024 prepared table is the same
             const per = spread(slotLevel, known);
             const names = [];
             per.forEach((n, i) => names.push(...drawSpells('Warlock', i + 1, n)));
+            const always = Object.keys(bonus).filter(l => +l >= 1 && +l <= slotLevel).flatMap(l => bonus[l].map(b => b.name));
+            names.unshift(...always);
             lines.push({ label: 'Cantrips (at will)', spells: cantrips });
-            lines.push({ label: `1st–${sbOrdinal(slotLevel)} level (${slots} ${sbOrdinal(slotLevel)}-level slot${slots > 1 ? 's' : ''})`, spells: names });
+            lines.push({ label: `1st–${sbOrdinal(slotLevel)} level (${slots} ${sbOrdinal(slotLevel)}-level slot${slots > 1 ? 's' : ''})`, spells: names, ...(always.length ? { marked: always } : {}) });
             topUp('Warlock', per, known, () => names);
             if (level >= 11) lines.push({ label: '6th level (1/day, Mystic Arcanum)', spells: drawSpells('Warlock', 6, 1) });
             if (level >= 13) lines.push({ label: '7th level (1/day, Mystic Arcanum)', spells: drawSpells('Warlock', 7, 1) });
@@ -630,11 +706,13 @@ function rollStatBlock(npc, force = null) {
             if (level >= 17) lines.push({ label: '9th level (1/day, Mystic Arcanum)', spells: drawSpells('Warlock', 9, 1) });
             slotsText = 'regains its spell slots on a short or long rest';
         } else {
-            const slots = (C.cast === 'half' ? SB_HALF_SLOTS : SB_FULL_SLOTS)[level];
-            const total = C.known ? SB_KNOWN[cls][level]
+            // 2024 half casters have two 1st-level slots at 1st level; after that the tables match.
+            const slots = v24 && C.cast === 'half' && level === 1 ? [2] : (C.cast === 'half' ? SB_HALF_SLOTS : SB_FULL_SLOTS)[level];
+            const total14 = !casts14 ? 0 : C.known ? SB_KNOWN[cls][level]
                 : Math.max(1, spellMod + (C.cast === 'half' ? Math.floor(level / 2) : level));
-            const per = spread(slots.length, total);
-            if (cantrips.length) lines.push({ label: 'Cantrips (at will)', spells: cantrips });
+            const total = v24 ? SB24_PREPARED[cls][level] : total14;
+            const per = casts14 ? spread(slots.length, total14) : slots.map(() => 0);
+            if (cantrips.length) lines.push({ label: 'Cantrips (at will)', spells: cantrips, ...(bonus[0] ? { marked: bonus[0].map(b => b.name) } : {}) });
             const byLevel = [];
             slots.forEach((n, i) => {
                 const lvl = i + 1;
@@ -654,9 +732,18 @@ function rollStatBlock(npc, force = null) {
                 });
             }
             topUp(cls, per, total, i => byLevel[i].spells);
+            // 2024 counts below the 2014 draw: drop the extras from the top spell level down.
+            let excess = v24 ? per.reduce((a, b) => a + b, 0) - total : 0;
+            [1, 0].forEach(keep => {
+                for (let i = byLevel.length - 1; i >= 0 && excess > 0; i--) {
+                    const L = byLevel[i], own = L.spells.filter(n => !(L.marked || []).includes(n));
+                    while (excess > 0 && own.length > keep) { L.spells.splice(L.spells.lastIndexOf(own.pop()), 1); excess--; }
+                }
+            });
         }
-        const markWhy = cls === 'Bard' ? 'Magical Secrets (from another class\'s list)'
-            : cls === 'Druid' ? `Circle of the Land (${land}) spell, always prepared` : `${C.sub[0]} spell, always prepared`;
+        const markWhy = cls === 'Bard' ? `${v24 ? 'Magical Discoveries' : 'Magical Secrets'} (from another class's list)`
+            : cls === 'Druid' ? `${v24 ? 'Druidic or ' : ''}Circle of the Land (${landName}) spell, always prepared`
+                : v24 && (cls === 'Paladin' || cls === 'Ranger') ? 'class or subclass feature, always prepared' : `${subName} spell, always prepared`;
         spellcasting = {
             ability: SB_ABILITY_NAMES[C.key], dc: spellDC, attack: spellAtk, lines, markWhy,
             prepared: !C.known, focus: { Wizard: 'spellbook and arcane focus', Sorcerer: 'arcane focus', Warlock: 'arcane focus',
@@ -697,9 +784,10 @@ function rollStatBlock(npc, force = null) {
         const label = (plus ? `+${plus} ` : '') + name.charAt(0).toUpperCase() + name.slice(1);
         let text = `${kind}: ${sbSigned(hit)} to hit, ${where}, one target. Hit: ${sbDamage(die, dmgMod)} ${type} damage`;
         const vers = (props.match(/v(\d+d\d+)/) || [])[1];
-        if (vers && !useShield) text += `, or ${sbDamage(vers, style === 'Dueling' ? dmgMod - 2 : dmgMod)} ${type} damage if used with two hands`;
+        // A monk's martial arts die can already match the two-handed die: then there's nothing to add.
+        if (vers && !useShield && !(die !== dice && +die.slice(2) >= +vers.slice(2))) text += `, or ${sbDamage(vers, style === 'Dueling' ? dmgMod - 2 : dmgMod)} ${type} damage if used with two hands`;
         if (cls === 'Druid' && (name === 'quarterstaff' || name === 'club') && spellcasting && spellcasting.lines.some(l => l.spells.includes('Shillelagh')))
-            text += `, or ${sbDamage('1d8', m.wis + plus)} bludgeoning damage (+${m.wis + prof + plus} to hit) with shillelagh`;
+            text += `, or ${sbDamage(v24 ? (level >= 17 ? '2d6' : level >= 11 ? '1d12' : level >= 5 ? '1d10' : '1d8') : '1d8', m.wis + plus)} bludgeoning damage (+${m.wis + prof + plus} to hit) with shillelagh`;
         if (cls === 'Barbarian' && !isRanged) text += `, plus ${rageDmg} while raging${thrown ? ' (in melee)' : ''}`;
         return { name: label, text: text + '.' };
     };
@@ -752,7 +840,7 @@ function rollStatBlock(npc, force = null) {
             add(bonusActions, `Rage (${rages}/Day)`, `For 1 minute: advantage on Strength checks and saves, +${rageDmg} to melee weapon damage, and resistance to bludgeoning, piercing, and slashing damage.`);
             if (level >= 2) add(traits, 'Reckless Attack', `Can attack with advantage on Strength melee attacks this turn; attacks against ${him} have advantage until ${his} next turn.`);
             if (level >= 2) add(traits, 'Danger Sense', 'Advantage on Dexterity saves against effects they can see.');
-            if (level >= 3) add(bonusActions, 'Frenzy', `While raging in a frenzy, makes one melee weapon attack as a bonus action each turn (gains a level of exhaustion when the rage ends).`);
+            if (level >= 3) add(bonusActions, 'Frenzy', `While raging in a frenzy, makes one melee weapon attack as a bonus action on each turn after the first (gains a level of exhaustion when the rage ends).`);
             if (level >= 7) add(traits, 'Feral Instinct', 'Advantage on initiative rolls.');
             if (level >= 9) add(traits, 'Brutal Critical', `Rolls ${level >= 17 ? 'three' : level >= 13 ? 'two' : 'one'} extra weapon damage die on a critical hit.`);
             if (level >= 11) add(traits, 'Relentless Rage', 'When dropped to 0 hit points while raging, a DC 10 Constitution save (+5 per later use) leaves them at 1 instead.');
@@ -873,7 +961,148 @@ function rollStatBlock(npc, force = null) {
             if (level >= 10) add(traits, 'Empowered Evocation', `Adds ${sbSigned(m.int)} to one damage roll of a wizard evocation spell.`);
         }
     };
-    feats[cls]();
+    // The same classes under the 2024 rules (SRD 5.2.1). The draws (metamagic, invocations) come last,
+    // as in the 2014 set, so nothing before them moves.
+    const dc = k => 8 + prof + m[k];
+    const styleText = {
+        'Great Weapon Fighting': 'Treats 1s and 2s on damage dice as 3s with two-handed or versatile melee weapons held in two hands.',
+        Archery: '+2 to ranged weapon attack rolls (included).', Dueling: '+2 damage with a one-handed melee weapon (included).',
+        Defense: '+1 AC while wearing armor (included).'
+    };
+    const feats24 = {
+        Barbarian: () => {
+            const rages = level >= 17 ? 6 : level >= 12 ? 5 : level >= 6 ? 4 : level >= 3 ? 3 : 2;
+            add(bonusActions, `Rage (${rages}/Long Rest)`, `Until the end of ${his} next turn (extended by attacking or forcing a save, up to 10 minutes): advantage on Strength checks and saves, +${rageDmg} damage on Strength attacks, and resistance to bludgeoning, piercing, and slashing damage. Regains one use on a short rest.`);
+            if (level >= 2) add(traits, 'Reckless Attack', `Can take advantage on Strength attacks until ${his} next turn; attacks against ${him} have advantage too.`);
+            if (level >= 2) add(traits, 'Danger Sense', 'Advantage on Dexterity saves unless incapacitated.');
+            if (level >= 3) add(traits, 'Frenzy', `While raging and attacking recklessly, the first target hit with a Strength attack each turn takes an extra ${rageDmg}d6 damage.`);
+            if (level >= 6) add(traits, 'Mindless Rage', 'Immune to the charmed and frightened conditions while raging.');
+            if (level >= 7) add(traits, 'Feral Instinct', 'Advantage on initiative rolls.');
+            if (level >= 9) add(traits, 'Brutal Strike', `When attacking recklessly, can give up advantage on one Strength attack; on a hit it deals an extra ${level >= 17 ? 2 : 1}d10 damage and pushes the target 15 feet or cuts its speed by 15 feet.`);
+            if (level >= 10) add(reactions, 'Retaliation', `When a creature within 5 feet damages ${him}, makes a melee attack against it.`);
+            if (level >= 11) add(traits, 'Relentless Rage', `When dropped to 0 hit points while raging, a DC 10 Constitution save (+5 per later use) leaves ${him} at ${2 * level} hit points instead.`);
+            if (level >= 14) add(bonusActions, 'Intimidating Presence (1/Long Rest)', `Creatures of ${his} choice within 30 feet make a DC ${dc('str')} Wisdom save or are frightened for 1 minute.`);
+        },
+        Bard: () => {
+            const die = level >= 15 ? 'd12' : level >= 10 ? 'd10' : level >= 5 ? 'd8' : 'd6';
+            add(bonusActions, `Bardic Inspiration (${Math.max(1, m.cha)}/${level >= 5 ? 'Short Rest' : 'Long Rest'})`, `A creature within 60 feet gains a ${die} to add to one failed D20 Test within the next hour.`);
+            if (level >= 2) add(traits, 'Jack of All Trades', `Adds +${Math.floor(prof / 2)} to skill checks ${he} ${he === 'they' ? 'aren\'t' : 'isn\'t'} proficient in.`);
+            if (level >= 3) add(reactions, 'Cutting Words', `Spends a Bardic Inspiration to subtract a ${die} from a damage roll, or from an ability check or attack roll that would succeed, by a creature within 60 feet.`);
+            if (level >= 7) add(reactions, 'Countercharm', 'When they or a creature within 30 feet fails a save against being charmed or frightened, the creature rerolls it with advantage.');
+            if (level >= 14) add(traits, 'Peerless Skill', 'On a failed ability check or attack roll, spends a Bardic Inspiration and adds the roll (not spent if it still fails).');
+        },
+        Cleric: () => {
+            add(traits, 'Divine Order (Protector)', 'Trained with martial weapons and heavy armor.');
+            const uses = level >= 18 ? 4 : level >= 6 ? 3 : 2;
+            if (level >= 2) {
+                const spark = level >= 18 ? 4 : level >= 13 ? 3 : level >= 7 ? 2 : 1;
+                add(actions, `Channel Divinity (${uses}/Long Rest)`, `Divine Spark: one creature within 30 feet regains ${sbDamage(`${spark}d8`, m.wis)} hit points, or makes a DC ${spellDC} Constitution save, taking that much radiant or necrotic damage on a failure (half on a success). Turn Undead: undead of ${his} choice within 30 feet make a DC ${spellDC} Wisdom save or are frightened and incapacitated for 1 minute${level >= 5 ? `, taking ${Math.max(1, m.wis)}d8 radiant damage` : ''}. Regains one use on a short rest.`);
+            }
+            if (level >= 3) add(traits, 'Disciple of Life', 'Spells cast with a slot that restore hit points restore an extra 2 + the slot\'s level.');
+            if (level >= 3) add(actions, 'Preserve Life (Channel Divinity)', `Splits ${5 * level} hit points among bloodied creatures within 30 feet, up to half each one's maximum.`);
+            if (level >= 6) add(traits, 'Blessed Healer', 'Healing someone else with a spell slot also heals them 2 + the slot\'s level.');
+            if (level >= 7) add(traits, 'Divine Strike', `Once per turn, a weapon hit deals an extra ${level >= 14 ? '2d8' : '1d8'} radiant or necrotic damage.`);
+            if (level >= 10) add(actions, 'Divine Intervention (1/Long Rest)', `Casts any cleric spell of 5th level or lower without a slot or material components${level >= 20 ? ', or wish' : ''}.`);
+            if (level >= 17) add(traits, 'Supreme Healing', 'Healing dice from spells and Channel Divinity always roll their highest.');
+        },
+        Druid: () => {
+            add(traits, 'Primal Order (Warden)', 'Trained with martial weapons and medium armor.');
+            if (level >= 2) {
+                const cr = level >= 8 ? '1' : level >= 4 ? '1/2' : '1/4';
+                const hours = Math.floor(level / 2), uses = level >= 17 ? 4 : level >= 6 ? 3 : 2;
+                add(bonusActions, `Wild Shape (${uses}/Long Rest)`, `Turns into a beast of CR ${cr} or lower${level >= 8 ? '' : ' without a flying speed'} for up to ${hours} hour${hours === 1 ? '' : 's'}, gaining ${level} temporary hit points. Regains one use on a short rest.`);
+            }
+            if (level >= 3) {
+                const d = level >= 14 ? 4 : level >= 10 ? 3 : 2;
+                add(actions, 'Land\'s Aid (Wild Shape)', `A 10-foot sphere within 60 feet: each creature of ${his} choice in it makes a DC ${spellDC} Constitution save, taking ${d}d6 necrotic damage on a failure (half on a success), and one creature in it regains ${d}d6 hit points.`);
+            }
+            if (level >= 6) add(traits, 'Natural Recovery', `Once a day, casts a circle spell without a slot, and on a short rest recovers spell slots totaling ${Math.ceil(level / 2)} levels (none 6th or higher).`);
+            if (level >= 10) add(traits, 'Nature\'s Ward', `Immune to the poisoned condition, and resistance to ${SB24_LANDS[land24].ward} damage.`);
+        },
+        Fighter: () => {
+            if (style) add(traits, `Fighting Style (${style})`, styleText[style]);
+            add(bonusActions, `Second Wind (${level >= 10 ? 4 : level >= 4 ? 3 : 2}/Long Rest)`, `Regains ${sbDamage('1d10', level)} hit points. Regains one use on a short rest.`);
+            if (level >= 2) add(traits, `Action Surge (${level >= 17 ? 2 : 1}/Short Rest)`, 'Takes one additional action on their turn (not the Magic action).');
+            if (level >= 3) add(traits, 'Improved Critical', `Weapon attacks and unarmed strikes score a critical hit on a roll of ${level >= 15 ? '18–20' : '19 or 20'}.`);
+            if (level >= 3) add(traits, 'Remarkable Athlete', 'Advantage on initiative rolls and Athletics checks.');
+            if (level >= 9) add(traits, `Indomitable (${level >= 17 ? 3 : level >= 13 ? 2 : 1}/Long Rest)`, `Rerolls a failed saving throw with a +${level} bonus.`);
+            if (level >= 13) add(traits, 'Studied Attacks', 'After missing a creature, has advantage on the next attack against it before the end of their next turn.');
+            if (level >= 18) add(traits, 'Survivor', `Advantage on death saves; while bloodied, regains ${5 + m.con} hit points at the start of each turn.`);
+        },
+        Monk: () => {
+            add(bonusActions, 'Martial Arts', 'Makes one unarmed strike.');
+            if (level >= 2) add(bonusActions, `Monk's Focus (${level} Points/Short Rest)`, `Flurry of Blows (1 point): ${level >= 10 ? 'three' : 'two'} unarmed strikes. Patient Defense: Disengage, or Disengage and Dodge for 1 point. Step of the Wind: Dash, or Disengage and Dash for 1 point, jump distance doubled.`);
+            if (level >= 3) add(reactions, 'Deflect Attacks', `Reduces the damage of an attack that hits ${him} by ${sbDamage('1d10', m.dex + level)}; if that drops it to 0, can spend 1 focus to redirect it (DC ${dc('wis')} Dexterity save or ${sbDamage(`2${maDie.slice(1)}`, m.dex)} damage).`);
+            if (level >= 3) add(traits, 'Open Hand Technique', `A Flurry of Blows hit can stop the target's opportunity attacks until its next turn, push it 15 feet (Strength save), or knock it prone (Dexterity save); DC ${dc('wis')}.`);
+            if (level >= 5) add(traits, 'Stunning Strike', `Once per turn after a hit, spends 1 focus: the target makes a DC ${dc('wis')} Constitution save or is stunned until the start of ${his} next turn (on a success its speed is halved and the next attack on it has advantage).`);
+            if (level >= 6) add(bonusActions, `Wholeness of Body (${Math.max(1, m.wis)}/Long Rest)`, `Regains ${maDie} ${m.wis < 0 ? '−' : '+'} ${Math.abs(m.wis)} hit points (at least 1).`);
+            if (level >= 7) add(traits, 'Evasion', 'Takes no damage on a successful Dexterity save for half damage, and half on a failure.');
+        },
+        Paladin: () => {
+            add(bonusActions, `Lay on Hands (${5 * level} HP Pool/Long Rest)`, 'Touches a creature to restore hit points from the pool, or spends 5 to end the poisoned condition.');
+            if (style) add(traits, `Fighting Style (${style})`, styleText[style]);
+            if (level >= 2) add(traits, 'Paladin\'s Smite', 'Divine smite is always prepared and can be cast once per long rest without a slot: on a melee hit, an extra 2d8 radiant damage (+1d8 per slot level above 1st, +1d8 against fiends and undead).');
+            if (level >= 3) add(bonusActions, `Channel Divinity (${level >= 11 ? 3 : 2}/Long Rest)`, `Divine Sense: for 10 minutes knows the location of celestials, fiends, and undead within 60 feet. Sacred Weapon: for 10 minutes, adds ${sbSigned(Math.max(1, m.cha))} to attack rolls with one melee weapon, which can deal radiant damage. Regains one use on a short rest.`);
+            const aura = level >= 18 ? 30 : 10;
+            if (level >= 6) add(traits, 'Aura of Protection', `${npc.firstName || 'They'} and allies within ${aura} feet add ${sbSigned(Math.max(1, m.cha))} to saving throws.`);
+            if (level >= 7) add(traits, 'Aura of Devotion', `They and allies within ${aura} feet are immune to the charmed condition${level >= 10 ? ' (and, by Aura of Courage, the frightened condition)' : ''}.`);
+            if (level >= 9) add(actions, 'Abjure Foes (Channel Divinity)', `Up to ${Math.max(1, m.cha)} creatures within 60 feet make a DC ${spellDC} Wisdom save or are frightened for 1 minute.`);
+            if (level >= 11) add(traits, 'Radiant Strikes', 'Every melee weapon hit deals an extra 1d8 radiant damage.');
+        },
+        Ranger: () => {
+            const marks = level >= 17 ? 6 : level >= 13 ? 5 : level >= 9 ? 4 : level >= 5 ? 3 : 2;
+            add(traits, 'Favored Enemy', `Hunter's mark is always prepared; casts it ${marks} times per long rest without a slot.`);
+            if (style) add(traits, `Fighting Style (${style})`, styleText[style]);
+            if (level >= 3) add(traits, 'Colossus Slayer', 'Once per turn, a weapon hit on a creature below its hit point maximum deals an extra 1d8 damage.');
+            if (level >= 6) add(traits, 'Roving', 'Climb and swim speeds equal to their speed (included: +10 feet).');
+            if (level >= 7) add(traits, 'Multiattack Defense', 'After a creature hits them, attacks from that creature have disadvantage against them for the rest of the turn.');
+            if (level >= 10) add(actions, `Tireless (${Math.max(1, m.wis)}/Long Rest)`, `Gains ${sbDamage('1d8', m.wis)} temporary hit points (at least 1).`);
+            if (level >= 11) add(traits, 'Superior Hunter\'s Prey', 'Once per turn, hunter\'s mark damage also hits a second creature within 30 feet of the first.');
+            if (level >= 14) add(bonusActions, `Nature's Veil (${Math.max(1, m.wis)}/Long Rest)`, 'Becomes invisible until the end of their next turn.');
+        },
+        Rogue: () => {
+            add(traits, 'Sneak Attack (1/Turn)', `Deals an extra ${sbDamage(`${Math.ceil(level / 2)}d6`, 0)} damage with a finesse or ranged weapon hit when ${he} ${has} advantage, or when an ally is within 5 feet of the target.`);
+            if (level >= 2) add(bonusActions, 'Cunning Action', 'Dash, Disengage, or Hide.');
+            if (level >= 3) add(bonusActions, 'Steady Aim', 'If they haven\'t moved, gains advantage on their next attack this turn; speed drops to 0.');
+            if (level >= 3) add(bonusActions, 'Fast Hands', 'Sleight of Hand, the Utilize action, or a magic item\'s Magic action.');
+            if (level >= 5) add(traits, 'Cunning Strike', `Can give up 1d6 of Sneak Attack for an effect (DC ${dc('dex')}): Trip (Dexterity save or prone), Withdraw (move half speed without opportunity attacks)${level >= 9 ? ', or Stealth Attack (stays hidden)' : ''}.`);
+            if (level >= 5) add(reactions, 'Uncanny Dodge', 'Halves the damage of an attack from an attacker they can see.');
+            if (level >= 7) add(traits, 'Evasion', 'Takes no damage on a successful Dexterity save for half damage, and half on a failure.');
+            if (level >= 7) add(traits, 'Reliable Talent', 'Treats any d20 roll of 9 or lower on a proficient ability check as a 10.');
+        },
+        Sorcerer: () => {
+            const [type] = SB_DRAGONS[dragonColor];
+            add(bonusActions, 'Innate Sorcery (2/Long Rest)', `For 1 minute, sorcerer spell save DC ${spellDC + 1} and advantage on sorcerer spell attacks.`);
+            if (level >= 2) add(traits, `Font of Magic (${level} Sorcery Points)`, 'Can turn sorcery points into spell slots (bonus action) and spell slots into points.');
+            if (level >= 2) add(traits, 'Metamagic', `${pickSome([...SB_METAMAGIC, ...SB24_METAMAGIC_MORE], level >= 17 ? 6 : level >= 10 ? 4 : 2).join(', ')}.`);
+            if (level >= 3) add(traits, 'Draconic Resilience', `${dragonColor} dragon ancestry. +1 hit point per level, and AC 10 + Dexterity + Charisma without armor (included).`);
+            if (level >= 6) add(traits, 'Elemental Affinity', `Resistance to ${type} damage; adds ${sbSigned(Math.max(0, m.cha))} to one damage roll of a spell that deals ${type} damage.`);
+            if (level >= 14) add(bonusActions, 'Dragon Wings (1/Long Rest)', 'Sprouts dragon wings for 1 hour, gaining a flying speed of 60 feet.');
+        },
+        Warlock: () => {
+            const pact = pactRoll < 0.34 ? ['Pact of the Chain', 'Can cast find familiar without a slot (an imp, quasit, or other special form).']
+                : pactRoll < 0.67 ? ['Pact of the Blade', 'Can conjure a pact weapon as a bonus action and attack with Charisma.']
+                    : ['Pact of the Tome', 'Has a Book of Shadows with three extra cantrips and two rituals from any class.'];
+            const open = SB24_INVOCATIONS.filter(i => i[2] <= level);
+            const count = SB24_INVOCATIONS_KNOWN[level] - 1;
+            const inv = count <= 0 ? [] : [open[0], ...pickSome(open.slice(1), count - 1)].filter(i => i && i[2] <= level);
+            add(traits, 'Eldritch Invocations', [pact, ...inv].map(([n, t]) => `${n}: ${t}`).join(' '));
+            if (level >= 2) add(traits, 'Magical Cunning (1/Long Rest)', `A 1-minute rite restores ${level >= 20 ? 'all' : 'half'} of ${his} expended Pact Magic slots.`);
+            if (level >= 3) add(traits, 'Dark One\'s Blessing', `When ${he} or anyone within 10 feet reduces an enemy to 0 hit points, ${he} ${has} ${Math.max(1, m.cha + level)} temporary hit points.`);
+            if (level >= 6) add(traits, `Dark One's Own Luck (${Math.max(1, m.cha)}/Long Rest)`, 'Adds a d10 to an ability check or saving throw.');
+            if (level >= 10) add(traits, 'Fiendish Resilience', 'Chooses one damage type other than force after a rest and has resistance to it.');
+            if (level >= 14) add(traits, 'Hurl Through Hell (1/Long Rest)', `Once per turn on a hit, the target makes a DC ${spellDC} Charisma save or vanishes until the end of ${his} next turn, taking 8d10 psychic damage (unless it's a fiend).`);
+        },
+        Wizard: () => {
+            add(traits, 'Arcane Recovery (1/Day)', `On a short rest, recovers spell slots totaling ${Math.ceil(level / 2)} levels (none 6th or higher).`);
+            add(traits, 'Ritual Adept', 'Can cast any ritual in their spellbook without preparing it.');
+            if (level >= 3) add(traits, 'Potent Cantrip', 'A cantrip that misses, or that a creature saves against, still deals half damage.');
+            if (level >= 6) add(traits, 'Sculpt Spells', 'When casting an evocation spell, chooses up to 1 + the spell\'s level creatures to automatically succeed on their saves and take no damage.');
+            if (level >= 10) add(traits, 'Empowered Evocation', `Adds ${sbSigned(Math.max(0, m.int))} to one damage roll of a wizard evocation spell.`);
+            if (level >= 14) add(traits, 'Overchannel', 'Deals maximum damage with a spell of 5th level or lower (again before a long rest costs them necrotic damage).');
+        }
+    };
+    (v24 ? feats24 : feats)[cls]();
     if (cls === 'Rogue') add(traits, 'Thieves\' Cant', 'Knows the secret mix of slang, jargon, and code of thieves.');
     if (item === 'Cloak of Protection' || item === 'Ring of Protection') add(traits, item, '+1 to AC and saving throws (included).');
 
@@ -901,8 +1130,8 @@ function rollStatBlock(npc, force = null) {
 
     return {
         v: 1,
-        cls, level, sub: level >= C.sub[1] ? C.sub[0] : '',
-        title: `Level ${level} ${cls}${level >= C.sub[1] ? ` (${C.sub[0]})` : ''}`,
+        cls, level, sub: level >= subAt ? subName : '',
+        title: `Level ${level} ${cls}${level >= subAt ? ` (${subName})` : ''}`,
         typeLine: `${R.size} ${R.type}, ${(npc.alignment || 'any alignment').toLowerCase()}`,
         stats, baseStats: base, ac, acText: acParts.join(', '), hp, hitDice: `${level}d${C.hd}${level * (m.con + hpPer) ? ` ${level * (m.con + hpPer) > 0 ? '+' : '−'} ${Math.abs(level * (m.con + hpPer))}` : ''}`, speed: `${speed} ft.`,
         saves, skills, resist, senses, langs, prof,

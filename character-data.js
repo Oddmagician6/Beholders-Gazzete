@@ -317,7 +317,7 @@ const CB_CLASSES = [
             [1, 'Unarmored Defense', 'With no armor, your AC is 10 + DEX + CON (a shield still counts).'],
             [2, 'Reckless Attack', 'On your first attack of a turn, take advantage on STR melee attacks; attacks against you have advantage until your next turn.'],
             [2, 'Danger Sense', 'Advantage on DEX saves against effects you can see, unless blinded, deafened, or incapacitated.'],
-            [3, 'Frenzy', 'Rage in a frenzy to make one melee attack as a bonus action each turn; you gain a level of exhaustion when it ends.'],
+            [3, 'Frenzy', 'Rage in a frenzy to make one melee weapon attack as a bonus action on each of your turns after the one you start it; you gain a level of exhaustion when it ends.'],
             [5, 'Extra Attack', 'Attack twice when you take the Attack action.'],
             [5, 'Fast Movement', '+10 ft. speed while not wearing heavy armor.'],
             [6, 'Mindless Rage', 'You can\'t be charmed or frightened while raging; raging suspends those effects.'],

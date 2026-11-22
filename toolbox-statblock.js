@@ -463,7 +463,7 @@ function sbPf2eHazardParts(h) {
         defense: h.ac != null ? { ac: h.ac, saves } : null,
         // A hazard breaks at half its HP (GM Core prints the BT, with or without Hardness; the data leaves it out).
         // Hardness 0 is printed too (Hallucination Powder Trap); 1 HP has no BT.
-        hp: [h.hd != null ? ['Hardness', h.hd] : null, h.hp ? ['HP', `${h.hp}${h.hp >= 2 ? ` (BT ${Math.floor(h.hp / 2)})` : ''}${h.hpd ? ` (${h.hpd})` : ''}`] : null,
+        hp: [h.hd != null ? ['Hardness', h.hd] : null, h.hp ? ['HP', `${h.hp}${h.hp >= 2 && !h.nb ? ` (BT ${Math.floor(h.hp / 2)})` : ''}${h.hpd ? ` (${h.hpd})` : ''}`] : null,
             ['Immunities', h.im], ['Weaknesses', h.we], ['Resistances', h.re]].filter(x => x && (x[1] || x[1] === 0)),
         before: (h.ab || []).filter(a => !named(a)),
         after: (h.ab || []).filter(named),

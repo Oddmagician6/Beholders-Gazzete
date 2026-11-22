@@ -668,10 +668,13 @@ function setupMaps() {
     document.getElementById('maps-pick').addEventListener('change', ev => mapsShow(ev.target.value, true));
     const name = document.getElementById('maps-name');
     let nameTimer = null;
+    // The map the box was opened on: if another tab deletes it while the box has focus (the page moves
+    // on to another map, keeping the typed text), the edit is dropped instead of renaming that one.
+    let nameFor = '';
+    name.addEventListener('focus', () => { nameFor = mapsState.id; });
     name.addEventListener('input', () => {
         clearTimeout(nameTimer);
-        // The name is for the map on screen now: if another tab removes it meanwhile, no other map takes it.
-        const id = mapsState.id, typed = name.value;
+        const id = nameFor || mapsState.id, typed = name.value;
         nameTimer = setTimeout(() => {
             const nb = nbLoad(), e = mapsEntry(nb);
             if (!e || e.id !== id) return;
@@ -684,7 +687,14 @@ function setupMaps() {
         }, 400);
     });
     // Leaving the box tells the other tabs (and redraws the pin pickers with the new name).
-    name.addEventListener('change', () => { clearTimeout(nameTimer); const nb = nbLoad(), e = mapsEntry(nb); if (!e) return; e.title = nbText(name.value, NB_LIMITS.title) || 'My map'; nbStore(nb); });
+    name.addEventListener('change', () => {
+        clearTimeout(nameTimer);
+        const nb = nbLoad(), e = mapsEntry(nb), id = nameFor || mapsState.id;
+        nameFor = document.activeElement === name ? mapsState.id : '';
+        if (!e || e.id !== id) { if (e) name.value = e.title; return; }
+        e.title = nbText(name.value, NB_LIMITS.title) || 'My map';
+        nbStore(nb);
+    });
 
     document.getElementById('maps-delete').addEventListener('click', mapsDeleteMap);
     document.getElementById('maps-notes').addEventListener('click', () => { if (mapsEntry()) wpOpenEntry(mapsState.id); });

@@ -35,6 +35,8 @@
     // Desktop dropdown: fit it into the space below the nav (it scrolls past that).
     // Opened by a click, it first makes room; hovering never scrolls the page.
     group.addEventListener('mouseenter', fitSub);
+    // One menu at a time: pointing at another group closes one opened by a click.
+    group.addEventListener('mouseenter', function() { closeGroups(group); });
     toggle.addEventListener('click', function() {
       if (group.classList.contains('open') && !(ul && ul.classList.contains('nav-open'))) makeRoom(212);
       fitSub();

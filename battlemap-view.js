@@ -73,12 +73,18 @@ function bvFromSaves() {
 }
 
 function bvSetup() {
-    bvFromSaves();
     const sync = $('bv-sync');
     let channel = null;
     try { channel = new BroadcastChannel(BP_CHANNEL); } catch (e) {}
     // Opened from a Builder (its 📺 button): follow that tab only, not another tab's map.
     const from = BV.from = new URLSearchParams(location.hash.slice(1)).get('from') || '';
+    // That Builder answers the hello below at once; until it does (or if it's gone, after a moment) the
+    // saved map that another tab may have opened since isn't put up.
+    if (from && channel) {
+        $('bv-dark').hidden = false;
+        $('bv-dark').textContent = 'Waiting for the Battlemap Builder…';
+        setTimeout(() => { if (!BV.heard) bvFromSaves(); }, 2000);
+    } else bvFromSaves();
     if (channel) {
         channel.addEventListener('message', e => {
             if (!e.data || e.data.type !== 'state') return;
@@ -96,8 +102,13 @@ function bvSetup() {
     // The Builder saves a moment after it posts, so a save just after a message is that message's.
     window.addEventListener('storage', e => {
         if (e.key !== BM_KEY && e.key !== BP_FIGHT_KEY && e.key !== BP_OPTS_KEY && e.key !== null) return;
-        const at = Date.now();
-        setTimeout(() => { if (BV.heard < at - 2000) { bvFromSaves(); sync.textContent = ''; } }, 400);
+        // Still hearing from the Builder: look again once it has been quiet for two seconds, so a map
+        // deleted just after its last message doesn't stay up.
+        const check = () => {
+            if (BV.heard < Date.now() - 2000) { bvFromSaves(); sync.textContent = ''; }
+            else setTimeout(check, BV.heard + 2100 - Date.now());
+        };
+        setTimeout(check, 400);
     });
 
     const full = $('bv-full');

@@ -202,6 +202,12 @@ const RULES_CARDS = [
             { table: { head: ['Lifestyle', 'Per day', 'What it buys'], rows: RULES_LIFESTYLES.map(([name, gp, what]) =>
                 [name, gp === null ? '—' : (typeof formatCoins === 'function' ? formatCoins(gp) : gp + ' gp'), what]) } },
             { note: 'The short descriptions are the Gazette\'s.' }
+        ],
+        // SRD 5.2.1 p. 101: the same costs, Aristocratic a flat 10 gp a day (no "at least").
+        v2024: [
+            { table: { head: ['Lifestyle', 'Per day', 'What it buys'], rows: RULES_LIFESTYLES.map(([name, gp, what]) =>
+                [name, gp === null ? '—' : (typeof formatCoins === 'function' ? formatCoins(gp) : gp + ' gp'), what.replace(' (10 gp a day at least)', '')]) } },
+            { note: 'The short descriptions are the Gazette\'s.' }
         ]
     }
 ];

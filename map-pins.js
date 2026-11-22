@@ -72,11 +72,12 @@ function pinSvg(pins, W, H, { cls = 'mp', r = 6.5, sel = '' } = {}) {
 
 // Where a pointer event falls on a map, as fractions of W × H. frame: the element whose
 // own units are the map's (an <svg> with a viewBox, or a transformed <g> inside one).
-function pinPoint(frame, ev, W, H) {
+// raw: the fractions as they fall, even off the map (a drag adds its grab offset before clamping).
+function pinPoint(frame, ev, W, H, raw = false) {
     const m = frame.getScreenCTM();
     if (!m) return null;
     const pt = new DOMPoint(ev.clientX, ev.clientY).matrixTransform(m.inverse());
-    return { x: pinCoord(pt.x / W), y: pinCoord(pt.y / H) };
+    return raw ? { x: pt.x / W, y: pt.y / H } : { x: pinCoord(pt.x / W), y: pinCoord(pt.y / H) };
 }
 
 // Make pins work inside host. o = {
@@ -109,12 +110,12 @@ function pinWire(host, o) {
         drag.moved = true;
         if (!drag.el) return;
         const frame = o.frame(), { W, H } = o.size();
-        const at = frame && pinPoint(frame, ev, W, H);
+        const at = frame && pinPoint(frame, ev, W, H, true);
         if (!at) return;
         // Where on the pin it was grabbed (its head sits above its spot): the spot keeps that offset, so it
         // doesn't jump to the pointer.
         if (!drag.off) {
-            const grab = pinPoint(frame, { clientX: drag.x0, clientY: drag.y0 }, W, H);
+            const grab = pinPoint(frame, { clientX: drag.x0, clientY: drag.y0 }, W, H, true);
             const t = (drag.el.getAttribute('transform') || '').match(/translate\(([-\d.]+)[ ,]+([-\d.]+)\)/);
             drag.off = grab && t ? { x: Number(t[1]) / W - grab.x, y: Number(t[2]) / H - grab.y } : { x: 0, y: 0 };
         }

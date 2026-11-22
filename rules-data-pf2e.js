@@ -57,7 +57,7 @@ const RULES_CARDS_PF2E = [
                 ['Step', 'Move 5 feet without triggering reactions that react to moving.'],
                 ['Interact', 'Draw, stow, pick up, open, or use an object.'],
                 ['Raise a Shield', 'The shield\'s bonus to AC until your next turn.'],
-                ['Take Cover', 'Standard cover becomes greater; next to a wall or obstacle you get standard cover, and prone you get greater cover against ranged attacks. It lasts until you leave your space, attack, or fall unconscious.'],
+                ['Take Cover', 'Standard cover becomes greater; next to a wall or obstacle you get standard cover, and prone you get greater cover against ranged attacks. It lasts until you leave your space, attack, fall unconscious, or end it as a free action.'],
                 ['Seek', 'A Perception check to find hidden or undetected creatures and objects.'],
                 ['Delay / Ready', 'Delay moves your turn later in the order; Ready (2 actions) sets up a reaction with a trigger.'],
                 ['Flanking', 'You and an ally on opposite sides or corners of a foe, both able to act and to attack it in melee, and both with it in reach: it\'s off-guard (−2 AC) to your melee attacks.'],

@@ -305,13 +305,15 @@ function bkLoadMaps() {
     return Promise.all(BK_MAPS.map(k => mapAll(k.db).then(recs => { bkMapsHere[k.db] = recs; }, () => { bkMapsHere[k.db] = null; })));
 }
 
-// The pictures a backup takes, both systems': as many as fit MAP_LIMITS.backup, oldest first.
-// Returns { take, left, total }; each record carries k, its BK_MAPS row.
+// The pictures a backup takes, both systems': as many as fit MAP_LIMITS.backup, oldest first, and no
+// more than MAP_LIMITS.maps a system (what a restore keeps). Returns { take, left, total }; each record
+// carries k, its BK_MAPS row.
 function bkMapsToSave() {
-    const take = [], left = [];
+    const take = [], left = [], per = new Map();
     let total = 0;
     bkAllMaps().sort((a, b) => a.added.localeCompare(b.added)).forEach(r => {
-        if (total + r.size <= MAP_LIMITS.backup) { take.push(r); total += r.size; } else left.push(r);
+        const n = per.get(r.k) || 0;
+        if (total + r.size <= MAP_LIMITS.backup && n < MAP_LIMITS.maps) { take.push(r); total += r.size; per.set(r.k, n + 1); } else left.push(r);
     });
     return { take, left, total };
 }
@@ -365,6 +367,20 @@ function bkCleanMaps(raw) {
     return { value, dropped: raw.length - value.length };
 }
 
+// A picture row marked "Same as here" by id, type, and size: check the bytes too (a redrawn map can keep its size).
+async function bkSamePictures(plan) {
+    for (const r of plan.rows) {
+        if (!r.k.maps || !r.same) continue;
+        for (const m of r.value) {
+            const here = bkMapsOf(r.k).find(x => x.id === m.id);
+            const file = mapUnB64(m.data, m.type);
+            const a = here && new Uint8Array(await here.blob.arrayBuffer()), b = file && new Uint8Array(await file.arrayBuffer());
+            if (!a || !b || a.length !== b.length || a.some((x, i) => x !== b[i])) { r.same = false; break; }
+        }
+    }
+    return plan;
+}
+
 function bkParseFile(text) {
     if (typeof text !== 'string' || text.length > BK_FILE_MAX) throw new Error('That file is too big to be a Gazette backup.');
     let raw;
@@ -408,11 +424,17 @@ async function bkRestoreMaps(list, ids, k) {
             if (!blob) throw new Error('not base64');
             const pic = await mapCheck(blob);
             const nb = nbLoad(k.nb);
+            const had = nbFind(nb, ids[m.id] || m.id);
+            const isNew = !(had && had.kind === 'map');
+            // No more maps than the notebook holds (MAP_LIMITS.maps), or a backup of them couldn't be restored whole.
+            if (isNew && nb.entries.filter(e => e.kind === 'map').length >= MAP_LIMITS.maps) throw new Error('full');
             const id = mapFileEntry(nb, { id: ids[m.id] || m.id, name: m.name, w: pic.w, h: pic.h });
             if (!id) throw new Error('notebook');
             // The picture first: a store that refuses it leaves no map entry without a picture behind.
             await mapPut({ id, name: m.name, ...pic }, k.db);
-            if (!nbStore(nb, false, k.nb)) throw new Error('notebook');
+            // A map already in the notebook needs no notebook write. A new one the notebook won't keep
+            // takes its picture back out, so nothing is left half restored.
+            if (isNew && !nbStore(nb, false, k.nb)) { await mapDelete(id, k.db).catch(() => {}); throw new Error('notebook'); }
             put++;
         } catch (e) {
             bad++;
@@ -530,9 +552,11 @@ function bkImport(file) {
     renderBackupPlan();
     if (file.size > BK_FILE_MAX) { bkStatus('⚠️ That file is too big to be a Gazette backup.'); return; }
     if (file.size > BK_BIG) bkStatus('📂 Reading the backup…');
-    file.text().then(text => {
+    file.text().then(async text => {
         if (reading !== bkReading) return;
-        bkPlan = bkParseFile(text);
+        const plan = await bkSamePictures(bkParseFile(text));
+        if (reading !== bkReading) return;
+        bkPlan = plan;
         bkStatus('');
         renderBackupPlan();
         document.getElementById('bk-plan').scrollIntoView({ behavior: 'smooth', block: 'nearest' });

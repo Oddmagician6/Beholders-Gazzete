@@ -242,6 +242,8 @@ function loadPicks() {
         const same = picks.find(x => pickRow(x.id) === pickRow(p.id));
         if (same) same.count = Math.min(PICK_MAX_COUNT, same.count + count);
         else if (picks.length < PICKS_MAX) picks.push({ id: p.id, count });
+        // Past the list's room (a rules switch let more back in): kept with the parked ones, not dropped at the next save.
+        else if (!parked.some(x => x.id === p.id)) parked.push({ id: p.id, count });
     });
 }
 

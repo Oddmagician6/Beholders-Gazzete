@@ -204,6 +204,7 @@ function hpPanel(c, d) {
         <div class="cs-amount"><input type="number" id="cs-amt" min="0" max="999" inputmode="numeric" aria-label="Amount of damage or healing" placeholder="0" value="${esc(amount)}">
           <button type="button" class="cs-btn cs-red" data-act="damage">🗡️ Damage</button>
           <button type="button" class="cs-btn cs-red" data-act="damage" data-v="crit" title="Damage from a critical hit: dying 2 instead of 1 if it knocks you out">💥 From a Crit</button>
+          <button type="button" class="cs-btn cs-red" data-act="damage" data-v="nonlethal" title="Nonlethal damage: dropping to 0 knocks you out (unconscious) without dying">😵 Nonlethal</button>
           <button type="button" class="cs-btn cs-green" data-act="heal">💚 Heal</button>
           <button type="button" class="cs-btn" data-act="temp">🛡️ Temp HP</button></div>`;
     if (notice) {
@@ -594,14 +595,15 @@ function onClick(e) {
                 notice = got ? { text: `💚 +${got} Hit Points.${ppCond(cur, 'Wounded') ? ` Wounded ${ppCond(cur, 'Wounded')}.` : ''}`, ok: true } : { text: ppDead(cur) ? 'The dead can\'t be healed.' : 'Already at full Hit Points.', ok: false };
                 return;
             }
-            const r = ppDamage(cur, s, amt, v === 'crit');
+            const r = ppDamage(cur, s, amt, v === 'crit', v === 'nonlethal');
             heroicNow = r.heroic;
             const bits = [];
             if (r.temp) bits.push(`${r.temp} taken by temporary HP`);
             if (r.hp) bits.push(`−${r.hp} HP`);
-            let text = `🗡️ ${amt} damage${bits.length ? ': ' + bits.join(', ') : ''}.`;
+            let text = `🗡️ ${amt} ${v === 'nonlethal' ? 'nonlethal ' : ''}damage${bits.length ? ': ' + bits.join(', ') : ''}.`;
             if (r.massive) text += ' Massive damage (double your maximum in one blow): dead.';
             else if (r.dead) text += ` Dying ${r.dying}: dead.${r.heroic ? ' Heroic Recovery can still stop it.' : ''}`;
+            else if (r.ko) text += r.down ? ' Knocked out: unconscious, not dying.' : ' Still unconscious, not dying.';
             else if (r.down) text += ` Knocked out: dying ${r.dying}, unconscious.`;
             else if (r.dying) text += ` Hurt while dying: dying ${r.dying}.`;
             notice = { text, ok: false };

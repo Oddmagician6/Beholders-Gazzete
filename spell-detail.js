@@ -28,7 +28,8 @@ function spellByName(name) {
     const find = n => {
         const key = n.toLowerCase();
         const renamed = typeof rulesRename === 'function' && rulesRename('spells', n);   // Feeblemind -> Befuddlement in 2024
-        return SPELLS_DATA.find(s => s.name.toLowerCase() === key || (renamed && s.name === renamed)) || null;
+        // The exact name before the rename (a homebrew Feeblemind in 2024 is that spell, not Befuddlement).
+        return SPELLS_DATA.find(s => s.name.toLowerCase() === key) || (renamed && SPELLS_DATA.find(s => s.name === renamed)) || null;
     };
     // The exact name first; then without a note ("Fireball (at will)") and with a plain apostrophe ("Hunter’s Mark").
     const plain = spellBareName(name.replace(/[‘’]/g, "'"));

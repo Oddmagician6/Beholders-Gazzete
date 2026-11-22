@@ -291,7 +291,8 @@ function rulesStampLink(e) {
     let u;
     try { u = new URL(a.getAttribute('href'), location.href); } catch (err) { return; }
     if (u.origin !== location.origin || !u.search || u.searchParams.has('rules')) return;
-    const r = rulesLinkParams({}).rules;
+    // The link's own query decides whether it holds a roll (a 2014 page stamps rules=2014 on those, B491).
+    const r = rulesLinkParams(Object.fromEntries(u.searchParams)).rules;
     if (!r) return;
     u.searchParams.set('rules', r);
     a.setAttribute('href', u.pathname + u.search + u.hash);

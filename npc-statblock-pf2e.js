@@ -215,11 +215,12 @@ function sbPf2eNpcParts(block) {
     if (!base) return { m, b: null, swap };
     // Flat checks (a firearm's misfire, DC 11 to target a concealed foe) are fixed by the rules, not the creature.
     // A Strike written into an ability ("The Strike has a +15 attack modifier") moves like the block's own.
-    // Elite and weak move ability damage by 2 as well ("2d6 bludgeoning damage", "**Damage** 1d6+5 piercing").
-    const dmg = t => t.replace(/\b\d+d\d+(?:[+−-]\d+)?(?= (?:[a-z]+ ){0,2}damage\b)/g, x => sbPf2eDamage(x, d))
-        .replace(/(\*\*Damage\*\* )(\d+d\d+(?:[+−-]\d+)?)/g, (_, h, x) => h + sbPf2eDamage(x, d));
-    const dc = list => (list || []).map(([name, cost, traits, text]) => [name, cost, traits, d ? dmg(text.replace(/DC (\d+)\b(?! flat)/g, (_, n) => `DC ${+n + d}`)
-        .replace(/([+−-])(\d+)(?= attack (?:modifier|bonus))/g, (_, s, n) => sbSigned((s === '+' ? 1 : -1) * +n + d))) : text]);
+    // Elite and weak move ability damage by 2 as well ("2d6 bludgeoning damage", "**Damage** 1d6+5 piercing"),
+    // and by 4 for a limited-use ability (the row's fifth element, 1: a daily or hourly Frequency, a recharge).
+    const dmg = (t, dd) => t.replace(/\b\d+d\d+(?:[+−-]\d+)?(?= (?:[a-z]+ ){0,2}damage\b)/g, x => sbPf2eDamage(x, dd))
+        .replace(/(\*\*Damage\*\* )(\d+d\d+(?:[+−-]\d+)?)/g, (_, h, x) => h + sbPf2eDamage(x, dd));
+    const dc = list => (list || []).map(([name, cost, traits, text, lim]) => [name, cost, traits, d ? dmg(text.replace(/DC (\d+)\b(?! flat)/g, (_, n) => `DC ${+n + d}`)
+        .replace(/([+−-])(\d+)(?= attack (?:modifier|bonus))/g, (_, s, n) => sbSigned((s === '+' ? 1 : -1) * +n + d)), lim ? 2 * d : d) : text, ...(lim ? [lim] : [])]);
     const b = { ...base, pd: sbPf2eShift(base.pd, d), sk: sbPf2eShift(base.sk, d), ia: dc(base.ia), da: dc(base.da), oa: dc(base.oa),
         st: (base.st || []).map(([ranged, name, bonus, traits, dmg]) => [ranged, name, bonus + d, traits, sbPf2eDamage(dmg, d)]),
         sc: (base.sc || []).map(([name, sdc, atk, note, ranks]) => [name, sdc + d, atk ? atk + d : atk, note, ranks]) };
@@ -238,7 +239,7 @@ function sbPf2eNpcParts(block) {
 function sbPf2eNpcNote(block, swap) {
     const c = SB_PF2E_NPCS[block.id];
     const out = [];
-    if (block.adj) out.push(`${block.adj > 0 ? 'Elite' : 'Weak'} (GM Core): NPC Core's level ${c.level} ${c.name.toLowerCase()} with ${block.adj > 0 ? '+2' : '−2'} to AC, attacks, DCs, saves, Perception, skills, and Strike damage, and ${block.adj > 0 ? 'more' : 'fewer'} HP, all worked in. Damage from its other abilities and spells takes ${block.adj > 0 ? '+2' : '−2'} more (${block.adj > 0 ? '+4' : '−4'} for one it can't use at will).`);
+    if (block.adj) out.push(`${block.adj > 0 ? 'Elite' : 'Weak'} (GM Core): NPC Core's level ${c.level} ${c.name.toLowerCase()} with ${block.adj > 0 ? '+2' : '−2'} to AC, attacks, DCs, saves, Perception, skills, and Strike damage, and ${block.adj > 0 ? 'more' : 'fewer'} HP, all worked in. Its other abilities' damage moves by 2 too, and by 4 for one it can't use at will (a daily or hourly Frequency, a recharge), worked in; its spells' damage takes ${block.adj > 0 ? '+4' : '−4'}.`);
     if (swap) out.push(`Ancestry: NPC Core's block is human; the Gazette moved it to ${ruleWord('race', block.race)} (traits, size, Speed, senses, and a language).`);
     // A block picked by hand whose ancestry isn't this person's (an elf with the dwarf smith's block).
     else if (c && !sbPf2eFits(c, block.race)) {

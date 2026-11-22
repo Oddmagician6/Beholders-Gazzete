@@ -184,6 +184,13 @@ function hoRender(push = false, save = true) {
 // ── Actions ───────────────────────────────────────────────
 function hoSetType(t) {
     if (t === ho.t) return;
+    // The type being opened takes what storage holds now: another tab may have written it while this
+    // one kept focus (and skipped its storage events), and the save below would put the stale copy back.
+    try {
+        const saved = JSON.parse(localStorage.getItem(HO_KEY));
+        const f = saved && saved.forms && typeof saved.forms === 'object' && saved.forms[t];
+        if (f) ho.forms[t] = handoutClean(t, f);
+    } catch (e) { /* nothing saved: keep this tab's copy */ }
     ho.t = t;
     hoRender(true);
 }

@@ -347,7 +347,9 @@ function webOpenInNotebook(id) {
 // ── Dragging an entry ─────────────────────────────────────
 function webMoveNode(id, x, y) {
     if (!webState.nodeEls.has(id)) return false;   // redrawn without it (removed, or a filter hid it)
-    webState.pos[id] = [Math.round(x * 10) / 10, Math.round(y * 10) / 10];
+    // Kept inside what a saved layout reads back (WEB_LIMITS.coord), so a far drag isn't lost on reload.
+    const c = v => Math.max(-WEB_LIMITS.coord, Math.min(WEB_LIMITS.coord, Math.round(v * 10) / 10));
+    webState.pos[id] = [c(x), c(y)];
     webState.nodeEls.get(id).setAttribute('transform', `translate(${webState.pos[id][0]} ${webState.pos[id][1]})`);
     webState.edgeEls.get(id).forEach(({ el, end }) => {
         el.setAttribute(`x${end}`, webState.pos[id][0]);
@@ -536,8 +538,10 @@ async function webDownload() {
         + `<rect class="wg-bg" x="${vb.x.toFixed(1)}" y="${vb.y.toFixed(1)}" width="${vb.w.toFixed(1)}" height="${vb.h.toFixed(1)}"/>`
         + (title ? `<text class="wg-title" x="${(vb.x + 24).toFixed(1)}" y="${(vb.y + 34).toFixed(1)}">${esc(nb.name)}</text>` : '')
         + webInnerHTML(nodes, edges) + '</svg>';
+    // Characters XML can't hold (a notebook name ending in U+FFFF) would make the whole picture fail to draw.
+    const svgOk = svg.replace(/[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/gu, '');
     flash('web-status', '⏳ Drawing the picture…');
-    const ok = await mapExportPng(svg, w, h, mapPageCss('.wg-'), `${mapFileSlug(nb.name || 'campaign')}-web.png`);
+    const ok = await mapExportPng(svgOk, w, h, mapPageCss('.wg-'), `${mapFileSlug(nb.name || 'campaign')}-web.png`);
     flash('web-status', ok ? `⬇️ Saved a ${w} × ${h} picture of ${nodes.length} ${nodes.length === 1 ? 'entry' : 'entries'}.`
         : "⚠️ This browser couldn't draw a picture that big. Hide some kinds and try again.");
 }

@@ -50,6 +50,12 @@ function weFlash(msg, keep = false) {
 function weSaveNow() {
     clearTimeout(WE.saveTimer);
     WE.store.cur = WE.m.id;
+    // Two tabs saving at once (before either hears of the other's save): another tab's newer copy of a
+    // map this tab isn't drawing on wins, so this save doesn't put back an old one.
+    wmLoadStore().maps.forEach(o => {
+        const i = WE.store.maps.findIndex(m => m.id === o.id);
+        if (i >= 0 && o.id !== WE.m.id && (o.t || 0) > (WE.store.maps[i].t || 0)) WE.store.maps[i] = o;
+    });
     // Still unsaved when the browser said no, so the next change, a map switch, or leaving tries again.
     WE.dirty = !wmSaveStore(WE.store);
     if (!WE.dirty) return true;
@@ -855,9 +861,10 @@ async function weCopyLink() {
     delete p.id;
     delete p.t;
     const code = await packShareCode(p);
-    // A link longer than weFromLink takes would open as "broken": say so instead of copying it.
-    if (code.length > WM_LIMITS.code) {
-        weFlash(`⚠️ This map has too much drawn on it for a link (${code.length.toLocaleString('en-US')} characters, ${WM_LIMITS.code.toLocaleString('en-US')} at most). Download it as a PNG, or keep it in a backup (Privacy page).`, true);
+    // A link longer than weFromLink takes (or one that unpacks to more than it reads) would open as
+    // "broken": say so instead of copying it.
+    if (code.length > WM_LIMITS.code || new TextEncoder().encode(JSON.stringify(p)).length > WM_LIMITS.bytes) {
+        weFlash(`⚠️ This map has too much drawn on it for a link${code.length > WM_LIMITS.code ? ` (${code.length.toLocaleString('en-US')} characters, ${WM_LIMITS.code.toLocaleString('en-US')} at most)` : ''}. Download it as a PNG, or keep it in a backup (Privacy page).`, true);
         return;
     }
     const url = new URL('fantasy-world-map-maker', location.href);
@@ -1150,7 +1157,8 @@ function weSetup() {
         weFillMapFields();
         weBuild(true);
         weSave();
-        weFlash(`📐 Now ${v[1] * WM_CELL} × ${v[2] * WM_CELL}, grown or trimmed evenly round the edges. Undo puts it back.`);
+        const lost = WE.m.dropped ? ` ⚠️ ${WE.m.dropped} cut line${WE.m.dropped === 1 ? '' : 's'} didn't fit (a map holds ${WM_LIMITS.lines}).` : '';
+        weFlash(`📐 Now ${v[1] * WM_CELL} × ${v[2] * WM_CELL}, grown or trimmed evenly round the edges.${lost} Undo puts it back.`, !!lost);
     });
     $('we-new').addEventListener('click', () => {
         const m = wmBlank(WE.m.w, WE.m.h, 'New world', WE.m.style);

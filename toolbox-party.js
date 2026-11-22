@@ -168,11 +168,17 @@ document.addEventListener('DOMContentLoaded', () => {
             flash('party-status', '🧹 The party is cleared. The tools go back to their own defaults.');
         });
     });
-    // Another tab on the same browser changed the party.
+    // Another tab on the same browser changed the party. While a card has focus only the summary and the
+    // Play Sheet lines change; the cards redraw once focus leaves them (a member removed there goes then).
+    let stale = false;
+    list.addEventListener('focusout', e => {
+        if (stale && !list.contains(e.relatedTarget)) { stale = false; renderPartyTab(); }
+    });
     window.addEventListener('storage', e => {
         if (e.key !== PARTY_KEY && e.key !== null) return;
         party = loadParty();
         if (!list.contains(document.activeElement)) { renderPartyTab(); return; }
+        stale = true;
         renderPartySum();
         // Typing in a card: only the Play Sheet lines change.
         list.querySelectorAll('.pt-char').forEach(li => { const c = party.find(m => m.id === li.dataset.id); li.querySelector('.pt-live-box').innerHTML = c ? partyLiveHtml(c) : ''; });

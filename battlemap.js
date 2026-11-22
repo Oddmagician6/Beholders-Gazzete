@@ -95,11 +95,22 @@ function bbFlash(msg, keep = false) {
 // False (after a warning) when the browser wouldn't keep it.
 function bbSaveNow() {
     clearTimeout(BB.saveTimer);
-    BB.dirty = false;
     BB.store.cur = BB.m.id;
-    if (bmSaveStore(BB.store)) return true;
+    bbAdoptNewer();
+    // Still unsaved when the browser said no, so a map switch or leaving the page tries again.
+    BB.dirty = !bmSaveStore(BB.store);
+    if (!BB.dirty) return true;
     bbFlash('⚠️ This browser would not save the map (storage full or turned off). Copy a link to keep it.', true);
     return false;
+}
+
+// Two tabs saving at once (before either hears of the other's save): another tab's newer copy of a
+// map this tab isn't drawing on wins, so this save doesn't put back an old one.
+function bbAdoptNewer() {
+    bmLoadStore().maps.forEach(o => {
+        const i = BB.store.maps.findIndex(m => m.id === o.id);
+        if (i >= 0 && o.id !== BB.m.id && (o.t || 0) > (BB.store.maps[i].t || 0)) BB.store.maps[i] = o;
+    });
 }
 
 function bbSave() {

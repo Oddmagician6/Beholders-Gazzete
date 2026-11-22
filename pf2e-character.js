@@ -37,6 +37,10 @@ const PC_DEITY_SPELLS = 3;
 const PC_TRADITIONS = ['arcane', 'divine', 'occult', 'primal'];
 // The elemental bloodline's influences (c.sub holds the one picked, as a tradition for the others).
 const PC_ELEMENTS = ['air', 'earth', 'fire', 'metal', 'water', 'wood'];
+// A patron whose familiar learns one spell of a pair (c.sub holds the spell key picked).
+const PC_FAM_CHOICE = { 'wilding-steward': ['summon-animal', 'summon-plant-or-fungus'] };
+const PC_FAM_NAMES = { 'summon-animal': 'Summon Animal', 'summon-plant-or-fungus': 'Summon Plant or Fungus' };
+function pcSubOk(v) { return PC_TRADITIONS.includes(v) || PC_ELEMENTS.includes(v) || Object.values(PC_FAM_CHOICE).some(l => l.includes(v)); }
 // The level-19 features that give one 10th-rank slot.
 // Level-20 class feats that add a second 10th-rank slot (Player Core / Player Core 2).
 const PC_TENTH_MORE = ['archwizard-s-might', 'bloodline-perfection', 'hierophant-s-power', 'maker-of-miracles', 'oracular-providence', 'perfect-encore'];
@@ -96,7 +100,7 @@ function pcClean(raw) {
     c.cls = pcId(raw.cls, PF2E_CLASSES);
     c.ch = pcId(raw.ch, PF2E_CHOICES);
     c.ch2 = pcId(raw.ch2, PF2E_CHOICES);
-    c.sub = PC_TRADITIONS.includes(raw.sub) || PC_ELEMENTS.includes(raw.sub) ? raw.sub : '';
+    c.sub = pcSubOk(raw.sub) ? raw.sub : '';
     const b = raw.boosts && typeof raw.boosts === 'object' ? raw.boosts : {};
     c.boosts.anc = pcAbilList(b.anc, 4);
     c.boosts.ancFree = b.ancFree === true;
@@ -1207,7 +1211,9 @@ function pcSpellGrants(c) {
         const hex = /You (?:gain|learn) the (.+?) hex\b/.exec(text);
         if (hex) addFocus(pcSpellKey(hex[1]), x.n);
         const fam = /familiar learns (.+?)\./.exec(text);
-        if (fam) names(fam[1]).forEach(key => out.list.push({ key, rank: PF2E_SPELLS[key].r, from: x.n, counts: false, to: 'book' }));
+        // "your choice of Summon Animal or Summon Plant or Fungus": the one picked (c.sub), none until then.
+        const famKeys = PC_FAM_CHOICE[id] ? (PC_FAM_CHOICE[id].includes(c.sub) ? [c.sub] : []) : fam ? names(fam[1]) : [];
+        famKeys.forEach(key => out.list.push({ key, rank: PF2E_SPELLS[key].r, from: x.n, counts: false, to: 'book' }));
     });
     // Basic Bloodline Spell and the like: the dedication's class choice gives its initial focus spell.
     pcDedications(c).forEach(d => {
@@ -1379,6 +1385,7 @@ function pcTodo(c) {
         if (p.ch && p.ch.skc && !p.ch.skc.includes(c.skills.ch)) out.push(['class', `Pick the skill from your ${p.ch.n}.`]);
         if (p.ch && p.ch.tr === 'choice' && !PC_TRADITIONS.includes(c.sub)) out.push(['class', 'Pick your bloodline\'s tradition.']);
         if (c.ch === 'bloodline-elemental' && !PC_ELEMENTS.includes(c.sub)) out.push(['class', 'Pick your elemental influence.']);
+        if (PC_FAM_CHOICE[c.ch] && !PC_FAM_CHOICE[c.ch].includes(c.sub)) out.push(['class', 'Pick the spell your familiar learns.']);
         if ((c.cls === 'cleric' || c.cls === 'champion') && !c.deity.skill) out.push(['class', 'Pick your deity\'s skill.']);
         if (c.cls === 'cleric' && !c.deity.font) out.push(['class', 'Pick your divine font.']);
     }

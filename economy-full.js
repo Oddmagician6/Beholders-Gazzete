@@ -50,8 +50,8 @@ function renderTable(items) {
         <tr>
             <td class="item-name-cell">${escapeHTML(item.name)}${item.level !== undefined ? `<span class="item-level">Lv ${item.level}</span>` : ''}</td>
             <td class="item-category">${MARKET_CATEGORIES[item.category] || item.category}</td>
-            <td class="price-cell">${formatCoins(item.basePrice)}</td>
-            <td class="price-cell">${formatCoins(item.currentPrice)}</td>
+            <td class="price-cell">${formatCoins(item.basePrice, true)}</td>
+            <td class="price-cell">${formatCoins(item.currentPrice, true)}</td>
             <td>${getChangeHTML(item.changePercent)}</td>
             <td>${getSparkline(item.history)}</td>
         </tr>

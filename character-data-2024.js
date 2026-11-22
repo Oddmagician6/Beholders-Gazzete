@@ -16,9 +16,11 @@
    available at https://creativecommons.org/licenses/by/4.0/legalcode.
    ============================================================ */
 
-// Common plus two of these at 1st level (any language here for the rogue's and ranger's extras).
+// Common plus two of these at 1st level: the first CB24_STANDARD_LANGS are the standard languages the two come
+// from; the rest are rare (any language here for the rogue's and ranger's extras).
 const CB24_LANGUAGES = ['Common Sign Language', 'Draconic', 'Dwarvish', 'Elvish', 'Giant', 'Gnomish', 'Goblin', 'Halfling', 'Orc',
     'Abyssal', 'Celestial', 'Deep Speech', 'Infernal', 'Primordial', 'Sylvan', 'Undercommon'];
+const CB24_STANDARD_LANGS = 9;
 
 // ── Species ──────────────────────────────────────────────
 // No ability score increases (backgrounds give them now). subraces: lineages, legacies, and giant
@@ -448,7 +450,7 @@ const CB24_CLASSES = [
             [2, 'Unarmored Movement', x => `+${x.L >= 18 ? 30 : x.L >= 14 ? 25 : x.L >= 10 ? 20 : x.L >= 6 ? 15 : 10} ft. speed without armor or shield.`],
             [2, 'Uncanny Metabolism', x => `Once per long rest, when you roll initiative, regain all focus points and 1d${x.martial} + ${x.L} hit points.`],
             [3, 'Deflect Attacks', x => `Reaction: cut a ${x.L >= 13 ? '' : 'bludgeoning, piercing, or slashing '}hit's damage by 1d10 ${cbPlus(x.m.dex + x.L)}; at 0, spend 1 focus to redirect it (DEX save or 2d${x.martial} ${cbPlus(x.m.dex)}).`],
-            [3, 'Open Hand Technique', x => `Flurry hits can deny reactions (Addle), push 15 ft. (STR save), or knock prone (DEX save); DC ${x.dc('wis')}.`],
+            [3, 'Open Hand Technique', x => `Flurry hits can stop opportunity attacks until its next turn (Addle), push 15 ft. (STR save), or knock prone (DEX save); DC ${x.dc('wis')}.`],
             [4, 'Slow Fall', x => `Reaction: reduce falling damage by ${5 * x.L}.`],
             [5, 'Extra Attack', 'Attack twice when you take the Attack action.'],
             [5, 'Stunning Strike', x => `Once a turn, spend 1 focus on a hit: DC ${x.dc('wis')} CON save or stunned until your next turn; on a success its speed is halved and the next attack on it has advantage.`],
@@ -492,7 +494,7 @@ const CB24_CLASSES = [
             [11, 'Radiant Strikes', 'Melee weapon hits and unarmed strikes deal an extra 1d8 radiant.'],
             [15, 'Smite of Protection', 'When you cast divine smite, you and allies in your aura have half cover until your next turn.'],
             [19, 'Epic Boon', 'An Epic Boon feat (Boon of Truesight suggested): see Abilities.'],
-            [20, 'Holy Nimbus', x => `Bonus action, once per long rest (or spend a 5th-level slot): for 10 minutes your aura is sunlight, enemies starting a turn in it take ${Math.max(0, x.m.cha) + x.prof} radiant, and you have advantage on saves forced by fiends and undead.`]
+            [20, 'Holy Nimbus', x => `Bonus action, once per long rest (or spend a 5th-level slot): for 10 minutes your aura is sunlight, enemies starting a turn in it take ${Math.max(0, x.m.cha + x.prof)} radiant, and you have advantage on saves forced by fiends and undead.`]
         ]
     },
     {

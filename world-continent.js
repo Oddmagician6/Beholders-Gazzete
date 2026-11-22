@@ -124,8 +124,10 @@ function contJourneyText(c, j) {
     const T = TRAVEL_TERRAIN[j.terrain];
     const share = Math.round(j.roadShare * 100);
     const how = j.terrain === 'road' ? `mostly by road (${share}% of the way)` : `mostly ${T.label.toLowerCase()}${share ? `, with ${share}% of it on roads` : ', no roads'}`;
-    const days = Math.max(1, Math.round(j.miles / 24));
-    return `About ${j.miles.toLocaleString('en-US')} miles, ${how}. At a normal pace (24 miles a day), about ${days} day${days === 1 ? '' : 's'}${T.difficult ? ', or longer: the going is hard' : ''}.`;
+    // Pathfinder walks by Speed (Player Core's Travel Speed table): 25 feet is 20 miles in an 8-hour day, as the Travel tool's default.
+    const pf = typeof ruleSystemId === 'function' && ruleSystemId() === 'pf2e', perDay = pf ? 20 : 24;
+    const days = Math.max(1, Math.round(j.miles / perDay));
+    return `About ${j.miles.toLocaleString('en-US')} miles, ${how}. ${pf ? 'At Speed 25 feet (20 miles a day)' : 'At a normal pace (24 miles a day)'}, about ${days} day${days === 1 ? '' : 's'}${T.difficult ? ', or longer: the going is hard' : ''}.`;
 }
 
 function contLegend() {
