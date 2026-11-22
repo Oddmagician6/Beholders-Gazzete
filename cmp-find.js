@@ -2,9 +2,10 @@
   // The Pathfinder lists' find box: hide links that don't match, and the sections left empty
   var q = document.getElementById('cmp-q');
   if (!q) return;
-  // Accents, curly apostrophes and dashes don't count: "deja vu" finds Déjà Vu, "reaper’s" reaper's.
+  // Accents, apostrophes and dashes don't count: "deja vu" finds Déjà Vu; "reapers", "reaper's" and
+  // "reaper’s" all find Reaper's Lantern (B845).
   function fold(s) {
-    return s.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[\u2018\u2019\u02bc`]/g, "'").replace(/[\u2010-\u2015]/g, '-');
+    return s.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[\u2018\u2019\u02bc`']/g, '').replace(/[\u2010-\u2015]/g, '-');
   }
   var sections = [].slice.call(document.querySelectorAll('section.cmp-more[id]')).map(function (sec) {
     var count = sec.querySelector('.cmp-count');

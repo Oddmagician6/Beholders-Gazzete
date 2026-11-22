@@ -51,6 +51,10 @@ let rulesFailed = false;       // the 2024 data file didn't load
 const RULES51 = {};            // the 5.1 data as the page loaded it
 
 let rulesPinnedByUrl = false;  // rulesPage came from a ?rules= address (not a saved character)
+// True while Back/Forward switches the version: the page's listeners redraw, but setUrlParams (rng.js)
+// leaves the address alone, or a listener would write the roll still on screen over the entry being
+// restored (B831). The page's own popstate then draws that entry. A var, so rng.js can test it early.
+var rulesHistoryStep = false;
 (function () {
     const v = new URLSearchParams(location.search).get('rules');
     if (v === '2014' || v === '2024') { rulesPage = v; rulesPinnedByUrl = true; }
@@ -403,10 +407,13 @@ if (SRD52_OK) {
     // Back/Forward to an address with its own rules=: that version, before the page redraws the roll.
     window.addEventListener('popstate', () => {
         const v = new URLSearchParams(location.search).get('rules');
-        if ((v === '2014' || v === '2024') && v !== rulesVersion()) rulesUse(v, true);
-        else if ((v === '2014' || v === '2024') && !rulesPinnedByUrl) { rulesPage = v; rulesPinnedByUrl = true; }
-        // An address with no rules= follows the reader's setting again, not the last address's pin.
-        else if (!v && rulesPinnedByUrl) rulesUse(null);
+        rulesHistoryStep = true;
+        try {
+            if ((v === '2014' || v === '2024') && v !== rulesVersion()) rulesUse(v, true);
+            else if ((v === '2014' || v === '2024') && !rulesPinnedByUrl) { rulesPage = v; rulesPinnedByUrl = true; }
+            // An address with no rules= follows the reader's setting again, not the last address's pin.
+            else if (!v && rulesPinnedByUrl) rulesUse(null);
+        } finally { rulesHistoryStep = false; }
         if (!v && !RULES_TEXT_ONLY) rulesDropUrlParam();
     });
     if (!RULES_TEXT_ONLY) ['click', 'auxclick', 'contextmenu'].forEach(t => document.addEventListener(t, rulesStampLink, true));

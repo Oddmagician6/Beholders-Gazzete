@@ -10,6 +10,7 @@ let recentRumors = [];
 let baseCount = 0;   // rumors from rumors.json; reader-added ones come after and can't be shared
 let currentIdx = -1;
 let realmsIdx = -1;     // the Realms rumor on screen (an index into REALMS_RUMORS), or -1
+const RUMOR_LOAD = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);   // this page load (B841)
 const realmsDecks = {}; // category -> REALMS_RUMORS indexes left to deal
 
 // Rumor text can come from the reader (Contribute form), so never inject it raw.
@@ -108,7 +109,8 @@ function updateDeckCount(reshuffled) {
         return;
     }
     const { left, total } = rumorDeckCount(allRumors.rumors, baseCount, currentCategory);
-    if (!total) return;
+    // An empty pool: no counter, not the Realms one left from before (B842).
+    if (!total) { document.getElementById('deck-count').hidden = true; return; }
     document.getElementById('deck-left').textContent = reshuffled
         ? `The deck ran dry, so the bard reshuffled. ${left} of ${total} left.`
         : left ? `${left} of ${total} rumors left in this deck.` : `All ${total} told. The next draw reshuffles the deck.`;
@@ -130,7 +132,8 @@ function syncUrl(push) {
     }
     const shareable = currentIdx >= 0 && currentIdx < baseCount;
     // A reader-added rumor can't go in a link, so its history entry carries it instead.
-    setUrlParams(shareable ? { rumor: currentIdx } : {}, push, shareable ? null : { reader: currentIdx });
+    // The entry names this page load too: after a reload the same index is someone else's rumor (B841).
+    setUrlParams(shareable ? { rumor: currentIdx } : {}, push, shareable ? null : { reader: currentIdx, load: RUMOR_LOAD });
     document.getElementById('rumor-link').hidden = !shareable;
 }
 
@@ -155,7 +158,7 @@ function applyUrl() {
     const shareable = idx >= 0 && idx < baseCount;
     if (!shareable) {
         // Reader rumors last until a refresh, so an older entry can point past the end.
-        const reader = history.state && history.state.reader;
+        const reader = history.state && history.state.load === RUMOR_LOAD ? history.state.reader : null;
         if (v !== null || !Number.isInteger(reader) || reader < baseCount || !allRumors.rumors[reader]) return false;
         idx = reader;
     }

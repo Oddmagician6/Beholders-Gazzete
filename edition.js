@@ -8,10 +8,11 @@
    ============================================ */
 
 const edEsc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-// Date-only strings parse as UTC midnight, which shows the day before in the Americas
-const edDay = s => new Date(s + 'T12:00:00');
-const edLong = s => edDay(s).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-const edShort = s => edDay(s).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+// A date key is a calendar day, not a moment: noon UTC shown in UTC is that day everywhere, even where
+// local midnight skipped it (Samoa's 2011-12-30) (B843).
+const edDay = s => new Date(s + 'T12:00:00Z');
+const edLong = s => edDay(s).toLocaleDateString('en-US', { timeZone: 'UTC', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+const edShort = s => edDay(s).toLocaleDateString('en-US', { timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric' });
 
 let edDesks = [], edDates = [], edByDate = new Map();
 
@@ -28,8 +29,12 @@ function edPic(a, small) {
 
 // Article text as written by the newsroom (trusted, same as article.html), minus the old <br> spacers between
 // blocks. A <br> inside a paragraph (a list of bullets) stays (B392).
+// A spacer is a run of <br> next to a block tag (or the start or end); one between two inline tags
+// (<b>First</b><br><b>Second</b>) is a line break in the paragraph and stays (B844).
+const ED_BLOCK = /^<\/?(?:p|div|h[1-6]|ul|ol|li|blockquote|figure|figcaption|table|thead|tbody|tr|td|th|section|aside|hr)\b/i;
 function edBody(a) {
-    return String(a.content || '').replace(/(^|>)\s*(?:<br\s*\/?>\s*)+(?=<|$)/gi, '$1');
+    return String(a.content || '').replace(/(^|<[^<>]*>)\s*(?:<br\s*\/?>\s*)+(?=(<[^<>]*>)|$)/gi,
+        (m, before, after) => !before || ED_BLOCK.test(before) || !after || ED_BLOCK.test(after) ? before : m);
 }
 
 function edKicker(a) {

@@ -198,7 +198,16 @@ async function tablesFromShareCode(code) {
     const list = data.t.slice(0, TABLE_LIMITS.shareTables)
         .map(r => (Array.isArray(r) ? tableClean({ name: r[0], src: r[1], die: r[2] }) : null))
         .filter(Boolean);
-    list.forEach(t => { if (!t.name) t.name = 'Shared table'; });
+    // An untitled table gets a name none of the others in the link has, or a table it rolls named
+    // "Shared table" would be dropped as a duplicate and [[Shared table]] would roll itself (B835).
+    const taken = new Set(list.filter(t => t.name).map(t => tableKey(t.name)));
+    list.forEach(t => {
+        if (t.name) return;
+        let name = 'Shared table';
+        for (let n = 2; taken.has(tableKey(name)); n++) name = `Shared table (${n})`;
+        t.name = name;
+        taken.add(tableKey(name));
+    });
     // One table to a name, as tablesWithRefs makes them ([[Name]] rolls the first anyway).
     const named = list.filter((t, i) => list.findIndex(o => tableKey(o.name) === tableKey(t.name)) === i);
     if (!named.length) throw broken;

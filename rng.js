@@ -68,6 +68,8 @@ function paramsQuery(params) {
 // history.state so Back/Forward can show it again.
 // On the Toolbox and the Worldbuilder, a tab's roll goes on that tab's own page (tab-pages.js).
 function setUrlParams(params, push = true, state = null) {
+    // Back/Forward is switching the rules version (srd52.js): the entry being restored keeps its address (B831).
+    if (typeof rulesHistoryStep !== 'undefined' && rulesHistoryStep) return;
     let path = location.pathname;
     if (typeof rulesLinkParams === 'function') params = rulesLinkParams(params);   // ?rules=2024 (srd52.js)
     if (typeof TAB_PAGES !== 'undefined' && TAB_PAGES) [path, params] = tabPageAddress(params);

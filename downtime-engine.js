@@ -150,6 +150,7 @@ const DOWNTIME_GAMES = ruleTable({
     races:  { label: 'Betting on the races', check: '{skill:int:investigation}', dc: 15, pf: 0 },
     high:   { label: 'A private high-stakes game', check: '{skill:cha:deception} or {alt:a gaming set|Games Lore}', dc: 18, pf: 2 }
 });
+const TRAIN_DAYS_SRD = 250;      // SRD 5.1 training time for a language or tool (B839)
 const TRAIN_GP_PER_DAY = 1;      // house rule: a tutor's fee per day of lessons
 const GAMBLE_MAX_BONUS = 20;
 
@@ -643,7 +644,8 @@ function carouseCircle(life) {
 
 // Total days of downtime from weeks plus days, clamped to 0..365.
 function downtimeDays(weeks, days) {
-    const d = Math.floor(Number(weeks) || 0) * 7 + Math.floor(Number(days) || 0);
+    // Each field is 0 or more on its own: a link's d=-1 doesn't take a day off the weeks (B840).
+    const d = Math.max(0, Math.floor(Number(weeks) || 0)) * 7 + Math.max(0, Math.floor(Number(days) || 0));
     return Math.min(DOWNTIME_MAX_DAYS, Math.max(0, d));
 }
 
@@ -713,6 +715,8 @@ function downtimeFor(c, days, seed, i = 0, opts = {}) {
             out.winGp = Math.round(perDay * paidDays * 100) / 100;
             out.earn = { d20, total: d20 + bonus, dc, deg, perDay, task, tier: DT_PF2E_DEGREES[deg] };
             lines.push({ text: `One check after the first day sets the pay for the whole task (DC ${dc} at task level ${task}).`, src: 'PC' });
+            // With the weekly log off, the check has no week to show in: it goes here (B838).
+            if (opts.events === false) lines.push({ text: gambleRollText(out.earn) + '.', src: 'PC' });
             lines.push({ text: deg === 0
                 ? 'Critical failure: no pay, fired on the spot, and word gets around town.'
                 : `${dtCap(DT_PF2E_DEGREES[deg])}: ${formatCoins(perDay)} a day${deg >= 2 ? ` (${rank})` : ''}, ${formatCoins(out.winGp)} for ${days} day${days === 1 ? '' : 's'}.${deg === 1 ? ' The GM will likely cut the job short.' : ''}`, src: 'PC' });
@@ -764,7 +768,10 @@ function downtimeFor(c, days, seed, i = 0, opts = {}) {
         // SRD 5.1: while crafting, a modest lifestyle is free and a comfortable one costs half (5.2.1: no such rule).
         const rate = v24 ? full : lifeIndex(life) <= lifeIndex('modest') ? 0 : life === 'comfortable' ? full / 2 : full;
         lifeGp = craftDays * rate + (days - craftDays) * full;
-        const materials = made / 2;
+        // SRD 5.2.1: raw materials worth half the purchase cost, rounded down (a 15 gp item takes 7 gp). The cost
+        // so far is that of the progress made, so the parts add up to the whole when the item is done (B837).
+        const mats = gp => v24 ? (gp >= 2 ? Math.floor(gp / 2) : Math.floor(gp * 50) / 100) : gp / 2;
+        const materials = Math.round((mats(done + made) - mats(done)) * 100) / 100;
         out.extraGp += materials;
         out.craft = { value, done, made, perDay, craftDays, finished, materials,
             daysLeft: finished || !value ? 0 : Math.ceil((value - done - made) / perDay) };
@@ -773,7 +780,7 @@ function downtimeFor(c, days, seed, i = 0, opts = {}) {
             lines.push({ text: `Crafting at ${formatCoins(perDay)} of progress a day${helpers ? ` (with ${helpers} helper${helpers === 1 ? '' : 's'})` : ''}: ${formatCoins(done + made)} of ${formatCoins(value)}${finished ? ', finished' : ''}.`, src: 'SRD' });
             if (finished) lines.push({ text: `Done after ${craftDays} day${craftDays === 1 ? '' : 's'} of work.`, src: 'SRD' });
             else lines.push({ text: `${formatCoins(value - done - made)} of work left: about ${out.craft.daysLeft} more day${out.craft.daysLeft === 1 ? '' : 's'}.`, src: 'SRD' });
-            if (made) lines.push({ text: `Raw materials: ${formatCoins(materials)} (half the value of the progress made).`, src: 'SRD' });
+            if (made) lines.push({ text: `Raw materials: ${formatCoins(materials)} (half the value of the progress made${v24 ? ', rounded down' : ''}).`, src: 'SRD' });
         }
         if (craftDays && rate < full) lines.push({ text: life === 'comfortable' ? 'Comfortable lifestyle at half cost while crafting.' : 'Lifestyle paid for while crafting (modest or less is free).', src: 'SRD' });
         else if (craftDays && !v24 && lifeIndex(life) > lifeIndex('comfortable')) lines.push({ text: 'Crafting doesn\'t cover a lifestyle this lavish, so it costs full price.', src: 'ruling' });
@@ -808,12 +815,16 @@ function downtimeFor(c, days, seed, i = 0, opts = {}) {
         for (let wk = 0; wk < Math.min(weeks, CAROUSE_SHOWN); wk++) out.carouse.outcomes.push(carouseWeek(circle, seed, i, wk, seen));
         lines.push({ text: `Carousing in ${CAROUSE_CIRCLES[circle].label} costs the lifestyle's price again each day, and brings one outcome per week.`, src: 'house' });
     } else if (c.act === 'train') {
-        const need = Math.floor(Math.max(0, Number(c.val) || 0));
+        // SRD 5.1: 250 days at 1 gp a day, when no other number of days is entered (B839). 2024 has no such rule.
+        const srdTrain = !DT_PF2E && !dtCraft2024();
+        const need = Math.floor(Math.max(0, Number(c.val) || 0)) || (srdTrain ? TRAIN_DAYS_SRD : 0);
         const had = Math.min(need, Math.floor(Math.max(0, Number(c.done) || 0)));
         const used = need ? Math.min(days, need - had) : days;
         out.extraGp += used * TRAIN_GP_PER_DAY;
         out.train = { need, had, used, finished: need > 0 && had + used >= need };
-        lines.push({ text: `A tutor charges ${formatCoins(TRAIN_GP_PER_DAY)} a day of lessons. The DM sets how many days a language or tool proficiency takes.`, src: 'house' });
+        lines.push(srdTrain
+            ? { text: `Training with an instructor: ${formatCoins(TRAIN_GP_PER_DAY)} a day, and ${TRAIN_DAYS_SRD} days for a language or tool proficiency (the DM can set other days).`, src: 'SRD' }
+            : { text: `A tutor charges ${formatCoins(TRAIN_GP_PER_DAY)} a day of lessons. The DM sets how many days a language or tool proficiency takes.`, src: 'house' });
         if (need) {
             lines.push({ text: out.train.finished
                 ? `Training done: ${need} of ${need} days${used < days ? `, finished on day ${used}` : ''}. The character gains the proficiency.`

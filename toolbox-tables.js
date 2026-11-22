@@ -333,10 +333,17 @@ function saveShared(btn) {
     const clash = list.filter(s => { const mine = tableFind(tables, s.name); return mine && (mine.src !== s.src || mine.die !== s.die); });
     const add = list.filter(s => !tableFind(tables, s.name));
     if (tables.length + add.length > TABLES_MAX) { flash('tables-status', `⚠️ ${TABLES_MAX} tables at most. Delete some first.`); return; }
+    // The confirm is for the tables the warning named: if another tab changed which ones get replaced
+    // between the two clicks, warn again (B832).
+    const clashKey = clash.map(s => tableKey(s.name)).join('\n');
+    if (btn.dataset.armed && btn.dataset.clash !== clashKey) { clearTimeout(btn._t); delete btn.dataset.armed; btn.textContent = '💾 Save to My Tables'; }
+    btn.dataset.clash = clashKey;
     const save = () => {
+        // One write for the lot; if the browser won't keep it, nothing changes and the share stays open (B833).
+        const before = tables.map(t => ({ ...t }));
         clash.forEach(s => Object.assign(tableFind(tables, s.name), { src: s.src, die: s.die }));
-        add.forEach(addTable);
-        saveTables();
+        add.forEach(s => tables.push(cleanStoredTable({ ...s, id: newTableId() })));
+        if (!saveTables()) { tables = before; renderTableList(); renderTableEditor(); return; }
         const main = tableFind(tables, list[0].name);
         closeShared();
         selectTable(main.id);
@@ -421,7 +428,8 @@ function setupTables() {
         else flash('tables-status', 'Nothing rolled yet.');
     });
     document.getElementById('tbl-res-clear').addEventListener('click', () => { tblResults = []; renderTableResults(); renderTableCheck(); });
-    document.getElementById('tbl-link').addEventListener('click', () => { const t = curTable(); if (t) shareTable(t, tables, 'tables-status'); });
+    // The link packs the tables the roll would read, an open shared table's included (B834).
+    document.getElementById('tbl-link').addEventListener('click', () => { const t = curTable(); if (t) shareTable(t, tables.concat(tblShared ? tblShared.list : []), 'tables-status'); });
     const del = document.getElementById('tbl-delete');
     del.addEventListener('click', () => armedClick(del, '🗑️ Delete', deleteTable));
     document.getElementById('tbl-shared').addEventListener('click', onSharedClick);

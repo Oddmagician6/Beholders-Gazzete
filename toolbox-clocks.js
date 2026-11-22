@@ -32,11 +32,28 @@ function newClockId() {
     return Date.now().toString(36) + Math.floor(Math.random() * 1296).toString(36);
 }
 
+// The saved list, cleaned. A clock whose id is missing, malformed, or a repeat gets a new one, and the
+// repaired list is written back at once, so the next read (this tab's, another tab's, the DM screen's)
+// finds the same ids and a click still finds its clock (B836). Null when nothing usable is saved.
+function readClocks() {
+    let saved;
+    try { saved = JSON.parse(localStorage.getItem(CLOCKS_KEY)); } catch (e) { return null; }
+    if (!Array.isArray(saved)) return null;
+    const ids = new Set();
+    let fixed = false;
+    const list = saved.map(cleanClock).filter(Boolean).slice(0, CLOCKS_MAX);
+    list.forEach((c, i) => {
+        const raw = saved.find(x => x && typeof x === 'object' && x.id === c.id);
+        if (!raw || ids.has(c.id)) { do c.id = newClockId(); while (ids.has(c.id)); fixed = true; }
+        ids.add(c.id);
+    });
+    if (fixed) try { localStorage.setItem(CLOCKS_KEY, JSON.stringify(list)); } catch (e) {}
+    return list;
+}
+
 function loadClocks() {
-    try {
-        const saved = JSON.parse(localStorage.getItem(CLOCKS_KEY));
-        if (Array.isArray(saved)) clocks = saved.map(cleanClock).filter(Boolean).slice(0, CLOCKS_MAX);
-    } catch (e) {}
+    const list = readClocks();
+    if (list) clocks = list;
 }
 
 let clocksUnsaved = false;
@@ -53,10 +70,9 @@ function saveClocks() {
 // A list this browser couldn't save stays as it is (the saved one is older).
 function syncClocks() {
     if (clocksUnsaved) return;
-    try {
-        const saved = JSON.parse(localStorage.getItem(CLOCKS_KEY));
-        clocks = Array.isArray(saved) ? saved.map(cleanClock).filter(Boolean).slice(0, CLOCKS_MAX) : [];
-    } catch (e) {}
+    let saved;
+    try { saved = JSON.parse(localStorage.getItem(CLOCKS_KEY)); } catch (e) { return; }
+    clocks = Array.isArray(saved) ? readClocks() : [];
 }
 
 // ── Drawing ───────────────────────────────────────────────
