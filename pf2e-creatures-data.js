@@ -1111,7 +1111,7 @@ const PF2E_CREATURES = [
   ["sordesdaemon", "Sordesdaemon", 15, "L", "c", ["daemon", "fiend", "unholy"], 37, 300, 30, 24, 26, 26, "MC2", "underdark town dungeon"],
   ["sramana", "Sramana", 15, "M", "c", ["angel", "celestial", "holy"], 36, 300, 26, 24, 28, 29, "MC2", "mountain town"],
   ["sykever", "Sykever", 15, "H", "c", ["darvakka", "shadow", "undead", "unholy"], 37, 335, 25, 25, 31, 29, "MC2", "underdark dungeon"],
-  ["totum-font", "Totum Font", 15, "L", "c", ["air", "earth", "elemental", "fire", "metal", "water", "wood"], 35, 104, 26, 23, 29, 30, "MC2", "forest mountain swamp coast desert underdark dungeon"],
+  ["totum-font", "Totum Font", 15, "L", "c", ["air", "earth", "elemental", "fire", "metal", "water", "wood"], 35, 325, 26, 23, 29, 30, "MC2", "forest mountain swamp coast desert underdark dungeon"],
   ["wemmuth", "Wemmuth", 15, "H", "c", ["plant"], 37, 335, 27, 27, 24, 25, "MC2", "forest swamp"],
   ["zhuraita", "Zhuraita", 15, "M", "c", ["azata", "celestial", "holy"], 37, 280, 23, 26, 29, 28, "MC2", "mountain town"],
   ["astradaemon", "Astradaemon", 16, "L", "c", ["daemon", "fiend", "unholy"], 39, 240, 27, 30, 26, 28, "MC", "underdark town dungeon"],

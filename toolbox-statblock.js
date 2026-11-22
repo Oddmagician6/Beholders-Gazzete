@@ -381,7 +381,8 @@ function sbPf2ePerception(m, b) {
 
 function sbPf2eDefenses(m, b) {
     return {
-        ac: `${m.ac}${b.acd ? ` (${b.acd})` : ''}`,
+        // Some notes come in their own parentheses ("(20 with shield raised)"): don't wrap them twice (B892).
+        ac: `${m.ac}${b.acd ? (b.acd[0] === '(' ? ` ${b.acd}` : ` (${b.acd})`) : ''}`,
         saves: [['Fort', m.fort], ['Ref', m.ref], ['Will', m.will]],
         saveNote: b.svd || '',
         hp: [`${m.hp}${b.hpd ? `, ${b.hpd}` : ''}`, ['Hardness', b.hd], ['Immunities', b.im], ['Weaknesses', b.we], ['Resistances', b.re]]

@@ -41,7 +41,9 @@ const ENC_PF2E_TYPES = ['undead', 'dragon', 'fiend', 'celestial', 'monitor', 'fe
 
 function encPf2eMonster(c) {
     const type = ENC_PF2E_TYPES.find(t => c.traits.includes(t)) || 'humanoid';
-    return { ...c, cr: String(c.level), dex: c.per, type, get xp() { return encPf2eXp(c.level); } };
+    // unique: one of a kind (Monster Core p. 6), never two in a roll. summoned: brought by another creature
+    // (an ozthoom's shadow double), so a roll never sends one alone (B890, B893).
+    return { ...c, cr: String(c.level), dex: c.per, type, unique: c.rarity === 'q', summoned: c.traits.includes('summoned'), get xp() { return encPf2eXp(c.level); } };
 }
 
 // A Pathfinder kind → the 5e type whose scene lines fit it (scenes are written by 5e type).
@@ -224,6 +226,15 @@ function pick(arr) {
     return arr[Math.floor(rand() * arr.length)];
 }
 
+// A pick that never sends a summoned creature on its own: a draw that lands on one draws again from the
+// rest (so rolls that never drew one keep their monsters). null when there's nobody else (B893).
+function encPickFoe(arr) {
+    const m = pick(arr);
+    if (!m || !m.summoned) return m;
+    const rest = arr.filter(x => !x.summoned);
+    return rest.length ? pick(rest) : null;
+}
+
 // A random encounter that spends most of the budget and rates at the difficulty asked for:
 // a lead monster (now and then a lone boss) plus up to two kinds of weaker support,
 // no CR above the party's level, at most two creatures per character.
@@ -250,12 +261,13 @@ function fillEncounter(pool, budget, diff, leadPool = null) {
         const themed = !!(leadPool && leadPool.length);
         const base = themed ? leadPool : pool;
         const leads = base.filter(m => encPickXp(m) >= target * 0.15 && encPickXp(m) <= target * top);
-        const lead = pick(leads.length ? leads : base);
+        const lead = encPickFoe(leads.length ? leads : base);
+        if (!lead) continue;
         // A group's leader brings followers rather than copies of itself, when it has any.
         const kinds = themed && rolledKinds === 1 && pool.some(m => encPickXp(m) < encPickXp(lead)) ? 2 : rolledKinds;
         const list = [{ m: lead, count: 1 }];
         let spent = encPickXp(lead), count = 1;
-        const room = () => Math.min(cap - count, Math.floor((target - spent) / encPickXp(lead)));
+        const room = () => lead.unique ? 0 : Math.min(cap - count, Math.floor((target - spent) / encPickXp(lead)));
         // A lone kind fills the budget with more of the same; a lead may bring a twin.
         const more = kinds === 1 ? room() : rand() < 0.3 ? Math.min(1, room()) : 0;
         if (more > 0) { list[0].count += more; spent += encPickXp(lead) * more; count += more; }
@@ -263,15 +275,16 @@ function fillEncounter(pool, budget, diff, leadPool = null) {
             const left = target - spent;
             const support = pool.filter(m => encPickXp(m) < encPickXp(lead) && encPickXp(m) <= left && !list.some(e => e.m === m));
             if (!support.length) break;
-            const m = pick(support);
+            const m = encPickFoe(support);
+            if (!m) break;
             const most = Math.min(cap - count, Math.floor(left / encPickXp(m)));
-            const n = Math.max(1, Math.ceil(most * (0.5 + rand() * 0.5)));
+            const n = m.unique ? (rand(), 1) : Math.max(1, Math.ceil(most * (0.5 + rand() * 0.5)));
             list.push({ m, count: n });
             spent += encPickXp(m) * n; count += n;
         }
         // A group short of its budget sends more of its last followers.
         const last = list[list.length - 1];
-        const extra = themed && spent < target * 0.8 ? Math.min(cap - count, Math.floor((target - spent) / encPickXp(last.m))) : 0;
+        const extra = themed && !last.m.unique && spent < target * 0.8 ? Math.min(cap - count, Math.floor((target - spent) / encPickXp(last.m))) : 0;
         if (extra > 0) { last.count += extra; spent += encPickXp(last.m) * extra; count += extra; }
         if (spent > bestXp) { best = list; bestXp = spent; }
     }

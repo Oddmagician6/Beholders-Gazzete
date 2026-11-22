@@ -552,7 +552,14 @@ function rollTown(seed, opts = {}) {
     const govFits = TOWN_GOVS.filter(g => g.sizes.includes(size));
     t.gov = part('gov.' + size, () => townPick(govFits).key);
     // A realm on the Continent tab asks for its own kinds of rule (opts.govs), where they fit the size.
-    const govWanted = Array.isArray(opts.govs) ? govFits.filter(g => opts.govs.includes(g.key)) : [];
+    let govWanted = Array.isArray(opts.govs) ? govFits.filter(g => opts.govs.includes(g.key)) : [];
+    // None of the realm's kinds fits this size (a theocracy's metropolis, an empire's hamlet): take one that
+    // fits the next size up or down, so its rule still follows the realm's ways (B894).
+    if (!govWanted.length && Array.isArray(opts.govs)) {
+        const order = Object.keys(TOWN_SIZES), at = order.indexOf(size);
+        const near = [order[at - 1], order[at + 1]].filter(Boolean);
+        govWanted = TOWN_GOVS.filter(g => opts.govs.includes(g.key) && g.sizes.some(z => near.includes(z)));
+    }
     if (govWanted.length && !govWanted.some(g => g.key === t.gov)) t.gov = part('gov.realm.' + size, () => townPick(govWanted).key);
     const gov = TOWN_GOVS.find(g => g.key === t.gov);
     // Nobody runs a town at seventeen: a leader is at least an adult.

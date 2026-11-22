@@ -221,7 +221,9 @@ function sbPf2eNpcParts(block) {
         .replace(/(\*\*Damage\*\* )(\d+d\d+(?:[+−-]\d+)?)/g, (_, h, x) => h + sbPf2eDamage(x, dd));
     const dc = list => (list || []).map(([name, cost, traits, text, lim]) => [name, cost, traits, d ? dmg(text.replace(/DC (\d+)\b(?! flat)/g, (_, n) => `DC ${+n + d}`)
         .replace(/([+−-])(\d+)(?= attack (?:modifier|bonus))/g, (_, s, n) => sbSigned((s === '+' ? 1 : -1) * +n + d)), lim ? 2 * d : d) : text, ...(lim ? [lim] : [])]);
-    const b = { ...base, pd: sbPf2eShift(base.pd, d), sk: sbPf2eShift(base.sk, d), ia: dc(base.ia), da: dc(base.da), oa: dc(base.oa),
+    // An other-AC note ("(26 with shield raised)", "21 vs. traps") moves with the AC (B891); a "+1 status" bonus doesn't.
+    const acd = base.acd && d ? base.acd.replace(/^(\(?)(\d+)(?= (?:with|when|vs\.|while|against|in|from|plus)\b)/, (_, o, n) => o + (+n + d)) : base.acd;
+    const b = { ...base, acd, pd: sbPf2eShift(base.pd, d), sk: sbPf2eShift(base.sk, d), ia: dc(base.ia), da: dc(base.da), oa: dc(base.oa),
         st: (base.st || []).map(([ranged, name, bonus, traits, dmg]) => [ranged, name, bonus + d, traits, sbPf2eDamage(dmg, d)]),
         sc: (base.sc || []).map(([name, sdc, atk, note, ranks]) => [name, sdc + d, atk ? atk + d : atk, note, ranks]) };
     if (swap) {

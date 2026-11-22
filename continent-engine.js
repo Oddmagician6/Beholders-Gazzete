@@ -1135,6 +1135,14 @@ function rollContinent(seed, opts = {}) {
         if (best) addRoad(best[0].id, best[1].id, !feud);
     }));
     c.roadCells = roads;
+    // A feud's track can run along roads laid after it: say how it really goes, the way the
+    // journey planner does (B896).
+    c.roads.forEach(r => {
+        if (r.kept) return;
+        const off = r.path.filter(i => !roads[i]);
+        r.roadShare = 1 - off.length / r.path.length;
+        r.terrain = r.roadShare >= 0.6 ? 'road' : contMainTerrain(m, off);
+    });
 
     // Trade (E5): each nation sells to one realm it isn't feuding with, by the road between
     // them, or by sea when both have a coast and no border.
@@ -1429,7 +1437,8 @@ function contPoiHook(c, p) {
 
 function contRoadLine(c, r) {
     const A = c.towns[r.a], B = c.towns[r.b];
-    const how = r.kept ? 'by road' : `an unkept track through ${CONT_BIOMES[r.terrain] ? CONT_BIOMES[r.terrain].label : 'coastland'}`;
+    const how = r.kept ? 'by road' : r.terrain === 'road' ? 'mostly by road, though the feud left the border stretch unkept'
+        : `an unkept track through ${CONT_BIOMES[r.terrain] ? CONT_BIOMES[r.terrain].label : 'coastland'}`;
     return `${A.name} to ${B.name}: about ${r.miles.toLocaleString('en-US')} miles, ${how}.`;
 }
 
@@ -1825,6 +1834,8 @@ function contMapSvg(c, title, id = 'cm', style = 'classic') {
     const tints = Object.keys(CONT_BIOMES).filter(b => b !== 'plains' && m.landIdx.some(i => m.biome[i] === b))
         .map(b => `<path class="${atlas ? 'cm-a-tint' : 'cm-tint'}" fill="${CONT_BIOMES[b].color}" d="${contFillPath(m, contSoftMask(m, i => m.biome[i] === b), 0.45)}"/>`).join('');
     const nationMasks = c.nations.map(nat => contSoftMask(m, i => m.owner[i] === nat.index));
+    // A town at a ragged border keeps its own realm's color under its marker, not a neighbor's (B895).
+    c.towns.forEach(t => nationMasks.forEach((v, k) => { v[t.cell] = k === t.nation ? 1 : 0; }));
     const realms = c.nations.map((nat, k) => `<path class="${atlas ? 'cm-a-realm' : 'cm-realm'}" fill="${nat.color}" d="${contFillPath(m, nationMasks[k], 0.5)}"/>`).join('');
     const nearWater = (x, y) => [[0, 0], [1, 0], [0, 1], [1, 1]].some(([dx, dy]) => !m.land[(y + dy) * m.cols + x + dx]);
     const borders = nationMasks.map(v => contEdgePath(m, v, 0.5, nearWater)).join('');
