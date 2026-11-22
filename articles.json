@@ -9481,6 +9481,142 @@
         "rumor": "They say the paladin's horse only vanishes when someone gives it one star, so tip well or learn to swim."
       },
       "fiction": true
+    },
+    {
+      "id": "earth-elemental-snow-shovellers-picket-party",
+      "title": "Party's Earth Elemental Clears Snow, Cobbles and Half a Wall",
+      "category": "Labor",
+      "author": "Brakka Stonesweat",
+      "date": "2026-11-22",
+      "excerpt": "A broke adventuring party underbid the shovellers and sent an earth elemental to clear the snow. It took the cobbles too. Now there's a picket line.",
+      "social": "A broke adventuring party underbid 31 snow shovellers with a druid and an earth elemental. The elemental cleared the snow. Then it cleared 187 cobblestones, a fence, and half a cooper's wall. The shovellers are picketing the party's tavern. Would your druid pick up a shovel, or cast the spell?",
+      "content": "<p>The earth elemental got the snow. It got the street too.</p>\n\n<p>An adventuring party short on winter coin took a snow-clearing contract in Brindlemoor on Thursday and had its druid conjure an earth elemental to do the digging. The elemental cleared the snow on Tanner's Row. It then cleared 187 cobblestones, a garden fence and half a cooper's wall, and the Brindlemoor Shovellers' Lodge has picketed the party's tavern ever since.</p>\n\n<p>The party calls itself the Lean Winter Company. Four adventurers. By their own count they had 9 silver between them, since the Undermaw goes quiet for the season and the monsters stop paying. The ward clerk posted the job at 30 silver for three streets. The Lodge bid 45, which buys 31 shovellers, a dawn start and a hot lunch. The Lean Winter bid 12. That means they undercut a union with a spell.</p>\n\n<p>\"I have dug that street for twenty-two winters,\" said Ulla Coldmitten, a snow-shoveller and the Lodge's steward. \"You learn where the cobbles are. You go around them. That's the whole trade. The rock fellow did not go around them.\"</p>\n\n<p>The druid, Bryony Thatchwell, says the first hour went beautifully. The elemental moved through the drifts \"like a mole through custard.\" Then she sneezed. After that, she said, it \"got very enthusiastic about the job.\" It worked down to the clay. It put the fence somewhere. Nobody has found the fence.</p>\n\n<p>Hal Brennick, a cooper, came outside to find half his wall gone and his barrels looking at the street. \"I asked it to stop,\" he said. \"It looked at me like I was more snow.\"</p>\n\n<p>The clerk paid the company its 12 silver on Friday. He also sent a bill for the cobbles: 40 gold. In plain speech, the job cost them about 40 gold and paid them a tip.</p>\n\n<p>The picket stands outside The Sleeping Mule Tavern, where the company rents two rooms. Thirty-one shovellers walk it, shovels on shoulders, singing a song about fences that I won't print. The Mule's landlady reports business is up, because picketers drink. The company has eaten every meal upstairs. \"We had a druid. They had shovels. It seemed like math,\" said Dorran Pike, the company's fighter, through a window. \"I'm learning the math was wrong.\"</p>\n\n<p>The Lodge wants the contract back, an apology in writing, and the Lean Winter on the line with real shovels at Lodge rates, with a proper lunch break. Thatchwell has agreed to the lunch. Talks continue.</p>\n\n<p>\"Nobody here is against magic,\" Coldmitten said. \"I'm against magic that works for 12 silver and doesn't know what a fence is.\"</p>\n\n<p>I've got nothing against broke adventurers. I've been broke. But undercut the folk who live off a job and next winter the clerk remembers the 12. Not the 45. Even <a href=\"/a/frost-giant-wages-rimeback-pass-ninefathom\">the frost giant clearing the Rimeback Pass</a> asked for a proper wage.</p>\n\n<p><em>Solidarity. And stretch your back. — Brakka</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Fence Nobody Found",
+          "text": "A town's snow contract went to a conjured earth elemental, and now the main street is a trench, a fence is missing, and the shovellers' crew is picketing the inn where the party sleeps. The town clerk will waive the damages if the party finds the fence and settles the shovellers before the next snowfall, but the elemental's tunnels run under half the town and something down there has started moving the cobbles back on its own."
+        },
+        "npc": {
+          "name": "Greta Ironmitt",
+          "role": "Shovellers' crew foreman",
+          "want": "She wants her crew paid for the winter, and she wants the party out on the street with a shovel in front of everyone.",
+          "secret": "She sold her own crew's spring contract to a hedge wizard last year and is terrified somebody will find out.",
+          "race": "dwarf",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Cold Hearth Inn",
+          "text": "A cheap inn on a street with no cobbles left, where the picket line out front has become the inn's best paying crowd. The landlady quietly sends hot cider out to the strikers and adds it to the party's bill.",
+          "tavern": true
+        },
+        "rumor": "My cousin swears the rock thing is still under the street, and every time somebody sneezes, it shoves up another cobblestone."
+      },
+      "fiction": true
+    },
+    {
+      "id": "arcane-lock-council-chamber-password-goat",
+      "title": "Wizard's Arcane Lock Seals Council Out; Nobody Wrote Password",
+      "category": "Regulations",
+      "author": "Ottoline Vex",
+      "date": "2026-11-22",
+      "excerpt": "A hired adventuring party's wizard cast Arcane Lock on Brindlemoor's council chamber, and nobody wrote the password down. Council now meets in the snow.",
+      "social": "Brindlemoor's Burgess Council held its latest session on the front steps, in the snow. The adventuring party hired to guard the chamber overnight had its wizard cast Arcane Lock on the doors, and nobody wrote down the password. He swears it was something about a goat. The doors have already refused \"goat\" and \"goats.\" Be honest: who in your party would have written it down?",
+      "content": "<p>Brindlemoor's Burgess Council held its latest session on the front steps of its own chamber, in the snow, after the wizard of a hired adventuring party cast Arcane Lock on the doors and nobody wrote down the password. The wizard, Quenby Marrowind of the Fairlatch Company, maintains the password was \"something about a goat.\"</p>\n\n<p>The Council engaged the Fairlatch Company, four adventurers at 12 silver the night, to secure the chamber after last month's business with the <a href=\"/a/mimic-ballot-box-eats-31-votes-brindlemoor\">ballot box that ate 31 votes</a>. The contract asks the party to \"make the chamber secure.\" It does not ask them to make it openable afterward. I have read the contract twice, and so has the Clerk. It is a very good contract. Nobody read it before signing.</p>\n\n<p>For readers who skipped civic magic, Arcane Lock holds a door shut for as long as the caster likes and lets through anyone who speaks the password. The caster chooses the password. The caster is then expected to remember it. Mr. Marrowind chose his at about two in the morning, after the party's rogue bet him a silver he couldn't make it rhyme.</p>\n\n<p>Debate opened on the third step at nine. Councilor Maldrith Quennel, the gentleman from the Chandler Ward, who is a lich and asks for everything in writing, moved that the party produce the password in writing. The motion was seconded. The party's fighter, a large woman named Brannagh Tusk, replied, \"That's the whole problem, sir.\" Quennel, being dead, was untroubled by the snow. The other eight Burgesses were troubled by it and said so at length.</p>\n\n<p>After ninety minutes of procedure, the Council voted to allow the party three guesses an hour. The minutes, kept on the Clerk's sleeve because the minute book is inside, record the following attempts: \"goat,\" \"goats,\" \"the goat,\" \"billy,\" \"a goat is fine,\" and, from the rogue, \"open up, it's us.\" The doors refused each one. The party's halfling cleric then tried \"something about a goat,\" word for word. The doors refused that too, which Mr. Marrowind called \"a relief, honestly.\"</p>\n\n<p>Brindlemoor has one licensed caster of Knock, who is in Ashenfold for her sister's wedding until Tuesday. Reeve Maudrey Fennick of Brindlemoor told reporters, \"We are aware of the door.\" She confirmed that an axe was discussed and ruled out, because the doors are listed with the Heritage Committee, and the Heritage Committee meets inside.</p>\n\n<p>By my count the session produced six Promises Made, including \"we'll be in by lunch,\" and one Promise Kept: a motion to hold the next session on the steps as well, which passed 9-0 because nobody could reach the rulebook to object. A courtier who asked not to be named because they were not authorized to be awake suggested the password may involve the goat from <a href=\"/a/bard-suggestion-spell-900-voters-goat-rally\">last week's rally</a>. Mr. Marrowind said he had attended that rally, then went quiet for some time.</p>\n\n<p>The Fairlatch Company has offered the Council a full refund of 12 silver. Quennel has asked for the offer in writing. The quills are inside.</p>\n\n<p><em>— O.V., from the gallery</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Password About a Goat",
+          "text": "A town hall has been sealed with Arcane Lock, and the wizard who cast it can't remember the password. The mayor wants it open by the dawn tax hearing without harming the heritage-listed doors, and pays 50 gold if the party manages it. The party can hunt for the wizard's scribbled notes, find someone who knows Knock, or piece together the password from what the wizard did that night."
+        },
+        "npc": {
+          "name": "Wilda Crane",
+          "role": "Retired Locksmith and Hedge Mage",
+          "want": "She wants to open the door herself and win the town's lock contract back from the adventurers who undercut her.",
+          "secret": "She taught the forgetful wizard to set rhyming passwords and keeps a ledger of every password her old students ever chose.",
+          "race": "gnome",
+          "gender": "female",
+          "kind": "magic"
+        },
+        "location": {
+          "name": "The Steps of the Old Moot Hall",
+          "text": "The town council now sits on these stone steps under borrowed blankets. The clerk has swept the snow into a perfect rectangle matching the chamber's seating plan and fines anyone who sits outside it.",
+          "tavern": false
+        },
+        "rumor": "My cousin swears the password is just 'baa' and the wizard's too proud to say it out loud in front of the Council."
+      },
+      "fiction": true
+    },
+    {
+      "id": "kobolds-120-feast-pies-thank-you-notes",
+      "title": "Kobolds Take 120 Feast Pies, Leave Thank-You Notes",
+      "category": "Local Chaos",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-11-22",
+      "excerpt": "Kobolds took 120 pies cooling on Brindlemoor windowsills for the Grand Feast. They thought the pies were offerings, and left thank-you notes. Allegedly.",
+      "social": "Forty Brindlemoor households set out 120 pies to cool for the Grand Feast. By morning every sill was empty except for a thank-you note. A kobold warren thought the pies were offerings, and the notes say the apple one was best. Which pie would you have left on the sill?",
+      "content": "<p>At roughly the second bell after midnight on Sunday, 120 pies cooling on Brindlemoor windowsills for the Grand Feast allegedly vanished, and the thieves were kobolds. A small warren under Tanner's Row thought the pies were offerings, carried off every one, and left a thank-you note on each sill.</p>\n\n<p>The pies were the feast committee's cheapest plan yet. The committee has 900 gp and has promised to feed 2,000 people on the Town Green on the 26th, so <a href=\"/a/halfling-feastwarden-feast-2000-brindlemoor\">Feastwarden Odo Plumbrook</a> asked forty households to bake three pies each and set them out to cool. All forty did, which Plumbrook calls the best turnout of the season.</p>\n\n<p>The notes are in charcoal, in Common, mostly. \"THANK YOU FOR PIE,\" reads the one left for Marigold Tench, who was standing in her nightgown holding a rolling pin when I got there. \"WE ARE VERY HONORED. THE APPLE ONE WAS BEST. WE LEFT YOU A GOOD TRAP.\" The good trap was a thread across the sill tied to a bell, and it drops a paper flower on anyone who reaches for the missing pie. \"It got me twice,\" said Tench. \"The flower's quite nice, honestly.\"</p>\n\n<p>I'm a kobold myself, so let me explain. In a warren, anything left up high at night, still warm, is for the dragon. If no dragon turns up, it's allegedly for whoever got there first. Forty sills of warm pies in a row is the biggest offering any kobold has ever seen. They allegedly carried them home in a line, one pie per kobold, with a lookout at the front. One kobold's only job was to sing.</p>\n\n<p>The warren calls itself the Clatterhole. It lives under an old cooperage behind a door the size of a breadbox. I found it by following crumbs and one dropped cherry. Ozzle Pinchwick, who speaks for the Clatterhole and was wearing a pie tin as a hat at the time, came out to talk. \"We thought the town finally liked us,\" Pinchwick said. \"One hundred and twenty pies! We voted on whether we deserved them. We decided yes.\"</p>\n\n<p>Pinchwick then showed me a pit trap dug just for my foot and asked me to step in it, for fun. I did. It was an inch deep and had a cushion in it. The pie tin, by the way, was polished so bright you could see the moon in it. Anyway.</p>\n\n<p>Plumbrook took the news standing on a chair at the Sleeping Mule. \"This is a strong start,\" he said. \"Our pies are so good a whole warren thought they were sacred. You can't buy a review like that.\" Asked where 120 new pies come from with four days to go, he said the Clatterhole had offered to help, that he had said yes, and that he did not yet know what he had said yes to. The <a href=\"/a/giant-crab-feast-stuck-town-gate\">giant crab in the East Gate</a> is also still there.</p>\n\n<p>Pinchwick says every pie tin will come back washed, and that the warren has started \"a surprise for the feast, with springs in it.\" The City Watch was allegedly told about the surprise and asked how big the springs were. Pinchwick held two claws about this far apart. The Watch went home.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Missing Harvest Pies",
+          "text": "Every pie set out to cool for a village's harvest supper has vanished overnight, replaced by polite notes and tiny harmless traps. The supper's organizer will pay 25 gp to get the pies back before tomorrow evening, but the trail leads to a kobold warren that sincerely believes the town has started worshipping it."
+        },
+        "npc": {
+          "name": "Hesper Pottle",
+          "role": "Village baker and pie judge",
+          "want": "She wants her prize-winning plum pie back before the supper, because the judging is tomorrow and she has won eleven years running.",
+          "secret": "She has quietly left a pie on her back step for the kobolds every winter for years, which is why the warren thinks pies on sills are a holiday.",
+          "race": "human",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Breadbox Door",
+          "text": "A tiny door under an abandoned cooperage that opens on a warren of kobold tunnels, every corridor lined with traps that drop paper flowers or tip visitors gently onto cushions. One tunnel near the larder has a real trap, set by a kobold who missed the meeting.",
+          "tavern": false
+        },
+        "rumor": "My cousin says the kobolds only took the pies because somebody's grandmother has been leaving them cake for thirty years, and now they think it's a holiday."
+      },
+      "fiction": true
+    },
+    {
+      "id": "unidentified-potions-identify-fee-pinchpenny-company",
+      "title": "Party Drinks 6 Unidentified Potions to Skip the Identify Fee",
+      "category": "Health",
+      "author": "Brother Wendell Tumbleberry",
+      "date": "2026-11-22",
+      "excerpt": "Friends, the Pinchpenny Company drank six unidentified potions to save 150 gold on an Identify spell. My clinic bill came to 610. Soup is on the house.",
+      "social": "The Pinchpenny Company came home from the Undermaw with six unidentified potions and a plan to save 150 gold. They drank them all on Friday night. By morning one was invisible, one was floating, and the clinic bill was 610 gold. Which vial would your character have drunk first?",
+      "content": "<p>Friends, the Pinchpenny Company came home from the Undermaw on Friday with six unidentified potions and a sage's quote of 150 gold to cast Identify on the lot. They drank all six that night instead, to save the fee. My clinic spent Saturday sorting out the results, and the bill came to 610 gold.</p>\n\n<p>I'll start with the good news: everyone is alive. Now the rest. Their fighter, a large and cheerful woman named Brisa Holloway, is invisible. She walked into my clinic at dawn, or rather the door opened by itself and a voice said \"sorry about this.\" Their cleric floats about four feet off the ground and has to be tied to a bedpost like a festival balloon. Their ranger now speaks only to animals. He had a long, earnest talk with my cat about the whole evening, and my cat has not looked at me the same way since.</p>\n\n<p>Then there is the wizard, Tobin Reedle. The sixth vial was oil of slipperiness. You are meant to rub it on your boots, friends, not drink it. He has slid off every bench in the building, two cots, and one visiting priest. His spoon will not stay in his hand, so we feed him broth through a reed.</p>\n\n<p>\"We did the arithmetic,\" Brisa told me from somewhere near the window. \"Twenty-five gold a vial is robbery. Drinking them is free.\" I gently pointed out that my clinic is not free, and that I had also done the arithmetic.</p>\n\n<p>The old herbals have a line about this: never taste what you cannot name. The Brindlemoor Alchemists' Circle went further last spring and tallied 340 delvers who drank unknown vials. Fewer than half got anything useful, and one in nine needed a priest by sundown. I know these numbers by heart. You would be amazed how often I recite them to people lying on my floor.</p>\n\n<p>This is the third party this month. The Fourth Attempt <a href=\"/a/unidentified-potions-party-drinks-nine-infirmary-wendell\">drank nine unidentified potions</a> on the first, and the Brass Kettle Company <a href=\"/a/unidentified-potions-brass-kettle-healing-last-vial\">went through eleven</a> to find the healing one, which was naturally the last. I am starting to think the Undermaw leaves them out as bait.</p>\n\n<p>So, gently, here is the arithmetic. Identify: 150 gold, done by teatime, and nobody floats. My clinic: 610 gold, one ruined ceiling, and a cat with opinions. The sage is cheaper, friends. The sage is always cheaper. My friend Nyx tells me someone is selling a gadget that names a potion from a sketch of the bottle. Go outside, Nyx.</p>\n\n<p>The invisible fighter should wear a bell until it wears off, which the clinic expects by Tuesday. The floating cleric should stay tethered. For all of them, I prescribe a pot of potato-and-leek, eaten slowly, with both feet on the floor if you can manage it.</p>\n\n<p><em>Rest well, friends. — Brother Wendell</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Sage Who Never Guesses",
+          "text": "A town sage charges 25 gold a vial to cast Identify, and adventurers grumble that she's padding her prices. She hires the party to recover a stolen satchel of potions before the thieves start drinking them, because one vial in the batch is poison and she's the only one who knows which."
+        },
+        "npc": {
+          "name": "Marla Quillfeather",
+          "role": "Potion sage and appraiser",
+          "want": "She wants the stolen satchel back before anyone drinks from it.",
+          "secret": "She mislabeled the poison vial herself last week and can't tell it apart from a potion of healing without casting Identify again.",
+          "race": "gnome",
+          "gender": "female",
+          "kind": "magic"
+        },
+        "location": {
+          "name": "The Corked Owl Appraisals",
+          "text": "A cramped shop where every shelf holds unlabeled vials waiting for the sage's spell. A sign by the door lists her fee and, under it, the clinic's fee for comparison.",
+          "tavern": false
+        },
+        "rumor": "Somebody said the last party to skip the sage drank oil of slipperiness and slid clear across the market square, and the potion of invisibility one hasn't been seen since, which I suppose is the point."
+      },
+      "fiction": true
     }
   ]
 }

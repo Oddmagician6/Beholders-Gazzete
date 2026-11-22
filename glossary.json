@@ -1,5 +1,5 @@
 {
-    "generated":  "2026-11-21",
+    "generated":  "2026-11-22",
     "writers":  [
                     {
                         "id":  "ottoline-vex",
@@ -30,8 +30,13 @@
                                            "name":  "Grashka Ironjaw"
                                        }
                                    ],
-                        "article_count":  36,
+                        "article_count":  37,
                         "articles":  [
+                                         {
+                                             "id":  "arcane-lock-council-chamber-password-goat",
+                                             "title":  "Wizard\u0027s Arcane Lock Seals Council Out; Nobody Wrote Password",
+                                             "date":  "2026-11-22"
+                                         },
                                          {
                                              "id":  "bard-suggestion-spell-900-voters-goat-rally",
                                              "title":  "Bard\u0027s Suggestion Spell Makes 900 Voters Agree With a Goat",
@@ -51,11 +56,6 @@
                                              "id":  "zone-of-truth-council-hearing-party-confesses",
                                              "title":  "Party Casts Zone of Truth to Prove Innocence, Confesses All",
                                              "date":  "2026-11-12"
-                                         },
-                                         {
-                                             "id":  "halfling-feastwarden-feast-2000-brindlemoor",
-                                             "title":  "Halfling Feastwarden Promises Feast for 2,000, Has No Menu",
-                                             "date":  "2026-11-09"
                                          }
                                      ]
                     },
@@ -199,8 +199,13 @@
                                            "name":  "Sterling Vanmoor"
                                        }
                                    ],
-                        "article_count":  36,
+                        "article_count":  37,
                         "articles":  [
+                                         {
+                                             "id":  "earth-elemental-snow-shovellers-picket-party",
+                                             "title":  "Party\u0027s Earth Elemental Clears Snow, Cobbles and Half a Wall",
+                                             "date":  "2026-11-22"
+                                         },
                                          {
                                              "id":  "piercers-mine-guild-sends-hats-not-helmets",
                                              "title":  "Piercers Fall in Mine; Guild Sends Party Hats, Not Helmets",
@@ -220,11 +225,6 @@
                                              "id":  "kobolds-strike-trapped-picket-line-adventuring-party",
                                              "title":  "Party Hired to Clear Out Kobolds Finds Trapped Picket Line",
                                              "date":  "2026-11-13"
-                                         },
-                                         {
-                                             "id":  "ettin-porter-loot-split-two-shares",
-                                             "title":  "Loot Split: Ettin Porter\u0027s Two Heads Each Want a Share",
-                                             "date":  "2026-11-10"
                                          }
                                      ]
                     },
@@ -363,8 +363,13 @@
                                            "name":  "Nyx Spindlecoil"
                                        }
                                    ],
-                        "article_count":  37,
+                        "article_count":  38,
                         "articles":  [
+                                         {
+                                             "id":  "unidentified-potions-identify-fee-pinchpenny-company",
+                                             "title":  "Party Drinks 6 Unidentified Potions to Skip the Identify Fee",
+                                             "date":  "2026-11-22"
+                                         },
                                          {
                                              "id":  "giant-boar-duchess-9-piglets-feast",
                                              "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
@@ -384,11 +389,6 @@
                                              "id":  "wisp-party-loses-9-patients-glimmerfen",
                                              "title":  "Party Follows Helpful Will-o\u0027-Wisp, Loses 9 Patients",
                                              "date":  "2026-11-11"
-                                         },
-                                         {
-                                             "id":  "shrieker-mushrooms-tanners-row-sleepless-wendell",
-                                             "title":  "Adventurers Bring Home Shriekers; Tanner\u0027s Row Can\u0027t Sleep",
-                                             "date":  "2026-11-09"
                                          }
                                      ]
                     },
@@ -423,8 +423,13 @@
                                            "name":  "Hollis Delvewright"
                                        }
                                    ],
-                        "article_count":  39,
+                        "article_count":  40,
                         "articles":  [
+                                         {
+                                             "id":  "kobolds-120-feast-pies-thank-you-notes",
+                                             "title":  "Kobolds Take 120 Feast Pies, Leave Thank-You Notes",
+                                             "date":  "2026-11-22"
+                                         },
                                          {
                                              "id":  "gust-of-wind-market-leaves-14-stalls",
                                              "title":  "Wizard\u0027s Gust of Wind Clears Market Leaves and 14 Stalls",
@@ -444,11 +449,6 @@
                                              "id":  "druid-giant-frog-jumping-contest-judges-hat",
                                              "title":  "Druid Wild Shapes Into Giant Frog, Wins Fair, Eats Judge\u0027s Hat",
                                              "date":  "2026-11-14"
-                                         },
-                                         {
-                                             "id":  "giant-boar-tavern-stable-duchess-harrowgate",
-                                             "title":  "Giant Boar Rents Tavern Stable; Innkeeper Names Her Duchess",
-                                             "date":  "2026-11-12"
                                          }
                                      ]
                     },
@@ -598,32 +598,32 @@
                       "short":  "Brindlemoor",
                       "type":  "place",
                       "blurb":  "A frontier market town built on top of the entrance to the Undermaw. Its economy runs on adventurers, and so does its hospital.",
-                      "appearances":  124,
+                      "appearances":  128,
                       "articles":  [
+                                       {
+                                           "id":  "arcane-lock-council-chamber-password-goat",
+                                           "title":  "Wizard\u0027s Arcane Lock Seals Council Out; Nobody Wrote Password",
+                                           "date":  "2026-11-22"
+                                       },
+                                       {
+                                           "id":  "earth-elemental-snow-shovellers-picket-party",
+                                           "title":  "Party\u0027s Earth Elemental Clears Snow, Cobbles and Half a Wall",
+                                           "date":  "2026-11-22"
+                                       },
+                                       {
+                                           "id":  "kobolds-120-feast-pies-thank-you-notes",
+                                           "title":  "Kobolds Take 120 Feast Pies, Leave Thank-You Notes",
+                                           "date":  "2026-11-22"
+                                       },
+                                       {
+                                           "id":  "unidentified-potions-identify-fee-pinchpenny-company",
+                                           "title":  "Party Drinks 6 Unidentified Potions to Skip the Identify Fee",
+                                           "date":  "2026-11-22"
+                                       },
                                        {
                                            "id":  "find-steed-ride-share-paladin-one-star",
                                            "title":  "Paladin\u0027s Find Steed Ride-Share Vanishes Mid-River Over 1 Star",
                                            "date":  "2026-11-21"
-                                       },
-                                       {
-                                           "id":  "giant-crab-feast-stuck-town-gate",
-                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
-                                           "date":  "2026-11-21"
-                                       },
-                                       {
-                                           "id":  "giant-eagles-refuse-updraft-company-escort-duke",
-                                           "title":  "Giant Eagles Refuse Party\u0027s Escort Plan: \u0027Not a Coach Service\u0027",
-                                           "date":  "2026-11-21"
-                                       },
-                                       {
-                                           "id":  "yeti-fur-coats-300-percent-first-snow",
-                                           "title":  "Yeti Fur Coats Up 300% After First Snow; Yetis Unimpressed",
-                                           "date":  "2026-11-21"
-                                       },
-                                       {
-                                           "id":  "giant-boar-duchess-9-piglets-feast",
-                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
-                                           "date":  "2026-11-20"
                                        }
                                    ]
                   },
@@ -734,8 +734,13 @@
                       "short":  "Reeve Fennick",
                       "type":  "person",
                       "blurb":  "Brindlemoor\u0027s chief magistrate. Signs every dungeon permit, every bounty, and every apology to the farmers downwind.",
-                      "appearances":  56,
+                      "appearances":  57,
                       "articles":  [
+                                       {
+                                           "id":  "arcane-lock-council-chamber-password-goat",
+                                           "title":  "Wizard\u0027s Arcane Lock Seals Council Out; Nobody Wrote Password",
+                                           "date":  "2026-11-22"
+                                       },
                                        {
                                            "id":  "salamander-oven-subscription-lapses-40-pies",
                                            "title":  "Salamander Oven Subscription Lapses Mid-Bake; 40 Pies Half-Done",
@@ -755,11 +760,6 @@
                                            "id":  "red-dragon-lich-feast-invites-fire-marshal",
                                            "title":  "Red Dragon and Lich Demand Feast Invites; Fire Marshal Says No",
                                            "date":  "2026-11-16"
-                                       },
-                                       {
-                                           "id":  "feast-2000-tiered-seating-heroes-feast-bid",
-                                           "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
-                                           "date":  "2026-11-15"
                                        }
                                    ]
                   },
@@ -768,8 +768,18 @@
                       "short":  "the Undermaw",
                       "type":  "place",
                       "blurb":  "The dungeon under Brindlemoor. Its levels are numbered, its bottom has never been found, and the Guild calls it mostly cleared.",
-                      "appearances":  54,
+                      "appearances":  56,
                       "articles":  [
+                                       {
+                                           "id":  "earth-elemental-snow-shovellers-picket-party",
+                                           "title":  "Party\u0027s Earth Elemental Clears Snow, Cobbles and Half a Wall",
+                                           "date":  "2026-11-22"
+                                       },
+                                       {
+                                           "id":  "unidentified-potions-identify-fee-pinchpenny-company",
+                                           "title":  "Party Drinks 6 Unidentified Potions to Skip the Identify Fee",
+                                           "date":  "2026-11-22"
+                                       },
                                        {
                                            "id":  "gust-of-wind-market-leaves-14-stalls",
                                            "title":  "Wizard\u0027s Gust of Wind Clears Market Leaves and 14 Stalls",
@@ -784,16 +794,6 @@
                                            "id":  "identify-spell-fees-party-drinks-loot",
                                            "title":  "Identify Fees Jump 60%, So Party Tests Its Loot by Drinking It",
                                            "date":  "2026-11-15"
-                                       },
-                                       {
-                                           "id":  "owlbear-cub-future-mount-copper-saddle",
-                                           "title":  "Party Adopts Owlbear Cub as \u0027Future Mount\u0027; Clinic Visits: 11",
-                                           "date":  "2026-11-14"
-                                       },
-                                       {
-                                           "id":  "kobolds-strike-trapped-picket-line-adventuring-party",
-                                           "title":  "Party Hired to Clear Out Kobolds Finds Trapped Picket Line",
-                                           "date":  "2026-11-13"
                                        }
                                    ]
                   },
@@ -832,6 +832,40 @@
                                    ]
                   },
                   {
+                      "name":  "The Copper Bucket Company",
+                      "short":  "the Company",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor adventuring party that brought a sack of shrieker mushrooms home from the Undermaw to sell, and kept Tanner\u0027s Row awake for four nights.",
+                      "appearances":  46,
+                      "articles":  [
+                                       {
+                                           "id":  "arcane-lock-council-chamber-password-goat",
+                                           "title":  "Wizard\u0027s Arcane Lock Seals Council Out; Nobody Wrote Password",
+                                           "date":  "2026-11-22"
+                                       },
+                                       {
+                                           "id":  "earth-elemental-snow-shovellers-picket-party",
+                                           "title":  "Party\u0027s Earth Elemental Clears Snow, Cobbles and Half a Wall",
+                                           "date":  "2026-11-22"
+                                       },
+                                       {
+                                           "id":  "unidentified-potions-identify-fee-pinchpenny-company",
+                                           "title":  "Party Drinks 6 Unidentified Potions to Skip the Identify Fee",
+                                           "date":  "2026-11-22"
+                                       },
+                                       {
+                                           "id":  "giant-eagles-refuse-updraft-company-escort-duke",
+                                           "title":  "Giant Eagles Refuse Party\u0027s Escort Plan: \u0027Not a Coach Service\u0027",
+                                           "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "gust-of-wind-market-leaves-14-stalls",
+                                           "title":  "Wizard\u0027s Gust of Wind Clears Market Leaves and 14 Stalls",
+                                           "date":  "2026-11-20"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "High Lord Donwald of the Golden Towers",
                       "short":  "Donwald",
                       "type":  "person",
@@ -866,46 +900,17 @@
                                    ]
                   },
                   {
-                      "name":  "The Copper Bucket Company",
-                      "short":  "the Company",
-                      "type":  "organization",
-                      "blurb":  "A Brindlemoor adventuring party that brought a sack of shrieker mushrooms home from the Undermaw to sell, and kept Tanner\u0027s Row awake for four nights.",
-                      "appearances":  43,
-                      "articles":  [
-                                       {
-                                           "id":  "giant-eagles-refuse-updraft-company-escort-duke",
-                                           "title":  "Giant Eagles Refuse Party\u0027s Escort Plan: \u0027Not a Coach Service\u0027",
-                                           "date":  "2026-11-21"
-                                       },
-                                       {
-                                           "id":  "gust-of-wind-market-leaves-14-stalls",
-                                           "title":  "Wizard\u0027s Gust of Wind Clears Market Leaves and 14 Stalls",
-                                           "date":  "2026-11-20"
-                                       },
-                                       {
-                                           "id":  "unlimited-tiny-hut-10-feet-voidpocket-mule",
-                                           "title":  "\u0027Unlimited\u0027 Tiny Hut Is 10 Feet Wide. Six Heroes, One Mule Tried",
-                                           "date":  "2026-11-20"
-                                       },
-                                       {
-                                           "id":  "bard-suggestion-spell-900-voters-goat-rally",
-                                           "title":  "Bard\u0027s Suggestion Spell Makes 900 Voters Agree With a Goat",
-                                           "date":  "2026-11-19"
-                                       },
-                                       {
-                                           "id":  "major-image-gold-audit-party-loan-ledgerhall",
-                                           "title":  "Major Image Gold Vanishes in Audit; Party Had Borrowed on It",
-                                           "date":  "2026-11-19"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "the Fourth Attempt",
                       "short":  "the Fourth Attempt",
                       "type":  "organization",
                       "blurb":  "An adventuring party named in honor of the first three. Licensed by Chapter 9, popular with bards, unpopular with insurers.",
-                      "appearances":  41,
+                      "appearances":  42,
                       "articles":  [
+                                       {
+                                           "id":  "unidentified-potions-identify-fee-pinchpenny-company",
+                                           "title":  "Party Drinks 6 Unidentified Potions to Skip the Identify Fee",
+                                           "date":  "2026-11-22"
+                                       },
                                        {
                                            "id":  "giant-crab-feast-stuck-town-gate",
                                            "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
@@ -925,11 +930,6 @@
                                            "id":  "giant-boar-tavern-stable-duchess-harrowgate",
                                            "title":  "Giant Boar Rents Tavern Stable; Innkeeper Names Her Duchess",
                                            "date":  "2026-11-12"
-                                       },
-                                       {
-                                           "id":  "giant-boar-feast-alive-fourth-attempt",
-                                           "title":  "Giant Boar Brought Back Alive for Feast. Nobody Said Dead.",
-                                           "date":  "2026-11-11"
                                        }
                                    ]
                   },
@@ -1002,12 +1002,51 @@
                                    ]
                   },
                   {
+                      "name":  "The Sleeping Mule Tavern",
+                      "short":  "the Sleeping Mule",
+                      "type":  "place",
+                      "blurb":  "A Tanner\u0027s Row tavern in Brindlemoor with a deep cellar, a loyal clientele of adventurers, and until recently a very clean walk-in cooler.",
+                      "appearances":  31,
+                      "articles":  [
+                                       {
+                                           "id":  "earth-elemental-snow-shovellers-picket-party",
+                                           "title":  "Party\u0027s Earth Elemental Clears Snow, Cobbles and Half a Wall",
+                                           "date":  "2026-11-22"
+                                       },
+                                       {
+                                           "id":  "kobolds-120-feast-pies-thank-you-notes",
+                                           "title":  "Kobolds Take 120 Feast Pies, Leave Thank-You Notes",
+                                           "date":  "2026-11-22"
+                                       },
+                                       {
+                                           "id":  "giant-crab-feast-stuck-town-gate",
+                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
+                                           "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "carrion-crawler-skeleton-guardpost-level-two",
+                                           "title":  "Carrion Crawler Takes Post After Party Evicts Skeleton Guards",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "giant-boar-duchess-9-piglets-feast",
+                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
+                                           "date":  "2026-11-20"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the City Watch",
                       "short":  "the Watch",
                       "type":  "institution",
                       "blurb":  "Underpaid, overworked, and frequently outmatched by griffins.",
-                      "appearances":  29,
+                      "appearances":  30,
                       "articles":  [
+                                       {
+                                           "id":  "kobolds-120-feast-pies-thank-you-notes",
+                                           "title":  "Kobolds Take 120 Feast Pies, Leave Thank-You Notes",
+                                           "date":  "2026-11-22"
+                                       },
                                        {
                                            "id":  "gust-of-wind-market-leaves-14-stalls",
                                            "title":  "Wizard\u0027s Gust of Wind Clears Market Leaves and 14 Stalls",
@@ -1027,45 +1066,6 @@
                                            "id":  "bard-haggle-2-copper-misses-bounty",
                                            "title":  "Bard Haggles 2 Copper in an Hour, Party Misses 600 gp Bounty",
                                            "date":  "2026-11-07"
-                                       },
-                                       {
-                                           "id":  "gelatinous-cube-storage-rent-brindlemoor-warehouse",
-                                           "title":  "Gelatinous Cube Storage Rents at 2 gp, Eats 11 Crates",
-                                           "date":  "2026-11-05"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "The Sleeping Mule Tavern",
-                      "short":  "the Sleeping Mule",
-                      "type":  "place",
-                      "blurb":  "A Tanner\u0027s Row tavern in Brindlemoor with a deep cellar, a loyal clientele of adventurers, and until recently a very clean walk-in cooler.",
-                      "appearances":  29,
-                      "articles":  [
-                                       {
-                                           "id":  "giant-crab-feast-stuck-town-gate",
-                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
-                                           "date":  "2026-11-21"
-                                       },
-                                       {
-                                           "id":  "carrion-crawler-skeleton-guardpost-level-two",
-                                           "title":  "Carrion Crawler Takes Post After Party Evicts Skeleton Guards",
-                                           "date":  "2026-11-20"
-                                       },
-                                       {
-                                           "id":  "giant-boar-duchess-9-piglets-feast",
-                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
-                                           "date":  "2026-11-20"
-                                       },
-                                       {
-                                           "id":  "bard-suggestion-spell-900-voters-goat-rally",
-                                           "title":  "Bard\u0027s Suggestion Spell Makes 900 Voters Agree With a Goat",
-                                           "date":  "2026-11-19"
-                                       },
-                                       {
-                                           "id":  "thunderwave-tavern-brawl-sleeping-mule-wall",
-                                           "title":  "Thunderwave Ends Tavern Brawl; Tavern Gains a Room",
-                                           "date":  "2026-11-18"
                                        }
                                    ]
                   },
@@ -1308,6 +1308,40 @@
                                    ]
                   },
                   {
+                      "name":  "Ashenfold",
+                      "short":  "Ashenfold",
+                      "type":  "place",
+                      "blurb":  "A barony on the near side of the Quillmarch Bridge, forever in talks with its neighbor Brackwater.",
+                      "appearances":  15,
+                      "articles":  [
+                                       {
+                                           "id":  "arcane-lock-council-chamber-password-goat",
+                                           "title":  "Wizard\u0027s Arcane Lock Seals Council Out; Nobody Wrote Password",
+                                           "date":  "2026-11-22"
+                                       },
+                                       {
+                                           "id":  "find-steed-ride-share-paladin-one-star",
+                                           "title":  "Paladin\u0027s Find Steed Ride-Share Vanishes Mid-River Over 1 Star",
+                                           "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "feast-seating-chart-treaty-baronies-turnips",
+                                           "title":  "Rival Baronies RSVP to Feast; Seating Chart Is Now a Treaty",
+                                           "date":  "2026-11-18"
+                                       },
+                                       {
+                                           "id":  "winter-wolves-baronies-hire-same-party",
+                                           "title":  "Winter Wolves Block Road; Both Baronies Hire Same Party",
+                                           "date":  "2026-11-16"
+                                       },
+                                       {
+                                           "id":  "griffon-air-route-teleportation-circle-hopwell",
+                                           "title":  "Griffon Air Route Runs Straight Into a Teleportation Circle",
+                                           "date":  "2026-11-14"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Calimshan",
                       "short":  "Calimshan",
                       "type":  "country",
@@ -1376,36 +1410,36 @@
                                    ]
                   },
                   {
-                      "name":  "Ashenfold",
-                      "short":  "Ashenfold",
-                      "type":  "place",
-                      "blurb":  "A barony on the near side of the Quillmarch Bridge, forever in talks with its neighbor Brackwater.",
+                      "name":  "Feastwarden Odo Plumbrook",
+                      "short":  "Plumbrook",
+                      "type":  "person",
+                      "blurb":  "A Brindlemoor halfling appointed Feastwarden of the Grand Feast. He has promised to feed 2,000 people and has never once doubted it.",
                       "appearances":  14,
                       "articles":  [
                                        {
-                                           "id":  "find-steed-ride-share-paladin-one-star",
-                                           "title":  "Paladin\u0027s Find Steed Ride-Share Vanishes Mid-River Over 1 Star",
+                                           "id":  "kobolds-120-feast-pies-thank-you-notes",
+                                           "title":  "Kobolds Take 120 Feast Pies, Leave Thank-You Notes",
+                                           "date":  "2026-11-22"
+                                       },
+                                       {
+                                           "id":  "giant-crab-feast-stuck-town-gate",
+                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
                                            "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "giant-boar-duchess-9-piglets-feast",
+                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "salamander-oven-subscription-lapses-40-pies",
+                                           "title":  "Salamander Oven Subscription Lapses Mid-Bake; 40 Pies Half-Done",
+                                           "date":  "2026-11-19"
                                        },
                                        {
                                            "id":  "feast-seating-chart-treaty-baronies-turnips",
                                            "title":  "Rival Baronies RSVP to Feast; Seating Chart Is Now a Treaty",
                                            "date":  "2026-11-18"
-                                       },
-                                       {
-                                           "id":  "winter-wolves-baronies-hire-same-party",
-                                           "title":  "Winter Wolves Block Road; Both Baronies Hire Same Party",
-                                           "date":  "2026-11-16"
-                                       },
-                                       {
-                                           "id":  "griffon-air-route-teleportation-circle-hopwell",
-                                           "title":  "Griffon Air Route Runs Straight Into a Teleportation Circle",
-                                           "date":  "2026-11-14"
-                                       },
-                                       {
-                                           "id":  "feast-budget-900-gp-goose-600-plumbrook",
-                                           "title":  "Feast Menu Costs 4,300 gp on a 900 gp Budget; Goose Is 600",
-                                           "date":  "2026-11-10"
                                        }
                                    ]
                   },
@@ -1478,40 +1512,6 @@
                                    ]
                   },
                   {
-                      "name":  "Feastwarden Odo Plumbrook",
-                      "short":  "Plumbrook",
-                      "type":  "person",
-                      "blurb":  "A Brindlemoor halfling appointed Feastwarden of the Grand Feast. He has promised to feed 2,000 people and has never once doubted it.",
-                      "appearances":  13,
-                      "articles":  [
-                                       {
-                                           "id":  "giant-crab-feast-stuck-town-gate",
-                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
-                                           "date":  "2026-11-21"
-                                       },
-                                       {
-                                           "id":  "giant-boar-duchess-9-piglets-feast",
-                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
-                                           "date":  "2026-11-20"
-                                       },
-                                       {
-                                           "id":  "salamander-oven-subscription-lapses-40-pies",
-                                           "title":  "Salamander Oven Subscription Lapses Mid-Bake; 40 Pies Half-Done",
-                                           "date":  "2026-11-19"
-                                       },
-                                       {
-                                           "id":  "feast-seating-chart-treaty-baronies-turnips",
-                                           "title":  "Rival Baronies RSVP to Feast; Seating Chart Is Now a Treaty",
-                                           "date":  "2026-11-18"
-                                       },
-                                       {
-                                           "id":  "griffon-egg-feast-geese-adventuring-party",
-                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
-                                           "date":  "2026-11-17"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Party of the Red Oliphant",
                       "short":  "the Red Oliphants",
                       "type":  "party",
@@ -1546,6 +1546,40 @@
                                    ]
                   },
                   {
+                      "name":  "the Apprentice Scholars\u0027 Lodge",
+                      "short":  "the Lodge",
+                      "type":  "institution",
+                      "blurb":  "The union lodge of Harrowmoor\u0027s apprentice scholars, over 4,000 strong and affiliated with the United Axlewrights.",
+                      "appearances":  13,
+                      "articles":  [
+                                       {
+                                           "id":  "earth-elemental-snow-shovellers-picket-party",
+                                           "title":  "Party\u0027s Earth Elemental Clears Snow, Cobbles and Half a Wall",
+                                           "date":  "2026-11-22"
+                                       },
+                                       {
+                                           "id":  "griffon-egg-feast-geese-adventuring-party",
+                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
+                                           "date":  "2026-11-17"
+                                       },
+                                       {
+                                           "id":  "griffon-air-route-teleportation-circle-hopwell",
+                                           "title":  "Griffon Air Route Runs Straight Into a Teleportation Circle",
+                                           "date":  "2026-11-14"
+                                       },
+                                       {
+                                           "id":  "banshee-call-center-service-award-wailwell-support",
+                                           "title":  "Banshee Call Center Wins Service Award; Teacups Do Not",
+                                           "date":  "2026-11-05"
+                                       },
+                                       {
+                                           "id":  "ghost-lamplighters-strike-hallows-eve-brindlemoor",
+                                           "title":  "Ghost Lamplighters Strike on Hallow\u0027s Eve Over Haunt Pay",
+                                           "date":  "2026-10-31"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Brackwater",
                       "short":  "Brackwater",
                       "type":  "place",
@@ -1576,40 +1610,6 @@
                                            "id":  "potion-of-invisibility-envoy-parley-three-days",
                                            "title":  "Potion of Invisibility Envoy Sits Through 3-Day Parley",
                                            "date":  "2026-11-07"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "the Apprentice Scholars\u0027 Lodge",
-                      "short":  "the Lodge",
-                      "type":  "institution",
-                      "blurb":  "The union lodge of Harrowmoor\u0027s apprentice scholars, over 4,000 strong and affiliated with the United Axlewrights.",
-                      "appearances":  12,
-                      "articles":  [
-                                       {
-                                           "id":  "griffon-egg-feast-geese-adventuring-party",
-                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
-                                           "date":  "2026-11-17"
-                                       },
-                                       {
-                                           "id":  "griffon-air-route-teleportation-circle-hopwell",
-                                           "title":  "Griffon Air Route Runs Straight Into a Teleportation Circle",
-                                           "date":  "2026-11-14"
-                                       },
-                                       {
-                                           "id":  "banshee-call-center-service-award-wailwell-support",
-                                           "title":  "Banshee Call Center Wins Service Award; Teacups Do Not",
-                                           "date":  "2026-11-05"
-                                       },
-                                       {
-                                           "id":  "ghost-lamplighters-strike-hallows-eve-brindlemoor",
-                                           "title":  "Ghost Lamplighters Strike on Hallow\u0027s Eve Over Haunt Pay",
-                                           "date":  "2026-10-31"
-                                       },
-                                       {
-                                           "id":  "gelatinous-cube-dishwasher-layoff-40-tankard-crumb",
-                                           "title":  "Gelatinous Cube Replaces 40 Dishwashers at Tavern Chain",
-                                           "date":  "2026-10-27"
                                        }
                                    ]
                   },
@@ -4079,6 +4079,35 @@
                                    ]
                   },
                   {
+                      "name":  "the Rimeback Pass",
+                      "short":  "the Rimeback",
+                      "type":  "place",
+                      "blurb":  "The mountain pass north of Brindlemoor that carries the town\u0027s winter salt, lamp oil, and flour, with a stone toll house at its foot.",
+                      "appearances":  4,
+                      "articles":  [
+                                       {
+                                           "id":  "earth-elemental-snow-shovellers-picket-party",
+                                           "title":  "Party\u0027s Earth Elemental Clears Snow, Cobbles and Half a Wall",
+                                           "date":  "2026-11-22"
+                                       },
+                                       {
+                                           "id":  "giant-eagles-refuse-updraft-company-escort-duke",
+                                           "title":  "Giant Eagles Refuse Party\u0027s Escort Plan: \u0027Not a Coach Service\u0027",
+                                           "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "yeti-fur-coats-300-percent-first-snow",
+                                           "title":  "Yeti Fur Coats Up 300% After First Snow; Yetis Unimpressed",
+                                           "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "frost-giant-wages-rimeback-pass-ninefathom",
+                                           "title":  "Frost Giant Clearing Snowed-In Pass Wants Giant-Sized Wages",
+                                           "date":  "2026-11-17"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Wagonmasters\u0027 Brotherhood",
                       "short":  "the Brotherhood",
                       "type":  "institution",
@@ -4253,6 +4282,30 @@
                                            "id":  "city-workers-strike-corvallow-240-library",
                                            "title":  "Corvallow City Strike: 240 Walk Out, Library Left to Gargoyle",
                                            "date":  "2026-10-16"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Councilor Maldrith Quennel",
+                      "short":  "Quennel",
+                      "type":  "person",
+                      "blurb":  "A lich who sits for the Chandler Ward on Brindlemoor\u0027s Burgess Council and has lived in a crypt on Chandler Lane for about three hundred years. He asks for everything in writing.",
+                      "appearances":  3,
+                      "articles":  [
+                                       {
+                                           "id":  "arcane-lock-council-chamber-password-goat",
+                                           "title":  "Wizard\u0027s Arcane Lock Seals Council Out; Nobody Wrote Password",
+                                           "date":  "2026-11-22"
+                                       },
+                                       {
+                                           "id":  "red-dragon-lich-feast-invites-fire-marshal",
+                                           "title":  "Red Dragon and Lich Demand Feast Invites; Fire Marshal Says No",
+                                           "date":  "2026-11-16"
+                                       },
+                                       {
+                                           "id":  "lich-files-brindlemoor-council-seat-charter-silent",
+                                           "title":  "Lich Files for Brindlemoor Council Seat; Charter Silent on Death",
+                                           "date":  "2026-10-29"
                                        }
                                    ]
                   },
@@ -4929,30 +4982,6 @@
                                    ]
                   },
                   {
-                      "name":  "the Rimeback Pass",
-                      "short":  "the Rimeback",
-                      "type":  "place",
-                      "blurb":  "The mountain pass north of Brindlemoor that carries the town\u0027s winter salt, lamp oil, and flour, with a stone toll house at its foot.",
-                      "appearances":  3,
-                      "articles":  [
-                                       {
-                                           "id":  "giant-eagles-refuse-updraft-company-escort-duke",
-                                           "title":  "Giant Eagles Refuse Party\u0027s Escort Plan: \u0027Not a Coach Service\u0027",
-                                           "date":  "2026-11-21"
-                                       },
-                                       {
-                                           "id":  "yeti-fur-coats-300-percent-first-snow",
-                                           "title":  "Yeti Fur Coats Up 300% After First Snow; Yetis Unimpressed",
-                                           "date":  "2026-11-21"
-                                       },
-                                       {
-                                           "id":  "frost-giant-wages-rimeback-pass-ninefathom",
-                                           "title":  "Frost Giant Clearing Snowed-In Pass Wants Giant-Sized Wages",
-                                           "date":  "2026-11-17"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "the Stingmantas of Tampering Bay",
                       "short":  "the Stingmantas",
                       "type":  "company",
@@ -5349,25 +5378,6 @@
                                            "id":  "federal-reserve-gold-leaf",
                                            "title":  "Federal Reserve of Waterdeep Prints Too Much Gold Leaf",
                                            "date":  "2026-04-16"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Councilor Maldrith Quennel",
-                      "short":  "Quennel",
-                      "type":  "person",
-                      "blurb":  "A lich who sits for the Chandler Ward on Brindlemoor\u0027s Burgess Council and has lived in a crypt on Chandler Lane for about three hundred years. He asks for everything in writing.",
-                      "appearances":  2,
-                      "articles":  [
-                                       {
-                                           "id":  "red-dragon-lich-feast-invites-fire-marshal",
-                                           "title":  "Red Dragon and Lich Demand Feast Invites; Fire Marshal Says No",
-                                           "date":  "2026-11-16"
-                                       },
-                                       {
-                                           "id":  "lich-files-brindlemoor-council-seat-charter-silent",
-                                           "title":  "Lich Files for Brindlemoor Council Seat; Charter Silent on Death",
-                                           "date":  "2026-10-29"
                                        }
                                    ]
                   },
@@ -7172,6 +7182,20 @@
                                            "id":  "city-council-unqualified-innkeeper-wins-12635-votes",
                                            "title":  "Unqualified Innkeeper Wins City Council Seat, 12,635 Votes",
                                            "date":  "2026-10-20"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Bryony Thatchwell",
+                      "short":  "Thatchwell",
+                      "type":  "person",
+                      "blurb":  "The druid of the Lean Winter Company, whose earth elemental cleared Tanner\u0027s Row of snow, cobbles and a fence after she sneezed.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "earth-elemental-snow-shovellers-picket-party",
+                                           "title":  "Party\u0027s Earth Elemental Clears Snow, Cobbles and Half a Wall",
+                                           "date":  "2026-11-22"
                                        }
                                    ]
                   },
@@ -9612,6 +9636,20 @@
                                    ]
                   },
                   {
+                      "name":  "Ozzle Pinchwick of the Clatterhole",
+                      "short":  "Pinchwick",
+                      "type":  "person",
+                      "blurb":  "The kobold who speaks for the Clatterhole warren. Wears a polished pie tin as a hat and digs inch-deep pit traps with cushions in them for guests.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "kobolds-120-feast-pies-thank-you-notes",
+                                           "title":  "Kobolds Take 120 Feast Pies, Leave Thank-You Notes",
+                                           "date":  "2026-11-22"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Palanteer Seeing-Stones",
                       "short":  "Palanteer",
                       "type":  "company",
@@ -9762,6 +9800,20 @@
                                            "id":  "ai-chips-open-source-gargoogle-amazoom-envydia",
                                            "title":  "Rivals Open-Source Tools to Pry Devs Off Envydia AI Chips",
                                            "date":  "2026-10-21"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Quenby Marrowind",
+                      "short":  "Mr. Marrowind",
+                      "type":  "person",
+                      "blurb":  "Wizard of the Fairlatch Company. Cast the Arcane Lock that shut Brindlemoor\u0027s Burgess Council out of its own chamber.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "arcane-lock-council-chamber-password-goat",
+                                           "title":  "Wizard\u0027s Arcane Lock Seals Council Out; Nobody Wrote Password",
+                                           "date":  "2026-11-22"
                                        }
                                    ]
                   },
@@ -10564,6 +10616,20 @@
                                    ]
                   },
                   {
+                      "name":  "the Brindlemoor Shovellers\u0027 Lodge",
+                      "short":  "the Shovellers\u0027 Lodge",
+                      "type":  "organization",
+                      "blurb":  "The union of Brindlemoor\u0027s snow shovellers: 31 members, dawn starts, and a hot lunch written into every contract.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "earth-elemental-snow-shovellers-picket-party",
+                                           "title":  "Party\u0027s Earth Elemental Clears Snow, Cobbles and Half a Wall",
+                                           "date":  "2026-11-22"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Bureau of Mounts \u0026 Wagons",
                       "short":  "the Mounts Bureau",
                       "type":  "agency",
@@ -10616,6 +10682,20 @@
                                            "id":  "cursed-ring-fighter-invests-party-loot",
                                            "title":  "Cursed Ring Bought As-Is Makes Fighter Invest Party\u0027s Loot",
                                            "date":  "2026-11-13"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Clatterhole",
+                      "short":  "the Clatterhole",
+                      "type":  "organization",
+                      "blurb":  "A small kobold warren under an old cooperage on Tanner\u0027s Row, behind a door the size of a breadbox. Its kobolds are earnest, polite, and very fond of harmless traps.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "kobolds-120-feast-pies-thank-you-notes",
+                                           "title":  "Kobolds Take 120 Feast Pies, Leave Thank-You Notes",
+                                           "date":  "2026-11-22"
                                        }
                                    ]
                   },
@@ -10826,6 +10906,20 @@
                                            "id":  "golf-course-tree-removal-430-trees-donwald",
                                            "title":  "Judge Halts Golf Course Tree Removal; Dryads Cheer",
                                            "date":  "2026-10-27"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Fairlatch Company",
+                      "short":  "the Fairlatch Company",
+                      "type":  "organization",
+                      "blurb":  "A four-member adventuring party hired by Brindlemoor\u0027s Burgess Council to secure its chamber overnight, which it did, permanently.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "arcane-lock-council-chamber-password-goat",
+                                           "title":  "Wizard\u0027s Arcane Lock Seals Council Out; Nobody Wrote Password",
+                                           "date":  "2026-11-22"
                                        }
                                    ]
                   },
@@ -11208,6 +11302,20 @@
                                    ]
                   },
                   {
+                      "name":  "the Lean Winter Company",
+                      "short":  "the Lean Winter",
+                      "type":  "organization",
+                      "blurb":  "A four-member Brindlemoor adventuring party that ran out of coin one winter and underbid the snow shovellers with a conjured earth elemental.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "earth-elemental-snow-shovellers-picket-party",
+                                           "title":  "Party\u0027s Earth Elemental Clears Snow, Cobbles and Half a Wall",
+                                           "date":  "2026-11-22"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Lindenwick Educators\u0027 Guild",
                       "short":  "the Educators\u0027 Guild",
                       "type":  "institution",
@@ -11442,6 +11550,20 @@
                                            "id":  "retail-sales-lamp-oil-merchant-ministry",
                                            "title":  "Retail Sales Rise 0.8%, Mostly Lamp Oil Costs",
                                            "date":  "2026-10-16"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Pinchpenny Company",
+                      "short":  "the Pinchpenny Company",
+                      "type":  "organization",
+                      "blurb":  "A four-member Brindlemoor adventuring party that drank six unidentified potions in one night to save 150 gold on an Identify spell, and ran up a 610-gold clinic bill.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "unidentified-potions-identify-fee-pinchpenny-company",
+                                           "title":  "Party Drinks 6 Unidentified Potions to Skip the Identify Fee",
+                                           "date":  "2026-11-22"
                                        }
                                    ]
                   },
@@ -12156,6 +12278,20 @@
                                            "id":  "antitrust-merger-kimberlee-kenvew-40b-gp",
                                            "title":  "Antitrust Board Clears 40B GP Merger of Tissues and Tonics",
                                            "date":  "2026-10-19"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Ulla Coldmitten",
+                      "short":  "Coldmitten",
+                      "type":  "person",
+                      "blurb":  "A Brindlemoor snow shoveller of twenty-two winters and steward of the Shovellers\u0027 Lodge, who knows where every cobble on Tanner\u0027s Row is.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "earth-elemental-snow-shovellers-picket-party",
+                                           "title":  "Party\u0027s Earth Elemental Clears Snow, Cobbles and Half a Wall",
+                                           "date":  "2026-11-22"
                                        }
                                    ]
                   },
