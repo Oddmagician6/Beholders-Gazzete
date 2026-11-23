@@ -517,6 +517,34 @@
       "hashtags": "#UnidentifiedPotions #PinchpennyCompany #BrotherWendell #Identify",
       "publishAt": "2026-11-23T02:00:00Z",
       "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "water-elemental-cranberry-bogs-sauce-4-sp",
+      "release_tag": "reel-stage-nov23-cranberry-ig-20261123",
+      "hashtags": "#WaterElemental #RedwaterBogs #CranberrySauce #GrandFeast",
+      "publishAt": "2026-11-23T17:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "gricks-feast-dinner-unsearched-room-long-rest",
+      "release_tag": "reel-stage-nov23-gricks-ig-20261123",
+      "hashtags": "#Gricks #Undermaw #LarkfallowCompany #LongRest",
+      "publishAt": "2026-11-23T20:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "prestidigitation-seasoning-trail-rations-one-hour",
+      "release_tag": "reel-stage-nov23-hardtack-ig-20261123",
+      "hashtags": "#Prestidigitation #Hardtack #TrailRations #BramblegateIrregulars",
+      "publishAt": "2026-11-23T23:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "heroes-feast-1000-gp-party-dragon-out",
+      "release_tag": "reel-stage-nov23-feast-ig-20261123",
+      "hashtags": "#HeroesFeast #GreenDragon #BrightmantleCompany #SaltmarrowBanquets",
+      "publishAt": "2026-11-24T02:00:00Z",
+      "custom_artwork_confirmed": true
     }
   ]
 }
