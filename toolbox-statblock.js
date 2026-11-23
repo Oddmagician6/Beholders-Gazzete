@@ -344,7 +344,23 @@ function sbPf2ePlain(text) {
 }
 
 function sbPf2eCost(cost) {
-    return cost ? ` <span class="sb-act" title="${SB_PF2E_COST_WORDS[cost]}" aria-label="${SB_PF2E_COST_WORDS[cost]}">${SB_PF2E_COST[cost]}</span>` : '';
+    if (!cost) return '';
+    const range = sbPf2eCostRange(cost);
+    const glyph = range ? `${SB_PF2E_COST[range[0]]} ${range[1]} ${SB_PF2E_COST[range[2]]}` : SB_PF2E_COST[cost];
+    return ` <span class="sb-act" title="${sbPf2eCostWords(cost)}" aria-label="${sbPf2eCostWords(cost)}">${glyph}</span>`;
+}
+
+// A variable cost ('1-3' one to three actions, '1/2' one or two; B970): [low, 'to' | 'or', high], or null.
+function sbPf2eCostRange(cost) {
+    const m = /^([1-3])([-/])([1-3])$/.exec(cost);
+    return m ? [m[1], m[2] === '-' ? 'to' : 'or', m[3]] : null;
+}
+
+function sbPf2eCostWords(cost) {
+    const range = sbPf2eCostRange(cost);
+    if (!range) return SB_PF2E_COST_WORDS[cost] || '';
+    const n = ['', 'one', 'two', 'three'];
+    return `[${n[range[0]]} ${range[1]} ${n[range[2]]} actions]`;
 }
 
 // An ability: its name, action cost, and traits run into the first line; "- " lines make a list.
@@ -367,7 +383,9 @@ function sbPf2eAbility([name, cost, traits, text]) {
 }
 
 function sbPf2eStrike([ranged, name, bonus, traits, dmg]) {
-    return { kind: ranged ? 'Ranged' : 'Melee', text: `${name.toLowerCase()} ${sbPf2eMap(bonus, traits)}${traits.length ? ` (${traits.join(', ')})` : ''}`, dmg };
+    // A Strike with no damage roll ("Tongue Grab") is printed as an Effect (B976).
+    return { kind: ranged ? 'Ranged' : 'Melee', text: `${name.toLowerCase()} ${sbPf2eMap(bonus, traits)}${traits.length ? ` (${traits.join(', ')})` : ''}`, dmg,
+        label: /\d/.test(dmg) ? 'Damage' : 'Effect' };
 }
 
 // A rank's spell list ("fireball (×2), invisibility (at will, self only)"): each spell with a
@@ -431,7 +449,7 @@ function sbPf2eHtml(m, block = null) {
         </div>
         <div class="sb-props">
             ${line('Speed', b.sp)}
-            ${(b.st || []).map(sbPf2eStrike).map(s => `<p class="sb-feat"><strong>${s.kind}</strong>${sbPf2eCost('1')} ${esc(s.text)}, <strong>Damage</strong> ${esc(s.dmg)}</p>`).join('')}
+            ${(b.st || []).map(sbPf2eStrike).map(s => `<p class="sb-feat"><strong>${s.kind}</strong>${sbPf2eCost('1')} ${esc(s.text)}, <strong>${s.label}</strong> ${esc(s.dmg)}</p>`).join('')}
             ${(b.sc || []).map(sbPf2eSpells).map(s => `<div class="sb-feature"><p class="sb-feat"><strong>${esc(s.name)}</strong> ${s.head ? `${esc(s.head)}; ` : ''}${s.ranks.map(([r, l]) => `<strong>${esc(r)}</strong> ${sbPf2eSpellList(l)}`).join('; ')}</p><div class="sb-spell-detail" hidden></div></div>`).join('')}
             ${abilities(b.oa)}
         </div>`;
@@ -441,7 +459,7 @@ function sbPf2eText(m, block = null) {
     const b = block || (blocksReady() && sbOwn(PF2E_BLOCKS, m.id));
     if (!b) return '';
     const ability = ([name, cost, traits, text]) =>
-        `${name}${cost ? ` ${SB_PF2E_COST_WORDS[cost]}` : ''}${traits.length ? ` (${traits.join(', ')})` : ''} ${sbPf2ePlain(text).replace(/\n+/g, ' ')}`.trim();
+        `${name}${cost ? ` ${sbPf2eCostWords(cost)}` : ''}${traits.length ? ` (${traits.join(', ')})` : ''} ${sbPf2ePlain(text).replace(/\n+/g, ' ')}`.trim();
     const d = sbPf2eDefenses(m, b);
     return [
         `${m.name.toUpperCase()} (CREATURE ${String(m.level).replace("-", "−")})`, sbPf2eTraits(m).join(', '),
@@ -453,7 +471,7 @@ function sbPf2eText(m, block = null) {
         `HP ${d.hp[0]}${d.hp.slice(1).filter(([, v]) => v).map(([k, v]) => `; ${k} ${v}`).join('')}`,
         ...(b.da || []).map(ability),
         `Speed ${b.sp}`,
-        ...(b.st || []).map(sbPf2eStrike).map(s => `${s.kind} [one action] ${s.text}, Damage ${s.dmg}`),
+        ...(b.st || []).map(sbPf2eStrike).map(s => `${s.kind} [one action] ${s.text}, ${s.label} ${s.dmg}`),
         ...(b.sc || []).map(sbPf2eSpells).map(s => `${s.name} ${s.head ? `${s.head}; ` : ''}${s.ranks.map(([r, l]) => `${r} ${l}`).join('; ')}`),
         ...(b.oa || []).map(ability)
     ].filter(Boolean).join('\n');
@@ -519,7 +537,7 @@ function sbPf2eHazardText(h) {
     const p = sbPf2eHazardParts(h);
     const flat = t => sbPf2ePlain(t).replace(/\n+/g, ' ');
     const ability = ([name, cost, traits, text]) =>
-        `${name}${cost ? ` ${SB_PF2E_COST_WORDS[cost]}` : ''}${traits.length ? ` (${traits.join(', ')})` : ''} ${flat(text)}`.trim();
+        `${name}${cost ? ` ${sbPf2eCostWords(cost)}` : ''}${traits.length ? ` (${traits.join(', ')})` : ''} ${flat(text)}`.trim();
     return [
         `${h.n.toUpperCase()} (${p.level.toUpperCase()})`, p.traits.join(', '),
         p.stealth && `Stealth ${flat(p.stealth)}`, h.ds && `Description ${flat(h.ds)}`, h.dis && `Disable ${flat(h.dis)}`,

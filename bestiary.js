@@ -146,6 +146,13 @@ function bstLinkParams(params) {
     return typeof rulesLinkParams === 'function' ? rulesLinkParams(params) : params;
 }
 
+// A shared link to one monster. An SRD 5.2 addition shown among the 2014 monsters (the additions switch
+// is the reader's own) opens with the 2024 rules, where everyone has it (B980).
+function bstShareParams(m) {
+    const added = m.v52 && typeof rulesVersion === 'function' && rulesVersion() === '2014';
+    return added ? { m: m.id, rules: '2024' } : { m: m.id };
+}
+
 function render() {
     const f = filters();
     const list = filtered(f);
@@ -192,8 +199,13 @@ function toggleRow(id) {
         open.delete(id);
         openIds = openIds.filter(x => !Object.hasOwn(MONSTER_BY_ID, x) || MONSTER_BY_ID[x].id !== id);
     } else {
-        // The address holds 12 at most: a 13th wouldn't come back on a reload.
-        if (openIds.length >= PICKS_MAX) { bstFlash(`⚠️ ${PICKS_MAX} stat blocks open at most. Close one first.`); return; }
+        // The address holds 12 at most: a 13th wouldn't come back on a reload. An asked-for id this
+        // edition has no row for (another edition's monster, or a made-up one) gives up its place first (B981).
+        if (openIds.length >= PICKS_MAX) {
+            const idle = openIds.findIndex(x => !Object.hasOwn(MONSTER_BY_ID, x));
+            if (idle < 0) { bstFlash(`⚠️ ${PICKS_MAX} stat blocks open at most. Close one first.`); return; }
+            openIds.splice(idle, 1);
+        }
         open.add(id);
         openIds.push(id);
     }
@@ -215,7 +227,7 @@ function onListClick(e) {
     else if (act.dataset.act === 'copy') navigator.clipboard.writeText(monsterBlockText(m))
         .then(() => bstFlash(`📋 Copied the ${m.name} stat block.`))
         .catch(() => bstFlash('⚠️ Copy blocked by the browser.'));
-    else if (act.dataset.act === 'link') navigator.clipboard.writeText(`${location.origin}${location.pathname}?${paramsQuery(bstLinkParams({ m: m.id }))}`)
+    else if (act.dataset.act === 'link') navigator.clipboard.writeText(`${location.origin}${location.pathname}?${paramsQuery(bstLinkParams(bstShareParams(m)))}`)
         .then(() => bstFlash(`🔗 Copied a link to the ${m.name}.`))
         .catch(() => bstFlash('⚠️ Copy blocked by the browser.'));
 }
@@ -240,15 +252,26 @@ function loadPicks() {
             return;
         }
         const same = picks.find(x => pickRow(x.id) === pickRow(p.id));
-        if (same) same.count = Math.min(PICK_MAX_COUNT, same.count + count);
+        // Two saved picks on one row (2014's Orc and Thug are both 2024's Tough) show as one; parts keeps
+        // each one's own id and count, so a switch back finds both again (B982).
+        if (same) {
+            same.parts = (same.parts || [{ id: same.id, count: same.count }]).concat({ id: p.id, count });
+            same.count = Math.min(PICK_MAX_COUNT, same.count + count);
+        }
         else if (picks.length < PICKS_MAX) picks.push({ id: p.id, count });
         // Past the list's room (a rules switch let more back in): kept with the parked ones, not dropped at the next save.
         else if (!parked.some(x => x.id === p.id)) parked.push({ id: p.id, count });
     });
 }
 
+// A merged pick saves as its parts while its count is still theirs; once changed here it saves as one.
+function savedPicks() {
+    return picks.flatMap(p => p.parts && p.count === p.parts.reduce((t, x) => t + x.count, 0)
+        ? p.parts.map(x => ({ id: x.id, count: x.count })) : [{ id: p.id, count: p.count }]);
+}
+
 function savePicks() {
-    try { localStorage.setItem(PICKS_KEY, JSON.stringify([...picks, ...parked].slice(0, PICKS_SAVED_MAX))); } catch (e) {
+    try { localStorage.setItem(PICKS_KEY, JSON.stringify([...savedPicks(), ...parked].slice(0, PICKS_SAVED_MAX))); } catch (e) {
         // After the caller's own message ("➕ Orc ×1"), so this one stays on screen.
         queueMicrotask(() => bstFlash("⚠️ This browser wouldn't save the encounter list (storage full or blocked)."));
     }

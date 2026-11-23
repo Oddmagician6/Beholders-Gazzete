@@ -171,6 +171,8 @@ function handoutSourceParams(p) {
 }
 
 const hoPick = (v, list, def = 'random') => list.includes(v) ? v : def;
+// A select of 1..max read the way setFieldValue reads it: the option's exact value, else the default.
+const hoOption = (v, max, def) => /^[1-9]\d?$/.test(v || '') && +v <= max ? +v : def;
 
 // The roll a source names: { from, seed, query, npc | quest | shop, title }, or null.
 function handoutSource(src) {
@@ -190,7 +192,9 @@ function handoutSource(src) {
         if (src.from === 'quest') {
             const job = p.get('job');
             const quest = rollQuest(src.seed, {
-                level: Number(p.get('lvl')) || 3, size: Number(p.get('n')) || 4,
+                // The Quest tab's own choices (level 1-20, party of 1-8, as written there): "05" or "1e1" falls back
+                // to its defaults there, so it does here too, and the handout matches its source link (B977).
+                level: hoOption(p.get('lvl'), 20, 3), size: hoOption(p.get('n'), 8, 4),
                 job: Object.hasOwn(QUEST_JOBS, job) ? job : 'random', world: p.get('world')
             });
             // The Worldbuilder town a Realms job is near (the Quest tab's town=, B537), in place of the rolled city.

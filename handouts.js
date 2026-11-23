@@ -58,11 +58,11 @@ function hoFlash(text) {
 }
 
 // Two clicks for anything that throws away typing.
-function hoArmed(btn, action, needed = true) {
+function hoArmed(btn, action, needed = true, warn = '⚠️ Click again to replace') {
     if (!needed) { action(); return; }
     if (!btn.dataset.armed) {
         btn.dataset.armed = btn.textContent;
-        btn.textContent = '⚠️ Click again to replace';
+        btn.textContent = warn;
         btn._t = setTimeout(() => { btn.textContent = btn.dataset.armed; delete btn.dataset.armed; }, 3000);
         return;
     }
@@ -72,13 +72,29 @@ function hoArmed(btn, action, needed = true) {
     action();
 }
 
+// A first click armed on one handout doesn't count for another: a type switch (or Back) puts every
+// armed button back (B978). hoRenderTypes then writes the Roll button's label for the new type.
+function hoDisarm() {
+    document.querySelectorAll('[data-armed]').forEach(btn => {
+        clearTimeout(btn._t);
+        btn.textContent = btn.dataset.armed;
+        delete btn.dataset.armed;
+    });
+}
+
 // ── URL ───────────────────────────────────────────────────
 function hoParams() {
-    const p = { t: ho.t };
-    const src = hoForm().src;
+    return hoQueryParams(ho.t, hoForm().src);
+}
+
+function hoQueryParams(t, src) {
+    const p = { t };
     if (src) new URLSearchParams(src).forEach((v, k) => { p[k] = p[k] ? [].concat(p[k], v) : v; });
     return p;
 }
+
+// The address of a roll waiting behind Replace / Keep: its type and the link's roll.
+const hoPendingParams = pend => hoQueryParams(pend.t, pend.query);
 
 // Read the address bar: pick the type, and fill it from the roll in the link if that's new.
 function hoApplyUrl() {
@@ -176,8 +192,9 @@ function hoRender(push = false, save = true) {
     hoRenderSource();
     hoRenderPending();
     document.getElementById('ho-ink').checked = ho.ink;
-    // While a link's roll waits, the address keeps that link (a refresh asks again).
-    if (push !== null && !(hoPending && hoPending.t === ho.t)) setUrlParams(hoParams(), push);
+    // While a link's roll waits, the address shows that link (a refresh asks again), also on coming back
+    // to its type from another one (B979).
+    if (push !== null) setUrlParams(hoPending && hoPending.t === ho.t ? hoPendingParams(hoPending) : hoParams(), push);
     if (save) hoSave();
 }
 
@@ -191,6 +208,7 @@ function hoSetType(t) {
         const f = saved && saved.forms && typeof saved.forms === 'object' && saved.forms[t];
         if (f) ho.forms[t] = handoutClean(t, f);
     } catch (e) { /* nothing saved: keep this tab's copy */ }
+    hoDisarm();
     ho.t = t;
     hoRender(true);
 }
@@ -293,6 +311,7 @@ function hoOnSourceClick(e) {
         const t = b.dataset.also;
         const go = () => {
             if (ho.forms[t].src !== src) hoFillFrom(t, src);
+            hoDisarm();
             ho.t = t;
             hoRender(true);
         };
@@ -339,7 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hoPending && hoPending.t === ho.t) hoPending = null;
         hoRender(true);
         hoFlash('🧽 Cleared.');
-    }, !hoIsBlank(ho.t)));
+    }, !hoIsBlank(ho.t), '⚠️ Click again to clear'));
     document.getElementById('ho-ink').addEventListener('change', e => {
         ho.ink = e.target.checked;
         hoRenderPreview();
@@ -348,6 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Back/Forward: another type, or another roll.
     window.addEventListener('popstate', () => {
+        hoDisarm();
         hoApplyUrl();
         hoRender(null);
     });
