@@ -250,9 +250,9 @@ const CB24_HUNTER = {
 };
 const CB24_AFFINITY = ['acid', 'cold', 'fire', 'lightning', 'poison'];
 const CB24_METAMAGIC = {
-    careful: ['Careful Spell', `1 point: up to your CHA modifier creatures pass the spell's save and take no damage on a success.`],
+    careful: ['Careful Spell', `1 point: up to your CHA modifier creatures (at least one) pass the spell's save and take no damage on a success.`],
     distant: ['Distant Spell', '1 point: double the range, or touch becomes 30 ft.'],
-    empowered: ['Empowered Spell', '1 point: reroll up to your CHA modifier damage dice (works with another option).'],
+    empowered: ['Empowered Spell', '1 point: reroll up to your CHA modifier damage dice, at least one (works with another option).'],
     extended: ['Extended Spell', '1 point: double a duration of 1 minute or more (max 24 hours); advantage on its concentration saves.'],
     heightened: ['Heightened Spell', '2 points: one target has disadvantage on saves against the spell.'],
     quickened: ['Quickened Spell', '2 points: an action spell becomes a bonus action (no other 1st-level+ spell that turn).'],
@@ -560,7 +560,7 @@ const CB24_CLASSES = [
         asi: [4, 8, 10, 12, 16],
         features: [
             [1, 'Expertise', x => `Expertise in ${x.L >= 6 ? 'four' : 'two'} of your skills.`],
-            [1, 'Sneak Attack', x => `Once a turn, +${Math.ceil(x.L / 2)}d6 with a finesse or ranged weapon when you have advantage, or an ally is next to the target and you don't have disadvantage.`],
+            [1, 'Sneak Attack', x => `Once a turn, +${Math.ceil(x.L / 2)}d6 with a finesse or ranged weapon when you have advantage, or an ally who isn't incapacitated is next to the target and you don't have disadvantage.`],
             [1, "Thieves' Cant", 'You know Thieves\' Cant and one more language: see Background.'],
             [1, 'Weapon Mastery', 'Use the mastery properties of two kinds of weapons; change them after a long rest.'],
             [2, 'Cunning Action', 'Dash, Disengage, or Hide as a bonus action.'],

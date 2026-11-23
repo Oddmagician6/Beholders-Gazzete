@@ -393,7 +393,7 @@ const NAME_TABLES = {
 const PLURAL_IRREGULAR = {
     Ox: 'Oxen', Mouse: 'Mice', Goose: 'Geese', Foot: 'Feet', Tooth: 'Teeth', Man: 'Men', Woman: 'Women',
     Wolf: 'Wolves', Loaf: 'Loaves', Shelf: 'Shelves', Elf: 'Elves', Dwarf: 'Dwarves', Leaf: 'Leaves', Knife: 'Knives',
-    Calf: 'Calves', Half: 'Halves', Thief: 'Thieves', Staff: 'Staves', Hoof: 'Hooves', Scarf: 'Scarves', Wife: 'Wives',
+    Calf: 'Calves', Half: 'Halves', Thief: 'Thieves', Staff: 'Staves', Hoof: 'Hooves', Scarf: 'Scarves', Wife: 'Wives', Sheaf: 'Sheaves',
     Sheep: 'Sheep', Deer: 'Deer', Fish: 'Fish', Salmon: 'Salmon', Swine: 'Swine', Moose: 'Moose', Die: 'Dice',
     Gnome: 'Gnomes', Cube: 'Cubes', Hart: 'Harts', Scissors: 'Scissors', Halfling: 'Halflings', Kobold: 'Kobolds',
     Mongoose: 'Mongooses', Bass: 'Bass', Cod: 'Cod', Eel: 'Eels', Herring: 'Herring'

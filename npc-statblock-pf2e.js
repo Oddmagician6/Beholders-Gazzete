@@ -142,7 +142,8 @@ const sbPf2ePick = list => list[Math.floor(rand() * list.length)];
 // withSeed so the same seed gives the same block. The pick and the adjustment always draw.
 function rollStatBlock(npc, force = null) {
     const race = SB_PF2E_ANCESTRY[npc.race] ? npc.race : 'human';
-    const fits = ids => (ids || []).filter(id => SB_PF2E_NPCS[id] && sbPf2eFits(SB_PF2E_NPCS[id], race));
+    // Array.isArray: a given role like "constructor" would find Object's own (B941).
+    const fits = ids => (Array.isArray(ids) ? ids : []).filter(id => SB_PF2E_NPCS[id] && sbPf2eFits(SB_PF2E_NPCS[id], race));
     const pool = fits(SB_PF2E_POOLS[npc.profession]).length ? fits(SB_PF2E_POOLS[npc.profession])
         : fits(SB_PF2E_POOLS[npc.professionCategory]).length ? fits(SB_PF2E_POOLS[npc.professionCategory]) : fits(SB_PF2E_POOLS.adventurer);
     const rolled = sbPf2ePick(pool);

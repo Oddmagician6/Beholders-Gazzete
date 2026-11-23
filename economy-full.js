@@ -78,11 +78,11 @@ function updateOverview(items) {
     }
 }
 
-function updateCountdown() {
-    const now = Date.now();   // one clock reading: two could straddle a slot change (-1:-1)
-    const msLeft = Math.max(0, marketSlotStart(now) + MARKET_SLOT_MS - now);
-    const minutes = Math.floor(msLeft / 60000);
-    const seconds = Math.floor((msLeft % 60000) / 1000);
+function updateCountdown(now = Date.now()) {   // one clock reading: two could straddle a slot change (-1:-1)
+    // Whole seconds rounded up: 00:00 only shows as the new slot starts (B950).
+    const left = Math.ceil(Math.max(0, marketSlotStart(now) + MARKET_SLOT_MS - now) / 1000);
+    const minutes = Math.floor(left / 60);
+    const seconds = left % 60;
     document.getElementById('countdown').textContent =
         `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
@@ -110,6 +110,8 @@ function updateAnalysis(items) {
     `;
 }
 
+const catLabel = item => MARKET_CATEGORIES[item.category] || item.category;
+
 function filterAndSort(items) {
     let result = [...items];
 
@@ -131,8 +133,11 @@ function filterAndSort(items) {
     }
 
     switch (document.getElementById('sort-filter').value) {
+        // Categories sort by the label the table shows, not the id (B948).
         case 'name':        result.sort((a, b) => a.name.localeCompare(b.name)); break;
-        case 'category':    result.sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name)); break;
+        case 'name-desc':   result.sort((a, b) => b.name.localeCompare(a.name)); break;
+        case 'category':    result.sort((a, b) => catLabel(a).localeCompare(catLabel(b)) || a.name.localeCompare(b.name)); break;
+        case 'category-desc': result.sort((a, b) => catLabel(b).localeCompare(catLabel(a)) || a.name.localeCompare(b.name)); break;
         case 'base-low':    result.sort((a, b) => a.basePrice - b.basePrice || a.name.localeCompare(b.name)); break;
         case 'base-high':   result.sort((a, b) => b.basePrice - a.basePrice || a.name.localeCompare(b.name)); break;
         case 'price-low':   result.sort((a, b) => a.currentPrice - b.currentPrice); break;
@@ -152,8 +157,8 @@ function renderList() {
 function sortTable(column) {
     const select = document.getElementById('sort-filter');
     const next = {
-        name: 'name',
-        category: 'category',
+        name: select.value === 'name' ? 'name-desc' : 'name',
+        category: select.value === 'category' ? 'category-desc' : 'category',
         basePrice: select.value === 'base-low' ? 'base-high' : 'base-low',
         currentPrice: select.value === 'price-low' ? 'price-high' : 'price-low',
         changePercent: select.value === 'change-up' ? 'change-down' : 'change-up',
@@ -164,15 +169,16 @@ function sortTable(column) {
 
 // Recompute prices only when a new 15-minute slot starts; tick the countdown every second.
 function tick() {
-    const slot = marketSlotStart(Date.now());
+    const now = Date.now();   // one reading, so the slot and its prices agree (B950)
+    const slot = marketSlotStart(now);
     if (slot !== marketSlot) {
         marketSlot = slot;
-        marketItems = marketSnapshot(Date.now());
+        marketItems = marketSnapshot(now);
         renderList();
         updateOverview(marketItems);
         updateAnalysis(marketItems);
     }
-    updateCountdown();
+    updateCountdown(now);
 }
 
 document.addEventListener('DOMContentLoaded', () => {

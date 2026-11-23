@@ -53,7 +53,8 @@ function generateNPC(seed = newSeed(), push = true, pinned = null, given = null)
     }
     if (!given) {
         const was = (currentNPC && currentNPC.given) || {};
-        given = { name: pinned.identity ? was.name : '', role: pinned.job ? was.role : '' };
+        // The god given in the link stays with the kept person (B942).
+        given = { name: pinned.identity ? was.name : '', role: pinned.job ? was.role : '', faith: pinned.identity ? was.faith : '' };
     }
     const opts = Object.fromEntries(Object.entries(NPC_FIELDS).map(([k, id]) => [k, document.getElementById(id).value]));
     const npc = { ...rollNpcPinned({ ...opts, ...given }, seed, pinned), rolledWith: opts };

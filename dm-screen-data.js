@@ -88,7 +88,7 @@ function dsCleanCard(c) {
 }
 
 function dsCleanLayout(l, ids) {
-    if (!l || typeof l !== 'object') return null;
+    if (!l || typeof l !== 'object' || Array.isArray(l)) return null;   // B943: junk can't take a layout slot
     const cardIds = new Set();
     const cards = (Array.isArray(l.cards) ? l.cards : []).map(dsCleanCard).filter(Boolean).slice(0, DS_LIMITS.cards);
     cards.forEach(c => { while (cardIds.has(c.id)) c.id = dsNewId(); cardIds.add(c.id); });

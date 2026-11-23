@@ -479,7 +479,8 @@ function cbFeatWhyNot(c, id, slot) {
     const lv = slot.lv || c.level;
     if (f.L && lv < f.L) return `${f.name} needs level ${f.L}.`;
     if (f.cat === 'style' && !cbHasStyleFeature(c, lv)) return `${f.name} needs the Fighting Style feature.`;
-    if (f.caster && !(cbClass(c.cls, c) || {}).cast) return `${f.name} needs spellcasting.`;
+    // The Spellcasting feature: a warlock's Pact Magic doesn't count (SRD 5.2.1 Boon of Spell Recall, B945).
+    if (f.caster && (!(cbClass(c.cls, c) || {}).cast || c.cls === 'warlock')) return `${f.name} needs the Spellcasting feature.`;
     if (!f.repeat) {
         const taken = cbFeatSlots(c).some(s => s.key !== slot.key && s.feat === id) || (f.cat === 'style' && c.opts.styles.includes(id));
         if (taken) return `You already have ${f.name}.`;
@@ -503,7 +504,8 @@ function cbFeatTodo(c, slot) {
     } else if (f.plus && !slot.plus) out.push(`${f.name}: pick the score it raises.`);
     else if (f.plus && f.plus !== 'any' && !f.plus.includes(slot.plus)) out.push(`${f.name} can't raise ${slot.plus.toUpperCase()}.`);
     if (f.req && f.req.any) {
-        const s = cbScores(c);
+        // The scores before this feat's level: its own +1 (or a later one) can't meet it (B944).
+        const s = cbScores(slot.lv ? { ...c, level: slot.lv - 1 } : c);
         const ok = Object.entries(f.req.any).some(([a, n]) => s[a] >= n);
         if (!ok) out.push(`${f.name} needs ${Object.entries(f.req.any).map(([a, n]) => `${a.toUpperCase()} ${n}`).join(' or ')}.`);
     }

@@ -330,7 +330,10 @@ function marketPrice(item, t) {
   const n = 0.45 * marketNoise('cat:' + item.category, s, 3 * MARKET_DAY_MS)
           + 0.40 * marketNoise(item.id, s, MARKET_DAY_MS)
           + 0.15 * (marketHash(item.id + '#' + s / MARKET_SLOT_MS) * 2 - 1);
-  return Math.max(0.01, Math.round(item.basePrice * (1 + MARKET_SWING * n) * 100) / 100);
+  const cp = Math.round(item.basePrice * (1 + MARKET_SWING * n) * 100);
+  // Rounding to the copper must not carry a cheap item past the ±15% band (5 cp to 6 cp is +20%: B949).
+  const lo = Math.ceil(item.basePrice * (1 - MARKET_SWING) * 100 - 1e-9), hi = Math.floor(item.basePrice * (1 + MARKET_SWING) * 100 + 1e-9);
+  return Math.max(0.01, (lo <= hi ? Math.min(hi, Math.max(lo, cp)) : cp) / 100);
 }
 
 // Snapshot of every item at time t: current price, 24h change, and 7 daily points

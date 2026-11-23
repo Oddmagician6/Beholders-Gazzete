@@ -461,7 +461,9 @@ function rollStatBlock(npc, force = null) {
     // Class and level always draw, so a forced block rolls the rest the same way.
     const base = { ...npc.stats };
     const baseMods = mods(base);
-    const odds = SB_CLASS_ODDS[npc.profession] || SB_CLASS_ODDS[cat] || SB_CLASS_ODDS.adventurer;
+    // Own keys only: a given role like "constructor" must not find Object's own (B941).
+    const own = (t, k) => (Object.hasOwn(t, k) ? t[k] : undefined);
+    const odds = own(SB_CLASS_ODDS, npc.profession) || own(SB_CLASS_ODDS, cat) || SB_CLASS_ODDS.adventurer;
     // Classes that suit the NPC's best scores come up more.
     const rolledCls = sbWeighted(odds.map(([c, w]) => [c, w * Math.pow(2, baseMods[SB_CLASSES[c].key])]));
     const [lo, hiBase] = SB_LEVELS[cat] || [1, 4];
@@ -614,7 +616,7 @@ function rollStatBlock(npc, force = null) {
         const curated = (SB_SPELL_PICKS[klass] && SB_SPELL_PICKS[klass][lvl]) || [];
         const all = typeof SPELLS_DATA !== 'undefined' ? SPELLS_DATA.filter(s => s.level === lvl && s.classes.includes(klass) && !s.hb && (v24 || !s.v52)).map(s => s.name) : [];
         const names = [...new Set([...curated, ...all])].filter(n => !usedSpells.has(n));
-        const school = klass === 'Wizard' && SB_SCHOOLS[npc.profession];
+        const school = klass === 'Wizard' && own(SB_SCHOOLS, npc.profession);
         return names.map(n => {
             let w = curated.includes(n) ? 4 : 1;
             if (school && (sbSpell(n) || {}).school === school) w *= 4;
