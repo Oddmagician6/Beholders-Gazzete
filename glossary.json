@@ -1,5 +1,5 @@
 {
-    "generated":  "2026-11-22",
+    "generated":  "2026-11-23",
     "writers":  [
                     {
                         "id":  "ottoline-vex",
@@ -85,8 +85,13 @@
                                            "name":  "Sterling Vanmoor"
                                        }
                                    ],
-                        "article_count":  39,
+                        "article_count":  40,
                         "articles":  [
+                                         {
+                                             "id":  "water-elemental-cranberry-bogs-sauce-4-sp",
+                                             "title":  "Water Elemental Floods Cranberry Bogs; Sauce Hits 4 sp a Jar",
+                                             "date":  "2026-11-23"
+                                         },
                                          {
                                              "id":  "yeti-fur-coats-300-percent-first-snow",
                                              "title":  "Yeti Fur Coats Up 300% After First Snow; Yetis Unimpressed",
@@ -106,11 +111,6 @@
                                              "id":  "identify-spell-fees-party-drinks-loot",
                                              "title":  "Identify Fees Jump 60%, So Party Tests Its Loot by Drinking It",
                                              "date":  "2026-11-15"
-                                         },
-                                         {
-                                             "id":  "adventuring-party-gems-winter-inn-bill-pretty",
-                                             "title":  "Party Pays Winter Inn Bill in Gems; Keeper Rates Them \u0027Pretty\u0027",
-                                             "date":  "2026-11-12"
                                          }
                                      ]
                     },
@@ -144,8 +144,13 @@
                                            "name":  "Barnaby Tallowmere"
                                        }
                                    ],
-                        "article_count":  36,
+                        "article_count":  37,
                         "articles":  [
+                                         {
+                                             "id":  "heroes-feast-1000-gp-party-dragon-out",
+                                             "title":  "Party Spends 1,000 gp on Heroes\u0027 Feast; Dragon Was Out",
+                                             "date":  "2026-11-23"
+                                         },
                                          {
                                              "id":  "unlimited-tiny-hut-10-feet-voidpocket-mule",
                                              "title":  "\u0027Unlimited\u0027 Tiny Hut Is 10 Feet Wide. Six Heroes, One Mule Tried",
@@ -165,11 +170,6 @@
                                              "id":  "cursed-ring-fighter-invests-party-loot",
                                              "title":  "Cursed Ring Bought As-Is Makes Fighter Invest Party\u0027s Loot",
                                              "date":  "2026-11-13"
-                                         },
-                                         {
-                                             "id":  "reincarnate-spell-upgrade-fighter-badger-second-spring",
-                                             "title":  "Party Pays 450 gp Reincarnate Upgrade; Fighter Is a Badger",
-                                             "date":  "2026-11-10"
                                          }
                                      ]
                     },
@@ -253,8 +253,13 @@
                                            "name":  "Brother Wendell Tumbleberry"
                                        }
                                    ],
-                        "article_count":  38,
+                        "article_count":  39,
                         "articles":  [
+                                         {
+                                             "id":  "prestidigitation-seasoning-trail-rations-one-hour",
+                                             "title":  "Wizard Sells Prestidigitation Seasoning; Flavor Lasts 1 Hour",
+                                             "date":  "2026-11-23"
+                                         },
                                          {
                                              "id":  "find-steed-ride-share-paladin-one-star",
                                              "title":  "Paladin\u0027s Find Steed Ride-Share Vanishes Mid-River Over 1 Star",
@@ -274,11 +279,6 @@
                                              "id":  "magic-mouth-doorbell-recall-snowlatch-password",
                                              "title":  "Magic Mouth Doorbell Recalled for Reciting Party\u0027s Password",
                                              "date":  "2026-11-16"
-                                         },
-                                         {
-                                             "id":  "salamander-oven-30-gp-heat-subscription-feast",
-                                             "title":  "Salamander Oven Rents for 30 gp a Day; Heat Costs Extra",
-                                             "date":  "2026-11-13"
                                          }
                                      ]
                     },
@@ -481,8 +481,13 @@
                                            "name":  "Skritch Mudwhistle"
                                        }
                                    ],
-                        "article_count":  35,
+                        "article_count":  36,
                         "articles":  [
+                                         {
+                                             "id":  "gricks-feast-dinner-unsearched-room-long-rest",
+                                             "title":  "Gricks Eat Party\u0027s Feast Dinner in Room Nobody Searched",
+                                             "date":  "2026-11-23"
+                                         },
                                          {
                                              "id":  "giant-crab-feast-stuck-town-gate",
                                              "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
@@ -502,11 +507,6 @@
                                              "id":  "roper-stalagmite-ranger-fourth-attempt",
                                              "title":  "Roper Was the Stalagmite the Ranger Leaned On",
                                              "date":  "2026-11-15"
-                                         },
-                                         {
-                                             "id":  "prophecies-contradict-all-come-true-fourth-attempt",
-                                             "title":  "13 Prophecies Contradict Each Other. All 13 Come True.",
-                                             "date":  "2026-11-13"
                                          }
                                      ]
                     },
@@ -598,8 +598,23 @@
                       "short":  "Brindlemoor",
                       "type":  "place",
                       "blurb":  "A frontier market town built on top of the entrance to the Undermaw. Its economy runs on adventurers, and so does its hospital.",
-                      "appearances":  128,
+                      "appearances":  131,
                       "articles":  [
+                                       {
+                                           "id":  "gricks-feast-dinner-unsearched-room-long-rest",
+                                           "title":  "Gricks Eat Party\u0027s Feast Dinner in Room Nobody Searched",
+                                           "date":  "2026-11-23"
+                                       },
+                                       {
+                                           "id":  "heroes-feast-1000-gp-party-dragon-out",
+                                           "title":  "Party Spends 1,000 gp on Heroes\u0027 Feast; Dragon Was Out",
+                                           "date":  "2026-11-23"
+                                       },
+                                       {
+                                           "id":  "water-elemental-cranberry-bogs-sauce-4-sp",
+                                           "title":  "Water Elemental Floods Cranberry Bogs; Sauce Hits 4 sp a Jar",
+                                           "date":  "2026-11-23"
+                                       },
                                        {
                                            "id":  "arcane-lock-council-chamber-password-goat",
                                            "title":  "Wizard\u0027s Arcane Lock Seals Council Out; Nobody Wrote Password",
@@ -609,21 +624,6 @@
                                            "id":  "earth-elemental-snow-shovellers-picket-party",
                                            "title":  "Party\u0027s Earth Elemental Clears Snow, Cobbles and Half a Wall",
                                            "date":  "2026-11-22"
-                                       },
-                                       {
-                                           "id":  "kobolds-120-feast-pies-thank-you-notes",
-                                           "title":  "Kobolds Take 120 Feast Pies, Leave Thank-You Notes",
-                                           "date":  "2026-11-22"
-                                       },
-                                       {
-                                           "id":  "unidentified-potions-identify-fee-pinchpenny-company",
-                                           "title":  "Party Drinks 6 Unidentified Potions to Skip the Identify Fee",
-                                           "date":  "2026-11-22"
-                                       },
-                                       {
-                                           "id":  "find-steed-ride-share-paladin-one-star",
-                                           "title":  "Paladin\u0027s Find Steed Ride-Share Vanishes Mid-River Over 1 Star",
-                                           "date":  "2026-11-21"
                                        }
                                    ]
                   },
@@ -632,8 +632,13 @@
                       "short":  "the Guild",
                       "type":  "institution",
                       "blurb":  "A guild of heritage keepers who sue to protect old buildings and groves in the capital.",
-                      "appearances":  100,
+                      "appearances":  101,
                       "articles":  [
+                                       {
+                                           "id":  "heroes-feast-1000-gp-party-dragon-out",
+                                           "title":  "Party Spends 1,000 gp on Heroes\u0027 Feast; Dragon Was Out",
+                                           "date":  "2026-11-23"
+                                       },
                                        {
                                            "id":  "carrion-crawler-skeleton-guardpost-level-two",
                                            "title":  "Carrion Crawler Takes Post After Party Evicts Skeleton Guards",
@@ -653,11 +658,6 @@
                                            "id":  "piercers-mine-guild-sends-hats-not-helmets",
                                            "title":  "Piercers Fall in Mine; Guild Sends Party Hats, Not Helmets",
                                            "date":  "2026-11-19"
-                                       },
-                                       {
-                                           "id":  "harpy-jingle-adventuring-party-river-fernsley",
-                                           "title":  "Harpy Jingle Walks Party Into River; Shop Calls It Foot Traffic",
-                                           "date":  "2026-11-18"
                                        }
                                    ]
                   },
@@ -836,8 +836,18 @@
                       "short":  "the Company",
                       "type":  "organization",
                       "blurb":  "A Brindlemoor adventuring party that brought a sack of shrieker mushrooms home from the Undermaw to sell, and kept Tanner\u0027s Row awake for four nights.",
-                      "appearances":  46,
+                      "appearances":  48,
                       "articles":  [
+                                       {
+                                           "id":  "gricks-feast-dinner-unsearched-room-long-rest",
+                                           "title":  "Gricks Eat Party\u0027s Feast Dinner in Room Nobody Searched",
+                                           "date":  "2026-11-23"
+                                       },
+                                       {
+                                           "id":  "heroes-feast-1000-gp-party-dragon-out",
+                                           "title":  "Party Spends 1,000 gp on Heroes\u0027 Feast; Dragon Was Out",
+                                           "date":  "2026-11-23"
+                                       },
                                        {
                                            "id":  "arcane-lock-council-chamber-password-goat",
                                            "title":  "Wizard\u0027s Arcane Lock Seals Council Out; Nobody Wrote Password",
@@ -852,16 +862,6 @@
                                            "id":  "unidentified-potions-identify-fee-pinchpenny-company",
                                            "title":  "Party Drinks 6 Unidentified Potions to Skip the Identify Fee",
                                            "date":  "2026-11-22"
-                                       },
-                                       {
-                                           "id":  "giant-eagles-refuse-updraft-company-escort-duke",
-                                           "title":  "Giant Eagles Refuse Party\u0027s Escort Plan: \u0027Not a Coach Service\u0027",
-                                           "date":  "2026-11-21"
-                                       },
-                                       {
-                                           "id":  "gust-of-wind-market-leaves-14-stalls",
-                                           "title":  "Wizard\u0027s Gust of Wind Clears Market Leaves and 14 Stalls",
-                                           "date":  "2026-11-20"
                                        }
                                    ]
                   },
@@ -938,8 +938,13 @@
                       "short":  "Shieldwall Mutual",
                       "type":  "organization",
                       "blurb":  "Brindlemoor\u0027s adventurer insurer. Covers death, dismemberment, and curses, except the ones that are your own fault, which is most of them.",
-                      "appearances":  34,
+                      "appearances":  35,
                       "articles":  [
+                                       {
+                                           "id":  "gricks-feast-dinner-unsearched-room-long-rest",
+                                           "title":  "Gricks Eat Party\u0027s Feast Dinner in Room Nobody Searched",
+                                           "date":  "2026-11-23"
+                                       },
                                        {
                                            "id":  "owlbear-cub-future-mount-copper-saddle",
                                            "title":  "Party Adopts Owlbear Cub as \u0027Future Mount\u0027; Clinic Visits: 11",
@@ -959,11 +964,40 @@
                                            "id":  "reincarnate-spell-upgrade-fighter-badger-second-spring",
                                            "title":  "Party Pays 450 gp Reincarnate Upgrade; Fighter Is a Badger",
                                            "date":  "2026-11-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "The Sleeping Mule Tavern",
+                      "short":  "the Sleeping Mule",
+                      "type":  "place",
+                      "blurb":  "A Tanner\u0027s Row tavern in Brindlemoor with a deep cellar, a loyal clientele of adventurers, and until recently a very clean walk-in cooler.",
+                      "appearances":  32,
+                      "articles":  [
+                                       {
+                                           "id":  "water-elemental-cranberry-bogs-sauce-4-sp",
+                                           "title":  "Water Elemental Floods Cranberry Bogs; Sauce Hits 4 sp a Jar",
+                                           "date":  "2026-11-23"
                                        },
                                        {
-                                           "id":  "doppelganger-temp-agency-14-firms-one-clerk",
-                                           "title":  "Doppelganger Temp Agency Bills 14 Firms for One Clerk",
-                                           "date":  "2026-11-08"
+                                           "id":  "earth-elemental-snow-shovellers-picket-party",
+                                           "title":  "Party\u0027s Earth Elemental Clears Snow, Cobbles and Half a Wall",
+                                           "date":  "2026-11-22"
+                                       },
+                                       {
+                                           "id":  "kobolds-120-feast-pies-thank-you-notes",
+                                           "title":  "Kobolds Take 120 Feast Pies, Leave Thank-You Notes",
+                                           "date":  "2026-11-22"
+                                       },
+                                       {
+                                           "id":  "giant-crab-feast-stuck-town-gate",
+                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
+                                           "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "carrion-crawler-skeleton-guardpost-level-two",
+                                           "title":  "Carrion Crawler Takes Post After Party Evicts Skeleton Guards",
+                                           "date":  "2026-11-20"
                                        }
                                    ]
                   },
@@ -998,40 +1032,6 @@
                                            "id":  "skeleton-guards-walk-off-undermaw-level-two",
                                            "title":  "Skeleton Guards Walk Off Level Two After 400 Years on Post",
                                            "date":  "2026-11-08"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "The Sleeping Mule Tavern",
-                      "short":  "the Sleeping Mule",
-                      "type":  "place",
-                      "blurb":  "A Tanner\u0027s Row tavern in Brindlemoor with a deep cellar, a loyal clientele of adventurers, and until recently a very clean walk-in cooler.",
-                      "appearances":  31,
-                      "articles":  [
-                                       {
-                                           "id":  "earth-elemental-snow-shovellers-picket-party",
-                                           "title":  "Party\u0027s Earth Elemental Clears Snow, Cobbles and Half a Wall",
-                                           "date":  "2026-11-22"
-                                       },
-                                       {
-                                           "id":  "kobolds-120-feast-pies-thank-you-notes",
-                                           "title":  "Kobolds Take 120 Feast Pies, Leave Thank-You Notes",
-                                           "date":  "2026-11-22"
-                                       },
-                                       {
-                                           "id":  "giant-crab-feast-stuck-town-gate",
-                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
-                                           "date":  "2026-11-21"
-                                       },
-                                       {
-                                           "id":  "carrion-crawler-skeleton-guardpost-level-two",
-                                           "title":  "Carrion Crawler Takes Post After Party Evicts Skeleton Guards",
-                                           "date":  "2026-11-20"
-                                       },
-                                       {
-                                           "id":  "giant-boar-duchess-9-piglets-feast",
-                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
-                                           "date":  "2026-11-20"
                                        }
                                    ]
                   },
@@ -1376,6 +1376,40 @@
                                    ]
                   },
                   {
+                      "name":  "Feastwarden Odo Plumbrook",
+                      "short":  "Plumbrook",
+                      "type":  "person",
+                      "blurb":  "A Brindlemoor halfling appointed Feastwarden of the Grand Feast. He has promised to feed 2,000 people and has never once doubted it.",
+                      "appearances":  15,
+                      "articles":  [
+                                       {
+                                           "id":  "water-elemental-cranberry-bogs-sauce-4-sp",
+                                           "title":  "Water Elemental Floods Cranberry Bogs; Sauce Hits 4 sp a Jar",
+                                           "date":  "2026-11-23"
+                                       },
+                                       {
+                                           "id":  "kobolds-120-feast-pies-thank-you-notes",
+                                           "title":  "Kobolds Take 120 Feast Pies, Leave Thank-You Notes",
+                                           "date":  "2026-11-22"
+                                       },
+                                       {
+                                           "id":  "giant-crab-feast-stuck-town-gate",
+                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
+                                           "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "giant-boar-duchess-9-piglets-feast",
+                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "salamander-oven-subscription-lapses-40-pies",
+                                           "title":  "Salamander Oven Subscription Lapses Mid-Bake; 40 Pies Half-Done",
+                                           "date":  "2026-11-19"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Party of the Blue Donkey",
                       "short":  "the Blue Donkeys",
                       "type":  "party",
@@ -1406,40 +1440,6 @@
                                            "id":  "state-visit-red-carpet-emperor-shi-donwald-senators",
                                            "title":  "Red-Carpet State Visit Leaves Red Oliphants Fuming",
                                            "date":  "2026-10-18"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Feastwarden Odo Plumbrook",
-                      "short":  "Plumbrook",
-                      "type":  "person",
-                      "blurb":  "A Brindlemoor halfling appointed Feastwarden of the Grand Feast. He has promised to feed 2,000 people and has never once doubted it.",
-                      "appearances":  14,
-                      "articles":  [
-                                       {
-                                           "id":  "kobolds-120-feast-pies-thank-you-notes",
-                                           "title":  "Kobolds Take 120 Feast Pies, Leave Thank-You Notes",
-                                           "date":  "2026-11-22"
-                                       },
-                                       {
-                                           "id":  "giant-crab-feast-stuck-town-gate",
-                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
-                                           "date":  "2026-11-21"
-                                       },
-                                       {
-                                           "id":  "giant-boar-duchess-9-piglets-feast",
-                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
-                                           "date":  "2026-11-20"
-                                       },
-                                       {
-                                           "id":  "salamander-oven-subscription-lapses-40-pies",
-                                           "title":  "Salamander Oven Subscription Lapses Mid-Bake; 40 Pies Half-Done",
-                                           "date":  "2026-11-19"
-                                       },
-                                       {
-                                           "id":  "feast-seating-chart-treaty-baronies-turnips",
-                                           "title":  "Rival Baronies RSVP to Feast; Seating Chart Is Now a Treaty",
-                                           "date":  "2026-11-18"
                                        }
                                    ]
                   },
@@ -1648,6 +1648,40 @@
                                    ]
                   },
                   {
+                      "name":  "Guildmaster Tobrin Ashgrove",
+                      "short":  "Ashgrove",
+                      "type":  "person",
+                      "blurb":  "A famed guildmaster of the merchant circuit, known for gala speeches and hot-air balloons.",
+                      "appearances":  11,
+                      "articles":  [
+                                       {
+                                           "id":  "heroes-feast-1000-gp-party-dragon-out",
+                                           "title":  "Party Spends 1,000 gp on Heroes\u0027 Feast; Dragon Was Out",
+                                           "date":  "2026-11-23"
+                                       },
+                                       {
+                                           "id":  "feast-2000-tiered-seating-heroes-feast-bid",
+                                           "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
+                                           "date":  "2026-11-15"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-3000-potatoes-exposure-plumbrook",
+                                           "title":  "Adventuring Party Peels 3,000 Potatoes, Paid in Exposure",
+                                           "date":  "2026-11-14"
+                                       },
+                                       {
+                                           "id":  "cursed-ring-fighter-invests-party-loot",
+                                           "title":  "Cursed Ring Bought As-Is Makes Fighter Invest Party\u0027s Loot",
+                                           "date":  "2026-11-13"
+                                       },
+                                       {
+                                           "id":  "carpet-of-flying-surge-pricing-rain-hailrug",
+                                           "title":  "Carpet of Flying Surge Pricing Hits 40x as the Rain Worsens",
+                                           "date":  "2026-11-12"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Inspector Corwin Tallowby",
                       "short":  "Tallowby",
                       "type":  "person",
@@ -1814,40 +1848,6 @@
                                            "id":  "sanctions-waiver-damara-oil-tariffs-donwald",
                                            "title":  "Donwald\u0027s Sanctions Waiver Spares Damara Oil Tariffs",
                                            "date":  "2026-10-18"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Guildmaster Tobrin Ashgrove",
-                      "short":  "Ashgrove",
-                      "type":  "person",
-                      "blurb":  "A famed guildmaster of the merchant circuit, known for gala speeches and hot-air balloons.",
-                      "appearances":  10,
-                      "articles":  [
-                                       {
-                                           "id":  "feast-2000-tiered-seating-heroes-feast-bid",
-                                           "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
-                                           "date":  "2026-11-15"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-3000-potatoes-exposure-plumbrook",
-                                           "title":  "Adventuring Party Peels 3,000 Potatoes, Paid in Exposure",
-                                           "date":  "2026-11-14"
-                                       },
-                                       {
-                                           "id":  "cursed-ring-fighter-invests-party-loot",
-                                           "title":  "Cursed Ring Bought As-Is Makes Fighter Invest Party\u0027s Loot",
-                                           "date":  "2026-11-13"
-                                       },
-                                       {
-                                           "id":  "carpet-of-flying-surge-pricing-rain-hailrug",
-                                           "title":  "Carpet of Flying Surge Pricing Hits 40x as the Rain Worsens",
-                                           "date":  "2026-11-12"
-                                       },
-                                       {
-                                           "id":  "reincarnate-spell-upgrade-fighter-badger-second-spring",
-                                           "title":  "Party Pays 450 gp Reincarnate Upgrade; Fighter Is a Badger",
-                                           "date":  "2026-11-10"
                                        }
                                    ]
                   },
@@ -2940,6 +2940,40 @@
                                    ]
                   },
                   {
+                      "name":  "the Thornwood",
+                      "short":  "the Thornwood",
+                      "type":  "place",
+                      "blurb":  "An old forest a two-day walk from Brindlemoor, home to giant boars and oaks with hollows big enough to sleep in.",
+                      "appearances":  6,
+                      "articles":  [
+                                       {
+                                           "id":  "heroes-feast-1000-gp-party-dragon-out",
+                                           "title":  "Party Spends 1,000 gp on Heroes\u0027 Feast; Dragon Was Out",
+                                           "date":  "2026-11-23"
+                                       },
+                                       {
+                                           "id":  "giant-boar-duchess-9-piglets-feast",
+                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
+                                           "date":  "2026-11-20"
+                                       },
+                                       {
+                                           "id":  "feast-2000-tiered-seating-heroes-feast-bid",
+                                           "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
+                                           "date":  "2026-11-15"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-3000-potatoes-exposure-plumbrook",
+                                           "title":  "Adventuring Party Peels 3,000 Potatoes, Paid in Exposure",
+                                           "date":  "2026-11-14"
+                                       },
+                                       {
+                                           "id":  "giant-boar-tavern-stable-duchess-harrowgate",
+                                           "title":  "Giant Boar Rents Tavern Stable; Innkeeper Names Her Duchess",
+                                           "date":  "2026-11-12"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Anthropyre Arcanum",
                       "short":  "Anthropyre",
                       "type":  "company",
@@ -3514,40 +3548,6 @@
                                            "id":  "golden-coast-clerks-call-first-strike-margrave-rolls-initiative",
                                            "title":  "Golden Coast Clerks Call First Strike; Margrave Rolls for Initiative",
                                            "date":  "2026-10-10"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "the Thornwood",
-                      "short":  "the Thornwood",
-                      "type":  "place",
-                      "blurb":  "An old forest a two-day walk from Brindlemoor, home to giant boars and oaks with hollows big enough to sleep in.",
-                      "appearances":  5,
-                      "articles":  [
-                                       {
-                                           "id":  "giant-boar-duchess-9-piglets-feast",
-                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
-                                           "date":  "2026-11-20"
-                                       },
-                                       {
-                                           "id":  "feast-2000-tiered-seating-heroes-feast-bid",
-                                           "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
-                                           "date":  "2026-11-15"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-3000-potatoes-exposure-plumbrook",
-                                           "title":  "Adventuring Party Peels 3,000 Potatoes, Paid in Exposure",
-                                           "date":  "2026-11-14"
-                                       },
-                                       {
-                                           "id":  "giant-boar-tavern-stable-duchess-harrowgate",
-                                           "title":  "Giant Boar Rents Tavern Stable; Innkeeper Names Her Duchess",
-                                           "date":  "2026-11-12"
-                                       },
-                                       {
-                                           "id":  "giant-boar-feast-alive-fourth-attempt",
-                                           "title":  "Giant Boar Brought Back Alive for Feast. Nobody Said Dead.",
-                                           "date":  "2026-11-11"
                                        }
                                    ]
                   },
@@ -5154,6 +5154,25 @@
                                    ]
                   },
                   {
+                      "name":  "Bog-keeper Tilly Marrowfen",
+                      "short":  "Marrowfen",
+                      "type":  "person",
+                      "blurb":  "Keeper of the Redwater Bogs, who harvested cranberries with buckets for thirty years and hired an elemental once.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "water-elemental-cranberry-bogs-sauce-4-sp",
+                                           "title":  "Water Elemental Floods Cranberry Bogs; Sauce Hits 4 sp a Jar",
+                                           "date":  "2026-11-23"
+                                       },
+                                       {
+                                           "id":  "hooded-stranger-same-quest-14-adventuring-parties",
+                                           "title":  "Hooded Stranger Gave Same Quest to 14 Adventuring Parties",
+                                           "date":  "2026-11-08"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Brindlemoor Grangers\u0027 Fellowship",
                       "short":  "the Grangers\u0027 Fellowship",
                       "type":  "organization",
@@ -6689,6 +6708,25 @@
                                            "id":  "impeachment-maztica-senate-judge-moraine-warlord",
                                            "title":  "Maztica Senate Plots Impeachment of Judge Who Jailed Warlord",
                                            "date":  "2026-10-17"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "The Thornbury Irregulars",
+                      "short":  "the Irregulars",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor adventuring party of four and a half, since its fighter Hobb Greaveson came back from the Reincarnate rite as a badger.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "prestidigitation-seasoning-trail-rations-one-hour",
+                                           "title":  "Wizard Sells Prestidigitation Seasoning; Flavor Lasts 1 Hour",
+                                           "date":  "2026-11-23"
+                                       },
+                                       {
+                                           "id":  "reincarnate-spell-upgrade-fighter-badger-second-spring",
+                                           "title":  "Party Pays 450 gp Reincarnate Upgrade; Fighter Is a Badger",
+                                           "date":  "2026-11-10"
                                        }
                                    ]
                   },
@@ -9776,6 +9814,20 @@
                                    ]
                   },
                   {
+                      "name":  "Prudence Haverwick",
+                      "short":  "Haverwick",
+                      "type":  "person",
+                      "blurb":  "Owner of Saltmarrow Banquets, who keeps the tip and never asks what her customers plan to fight.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "heroes-feast-1000-gp-party-dragon-out",
+                                           "title":  "Party Spends 1,000 gp on Heroes\u0027 Feast; Dragon Was Out",
+                                           "date":  "2026-11-23"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Pudding",
                       "short":  "Pudding",
                       "type":  "creature",
@@ -9982,6 +10034,20 @@
                                            "id":  "city-workers-strike-vote-portmantle-93-percent",
                                            "title":  "Portmantle City Workers Vote 93% to Strike",
                                            "date":  "2026-10-22"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Saltmarrow Banquets",
+                      "short":  "Saltmarrow",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor caterer that sells catered Heroes\u0027 Feast tables at exactly the price of the spell\u0027s jeweled bowl. Sold out thirty tables in November.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "heroes-feast-1000-gp-party-dragon-out",
+                                           "title":  "Party Spends 1,000 gp on Heroes\u0027 Feast; Dragon Was Out",
+                                           "date":  "2026-11-23"
                                        }
                                    ]
                   },
@@ -10612,6 +10678,20 @@
                                            "id":  "griffon-egg-feast-geese-adventuring-party",
                                            "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
                                            "date":  "2026-11-17"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Brightmantle Company",
+                      "short":  "the Brightmantles",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor adventuring party that spent 1,000 gp on a catered Heroes\u0027 Feast before a dragon fight. The dragon was out to dinner.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "heroes-feast-1000-gp-party-dragon-out",
+                                           "title":  "Party Spends 1,000 gp on Heroes\u0027 Feast; Dragon Was Out",
+                                           "date":  "2026-11-23"
                                        }
                                    ]
                   },
@@ -11624,6 +11704,20 @@
                                    ]
                   },
                   {
+                      "name":  "the Redwater Bogs",
+                      "short":  "the Redwater Bogs",
+                      "type":  "place",
+                      "blurb":  "Cranberry bogs outside Brindlemoor that supply the town\u0027s sauce. Since November a water elemental has kept them flooded twelve feet deep.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "water-elemental-cranberry-bogs-sauce-4-sp",
+                                           "title":  "Water Elemental Floods Cranberry Bogs; Sauce Hits 4 sp a Jar",
+                                           "date":  "2026-11-23"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Rosy Socialists",
                       "short":  "the Rosy Socialists",
                       "type":  "party",
@@ -11900,20 +11994,6 @@
                                            "id":  "find-steed-ride-share-paladin-one-star",
                                            "title":  "Paladin\u0027s Find Steed Ride-Share Vanishes Mid-River Over 1 Star",
                                            "date":  "2026-11-21"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "The Thornbury Irregulars",
-                      "short":  "the Irregulars",
-                      "type":  "organization",
-                      "blurb":  "A Brindlemoor adventuring party of four and a half, since its fighter Hobb Greaveson came back from the Reincarnate rite as a badger.",
-                      "appearances":  1,
-                      "articles":  [
-                                       {
-                                           "id":  "reincarnate-spell-upgrade-fighter-badger-second-spring",
-                                           "title":  "Party Pays 450 gp Reincarnate Upgrade; Fighter Is a Badger",
-                                           "date":  "2026-11-10"
                                        }
                                    ]
                   },
@@ -12306,6 +12386,20 @@
                                            "id":  "cybersecurity-acquisition-varonyx-proofparchment-63b-gp",
                                            "title":  "6.3B gp Cybersecurity Buyout Sends Varonyx Private",
                                            "date":  "2026-10-20"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Verdigrass",
+                      "short":  "Verdigrass",
+                      "type":  "creature",
+                      "blurb":  "A young green dragon with a lair in the Thornwood who leaves polite notes on the door and reserves table nineteen at Saltmarrow Banquets.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "heroes-feast-1000-gp-party-dragon-out",
+                                           "title":  "Party Spends 1,000 gp on Heroes\u0027 Feast; Dragon Was Out",
+                                           "date":  "2026-11-23"
                                        }
                                    ]
                   },

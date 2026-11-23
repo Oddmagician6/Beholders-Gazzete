@@ -9617,6 +9617,142 @@
         "rumor": "Somebody said the last party to skip the sage drank oil of slipperiness and slid clear across the market square, and the potion of invisibility one hasn't been seen since, which I suppose is the point."
       },
       "fiction": true
+    },
+    {
+      "id": "water-elemental-cranberry-bogs-sauce-4-sp",
+      "title": "Water Elemental Floods Cranberry Bogs; Sauce Hits 4 sp a Jar",
+      "category": "Economy",
+      "author": "Barnaby Tallowmere",
+      "date": "2026-11-23",
+      "excerpt": "A water elemental hired to flood the cranberry bogs won't leave, and sauce went from 5 cp to 4 sp a jar. The Grand Feast needs 250 jars. I did the sums.",
+      "social": "A water elemental was hired to flood the cranberry bogs for one afternoon. It has now stayed four days and is guarding the berries. Cranberry sauce in Brindlemoor went from 5 copper a jar to 4 silver, three days before a feast for 2,000. Would you pay 4 silver for a jar of sauce, or eat your goose dry?",
+      "content": "<p>Cranberry sauce in Brindlemoor rose from 5 copper pieces a jar to 4 silver on Monday, an eightfold jump, after a water elemental hired to flood the Redwater Bogs for the harvest declined to go home. The Grand Feast on the Town Green is on the 26th, three days from now. (For anyone just joining us: Feastwarden Odo Plumbrook, a halfling, <a href=\"/a/halfling-feastwarden-feast-2000-brindlemoor\">promised a feast for 2,000</a> on a 900 gp budget.)</p>\n\n<p>First, some farming, because the sums depend on it. Cranberries are harvested wet. You flood the bog, knock the berries loose, and they float to the top, where you rake them into carts. Bog-keeper Tilly Marrowfen has done this with buckets and a sluice gate for thirty years. This autumn she paid a traveling wizard 15 gp to summon a water elemental instead, on the reasoning that it would take one afternoon.</p>\n\n<p>It has taken four days. The elemental has raised the bogs to roughly twelve feet, ringed the floating berries in a slow red whirlpool, and drowns any rake that comes near. \"It likes them,\" Marrowfen told me from the bank. \"It keeps holding one up to the light.\" The wizard has left town. His invoice, she says, did not mention dismissal.</p>\n\n<p>So supply went into the bog along with the rakes. Marrowfen normally sends Brindlemoor about 1,400 jars of sauce in the last week of harvest month. This week she has 61, bottled from berries that washed over the sluice gate. Demand did not fall at all, because everyone in town is coming to a feast. When the berries go down and the eaters stay put, the price goes up until enough people give up. At 4 sp, people are giving up.</p>\n\n<p>Now to the Loaf Index, which is where I start to sweat. At 4.675 copper a loaf, one jar of sauce is 8.56 loaves. (I have checked this four times. I would like it to be fewer loaves.) The Feastwarden's plan calls for one jar per eight guests, which is 250 jars. Last week that was 12.5 gp. Today it is 100 gp, or 2,139 loaves, and there are only 61 jars to buy.</p>\n\n<p>Plumbrook, speaking from a chair outside the Sleeping Mule Tavern, called the news \"a strong start\" and said the elemental \"clearly understands what a good cranberry is.\" He then asked whether the feast could hire it to fill the punch bowls. I asked how the remaining budget stood after the <a href=\"/a/feast-budget-900-gp-goose-600-plumbrook\">600 gp goose</a> and the 591 gp egg. He said the budget was \"in a very creative place.\"</p>\n\n<p>My colleague Sterling Vanmoor wrote to say the market will sort itself out, and that he has bought six jars at 4 sp \"before it really takes off.\" I would point out, gently, that a jar of sauce kept in a drawer does not go up in value. It goes up in mold.</p>\n\n<p>My aunt Marigold put up eleven jars in the summer and is keeping them in the boot next to her savings. She has been offered 5 sp a jar by a neighbor and is holding out for six.</p>\n\n<p>What this means for your pantry: if you own a jar, do not open it before Thursday. If you own a bucket, Tilly Marrowfen is paying.</p>\n\n<p><em>— B.T. (Loaf Index: see sidebar)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Elemental Who Stayed",
+          "text": "A water elemental summoned to flood a cranberry bog for the harvest has refused to leave and now guards the floating berries in a red whirlpool twelve feet deep. The bog-keeper will pay 60 gp to anyone who can send it home or talk it into sharing before the town's harvest feast, and the wizard who summoned it has skipped town with the binding words."
+        },
+        "npc": {
+          "name": "Corbin Ashe",
+          "role": "Traveling Hedge Wizard",
+          "want": "He wants to collect his 15 gp fee in the next town before word of the bog reaches it.",
+          "secret": "He never learned the dismissal, only the summoning, and has left three other elementals in three other ponds.",
+          "race": "human",
+          "gender": "male",
+          "kind": "magic"
+        },
+        "location": {
+          "name": "The Redwater Bogs",
+          "text": "Low cranberry bogs behind a sluice gate, now a single flooded basin with a slow red whirlpool in the middle. A drowned rake handle sticks up from it like a flagpole.",
+          "tavern": false
+        },
+        "rumor": "They say the thing in the bog only wants a berry it can keep, and if you hand it the biggest one in the county it'll go home quiet."
+      },
+      "fiction": true
+    },
+    {
+      "id": "gricks-feast-dinner-unsearched-room-long-rest",
+      "title": "Gricks Eat Party's Feast Dinner in Room Nobody Searched",
+      "category": "Monster Watch",
+      "author": "Hollis Delvewright",
+      "date": "2026-11-23",
+      "excerpt": "Four gricks got into an adventuring party's feast-week dinner in a dungeon room nobody had searched. One was in the stew. The cook is billing for the lid.",
+      "social": "The Larkfallow Company made camp in a dungeon room nobody had searched and laid out its feast-week dinner. Four gricks got there first: three in the food sacks, one in the stew. The cook hit hers with the pot lid. Be honest: does your party search the room before the long rest, or after dinner?",
+      "content": "<p>THE UNDERMAW, LEVEL 3, SIDE ROOM C — Gricks got into the Larkfallow Company's feast-week dinner last night, about forty feet under Brindlemoor. The adventuring party had made camp for a long rest in a room it hadn't searched, stacked the food sacks against the back wall and hung a ham over the cook-pot. By the time the stew was ready, three gricks were in the sacks and a fourth was in the pot.</p>\n\n<p>The party had planned this supper for a tenday. Brindlemoor's Grand Feast is three days off, and the Larkfallows, booked below until the end of the month, wanted a feast week of their own: a smoked ham, two loaves of honey bread, a wheel of cheese and a pot of mutton stew. The room was dry. The floor was flat and the fire drew well. \"We were going to search it after dinner,\" said the party's fighter, Odric Vane. \"Dinner first. It was a feast.\"</p>\n\n<p>Mabry Tollen, the hired cook, found the first one. She lifted the lid to stir and the stew stirred back. A grick is a worm about as long as a grown man, with four tentacles around a beak where its face ought to be, and this one had climbed into the warm pot and eaten most of the mutton. She hit it with the lid. \"I've cooked in eleven dungeons,\" she told me. \"You check the room. You check the room before anybody unpacks the onions.\"</p>\n\n<p>The other three came out of the food sacks: one from the flour, one from the bread, and one from the cheese, which by the rogue's account it had no plans to leave. The fight went four rounds. Final box score: Vane at 14 hit points, the wizard at 6, the rogue at 11, and the cleric at full and apologizing. Tollen took no damage and has billed the party for a new lid.</p>\n\n<p>The cleric had cast purify food and drink over the whole supper an hour before, as she does every feast week. The spell worked. \"The stew was perfectly clean,\" she said. \"There was a grick in it.\" The party's bard, who asked to be named, called the evening \"a learning meal.\"</p>\n\n<p>The ham survived, mostly. It hung from a ceiling hook out of reach, though one grick tried for it from the top of the bread sack for some time. The party ate the ham standing up and finished searching the room at midnight. They found two more gricks and a crack in the north wall they have agreed not to look into.</p>\n\n<p>The Shieldwall Mutual Assurance Society, which insures the party, covers lost provisions only when camp was made \"in a cleared area.\" The clerk at the Shieldwall Mutual counter asked me whether the room had been cleared. I said it had been cleared of dinner. She wrote that down.</p>\n\n<p>I prodded the last sack with a ten-foot pole on my way out. The cheese kept the pole, and the grick inside it kept the cheese. That is my fifteenth ten-foot pole of the season. Tollen wants a clause about unsearched rooms in her next contract, and she has my support. I had been promised a slice of the honey bread. I rolled poorly.</p>\n\n<p><em>— H.D., filing from below</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "Something in the Stew",
+          "text": "A roadside waystation's cave larder empties a little more every night, its sacks chewed open from the inside. The caravan cook who stores her winter provisions there will pay 25 gp and free meals to have the cave cleared before the caravan arrives in three days. Use the grick's stats for the nest, four of them, one curled in the bottom of a flour barrel."
+        },
+        "npc": {
+          "name": "Hessa Brannock",
+          "role": "Caravan cook",
+          "want": "She wants her provisions safe before the winter caravan arrives and its drovers start asking where supper is.",
+          "secret": "She moved her stores into the cave to dodge the waystation's storage fee, and the last renter left the cave for the same reason she should have.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Larder Cave",
+          "text": "A dry cave behind the waystation that travelers use as a free cold store. The sacks along the back wall are always a little fuller in the morning than they were at night.",
+          "tavern": false
+        },
+        "rumor": "They say whatever's in the old larder cave eats the flour first and the drovers last, so you'd better hope they bring flour."
+      },
+      "fiction": true
+    },
+    {
+      "id": "prestidigitation-seasoning-trail-rations-one-hour",
+      "title": "Wizard Sells Prestidigitation Seasoning; Flavor Lasts 1 Hour",
+      "category": "Technology",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-11-23",
+      "excerpt": "A party wizard sold Prestidigitation seasoning for trail rations at 2 cp a meal. The flavor lasts one hour. Lunch came at hour three. I subscribed anyway.",
+      "social": "A party wizard started selling Prestidigitation seasoning for trail rations at 2 cp a meal. Cinnamon, roast beef, even feast-day gravy. The catch is that the flavor lasts one hour, and lunch arrived at hour three. The fighter cancelled and ate plain hardtack for six days. Would you pay the wizard, or chew in silence?",
+      "content": "<p>Okay. OKAY. I just got back from nine days on the road with the Bramblegate Irregulars, and their wizard, Tamsin Quillowby, has launched a Prestidigitation seasoning service for trail rations. Two copper a meal and she flavors your hardtack with cinnamon, roast beef, or her premium blend, feast-day gravy. The one catch, which is in the spell and also in the fine print: the flavor lasts one hour.</p>\n\n<p>I signed up on day one. Of course I did! A cantrip-based flavor layer on top of legacy biscuit hardware? The mana throughput on this thing is basically zero. Tamsin can cast it all day for free, which she mentioned to nobody while collecting copper from five people.</p>\n\n<p>Day one was incredible. She seasoned breakfast at dawn and my hardtack tasted like a cinnamon bun that had been to a nice school. Then the party marched. The ranger wanted to reach the ford before dark, so we didn't stop to eat until three hours later, and by then the seasoning had expired. Lunch tasted like a roof tile. I filed a ticket. Tamsin said the service \"is delivered at the time of casting\" and that eating it later was \"a user-side latency issue.\"</p>\n\n<p>By day two, meals ran on Tamsin's schedule. Seasoning windows opened at dawn, noon, and dusk, and if you weren't chewing within the hour, too bad. We ate lunch at a dead run once. The cleric tried to save half a roast-beef biscuit for later and watched it slowly turn back into a biscuit, which she described to me as \"the saddest thing I have seen, and I work funerals.\"</p>\n\n<p>The real bottleneck was capacity. Tamsin can only keep three of these flavors going at once, and five of us were paying. So she rolled out a queue. Priority went to whoever paid for the week up front. I paid for the week up front. I would do it again, and that worries me.</p>\n\n<p>Garrick, the party fighter, cancelled on day three over the 2 cp, on principle. He ate plain hardtack for the remaining six days while the rest of us sat around the fire going \"mmm, gravy.\" On day five Tamsin offered him a free trial meal. He said no. On day six she cast roast beef on the air near his head, which she called \"ambient marketing,\" and he threw his boot in the river.</p>\n\n<p>This is how it always goes, isn't it? Remember the paladin who <a href=\"/a/find-steed-ride-share-paladin-one-star\">rented her Find Steed out to her own party</a>? Same business model, different animal. I hate subscription fees. I also had gravy-flavored hardtack in a swamp on day eight and it was the happiest I have been all month.</p>\n\n<p>Byte, my pseudodragon, has started saying \"Flavor that fits your schedule! Your wizard's schedule!\" at random intervals, so somebody's been feeding him the brochure. Brother Tumbleberry will tell you to just put salt on it. I think Brother Tumbleberry has never been offered gravy by a spell.</p>\n\n<p>Rating: four out of five beholder eyes. Damage Report: copper spent, 54. Meals eaten at a run: 3. Boots lost to the river: 1 (Garrick's). Taste buds: confused but loyal.</p>\n\n<p><em>— Nyx (they/them). Damage Report below.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Gravy Monopoly",
+          "text": "A caravan master hires the party because the caravan's hedge-mage has started charging drovers for Prestidigitation-flavored rations, and the drovers now refuse to move outside the mage's one-hour seasoning windows. The caravan is four days late, the cargo is perishable, and somebody has to break the mage's flavor monopoly without starting a mutiny."
+        },
+        "npc": {
+          "name": "Wendolyn Harrowby",
+          "role": "Caravan hedge-mage",
+          "want": "She wants every drover on a weekly flavor plan before the caravan reaches the city.",
+          "secret": "The cantrip costs her nothing, and she has been quietly selling the drovers' plain hardtack back to them as a 'premium crunch' tier.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "magic"
+        },
+        "location": {
+          "name": "The Seasoned Ford",
+          "text": "A river crossing where travelers stop to eat because a long-gone wizard's Prestidigitation stalls once stood there. The ford still smells faintly of cinnamon, and nobody can explain why.",
+          "tavern": false
+        },
+        "rumor": "They say the wizard up the road can make hardtack taste like feast-day gravy, but only for an hour, and only if you pay her in advance."
+      },
+      "fiction": true
+    },
+    {
+      "id": "heroes-feast-1000-gp-party-dragon-out",
+      "title": "Party Spends 1,000 gp on Heroes' Feast; Dragon Was Out",
+      "category": "Consumer",
+      "author": "Sterling Vanmoor",
+      "date": "2026-11-23",
+      "excerpt": "An adventuring party spent its whole 1,040 gp haul on a catered Heroes' Feast before a dragon fight. The dragon was out. Sterling sees a pivot.",
+      "social": "The Brightmantle Company spent 1,000 gp on a catered Heroes' Feast the night before storming a green dragon's lair. Poison immunity, extra hit points, the full table. The dragon had left a note on the door. It was out to dinner. What would your character do with 24 hours of poison immunity and nothing to fight?",
+      "content": "<p>An adventuring party called the Brightmantle Company spent 1,000 gp of its 1,040 gp dungeon haul on a catered Heroes' Feast on Friday night, then marched into a young green dragon's lair in the Thornwood on Saturday morning to find the dragon not at home. The table came from Saltmarrow Banquets of Brindlemoor, which prices every Heroes' Feast at exactly the cost of the spell's jeweled bowl and sold out all thirty tables this month. I'll say it up front: this is the best consumer story of the season.</p>\n\n<p>Look at the product. One hour of dinner, served by a cleric in a clean apron, and you walk away immune to poison and fear, with extra hit points and advantage on Wisdom saves for a full day. Against a green dragon, whose whole pitch is poison breath, that is perfect product-market fit. Saltmarrow's owner, Prudence Haverwick, told me the bowl gets consumed by the spell, so the customer pays for the bowl and the cleric, and she keeps the tip. \"Think of us as the pre-boss experience,\" she said. I wrote that on my wrist.</p>\n\n<p>The Brightmantles ate at sundown at a camp a mile from the lair. Their fighter, Corwin Dask, had three helpings of venison and announced he could \"feel his hit points.\" The wizard slept in her robe so she wouldn't waste the morning dressing. At first light they kicked in the lair door and found a note nailed to the inside, in neat green ink: OUT AT DINNER. BACK SUNDAY. HELP YOURSELF TO THE MOSS.</p>\n\n<p>The dragon, a young green named Verdigrass, had booked table nineteen at Saltmarrow Banquets for Saturday evening. Same caterer. Same bowl. Same 1,000 gp. Prudence Haverwick confirmed the reservation and called the dragon \"a wonderful repeat customer who tips in emeralds.\" My accountant calls that a conflict of interest. I call that serving both sides of the market, which is what every great guild does sooner or later.</p>\n\n<p>The party waited in the lair for nineteen hours, fully buffed and immune to poison, playing cards on a pile of moss. The feast wore off at sundown Saturday. Verdigrass came home Sunday morning, also immune to poison and fear, with extra hit points, and in an excellent mood. The Brightmantles left through a window with 40 gp, one card deck, and no rogue, who has since rightsized himself out of the adventuring party to join Saltmarrow's front-of-house staff. He gets the tips now. I call that a pivot.</p>\n\n<p>Brakka Stonesweat will no doubt write that the party got fleeced by a caterer. Brakka once called a <a href=\"/a/feast-2000-tiered-seating-heroes-feast-bid\">Heroes' Feast seating bid</a> \"a dinner with a velvet rope,\" so consider the source. When I met Guildmaster Tobrin Ashgrove at a balloon launch, he told me, \"Sterling, never fight on an empty stomach, and never fight on a full one either.\" I still don't know what he meant. I think about it constantly.</p>\n\n<p>Key takeaways for the ambitious adventurer:<br>- Buffs last 24 hours. Calendars last longer. Check the boss's.<br>- If your caterer knows the dragon's table number, ask what the dragon is having.<br>- Leave the rogue at home. He's networking.</p>\n\n<p><em>— Sterling Vanmoor, Guild Visionary. Let's connect at the Yawning Portal.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "Table Nineteen",
+          "text": "A banquet caterer has booked a young green dragon for a catered Heroes' Feast tomorrow night and wants the party to work the room as waitstaff and guards. A rival party plans to ambush the dragon on its walk home, fully fed, and the caterer will lose her best customer, and possibly her hall, if anyone fights indoors."
+        },
+        "npc": {
+          "name": "Ysolde Marrowby",
+          "role": "Banquet Cleric for Hire",
+          "want": "She wants to cast Heroes' Feast for whoever pays and never ask what they plan to fight.",
+          "secret": "She has quietly sold the same evening's guest list to both the dragon and the party hunting it.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "religious"
+        },
+        "location": {
+          "name": "The Copper Tureen",
+          "text": "A banquet inn with one long table reserved every night for monsters and one for the adventurers hunting them. The tables face each other, and the staff are paid to keep it polite.",
+          "tavern": true
+        },
+        "rumor": "I heard the dragon tips better than any party in town, so the kitchen saves it the good venison and tells it who's eating next."
+      },
+      "fiction": true
     }
   ]
 }
