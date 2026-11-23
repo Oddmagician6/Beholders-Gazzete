@@ -14,8 +14,19 @@ function spellPf2e() {
 }
 
 // A creature's spell name without its notes: "invisibility (at will, self only)" → "invisibility".
+// Notes can nest ("Fireball (5th level (at will))"): each balanced group at the end comes off.
 function spellBareName(name) {
-    return name.replace(/(\s*\([^()]*\))+\s*$/, '').trim();
+    let s = String(name).trim();
+    while (s.endsWith(')')) {
+        let depth = 0, i = s.length - 1;
+        for (; i >= 0; i--) {
+            if (s[i] === ')') depth++;
+            else if (s[i] === '(' && !--depth) break;
+        }
+        if (i <= 0) break;   // unbalanced, or nothing but a note
+        s = s.slice(0, i).trim();
+    }
+    return s;
 }
 
 function spellByName(name) {
@@ -132,9 +143,11 @@ function toggleSpellDetail(btn, box, scope = document) {
         const otherBox = other && other.querySelector('.sb-spell-detail');
         if (otherBox && otherBox !== box) otherBox.hidden = true;
     });
-    const sp = !open && spellByName(btn.dataset.spell);
-    if (!sp) { box.hidden = true; return; }
+    if (open) { box.hidden = true; return; }
+    const sp = spellByName(btn.dataset.spell);
     btn.setAttribute('aria-expanded', 'true');
-    box.innerHTML = spellDetailHtml(sp);
+    // A [[name]] the spell list doesn't have (a Monster Maker typo, a homebrew spell) says so instead of doing nothing.
+    const loaded = spellPf2e() ? typeof PF2E_SPELLS !== 'undefined' : typeof SPELLS_DATA !== 'undefined';
+    box.innerHTML = sp ? spellDetailHtml(sp) : `<p class="sb-spell-meta">No card for ${esc(btn.dataset.spell)}: ${loaded ? `it isn't in the ${spellPf2e() ? 'Pathfinder' : 'SRD'} spell list` : 'the spell list didn\'t load; check your connection and reload'}.</p>`;
     box.hidden = false;
 }

@@ -164,11 +164,15 @@ function bcFromUrl() {
 function bcTidy() {
     const tidy = (field, sets) => {
         const arr = (bc.boosts[field] || []).slice(0, sets.length);
+        const fixed = sets.filter(s => s[0].length === 1).map(s => s[0][0]);
+        // A repeat is checked against the picks kept so far, so a bad first pick (bb=str.str on a background
+        // whose first boost can't be Str) doesn't also drop a good second one.
+        const kept = [];
         bc.boosts[field] = sets.map(([opts], i) => {
             const a = arr[i];
-            if (!a || opts.length === 1 || !opts.includes(a)) return '';
-            const fixed = sets.filter(s => s[0].length === 1).map(s => s[0][0]);
-            return fixed.includes(a) || arr.slice(0, i).includes(a) ? '' : a;
+            const ok = a && opts.length > 1 && opts.includes(a) && !fixed.includes(a) && !kept.includes(a);
+            if (ok) kept.push(a);
+            return ok ? a : '';
         });
     };
     tidy('anc', pcAncSets({ ...bc, boosts: { ...bc.boosts, anc: [] } }));

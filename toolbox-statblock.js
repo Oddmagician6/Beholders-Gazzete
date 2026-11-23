@@ -162,8 +162,25 @@ function sbSpellLines(text) {
     return out;
 }
 
+// A Spellcasting feature that names its spells in a sentence (the 2024 pit fiend's Hellfire Spellcasting:
+// "casts Fireball ... replace one Fireball with Hold Monster ... or Wall of Fire"): buttons on the
+// capitalized names the spell list knows.
+function sbMarkProse(name, text) {
+    if (!/Spellcasting/.test(name) || text.includes('[[') || typeof spellByName !== 'function') return text;
+    return text.replace(/\b[A-Z][a-z'’]+(?: (?:of|the|[A-Z][a-z'’]+))*/g, run => {
+        const words = run.split(' ');
+        // The longest run of words from the start that's a spell ("Wall of Fire", not "Wall").
+        for (let n = words.length; n > 0; n--) {
+            const cand = words.slice(0, n).join(' ');
+            if (/ (of|the)$/.test(cand)) continue;
+            if (spellByName(cand)) return `[[${cand}]]${run.slice(cand.length)}`;
+        }
+        return run;
+    });
+}
+
 function sbFeatures2024(list) {
-    return list.map(([name, text]) => [name, sbSpellLines(text)]);
+    return list.map(([name, text]) => [name, sbMarkProse(name, sbSpellLines(text))]);
 }
 
 // The spells a block's features name (for the Spellbook link).

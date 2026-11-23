@@ -1659,6 +1659,7 @@ const PF2E_FEATS = {
   "root-magic": {"n":"Root Magic","l":1,"c":"skill","tr":["general","skill"],"pr":["trained in Occultism"],"b":"PC2"},
   "rope-runner": {"n":"Rope Runner","l":4,"c":"skill","ar":1,"tr":["archetype","skill"],"pr":["trained in Acrobatics","trained in Athletics","Pirate Dedication"],"b":"PC2"},
   "rough-rider": {"n":"Rough Rider","l":1,"c":"ancestry","tr":["goblin"],"b":"PC"},
+  "running-reload": {"n":"Running Reload","l":4,"c":"class","tr":["gunslinger","ranger"],"a":"1","b":"PC"},
   "running-tackle": {"n":"Running Tackle","l":8,"c":"class","ar":1,"tr":["archetype"],"pr":["Wrestler Dedication"],"a":"2","b":"PC2"},
   "runtsage": {"n":"Runtsage","l":5,"c":"ancestry","tr":["hobgoblin"],"b":"PC2"},
   "saber-teeth": {"n":"Saber Teeth","l":1,"c":"ancestry","tr":["catfolk"],"b":"PC2"},

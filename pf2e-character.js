@@ -743,7 +743,8 @@ function pcFeatsFor(c, slot, { archetype = false } = {}) {
         if (sub) fits = f.c === 'class' && !f.ar && f.tr.includes(sub.cls) && f.l <= sub.cap;
         if (kind === 'anc') fits = f.c === 'ancestry' && f.tr.some(t => traits.includes(t));
         else if (kind === 'cls') fits = f.c === 'class' && (f.ar ? archetype : f.tr.includes(c.cls));
-        else if (kind === 'arc') fits = f.ar === 1;
+        // An archetype skill feat goes in a skill feat slot, not a class feat slot (Player Core pg. 215).
+        else if (kind === 'arc') fits = f.ar === 1 && f.c !== 'skill';
         else if (kind === 'skf' || kind === 'mcs') fits = f.c === 'skill' && (!lim || pcSkillFeatFits(f, lim.skills));
         else if (kind === 'gen') fits = f.c === 'general' || f.c === 'skill';
         if (!fits) continue;
@@ -888,8 +889,10 @@ function pcArchetypeCheck(c) {
         if (!f || (!f.ar && !extraOf.length)) return;
         const own = f.ar ? pcFeatArchetypes(key) : extraOf;
         // Prerequisites as the character stood when the slot was filled: its level's attributes and
-        // skills, and only the feats in earlier slots. A feat that misses one doesn't count.
-        const at = { ...c, level: s.level, feats: Object.fromEntries(pcFeatSlots(c).slice(0, pcFeatSlots(c).findIndex(x => x.slot === s.slot)).filter(x => c.feats[x.slot]).map(x => [x.slot, c.feats[x.slot]])) };
+        // skills, and only the feats in earlier slots or picked at the same level (the level-up steps go in any
+        // order, Player Core pg. 29: Battle Medicine in the level 2 skill slot meets Medic Dedication's
+        // prerequisite in the level 2 class slot). A feat that misses one doesn't count.
+        const at = { ...c, level: s.level, feats: Object.fromEntries(pcFeatSlots(c).filter(x => x.slot !== s.slot && x.level <= s.level && c.feats[x.slot]).map(x => [x.slot, c.feats[x.slot]])) };
         const st = statsAt[s.slot] || (statsAt[s.slot] = pcStats(at));
         const unmet = (f.pr || []).filter(p => pcPrereqMet(at, p, st) === false);
         if (unmet.length) {
