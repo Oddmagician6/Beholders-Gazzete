@@ -128,7 +128,9 @@ const wmObj = v => !!v && typeof v === 'object' && !Array.isArray(v);
 const wmF = v => String(Math.round(v * 10) / 10);
 
 function wmEsc(s) {
-    return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    // Characters XML can't hold (U+FFFE, U+FFFF, a half of a surrogate pair) would break the SVG the PNG is drawn from (B954).
+    return String(s).replace(/[￾￿]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, '')
+        .replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
 function wmId() {
@@ -199,7 +201,8 @@ function wmUnRle(s, n, max) {
         at += c;
         if (re.lastIndex === s.length) break;
     }
-    return at === n ? out : null;
+    // All of it read (no junk after the last run, B955).
+    return at === n && (!s.length || re.lastIndex === s.length) ? out : null;
 }
 
 const wmR1 = v => Math.round(v * 10) / 10;
@@ -282,13 +285,17 @@ function wmClean(p) {
         fr: pick(k.fr, WM_FRAMES, d.fr), gr: pick(k.gr, WM_GRIDS, d.gr), gs: num(k.gs, 24, 400, d.gs), go: num(k.go, 0.05, 1, d.go),
         mi: num(k.mi, 0, 100000, d.mi), sb: bit(k.sb)
     };
-    return {
+    const land = wmUnRle(p.l, w * h, 1), bio = wmUnRle(p.b, w * h, WM_BIOMES.length);
+    const m = {
         id: typeof p.id === 'string' && /^[a-z0-9]{1,16}$/.test(p.id) ? p.id : wmId(),
         name: wmText(p.n, WM_LIMITS.name).replace(/\n/g, ' ') || 'Untitled world', w, h,
         style: pick(p.s, WM_STYLES, 'art'), t: num(p.t, 0, 1e15, 0),
-        land: wmUnRle(p.l, w * h, 1) || new Uint8Array(w * h), bio: wmUnRle(p.b, w * h, WM_BIOMES.length) || new Uint8Array(w * h),
+        land: land || new Uint8Array(w * h), bio: bio || new Uint8Array(w * h),
         ic, tx, ln, lk
     };
+    // A land or biome grid that didn't read back (every saved map has both): the page says so (B955).
+    if (!land || !bio) Object.defineProperty(m, 'broken', { value: true });
+    return m;
 }
 
 // Icons, labels, and line points pulled back inside the bounds wmClean keeps them in (60 units past

@@ -934,7 +934,7 @@ function panShape(shape, gods) {
                 const parent = kids[Math.floor(rand() * kids.length)];
                 roles[c] = { role: `Grandchild of ${name(a)}`, rel: `${panCap(PAN_KIN.child[kin])} of ${name(parent)}`, rank: 'young' };
             } else {
-                const nth = ['Eldest', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh', 'Eighth', 'Ninth', 'Tenth', 'Eleventh'][born++];
+                const nth = PAN_BOND_BIRTH[born++];
                 roles[c] = { role: `${nth} ${PAN_KIN.child[kin]} of ${name(a)} and ${name(b)}`, rel: '', rank: 'child' };
             }
         });
@@ -1089,10 +1089,21 @@ function rollPantheon(seed, opts = {}) {
 // a newer line instead, from a draw of its own, so every other pantheon is unchanged.
 const PAN_BOND_KIN = /are twins|own parent fell silent/;
 const PAN_BOND_FEAST = /holy days (fall close together|are kept with one joint feast)/;
+const PAN_BOND_BIRTH = ['Eldest', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh', 'Eighth', 'Ninth', 'Tenth', 'Eleventh'];
+// Where in its season a holy day falls (0 its first day, 1 its last): the first new or full moon comes early.
+function panHolyPos(h) {
+    return h.kind === 'turn' ? (h.at === 'first' ? 0 : h.at === 'last' ? 1 : 0.5) : h.kind === 'moon' ? 0.15 : h.pos;
+}
+// Two holy days close enough to share a feast: the same season, and within about a third of it (a month) (B964).
+function panHolyNear(a, b) {
+    return a.season === b.season && Math.abs(panHolyPos(a) - panHolyPos(b)) <= 0.34;
+}
 function panBondFix(p, part) {
     const kinWrong = (x, y, why) => {
         if (p.shape !== 'family' || !PAN_BOND_KIN.test(why)) return false;
-        if (/twins/.test(why)) return !((x.rank === 'child' && y.rank === 'child')
+        // Twins among the children are born one after the other: not the eldest and the third (B963).
+        const nth = g => PAN_BOND_BIRTH.indexOf(g.role.split(' ')[0]);
+        if (/twins/.test(why)) return !((x.rank === 'child' && y.rank === 'child' && Math.abs(nth(x) - nth(y)) === 1)
             || (x.i === p.leader && y.rank === 'elder') || (y.i === p.leader && x.rank === 'elder'));
         // "{b}'s own parent fell silent": b is the second god named.
         return ['child', 'young', 'outcast'].includes(y.rank);
@@ -1103,7 +1114,7 @@ function panBondFix(p, part) {
             const pool = PAN_BOND_WHY_MORE.map(w => panCap(panFill(w, x.name, y.name))).filter(w => !p.bonds.some(o => o.why === w));
             if (pool.length) b.why = panPick(pool);
         }
-        if (PAN_BOND_FEAST.test(b.effect) && x.holy.season !== y.holy.season) {
+        if (PAN_BOND_FEAST.test(b.effect) && !panHolyNear(x.holy, y.holy)) {
             const pool = PAN_BOND_EFFECTS_MORE.concat(PAN_BOND_EFFECTS_R1).filter(e => !PAN_BOND_FEAST.test(e))
                 .map(e => panCap(panFill(e, x.name, y.name))).filter(e => !p.bonds.some(o => o.effect === e));
             if (pool.length) b.effect = panPick(pool);
@@ -1272,7 +1283,8 @@ function panGodLines(p, i, cal) {
     const lines = [
         ['Rules over', `${formWord} of ${panList(g.portfolio)}`],
         g.realms ? null : ['Domain', panDomainText(g)],
-        ruleHasAlignment() ? ['Alignment', PAN_ALIGN_LABELS[g.alignment]] : ['Sanctification', panAlignShort(g.alignment) || 'None'],
+        // Player Core deity entries: a devotee "can choose holy" (or unholy), or None (B965).
+        ruleHasAlignment() ? ['Alignment', PAN_ALIGN_LABELS[g.alignment]] : ['Sanctification', panAlignShort(g.alignment) ? `Can choose ${panAlignShort(g.alignment).toLowerCase()}` : 'None'],
         ['Place', g.role + (g.rel ? `. ${g.rel}` : '') + '.'],
         ['Holy symbol', panCap(panSymbolText(g))],
         ['Shown as', panCap(panDepiction(g))],

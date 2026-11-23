@@ -46,6 +46,7 @@ function wpOpenEntry(id) {
 function pinBoard(o) {
     const state = { mode: false, sel: '', dragging: false, removing: null, clearing: false };
     const timers = {};
+    const asks = {};   // the two-click confirms' timeouts (kept apart from timers, which flush() runs)
     const pinsOf = nb => { const e = o.entry(nb); return (e && e.pins) || []; };
 
     function rowHTML(nb, self, pin, n) {
@@ -60,7 +61,7 @@ function pinBoard(o) {
             </div>
             <span class="wb-pin-acts">
                 ${to ? `<button type="button" class="btn wb-pin-go" data-pin="${id}">${NB_KINDS[to.kind].icon} Open →</button>` : ''}
-                <button type="button" class="btn wb-pin-del" data-pin="${id}" aria-label="Remove pin ${n + 1}">${state.removing === pin.id ? '⚠️ Sure?' : '✕'}</button>
+                <button type="button" class="btn wb-pin-del" data-pin="${id}" aria-label="Remove pin ${n + 1}">${state.removing === self.id + '|' + pin.id ? '⚠️ Sure?' : '✕'}</button>
             </span>
         </li>`;
     }
@@ -178,11 +179,13 @@ function pinBoard(o) {
             return;
         }
         if (t.classList.contains('wb-pin-del')) {
-            const id = t.dataset.pin;
-            if (state.removing !== id) {
-                state.removing = id;
+            // The first click counts for that pin on that map: the same pin id on another map asks again (B960).
+            const id = t.dataset.pin, at = o.entry(nbLoad()), sure = (at ? at.id : '') + '|' + id;
+            if (state.removing !== sure) {
+                state.removing = sure;
+                clearTimeout(asks.removing);
                 render();
-                setTimeout(() => { if (state.removing === id) { state.removing = null; render(); } }, 4000);
+                asks.removing = setTimeout(() => { if (state.removing === sure) { state.removing = null; render(); } }, 4000);
                 return;
             }
             state.removing = null;
@@ -195,8 +198,9 @@ function pinBoard(o) {
             if (!e) return;
             if (state.clearing !== e.id) {
                 state.clearing = e.id;
+                clearTimeout(asks.clearing);
                 render();
-                setTimeout(() => { if (state.clearing === e.id) { state.clearing = false; render(); } }, 4000);
+                asks.clearing = setTimeout(() => { if (state.clearing === e.id) { state.clearing = false; render(); } }, 4000);
                 return;
             }
             state.clearing = false;

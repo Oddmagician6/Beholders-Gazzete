@@ -51,16 +51,27 @@ function weSaveNow() {
     clearTimeout(WE.saveTimer);
     WE.store.cur = WE.m.id;
     // Two tabs saving at once (before either hears of the other's save): another tab's newer copy of a
-    // map this tab isn't drawing on wins, so this save doesn't put back an old one.
-    wmLoadStore().maps.forEach(o => {
+    // map this tab isn't drawing on wins, so this save doesn't put back an old one. A map the other tab made
+    // or deleted since this tab last read the saves stays made or deleted (B958).
+    const fresh = wmLoadStore().maps, seen = WE.known || new Set(), there = new Set(fresh.map(o => o.id));
+    fresh.forEach(o => {
         const i = WE.store.maps.findIndex(m => m.id === o.id);
-        if (i >= 0 && o.id !== WE.m.id && (o.t || 0) > (WE.store.maps[i].t || 0)) WE.store.maps[i] = o;
+        if (i >= 0) { if (o.id !== WE.m.id && (o.t || 0) > (WE.store.maps[i].t || 0)) WE.store.maps[i] = o; }
+        else if (!seen.has(o.id) && WE.store.maps.length < WM_LIMITS.maps) WE.store.maps.unshift(o);
     });
+    WE.store.maps = WE.store.maps.filter(m => m === WE.m || !seen.has(m.id) || there.has(m.id));
     // Still unsaved when the browser said no, so the next change, a map switch, or leaving tries again.
     WE.dirty = !wmSaveStore(WE.store);
+    weKnown(WE.dirty ? fresh : WE.store.maps);
+    if (WE.store.maps.length !== fresh.length || WE.store.maps.some((m, i) => !fresh[i] || fresh[i].id !== m.id)) weMapOptions();
     if (!WE.dirty) return true;
     weFlash('⚠️ This browser would not save the map (storage full or turned off). Copy a link to keep it.', true);
     return false;
+}
+
+// The maps this tab last read or wrote, so a save can tell another tab's new or deleted map from its own.
+function weKnown(maps) {
+    WE.known = new Set(maps.map(m => m.id));
 }
 
 function weSave() {
@@ -354,7 +365,8 @@ function weRulerText(r) {
     const units = Math.hypot(r.b.x - r.a.x, r.b.y - r.a.y), mi = WE.m.lk.mi;
     if (!mi) return `${Math.round(units / WM_CELL)} cells (set the miles across the map)`;
     const miles = units / (WE.m.w * WM_CELL) * mi;
-    const round = v => v >= 100 ? Math.round(v / 5) * 5 : Math.round(v);
+    // Short distances keep a decimal or two, as the scale bar does (B957).
+    const round = v => v >= 100 ? Math.round(v / 5) * 5 : v >= 10 ? Math.round(v) : v >= 1 ? Math.round(v * 10) / 10 : Math.round(v * 100) / 100;
     const days = miles / 24;
     return `${round(miles).toLocaleString('en-US')} miles · ${days < 1 ? 'under a day' : `${Math.round(days * 2) / 2} days`} on foot`;
 }
@@ -474,6 +486,8 @@ function weDown(e) {
             }
             let at = j;
             if (kind === 'm') {
+                // A full line: a point more would lose its far end on reload (B956).
+                if (s.p.length >= WM_LIMITS.pts) { weUnmark(); weFlash(`⚠️ A line holds ${WM_LIMITS.pts.toLocaleString('en-US')} points at most. Take one out first.`); return; }
                 const a = s.p[j], b = s.p[(j + 1) % s.p.length];
                 s.p.splice(j + 1, 0, [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]);
                 at = j + 1;
@@ -946,7 +960,8 @@ async function weFromLink() {
         weFlash(err.browser ? '⚠️ This browser is too old to open that map link. Try a newer Chrome, Edge, Firefox, or Safari.' : '⚠️ That map link is broken (cut short when it was copied?).', true);
         return;
     }
-    if (!m) { weFlash('⚠️ That map link is broken.', true); return; }
+    // Its land doesn't read back: opening it would save an empty sea as if it had worked (B955).
+    if (!m || m.broken) { weFlash('⚠️ That map link is broken.', true); return; }
     const same = x => { const a = wmPack(x), b = wmPack(m); delete a.id; delete a.t; delete b.id; delete b.t; return JSON.stringify(a) === JSON.stringify(b); };
     const had = WE.store.maps.find(same);
     if (had) weOpen(had.id);
@@ -1011,6 +1026,7 @@ function weLookInput(e) {
 function weSetup() {
     wePickers();
     WE.store = wmLoadStore();
+    weKnown(WE.store.maps);
     if (!WE.store.maps.length) {
         const m = wmBlank(200, 130, 'My world');
         wmRandomLand(m, 'continent', Math.floor(Math.random() * 1e9), true);
@@ -1132,7 +1148,7 @@ function weSetup() {
         weSave();
     });
 
-    $('we-maps').addEventListener('change', e => { unsure(); weOpen(e.target.value); });   // unsure: the Delete button's, below
+    $('we-maps').addEventListener('change', e => { unsure(); weOpen(e.target.value); weSaveNow(); });   // the map picked opens next time (B959)   // unsure: the Delete button's, below
     $('we-name').addEventListener('input', e => {
         WE.m.name = e.target.value.replace(/[\u0000-\u001f]/g, ' ').slice(0, WM_LIMITS.name) || 'Untitled world';
         weMapOptions();
@@ -1210,6 +1226,7 @@ function weSetup() {
     window.addEventListener('storage', e => {
         if (e.key !== WM_KEY && e.key !== null) return;
         const store = wmLoadStore(), id = WE.m.id;
+        weKnown(store.maps);
         // Changes on the way, or a stroke or drag under way: keep this map as it is here.
         if (WE.dirty || WE.drag) {
             const i = store.maps.findIndex(m => m.id === id);

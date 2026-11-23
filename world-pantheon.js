@@ -73,6 +73,8 @@ function applyPanUrl(p) {
 function panPriestLink(p, i) {
     const params = new URLSearchParams({ seed: deriveSeed(p.seed, 'priest.' + i), profession: 'religious' });
     if (p.realms) { params.set('world', 'realms'); params.set('faith', p.gods[i].name); }
+    // One of this god's own priests, not any passing pilgrim (B961).
+    else params.set('role', `Priest of ${p.gods[i].name} (${p.gods[i].priests})`);
     return 'npc-generator?' + params.toString();
 }
 

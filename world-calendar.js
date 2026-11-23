@@ -21,6 +21,14 @@ function calLinkedPantheon() {
 }
 
 function calSetPantheon(g) {
+    // Options as the Pantheon tab would read them (an unknown size is "any", Realms only where the page has it),
+    // so the two tabs agree they're the same pantheon (B962).
+    if (g) g = {
+        seed: g.seed,
+        size: Object.hasOwn(PAN_SIZES, g.size) ? g.size : 'random', shape: Object.hasOwn(PAN_SHAPES, g.shape) ? g.shape : 'random',
+        naming: Object.hasOwn(PAN_NAMING, g.naming) ? g.naming : 'random',
+        world: g.world === 'realms' && typeof realmsAllowed === 'function' && realmsAllowed() && typeof REALMS_GODS !== 'undefined' ? 'realms' : ''
+    };
     calState.gods = g;
     calState.pantheon = g ? rollPantheon(g.seed, g) : null;
 }
