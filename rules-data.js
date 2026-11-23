@@ -32,7 +32,7 @@ const SRD_CONDITION_TEXT = {
 // The same 15 conditions under the 2024 rules (SRD 5.2.1 Rules Glossary), summarized.
 const SRD_CONDITION_TEXT_2024 = {
     Blinded: SRD_CONDITION_TEXT.Blinded,
-    Charmed: SRD_CONDITION_TEXT.Charmed,
+    Charmed: ['Can\'t attack the charmer or target them with damaging abilities or magical effects.', 'The charmer has advantage on social checks against it.'],
     Deafened: SRD_CONDITION_TEXT.Deafened,
     Exhaustion: ['Up to 6 levels; each new dose adds one, and level 6 is death.', 'Every d20 Test takes −2 per level, and Speed drops 5 feet per level. See the Exhaustion card.'],
     Frightened: SRD_CONDITION_TEXT.Frightened,
@@ -156,7 +156,7 @@ const RULES_CARDS = [
         ]
     },
     {
-        id: 'travel', icon: '🥾', title: 'Travel Pace', keys: 'miles distance march overland journey stealth perception gallop mount',
+        id: 'travel', icon: '🥾', title: 'Travel Pace', keys: 'miles distance march forced march extended travel overland journey stealth perception gallop mount',
         blocks: [
             { table: { head: ['Pace', 'Minute', 'Hour', 'Day', 'Effect'], rows: [
                 ['Fast', '400 ft', '4 miles', '30 miles', '−5 to passive Wisdom (Perception)'],

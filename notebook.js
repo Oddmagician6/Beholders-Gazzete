@@ -367,9 +367,10 @@ function nbRollHref(kind, href) {
 }
 
 // A D&D tool link saved from a page with srd52.js carries the rules version it was rolled under (rules=2014 or
-// rules=2024), so it reopens as the same roll whatever the reader's setting is later (B385). Worldbuilder and
-// Pathfinder links don't read the 5e rules, so they stay bare.
-const NB_RULES_HREF = /^(npc-generator|toolbox|dnd-one-shot-generator|dnd-campaign-generator)(\.html)?\?/;
+// rules=2024), so it reopens as the same roll whatever the reader's setting is later (B385). The Worldbuilder's
+// Sites tab rolls 5e monsters too, so a site saved from a one-shot or a campaign carries it as well (B983); other
+// Worldbuilder tabs file their own links (saveWorldTab), and Pathfinder links don't read the 5e rules.
+const NB_RULES_HREF = /^(?:(?:npc-generator|toolbox|dnd-one-shot-generator|dnd-campaign-generator)(?:\.html)?\?|worldbuilder(?:\.html)?\?(?:[^#]*&)?tab=sites(?:[&#]|$))/;
 function nbRulesHref(href) {
     if (!NB_RULES_HREF.test(href) || typeof SRD52_OK === 'undefined' || !SRD52_OK || typeof rulesShown !== 'string') return href;
     const at = href.indexOf('?');

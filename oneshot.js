@@ -48,6 +48,8 @@ function osSaveParams() {
     delete p.lock;
     const set = OS_PARTS.filter(id => os.set[id] && String(os.set[id]) !== String(deriveSeed(os.seed, id))).map(id => `${id}.${os.set[id]}`);
     if (set.length) p.set = set.join(','); else delete p.set;
+    // The article didn't load (offline): what's shown is all rolled, so the saved link is too (B984).
+    if (!os.given) delete p.art;
     return p;
 }
 
@@ -71,6 +73,8 @@ function osFromUrl() {
         if (OS_PARTS.includes(id) && parseSeed(seed)) os.set[id] = seed;
     });
     os.lock = [...new Set((q.get('lock') || '').split(',').filter(id => OS_PARTS.includes(id)))];
+    // A kept part with no seed of its own in the link keeps the one it rolled from, so Roll New leaves it (B988).
+    os.lock.forEach(id => { if (!os.set[id]) os.set[id] = deriveSeed(os.seed, id); });
 }
 
 // An article's campaign block as the engine's `given` (null when it has none; false when the
@@ -157,14 +161,24 @@ function saveToNotebook() {
     const site = nbAdd({ kind: 'sites', title: o.site.name, sub: siteSummary(o.site), href: osSiteLink(o) });
     if (!site || !site.entry) return flash('📒 Saved the quest, but the site didn\'t fit (the notebook or this browser\'s storage is full). Make room and save again to add it.', true);
     const nb = nbLoad();
-    if (nbLink(nb, quest.entry.id, site.entry.id)) nbStore(nb);
+    // The site already holds as many links as an entry can: both are saved, but not tied together (B986).
+    if (!nbLink(nb, quest.entry.id, site.entry.id) || nbStore(nb) === false) {
+        return flash('📒 Saved the quest and the site, but couldn\'t link them (one of them holds as many links as it can, or storage is full).', true);
+    }
     flash(!quest.existed ? '📒 Saved the quest and the site to the Campaign Notebook.'
         : site.existed ? '📒 Already in the notebook.' : '📒 Added the site to the quest already in the notebook.');
 }
 
+// The stat blocks at the back load late: wait for them, so the print isn't "Loading the stat block…" (B985).
 function osPrint() {
-    document.querySelectorAll('.os-sb').forEach(d => { d.open = true; });
-    window.print();
+    const go = () => {
+        document.querySelectorAll('.os-sb').forEach(d => { d.open = true; });
+        window.print();
+    };
+    loadMonsterBlocks().then(() => { render(); go(); }, () => {
+        flash('⚠️ The stat blocks didn\'t load (offline?), so the printout leaves them out.', true);
+        go();
+    });
 }
 
 document.addEventListener('DOMContentLoaded', async () => {

@@ -5,12 +5,17 @@
   // Accents, apostrophes and dashes don't count: "deja vu" finds Déjà Vu; "reapers", "reaper's" and
   // "reaper’s" all find Reaper's Lantern (B845).
   function fold(s) {
-    return s.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[\u2018\u2019\u02bc`']/g, '').replace(/[\u2010-\u2015]/g, '-');
+    return s.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[\u2018\u2019\u02bc`']/g, '').replace(/[\u2010-\u2015\u2212]/g, '-');
+  }
+  // "Rain-Caller" is found as "rain caller", "rain-caller" and "raincaller" (B993).
+  function index(s) {
+    var t = fold(s);
+    return t + ' ' + t.replace(/-/g, '');
   }
   var sections = [].slice.call(document.querySelectorAll('section.cmp-more[id]')).map(function (sec) {
     var count = sec.querySelector('.cmp-count');
     return { sec: sec, count: count, total: count ? count.textContent : '', items: [].slice.call(sec.querySelectorAll('.cmp-links li')).map(function (li) {
-      return { li: li, text: fold(li.textContent + ' ' + (li.getAttribute('data-q') || '')) };
+      return { li: li, text: index(li.textContent + ' ' + (li.getAttribute('data-q') || '')) };
     }) };
   });
   var jump = document.querySelector('.cmp-jump'), jumpLabel = document.querySelector('.cmp-jump-label');

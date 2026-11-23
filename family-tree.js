@@ -34,7 +34,7 @@ const FAM_NPC = /^[A-Za-z0-9_.~%+=&*-]{1,1000}$/;
 const FAM_BOX = { w: 168, h: 62, spouse: 30, gap: 22, row: 58, pad: 16 };
 
 function famText(v, max) {
-    return typeof v === 'string' ? v.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').trim().slice(0, max) : '';
+    return typeof v === 'string' ? v.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').trim().slice(0, max).trimEnd() : '';   // trimmed after the cut too, so cleaning twice = once (B989)
 }
 
 function famLine(v, max) {
@@ -279,7 +279,9 @@ function famAdd(fam, id, rel, person, uid = '', partner = null) {
     const p = famPerson(fam, id);
     if (!p) return { why: 'They are no longer in the family.' };
     if (fam.people.length + (partner ? 2 : 1) > FAM_LIMITS.people) return { why: `A family holds ${FAM_LIMITS.people} people at most.` };
-    if (fam.unions.length >= FAM_LIMITS.unions) return { why: 'This family has as many marriages as it can hold.' };
+    // Only an edit that makes a union needs room for one: a sibling, or a child of a marriage already there, doesn't (B990).
+    const newUnion = rel === 'spouse' || rel === 'parent' || (rel === 'child' && famIsBlood(fam, p) && !(uid && famUnion(fam, uid) && famUnion(fam, uid).a === p.id));
+    if (newUnion && fam.unions.length >= FAM_LIMITS.unions) return { why: 'This family has as many marriages as it can hold.' };
     const np = { ...person, id: famNewId(fam, 'p'), of: '' };
     if (rel === 'spouse') {
         if (!famIsBlood(fam, p)) return { why: 'Partners who married in are shown in one marriage only. Add the new partner to someone born into the family.' };
@@ -431,7 +433,9 @@ function famLayout(fam) {
             }
             const kids = famKids(fam, u.id);
             if (!kids.length) return;
-            const k = withKids.indexOf(u), spread = (k - (withKids.length - 1) / 2) * 8;
+            // Each marriage's bar a little apart, all of them inside the gap between the rows (B987).
+            const step = withKids.length > 1 ? Math.min(8, (B.row - 12) / (withKids.length - 1)) : 0;
+            const k = withKids.indexOf(u), spread = (k - (withKids.length - 1) / 2) * step;
             const bar = y + B.h + B.row / 2 + spread;
             drops.push({ from, bar, kids: kids.map(c => xs.get(c.id) + B.w / 2), kidY: y + B.h + B.row });
         });
