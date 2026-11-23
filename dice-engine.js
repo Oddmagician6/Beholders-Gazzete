@@ -14,7 +14,12 @@
 
 const DICE_LIMITS = { dice: 100, sides: 1000, terms: 12, length: 80 };
 // Pathfinder pages keep their own history (ruleKey: gazette-dice-history-pf2e), like their other saves.
-const DICE_HISTORY_KEY = typeof ruleKey === 'function' ? ruleKey('gazette-dice-history') : 'gazette-dice-history';
+// A page without the rules layer (the pf2e/ compendium) goes by its data-system mark (B929).
+function diceSystem() {
+    return typeof document !== 'undefined' && document.documentElement && document.documentElement.dataset.system === 'pf2e' ? 'pf2e' : '5e';
+}
+const DICE_HISTORY_KEY = typeof ruleKey === 'function' ? ruleKey('gazette-dice-history')
+    : 'gazette-dice-history' + (diceSystem() === 'pf2e' ? '-pf2e' : '');
 const DICE_HISTORY_MAX = 50;
 
 function diceRand() {
@@ -121,7 +126,7 @@ function diceDetail(r) {
 // Pathfinder calls them fortune and misfortune (a page without the system layer is 5e).
 function diceModeLabel(mode) {
     const word = mode === 'adv' ? '{alt:advantage|fortune}' : mode === 'dis' ? '{alt:disadvantage|misfortune}' : '';
-    return typeof ruleText === 'function' ? ruleText(word) : word.replace(/^\{alt:([^|]*)\|.*\}$/, '$1');
+    return typeof ruleText === 'function' ? ruleText(word) : word.replace(/^\{alt:([^|]*)\|(.*)\}$/, diceSystem() === 'pf2e' ? '$2' : '$1');
 }
 
 // ── History (localStorage) ───────────────────────────────

@@ -329,8 +329,9 @@ function ppRestTen(c, s = pcStats(c)) {
 }
 
 // ── Inventory ─────────────────────────────────────────────
-// c.play.coins { pp, gp, sp, cp }; c.play.inv [{ n, q, bu }] with bu as PF2E_ITEMS writes it
-// ('—' none, 'L' light, or a number). 10 light items make 1 Bulk; 1,000 coins make 1 Bulk.
+// c.play.coins { pp, gp, sp, cp }; c.play.inv [{ n, q, bu, pe }] with bu as PF2E_ITEMS writes it
+// ('—' none, 'L' light, or a number) for every pe of them (ammunition: 10 arrows are L; a part lot counts whole).
+// 10 light items make 1 Bulk; 1,000 coins make 1 Bulk.
 const PP_BULKS = ['—', 'L', '1', '2', '3', '4', '6', '8', '12', '16'];
 const PP_COINS = [['pp', 10], ['gp', 1], ['sp', 0.1], ['cp', 0.01]];
 
@@ -341,7 +342,7 @@ function ppBulk(c, s = pcStats(c)) {
         .filter(id => id && PF2E_ITEMS[id]).map(id => ({ n: PF2E_ITEMS[id].n, q: 1, bu: PF2E_ITEMS[id].bu || '—', gear: true }));
     const items = [...gear, ...c.play.inv];
     let bulk = 0, light = 0;
-    items.forEach(x => { if (x.bu === 'L') light += x.q; else if (x.bu !== '—') bulk += (Number(x.bu) || 0) * x.q; });
+    items.forEach(x => { const n = Math.ceil(x.q / (x.pe || 1)); if (x.bu === 'L') light += n; else if (x.bu !== '—') bulk += (Number(x.bu) || 0) * n; });
     const coins = PP_COINS.reduce((n, [k]) => n + c.play.coins[k], 0);
     bulk += Math.floor(light / 10) + Math.floor(coins / 1000);
     return { bulk, light: light % 10, cap: 5 + s.mods.str, max: 10 + s.mods.str, items, coins };

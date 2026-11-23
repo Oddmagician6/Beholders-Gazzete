@@ -285,7 +285,8 @@ function pcCleanPlay(raw) {
     const coins = raw.coins && typeof raw.coins === 'object' ? raw.coins : {};
     ['pp', 'gp', 'sp', 'cp'].forEach(k => { p.coins[k] = int(coins[k], 0, 999999, 0); });
     p.inv = Array.isArray(raw.inv) ? raw.inv.filter(x => x && typeof x === 'object' && pcStr(x.n, 40).trim()).slice(0, 40).map(x => ({
-        n: pcStr(x.n, 40).trim(), q: int(x.q, 1, 999, 1), bu: /^(—|L|\d{1,2})$/.test(x.bu) ? x.bu : '—'
+        n: pcStr(x.n, 40).trim(), q: int(x.q, 1, 999, 1), bu: /^(—|L|\d{1,2})$/.test(x.bu) ? x.bu : '—',
+        ...(int(x.pe, 1, 99, 1) > 1 ? { pe: int(x.pe, 1, 99, 1) } : {})   // Bulk per that many (arrows: L per 10). B928
     })) : [];
     p.tw = Array.isArray(raw.tw) ? ['friend', 'me'].filter(k => raw.tw.includes(k)) : [];
     // A Heroic Recovery still open from the last blow (pathfinder-sheet.js), so a reload keeps the choice.
@@ -1067,7 +1068,8 @@ function pcAC(c) {
     const a = pcArmor(c);
     const cat = a ? a.ct : 'unarmored';
     const dex = a && Number.isFinite(a.dx) ? Math.min(mods.dex, a.dx) : mods.dex;
-    const item = (a ? a.ac || 0 : 0) + (c.gear.arPot || 0);
+    // A specific magic armor's own potency ("This +1 silver chain shirt") counts unless the pick is higher. B924
+    const item = (a ? a.ac || 0 : 0) + Math.max(c.gear.arPot || 0, a ? pcBuiltInRunes(c.gear.armor).pot : 0);
     return { ac: 10 + dex + pcBonus(prof[cat], c.level) + item, cat, dex, item, rank: prof[cat], armor: a };
 }
 
@@ -1315,7 +1317,7 @@ function pcFocusInText(text) {
     const out = [];
     String(text || '').split(/(?<=[.!?])\s+|\n/).forEach(sen => {
         if (!/\b(learn|gain)s?\b/.test(sen) || /\b(or|either|choice|choose)\b/i.test(sen)) return;
-        let rest = sen;
+        let rest = sen.replace(/\([^)]*\)/g, '');   // "(such as Fire Ray)" is an example, not a grant. B922
         pcFocusNames.forEach(([n, k]) => {
             const i = rest.indexOf(n);
             if (i < 0 || /\w/.test(rest[i - 1] || '') || /\w/.test(rest[i + n.length] || '')) return;
@@ -1344,7 +1346,7 @@ function pcSpellGrants(c) {
             if (head === 'Sorcerous Gifts' || head === 'Granted Spells' || head === 'Muse Spell') {
                 const at = head === 'Muse Spell' ? 1 : rank;
                 if (at < 0 || at > r.top) return;
-                names(value).forEach(key => out.list.push({ key, rank: at, from: x.n, counts: head === 'Sorcerous Gifts', to: 'rep' }));
+                names(value).forEach(key => out.list.push({ key, rank: at, from: x.n, counts: head === 'Sorcerous Gifts' || (head === 'Granted Spells' && x.c === 'sorcerer'), to: 'rep' }));   // B923: Angelic's heading
             }
             if (head === 'Curriculum' && rank >= 0 && rank <= r.top) out.curr[rank] = names(value);
             if (PC_FOCUS_HEADS.includes(head)) {

@@ -98,7 +98,8 @@ function fieldValue(el) {
 // Set a form field from a URL value; ignores values the field can't hold.
 function setFieldValue(el, v) {
     if (v === null || v === undefined) return false;
-    if (el.type === 'checkbox') { el.checked = v === '1'; return true; }
+    // A box holds only 1 or 0: a typo in a link falls back to the caller's default, not "off" (B934).
+    if (el.type === 'checkbox') { if (v !== '1' && v !== '0') return false; el.checked = v === '1'; return true; }
     if (el.tagName === 'SELECT' && ![...el.options].some(o => o.value === v)) return false;
     el.value = v;
     return true;

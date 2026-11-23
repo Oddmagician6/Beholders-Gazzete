@@ -66,6 +66,14 @@
     ul.style.setProperty('--nav-menu-max', Math.max(room, 80) + 'px');
   }
   window.addEventListener('resize', fitMenu);
+  // Widened past the phone layout (a tablet turned sideways) with the menu open: close it, or the
+  // open-menu rule keeps the dice button hidden on the desktop layout (B931).
+  if (window.matchMedia) {
+    const desk = window.matchMedia('(min-width: 769px)');
+    const onDesk = function() { if (desk.matches && ul && ul.classList.contains('nav-open')) { closeMenu(); closeGroups(); } };
+    if (desk.addEventListener) desk.addEventListener('change', onDesk);
+    else if (desk.addListener) desk.addListener(onDesk);
+  }
   window.addEventListener('scroll', fitMenu, { passive: true });
 
   if (btn && ul) {

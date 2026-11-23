@@ -104,7 +104,8 @@ function rollFormula(formula, mode = diceMode()) {
     const out = document.getElementById('dice-result');
     try {
         const r = rollAndRecord(formula, mode);
-        document.getElementById('dice-formula').value = r.formula;
+        // The tidy form unless it runs past the length limit (d% spelled d100), which would refuse the next roll (B930).
+        if (r.formula.length <= DICE_LIMITS.length) document.getElementById('dice-formula').value = r.formula;
         out.innerHTML = `
             <div class="dice-total">${r.total}</div>
             <div class="dice-detail">${esc(diceDetail(r))}${r.mode !== 'normal' ? ` · ${diceModeLabel(r.mode)}` : ''} ${critBadge(r.crit)}</div>

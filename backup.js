@@ -435,6 +435,8 @@ async function bkRestoreMaps(list, ids, k) {
             // A map already in the notebook needs no notebook write. A new one the notebook won't keep
             // takes its picture back out, so nothing is left half restored.
             if (isNew && !nbStore(nb, false, k.nb)) { await mapDelete(id, k.db).catch(() => {}); throw new Error('notebook'); }
+            // A map already here that took a picture of another size: its line in the notebook follows (B933).
+            if (!isNew && had.sub !== mapSub(pic.w, pic.h)) { had.sub = mapSub(pic.w, pic.h); nbStore(nb, false, k.nb); }
             put++;
         } catch (e) {
             bad++;

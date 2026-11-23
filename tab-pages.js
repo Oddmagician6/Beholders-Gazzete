@@ -56,6 +56,7 @@ function showTabPage(tab) {
     const page = tab === TAB_PAGES.first && !tabOfPage() ? TAB_PAGES.hub : tabPageKnown(tab) ? TAB_PAGES.tabs[tab] : null;
     if (!page) return;
     document.title = page.title;
+    tabPageNavActive(page.page);
     const kicker = document.querySelector('.page-hero .hero-kicker');
     if (kicker) kicker.textContent = page.kicker || '';
     const hero = document.querySelector('.page-hero-description');
@@ -64,6 +65,19 @@ function showTabPage(tab) {
     if (art && page.art) art.style.backgroundImage = `url('${page.art}')`;
     // A tab page carries only its own guide; it hides while another tab is on screen.
     document.querySelectorAll('.tool-guide[data-tab]').forEach(g => { g.hidden = g.dataset.tab !== tab; });
+}
+
+// The main nav's highlight follows the tab on screen when the nav links that tab's page (the Pathfinder
+// pages list each tool; the D&D nav links only the hub, which stays lit) (B932).
+function tabPageNavActive(file) {
+    if (!file) return;
+    const name = tabPageName(file);
+    const pages = new Set(Object.values(TAB_PAGES.tabs).concat(TAB_PAGES.hub || []).map(p => p.page && tabPageName(p.page)));
+    const links = [...document.querySelectorAll('.main-nav a[href]')];
+    const to = links.find(a => a.getAttribute('href') === name);
+    if (!to) return;
+    links.forEach(a => { if (a !== to && pages.has(a.getAttribute('href'))) a.classList.remove('active'); });
+    to.classList.add('active');
 }
 
 // Whether this page has the tab (a Pathfinder page leaves out the tabs that don't work there).

@@ -24,7 +24,7 @@ let restArmed = 0;
 let addForm = { n: '', max: '1', day: true };   // the Counters box, kept across redraws
 let target = '';             // the roll bar's DC: d20 rolls show their degree of success against it
 let pdForm = { f: '1d6', type: 'fire' };        // the persistent damage box
-let itemForm = { n: '', q: '1', bu: '—' };      // the Inventory box
+let itemForm = { n: '', q: '1', bu: '—', pe: 1 };      // the Inventory box (pe: a catalog lot's size, B928)
 let treat = { by: 'me', dc: 0 };                // Treat Wounds: who rolls, and the PP_TREAT row
 
 const PS_NO_GRANTS = { list: [], curr: {}, focus: [] };
@@ -316,7 +316,7 @@ function inventoryPanel(c, d) {
         const ctl = x.gear ? `<a class="cs-tag" href="pathfinder-character-builder?char=${encodeURIComponent(c.id)}" title="Armor, shield, and weapons are picked in the builder">builder</a>`
             : `<span class="cs-step"><button type="button" class="cs-btn" data-act="inv-q" data-i="${i}" data-n="-1" aria-label="One fewer ${esc(x.n)}"${x.q > 1 ? '' : ' disabled'}>−</button><span>${x.q}</span><button type="button" class="cs-btn" data-act="inv-q" data-i="${i}" data-n="1" aria-label="One more ${esc(x.n)}"${x.q < 999 ? '' : ' disabled'}>＋</button></span>
               <button type="button" class="cs-btn cs-mini" data-act="inv-del" data-i="${i}" aria-label="Remove ${esc(x.n)}">✕</button>`;
-        return `<li><span class="cs-name">${esc(x.n)}<small>Bulk ${x.bu === '—' ? '—' : x.q > 1 ? `${esc(x.bu)} each` : esc(x.bu)}</small></span>${ctl}</li>`;
+        return `<li><span class="cs-name">${esc(x.n)}<small>Bulk ${x.bu === '—' ? '—' : x.pe > 1 ? `${esc(x.bu)} per ${x.pe}` : x.q > 1 ? `${esc(x.bu)} each` : esc(x.bu)}</small></span>${ctl}</li>`;
     });
     return `<section class="cs-panel" aria-labelledby="cs-in-h"><h2 id="cs-in-h">🎒 Inventory</h2>
         <div class="pp-coins">${PP_COINS.map(([k]) => `<label class="cs-field">${k}<input type="number" id="pp-coin-${k}" data-coin="${k}" min="0" max="999999" inputmode="numeric" value="${p.coins[k]}"></label>`).join('')}</div>
@@ -711,11 +711,12 @@ function onClick(e) {
         const q = Math.min(999, Math.max(1, Math.round(Number(itemForm.q)) || 1));
         change(p => {
             // The same item again adds to its count.
-            const had = p.inv.find(x => x.n.toLowerCase() === name.toLowerCase() && x.bu === itemForm.bu);
+            const pe = itemForm.pe > 1 ? itemForm.pe : 0;
+            const had = p.inv.find(x => x.n.toLowerCase() === name.toLowerCase() && x.bu === itemForm.bu && (x.pe || 0) === pe);
             if (had) had.q = Math.min(999, had.q + q);
-            else p.inv.push({ n: name, q, bu: itemForm.bu });
+            else p.inv.push({ n: name, q, bu: itemForm.bu, ...(pe ? { pe } : {}) });
         });
-        itemForm = { n: '', q: '1', bu: '—' };
+        itemForm = { n: '', q: '1', bu: '—', pe: 1 };
         render();
         document.getElementById('pp-item-n').focus();
         return;
@@ -770,7 +771,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const itemBulk = new Map();
     const list = document.createElement('datalist');
     list.id = 'pp-items';
-    Object.values(PF2E_ITEMS).forEach(x => { if (!itemBulk.has(x.n.toLowerCase())) { itemBulk.set(x.n.toLowerCase(), x.bu || '—'); list.appendChild(new Option(x.n)); } });
+    Object.values(PF2E_ITEMS).forEach(x => { if (!itemBulk.has(x.n.toLowerCase())) { itemBulk.set(x.n.toLowerCase(), { bu: x.bu || '—', pe: x.pe > 1 ? x.pe : 1 }); list.appendChild(new Option(x.n)); } });
     document.body.appendChild(list);
 
     sheet.addEventListener('input', e => {
@@ -783,15 +784,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (id === 'pp-item-q') itemForm.q = e.target.value.slice(0, 3);
         if (id === 'pp-item-n') {
             itemForm.n = e.target.value.slice(0, 40);
-            const bu = itemBulk.get(itemForm.n.trim().toLowerCase());
-            if (bu && PP_BULKS.includes(bu)) { itemForm.bu = bu; document.getElementById('pp-item-bu').value = bu; }
+            const it = itemBulk.get(itemForm.n.trim().toLowerCase());
+            itemForm.pe = it && PP_BULKS.includes(it.bu) ? it.pe : 1;
+            if (it && PP_BULKS.includes(it.bu)) { itemForm.bu = it.bu; document.getElementById('pp-item-bu').value = it.bu; }
         }
     });
     sheet.addEventListener('change', e => {
         const id = e.target.id;
         if (id === 'pp-res-day') addForm.day = e.target.checked;
         if (id === 'pp-pd-type') pdForm.type = e.target.value;
-        if (id === 'pp-item-bu') itemForm.bu = e.target.value;
+        if (id === 'pp-item-bu') { itemForm.bu = e.target.value; itemForm.pe = 1; }   // a Bulk typed in is per item
         if (id === 'pp-tw-by') { treat.by = e.target.value; render(); }
         if (id === 'pp-tw-dc') { treat.dc = Number(e.target.value) || 0; render(); }
         if (e.target.dataset.coin) {

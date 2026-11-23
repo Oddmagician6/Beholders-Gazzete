@@ -160,6 +160,9 @@ function pf2eEntry(i) {
   if (spell) {
     e.spell = spell;
     e.name = i.n.replace(/(\d+(?:st|nd|rd|th))-Rank Spell/i, (s, r) => `${PF2E_SPELLS[spell].n}, ${r.toLowerCase()} rank`);
+    // GM Core: a scroll's price adds the spell's cost ("oils worth 3 gp"; a cost that scales has no one number). B926
+    const cost = i.ct === 'scroll' && /^[^×\d]*worth (\d[\d,]*) gp$/i.exec(PF2E_SPELLS[spell].co || '');
+    if (cost) e.value += Number(cost[1].replace(/,/g, ''));
   }
   if (i.k === 'r') pf2eEtch(i, e);
   return e;
@@ -183,7 +186,8 @@ function pf2eRollItem(level, kind = 'any', rarity = 'any') {
     if (!fits.length) continue;
     const pool = fits.filter(i => i.ra === ra[want]);
     if (pool.length) return pick(pool);
-    if (rarity === 'any') { const common = fits.filter(i => !i.ra); return pick(common.length ? common : fits); }
+    // A level with only rare and unique items goes on to the next one down. B927
+    if (rarity === 'any') { const common = fits.filter(i => !i.ra), soft = common.length ? common : fits.filter(i => i.ra === 'u'); if (soft.length) return pick(soft); }
   }
   return null;
 }

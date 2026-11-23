@@ -676,6 +676,8 @@ function onClick(e) {
         ps.charId = '';
         if (num) ps.m = num.mod;
         const p = psParams();
+        // A standalone caster has no feats, so the focus spells they gave go in the link as picks. B921.
+        if (was) p.fo = [...new Set([...ps.c.spells.focus, ...ps.g.focus.map(f => f.key)])].join(',');
         ps.charId = was;
         return psCopyText(location.origin + location.pathname + '?' + paramsQuery(p), was ? '🔗 Link copied: it opens these spells as a caster of their own, not the saved character.' : '🔗 Link copied.');
     }
