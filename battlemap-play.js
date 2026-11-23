@@ -81,7 +81,14 @@ function bpMonster(id) {
         bpMonsterIndex = new Map(adds.concat(MONSTERS).map(r => [r.id, { size: r.size, type: r.type }]));
         bpMonsterFor = now;
     }
-    return bpMonsterIndex.get(id) || null;
+    if (bpMonsterIndex.has(id)) return bpMonsterIndex.get(id);
+    // A combatant added under the other rules: its id in these (goblin <-> goblin-warrior, B1001).
+    const full = typeof SRD52_FULL !== 'undefined' ? SRD52_FULL : null;
+    const alt = bpIs24() ? full && full.renames.monsters[id] : (typeof rulesOldId === 'function' ? rulesOldId(id) : null);
+    return (alt && bpMonsterIndex.get(alt)) || null;
+}
+function bpIs24() {
+    return typeof rulesShown === 'string' && rulesShown === '2024';
 }
 
 // A player character's class, from the Party tab (by the id the Play Sheet gave it, else by name).

@@ -37,7 +37,7 @@ function lootParams() {
   // D&D: the split's party size (pcs=) rides along when it isn't four; it changes no roll.
   const pcs = !LOOT_PF2E && lootPartySize() !== 4 ? lootPartySize() : null;
   return { tab: currentLoot.tab === 'individual' ? null : currentLoot.tab, ...currentLoot.fields, seed: currentLoot.seed, kept: currentLoot.kept || null, pcs,
-    hb: currentLoot.hb ? '1' : null };
+    hb: currentLoot.hb ? '1' : null, rules: currentLoot.rules === '2014' || currentLoot.rules === '2024' ? currentLoot.rules : null };
 }
 
 // A hoard opened from a site (world-sites.js) says where the site's key put it: { seed, text } until another roll.
@@ -170,6 +170,8 @@ function generateLoot(seed = newSeed(), push = true) {
     fields: changedFields(currentTab),
     // The homebrew swap was on for this roll: the link says so (hb=1), so it replays the same way.
     hb: !LOOT_PF2E && lootHomebrewOn(),
+    // D&D: the rules it was rolled under, so a saved hoard's link replays it under them (B995).
+    ...(!LOOT_PF2E && typeof rulesShown === 'string' ? { rules: rulesShown } : {}),
     generatedAt: new Date().toISOString()
   };
 
@@ -474,7 +476,12 @@ function loadSaved(i) {
   try {
     const saved = readLoot();
     // A hoard saved before links has no seed; its history entry carries it instead.
-    if (saved[i]) { currentLoot = saved[i]; restoreTab(currentLoot); displayLoot(); setUrlParams(lootParams(), true, currentLoot.seed ? null : { loot: currentLoot }); }
+    if (saved[i]) {
+      currentLoot = saved[i]; restoreTab(currentLoot); displayLoot(); setUrlParams(lootParams(), true, currentLoot.seed ? null : { loot: currentLoot });
+      // Rolled under the other rules: the page shows those (the switch rolls the seed again under them, B995).
+      const r = currentLoot.rules;
+      if (!LOOT_PF2E && (r === '2014' || r === '2024') && typeof rulesUse === 'function' && typeof rulesShown === 'string' && r !== rulesShown) rulesUse(r);
+    }
   } catch(e) {}
 }
 

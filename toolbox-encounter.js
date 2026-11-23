@@ -469,17 +469,30 @@ function setupEncounter() {
         srd52OnChange(() => {
             const rows = [], parked = [];
             const find = id => MONSTER_BY_ID[id] || (typeof rulesOldId === 'function' && MONSTER_BY_ID[rulesOldId(id)]) || null;
-            const put = (m, e) => {
+            // merged: the rows a merged row was made of ({ id, count }), so switching back splits it again
+            // (three werewolf forms -> one 2024 Werewolf -> the three forms) while its count is unchanged (B994).
+            const put = (m, e, id) => {
                 const had = rows.find(r => r.m === m);
-                if (had) had.count = Math.min(ENC_MAX_COUNT, had.count + e.count);
-                else rows.push({ ...e, m });
+                if (had) {
+                    had.count = Math.min(ENC_MAX_COUNT, had.count + e.count);
+                    had.merged.push({ id, count: e.count });
+                } else rows.push({ ...e, m, merged: [{ id, count: e.count }] });
             };
             enc.list.forEach(e => {
+                const was = e.merged;
+                if (was && e.count === was.reduce((s, x) => s + x.count, 0)) {
+                    const ms = was.map(x => find(x.id));
+                    if (ms.every(Boolean) && new Set(ms).size === ms.length) {
+                        was.forEach((x, k) => put(ms[k], { ...e, count: x.count }, x.id));
+                        return;
+                    }
+                }
                 // A stand-in ("Orc (Tough)") goes back by the id it stands for (B903).
                 const m = e.m.hb ? e.m : find(e.m.from || e.m.id);
-                if (m) put(m, e); else parked.push({ id: e.m.from || e.m.id, count: e.count });
+                if (m) put(m, e, e.m.from || e.m.id); else parked.push({ id: e.m.from || e.m.id, count: e.count });
             });
-            enc.parked.forEach(e => { const m = find(e.id); if (m) put(m, { count: e.count }); else parked.push(e); });
+            enc.parked.forEach(e => { const m = find(e.id); if (m) put(m, { count: e.count }, e.id); else parked.push(e); });
+            rows.forEach(r => { if (r.merged.length < 2) delete r.merged; });
             enc.list = rows;
             enc.parked = parked;
             renderPicker();

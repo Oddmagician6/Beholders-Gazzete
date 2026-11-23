@@ -143,7 +143,18 @@ function magicMorePool(rarity, type = 'any') {
 // beads, ammunition…); a Spell Scroll twice its scribing cost (p. 103: cantrip 15 gp … 9th 50,000 gp).
 const LOOT_GP_2024 = { common:100, uncommon:400, rare:4000, 'very-rare':40000, legendary:200000, artifact:0 };
 const LOOT_SCROLL_GP_2024 = [30, 50, 200, 300, 2000, 3000, 20000, 25000, 30000, 100000];
-const LOOT_CONSUMABLE_2024 = /Ammunition|^(Oil|Dust|Bead) of|Elemental Gem|^Feather Token|^Sovereign Glue|^Universal Solvent|Ointment/;
+const LOOT_CONSUMABLE_2024 = /Ammunition|^(Oil|Dust|Bead) of|Elemental Gem|Feather Token|^Sovereign Glue|^Universal Solvent|Ointment/;
+// A kind the 5.2 entry prints at its own rarity ("Anchor (Uncommon)" under Feather Token, SRD 5.2.1 p. 221):
+// the item keeps its 2014 pool, so rolls don't move, but shows and is valued at that rarity (B999).
+function loot52KindRarity(name) {
+  const base = loot52Name(name), t = SRD52_FULL.items[base];
+  if (!t || !/rarity varies/i.test(t[0])) return null;
+  const kind = (/\((.+)\)$/.exec(name) || [])[1] || (name.endsWith(' ' + base) ? name.slice(0, -base.length - 1) : '');
+  if (!kind) return null;
+  const esc = kind.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const m = new RegExp('\\*\\*\\*' + esc + ' \\((Common|Uncommon|Rare|Very Rare|Legendary)\\b').exec(t[1]);
+  return m ? m[1].toLowerCase().replace(' ', '-') : null;
+}
 function loot52Value(rarity, type, name) {
   if (type === 'scroll') {
     const m = /\((?:Cantrip|(\d)\w* Level)\)/.exec(name);
@@ -183,12 +194,13 @@ function getMagicItem(rarity, type = 'any') {
   if (more.length) withSeed(side, () => {
     if (rand() < more.length / (pool.length + more.length)) { was = item.type; item = lootPick(more); name = item.name; }
   });
+  const shown = (loot24() && loot52KindRarity(name)) || rarity;
   const out = {
     name:      loot24() ? loot52Display(name) : name,
-    rarity,
+    rarity:    shown,
     type:      item.type,
     attune:    item.attune || false,
-    value:     loot24() ? loot52Value(rarity, item.type, name) : magicItemGP(rarity)
+    value:     loot24() ? loot52Value(shown, item.type, name) : magicItemGP(rarity)
   };
   // A swapped-in item's flavor text takes the draws the item it replaced would have (magicFlavor);
   // kept off the saved hoard (not enumerable).

@@ -86,11 +86,27 @@ function allMonsters() {
     return typeof srd52Monsters === 'function' ? [...MONSTERS, ...srd52Monsters()] : MONSTERS;
 }
 
+// A 2024 block can print two sizes ("Medium or Small humanoid": the Guard) and a swarm its creatures' type
+// ("swarm of Tiny undead"); the row holds one of each, so the filters read the block too (B1002).
+// The SRD 5.1 swarms are all beasts.
+function bstSizesOf(m) {
+    const t = m.block && typeof m.block.t === 'string' ? m.block.t : '';
+    const two = /^(\w+) or (\w+) /.exec(t);
+    const letter = n => Object.keys(BST_SIZES).find(k => BST_SIZES[k].toLowerCase() === n.toLowerCase());
+    return two ? [m.size, letter(two[1]), letter(two[2])].filter(Boolean) : [m.size];
+}
+function bstSwarmOf(m) {
+    if (m.type !== 'swarm') return '';
+    const t = m.block && typeof m.block.t === 'string' ? m.block.t : '';
+    const k = /swarm of \w+ (\w+)/i.exec(t);
+    return k ? k[1].toLowerCase().replace(/s$/, '') : 'beast';
+}
+
 function filtered(f) {
     const lo = f.min ? crValue(f.min) : -1, hi = f.max ? crValue(f.max) : 99;
     return allMonsters().filter(m => (!f.q || m.name.toLowerCase().includes(f.q) || m.type.includes(f.q))
         && crValue(m.cr) >= Math.min(lo, hi) && crValue(m.cr) <= Math.max(lo, hi)
-        && (!f.type || m.type === f.type) && (!f.size || m.size === f.size)
+        && (!f.type || m.type === f.type || bstSwarmOf(m) === f.type) && (!f.size || bstSizesOf(m).includes(f.size))
         && (!f.hab || habsOf(m).includes(f.hab)))
         .sort(BST_SORTS[f.sort] || BST_SORTS.name);
 }

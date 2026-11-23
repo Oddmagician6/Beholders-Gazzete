@@ -949,12 +949,12 @@ function rollThemedEncounter(budget, diff, opts = {}) {
         if (!all.length) return [];
         const h = habitat || pick(b.habs);
         const local = all.filter(m => !ENC_MONSTER_HABITATS[m.id] || ENC_MONSTER_HABITATS[m.id].includes(h));
-        const home = local.some(m => b.leads.includes(m.id));
+        const home = local.some(m => encLeadsBand(b, m.id));
         if (!home && strict) return [];
         const pool = home ? local : all;
         // A random group needs one of its leaders in the fight (no necromancer-less zombies).
-        if (randomBand && !pool.some(m => b.leads.includes(m.id) && encPickXp(m) >= budget[diff] * 0.15)) return [];
-        return fillEncounter(pool, budget, diff, pool.filter(m => b.leads.includes(m.id)));
+        if (randomBand && !pool.some(m => encLeadsBand(b, m.id) && encPickXp(m) >= budget[diff] * 0.15)) return [];
+        return fillEncounter(pool, budget, diff, pool.filter(m => encLeadsBand(b, m.id)));
     };
     if (band && band !== "none") {
         const b = ENC_BAND_BY_KEY[band];
