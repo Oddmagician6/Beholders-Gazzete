@@ -283,13 +283,16 @@ function loadSpells() {
 
 // A new builder character with these scores (and the race and class, if picked).
 // The builder opens the newest character, so it lands on this one.
+// The builder reads two picks as +2 / +1, so a +1 / +1 / +1 needs all three first.
+function pbSplitIncomplete() {
+    if (!(pb24() && pbBg() && pb.split === 3 && pb.abil.length && pb.abil.length < 3)) return false;
+    flash(`Pick ${3 - pb.abil.length} more ${3 - pb.abil.length === 1 ? 'ability' : 'abilities'} for the +1 / +1 / +1 first, or switch to +2 / +1.`, true);
+    return true;
+}
+
 async function sendToBuilder() {
     const btn = document.getElementById('pb-send');
-    // The builder reads two picks as +2 / +1, so a +1 / +1 / +1 needs all three first.
-    if (pb24() && pbBg() && pb.split === 3 && pb.abil.length && pb.abil.length < 3) {
-        flash(`Pick ${3 - pb.abil.length} more ${3 - pb.abil.length === 1 ? 'ability' : 'abilities'} for the +1 / +1 / +1 first, or switch to +2 / +1.`, true);
-        return;
-    }
+    if (pbSplitIncomplete()) return;
     btn.disabled = true;
     try {
         // Saving re-cleans every saved character, which drops spells it can't look up.
@@ -299,6 +302,8 @@ async function sendToBuilder() {
         btn.disabled = false;
         return;
     }
+    // A pick changed while the list loaded (B1029).
+    if (pbSplitIncomplete()) { btn.disabled = false; return; }
     if (cbLoadAll().length >= CB_MAX) {
         flash(`You have ${CB_MAX} characters saved; delete one in the Character Builder first.`, true);
         btn.disabled = false;

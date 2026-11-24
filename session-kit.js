@@ -177,7 +177,15 @@ function applyUrl(p) {
     lostPins = {};
     rollCrier(p.get('crier'));
     rollRumor(/^\d+$/.test(p.get('rumor') || '') ? Number(p.get('rumor')) : -1);
-    SEEDED.forEach(k => ROLLERS[k](parseSeed(p.get(k)) || undefined));
+    // A headline or rumor the link pins that didn't load stays pinned, on Back/Forward too (B1022).
+    if (p.has('crier') && !kit.crier) lostPins.crier = p.get('crier');
+    if (p.has('rumor') && !kit.rumor) lostPins.rumor = p.get('rumor');
+    // A panel saved before seeds has no place in the address, so the page's own address leaves it out:
+    // reloading that address keeps it rather than rolling over it (B1021).
+    SEEDED.forEach(k => {
+        if (!p.has(k) && kit[k] && !kit.seeds[k]) return;
+        ROLLERS[k](parseSeed(p.get(k)) || undefined);
+    });
     return true;
 }
 
@@ -312,7 +320,7 @@ function lootHTML() {
         <div class="npc-sub">${kind}, CR ${esc(l.cr)}</div>
         ${find}
         <span class="kit-label">Coins</span>
-        <p>${coins || '<span class="muted">Not a copper.</span>'}</p>
+        <p>${coins || '<span class="muted">Not a copper.</span>'}${coins && l.coinNote ? ` <span class="kit-find">${esc(l.coinNote)}</span>` : ''}</p>
         ${valuables ? `<span class="kit-label">Gems, art &amp; goods</span><ul class="loot-list">${valuables}</ul>` : ''}
         ${magic ? `<span class="kit-label">Magic items</span><ul class="loot-list">${magic}</ul>` : ''}
         ${odds ? `<span class="kit-label">Odds &amp; ends</span><p>${lootCap(odds)}.</p>` : ''}
@@ -482,22 +490,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     Object.keys(ROLLERS).forEach(render);
     // A headline or rumor the link pins but that didn't load (a failed fetch) stays in the address
     // and out of the saved kit, so a refresh once the files load shows it.
-    const lost = fromLink && ((opened.has('crier') && !kit.crier) || (opened.has('rumor') && !kit.rumor));
-    if (lost) {
-        if (opened.has('crier') && !kit.crier) lostPins.crier = opened.get('crier');
-        if (opened.has('rumor') && !kit.rumor) lostPins.rumor = opened.get('rumor');
-        syncUrl(false);
-    } else {
-        saveKit();
-        syncUrl(false);
-    }
+    // (applyUrl keeps them in lostPins.)
+    if (!(fromLink && (lostPins.crier || lostPins.rumor))) saveKit();
+    syncUrl(false);
     kitReady = true;
 
     // Back/Forward step through rerolls.
     window.addEventListener('popstate', () => {
         if (!applyUrl(urlParams())) return;
         Object.keys(ROLLERS).forEach(render);
-        saveKit();
+        if (!lostPins.crier && !lostPins.rumor) saveKit();
     });
 
     // Shop prices follow the market's 15-minute bell.

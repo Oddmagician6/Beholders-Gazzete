@@ -45,7 +45,8 @@ function dtBlankChar() {
 }
 
 function dtWorkOk(k) {
-    return !!(DOWNTIME_WORK[k] || DOWNTIME_GAMES[k] || (DT_PF2E && DOWNTIME_PF2E_RETRAIN[k]));
+    // Own keys only: "constructor" isn't a job (B1028).
+    return Object.hasOwn(DOWNTIME_WORK, k) || Object.hasOwn(DOWNTIME_GAMES, k) || (DT_PF2E && Object.hasOwn(DOWNTIME_PF2E_RETRAIN, k));
 }
 
 function dtNum(v, max, min = 0) {
@@ -61,8 +62,8 @@ function dtClean(c) {
     const b = dtBlankChar();
     const out = {
         name: String(c.name || '').slice(0, 40),
-        life: DOWNTIME_LIFESTYLES[c.life] ? c.life : b.life,
-        act: DOWNTIME_ACTIVITIES[c.act] ? c.act : b.act,
+        life: Object.hasOwn(DOWNTIME_LIFESTYLES, c.life) ? c.life : b.life,
+        act: Object.hasOwn(DOWNTIME_ACTIVITIES, c.act) ? c.act : b.act,
         val: c.val === '' || c.val === undefined ? '' : String(dtNum(c.val, DT_VALUE_MAX)),
         done: c.done === '' || c.done === undefined ? '' : String(dtNum(c.done, DT_VALUE_MAX, DT_MIN_BONUS)),
         help: String(Math.min(DOWNTIME_MAX_CHARS - 1, Math.floor(dtNum(c.help, 99)))),

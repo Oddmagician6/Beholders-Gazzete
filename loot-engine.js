@@ -161,7 +161,8 @@ function loot52Value(rarity, type, name) {
     if (m) return LOOT_SCROLL_GP_2024[m[1] ? +m[1] : 0];
   }
   const v = LOOT_GP_2024[rarity] || 0;
-  return type === 'potion' || LOOT_CONSUMABLE_2024.test(name) ? v / 2 : v;
+  // The 5.2 name too: Arrow of Slaying is Ammunition of Slaying there (B1025).
+  return type === 'potion' || LOOT_CONSUMABLE_2024.test(name) || LOOT_CONSUMABLE_2024.test(loot52Display(name)) ? v / 2 : v;
 }
 
 // Returns null when no item of that type exists at that rarity.
@@ -185,10 +186,17 @@ function getMagicItem(rarity, type = 'any') {
   }
   // lootPick, with its draw kept: a later item (magicMorePool) may take the slot, decided from a seed
   // made of that draw, so the hoard takes no extra draws.
-  const u = rand();
-  let item = pool[Math.floor(u * pool.length)];
   // A generic item ("Potion of Resistance") comes out as one of its SRD kinds (drawn even if swapped below).
-  let name = item.variants ? lootPick(item.variants) : item.name;
+  // In 2024 a kind printed at another rarity (Fan Feather Token, Uncommon) is passed over: a Rare pick
+  // stays Rare (B1024). Only a roll that lands on one draws again, so every other roll stays.
+  let u, item, name;
+  for (let tries = 0; ; tries++) {
+    u = rand();
+    item = pool[Math.floor(u * pool.length)];
+    name = item.variants ? lootPick(item.variants) : item.name;
+    const kind = loot24() && loot52KindRarity(name);
+    if (!kind || kind === rarity || tries >= 9) break;
+  }
   const more = magicMorePool(rarity, type), side = Math.floor(u * 4294967296).toString(36);
   let was = null;
   if (more.length) withSeed(side, () => {

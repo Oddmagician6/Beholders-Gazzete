@@ -764,7 +764,8 @@ function downtimeFor(c, days, seed, i = 0, opts = {}) {
         const left = value - done;
         const craftDays = left > 0 ? Math.min(days, Math.ceil(left / perDay)) : 0;
         const made = Math.min(left, craftDays * perDay);
-        const finished = value > 0 && done + made >= value;
+        // In copper, so 0.05 + 0.16 of a 0.21 gp item finishes it (B1026).
+        const finished = value > 0 && Math.round((done + made) * 100) >= Math.round(value * 100);
         // SRD 5.1: while crafting, a modest lifestyle is free and a comfortable one costs half (5.2.1: no such rule).
         const rate = v24 ? full : lifeIndex(life) <= lifeIndex('modest') ? 0 : life === 'comfortable' ? full / 2 : full;
         lifeGp = craftDays * rate + (days - craftDays) * full;
@@ -828,7 +829,7 @@ function downtimeFor(c, days, seed, i = 0, opts = {}) {
         if (need) {
             lines.push({ text: out.train.finished
                 ? `Training done: ${need} of ${need} days${used < days ? `, finished on day ${used}` : ''}. The character gains the proficiency.`
-                : `${had + used} of ${need} days of training: ${need - had - used} more to go.`, src: 'house' });
+                : `${had + used} of ${need} days of training: ${need - had - used} more to go.`, src: srdTrain ? 'SRD' : 'house' });   // B1027
         } else lines.push({ text: 'Enter the days the training takes to track progress.', src: 'ruling' });
     } else if (c.act === 'gamble') {
         const stake = Math.max(0, Math.round((Number(c.val) || 0) * 100) / 100);
