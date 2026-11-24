@@ -32,9 +32,9 @@ const PK_TRAIT_NOTES = {
     agile: () => 'Agile: your multiple attack penalty with it is −4 and −8 (already on the card).',
     finesse: () => 'Finesse: you can attack with Dexterity in place of Strength (the better one is counted).',
     deadly: d => `Deadly ${d}: a critical hit adds one ${d} of damage (two with greater striking, three with major).`,
-    fatal: d => `Fatal ${d}: on a critical hit, every damage die becomes a ${d}, and you add one more ${d}.`,
+    fatal: d => `Fatal ${d}: on a critical hit, the weapon's damage dice become ${d}s, and it adds one more ${d}.`,
     forceful: () => 'Forceful: +1 damage per weapon die on your second attack of the turn, +2 per die on the third and later.',
-    sweep: () => 'Sweep: +1 circumstance bonus to hit if you already attacked a different target this turn.',
+    sweep: () => 'Sweep: +1 circumstance bonus to hit if you already attacked a different target with it this turn.',
     backstabber: () => 'Backstabber: +1 precision damage against an off-guard target (+2 with a +3 potency rune).',
     backswing: () => 'Backswing: after you miss with it, +1 circumstance bonus to your next attack with it this turn.',
     propulsive: () => 'Propulsive: adds half your Strength modifier to damage if it\'s positive, all of it if negative (counted).',
@@ -105,6 +105,7 @@ function pkPrice(cp) {
 const pkBlocks = text => gcBlocks(String(text || '').replace(/^- /gm, '• '));
 
 function pkStrikes(c) {
+    const { mods } = pcAttrs(c);
     return pcStrikes(c).map(s => {
         const m = /^(.*?)\s*([BPS])$/.exec(s.dmg);
         const notes = [];
@@ -116,10 +117,16 @@ function pkStrikes(c) {
         const more = [];
         if (s.ranged) more.push(['Range increment', `${s.range} ft.`]);
         const w = PF2E_ITEMS[s.key];
+        // A melee weapon with thrown attacks with Dexterity when thrown (Player Core): its own to-hit line.
+        const thrown = !s.ranged && s.traits.map(t => /^thrown-(\d+)$/.exec(t)).find(Boolean);
+        if (thrown) {
+            const melee = s.traits.includes('finesse') ? Math.max(mods.str, mods.dex) : mods.str;
+            more.push([`Thrown (${thrown[1]} ft.)`, s.atk.map(a => pcSign(a - melee + mods.dex)).join(' / ')]);
+        }
         if (w && w.rl !== undefined && w.rl !== '') more.push(['Reload', w.rl]);
         if (s.traits.length) more.push(['Traits', s.traits.join(', ')]);
-        // A bomb's damage is in its text, not its dice.
-        if (!s.dmg && w && w.x) notes.push(...w.x.split('\n').filter(l => !/^\*\*Activate/.test(l)));
+        // A bomb's persistent and splash damage are in its text, not its dice.
+        if (w && w.x && (!s.dmg || (w.tr || []).includes('bomb'))) notes.push(...w.x.split('\n').filter(l => !/^\*\*Activate/.test(l)));
         return {
             name: s.name, sub: `${PC_RANKS[s.rank]} · ${s.ranged ? 'ranged' : 'melee'} Strike ◆`,
             hitLabel: 'To hit (MAP)', hit: s.atk.map(pcSign).join(' / '),
@@ -166,47 +173,58 @@ function pkFeatures(c) {
 }
 
 // The character's spells: cantrips, repertoire or prepared spells (a spellbook if nothing is
-// prepared), granted ones, focus spells, and a spellcasting archetype's, each once: [{ key, how }].
+// prepared), granted ones, focus spells, and a spellcasting archetype's, each once: [{ key, how, ranks }].
+// ranks: the ranks it's cast at (prepared, repertoire, or a cantrip or focus spell heightened to half the
+// level rounded up); empty when only the book's rank applies.
 function pkSpells(c) {
     const arcs = pcArcCastings(c);
     if (!pcCasting(c) && !arcs.length) return [];
     const s = typeof pcTextState !== 'undefined' && pcTextState === 2 ? pcFittedSpells(c) : c.spells;
     const grants = pcSpellGrants(c);
     const out = new Map();
-    const add = (k, how) => { if (Object.hasOwn(PF2E_SPELLS, k) && !out.has(k)) out.set(k, how); };
+    const top = Math.min(10, Math.ceil(c.level / 2));
+    const add = (k, how, rank) => {
+        if (!Object.hasOwn(PF2E_SPELLS, k)) return;
+        if (!out.has(k)) out.set(k, { how, ranks: new Set() });
+        const sp = PF2E_SPELLS[k];
+        const r = sp.k === 'c' || sp.k === 'f' ? top : Number(rank) || 0;
+        if (r) out.get(k).ranks.add(r);
+    };
     s.ct.forEach(k => add(k, 'cantrip'));
     grants.list.filter(g => g.rank === 0).forEach(g => add(g.key, g.from));
-    Object.keys(s.rep).sort((a, b) => a - b).forEach(r => s.rep[r].forEach(k => add(k, s.sig[r] === k ? 'signature' : 'repertoire')));
-    grants.list.filter(g => g.rank > 0 && g.to === 'rep').forEach(g => add(g.key, g.from));
-    const prepped = Object.keys(s.prep).sort((a, b) => a - b).flatMap(r => s.prep[r].filter(Boolean));
-    prepped.forEach(k => add(k, 'prepared'));
+    Object.keys(s.rep).sort((a, b) => a - b).forEach(r => s.rep[r].forEach(k => add(k, s.sig[r] === k ? 'signature' : 'repertoire', r)));
+    grants.list.filter(g => g.rank > 0 && g.to === 'rep').forEach(g => add(g.key, g.from, g.rank));
+    const prepped = Object.keys(s.prep).sort((a, b) => a - b).flatMap(r => s.prep[r].filter(Boolean).map(k => [k, r]));
+    prepped.forEach(([k, r]) => add(k, 'prepared', r));
     if (!prepped.length) {
         s.book.forEach(k => add(k, 'spellbook'));
         grants.list.filter(g => g.rank > 0 && g.to === 'book').forEach(g => add(g.key, g.from));
     }
     // A cleric's divine font: heal or harm at the top rank, cast from the font's own slots.
     const cast = pcCasting(c);
-    if (cast && cast.font && cast.font.spell) add(cast.font.spell, 'divine font');
+    if (cast && cast.font && cast.font.spell) add(cast.font.spell, 'divine font', Math.min(9, top));
     pcFocus(c, grants).list.forEach(f => add(f.key, f.from || 'focus'));
     arcs.forEach(a => {
         const m = s.mc[a.arc];
         if (!m) return;
         const how = `${a.n.toLowerCase()} archetype`;
         m.ct.forEach(k => add(k, how));
-        Object.values(m.rep).flat().forEach(k => add(k, how));
-        const prep = Object.values(m.prep).flat().filter(Boolean);
-        (prep.length ? prep : m.book).forEach(k => add(k, how));
+        Object.entries(m.rep).forEach(([r, ks]) => ks.forEach(k => add(k, how, r)));
+        const prep = Object.entries(m.prep).flatMap(([r, ks]) => ks.filter(Boolean).map(k => [k, r]));
+        if (prep.length) prep.forEach(([k, r]) => add(k, how, r));
+        else m.book.forEach(k => add(k, how));
     });
-    return [...out].map(([key, how]) => ({ key, how }));
+    return [...out].map(([key, { how, ranks }]) => ({ key, how, ranks: [...ranks].sort((a, b) => a - b) }));
 }
 
-function pkSpellCards(host, key, tag) {
+function pkSpellCards(host, key, tag, ranks = []) {
     const s = PF2E_SPELLS[key];
     const focus = s.k === 'f' || (s.k === 'c' && !(s.td || []).length);
     const kind = s.k === 'c' ? 'Cantrip' : s.k === 'f' ? 'Focus' : s.k === 'r' ? 'Ritual' : 'Spell';
     const stat = (k, v) => (v ? `<div><dt>${k}</dt><dd>${gcEsc(v)}</dd></div>` : '');
     const cast = PK_ACTS[s.t] || s.t;
-    const stats = `<dl class="gc-stats">${stat('Cast', cast)}${stat('Range', s.rg)}${stat(s.ar ? 'Area' : 'Targets', s.ar || s.tg)}${stat('Defense', s.df)}${stat('Duration', s.du)}${stat('Cost', s.co)}</dl>`;
+    const at = ranks.length && !(ranks.length === 1 && ranks[0] === s.r) ? `${ranks.length > 1 ? 'ranks' : 'rank'} ${ranks.join(', ')}` : '';
+    const stats = `<dl class="gc-stats">${stat('Cast at', at)}${stat('Cast', cast)}${stat('Range', s.rg)}${stat(s.ar ? 'Area' : 'Targets', s.ar || s.tg)}${stat('Defense', s.df)}${stat('Duration', s.du)}${stat('Cost', s.co)}</dl>`;
     const rarity = s.ra ? PK_RARITY[s.ra] + ' · ' : '';
     return gcFlow(host, pkBlocks(s.x), (body, part, total, tight) => gcTextCard({
         color: PK_TRAD_COLORS[focus ? 'focus' : (s.td || [])[0]] || '#8a6a2a', name: s.n,
@@ -251,9 +269,9 @@ function pkCards() {
         ['class', 'feat', 'ancestry', 'background'].filter(on).forEach(set => f[set].forEach(x => {
             pkCached(JSON.stringify([x, tag]), () => pkFeatureCards(host, x, tag)).forEach(html => out.push({ set, html }));
         }));
-        if (on('spell')) pkSpells(pk.c).forEach(({ key, how }) => {
+        if (on('spell')) pkSpells(pk.c).forEach(({ key, how, ranks }) => {
             const t = `${tag} · ${how}`;
-            pkCached('spell:' + key + t, () => pkSpellCards(host, key, t)).forEach(html => out.push({ set: 'spell', html }));
+            pkCached(JSON.stringify(['spell', key, t, ranks]), () => pkSpellCards(host, key, t, ranks)).forEach(html => out.push({ set: 'spell', html }));
         });
     }
     if (on('items')) pk.items.forEach(k => {

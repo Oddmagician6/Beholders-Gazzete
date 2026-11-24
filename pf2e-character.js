@@ -1141,8 +1141,13 @@ function pcStrikes(c) {
         const b = pcBuiltInRunes(w.id);
         return { ...PF2E_ITEMS[w.id], key: w.id, pot: Math.max(w.pot || 0, b.pot), str: Math.max(w.str || 0, b.str), own: (w.pot || 0) > b.pot || (w.str || 0) > b.str };
     }).filter(w => w.k === 'w');
+    // Handwraps of mighty blows aren't a weapon of their own: their runes go on the fist (GM Core).
+    const wraps = rows.filter(w => w.ct === 'unarmed' && w.key === 'handwraps-of-mighty-blows');
+    wraps.forEach(w => rows.splice(rows.indexOf(w), 1));
+    const wrap = wraps.reduce((a, w) => ({ pot: Math.max(a.pot, w.pot || 0), str: Math.max(a.str, w.str || 0) }), { pot: 0, str: 0 });
     // A monk's Powerful Fist makes it a d6.
-    rows.push({ n: 'Fist', key: '', ct: 'unarmed', g: 'brawling', dm: c.cls === 'monk' ? '1d6 B' : '1d4 B', tr: ['agile', 'finesse', 'nonlethal', 'unarmed'], pot: 0, str: 0 });
+    rows.push({ n: wraps.length ? 'Fist (handwraps)' : 'Fist', key: '', ct: 'unarmed', g: 'brawling', dm: c.cls === 'monk' ? '1d6 B' : '1d4 B',
+        tr: ['agile', 'finesse', 'nonlethal', 'unarmed'].concat(wraps.length ? ['magical'] : []), pot: wrap.pot, str: wrap.str, own: !!(wrap.pot || wrap.str) });
     return rows.map(w => {
         const tr = w.tr || [];
         const ranged = !!w.rg;

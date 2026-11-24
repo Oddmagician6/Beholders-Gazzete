@@ -363,13 +363,15 @@ function addToFight({ name, mod = 0, fixed = null, hp = null, ac = null, count =
 function addCombatants(e) {
     e.preventDefault();
     const v = id => document.getElementById(id).value;
-    const name = v('ia-name').trim().replace(/\s+/g, ' ').slice(0, 36);
+    const full = v('ia-name').trim().replace(/\s+/g, ' ').slice(0, 60);
+    const name = full.slice(0, 36).trim();
     if (!name) return;
     // An SRD monster's name brings its stat block, and fills a blank HP or AC and a bonus left at 0.
-    const m = monsterNamed(name);
+    // The whole name is looked up before the tracker cuts it to 36 (some Pathfinder spellcaster dragons run to 42).
+    const m = monsterNamed(full);
     const mod = num(v('ia-mod')) ?? 0;
     const added = addToFight({
-        name, mod: Math.max(-10, Math.min(INIT_PF2E ? 40 : 20, m && mod === 0 ? monsterInit(m) : mod)), fixed: num(v('ia-init')),
+        name, mod: Math.max(-10, Math.min(INIT_PF2E ? 50 : 20, m && mod === 0 ? monsterInit(m) : mod)), fixed: num(v('ia-init')),
         hp: num(v('ia-hp')) ?? (m ? m.hp : null), ac: num(v('ia-ac')) ?? (m ? m.ac : null),
         count: Math.max(1, Math.min(20, num(v('ia-count')) ?? 1)), monster: m ? m.id : null
     });
@@ -729,7 +731,9 @@ function setupInitiative() {
     if (typeof srd52OnChange === 'function') srd52OnChange(() => { fillMonsterNames(); renderFight(); });
     const follow = document.getElementById('init-follow');
     if (!INIT_BLOCKS) follow.closest('label').style.display = 'none';
-    if (INIT_PF2E) document.getElementById('ia-mod').max = 40;
+    // Pathfinder Perception runs to +43 (Monster Core 2's hekatonkheires titan); names to 42 characters.
+    if (INIT_PF2E) document.getElementById('ia-mod').max = 50;
+    document.getElementById('ia-name').maxLength = 60;
     follow.checked = followTurns();
     follow.addEventListener('change', () => {
         try { localStorage.setItem(INIT_FOLLOW_KEY, follow.checked ? 'on' : 'off'); } catch (e) {}

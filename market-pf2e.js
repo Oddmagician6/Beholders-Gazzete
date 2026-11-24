@@ -74,7 +74,7 @@ const MARKET_PF2E_CATEGORIES = {
     'magic-items': 'Magic Items & Runes',
 };
 
-const MARKET_PF2E_TOOL = /toolkit|^tool-|^alchemist-s-lab$|^climbing-kit$|^disguise-kit|^fishing-tackle$|^musical-instrument|^writing-set|^cookware$|^compass$|^spyglass$|^merchant-s-scale$/;
+const MARKET_PF2E_TOOL = /toolkit|^tool-|^alchemist-s-lab$|^climbing-kit(-extreme)?$|^disguise-kit|^fishing-tackle$|^musical-instrument|^writing-set|^cookware$|^compass$|^spyglass$|^merchant-s-scale$/;
 
 // A Pathfinder item's market category, or null when it doesn't trade (coins, unpriced).
 function marketPf2eCategory(it, id) {
@@ -88,7 +88,8 @@ function marketPf2eCategory(it, id) {
         case 'r': return 'magic-items';
         case 'c':
             if (it.ct === 'wand') return 'magic-items';
-            if (it.ct === 'toolkit') return 'tools';
+            // An alchemical tool (snake oil) is used up like any consumable (GM Core).
+            if (it.ct === 'toolkit' && !tr.includes('alchemical')) return 'tools';
             return !it.l && !tr.length ? 'adventuring-gear' : 'consumables';
         default:
             if (tr.includes('precious')) return 'trade-goods';
