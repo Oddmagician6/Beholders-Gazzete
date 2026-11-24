@@ -5,6 +5,9 @@
    has 🔒 keep and 🎲 reroll; Roll New Adventure leaves kept parts alone.
    The address bar holds it all, so a reload or a shared link rebuilds the same adventure:
      ?seed=&level=&party=&len=&tone=&kind=&set=part.seed,…&lock=part,…&art=<article id>
+   A kept hook or road also holds what it read from the site, so a new site leaves it alone (B1031):
+     set=hook.<seed>.<site kind>  set=road.<seed>.<terrain>.<site kind>.<band or none>
+   A link without them rolls as it always did; they're added the first time the part is kept.
    art: an article's "Use This in My Campaign" block (articles.json `campaign`) gives the
    title, the job, the patron, the town, and a clue; with no seed, the seed follows the id.
    A new adventure (no seed in the URL) starts at the Toolbox Party tab's level and size.
@@ -13,7 +16,21 @@
 
 const OS_PART_LABELS = { site: 'Site & villain', plot: 'Plot & twist', hook: 'Town & patron', road: 'Road', hoard: 'Hoard' };
 
-const os = { seed: '', level: 3, party: 4, len: 'standard', tone: '', kind: '', set: {}, lock: [], art: '', given: null, data: null };
+const os = { seed: '', level: 3, party: 4, len: 'standard', tone: '', kind: '', set: {}, pin: {}, lock: [], art: '', given: null, data: null };
+
+// A part's set= token: its seed, then a kept hook's or road's pins (B1031).
+function osSetToken(id) {
+    const p = os.pin[id];
+    const tail = !p ? [] : id === 'hook' ? [p.kind] : [p.terrain, p.kind, p.band || 'none'];
+    return [id, os.set[id], ...tail].join('.');
+}
+
+function osReadPin(id, rest) {
+    const ok = v => /^[a-z0-9-]{1,40}$/.test(v || '');
+    if (id === 'hook' && ok(rest[0])) return { kind: rest[0] };
+    if (id === 'road' && ok(rest[0]) && ok(rest[1]) && ok(rest[2])) return { terrain: rest[0], kind: rest[1], band: rest[2] === 'none' ? null : rest[2] };
+    return null;
+}
 
 function esc(s) {
     return String(s === undefined || s === null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -34,7 +51,7 @@ function osParams() {
     if (os.len !== 'standard') p.len = os.len;
     if (os.tone) p.tone = os.tone;
     if (os.kind) p.kind = os.kind;
-    const set = OS_PARTS.filter(id => os.set[id]).map(id => `${id}.${os.set[id]}`);
+    const set = OS_PARTS.filter(id => os.set[id]).map(osSetToken);
     if (set.length) p.set = set.join(',');
     if (os.lock.length) p.lock = os.lock.join(',');
     if (os.art) p.art = os.art;
@@ -46,7 +63,8 @@ function osParams() {
 function osSaveParams() {
     const p = osParams();
     delete p.lock;
-    const set = OS_PARTS.filter(id => os.set[id] && String(os.set[id]) !== String(deriveSeed(os.seed, id))).map(id => `${id}.${os.set[id]}`);
+    // A pinned part stays in the link even on its own seed: the pins are what it read from another site.
+    const set = OS_PARTS.filter(id => os.set[id] && (os.pin[id] || String(os.set[id]) !== String(deriveSeed(os.seed, id)))).map(osSetToken);
     if (set.length) p.set = set.join(','); else delete p.set;
     // The article didn't load (offline): what's shown is all rolled, so the saved link is too (B984).
     if (!os.given) delete p.art;
@@ -68,9 +86,13 @@ function osFromUrl() {
     os.tone = Object.hasOwn(OS_TONES, q.get('tone')) ? q.get('tone') : '';
     os.kind = Object.hasOwn(SITE_KINDS, q.get('kind')) ? q.get('kind') : '';
     os.set = {};
+    os.pin = {};
     (q.get('set') || '').split(',').forEach(t => {
-        const [id, seed] = t.split('.');
-        if (OS_PARTS.includes(id) && parseSeed(seed)) os.set[id] = seed;
+        const [id, seed, ...rest] = t.split('.');
+        if (!OS_PARTS.includes(id) || !parseSeed(seed)) return;
+        os.set[id] = seed;
+        const pin = osReadPin(id, rest);
+        if (pin) os.pin[id] = pin;
     });
     os.lock = [...new Set((q.get('lock') || '').split(',').filter(id => OS_PARTS.includes(id)))];
     // A kept part with no seed of its own in the link keeps the one it rolled from, so Roll New leaves it (B988).
@@ -99,12 +121,16 @@ async function osLoadArticle(id) {
 }
 
 function osRoll() {
-    os.data = rollOneShot(os.seed, { level: os.level, party: os.party, length: os.len, tone: os.tone, kind: os.kind, given: os.given }, os.set);
+    os.data = rollOneShot(os.seed, { level: os.level, party: os.party, length: os.len, tone: os.tone, kind: os.kind, given: os.given }, os.set, os.pin);
+    // A kept hook or road remembers what it read from this site, so the next one leaves it alone (B1031).
+    // Pinned from this roll, so the adventure on the page doesn't change.
+    // A pin lasts as long as the part's seed: Roll New and 🎲 drop it, unlocking doesn't.
+    ['hook', 'road'].forEach(id => { if (os.lock.includes(id) && !os.pin[id]) os.pin[id] = { ...os.data.pins[id] }; });
 }
 
 function osChanged(push = false) {
-    setUrlParams(osParams(), push);
     osRoll();
+    setUrlParams(osParams(), push);
     render();
 }
 
@@ -144,7 +170,7 @@ function render() {
 // ── Actions ──────────────────────────────────────────────
 function rollNew() {
     os.seed = newSeed();
-    OS_PARTS.forEach(id => { if (!os.lock.includes(id)) delete os.set[id]; });
+    OS_PARTS.forEach(id => { if (!os.lock.includes(id)) { delete os.set[id]; delete os.pin[id]; } });
     osChanged(true);
 }
 
@@ -195,8 +221,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     os.given = await osLoadArticle(os.art);
     if (os.given === false) { os.given = null; flash('⚠️ The Gazette article didn\'t load (offline?), so this adventure is all rolled. Reload to try again.', true); }
     else if (os.art && !os.given) { os.art = ''; flash('That article has no campaign block, so this adventure is all rolled.', true); }
-    setUrlParams(osParams(), false);
     osRoll();
+    setUrlParams(osParams(), false);
     render();
     loadMonsterBlocks().then(render, () => {});
     // The 2014/2024 rules switched (another tab, or Back to a rules= address): roll again on the new
@@ -232,6 +258,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             else { os.lock.push(id); os.set[id] = os.data.seeds[id]; }
         } else {
             os.set[id] = newSeed();
+            delete os.pin[id];
         }
         osChanged(!b.dataset.lock);
         const again = document.querySelector(`#os-module [data-${b.dataset.lock ? 'lock' : 'reroll'}="${id}"]`);

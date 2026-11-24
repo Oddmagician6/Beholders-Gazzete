@@ -121,7 +121,7 @@ function oneShotBodyHtml(o, opt = {}) {
             ${h('Act 2', 'The road', 'road')}
             <h4>🔎 The trail (three clues: any one is enough to find the way)</h4>
             <ul class="os-clues">${o.road.clues.map(c => `<li><span class="os-dc">DC ${c.dc} ${esc(c.skill)}</span> ${esc(c.text)}</li>`).join('')}</ul>
-            <h4>🛤️ On the road (${o.road.days.length} day${o.road.days.length === 1 ? '' : 's'}, ${esc(TRAVEL_SEASONS[o.road.season].label.toLowerCase())}, ${esc(TRAVEL_TERRAIN[o.terrain].label.toLowerCase())})</h4>
+            <h4>🛤️ On the road (${o.road.days.length} day${o.road.days.length === 1 ? '' : 's'}, ${esc(TRAVEL_SEASONS[o.road.season].label.toLowerCase())}, ${esc(TRAVEL_TERRAIN[o.road.terrain || o.terrain].label.toLowerCase())})</h4>
             ${o.road.days.map((d, i) => `<div class="os-day">
                 <p><strong>Day ${i + 1}:</strong> ${esc(d.weather)}. ${esc(d.scene)}</p>
                 <p><strong>${esc(d.event.t)}.</strong> ${esc(d.event.d)}${d.event.hook ? ` ${esc(d.event.hook)}` : ''}</p>

@@ -1,6 +1,6 @@
 /* ============================================
    ONE-SHOT ENGINE (F73): a whole adventure in three acts, page-free.
-   rollOneShot(seed, opts, set) composes the other engines into one story:
+   rollOneShot(seed, opts, set, pins) composes the other engines into one story:
      site  → a keyed site (site-engine.js rollSite); its boss is the villain
      plot  → the villain's goal, the thing everyone wants, the twist, the clock, the ending
      hook  → Act 1: the town, the tavern (tavern-engine.js), the patron, the job, the pay
@@ -9,6 +9,10 @@
    Each part rolls from set[part] or deriveSeed(seed, part), so a kept part holds still while
    the rest reroll. The parts read each other's names (the plot names the site's boss), so a
    new site renames the villain everywhere, but the plot keeps its own picks.
+   pins: what a kept hook or road read from the site when it was kept (B1031), so a new site
+   leaves its town and its road alone: { hook: { kind }, road: { terrain, kind, band } }
+   (band null: the road's fights came from the site's habitat). The result's `pins` are the
+   values this roll used; with no pins the parts read the site as before.
    opts: { level 1-20, party 1-8, length (OS_LENGTHS key), tone (OS_TONES key or 'random'),
            kind (SITE_KINDS key or 'random'), given (an article's campaign block, see below) }
    given: { title, hook, npc: { name, role, want, secret, gender }, place, placeText, tavern, rumor }: the
@@ -670,8 +674,9 @@ function osNameable(site) {
 }
 
 // ── The roll ─────────────────────────────────────────────
-function rollOneShot(seed, opts = {}, set = {}) {
+function rollOneShot(seed, opts = {}, set = {}, pins = {}) {
     const ps = id => (set && set[id]) || deriveSeed(seed, id);
+    const pin = pins || {};
     const level = osClamp(opts.level, 1, 20, 3);
     const party = osClamp(opts.party, 1, 8, 4);
     const length = Object.hasOwn(OS_LENGTHS, opts.length) ? opts.length : 'standard';
@@ -725,8 +730,10 @@ function rollOneShot(seed, opts = {}, set = {}) {
     if (stood) Object.assign(villain, { mind: 'folk', monster: stood.id, role: stood.name, first: gv.name.split(' ')[0] });
 
     // ── Act 1: the town, the tavern, the patron ──
+    // A kept hook picks its terrain from the kind of site it was kept with (B1031).
+    const hookKind = pin.hook && Object.hasOwn(OS_TERRAIN, pin.hook.kind) ? pin.hook.kind : kind;
     const hook = withSeed(seeds.hook, () => {
-        const terrain = osPick(OS_TERRAIN[kind]);
+        const terrain = osPick(OS_TERRAIN[hookKind]);
         const rolledTown = townName(OS_TOWN_SETTING[terrain] || 'crossroads');
         const town = given && given.place && !given.tavern ? given.place : rolledTown;
         const npc = rollNPC();
@@ -782,6 +789,11 @@ function rollOneShot(seed, opts = {}, set = {}) {
     const reward = questRound(osPayBase(level) * party * Lg.pay * (0.75 + hook.pay * 0.5));
 
     // ── Act 2: the trail, the road, the fights ──
+    // A kept road keeps the land and the band it was kept with (B1031); else the town's and the site's.
+    const rp = pin.road || null;
+    const roadTerrain = rp && Object.hasOwn(OS_TOWN_SETTING, rp.terrain) ? rp.terrain : hook.terrain;
+    const roadKind = rp && Object.hasOwn(SITE_KINDS, rp.kind) ? rp.kind : kind;
+    const roadBand = rp ? (rp.band && ENC_BAND_BY_KEY[rp.band] ? rp.band : null) : site.band;
     const road = withSeed(seeds.road, () => {
         const dc = osClueDc(site);
         const clues = [];
@@ -799,22 +811,22 @@ function rollOneShot(seed, opts = {}, set = {}) {
         for (let d = 0; d < n; d++) {
             const w = rollWeather('temperate', season, prev);
             prev = w;
-            const ev = travelMoreHook(rollRoadEvent(hook.terrain, w, usedEv), deriveSeed(seeds.road, 'event.more.' + d));
+            const ev = travelMoreHook(rollRoadEvent(roadTerrain, w, usedEv), deriveSeed(seeds.road, 'event.more.' + d));
             usedEv.push(ev.t);
-            days.push({ weather: weatherHeadline(w), event: ev, scene: rollScene(hook.terrain, season) });
+            days.push({ weather: weatherHeadline(w), event: ev, scene: rollScene(roadTerrain, season) });
         }
         const complication = fill(pick(OS_COMPLICATIONS[tone], 'complication.' + tone));
         const fights = [];
         for (let i = 0; i < Lg.fights; i++) {
             const diff = i === 0 ? 'moderate' : 'low';
             const fseed = deriveSeed(seeds.road, 'fight.' + i);
-            let r = site.band ? rollThemedEncounter(budget, diff, { band: site.band }) : { list: [], band: null };
-            if (!r.list.length) r = rollThemedEncounter(budget, diff, { habitat: SITE_KINDS[kind].habitat });
+            let r = roadBand ? rollThemedEncounter(budget, diff, { band: roadBand }) : { list: [], band: null };
+            if (!r.list.length) r = rollThemedEncounter(budget, diff, { habitat: SITE_KINDS[roadKind].habitat });
             if (!r.list.length) continue;
             const scene = rollEncounterScene(r.list, fseed, { band: r.band, level });
             fights.push({ list: r.list.map(e => ({ id: e.m.id, count: e.count })), band: r.band, diff, seed: fseed, scene, day: Math.min(n, i + 1) });
         }
-        return { season, days, clues, complication, fights };
+        return { season, terrain: roadTerrain, days, clues, complication, fights };
     });
     // The job is there and back: the clock leaves the road both ways and a day for the site.
     const deadline = fill(plot.clock[0].replace('{n}', Math.max(plot.days, 2 * road.days.length + 1)));
@@ -841,6 +853,7 @@ function rollOneShot(seed, opts = {}, set = {}) {
     const pitchBody = withSeed(deriveSeed(seeds.plot, 'pitch'), () => osCap(fill(pick(OS_PITCHES, 'pitch').replace('{deadline}', deadline))));
     return {
         seed, seeds, level, party, length, tone, kind, given: !!given, named, form, guard, budget,
+        pins: { hook: { kind: hookKind }, road: { terrain: roadTerrain, kind: roadKind, band: roadBand } },
         title, pitch: `${osA(T.adj)} one-shot. ${pitchBody}`, pitchBody,
         villain: { ...villain, goal },
         truth: fill(`{Villain} ${goalRaw}. ${osCap(late)} if nobody stops {vthem} in time.`),

@@ -4,6 +4,9 @@
    Rollers: npc-data.js (rollNPC), loot-engine.js (rollTreasure), rumors.json (dealt by rumor-deck.js),
    town-crier.js (articles.json), shop-engine.js (rollShop, live market prices).
    Seeds and the shareable URL: rng.js.
+   The 2014/2024 rules switch (srd52.js) changes the loot (the magic items and their values); the
+   loot remembers the rules it was rolled under, and the same seed rolls again under the other
+   ones (B1032). A link carries rules= like every rolled page.
    ============================================ */
 
 const KIT_KEY = 'gazette-session-kit';
@@ -86,9 +89,15 @@ function rollKitNPC(seed = newSeed()) {
     kit.npc = withSeed(seed, () => rollNPC({ race: opt('npc-race'), professionType: opt('npc-profession') }));
 }
 
+// The rules the loot rolls under: 2024, or 2014 with or without the SRD 5.2 additions (B1032).
+function kitRules() {
+    if (typeof rulesShown === 'string' && rulesShown === '2024') return '2024';
+    return typeof srd52On === 'function' && srd52On() ? '2014+' : '2014';
+}
+
 function rollKitLoot(seed = newSeed()) {
     kit.seeds.loot = seed;
-    kit.loot = { kind: opt('loot-kind'), cr: opt('loot-cr'), ...withSeed(seed, () => rollTreasure(opt('loot-kind'), opt('loot-cr'))) };
+    kit.loot = { kind: opt('loot-kind'), cr: opt('loot-cr'), ...withSeed(seed, () => rollTreasure(opt('loot-kind'), opt('loot-cr'))), rules: kitRules() };
 }
 
 function rollKitShop(seed = newSeed()) {
@@ -434,6 +443,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     fillShopTypePicker(document.getElementById('shop-type'));
     loadKit();
     setupParty();
+    const rulesBox = document.getElementById('kit-rules');
+    if (rulesBox && typeof srd52Toggle === 'function') rulesBox.innerHTML = srd52Toggle();
 
     document.getElementById('roll-all').addEventListener('click', rollAll);
     document.getElementById('copy-kit').addEventListener('click', copyKit);
@@ -474,6 +485,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             kit[part] = null;
             if (SEEDED.includes(part)) ROLLERS[part](parseSeed(kit.seeds[part]) || undefined);
         });
+        // Loot saved under the other rules rolls its seed again under these (B1032).
+        if (kit.loot && kit.seeds.loot && (kit.loot.rules || '2014') !== kitRules()) rollKitLoot(parseSeed(kit.seeds.loot) || undefined);
         // First visit (or nothing saved): roll a fresh kit.
         if (!kit.npc) rollKitNPC();
         if (!kit.loot) rollKitLoot();
@@ -494,6 +507,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!(fromLink && (lostPins.crier || lostPins.rumor))) saveKit();
     syncUrl(false);
     kitReady = true;
+
+    // D&D 2014/2024: the switch (here or in another tab) rolls the same loot seed under the new rules (B1032).
+    if (typeof srd52OnChange === 'function') srd52OnChange(() => {
+        if (!kit.loot || !kit.seeds.loot || (kit.loot.rules || '2014') === kitRules()) return;
+        rollKitLoot(parseSeed(kit.seeds.loot) || undefined);
+        render('loot');
+        if (!lostPins.crier && !lostPins.rumor) saveKit();
+        syncUrl(false);
+    });
 
     // Back/Forward step through rerolls.
     window.addEventListener('popstate', () => {
