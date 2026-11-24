@@ -9,7 +9,7 @@
    ============================================ */
 
 // mapId: the map the Builder this window follows last sent (its fallback reads that map, not another tab's).
-const BV = { key: '', state: null, heard: 0, from: '', mapId: '' };
+const BV = { key: '', state: null, heard: 0, from: '', mapId: '', lastFrom: '' };
 const $ = id => document.getElementById(id);
 
 // The squares to frame: the revealed ones and one around them, or all of it.
@@ -77,7 +77,10 @@ function bvSetup() {
     let channel = null;
     try { channel = new BroadcastChannel(BP_CHANNEL); } catch (e) {}
     // Opened from a Builder (its 📺 button): follow that tab only, not another tab's map.
-    const from = BV.from = new URLSearchParams(location.hash.slice(1)).get('from') || '';
+    const hash = new URLSearchParams(location.hash.slice(1));
+    const from = BV.from = hash.get('from') || '';
+    // The map that Builder had open (B1010): read from the saves until it speaks.
+    BV.mapId = from ? (hash.get('map') || '').slice(0, 40) : '';
     // That Builder answers the hello below at once; until it does (or if it's gone, after a moment) the
     // saved map that another tab may have opened since isn't put up.
     if (from && channel) {
@@ -87,8 +90,18 @@ function bvSetup() {
     } else bvFromSaves();
     if (channel) {
         channel.addEventListener('message', e => {
-            if (!e.data || e.data.type !== 'state') return;
+            if (!e.data) return;
             if (from && e.data.from !== from) return;
+            // The Builder closing (B1011): its ruler and the green light go, and the saves take over.
+            if (e.data.type === 'bye') {
+                if (!from && e.data.from !== BV.lastFrom) return;
+                BV.heard = 0;
+                sync.textContent = '';
+                bvFromSaves();
+                return;
+            }
+            if (e.data.type !== 'state') return;
+            BV.lastFrom = e.data.from;
             const st = bpCleanState(e.data.state);
             if (!st) return;
             BV.heard = Date.now();

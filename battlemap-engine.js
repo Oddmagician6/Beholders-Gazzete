@@ -495,15 +495,16 @@ function bmEdgeSpan(m, o) {
         const a = Math.round(c - o.w / 2), b = Math.round(c + o.w / 2) - 1;
         return b < a ? [Math.floor(c), Math.floor(c)] : [a, b];
     };
+    // One placed freely (Alt) well inside a square stands on no grid line (B1009).
     if (r % 180 === 0) {
         const gy = Math.round(o.y), [a, b] = span(o.x);
-        if (gy < 0 || gy > m.h) return null;
+        if (gy < 0 || gy > m.h || Math.abs(o.y - gy) > 0.25) return null;
         for (let gx = Math.max(0, a); gx <= Math.min(m.w - 1, b); gx++) at.push(gy * m.w + gx);
         return { list: 'hw', at };
     }
     if (r % 180 === 90) {
         const gx = Math.round(o.x), [a, b] = span(o.y);
-        if (gx < 0 || gx > m.w) return null;
+        if (gx < 0 || gx > m.w || Math.abs(o.x - gx) > 0.25) return null;
         for (let gy = Math.max(0, a); gy <= Math.min(m.h - 1, b); gy++) at.push(gy * (m.w + 1) + gx);
         return { list: 'vw', at };
     }

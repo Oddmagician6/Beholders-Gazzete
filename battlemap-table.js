@@ -65,8 +65,12 @@ function btPost() {
         btPostTimer = 0;
         // A dragged token's ruler only while the players can see the token: one hidden by the DM or under
         // the fog would give away where it went.
+        // Where it set out from too: a token walking out of the fog mustn't show where it came from (B1007).
         const tok = BB.ruler && BB.ruler.tok ? btToken(BB.ruler.tok) : null;
-        const shown = !tok || (!tok.hid && bmTokenSeen({ ...BB.m, fog: BB.m.fog || new Array(BB.m.w * BB.m.h).fill(0) }, tok));
+        const fogged = { ...BB.m, fog: BB.m.fog || new Array(BB.m.w * BB.m.h).fill(0) };
+        const half = tok ? (BM_TOKEN_SIZES[tok.s] || 1) / 2 : 0;
+        const shown = !tok || (!tok.hid && bmTokenSeen(fogged, tok)
+            && bmTokenSeen(fogged, { ...tok, x: BB.ruler.a.x - half, y: BB.ruler.a.y - half }));
         const r = BB.mode === 'play' && BB.ruler && shown ? { ...BB.ruler, text: bbRulerText(BB.ruler) } : null;
         try { BB.chan.postMessage({ type: 'state', from: btSession(), state: bpPlayerState(BB.m, BB.fight, BB.popts, r) }); } catch (e) {}
     }, 16);
@@ -75,7 +79,8 @@ function btPost() {
 function btOpenView() {
     // Saved first: the window draws this map from the saves until this page answers it.
     bbSaveNow();
-    const w = window.open('battlemap-view#from=' + btSession(), 'gazette-battlemap-view', 'popup,width=1280,height=800');
+    // The map too, so a window that can't hear this page (no channel) reads this map, not another tab's (B1010).
+    const w = window.open('battlemap-view#from=' + btSession() + '&map=' + encodeURIComponent(BB.m.id),'gazette-battlemap-view', 'popup,width=1280,height=800');
     if (!w) { bbFlash('⚠️ The browser blocked the window. Allow pop-ups for this site, or open the Player View link below the map.', true); return; }
     bbFlash('📺 Drag the Player View window to the TV or second screen, then press its ⛶ Full Screen button.');
     btPost();
@@ -485,6 +490,12 @@ function btSetup() {
     BB.fight = bpLoadFight();
     BB.popts = bpLoadOpts();
     btChannel();
+    // Leaving: the Player View lets go of this page's ruler and falls back to the saves (B1011).
+    window.addEventListener('pagehide', () => {
+        if (BB.chan) try { BB.chan.postMessage({ type: 'bye', from: btSession() }); } catch (e) {}
+    });
+    // Back from the browser's page cache: say where things stand again.
+    window.addEventListener('pageshow', e => { if (e.persisted) btPost(); });
     $('bt-size').innerHTML = btPick(BM_TOKEN_SIZE_NAMES, 'M');
     $('bt-kind').innerHTML = btPick(BM_TOKEN_KINDS, 'npc');
     $('bt-art').innerHTML = btArtOptions('');

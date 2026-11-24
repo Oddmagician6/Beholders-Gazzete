@@ -138,7 +138,15 @@ function bpSeenMap(m, fog) {
     const hw = m.hw.map((e, i) => { const x = i % w, y = (i - x) / w; return e && (seen(x, y) || seen(x, y - 1)) ? e : 0; });
     const vw = m.vw.map((e, i) => { const x = i % (w + 1), y = (i - x) / (w + 1); return e && (seen(x, y) || seen(x - 1, y)) ? e : 0; });
     const over = (x0, y0, x1, y1) => { for (let y = Math.floor(y0); y < Math.ceil(y1); y++) for (let x = Math.floor(x0); x < Math.ceil(x1); x++) if (seen(x, y)) return true; return false; };
-    const ob = m.ob.filter(o => o.k !== 'secret' && over(o.x, o.y, o.x + Math.max(1, o.w), o.y + Math.max(1, o.h)));
+    // A piece's x, y is its middle (B1006: not its corner), turned by r. Its box is at least half a square
+    // across, so a door on a grid line counts on both sides of it; a hair in from each edge, so a chest
+    // filling one square doesn't count its neighbours.
+    const box = o => {
+        const r = (o.r || 0) * Math.PI / 180, c = Math.abs(Math.cos(r)), s = Math.abs(Math.sin(r));
+        const hx = Math.max(0.25, (c * o.w + s * o.h) / 2), hy = Math.max(0.25, (s * o.w + c * o.h) / 2);
+        return over(o.x - hx + 0.01, o.y - hy + 0.01, o.x + hx - 0.01, o.y + hy - 0.01);
+    };
+    const ob = m.ob.filter(o => o.k !== 'secret' && box(o));
     const lb = m.lb.filter(l => seen(Math.min(w - 1, Math.floor(l.x)), Math.min(h - 1, Math.floor(l.y))));
     return { ...m, fl, hw, vw, ob, lb };
 }
@@ -150,6 +158,8 @@ function bpPlayerState(m, fight, opts, ruler = null) {
     const seen = { ...m, fog };
     // In the tracker's order (it keeps its list sorted; a save that isn't still turns the same way here).
     const view = initPlayerView({ ...fight, list: bpOrder(fight.list) });
+    // Monsters' health hidden from the players: not in the turn order sent them either (B1008).
+    if (opts.hp !== 'words') view.list.forEach(v => { if (!v.pc) v.health = null; });
     const pv = new Map(view.list.map(v => [v.key, v]));
     const tokens = m.tk.filter(t => !t.hid && bmTokenSeen(seen, t)).map(t => {
         const c = bpCombatant(t, fight), v = c ? pv.get(c.id) : null;

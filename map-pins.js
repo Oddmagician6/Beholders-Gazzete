@@ -105,7 +105,8 @@ function pinWire(host, o) {
         }
     });
     host.addEventListener('pointermove', ev => {
-        if (!drag || ev.pointerId !== drag.pid) return;
+        // A pinch begun on a pin is a pinch: the pin stops following (B1012).
+        if (!drag || ev.pointerId !== drag.pid || drag.multi) return;
         if (!drag.moved && Math.hypot(ev.clientX - drag.x0, ev.clientY - drag.y0) < 5) return;
         drag.moved = true;
         if (!drag.el) return;
@@ -130,6 +131,8 @@ function pinWire(host, o) {
         if (ev.pointerId !== d.pid) { if (!d.el) end(); return; }
         end();
         if (d.el) {
+            // A pinch: a pin it had half dragged goes back where it was.
+            if (d.multi) { if (d.moved) o.move(d.id, null, null); return; }
             if (d.moved && d.pt) o.move(d.id, d.pt.x, d.pt.y);
             else if (!d.moved && !d.multi) o.open(d.id, true);
             return;
