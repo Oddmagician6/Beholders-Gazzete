@@ -9753,6 +9753,142 @@
         "rumor": "I heard the dragon tips better than any party in town, so the kitchen saves it the good venison and tells it who's eating next."
       },
       "fiction": true
+    },
+    {
+      "id": "halfling-cooks-strike-feast-plumbrook-cousins",
+      "title": "Halfling Cooks Strike Before Feast, Led by Organizer's Cousins",
+      "category": "Labor",
+      "author": "Brakka Stonesweat",
+      "date": "2026-11-24",
+      "excerpt": "All 38 halfling cooks walked off Brindlemoor's Grand Feast two days out. Eleven are the Feastwarden's cousins. Their offered pay was a first helping.",
+      "social": "Two days before Brindlemoor feeds 2,000 people, all 38 halfling cooks walked out. Eleven of them are the Feastwarden's own cousins. The committee offered to pay them in \"the honor of the first helping.\" His backup plan is three scrolls of unseen servant. Would you cook for 2,000 for a first helping?",
+      "content": "<p>The halfling cooks walked out.</p>\n\n<p>All 38 cooks of the Hearthside Cooks' Guild put down their ladles Tuesday morning, two days before Brindlemoor's Grand Feast. The feast committee has 900 gp and has promised to feed 2,000 people on the Town Green on the 26th. Eleven of the strikers are cousins of the man who made that promise, <a href=\"/a/halfling-feastwarden-feast-2000-brindlemoor\">Feastwarden Odo Plumbrook</a>.</p>\n\n<p>The committee's pay offer was \"the honor of the first helping.\" That means no wages. It means you cook for 2,000 people for three days and then you get to eat some of it before they do.</p>\n\n<p>\"I've cooked for weddings, wakes and one siege,\" said Tansy Plumbrook, head pastry cook and the Feastwarden's first cousin on his mother's side. \"Nobody ever paid me in soup I made myself.\"</p>\n\n<p>The guild wants two silver a cook a day and a half-hour lunch break, sitting down, in a chair. That's the whole list. I'd sign that in my own blood. I'd sign it in Plumbrook's.</p>\n\n<p>So where did the 900 gp go? Ask the kitchen, which got none of it. The committee spent 591 gp on a griffon egg named Gilbert, who has not hatched and has not peeled a potato. It pays rent on a stall at the Sleeping Mule for Duchess the boar and her nine piglets. The potatoes got peeled by <a href=\"/a/adventuring-party-3000-potatoes-exposure-plumbrook\">an adventuring party paid in exposure</a>. I covered that. I'm still angry about it.</p>\n\n<p>Plumbrook answered from a chair on the Green. \"A strong start!\" he said. \"This is the fun part.\" Fun for whom, he didn't say. He has bought three scrolls of unseen servant from a hedge wizard on Tanner's Row and says the invisible helpers will do the stirring.</p>\n\n<p>The hedge wizard, Fenwick Starle, would like that on record as Plumbrook's idea. \"They'll stir all night. They can't taste,\" he said. \"Last one I lent out salted a custard until it was a rock. The customer used it as a doorstop.\"</p>\n\n<p>It's a family business now, the picket line. Eleven Plumbrooks walked the Green in aprons Tuesday under a sign reading FIRST HELPING IS NOT A WAGE. At noon the Feastwarden's own mother crossed the grass with a basket of scones for the strikers. She didn't bring him one.</p>\n\n<p>\"Thirty years I've scrubbed pots for that family,\" said Hobb Tealeaf, a dishwasher and the only guild member who isn't related to anybody. \"Never seen Sunday dinner this tense. And it's Tuesday.\"</p>\n\n<p>Prudence Haverwick of Saltmarrow Banquets offered to cater the whole feast herself at her usual rate, which works out to roughly sixty-six thousand gold. Plumbrook called this \"generous\" and put it in his hat.</p>\n\n<p>The committee meets tonight at the Sleeping Mule. The cooks plan to sit outside the door in chairs, on their lunch break. They've told the committee the break runs until Thursday.</p>\n\n<p><em>Solidarity. And stretch your back. — Brakka</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Feast Without Cooks",
+          "text": "The harvest festival is tomorrow, three hundred guests are on the road, and every cook in town has walked out over pay. The festival's organizer will pay the party to either broker a deal with the cooks by sundown or keep his unseen servant spells from ruining the food, and the cooks will pay them to make sure neither happens cheaply."
+        },
+        "npc": {
+          "name": "Pippa Larkmoss",
+          "role": "Head Cook of the Guild",
+          "want": "Two silver a day for every cook and a proper chair at lunch.",
+          "secret": "She has already baked every festival pie and hidden them in the temple's cold cellar, ready to roll out the minute a deal is signed.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Long Kitchen",
+          "text": "The festival kitchen behind the town hall, where forty pots now stir themselves under unseen servant spells. Nobody is tasting anything, and the soup has started to smell like boots.",
+          "tavern": false
+        },
+        "rumor": "My cousin says the cooks are only holding out because the organizer's own mother is feeding them scones, and she's been doing it for free."
+      },
+      "fiction": true
+    },
+    {
+      "id": "umber-hulk-tunnel-toll-adventuring-party-baronies",
+      "title": "Umber Hulk Tunnel Dodges 3-Copper Toll, Links Two Baronies",
+      "category": "International",
+      "author": "Grashka Ironjaw",
+      "date": "2026-11-24",
+      "excerpt": "An adventuring party paid an umber hulk 40 gold to dodge a 3-copper bridge toll. Smugglers found the tunnel first. Both baronies want the party.",
+      "social": "The Sallowmoss Company did not want to pay a three copper toll at Quillmarch Bridge. So they paid an umber hulk 40 gold to dig under the river. Smugglers found the tunnel four days before customs did, and now Ashenfold and Brackwater both have writs out for the party. Would your party have just paid the toll?",
+      "content": "<p>An adventuring party hired an umber hulk to dig a tunnel under the river rather than pay the three-copper toll at Quillmarch Bridge. The tunnel came up in Brackwater. Smugglers found it four days before the customs house did, and now Ashenfold and Brackwater agree on exactly one thing: it is the party's fault. Tension holds at fourteen siege-days.</p>\n\n<p>The party is the Sallowmoss Company. Four adventurers, one mule. The toll is three copper a head, up from two since <a href=\"/a/bridge-troll-toll-hike-quillmarch-parley\">the troll's toll hike last month</a>. The mule counts as a head. Total owed: fifteen copper. The umber hulk charged forty gold.</p>\n\n<p>\"We did the arithmetic,\" said Bresk Hollin, the company's wizard. \"We did it afterward. Most of our arithmetic happens afterward.\"</p>\n\n<p>The contract said to dig until daylight. The umber hulk dug for one night, came up in the root cellar of a Brackwater cooper, and kept the forty gold. The company walked through, saved fifteen copper, and went on to their quest. Nobody filled in the hole. Nobody told anyone about the hole. This is how wars start, and also how cheese gets cheaper.</p>\n\n<p>By the fourth day, somebody had hung a lantern at the Ashenfold end and a sign reading TUNNEL, 2 COPPER. Untaxed Ashenfold cheese was moving north by the cartload. Brackwater pickled eels were moving south. The smugglers undercut the bridge by one copper and threw in shelter from the rain. Customs found the tunnel on the fifth day, when an inspector followed the smell of eels.</p>\n\n<p>Gorvash Pennyfist, troll of Quillmarch Bridge for nine winters, took it hard. \"They stole my trade. Under my own river,\" he said. \"Now goat prices will go up. They always do.\" He did not explain the goats. I did not ask.</p>\n\n<p>The two baronies held an emergency parley at the midpoint of the tunnel, under the river, in the dark. Envoy Halric Dunmere of Ashenfold shook hands with Envoy Teodra Hallowmere of Brackwater. Firm, two seconds, no hidden dagger detected, although nobody could see. Dunmere said the tunnel opens into Brackwater, so it is a Brackwater tunnel. Hallowmere said the tunnel starts in Ashenfold, so it is an Ashenfold export, and she will tariff it by the foot. They talked for three hours. A cart of cheese went by twice.</p>\n\n<p>Both baronies have now posted writs for the Sallowmoss Company: Ashenfold for smuggling, Brackwater for unlicensed digging. The company is reported to be hiding in the tunnel itself. It is the only ground in the region neither side has claimed. They are paying the smugglers two copper a night to stay.</p>\n\n<p>I went down to see it. Damp. Low ceiling. Good footing. I ate field rations at the midpoint and they tasted the same as above ground, which is the point of field rations. Ottoline Vex covered the parley from a balcony in Brindlemoor. The balcony has no tunnel. Her readers should know that.</p>\n\n<p>Gorvash says the toll is four copper now, effective immediately, to cover losses. Hollin says next time the company will pay. Nobody believes either of them.</p>\n\n<p><em>Ironjaw, filed from the front.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Two-Copper Tunnel",
+          "text": "Someone has opened an unmapped tunnel under a border river, and smugglers charge two copper to use it. The bridge toll keeper wants it collapsed, the customs house wants it seized intact, and the burrowing beast that dug it is still down there, unpaid for the second half of the job (use the bulette's stats)."
+        },
+        "npc": {
+          "name": "Wenna Corrowby",
+          "role": "Tunnel Toll Stall Keeper",
+          "want": "She wants the tunnel open one more week, until her last cartload of untaxed cheese clears.",
+          "secret": "She paid the burrowing beast its missing fee, and it now digs wherever she points.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "criminal"
+        },
+        "location": {
+          "name": "The Midpoint",
+          "text": "A widened chamber halfway under the river where neither side's law reaches. Someone has hung a lantern, a price list, and a small sign that says NO ENVOYS.",
+          "tavern": false
+        },
+        "rumor": "My cousin says the thing that dug the tunnel is still down there, and it's started a third exit right under the reeve's wine cellar."
+      },
+      "fiction": true
+    },
+    {
+      "id": "bugbear-pie-eating-contest-eats-table",
+      "title": "Bugbear Wins Pie-Eating Contest, Then Eats the Table",
+      "category": "Local Chaos",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-11-24",
+      "excerpt": "A bugbear fighter won Fish Street's pie-eating contest and its 20 gp purse for his broke party. Then he allegedly ate the 32 gp table.",
+      "social": "A broke adventuring party sent its bugbear fighter to win a pie-eating contest on Fish Street. He ate 41 pies and won the 20 gold purse. Then he kept going and ate the oak table. The bakery has billed the party 32 gold. Your party is down to 3 copper: who do you send to the contest?",
+      "content": "<p>At roughly the second bell after noon, a bugbear fighter named Grukka Mossjaw allegedly won the Fish Street pie-eating contest outside the Brass Kettle bakery, finishing 41 pies in six minutes to take the 20 gp prize purse. He then ate the table, which was oak. The bakery has billed his adventuring party, the Thin Purse Company, 32 gold pieces for it, which leaves the party 12 gold in the hole on a contest it won.</p>\n\n<p>The Thin Purse Company entered for the money. According to the party's wizard and treasurer, Elsbeth Rook, the group's whole treasury before the contest was three copper pieces, a button, and an IOU from a goblin. \"We had a plan,\" Rook said, holding the ledger. \"The plan was pie. Nobody put a line in the plan about furniture.\"</p>\n\n<p>Netterly and two fishwives say Mossjaw cleared his last pie with a minute to spare, raised both arms, and was handed the purse. Then, allegedly, he leaned down and bit the corner off the judging table. \"I thought he was checking it for crumbs,\" said Hob Netterly, a cooper who was holding a pie of his own at the time. \"Then the whole leg went. He chewed it like a carrot. I put my pie down. I didn't want it anymore.\"</p>\n\n<p>The bakery's owner, Wilda Oatley, says the table had stood outside the Brass Kettle for nineteen years. \"My grandmother rolled crusts on that table,\" she said. \"He ate the part she rolled them on.\" Oatley also says the bugbear ate the tablecloth, two pie tins, and the little brass judge's bell, which was very shiny and which I would like to state for the record I saw first. It had a lovely ring to it. Anyway.</p>\n\n<p>The City Watch arrived at roughly the third bell and allegedly found a bugbear asleep on the cobbles beside four table legs, three of them bitten. A Watch sergeant took statements and confiscated nothing, because there was nothing left to confiscate. A pigeon tried to take the last crust. I chased it off. You're welcome, Fish Street.</p>\n\n<p>The party's cleric, a dwarf named Tobber Greystave, reportedly argued that the table was \"part of the presentation\" and therefore part of the contest. Oatley disagreed. So did the rulebook, which is one page long and says \"pies\" eleven times. It was nailed to the table. Mossjaw ate it, so nobody can check.</p>\n\n<p>Rook paid the bakery the 20 gp purse on the spot and signed for the remaining 12 against the party's next dungeon. Oatley says she'll take it in coin or in a new table, built to the old size. \"And he stays on the far side of it,\" she added. It's been a bad week for Brindlemoor pies, what with <a href=\"/a/kobolds-120-feast-pies-thank-you-notes\">kobolds carried off 120 of them</a> from windowsills on the 22nd.</p>\n\n<p>Reached in the Brass Kettle's alley, where he was allegedly sleeping it off, Mossjaw gave a short statement. \"Good table,\" he said. \"Bit dry.\" The bakery says next year's contest will be held on the ground.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Table Debt",
+          "text": "A baker holds a broke adventuring party's IOU for a table their bugbear ate, and she'll forgive it for anyone who brings back a replacement cut from the old ironwood stump in the haunted orchard north of town. The broke party wants it settled quietly, before the debt is posted on their guild's notice board, and an awakened tree in the orchard does not want to be a table."
+        },
+        "npc": {
+          "name": "Wilda Oatley",
+          "role": "Baker and contest organizer",
+          "want": "She wants her grandmother's table back, or one exactly like it, before the next market day.",
+          "secret": "She rigged the pie order so her nephew would win, and the bugbear ruined the fix along with the furniture.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Brass Kettle Bakery",
+          "text": "A crooked corner bakery whose front step now holds four bitten table legs propped up like a shrine. Bugbears are no longer served on the premises.",
+          "tavern": false
+        },
+        "rumor": "I heard the bugbear didn't eat that table out of hunger at all, he was after a gold coin somebody hid inside the leg."
+      },
+      "fiction": true
+    },
+    {
+      "id": "long-rest-giant-badger-den-hour-seven",
+      "title": "Long Rest Ends at Hour 7: Party Slept in Giant Badger's Den",
+      "category": "Creature Features",
+      "author": "Brother Wendell Tumbleberry",
+      "date": "2026-11-24",
+      "excerpt": "Friends, the Soft Landing Company took a long rest in a cozy root cellar near Gorsewick. A giant badger was hibernating in it. At hour seven, it woke.",
+      "social": "Five adventurers found the coziest root cellar outside Gorsewick and bedded down for a long rest. The furry heap in the corner was a giant badger, asleep for the winter. It woke at hour seven, one hour short. Nobody got their spells back, and the fighter now owns one boot. Who in your party checks the corner before lying down?",
+      "content": "<p>Friends, five adventurers from the Soft Landing Company bedded down for a long rest on Thursday night in a root cellar under an empty farmstead outside Gorsewick, and a giant badger was already asleep in it. It was hibernating under a heap of straw in the back corner. At hour seven of eight, it woke up.</p>\n\n<p>The party came to my clinic Friday morning with fourteen claw scratches between them, one bedroll chewed clean through, and a fighter wearing a single boot. Nobody got their spells back. \"We had one hour to go,\" said Oswin Harle, the party's wizard, while I cleaned his ear. \"One. I could feel the slots coming back. Then my pillow growled.\"</p>\n\n<p>Here is what happened, as near as I can piece it together. The cellar was warm and dry and smelled of earth and stored turnips, which is what a badger looks for in a bedroom too. The party's cleric, Brin Calloway, admits she saw \"a big furry lump\" in the corner and took it for a pile of old coats. Around hour five the wizard ran out of floor and put his head on it. Around hour seven the bard began to snore in a key the lump did not care for.</p>\n\n<p>Now, the science. The old herbals say never wake a sleeping badger, and they say it kindly. The naturalists at Candlekeep put it in plainer numbers: a badger doesn't sleep the whole winter straight through. It drops into a deep torpor, heart slowed, body cooled, living off its autumn fat. Waking up is the expensive part. Warming back up burns a good deal of that stored fat, so every time somebody rouses it in late November, it spends a piece of its winter pantry.</p>\n\n<p>So yes, I patched the party, and I'm on the badger's side. Five strangers moved into its bedroom and one used it as a pillow. It chased them up the ladder, ate the bedroll, kept the boot, and went back to sleep, which is more restraint than I'd show. Gorsewick's farm warden has since left a basket of earthworms and windfall pears by the cellar door and nailed up a sign reading OCCUPIED UNTIL SPRING. Before anyone writes in: this was not the Thornbury Irregulars' fighter who <a href=\"/a/reincarnate-spell-upgrade-fighter-badger-second-spring\">came back from the Reincarnate rite as a badger</a>. He keeps a room in town and gets up at a reasonable hour.</p>\n\n<p>My advice for anyone planning a long rest in the wild is simple. Check the corners before you lie down. Poke any heap with a ten-foot pole, and stand at the far end of it. If a spot is suspiciously cozy, something else probably found it first. My friend Nyx Spindlecoil tells me there's a charm now that buzzes when a den is occupied. Go outside, Nyx, and look in the den.</p>\n\n<p>For the Soft Landing Company I prescribe a pot of chestnut-and-parsnip soup and a proper eight hours at an inn with a door that locks. For the badger, I prescribe quiet.</p>\n\n<p><em>Rest well, friends. — Brother Wendell</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "Occupied Until Spring",
+          "text": "A farmer's winter stores are locked in her root cellar, and a giant badger has started its winter sleep on top of the potato bins. She wants her food out before the cold sets in, without killing or waking the badger, because the village believes harming it will bring a hungry winter."
+        },
+        "npc": {
+          "name": "Merra Thistlewood",
+          "role": "Root vegetable farmer",
+          "want": "She wants her potatoes, turnips, and seed stock out of the cellar before the hard frost.",
+          "secret": "She fed the badger all autumn to scare off grain thieves, and it is now too fat to fit back out the cellar door.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Turnip Hole",
+          "text": "A root cellar dug into a hillside, warm all winter because a hot spring runs under the floor. Every animal for a mile around knows about it, and most of them have tried to move in.",
+          "tavern": false
+        },
+        "rumor": "My cousin swears the badger in Merra's cellar sleeps on a pile of old gold, and that's why it's so lumpy."
+      },
+      "fiction": true
     }
   ]
 }
