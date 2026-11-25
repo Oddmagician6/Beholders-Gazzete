@@ -9889,6 +9889,142 @@
         "rumor": "My cousin swears the badger in Merra's cellar sleeps on a pile of old gold, and that's why it's so lumpy."
       },
       "fiction": true
+    },
+    {
+      "id": "druid-wild-shape-goose-futures-crash",
+      "title": "Goose Futures Crash 92% as Druid Sells Herself 30 Times",
+      "category": "Economy",
+      "author": "Barnaby Tallowmere",
+      "date": "2026-11-25",
+      "excerpt": "A druid used Wild Shape to sell herself as a goose 30 times in three days. On Feast Eve, Brindlemoor goose futures fell 92%. I have done the sums.",
+      "social": "Brindlemoor goose futures fell 92% on Feast Eve. A broke druid had used Wild Shape to get sold as a goose 30 times since Sunday, then walked home each night. One cooper bought her twice. Would your druid take the deal at 5 gold a sale?",
+      "content": "<p>Goose futures in Brindlemoor fell 92% on Wednesday, from 8 gp to 6 sp a bird, after the town learned that 30 of the geese sold at market since Sunday were one druid using Wild Shape. Tomorrow is Feast Day, and every family in town has a table to fill. (I have counted the druid. There is one.)</p>\n\n<p>Some background for the nervous. A futures contract on the Brindlemoor exchange is a promise to hand over one goose on Feast Day at a price agreed today. On Saturday that promise traded at 8 gp, nearly triple the 3 gp Wennet Abbeyfield asks at her pens on Tanner's Row. The pens were thinning out, and nobody wanted to carve a turnip on Feast Day.</p>\n\n<p>Then came the Short Straw Company, four adventurers who owe the Sleeping Mule eleven nights' rent. Their druid, Linnet Gorsebrook, holds the eighth rank in her circle, which is the rank at which the circle lets you take the shape of a bird. She can do it twice between rests and stay a goose for up to four hours. The party's fighter, Tobin Marsh, carried her to market under one arm and sold her, at about 5 gp a time. A few hours later the goose became a woman in a mossy cloak, apologized to whoever had bought her, and left. After an hour's rest at the Mule she went back to being stock. (I have checked her arithmetic. It works. That is the part keeping me up.)</p>\n\n<p>Gatekeeper Oswin Hask, who charges tolls by the leg, spotted it first. \"Same woman walked out the East Gate thirty times and never once walked in,\" he said. \"Two legs, every time. I charged her every time.\" His ledger now has a column headed GEESE (LEAVING).</p>\n\n<p>A cooper on Mill Lane bought her twice, on Monday and again on Tuesday, and only worked it out when she thanked him for the oats both times. A widow on Fish Street had already named her Clementine. She is taking it harder than the cooper.</p>\n\n<p>Here is the economics, as gently as I can put it. A futures price is the town's guess about tomorrow's supply. Thirty sales in three days looked like plenty of geese, so the price slid. Then the truth got out, and nobody would promise to take any goose at all, since any goose might go home at sundown. Abbeyfield has 197 real geese and no one believes her. \"People keep asking my geese their names,\" she told me over her fence. \"One bit a man. Most goose-like thing I've seen all week.\"</p>\n\n<p>Now the Loaf Index. At 4.675 copper a loaf, Saturday's 8 gp goose was 171 loaves. Today's is 12.8. Gorsebrook took about 150 gp in all, or 3,208 loaves, and says she only ever sold a goose. \"Every buyer got a goose,\" she said. \"I can't help how long it lasted.\" The City Watch is looking into whether you can steal yourself. My aunt Marigold keeps her savings in a boot and points out that the boot has never once turned into a druid. A pastry cook who bought three contracts at the top asked me on the street whether he could give them back. He cannot. That is rather the point of a contract.</p>\n\n<p>For buyers there is one bright spot. A real goose from Abbeyfield's pens now goes for 6 sp, a fifth of what she charged last week, and she has 197 of them. She would like that known.</p>\n\n<p>What this means for your pantry: buy the goose tonight, it is cheap, but tie it up and watch it for four hours before you reach for the oven.</p>\n\n<p><em>— B.T. (Loaf Index: see sidebar)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Goose That Walked Home",
+          "text": "Every goose sold at the autumn market this week has vanished from its buyer's pen by morning, and the poulterers' guild will pay 50 gp to whoever catches the shapechanger before market day. If the culprit isn't found, nobody in town will buy poultry for the harvest festival, and three families of goose farmers go under. Run the suspect with the druid stat block."
+        },
+        "npc": {
+          "name": "Marta Downey",
+          "role": "Poulterer and pen keeper",
+          "want": "She wants proof, in writing and with a seal, that her geese are only geese.",
+          "secret": "One of her own geese is her nephew, a druid hiding in the flock from a moneylender he owes 80 gp.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Goose Pens on Wicker Lane",
+          "text": "A row of wattle pens behind the market where buyers now sit up all night with lanterns, watching their geese. One pen has a goose that reads over people's shoulders.",
+          "tavern": false
+        },
+        "rumor": "My cousin bought a goose on Tuesday and by supper it was asking where the privy was."
+      },
+      "fiction": true
+    },
+    {
+      "id": "locate-object-stolen-sword-watch-evidence-room",
+      "title": "Locate Object Finds Stolen Sword in Watch Evidence Room",
+      "category": "Technology",
+      "author": "Nyx Spindlecoil",
+      "date": "2026-11-25",
+      "excerpt": "A wizard cast Locate Object to find her fighter's stolen sword. It led to the Watch evidence room, along with 31 more of the party's stolen things.",
+      "social": "A fighter's sword got stolen, so the party wizard cast Locate Object. The trail led straight into the City Watch evidence room. Next to the sword sat the wizard's own cloak, the rogue's lute, and 29 more things they had reported stolen. What's the first thing your character finds on that shelf?",
+      "content": "<p>The Thistlewade Company, a five-member adventuring party out of Brindlemoor, cast Locate Object on Tuesday to track down their fighter's stolen longsword, and the spell led them straight into the City Watch evidence room. The sword was there. So were 31 other things the party had reported stolen over the past two years, each one tagged \"owner unknown\" and parked on a shelf.</p>\n\n<p>Okay. OKAY. I have to talk about Locate Object, because I have now watched it work in the field and it is the best lost-item tracker on the market, full stop, fight me. There's no subscription and no pairing glyph. You picture the thing, and the caster feels a tug toward it if it's within a thousand feet. My familiar Byte, a pseudodragon who now speaks only in ad copy, watched it run and said, \"Never lose what matters. Terms apply.\" Byte is right about the terms. I'll get there.</p>\n\n<p>The setup: fighter Ardwin Dunholt woke at the Gilded Ferret with an empty scabbard and a strong opinion about the night porter. Wizard Liesl Marrin cast the spell over porridge. Runic latency: basically zero. The tug pointed east, then north, then down three flights of stairs under the Watch house on Lantern Row. \"I assumed it was a firmware glyph error,\" Marrin told me. \"Then I saw my blue cloak on a hook. I lost that cloak in the spring.\"</p>\n\n<p>The full haul, per Marrin's list: the longsword, the cloak, the rogue's lute, a bedroll, fourteen arrows, a cookpot, and a mule saddle with no mule. Dunholt found a dagger he had reported missing \"twice, on two separate occasions, which I now realize was the same dagger.\" Every evidence tag listed where the item had been recovered. Several tags listed the party's own rented rooms.</p>\n\n<p>Desk Sergeant Ilsa Cobbleham told the Gazette that everything was \"recovered in good faith\" and can go home with its owners once they file Form Nine and pay a storage fee of 2 silver per item per month. Marrin offered the spell as proof. \"A spell is not a receipt,\" Cobbleham said. A MONTHLY FEE. For HER OWN CLOAK. I have reviewed a lot of subscription models in this column and this is the first one where the product was already mine.</p>\n\n<p>Now the honest part, because I'm a professional. Locate Object has one known limitation, which is that a thin sheet of lead blocks it. Marrin tried again for the party's coin purse, 40 gold, stolen in the summer. The tug went straight to a lead-lined chest stenciled PETTY CASH and stopped dead. Cobbleham said the chest is \"for bookkeeping.\" Byte said, \"Your gold, safely stored.\" I've asked Byte to stop.</p>\n\n<p>Brother Tumbleberry will write a column telling everyone to touch grass and simply remember where they put their swords. Brother Tumbleberry, the sword was in a locked room with a city seal on the door.</p>\n\n<p>Rating: four and a half out of five beholder eyes. The spell worked flawlessly. I just wish it had found the sword somewhere we were allowed to walk out of. Damage Report: Swords recovered: 1. Swords released: 0. Forms filed: 3. Lead-lined chests glared at: 1, at length.</p>\n\n<p><em>— Nyx (they/them). Damage Report below.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Lead-Lined Petty Cash",
+          "text": "A party's Locate Object (or any finding spell) points into the town watch house, where their stolen gear sits tagged 'owner unknown' behind a fee they can't afford. A desk clerk quietly wants help proving the watch captain is selling 'unclaimed' goods out the back, and the evidence is in a lead-lined chest the spell can't see into."
+        },
+        "npc": {
+          "name": "Perrin Ashdown",
+          "role": "Night clerk of the evidence room",
+          "want": "To get the stolen goods back to their owners without losing his post.",
+          "secret": "He has kept a second, honest ledger of every item that went out the back door, and hid it inside a stolen lute.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "guard"
+        },
+        "location": {
+          "name": "The Lantern Row Evidence Room",
+          "text": "Three floors under the watch house, shelves of tagged loot run further than any watch house should need. Every tag says 'owner unknown,' and several are in the same handwriting as the theft reports upstairs.",
+          "tavern": false
+        },
+        "rumor": "My cousin says the watch doesn't catch thieves, it just takes over their routes, and anything they find in your room counts as recovered."
+      },
+      "fiction": true
+    },
+    {
+      "id": "adventuring-party-guard-feast-eats-third-tasting",
+      "title": "Adventuring Party Hired to Guard Feast Eats a Third of It",
+      "category": "Scandal",
+      "author": "Ottoline Vex",
+      "date": "2026-11-25",
+      "excerpt": "An adventuring party hired to guard Brindlemoor's Grand Feast overnight ate a third of it. The Council voted 6-3 to call it quality tasting.",
+      "social": "Brindlemoor hired an adventuring party to guard the feast food overnight. By dawn, 14 hams and 30 wheels of cheese were gone. The town council voted 6 to 3 to call it quality tasting, and the party has now billed 31 gp for the tasting. Would your character have stopped at one ham?",
+      "content": "<p>An adventuring party hired to guard the Grand Feast's food overnight ate about a third of it, Brindlemoor's feast committee confirmed Wednesday morning, one day before the feast is due on the Town Green. By noon the Burgess Council had voted 6-3 to enter the loss in the ledger as \"quality tasting.\"</p>\n\n<p>For readers just arriving: the feast belongs to Feastwarden Odo Plumbrook, a halfling who <a href=\"/a/halfling-feastwarden-feast-2000-brindlemoor\">promised a feast for 2,000</a> on a budget of 900 gold pieces. Reeve Maudrey Fennick of Brindlemoor appointed him in early November. Asked this week whether she regrets it, Reeve Fennick said \"Yes,\" paused, and then said, \"Put down yes.\"</p>\n\n<p>The party, a four-member outfit calling itself the Ironvow Company, was hired Tuesday at 6 gp for the night to guard the Wool Hall, where the feast's provisions are stacked to the rafters. They arrived at dusk with a lantern, a deck of cards and, in the fighter's words, \"no supper, because we assumed.\" At the dawn count the hall clerk found 14 hams, 30 wheels of cheese, 212 loaves and nine jars of cranberry sauce missing. There was no sign of a break-in, since the door had been locked all night from the inside, with the guards on that side of it.</p>\n\n<p>The Company's wizard said this was procedure. \"Guarding food means checking it for poison,\" she said. \"Every ham had to be checked. Some we checked twice, to be thorough.\" The cleric added that she cast Purify Food and Drink over the remaining two-thirds before leaving, and asked that this be counted as a service.</p>\n\n<p>The Council convened in emergency session at nine, which is to say at twenty to eleven, after the gentleman from Tanner's Row finished a speech on thrift during which he ate a roll from the evidence table. The motion before the Chamber moved the missing food from the Losses column to the Preparations column, where the ledger has more room. Councilor Maldrith Quennel, the lich who sits for the Chandler Ward and has not eaten in three centuries, voted no and asked for the meaning of \"tasting\" in writing. None was produced. The motion carried. Nobody could say how much a taste is.</p>\n\n<p>There is a wrinkle, and I mention it because nobody in the Chamber did. A harvest-fair bylaw that nobody ever got round to repealing pays official tasters 2 sp a dish. As of noon the Ironvow Company are, on paper, official tasters. Their rogue has filed an invoice for 31 gp.</p>\n\n<p>Feastwarden Plumbrook took the news standing on a chair in the Wool Hall. \"It's a strong start,\" he said. \"Now we know the ham is excellent.\" He says the feast will still feed 2,000, \"only more lightly.\" By my count that brings his Promises Made to 23. Promises Kept stands at one, the ham being excellent, which the party confirms.</p>\n\n<p>The feast opens at noon Thursday. The cooks are <a href=\"/a/halfling-cooks-strike-feast-plumbrook-cousins\">still on strike</a>. A courtier who asked not to be named because they were not authorized to be awake told me the Ironvow Company has been rehired to guard the Wool Hall again tonight, at the same rate, plus tasting.</p>\n\n<p><em>— O.V., from the gallery</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "Who Guards the Guards' Supper",
+          "text": "Food for a lord's harvest banquet keeps vanishing from the tithe barn overnight, and the hired guards swear nobody got past them. The steward wants the party to watch the guards without them knowing, because the banquet is in two days and the lord counts the hams personally."
+        },
+        "npc": {
+          "name": "Merrit Hollowell",
+          "role": "Keeper of the Banquet Larder",
+          "want": "She wants the banquet to go ahead with no one counting the hams too closely.",
+          "secret": "She has been selling hams out the back window for a month, and the hungry guards are her cover.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Old Tithe Barn",
+          "text": "A drafty barn stacked to the rafters with hams, cheeses, and bread for the banquet, with a door that only locks from the inside. One of the cheese wheels in the back row is a mimic, and it has also been eating the hams.",
+          "tavern": false
+        },
+        "rumor": "My cousin says the barn guards ate a whole cheese wheel each, and the steward paid them extra for it."
+      },
+      "fiction": true
+    },
+    {
+      "id": "self-stirring-cauldron-recall-stirs-cook-everstir",
+      "title": "Self-Stirring Cauldron Recalled After It Stirs the Cook",
+      "category": "Product Safety",
+      "author": "Sterling Vanmoor",
+      "date": "2026-11-25",
+      "excerpt": "Brassladle Kitchenworks recalls 1,200 Everstir self-stirring cauldrons on Feast Eve after one stirred an inn's head cook. Sterling smells a pivot.",
+      "social": "A cook leaned over a cauldron to taste the stew and came out four hours later, very well mixed. The maker has now recalled 1,200 self-stirring cauldrons on Feast Eve. Her boss says the stew was the best the inn ever served. Would you still taste it?",
+      "content": "<p>Brassladle Kitchenworks of Brindlemoor has recalled all 1,200 of its Everstir self-stirring cauldrons on Feast Eve, after one at the Crooked Goose on Fish Street stirred the inn's head cook instead of the stew. Wynn Applegarth leaned over the rim to taste a barley stock, the ladle arm lifted her in, and the cauldron stirred her clockwise for four hours. She is fine. By every account she is very well mixed.</p>\n\n<p>Some people see a recall. I see a product that over-delivered. The Goose bought its Everstir in the autumn and let two kitchen hands go the same week, which is textbook rightsizing of the adventuring party. One pot did the work of two people and never once asked for a stool. Then came Feast Eve, the busiest cooking night of the year, and the pot found a third job.</p>\n\n<p>Each Everstir runs on a bound Animate Objects charm with one order etched on the rim: STIR WHAT IS IN THE POT. Brassladle spokesman Orrin Saltvale told me the workshop never pictured a customer leaning that far over. \"Technically the cauldron did its job,\" he said. \"The cook was in the pot. The pot stirred. We're adding a second word.\" Replacement rims will read STIR SOUP.</p>\n\n<p>Regulars at the Goose say the potboy went for help, the help went for a longer ladle, and Applegarth spent the wait calling out seasoning notes on each pass. The innkeeper, Dunstan Hessop, finally hooked her apron with a boathook. He then served the stew. \"Best we ever made,\" he told me, and asked if Brassladle sells a model that does that on purpose.</p>\n\n<p>Applegarth was less sold. \"I wanted a pot that would let me sit down,\" she said, wringing out a sleeve. \"I sat down for four hours.\"</p>\n\n<p>Brakka Stonesweat will call this a workplace hazard. I call it engagement. I once shared a balloon basket with Guildmaster Tobrin Ashgrove, who told me, \"Sterling, a product that grabs the customer has retention.\" I think about that every day. Today I thought about it from a safe distance.</p>\n\n<p>Owners are told not to lean in, and to bring their Everstirs back to Brassladle for a refund or a free upgrade to the new Everstir Lidded. Saltvale says the Lidded keeps everything inside the pot. I asked what happens to whatever is already in there. He's getting back to me.</p>\n\n<p>Key takeaways for the ambitious adventurer:<br>- Automation never asks for a stool. It just doesn't always know who the soup is.<br>- Taste with a long spoon.<br>- Keep a boathook in the kitchen. You never know.</p>\n\n<p><em>— Sterling Vanmoor, Guild Visionary. Let's connect at the Yawning Portal.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Cauldron That Won't Stop",
+          "text": "A recalled self-stirring cauldron at a village inn has grabbed the innkeeper's son and won't let go, and it has started pulling in spoons, chairs, and the cat. The maker's recall agent will pay 50 gp to anyone who can shut it down without breaking the rune on its rim, which she needs back intact."
+        },
+        "npc": {
+          "name": "Marla Coppins",
+          "role": "Kitchenworks recall agent",
+          "want": "She wants every recalled cauldron collected before the next feast day, without a scratch on the enchantment.",
+          "secret": "She sold the cauldrons herself and knew about the stirring problem a month before the recall.",
+          "race": "gnome",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Ladle and Lantern",
+          "text": "A roadside inn whose kitchen now holds a cauldron that stirs anything within ladle reach (use the animated armor's stats, with a grapple on a hit). The stew has been very consistent all week.",
+          "tavern": true
+        },
+        "rumor": "My cousin says the new pots stir so well they'll stir your fortune right out of your purse if you stand close enough."
+      },
+      "fiction": true
     }
   ]
 }

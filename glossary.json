@@ -1,5 +1,5 @@
 {
-    "generated":  "2026-11-24",
+    "generated":  "2026-11-25",
     "writers":  [
                     {
                         "id":  "ottoline-vex",
@@ -30,8 +30,13 @@
                                            "name":  "Grashka Ironjaw"
                                        }
                                    ],
-                        "article_count":  37,
+                        "article_count":  38,
                         "articles":  [
+                                         {
+                                             "id":  "adventuring-party-guard-feast-eats-third-tasting",
+                                             "title":  "Adventuring Party Hired to Guard Feast Eats a Third of It",
+                                             "date":  "2026-11-25"
+                                         },
                                          {
                                              "id":  "arcane-lock-council-chamber-password-goat",
                                              "title":  "Wizard\u0027s Arcane Lock Seals Council Out; Nobody Wrote Password",
@@ -51,11 +56,6 @@
                                              "id":  "hold-person-heckler-spellcasting-ban-brindlemoor",
                                              "title":  "Hold Person Freezes Heckler Mid-Sneer; Spell Ban Takes 3 Hours",
                                              "date":  "2026-11-15"
-                                         },
-                                         {
-                                             "id":  "zone-of-truth-council-hearing-party-confesses",
-                                             "title":  "Party Casts Zone of Truth to Prove Innocence, Confesses All",
-                                             "date":  "2026-11-12"
                                          }
                                      ]
                     },
@@ -85,8 +85,13 @@
                                            "name":  "Sterling Vanmoor"
                                        }
                                    ],
-                        "article_count":  40,
+                        "article_count":  41,
                         "articles":  [
+                                         {
+                                             "id":  "druid-wild-shape-goose-futures-crash",
+                                             "title":  "Goose Futures Crash 92% as Druid Sells Herself 30 Times",
+                                             "date":  "2026-11-25"
+                                         },
                                          {
                                              "id":  "water-elemental-cranberry-bogs-sauce-4-sp",
                                              "title":  "Water Elemental Floods Cranberry Bogs; Sauce Hits 4 sp a Jar",
@@ -106,11 +111,6 @@
                                              "id":  "griffon-egg-feast-geese-adventuring-party",
                                              "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
                                              "date":  "2026-11-17"
-                                         },
-                                         {
-                                             "id":  "identify-spell-fees-party-drinks-loot",
-                                             "title":  "Identify Fees Jump 60%, So Party Tests Its Loot by Drinking It",
-                                             "date":  "2026-11-15"
                                          }
                                      ]
                     },
@@ -144,8 +144,13 @@
                                            "name":  "Barnaby Tallowmere"
                                        }
                                    ],
-                        "article_count":  37,
+                        "article_count":  38,
                         "articles":  [
+                                         {
+                                             "id":  "self-stirring-cauldron-recall-stirs-cook-everstir",
+                                             "title":  "Self-Stirring Cauldron Recalled After It Stirs the Cook",
+                                             "date":  "2026-11-25"
+                                         },
                                          {
                                              "id":  "heroes-feast-1000-gp-party-dragon-out",
                                              "title":  "Party Spends 1,000 gp on Heroes\u0027 Feast; Dragon Was Out",
@@ -165,11 +170,6 @@
                                              "id":  "feast-2000-tiered-seating-heroes-feast-bid",
                                              "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
                                              "date":  "2026-11-15"
-                                         },
-                                         {
-                                             "id":  "cursed-ring-fighter-invests-party-loot",
-                                             "title":  "Cursed Ring Bought As-Is Makes Fighter Invest Party\u0027s Loot",
-                                             "date":  "2026-11-13"
                                          }
                                      ]
                     },
@@ -253,8 +253,13 @@
                                            "name":  "Brother Wendell Tumbleberry"
                                        }
                                    ],
-                        "article_count":  39,
+                        "article_count":  40,
                         "articles":  [
+                                         {
+                                             "id":  "locate-object-stolen-sword-watch-evidence-room",
+                                             "title":  "Locate Object Finds Stolen Sword in Watch Evidence Room",
+                                             "date":  "2026-11-25"
+                                         },
                                          {
                                              "id":  "prestidigitation-seasoning-trail-rations-one-hour",
                                              "title":  "Wizard Sells Prestidigitation Seasoning; Flavor Lasts 1 Hour",
@@ -274,11 +279,6 @@
                                              "id":  "levitation-slippers-recall-rogue-vault-ceiling",
                                              "title":  "Levitation Slippers Recalled; Rogue Stuck on Vault Ceiling",
                                              "date":  "2026-11-18"
-                                         },
-                                         {
-                                             "id":  "magic-mouth-doorbell-recall-snowlatch-password",
-                                             "title":  "Magic Mouth Doorbell Recalled for Reciting Party\u0027s Password",
-                                             "date":  "2026-11-16"
                                          }
                                      ]
                     },
@@ -598,32 +598,32 @@
                       "short":  "Brindlemoor",
                       "type":  "place",
                       "blurb":  "A frontier market town built on top of the entrance to the Undermaw. Its economy runs on adventurers, and so does its hospital.",
-                      "appearances":  134,
+                      "appearances":  138,
                       "articles":  [
+                                       {
+                                           "id":  "adventuring-party-guard-feast-eats-third-tasting",
+                                           "title":  "Adventuring Party Hired to Guard Feast Eats a Third of It",
+                                           "date":  "2026-11-25"
+                                       },
+                                       {
+                                           "id":  "druid-wild-shape-goose-futures-crash",
+                                           "title":  "Goose Futures Crash 92% as Druid Sells Herself 30 Times",
+                                           "date":  "2026-11-25"
+                                       },
+                                       {
+                                           "id":  "locate-object-stolen-sword-watch-evidence-room",
+                                           "title":  "Locate Object Finds Stolen Sword in Watch Evidence Room",
+                                           "date":  "2026-11-25"
+                                       },
+                                       {
+                                           "id":  "self-stirring-cauldron-recall-stirs-cook-everstir",
+                                           "title":  "Self-Stirring Cauldron Recalled After It Stirs the Cook",
+                                           "date":  "2026-11-25"
+                                       },
                                        {
                                            "id":  "bugbear-pie-eating-contest-eats-table",
                                            "title":  "Bugbear Wins Pie-Eating Contest, Then Eats the Table",
                                            "date":  "2026-11-24"
-                                       },
-                                       {
-                                           "id":  "halfling-cooks-strike-feast-plumbrook-cousins",
-                                           "title":  "Halfling Cooks Strike Before Feast, Led by Organizer\u0027s Cousins",
-                                           "date":  "2026-11-24"
-                                       },
-                                       {
-                                           "id":  "umber-hulk-tunnel-toll-adventuring-party-baronies",
-                                           "title":  "Umber Hulk Tunnel Dodges 3-Copper Toll, Links Two Baronies",
-                                           "date":  "2026-11-24"
-                                       },
-                                       {
-                                           "id":  "gricks-feast-dinner-unsearched-room-long-rest",
-                                           "title":  "Gricks Eat Party\u0027s Feast Dinner in Room Nobody Searched",
-                                           "date":  "2026-11-23"
-                                       },
-                                       {
-                                           "id":  "heroes-feast-1000-gp-party-dragon-out",
-                                           "title":  "Party Spends 1,000 gp on Heroes\u0027 Feast; Dragon Was Out",
-                                           "date":  "2026-11-23"
                                        }
                                    ]
                   },
@@ -632,8 +632,13 @@
                       "short":  "the Guild",
                       "type":  "institution",
                       "blurb":  "A guild of heritage keepers who sue to protect old buildings and groves in the capital.",
-                      "appearances":  102,
+                      "appearances":  103,
                       "articles":  [
+                                       {
+                                           "id":  "self-stirring-cauldron-recall-stirs-cook-everstir",
+                                           "title":  "Self-Stirring Cauldron Recalled After It Stirs the Cook",
+                                           "date":  "2026-11-25"
+                                       },
                                        {
                                            "id":  "halfling-cooks-strike-feast-plumbrook-cousins",
                                            "title":  "Halfling Cooks Strike Before Feast, Led by Organizer\u0027s Cousins",
@@ -653,11 +658,6 @@
                                            "id":  "unlimited-tiny-hut-10-feet-voidpocket-mule",
                                            "title":  "\u0027Unlimited\u0027 Tiny Hut Is 10 Feet Wide. Six Heroes, One Mule Tried",
                                            "date":  "2026-11-20"
-                                       },
-                                       {
-                                           "id":  "bard-suggestion-spell-900-voters-goat-rally",
-                                           "title":  "Bard\u0027s Suggestion Spell Makes 900 Voters Agree With a Goat",
-                                           "date":  "2026-11-19"
                                        }
                                    ]
                   },
@@ -734,8 +734,13 @@
                       "short":  "Reeve Fennick",
                       "type":  "person",
                       "blurb":  "Brindlemoor\u0027s chief magistrate. Signs every dungeon permit, every bounty, and every apology to the farmers downwind.",
-                      "appearances":  57,
+                      "appearances":  58,
                       "articles":  [
+                                       {
+                                           "id":  "adventuring-party-guard-feast-eats-third-tasting",
+                                           "title":  "Adventuring Party Hired to Guard Feast Eats a Third of It",
+                                           "date":  "2026-11-25"
+                                       },
                                        {
                                            "id":  "arcane-lock-council-chamber-password-goat",
                                            "title":  "Wizard\u0027s Arcane Lock Seals Council Out; Nobody Wrote Password",
@@ -755,11 +760,6 @@
                                            "id":  "frost-giant-wages-rimeback-pass-ninefathom",
                                            "title":  "Frost Giant Clearing Snowed-In Pass Wants Giant-Sized Wages",
                                            "date":  "2026-11-17"
-                                       },
-                                       {
-                                           "id":  "red-dragon-lich-feast-invites-fire-marshal",
-                                           "title":  "Red Dragon and Lich Demand Feast Invites; Fire Marshal Says No",
-                                           "date":  "2026-11-16"
                                        }
                                    ]
                   },
@@ -798,6 +798,40 @@
                                    ]
                   },
                   {
+                      "name":  "The Copper Bucket Company",
+                      "short":  "the Company",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor adventuring party that brought a sack of shrieker mushrooms home from the Undermaw to sell, and kept Tanner\u0027s Row awake for four nights.",
+                      "appearances":  54,
+                      "articles":  [
+                                       {
+                                           "id":  "adventuring-party-guard-feast-eats-third-tasting",
+                                           "title":  "Adventuring Party Hired to Guard Feast Eats a Third of It",
+                                           "date":  "2026-11-25"
+                                       },
+                                       {
+                                           "id":  "druid-wild-shape-goose-futures-crash",
+                                           "title":  "Goose Futures Crash 92% as Druid Sells Herself 30 Times",
+                                           "date":  "2026-11-25"
+                                       },
+                                       {
+                                           "id":  "locate-object-stolen-sword-watch-evidence-room",
+                                           "title":  "Locate Object Finds Stolen Sword in Watch Evidence Room",
+                                           "date":  "2026-11-25"
+                                       },
+                                       {
+                                           "id":  "bugbear-pie-eating-contest-eats-table",
+                                           "title":  "Bugbear Wins Pie-Eating Contest, Then Eats the Table",
+                                           "date":  "2026-11-24"
+                                       },
+                                       {
+                                           "id":  "long-rest-giant-badger-den-hour-seven",
+                                           "title":  "Long Rest Ends at Hour 7: Party Slept in Giant Badger\u0027s Den",
+                                           "date":  "2026-11-24"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Deputy Registrar Pell Oddingwick",
                       "short":  "Oddingwick",
                       "type":  "person",
@@ -828,40 +862,6 @@
                                            "id":  "adventuring-party-glowing-mushrooms-no-rations-wendell",
                                            "title":  "Adventuring Party Eats Glowing Mushrooms, Forgot Rations",
                                            "date":  "2026-11-07"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "The Copper Bucket Company",
-                      "short":  "the Company",
-                      "type":  "organization",
-                      "blurb":  "A Brindlemoor adventuring party that brought a sack of shrieker mushrooms home from the Undermaw to sell, and kept Tanner\u0027s Row awake for four nights.",
-                      "appearances":  51,
-                      "articles":  [
-                                       {
-                                           "id":  "bugbear-pie-eating-contest-eats-table",
-                                           "title":  "Bugbear Wins Pie-Eating Contest, Then Eats the Table",
-                                           "date":  "2026-11-24"
-                                       },
-                                       {
-                                           "id":  "long-rest-giant-badger-den-hour-seven",
-                                           "title":  "Long Rest Ends at Hour 7: Party Slept in Giant Badger\u0027s Den",
-                                           "date":  "2026-11-24"
-                                       },
-                                       {
-                                           "id":  "umber-hulk-tunnel-toll-adventuring-party-baronies",
-                                           "title":  "Umber Hulk Tunnel Dodges 3-Copper Toll, Links Two Baronies",
-                                           "date":  "2026-11-24"
-                                       },
-                                       {
-                                           "id":  "gricks-feast-dinner-unsearched-room-long-rest",
-                                           "title":  "Gricks Eat Party\u0027s Feast Dinner in Room Nobody Searched",
-                                           "date":  "2026-11-23"
-                                       },
-                                       {
-                                           "id":  "heroes-feast-1000-gp-party-dragon-out",
-                                           "title":  "Party Spends 1,000 gp on Heroes\u0027 Feast; Dragon Was Out",
-                                           "date":  "2026-11-23"
                                        }
                                    ]
                   },
@@ -972,8 +972,13 @@
                       "short":  "the Sleeping Mule",
                       "type":  "place",
                       "blurb":  "A Tanner\u0027s Row tavern in Brindlemoor with a deep cellar, a loyal clientele of adventurers, and until recently a very clean walk-in cooler.",
-                      "appearances":  33,
+                      "appearances":  34,
                       "articles":  [
+                                       {
+                                           "id":  "druid-wild-shape-goose-futures-crash",
+                                           "title":  "Goose Futures Crash 92% as Druid Sells Herself 30 Times",
+                                           "date":  "2026-11-25"
+                                       },
                                        {
                                            "id":  "halfling-cooks-strike-feast-plumbrook-cousins",
                                            "title":  "Halfling Cooks Strike Before Feast, Led by Organizer\u0027s Cousins",
@@ -993,11 +998,40 @@
                                            "id":  "kobolds-120-feast-pies-thank-you-notes",
                                            "title":  "Kobolds Take 120 Feast Pies, Leave Thank-You Notes",
                                            "date":  "2026-11-22"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the City Watch",
+                      "short":  "the Watch",
+                      "type":  "institution",
+                      "blurb":  "Underpaid, overworked, and frequently outmatched by griffins.",
+                      "appearances":  33,
+                      "articles":  [
+                                       {
+                                           "id":  "druid-wild-shape-goose-futures-crash",
+                                           "title":  "Goose Futures Crash 92% as Druid Sells Herself 30 Times",
+                                           "date":  "2026-11-25"
                                        },
                                        {
-                                           "id":  "giant-crab-feast-stuck-town-gate",
-                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
-                                           "date":  "2026-11-21"
+                                           "id":  "locate-object-stolen-sword-watch-evidence-room",
+                                           "title":  "Locate Object Finds Stolen Sword in Watch Evidence Room",
+                                           "date":  "2026-11-25"
+                                       },
+                                       {
+                                           "id":  "bugbear-pie-eating-contest-eats-table",
+                                           "title":  "Bugbear Wins Pie-Eating Contest, Then Eats the Table",
+                                           "date":  "2026-11-24"
+                                       },
+                                       {
+                                           "id":  "kobolds-120-feast-pies-thank-you-notes",
+                                           "title":  "Kobolds Take 120 Feast Pies, Leave Thank-You Notes",
+                                           "date":  "2026-11-22"
+                                       },
+                                       {
+                                           "id":  "gust-of-wind-market-leaves-14-stalls",
+                                           "title":  "Wizard\u0027s Gust of Wind Clears Market Leaves and 14 Stalls",
+                                           "date":  "2026-11-20"
                                        }
                                    ]
                   },
@@ -1036,46 +1070,17 @@
                                    ]
                   },
                   {
-                      "name":  "the City Watch",
-                      "short":  "the Watch",
-                      "type":  "institution",
-                      "blurb":  "Underpaid, overworked, and frequently outmatched by griffins.",
-                      "appearances":  31,
-                      "articles":  [
-                                       {
-                                           "id":  "bugbear-pie-eating-contest-eats-table",
-                                           "title":  "Bugbear Wins Pie-Eating Contest, Then Eats the Table",
-                                           "date":  "2026-11-24"
-                                       },
-                                       {
-                                           "id":  "kobolds-120-feast-pies-thank-you-notes",
-                                           "title":  "Kobolds Take 120 Feast Pies, Leave Thank-You Notes",
-                                           "date":  "2026-11-22"
-                                       },
-                                       {
-                                           "id":  "gust-of-wind-market-leaves-14-stalls",
-                                           "title":  "Wizard\u0027s Gust of Wind Clears Market Leaves and 14 Stalls",
-                                           "date":  "2026-11-20"
-                                       },
-                                       {
-                                           "id":  "thunderwave-tavern-brawl-sleeping-mule-wall",
-                                           "title":  "Thunderwave Ends Tavern Brawl; Tavern Gains a Room",
-                                           "date":  "2026-11-18"
-                                       },
-                                       {
-                                           "id":  "snowball-fight-ice-knife-watch-9-wands",
-                                           "title":  "Snowball Fight Turns to Ice Knife; Watch Takes 9 Wands",
-                                           "date":  "2026-11-16"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "the Senate Chamber",
                       "short":  "the Chamber",
                       "type":  "institution",
                       "blurb":  "Upper house of Waterdeep, where Councilors debate, filibuster, and occasionally stop time.",
-                      "appearances":  28,
+                      "appearances":  29,
                       "articles":  [
+                                       {
+                                           "id":  "adventuring-party-guard-feast-eats-third-tasting",
+                                           "title":  "Adventuring Party Hired to Guard Feast Eats a Third of It",
+                                           "date":  "2026-11-25"
+                                       },
                                        {
                                            "id":  "hold-person-heckler-spellcasting-ban-brindlemoor",
                                            "title":  "Hold Person Freezes Heckler Mid-Sneer; Spell Ban Takes 3 Hours",
@@ -1095,11 +1100,40 @@
                                            "id":  "wish-spell-unanimous-vote-brindlemoor-council",
                                            "title":  "Wish Spell Makes Brindlemoor Vote Unanimous, 9-0, Forever",
                                            "date":  "2026-11-05"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Ivory Keep",
+                      "short":  "the Keep",
+                      "type":  "place",
+                      "blurb":  "The official white seat of the High Council. The High Lord visits it between stays at the Golden Tower.",
+                      "appearances":  22,
+                      "articles":  [
+                                       {
+                                           "id":  "self-stirring-cauldron-recall-stirs-cook-everstir",
+                                           "title":  "Self-Stirring Cauldron Recalled After It Stirs the Cook",
+                                           "date":  "2026-11-25"
                                        },
                                        {
-                                           "id":  "mimic-ballot-box-eats-31-votes-brindlemoor",
-                                           "title":  "Mimic Ballot Box Eats 31 Votes in Brindlemoor By-Election",
-                                           "date":  "2026-11-03"
+                                           "id":  "nothic-sells-party-heist-plan-rivals",
+                                           "title":  "Nothic Sells Party\u0027s Heist Plan to Rivals for 5 Gold",
+                                           "date":  "2026-11-17"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-ruined-keep-4800-gp-upkeep",
+                                           "title":  "Adventuring Party Spends 4,800 gp Reward on Ruined Keep",
+                                           "date":  "2026-11-04"
+                                       },
+                                       {
+                                           "id":  "lich-merger-400-skeleton-layoffs-desks",
+                                           "title":  "Lich Merger Rightsizes 400 Skeletons, Who Keep Coming In",
+                                           "date":  "2026-10-31"
+                                       },
+                                       {
+                                           "id":  "golf-course-tree-removal-430-trees-donwald",
+                                           "title":  "Judge Halts Golf Course Tree Removal; Dryads Cheer",
+                                           "date":  "2026-10-27"
                                        }
                                    ]
                   },
@@ -1138,40 +1172,6 @@
                                    ]
                   },
                   {
-                      "name":  "the Ivory Keep",
-                      "short":  "the Keep",
-                      "type":  "place",
-                      "blurb":  "The official white seat of the High Council. The High Lord visits it between stays at the Golden Tower.",
-                      "appearances":  21,
-                      "articles":  [
-                                       {
-                                           "id":  "nothic-sells-party-heist-plan-rivals",
-                                           "title":  "Nothic Sells Party\u0027s Heist Plan to Rivals for 5 Gold",
-                                           "date":  "2026-11-17"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-ruined-keep-4800-gp-upkeep",
-                                           "title":  "Adventuring Party Spends 4,800 gp Reward on Ruined Keep",
-                                           "date":  "2026-11-04"
-                                       },
-                                       {
-                                           "id":  "lich-merger-400-skeleton-layoffs-desks",
-                                           "title":  "Lich Merger Rightsizes 400 Skeletons, Who Keep Coming In",
-                                           "date":  "2026-10-31"
-                                       },
-                                       {
-                                           "id":  "golf-course-tree-removal-430-trees-donwald",
-                                           "title":  "Judge Halts Golf Course Tree Removal; Dryads Cheer",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "reserve-meeting-opens-stocks-rise-hold-priced",
-                                           "title":  "Stocks Rise as Reserve Meeting Opens, Hold Priced at 90%",
-                                           "date":  "2026-10-27"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "the Brindlemoor Board of Elections",
                       "short":  "the Board",
                       "type":  "organization",
@@ -1202,6 +1202,40 @@
                                            "id":  "dragon-hoard-annex-zoning-hearing-fish-street",
                                            "title":  "Zoning Board Weighs Dragon Hoard Annex on Fish Street",
                                            "date":  "2026-11-04"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Feastwarden Odo Plumbrook",
+                      "short":  "Plumbrook",
+                      "type":  "person",
+                      "blurb":  "A Brindlemoor halfling appointed Feastwarden of the Grand Feast. He has promised to feed 2,000 people and has never once doubted it.",
+                      "appearances":  17,
+                      "articles":  [
+                                       {
+                                           "id":  "adventuring-party-guard-feast-eats-third-tasting",
+                                           "title":  "Adventuring Party Hired to Guard Feast Eats a Third of It",
+                                           "date":  "2026-11-25"
+                                       },
+                                       {
+                                           "id":  "halfling-cooks-strike-feast-plumbrook-cousins",
+                                           "title":  "Halfling Cooks Strike Before Feast, Led by Organizer\u0027s Cousins",
+                                           "date":  "2026-11-24"
+                                       },
+                                       {
+                                           "id":  "water-elemental-cranberry-bogs-sauce-4-sp",
+                                           "title":  "Water Elemental Floods Cranberry Bogs; Sauce Hits 4 sp a Jar",
+                                           "date":  "2026-11-23"
+                                       },
+                                       {
+                                           "id":  "kobolds-120-feast-pies-thank-you-notes",
+                                           "title":  "Kobolds Take 120 Feast Pies, Leave Thank-You Notes",
+                                           "date":  "2026-11-22"
+                                       },
+                                       {
+                                           "id":  "giant-crab-feast-stuck-town-gate",
+                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
+                                           "date":  "2026-11-21"
                                        }
                                    ]
                   },
@@ -1270,40 +1304,6 @@
                                            "id":  "winter-wolves-baronies-hire-same-party",
                                            "title":  "Winter Wolves Block Road; Both Baronies Hire Same Party",
                                            "date":  "2026-11-16"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Feastwarden Odo Plumbrook",
-                      "short":  "Plumbrook",
-                      "type":  "person",
-                      "blurb":  "A Brindlemoor halfling appointed Feastwarden of the Grand Feast. He has promised to feed 2,000 people and has never once doubted it.",
-                      "appearances":  16,
-                      "articles":  [
-                                       {
-                                           "id":  "halfling-cooks-strike-feast-plumbrook-cousins",
-                                           "title":  "Halfling Cooks Strike Before Feast, Led by Organizer\u0027s Cousins",
-                                           "date":  "2026-11-24"
-                                       },
-                                       {
-                                           "id":  "water-elemental-cranberry-bogs-sauce-4-sp",
-                                           "title":  "Water Elemental Floods Cranberry Bogs; Sauce Hits 4 sp a Jar",
-                                           "date":  "2026-11-23"
-                                       },
-                                       {
-                                           "id":  "kobolds-120-feast-pies-thank-you-notes",
-                                           "title":  "Kobolds Take 120 Feast Pies, Leave Thank-You Notes",
-                                           "date":  "2026-11-22"
-                                       },
-                                       {
-                                           "id":  "giant-crab-feast-stuck-town-gate",
-                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
-                                           "date":  "2026-11-21"
-                                       },
-                                       {
-                                           "id":  "giant-boar-duchess-9-piglets-feast",
-                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
-                                           "date":  "2026-11-20"
                                        }
                                    ]
                   },
@@ -1652,8 +1652,13 @@
                       "short":  "Ashgrove",
                       "type":  "person",
                       "blurb":  "A famed guildmaster of the merchant circuit, known for gala speeches and hot-air balloons.",
-                      "appearances":  11,
+                      "appearances":  12,
                       "articles":  [
+                                       {
+                                           "id":  "self-stirring-cauldron-recall-stirs-cook-everstir",
+                                           "title":  "Self-Stirring Cauldron Recalled After It Stirs the Cook",
+                                           "date":  "2026-11-25"
+                                       },
                                        {
                                            "id":  "heroes-feast-1000-gp-party-dragon-out",
                                            "title":  "Party Spends 1,000 gp on Heroes\u0027 Feast; Dragon Was Out",
@@ -1673,11 +1678,6 @@
                                            "id":  "cursed-ring-fighter-invests-party-loot",
                                            "title":  "Cursed Ring Bought As-Is Makes Fighter Invest Party\u0027s Loot",
                                            "date":  "2026-11-13"
-                                       },
-                                       {
-                                           "id":  "carpet-of-flying-surge-pricing-rain-hailrug",
-                                           "title":  "Carpet of Flying Surge Pricing Hits 40x as the Rain Worsens",
-                                           "date":  "2026-11-12"
                                        }
                                    ]
                   },
@@ -2770,6 +2770,40 @@
                                    ]
                   },
                   {
+                      "name":  "the Cauldron Broadcasting Society",
+                      "short":  "the Cauldron",
+                      "type":  "company",
+                      "blurb":  "An old broadcasting house with a famous eye-shaped sigil, now sharing a roof with its old rival crier.",
+                      "appearances":  6,
+                      "articles":  [
+                                       {
+                                           "id":  "self-stirring-cauldron-recall-stirs-cook-everstir",
+                                           "title":  "Self-Stirring Cauldron Recalled After It Stirs the Cook",
+                                           "date":  "2026-11-25"
+                                       },
+                                       {
+                                           "id":  "multiple-sclerosis-misdiagnosis-one-in-five-wendell",
+                                           "title":  "1 in 5 Multiple Sclerosis Diagnoses Wrong; Ask a Second Seer",
+                                           "date":  "2026-10-26"
+                                       },
+                                       {
+                                           "id":  "weight-loss-drug-black-market-vial-wendell",
+                                           "title":  "Weight-Loss Drug Test: Bodega Vial Was Lip-Balm Filler",
+                                           "date":  "2026-10-22"
+                                       },
+                                       {
+                                           "id":  "midterm-polls-wrong-speaker-johnstone-stays-leader",
+                                           "title":  "Johnstone: Midterm Polls Wrong, and He Stays Speaker Anyway",
+                                           "date":  "2026-10-14"
+                                       },
+                                       {
+                                           "id":  "court-vacancy-blue-donkeys-schemer-midterms",
+                                           "title":  "Blue Donkeys Vow to Stall High Courts Vacancy Past Midterms",
+                                           "date":  "2026-10-12"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Chamber of Commons",
                       "short":  "the Commons",
                       "type":  "institution",
@@ -3484,40 +3518,6 @@
                                    ]
                   },
                   {
-                      "name":  "the Cauldron Broadcasting Society",
-                      "short":  "the Cauldron",
-                      "type":  "company",
-                      "blurb":  "An old broadcasting house with a famous eye-shaped sigil, now sharing a roof with its old rival crier.",
-                      "appearances":  5,
-                      "articles":  [
-                                       {
-                                           "id":  "multiple-sclerosis-misdiagnosis-one-in-five-wendell",
-                                           "title":  "1 in 5 Multiple Sclerosis Diagnoses Wrong; Ask a Second Seer",
-                                           "date":  "2026-10-26"
-                                       },
-                                       {
-                                           "id":  "weight-loss-drug-black-market-vial-wendell",
-                                           "title":  "Weight-Loss Drug Test: Bodega Vial Was Lip-Balm Filler",
-                                           "date":  "2026-10-22"
-                                       },
-                                       {
-                                           "id":  "midterm-polls-wrong-speaker-johnstone-stays-leader",
-                                           "title":  "Johnstone: Midterm Polls Wrong, and He Stays Speaker Anyway",
-                                           "date":  "2026-10-14"
-                                       },
-                                       {
-                                           "id":  "court-vacancy-blue-donkeys-schemer-midterms",
-                                           "title":  "Blue Donkeys Vow to Stall High Courts Vacancy Past Midterms",
-                                           "date":  "2026-10-12"
-                                       },
-                                       {
-                                           "id":  "skytrance-megamerger-rightsizes-hollowood",
-                                           "title":  "Skytrance Megamerger Closes, Bravely Rightsizes Hollowood\u0027s Adventuring Party",
-                                           "date":  "2026-10-10"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "the Nasdraq Composite",
                       "short":  "the Nasdraq",
                       "type":  "product",
@@ -3703,6 +3703,35 @@
                                            "id":  "pale-stockings-121-losses-one-win-from-pennant-melee",
                                            "title":  "Pale Stockings, Laughingstock of 121 Losses, One Win From the Pennant Melee",
                                            "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Councilor Maldrith Quennel",
+                      "short":  "Quennel",
+                      "type":  "person",
+                      "blurb":  "A lich who sits for the Chandler Ward on Brindlemoor\u0027s Burgess Council and has lived in a crypt on Chandler Lane for about three hundred years. He asks for everything in writing.",
+                      "appearances":  4,
+                      "articles":  [
+                                       {
+                                           "id":  "adventuring-party-guard-feast-eats-third-tasting",
+                                           "title":  "Adventuring Party Hired to Guard Feast Eats a Third of It",
+                                           "date":  "2026-11-25"
+                                       },
+                                       {
+                                           "id":  "arcane-lock-council-chamber-password-goat",
+                                           "title":  "Wizard\u0027s Arcane Lock Seals Council Out; Nobody Wrote Password",
+                                           "date":  "2026-11-22"
+                                       },
+                                       {
+                                           "id":  "red-dragon-lich-feast-invites-fire-marshal",
+                                           "title":  "Red Dragon and Lich Demand Feast Invites; Fire Marshal Says No",
+                                           "date":  "2026-11-16"
+                                       },
+                                       {
+                                           "id":  "lich-files-brindlemoor-council-seat-charter-silent",
+                                           "title":  "Lich Files for Brindlemoor Council Seat; Charter Silent on Death",
+                                           "date":  "2026-10-29"
                                        }
                                    ]
                   },
@@ -4291,30 +4320,6 @@
                                    ]
                   },
                   {
-                      "name":  "Councilor Maldrith Quennel",
-                      "short":  "Quennel",
-                      "type":  "person",
-                      "blurb":  "A lich who sits for the Chandler Ward on Brindlemoor\u0027s Burgess Council and has lived in a crypt on Chandler Lane for about three hundred years. He asks for everything in writing.",
-                      "appearances":  3,
-                      "articles":  [
-                                       {
-                                           "id":  "arcane-lock-council-chamber-password-goat",
-                                           "title":  "Wizard\u0027s Arcane Lock Seals Council Out; Nobody Wrote Password",
-                                           "date":  "2026-11-22"
-                                       },
-                                       {
-                                           "id":  "red-dragon-lich-feast-invites-fire-marshal",
-                                           "title":  "Red Dragon and Lich Demand Feast Invites; Fire Marshal Says No",
-                                           "date":  "2026-11-16"
-                                       },
-                                       {
-                                           "id":  "lich-files-brindlemoor-council-seat-charter-silent",
-                                           "title":  "Lich Files for Brindlemoor Council Seat; Charter Silent on Death",
-                                           "date":  "2026-10-29"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Councilor Thornis of the Carolan Reach",
                       "short":  "Thornis",
                       "type":  "person",
@@ -4383,6 +4388,30 @@
                                            "id":  "grill-brush-recall-wallmart-bazaar-bristles",
                                            "title":  "4.5 Million Grill Brush Recall Is Just a Bristle Pivot",
                                            "date":  "2026-10-14"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Gatekeeper Oswin Hask",
+                      "short":  "Hask",
+                      "type":  "person",
+                      "blurb":  "Keeper of Brindlemoor\u0027s East Gate for nineteen years. Has had a hay wagon and an ogre stuck in it.",
+                      "appearances":  3,
+                      "articles":  [
+                                       {
+                                           "id":  "druid-wild-shape-goose-futures-crash",
+                                           "title":  "Goose Futures Crash 92% as Druid Sells Herself 30 Times",
+                                           "date":  "2026-11-25"
+                                       },
+                                       {
+                                           "id":  "giant-crab-feast-stuck-town-gate",
+                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
+                                           "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-fealty-dropped-coins-lord-hask",
+                                           "title":  "Adventuring Party Sworn to Lord After Coin Pickup Mishap",
+                                           "date":  "2026-11-04"
                                        }
                                    ]
                   },
@@ -5107,6 +5136,30 @@
                                    ]
                   },
                   {
+                      "name":  "Wennet Abbeyfield",
+                      "short":  "Abbeyfield",
+                      "type":  "person",
+                      "blurb":  "A Brindlemoor poulterer on Tanner\u0027s Row who quoted the Grand Feast 600 gp for one goose that feeds two thousand, most of it for looking.",
+                      "appearances":  3,
+                      "articles":  [
+                                       {
+                                           "id":  "druid-wild-shape-goose-futures-crash",
+                                           "title":  "Goose Futures Crash 92% as Druid Sells Herself 30 Times",
+                                           "date":  "2026-11-25"
+                                       },
+                                       {
+                                           "id":  "griffon-egg-feast-geese-adventuring-party",
+                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
+                                           "date":  "2026-11-17"
+                                       },
+                                       {
+                                           "id":  "feast-budget-900-gp-goose-600-plumbrook",
+                                           "title":  "Feast Menu Costs 4,300 gp on a 900 gp Budget; Goose Is 600",
+                                           "date":  "2026-11-10"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Apollyon Grand Holdings",
                       "short":  "Apollyon",
                       "type":  "company",
@@ -5540,25 +5593,6 @@
                                            "id":  "senate-race-lawsuit-frostmarch-sullow-inquisitors",
                                            "title":  "Senate Race Lawsuit Targets Frostmarch\u0027s Second Sullow",
                                            "date":  "2026-10-24"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Gatekeeper Oswin Hask",
-                      "short":  "Hask",
-                      "type":  "person",
-                      "blurb":  "Keeper of Brindlemoor\u0027s East Gate for nineteen years. Has had a hay wagon and an ogre stuck in it.",
-                      "appearances":  2,
-                      "articles":  [
-                                       {
-                                           "id":  "giant-crab-feast-stuck-town-gate",
-                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
-                                           "date":  "2026-11-21"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-fealty-dropped-coins-lord-hask",
-                                           "title":  "Adventuring Party Sworn to Lord After Coin Pickup Mishap",
-                                           "date":  "2026-11-04"
                                        }
                                    ]
                   },
@@ -6969,25 +7003,6 @@
                                    ]
                   },
                   {
-                      "name":  "Wennet Abbeyfield",
-                      "short":  "Abbeyfield",
-                      "type":  "person",
-                      "blurb":  "A Brindlemoor poulterer on Tanner\u0027s Row who quoted the Grand Feast 600 gp for one goose that feeds two thousand, most of it for looking.",
-                      "appearances":  2,
-                      "articles":  [
-                                       {
-                                           "id":  "griffon-egg-feast-geese-adventuring-party",
-                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
-                                           "date":  "2026-11-17"
-                                       },
-                                       {
-                                           "id":  "feast-budget-900-gp-goose-600-plumbrook",
-                                           "title":  "Feast Menu Costs 4,300 gp on a 900 gp Budget; Goose Is 600",
-                                           "date":  "2026-11-10"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Wing-Marshal Corra Thistlebane",
                       "short":  "Thistlebane",
                       "type":  "person",
@@ -7297,6 +7312,20 @@
                                            "id":  "cockatrice-henhouse-party-grabs-212-chickens",
                                            "title":  "Cockatrice in Henhouse: Party Grabs 212 Chickens Bare-Handed",
                                            "date":  "2026-11-17"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Brassladle Kitchenworks",
+                      "short":  "Brassladle",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor maker of enchanted kitchenware, best known for the Everstir self-stirring cauldron, recalled on Feast Eve.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "self-stirring-cauldron-recall-stirs-cook-everstir",
+                                           "title":  "Self-Stirring Cauldron Recalled After It Stirs the Cook",
+                                           "date":  "2026-11-25"
                                        }
                                    ]
                   },
@@ -9247,6 +9276,20 @@
                                    ]
                   },
                   {
+                      "name":  "Linnet Gorsebrook",
+                      "short":  "Gorsebrook",
+                      "type":  "person",
+                      "blurb":  "Druid of the Short Straw Company, eighth rank in her circle, who sold herself at Brindlemoor market as a goose thirty times in three days and walked home every night.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "druid-wild-shape-goose-futures-crash",
+                                           "title":  "Goose Futures Crash 92% as Druid Sells Herself 30 Times",
+                                           "date":  "2026-11-25"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Local 25 of the Wagonmasters\u0027 Brotherhood",
                       "short":  "Local 25",
                       "type":  "institution",
@@ -9747,6 +9790,20 @@
                                            "id":  "prophecies-contradict-all-come-true-fourth-attempt",
                                            "title":  "13 Prophecies Contradict Each Other. All 13 Come True.",
                                            "date":  "2026-11-13"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Orrin Saltvale",
+                      "short":  "Saltvale",
+                      "type":  "person",
+                      "blurb":  "Spokesman for Brassladle Kitchenworks, who says every product did exactly what it was told.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "self-stirring-cauldron-recall-stirs-cook-everstir",
+                                           "title":  "Self-Stirring Cauldron Recalled After It Stirs the Cook",
+                                           "date":  "2026-11-25"
                                        }
                                    ]
                   },
@@ -11039,6 +11096,20 @@
                                    ]
                   },
                   {
+                      "name":  "the Everstir",
+                      "short":  "the Everstir",
+                      "type":  "item",
+                      "blurb":  "Brassladle\u0027s self-stirring cauldron, enchanted with one order on its rim: stir what is in the pot. All 1,200 recalled on Feast Eve.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "self-stirring-cauldron-recall-stirs-cook-everstir",
+                                           "title":  "Self-Stirring Cauldron Recalled After It Stirs the Cook",
+                                           "date":  "2026-11-25"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Fairlatch Company",
                       "short":  "the Fairlatch Company",
                       "type":  "organization",
@@ -11343,6 +11414,20 @@
                                            "id":  "unlimited-tiny-hut-10-feet-voidpocket-mule",
                                            "title":  "\u0027Unlimited\u0027 Tiny Hut Is 10 Feet Wide. Six Heroes, One Mule Tried",
                                            "date":  "2026-11-20"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Ironvow Company",
+                      "short":  "the Ironvow Company",
+                      "type":  "organization",
+                      "blurb":  "A four-member Brindlemoor adventuring party hired to guard the Grand Feast\u0027s food overnight. They ate a third of it and were then made official tasters.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "adventuring-party-guard-feast-eats-third-tasting",
+                                           "title":  "Adventuring Party Hired to Guard Feast Eats a Third of It",
+                                           "date":  "2026-11-25"
                                        }
                                    ]
                   },
@@ -11879,6 +11964,20 @@
                                    ]
                   },
                   {
+                      "name":  "the Short Straw Company",
+                      "short":  "the Short Straw Company",
+                      "type":  "organization",
+                      "blurb":  "A four-member Brindlemoor adventuring party that owes the Sleeping Mule eleven nights\u0027 rent and paid some of it by selling its druid as a goose thirty times.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "druid-wild-shape-goose-futures-crash",
+                                           "title":  "Goose Futures Crash 92% as Druid Sells Herself 30 Times",
+                                           "date":  "2026-11-25"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Silver Thistle Company",
                       "short":  "the Thistles",
                       "type":  "organization",
@@ -12309,6 +12408,20 @@
                                            "id":  "druid-goodberry-3-cp-farmers-bread-tax",
                                            "title":  "Druid Sells Goodberries for 3 cp; Farmers Demand Bread Tax",
                                            "date":  "2026-11-09"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Wool Hall",
+                      "short":  "the Wool Hall",
+                      "type":  "place",
+                      "blurb":  "A Brindlemoor guild hall off the Town Green where the Grand Feast\u0027s provisions are stacked to the rafters. Its door locks from the inside.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "adventuring-party-guard-feast-eats-third-tasting",
+                                           "title":  "Adventuring Party Hired to Guard Feast Eats a Third of It",
+                                           "date":  "2026-11-25"
                                        }
                                    ]
                   },
