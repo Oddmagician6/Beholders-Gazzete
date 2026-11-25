@@ -545,6 +545,34 @@
       "hashtags": "#HeroesFeast #GreenDragon #BrightmantleCompany #SaltmarrowBanquets",
       "publishAt": "2026-11-24T02:00:00Z",
       "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "druid-wild-shape-goose-futures-crash",
+      "release_tag": "reel-stage-nov25-goose-ig-20261125",
+      "hashtags": "#WildShape #GooseFutures #Brindlemoor #ShortStrawCompany",
+      "publishAt": "2026-11-25T17:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "locate-object-stolen-sword-watch-evidence-room",
+      "release_tag": "reel-stage-nov25-sword-ig-20261125",
+      "hashtags": "#LocateObject #CityWatch #ThistlewadeCompany #Brindlemoor",
+      "publishAt": "2026-11-25T20:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "adventuring-party-guard-feast-eats-third-tasting",
+      "release_tag": "reel-stage-nov25-feast-guard-ig-20261125",
+      "hashtags": "#IronvowCompany #GrandFeast #QualityTasting #Brindlemoor",
+      "publishAt": "2026-11-25T23:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "self-stirring-cauldron-recall-stirs-cook-everstir",
+      "release_tag": "reel-stage-nov25-cauldron-ig-20261125",
+      "hashtags": "#Everstir #SelfStirringCauldron #BrassladleKitchenworks #CrookedGoose",
+      "publishAt": "2026-11-26T02:00:00Z",
+      "custom_artwork_confirmed": true
     }
   ]
 }
