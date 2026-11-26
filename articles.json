@@ -10025,6 +10025,142 @@
         "rumor": "My cousin says the new pots stir so well they'll stir your fortune right out of your purse if you stand close enough."
       },
       "fiction": true
+    },
+    {
+      "id": "frost-giant-drinking-contest-warlock-signs-treaty",
+      "title": "Frost Giant Drinking Contest: 4 Standing, Warlock Signs Treaty",
+      "category": "International",
+      "author": "Grashka Ironjaw",
+      "date": "2026-11-26",
+      "excerpt": "A frost giant jarl invited 40 envoys to a feast and a drinking contest. Four stood at dawn. One was the escort party's warlock, so she signed the treaty.",
+      "social": "Forty envoys sat down at a frost giant's feast. Four were standing at dawn. The escort party's fighter started it all by telling the jarl he had a high Constitution, and the warlock signed the treaty for Brackwater because nobody else could hold a quill. Who at your table is saying \"I've got a high Constitution\" first?",
+      "content": "<p>Jarl Hjalmvar Frostmead, a frost giant of the high glacier, held a midwinter feast at his hall of Skarnholt on Thirdday and invited 40 envoys to settle the meltwater fishing rights below his ice. A drinking contest followed. Four guests were standing at dawn, and one of them signed the treaty for Brackwater. She was not Brackwater's envoy. She was the warlock of the adventuring party hired to escort him.</p>\n\n<p>The party is the Ninth Spoon Company, five swords and a mule, paid 80 gold by Brackwater to get one envoy up the pass and back down alive. The contract said nothing about mead. It should have.</p>\n\n<p>The parley opened well. The jarl's handshake swallowed the envoy to the elbow. Firm, four seconds, no hidden dagger detected, though there was room for one. Then the horns came out. A frost giant's drinking horn holds about a rain barrel. The jarl drains his in one pull and waits to see who follows.</p>\n\n<p>Borric Tallow, the company's fighter, followed. Witnesses at the low table agree on his exact words: \"I've got a high Constitution.\" The jarl's cupbearer says the hall went quiet. The giants had heard that line before. They keep a wall of shields from the men who said it.</p>\n\n<p>Tallow made it through two horns and part of a third. He then saluted a pillar and lay down under the bench with dignity. Brackwater's envoy, Holm Achery, tried to restore the party's honor and lasted one horn. The Ashenfold delegation fell next. Ashenfold had been fighting Brackwater for a week over <a href=\"/a/feast-seating-chart-treaty-baronies-turnips\">where everyone sits at a feast</a>. It turns out the floor seats everyone equally.</p>\n\n<p>By the sixth hour the field was the jarl, his cupbearer, a gnome from the Pellam Isles who had been pouring his mead into his boots, and Imra Vell, the Ninth Spoon's warlock. She drank every horn. She also wears a periapt of proof against poison under her collar, and Skarnholt mead counts. \"I didn't lie to anyone,\" she told this correspondent. \"Nobody asked about the necklace.\"</p>\n\n<p>The jarl declared the still-standing to be the treaty table. Vell signed for Brackwater. The gnome signed for the Pellam Isles, in a boot. The treaty gives the giants the meltwater fishing, and in return Brackwater gets one feast a year at Skarnholt. Attendance is mandatory.</p>\n\n<p>Brackwater's council calls the document void. Vell holds no office and was paid to carry a lantern. The jarl's position is shorter. \"She stood. He lay down. I read the ink.\" Ashenfold slept through the signing and now says the treaty does not bind it either. Tension holds at thirty siege-days and one hangover the size of a barony.</p>\n\n<p>The Ninth Spoon Company has asked for its 80 gold. Brackwater has asked who authorized a warlock to annex a lake. Tallow has asked for water. I ate a field ration on the ride down. It was the best meal of the parley.</p>\n\n<p><em>Ironjaw, filed from the front.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Treaty Under the Bench",
+          "text": "A frost giant jarl holds a signed treaty from last winter's feast, and the town that sent the envoy says the signature belongs to a hired guard. The town council hires the party to attend this year's mandatory feast and win the treaty back in the drinking contest, or steal it from the jarl's hall before the horns come out."
+        },
+        "npc": {
+          "name": "Sigrun Halvard",
+          "role": "Jarl's Cupbearer",
+          "want": "She wants one guest, just once, to outdrink the jarl so she can stop refilling his horn.",
+          "secret": "She waters the jarl's horn on nights she likes the guests, and she can be persuaded to like the party.",
+          "race": "human",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Shield Wall of Skarnholt",
+          "text": "One wall of the jarl's feast hall is covered in shields taken from guests who lost the drinking contest. Each one has the loser's boast painted on it, and the newest is still wet.",
+          "tavern": false
+        },
+        "rumor": "They say the jarl's mead is brewed from glacier melt and frost giant pride, and no one who drank a fourth horn remembers their own name till spring."
+      },
+      "fiction": true
+    },
+    {
+      "id": "divination-dry-goose-fourth-attempt-feast-eve",
+      "title": "Divination Says Goose Will Be Dry. Party Fights Fate, Loses.",
+      "category": "Omens & Prophecy",
+      "author": "Hollis Delvewright",
+      "date": "2026-11-26",
+      "excerpt": "The Fourth Attempt paid 50 gold for two divinations before Feast Eve dinner. Both said the goose would be dry. The fighter basted it 41 times anyway.",
+      "social": "The Fourth Attempt paid 50 gold for two divinations before dinner. Both said the goose would be dry. The fighter basted it 41 times. At midnight the rogue swapped it for a second goose. Both geese came out dry. Would your character trust the seer, or grab the ladle?",
+      "content": "<p>THE SLEEPING MULE, TANNER'S ROW, STREET LEVEL (NO FEET DOWN) — The Fourth Attempt spent 50 gold on two divinations before its Feast Eve dinner last night, and both gave the same answer: the goose will be dry. The adventuring party then spent four hours trying to beat it. The goose was dry.</p>\n\n<p>It started at the Brindlemoor Seers' Hall, where the party last bought readings on <a href=\"/a/prophecies-contradict-all-come-true-fourth-attempt\">Omen Day, when all thirteen came true</a>. Seer-Warden Ysmay Coldharrow charges two silver a prophecy most of the year. Feast week is 25 gold. \"The feeling was twenty-five gold,\" Coldharrow told me. \"I don't set the feeling.\" The question went to Seer Hester Vole, who looked into the smoke for some time and said, \"The goose will be dry.\" Asked whether it might come out moist, Seer Vole said, \"I saw a goose. It was dry.\"</p>\n\n<p>The party's cleric would not accept this. Back at the Sleeping Mule she cast divination herself, burning 25 gold of incense at the corner table to ask her god about dinner. Her god answered in one word. She would not tell me the word. The rogue told me anyway. It was \"Dry.\"</p>\n\n<p>What followed was the best-organized effort I have seen from this party since the secret door. The fighter basted the goose 41 times with a ladle lashed to my ten-foot pole, so he could reach the back of Keeper Bess Harrowgate's hearth. The pole caught fire on pass 38. That is my sixteenth of the season. The wizard cast create or destroy water into the bird, which held about a cup and put the other two gallons on Harrowgate's boots. At midnight the rogue swapped the goose for a second one off a Fish Street cart, on the theory that the prophecy meant a particular goose. Harrowgate roasted both.</p>\n\n<p>Box score at the carving: fighter 38 hit points, wizard 9 (grease burn), cleric 22, rogue 17, ranger at full and very quiet. Both geese at zero. The party's bard, who asked to be named, called the first goose \"a boot with opinions\" and the second \"the boot's brother.\" I rolled poorly on a drumstick and needed the whole jug of cider to get it down.</p>\n\n<p>Harrowgate isn't charging for the second goose. She is charging for the boots. \"Thirty years I've roasted geese,\" she said. \"Open the oven every six minutes to baste and they come out dry. I told them that for free.\" Nobody at the table remembers her saying it. The ranger now admits he heard something.</p>\n\n<p>Coldharrow says the Seers' Hall gives no refunds for accuracy. On the cleric's second opinion, she sniffed: \"We have never needed a god to check our work.\" The Fourth Attempt says it will ask about Yuletide dinner next month. The cleric has already bought the incense.</p>\n\n<p><em>— H.D., filing from below</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Ruined Wedding Prophecy",
+          "text": "A seer has told a wealthy family that tomorrow's wedding feast 'will be ruined', and the bride's mother hires the party to stop every possible cause before the guests sit down. An imp in the inn's kitchen is sabotaging dishes for a rival family, but the party will also have to keep the host herself away from the oven."
+        },
+        "npc": {
+          "name": "Marwen Tulliver",
+          "role": "Mother of the bride",
+          "want": "A flawless wedding feast so the groom's family finally stops sneering at hers.",
+          "secret": "She cooked the last family feast herself, it was a disaster, and she plans to baste the roast personally no matter what the party says.",
+          "race": "human",
+          "gender": "female",
+          "kind": "merchant"
+        },
+        "location": {
+          "name": "The Turning Spit",
+          "text": "A roadside inn famous for spit-roasted fowl, where the spit turns on its own at night. The cook calls it a blessing. It is an imp with a grudge.",
+          "tavern": true
+        },
+        "rumor": "They say the seer took 25 gold to tell the Tullivers the feast would be ruined, and she's never once been wrong about food."
+      },
+      "fiction": true
+    },
+    {
+      "id": "red-dragon-feast-oven-2000-turnips-skorvath",
+      "title": "Red Dragon Lights Feast Oven; 2,000 Eat Turnips and Pie",
+      "category": "Events",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-11-26",
+      "excerpt": "The Grand Feast fed 2,000 after a red dragon lit the dead oven. The crab walked home, the boar dined as a guest, and dinner was turnips. Allegedly.",
+      "social": "Brindlemoor's Grand Feast happened. The giant crab walked home to the river, a red dragon lit the dead oven, and 2,000 people ate turnip pie. The guest of honor was the boar who was supposed to be dinner, along with her nine piglets. Would you have sat at table nine?",
+      "content": "<p>At roughly the second bell after noon on Feast Day, a red dragon named Skorvath allegedly lit the Grand Feast's dead oven with one polite breath, and Brindlemoor fed 2,000 people on the Town Green after all. The menu was turnips and turnip pie. Feastwarden Odo Plumbrook, the halfling who promised a feast for 2,000 on a 900 gp budget, called it \"exactly the plan, mostly.\"</p>\n\n<p>Quick catch-up, for anyone who has been under a rock (on Tanner's Row that's allegedly three people): by this morning the roast had become a mother, the crab was stuck in a gate, the kobolds had the pies, the cooks had walked out, and the oven had <a href=\"/a/salamander-oven-subscription-lapses-40-pies\">stopped heating when its subscription lapsed</a>. Plumbrook still had his chair. He allegedly slept on it.</p>\n\n<p>The crab went first. Around sunrise the Admiral, the fourteen-foot giant crab wedged in the East Gate all week, allegedly wriggled loose and walked sideways to the river. \"It looked back once,\" said Pell Tusker, the Fish Street boy who named it, who was eating a raw turnip at the time. \"I waved. It pinched the air. That's a wave, for a crab.\" The Watch last saw it heading downstream toward Kelpmouth.</p>\n\n<p>Then the oven. Skorvath, the young red dragon who keeps 11,400 gold pieces under the old tannery, had RSVP'd weeks ago and allegedly turned up with a signed fire permit, in triplicate. Plumbrook asked, from the chair, for \"a little encouragement.\" Skorvath breathed once into the firebox. The oven lit. So did the far end of table nine. The Seers' Hall foresaw \"a table of fire\" back at the start of all this, and Seer Hester Vole, watching from the pudding line, said only, \"That one. I said a table.\" Skorvath apologized to table nine by name and paid for the cloth. That's three small fires on its record now. It would like you to know they were all small.</p>\n\n<p>With heat back, Tansy Plumbrook walked the Hearthside Cooks' Guild back in at the third bell. Her terms were two silver a day, a chair at lunch, and the first helping. Her cousin agreed to all of it from the chair. The cooks baked for three hours straight. Turnip pie, mostly. The town had turnips. I counted one cart and then stopped counting carts.</p>\n\n<p>The head table went to Duchess, the giant boar who was supposed to be dinner, and <a href=\"/a/giant-boar-duchess-9-piglets-feast\">her nine piglets</a>. Keeper Bess Harrowgate read out house rule six, \"No eating the guests,\" and nobody argued. Duchess ate two bushels of turnips and a tablecloth that wasn't on fire. One piglet ate a chair leg. Duke Osgar Wendmoor of Varnholt sat across from her and called her \"the large one\" all evening, which she allegedly took well.</p>\n\n<p>Also there was a brass ladle at the gravy station that caught the oven light just right. I looked at it for a while. Anyway.</p>\n\n<p>By sundown the Feastwarden counted 2,000 fed. I counted 1,960 and a lot of seconds. Hollis Delvewright will tell you the Fourth Attempt saved the feast with that crab. The crab left before lunch. The final bill went on a napkin, which Plumbrook allegedly fed to Duchess. \"Strong finish,\" he said, still on the chair. \"Next year, a goose.\"</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Dragon's Dinner Invitation",
+          "text": "A town's great oven has gone cold the night before its harvest feast, and the only creature nearby hot enough to light it is a young red dragon who lives under the tannery and takes etiquette very seriously. The feast's organizer wants the party to deliver a proper invitation and keep the dragon happy all evening, because one offended breath could take the whole Town Green with it."
+        },
+        "npc": {
+          "name": "Marigold Tunney",
+          "role": "Head of feast seating",
+          "want": "She wants every guest seated by rank before the oven is lit, dragon included.",
+          "secret": "She put the dragon at the table with the one noble it once fined for trespassing, and has not told anyone.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "Table Nine",
+          "text": "The long trestle table at the far end of the green, closest to the oven's firebox. Every seer in town has warned against sitting there, so it is the only table with seats left.",
+          "tavern": false
+        },
+        "rumor": "They say the dragon only agreed to come because somebody promised it the first slice of pie, and nobody's told the cooks."
+      },
+      "fiction": true
+    },
+    {
+      "id": "cleric-spell-slots-third-helpings-ghouls",
+      "title": "Cleric Burns All 9 Spell Slots on Third Helpings, Then Ghouls",
+      "category": "Health",
+      "author": "Brother Wendell Tumbleberry",
+      "date": "2026-11-26",
+      "excerpt": "Friends, a cleric spent all nine spell slots on Lesser Restoration for his party's third helpings. Then ghouls came up the cellar stairs. Pace yourselves.",
+      "social": "Brother Tobin Ashcombe cast Lesser Restoration nine times on his party's third helpings at the Copper Ladle. Being full is not a condition, so none of it worked. Then two ghouls came up the cellar stairs and paralyzed the fighter. Cleric players, do you keep one slot back until after the pie?",
+      "content": "<p>Friends, a cleric in Brindlemoor spent every one of his spell slots on Wednesday night treating his own party's third helpings at a Harvesttide supper, and then the ghouls came up through the cellar. Brother Tobin Ashcombe of the Second Helping Company cast Lesser Restoration nine times on four overstuffed adventurers at the Copper Ladle, and he had nothing left when a ghoul paralyzed the party's fighter at the cellar door.</p>\n\n<p>The supper itself sounds lovely. Roast goose, buttered turnips, a chestnut stuffing the Ladle's cook will not explain, and three pies. \"By the third helping our wizard said she couldn't feel her feet,\" Brother Tobin told me from a cot in my clinic, where he had come to lie down out of solidarity. \"So I healed her. Then the rogue groaned, so I healed him. Then I healed myself, twice, because of the pudding.\"</p>\n\n<p>Here is the trouble, friends, and I say it with love. The old herbals tell us a full belly wants a short walk and a long sit. The temple infirmary agrees: last winter it logged 140 cases of supper groaning, and every last one got better after an hour in a chair. Lesser Restoration ends a disease, or blindness, or deafness, or paralysis, or poison. Full is none of those. Each casting did nothing at all, and Brother Tobin, thinking he had rolled poorly, simply cast it again. He did this until the well ran dry, with gravy on his holy symbol.</p>\n\n<p>Around the ninth bell, two ghouls came up the Ladle's cellar stairs, which connect to the Undermaw the way everything in Brindlemoor eventually does. One clawed Gretta Vane, the party's fighter, and she went stiff as a fence post. Paralysis! The one ailment on that list a cleric could fix, and Brother Tobin had spent it all on a rogue with a sore tummy. The rogue, still too full to stand, threw a whole pie. It missed. The Ladle's barkeep ran both ghouls off with a fire poker and a bucket of dishwater, and the tavern cat watched from the rafters with the air of someone who had seen this before.</p>\n\n<p>Gretta came round after about a minute, as folk usually do from a ghoul's touch, and the party carried her to me on the pie table anyway. Nobody was badly hurt except the pie. Chapter 9 says the ghouls were \"dinner guests from a lower level\" and has issued no warning. You may recall a different party learned about pacing the hard way earlier this week, <a href=\"/a/long-rest-giant-badger-den-hour-seven\">sleeping in a giant badger's den</a>. It's been a long week at the clinic.</p>\n\n<p>So, gently, from one who loves a second helping: pace yourselves. Spell slots are like pie. Keep one back until the dishes are done and somebody has checked the cellar door. My friend Nyx tells me there's an enchanted ledger now that counts your helpings for you. Go outside, Nyx. For everyone else, I recommend a small cup of ginger and fennel broth, sipped slowly, sitting down, with no spellcasting until it's finished.</p>\n\n<p><em>Rest well, friends. — Brother Wendell</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Door Below Supper",
+          "text": "Ghouls have come up a tavern's cellar stairs on three supper nights running, always just after the pies come out. The innkeeper wants the passage sealed before the town's harvest feast fills her hall, and she is paying in food, served before the job, which is the trap."
+        },
+        "npc": {
+          "name": "Ansel Brookhart",
+          "role": "Tavern Cook and Gravy Keeper",
+          "want": "He wants the ghouls gone without anyone looking too hard at his cellar.",
+          "secret": "He has been leaving bowls of gravy scraps at the bottom of the cellar stairs for what he thought was a stray cat, and that is what keeps drawing the ghouls up.",
+          "race": "halfling",
+          "gender": "male",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Gravy Stair",
+          "text": "A narrow cellar stair behind a tavern kitchen that ends at an old bricked arch into the dungeon below. The bricks at the bottom have been pushed out from the far side, and the floor smells of roast goose.",
+          "tavern": false
+        },
+        "rumor": "My cousin says if you cast lesser restoration on yourself before a feast you can eat forever, and he's been in bed since Tuesday."
+      },
+      "fiction": true
     }
   ]
 }
