@@ -140,6 +140,7 @@ function showSection() {
   const d = desks.find(x => x.id === section);
   const featured = document.getElementById('featured-article');
   const welcome = document.getElementById('welcome-section');
+  const tools = document.getElementById('tools-strip');
   const title = document.getElementById('grid-title');
   const archive = document.getElementById('archive-link');
 
@@ -147,6 +148,7 @@ function showSection() {
     allArticles = latest.filter(a => deskOf(a) === d);
     if (featured) featured.hidden = true;
     if (welcome) welcome.hidden = true;
+    if (tools) tools.hidden = true;
     if (title) title.textContent = `${d.icon} ${d.name}`;
     if (archive) { archive.href = `archive?section=${encodeURIComponent(d.id)}`; archive.textContent = `📚 Every ${d.name} scroll in the archive →`; }
   } else {
@@ -154,6 +156,7 @@ function showSection() {
     allArticles = latest.slice(1);
     if (featured) featured.hidden = false;
     if (welcome) welcome.hidden = false;
+    if (tools) tools.hidden = false;
     if (title) title.textContent = '📰 More News';
     if (archive) { archive.href = 'archive'; archive.textContent = '📚 Browse the full archive, by month and desk →'; }
   }

@@ -384,6 +384,14 @@ p:last-child { margin-bottom: 0; }
   margin: 10px auto 0;
 }
 
+/* Homepage tools strip, under the featured story */
+.tools-strip { display: flex; align-items: center; gap: 14px 20px; flex-wrap: wrap; margin: 24px 0 0; padding: 16px 20px; background: rgba(212,168,67,0.06); border: var(--border-gold); border-radius: var(--radius-md); }
+.tools-strip[hidden] { display: none; }
+.tools-strip-text { flex: 1 1 280px; margin: 0; color: var(--text-mid); font-size: 0.95rem; line-height: 1.5; }
+.tools-strip-text strong { color: var(--gold-bright); }
+.tools-strip-btn { flex: 0 0 auto; white-space: nowrap; }
+@media (max-width: 560px) { .tools-strip-btn { width: 100%; text-align: center; } }
+
 .section-divider {
   margin: 56px 0 28px;
   padding-top: 28px;
