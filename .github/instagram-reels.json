@@ -573,6 +573,34 @@
       "hashtags": "#Everstir #SelfStirringCauldron #BrassladleKitchenworks #CrookedGoose",
       "publishAt": "2026-11-26T02:00:00Z",
       "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "frost-giant-drinking-contest-warlock-signs-treaty",
+      "release_tag": "reel-stage-nov26-frost-ig-20261126",
+      "hashtags": "#FrostGiant #Skarnholt #NinthSpoonCompany #Brackwater",
+      "publishAt": "2026-11-27T03:45:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "divination-dry-goose-fourth-attempt-feast-eve",
+      "release_tag": "reel-stage-nov26-goose-ig-20261126",
+      "hashtags": "#Divination #FourthAttempt #SleepingMule #FeastEve",
+      "publishAt": "2026-11-27T05:45:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "red-dragon-feast-oven-2000-turnips-skorvath",
+      "release_tag": "reel-stage-nov26-dragon-ig-20261126",
+      "hashtags": "#Skorvath #GrandFeast #TurnipPie #Brindlemoor",
+      "publishAt": "2026-11-27T07:45:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "cleric-spell-slots-third-helpings-ghouls",
+      "release_tag": "reel-stage-nov26-cleric-ig-20261126",
+      "hashtags": "#LesserRestoration #SpellSlots #CopperLadle #SecondHelpingCompany",
+      "publishAt": "2026-11-27T09:45:00Z",
+      "custom_artwork_confirmed": true
     }
   ]
 }
