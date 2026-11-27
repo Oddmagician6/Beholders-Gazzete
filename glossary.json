@@ -1,5 +1,5 @@
 {
-    "generated":  "2026-11-26",
+    "generated":  "2026-11-27",
     "writers":  [
                     {
                         "id":  "ottoline-vex",
@@ -85,8 +85,13 @@
                                            "name":  "Sterling Vanmoor"
                                        }
                                    ],
-                        "article_count":  41,
+                        "article_count":  42,
                         "articles":  [
+                                         {
+                                             "id":  "feast-bill-6100-gp-plumbrook-strong-year",
+                                             "title":  "Halfling\u0027s Feast for 2,000 Bills 6,100 gp on a 900 gp Budget",
+                                             "date":  "2026-11-27"
+                                         },
                                          {
                                              "id":  "druid-wild-shape-goose-futures-crash",
                                              "title":  "Goose Futures Crash 92% as Druid Sells Herself 30 Times",
@@ -106,11 +111,6 @@
                                              "id":  "major-image-gold-audit-party-loan-ledgerhall",
                                              "title":  "Major Image Gold Vanishes in Audit; Party Had Borrowed on It",
                                              "date":  "2026-11-19"
-                                         },
-                                         {
-                                             "id":  "griffon-egg-feast-geese-adventuring-party",
-                                             "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
-                                             "date":  "2026-11-17"
                                          }
                                      ]
                     },
@@ -144,8 +144,13 @@
                                            "name":  "Barnaby Tallowmere"
                                        }
                                    ],
-                        "article_count":  38,
+                        "article_count":  39,
                         "articles":  [
+                                         {
+                                             "id":  "doorbuster-adventuring-party-12-doors-unlocked",
+                                             "title":  "Party Kicks In 12 Doors for Doorbuster Sale; All Were Unlocked",
+                                             "date":  "2026-11-27"
+                                         },
                                          {
                                              "id":  "self-stirring-cauldron-recall-stirs-cook-everstir",
                                              "title":  "Self-Stirring Cauldron Recalled After It Stirs the Cook",
@@ -165,11 +170,6 @@
                                              "id":  "harpy-jingle-adventuring-party-river-fernsley",
                                              "title":  "Harpy Jingle Walks Party Into River; Shop Calls It Foot Traffic",
                                              "date":  "2026-11-18"
-                                         },
-                                         {
-                                             "id":  "feast-2000-tiered-seating-heroes-feast-bid",
-                                             "title":  "Tiered Seating Bid for Feast of 2,000: Chairs Are Gold Tier",
-                                             "date":  "2026-11-15"
                                          }
                                      ]
                     },
@@ -199,8 +199,13 @@
                                            "name":  "Sterling Vanmoor"
                                        }
                                    ],
-                        "article_count":  38,
+                        "article_count":  39,
                         "articles":  [
+                                         {
+                                             "id":  "adventuring-party-blackfrost-guard-store-credit",
+                                             "title":  "Adventuring Party Guards Sale 19 Hours, Paid in Store Credit",
+                                             "date":  "2026-11-27"
+                                         },
                                          {
                                              "id":  "halfling-cooks-strike-feast-plumbrook-cousins",
                                              "title":  "Halfling Cooks Strike Before Feast, Led by Organizer\u0027s Cousins",
@@ -220,11 +225,6 @@
                                              "id":  "frost-giant-wages-rimeback-pass-ninefathom",
                                              "title":  "Frost Giant Clearing Snowed-In Pass Wants Giant-Sized Wages",
                                              "date":  "2026-11-17"
-                                         },
-                                         {
-                                             "id":  "adventuring-party-3000-potatoes-exposure-plumbrook",
-                                             "title":  "Adventuring Party Peels 3,000 Potatoes, Paid in Exposure",
-                                             "date":  "2026-11-14"
                                          }
                                      ]
                     },
@@ -253,8 +253,13 @@
                                            "name":  "Brother Wendell Tumbleberry"
                                        }
                                    ],
-                        "article_count":  40,
+                        "article_count":  41,
                         "articles":  [
+                                         {
+                                             "id":  "potion-of-speed-blackfrost-queue-party-ages",
+                                             "title":  "Potion of Speed Wins Blackfrost Queue; Party Ages a Year",
+                                             "date":  "2026-11-27"
+                                         },
                                          {
                                              "id":  "locate-object-stolen-sword-watch-evidence-room",
                                              "title":  "Locate Object Finds Stolen Sword in Watch Evidence Room",
@@ -274,11 +279,6 @@
                                              "id":  "salamander-oven-subscription-lapses-40-pies",
                                              "title":  "Salamander Oven Subscription Lapses Mid-Bake; 40 Pies Half-Done",
                                              "date":  "2026-11-19"
-                                         },
-                                         {
-                                             "id":  "levitation-slippers-recall-rogue-vault-ceiling",
-                                             "title":  "Levitation Slippers Recalled; Rogue Stuck on Vault Ceiling",
-                                             "date":  "2026-11-18"
                                          }
                                      ]
                     },
@@ -598,32 +598,32 @@
                       "short":  "Brindlemoor",
                       "type":  "place",
                       "blurb":  "A frontier market town built on top of the entrance to the Undermaw. Its economy runs on adventurers, and so does its hospital.",
-                      "appearances":  141,
+                      "appearances":  145,
                       "articles":  [
+                                       {
+                                           "id":  "adventuring-party-blackfrost-guard-store-credit",
+                                           "title":  "Adventuring Party Guards Sale 19 Hours, Paid in Store Credit",
+                                           "date":  "2026-11-27"
+                                       },
+                                       {
+                                           "id":  "doorbuster-adventuring-party-12-doors-unlocked",
+                                           "title":  "Party Kicks In 12 Doors for Doorbuster Sale; All Were Unlocked",
+                                           "date":  "2026-11-27"
+                                       },
+                                       {
+                                           "id":  "feast-bill-6100-gp-plumbrook-strong-year",
+                                           "title":  "Halfling\u0027s Feast for 2,000 Bills 6,100 gp on a 900 gp Budget",
+                                           "date":  "2026-11-27"
+                                       },
+                                       {
+                                           "id":  "potion-of-speed-blackfrost-queue-party-ages",
+                                           "title":  "Potion of Speed Wins Blackfrost Queue; Party Ages a Year",
+                                           "date":  "2026-11-27"
+                                       },
                                        {
                                            "id":  "cleric-spell-slots-third-helpings-ghouls",
                                            "title":  "Cleric Burns All 9 Spell Slots on Third Helpings, Then Ghouls",
                                            "date":  "2026-11-26"
-                                       },
-                                       {
-                                           "id":  "divination-dry-goose-fourth-attempt-feast-eve",
-                                           "title":  "Divination Says Goose Will Be Dry. Party Fights Fate, Loses.",
-                                           "date":  "2026-11-26"
-                                       },
-                                       {
-                                           "id":  "red-dragon-feast-oven-2000-turnips-skorvath",
-                                           "title":  "Red Dragon Lights Feast Oven; 2,000 Eat Turnips and Pie",
-                                           "date":  "2026-11-26"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-guard-feast-eats-third-tasting",
-                                           "title":  "Adventuring Party Hired to Guard Feast Eats a Third of It",
-                                           "date":  "2026-11-25"
-                                       },
-                                       {
-                                           "id":  "druid-wild-shape-goose-futures-crash",
-                                           "title":  "Goose Futures Crash 92% as Druid Sells Herself 30 Times",
-                                           "date":  "2026-11-25"
                                        }
                                    ]
                   },
@@ -632,8 +632,18 @@
                       "short":  "the Guild",
                       "type":  "institution",
                       "blurb":  "A guild of heritage keepers who sue to protect old buildings and groves in the capital.",
-                      "appearances":  104,
+                      "appearances":  106,
                       "articles":  [
+                                       {
+                                           "id":  "doorbuster-adventuring-party-12-doors-unlocked",
+                                           "title":  "Party Kicks In 12 Doors for Doorbuster Sale; All Were Unlocked",
+                                           "date":  "2026-11-27"
+                                       },
+                                       {
+                                           "id":  "feast-bill-6100-gp-plumbrook-strong-year",
+                                           "title":  "Halfling\u0027s Feast for 2,000 Bills 6,100 gp on a 900 gp Budget",
+                                           "date":  "2026-11-27"
+                                       },
                                        {
                                            "id":  "red-dragon-feast-oven-2000-turnips-skorvath",
                                            "title":  "Red Dragon Lights Feast Oven; 2,000 Eat Turnips and Pie",
@@ -648,16 +658,6 @@
                                            "id":  "halfling-cooks-strike-feast-plumbrook-cousins",
                                            "title":  "Halfling Cooks Strike Before Feast, Led by Organizer\u0027s Cousins",
                                            "date":  "2026-11-24"
-                                       },
-                                       {
-                                           "id":  "heroes-feast-1000-gp-party-dragon-out",
-                                           "title":  "Party Spends 1,000 gp on Heroes\u0027 Feast; Dragon Was Out",
-                                           "date":  "2026-11-23"
-                                       },
-                                       {
-                                           "id":  "carrion-crawler-skeleton-guardpost-level-two",
-                                           "title":  "Carrion Crawler Takes Post After Party Evicts Skeleton Guards",
-                                           "date":  "2026-11-20"
                                        }
                                    ]
                   },
@@ -700,8 +700,13 @@
                       "short":  "Chapter 9",
                       "type":  "organization",
                       "blurb":  "The guild chapter that licenses parties to enter the Undermaw, sells the maps, and insists the maps are accurate.",
-                      "appearances":  74,
+                      "appearances":  75,
                       "articles":  [
+                                       {
+                                           "id":  "adventuring-party-blackfrost-guard-store-credit",
+                                           "title":  "Adventuring Party Guards Sale 19 Hours, Paid in Store Credit",
+                                           "date":  "2026-11-27"
+                                       },
                                        {
                                            "id":  "cleric-spell-slots-third-helpings-ghouls",
                                            "title":  "Cleric Burns All 9 Spell Slots on Third Helpings, Then Ghouls",
@@ -721,11 +726,40 @@
                                            "id":  "nothic-sells-party-heist-plan-rivals",
                                            "title":  "Nothic Sells Party\u0027s Heist Plan to Rivals for 5 Gold",
                                            "date":  "2026-11-17"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "The Copper Bucket Company",
+                      "short":  "the Company",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor adventuring party that brought a sack of shrieker mushrooms home from the Undermaw to sell, and kept Tanner\u0027s Row awake for four nights.",
+                      "appearances":  60,
+                      "articles":  [
+                                       {
+                                           "id":  "adventuring-party-blackfrost-guard-store-credit",
+                                           "title":  "Adventuring Party Guards Sale 19 Hours, Paid in Store Credit",
+                                           "date":  "2026-11-27"
                                        },
                                        {
-                                           "id":  "identify-spell-fees-party-drinks-loot",
-                                           "title":  "Identify Fees Jump 60%, So Party Tests Its Loot by Drinking It",
-                                           "date":  "2026-11-15"
+                                           "id":  "doorbuster-adventuring-party-12-doors-unlocked",
+                                           "title":  "Party Kicks In 12 Doors for Doorbuster Sale; All Were Unlocked",
+                                           "date":  "2026-11-27"
+                                       },
+                                       {
+                                           "id":  "feast-bill-6100-gp-plumbrook-strong-year",
+                                           "title":  "Halfling\u0027s Feast for 2,000 Bills 6,100 gp on a 900 gp Budget",
+                                           "date":  "2026-11-27"
+                                       },
+                                       {
+                                           "id":  "potion-of-speed-blackfrost-queue-party-ages",
+                                           "title":  "Potion of Speed Wins Blackfrost Queue; Party Ages a Year",
+                                           "date":  "2026-11-27"
+                                       },
+                                       {
+                                           "id":  "cleric-spell-slots-third-helpings-ghouls",
+                                           "title":  "Cleric Burns All 9 Spell Slots on Third Helpings, Then Ghouls",
+                                           "date":  "2026-11-26"
                                        }
                                    ]
                   },
@@ -734,8 +768,13 @@
                       "short":  "Reeve Fennick",
                       "type":  "person",
                       "blurb":  "Brindlemoor\u0027s chief magistrate. Signs every dungeon permit, every bounty, and every apology to the farmers downwind.",
-                      "appearances":  58,
+                      "appearances":  59,
                       "articles":  [
+                                       {
+                                           "id":  "feast-bill-6100-gp-plumbrook-strong-year",
+                                           "title":  "Halfling\u0027s Feast for 2,000 Bills 6,100 gp on a 900 gp Budget",
+                                           "date":  "2026-11-27"
+                                       },
                                        {
                                            "id":  "adventuring-party-guard-feast-eats-third-tasting",
                                            "title":  "Adventuring Party Hired to Guard Feast Eats a Third of It",
@@ -755,11 +794,6 @@
                                            "id":  "feast-seating-chart-treaty-baronies-turnips",
                                            "title":  "Rival Baronies RSVP to Feast; Seating Chart Is Now a Treaty",
                                            "date":  "2026-11-18"
-                                       },
-                                       {
-                                           "id":  "frost-giant-wages-rimeback-pass-ninefathom",
-                                           "title":  "Frost Giant Clearing Snowed-In Pass Wants Giant-Sized Wages",
-                                           "date":  "2026-11-17"
                                        }
                                    ]
                   },
@@ -794,40 +828,6 @@
                                            "id":  "major-image-gold-audit-party-loan-ledgerhall",
                                            "title":  "Major Image Gold Vanishes in Audit; Party Had Borrowed on It",
                                            "date":  "2026-11-19"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "The Copper Bucket Company",
-                      "short":  "the Company",
-                      "type":  "organization",
-                      "blurb":  "A Brindlemoor adventuring party that brought a sack of shrieker mushrooms home from the Undermaw to sell, and kept Tanner\u0027s Row awake for four nights.",
-                      "appearances":  56,
-                      "articles":  [
-                                       {
-                                           "id":  "cleric-spell-slots-third-helpings-ghouls",
-                                           "title":  "Cleric Burns All 9 Spell Slots on Third Helpings, Then Ghouls",
-                                           "date":  "2026-11-26"
-                                       },
-                                       {
-                                           "id":  "frost-giant-drinking-contest-warlock-signs-treaty",
-                                           "title":  "Frost Giant Drinking Contest: 4 Standing, Warlock Signs Treaty",
-                                           "date":  "2026-11-26"
-                                       },
-                                       {
-                                           "id":  "adventuring-party-guard-feast-eats-third-tasting",
-                                           "title":  "Adventuring Party Hired to Guard Feast Eats a Third of It",
-                                           "date":  "2026-11-25"
-                                       },
-                                       {
-                                           "id":  "druid-wild-shape-goose-futures-crash",
-                                           "title":  "Goose Futures Crash 92% as Druid Sells Herself 30 Times",
-                                           "date":  "2026-11-25"
-                                       },
-                                       {
-                                           "id":  "locate-object-stolen-sword-watch-evidence-room",
-                                           "title":  "Locate Object Finds Stolen Sword in Watch Evidence Room",
-                                           "date":  "2026-11-25"
                                        }
                                    ]
                   },
@@ -1210,8 +1210,13 @@
                       "short":  "Plumbrook",
                       "type":  "person",
                       "blurb":  "A Brindlemoor halfling appointed Feastwarden of the Grand Feast. He has promised to feed 2,000 people and has never once doubted it.",
-                      "appearances":  18,
+                      "appearances":  19,
                       "articles":  [
+                                       {
+                                           "id":  "feast-bill-6100-gp-plumbrook-strong-year",
+                                           "title":  "Halfling\u0027s Feast for 2,000 Bills 6,100 gp on a 900 gp Budget",
+                                           "date":  "2026-11-27"
+                                       },
                                        {
                                            "id":  "red-dragon-feast-oven-2000-turnips-skorvath",
                                            "title":  "Red Dragon Lights Feast Oven; 2,000 Eat Turnips and Pie",
@@ -1231,11 +1236,6 @@
                                            "id":  "water-elemental-cranberry-bogs-sauce-4-sp",
                                            "title":  "Water Elemental Floods Cranberry Bogs; Sauce Hits 4 sp a Jar",
                                            "date":  "2026-11-23"
-                                       },
-                                       {
-                                           "id":  "kobolds-120-feast-pies-thank-you-notes",
-                                           "title":  "Kobolds Take 120 Feast Pies, Leave Thank-You Notes",
-                                           "date":  "2026-11-22"
                                        }
                                    ]
                   },
@@ -1648,6 +1648,40 @@
                                    ]
                   },
                   {
+                      "name":  "Duchess",
+                      "short":  "Duchess",
+                      "type":  "creature",
+                      "blurb":  "The giant boar brought back alive from the Thornwood to be the Grand Feast\u0027s centerpiece. She now rents the big stall at the Sleeping Mule and keeps the pigeons off the roof.",
+                      "appearances":  12,
+                      "articles":  [
+                                       {
+                                           "id":  "feast-bill-6100-gp-plumbrook-strong-year",
+                                           "title":  "Halfling\u0027s Feast for 2,000 Bills 6,100 gp on a 900 gp Budget",
+                                           "date":  "2026-11-27"
+                                       },
+                                       {
+                                           "id":  "red-dragon-feast-oven-2000-turnips-skorvath",
+                                           "title":  "Red Dragon Lights Feast Oven; 2,000 Eat Turnips and Pie",
+                                           "date":  "2026-11-26"
+                                       },
+                                       {
+                                           "id":  "halfling-cooks-strike-feast-plumbrook-cousins",
+                                           "title":  "Halfling Cooks Strike Before Feast, Led by Organizer\u0027s Cousins",
+                                           "date":  "2026-11-24"
+                                       },
+                                       {
+                                           "id":  "giant-crab-feast-stuck-town-gate",
+                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
+                                           "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "giant-boar-duchess-9-piglets-feast",
+                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
+                                           "date":  "2026-11-20"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Guildmaster Tobrin Ashgrove",
                       "short":  "Ashgrove",
                       "type":  "person",
@@ -1678,40 +1712,6 @@
                                            "id":  "cursed-ring-fighter-invests-party-loot",
                                            "title":  "Cursed Ring Bought As-Is Makes Fighter Invest Party\u0027s Loot",
                                            "date":  "2026-11-13"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Duchess",
-                      "short":  "Duchess",
-                      "type":  "creature",
-                      "blurb":  "The giant boar brought back alive from the Thornwood to be the Grand Feast\u0027s centerpiece. She now rents the big stall at the Sleeping Mule and keeps the pigeons off the roof.",
-                      "appearances":  11,
-                      "articles":  [
-                                       {
-                                           "id":  "red-dragon-feast-oven-2000-turnips-skorvath",
-                                           "title":  "Red Dragon Lights Feast Oven; 2,000 Eat Turnips and Pie",
-                                           "date":  "2026-11-26"
-                                       },
-                                       {
-                                           "id":  "halfling-cooks-strike-feast-plumbrook-cousins",
-                                           "title":  "Halfling Cooks Strike Before Feast, Led by Organizer\u0027s Cousins",
-                                           "date":  "2026-11-24"
-                                       },
-                                       {
-                                           "id":  "giant-crab-feast-stuck-town-gate",
-                                           "title":  "Giant Crab for Feast Wedged in Brindlemoor Town Gate",
-                                           "date":  "2026-11-21"
-                                       },
-                                       {
-                                           "id":  "giant-boar-duchess-9-piglets-feast",
-                                           "title":  "Feast Boar Has 9 Piglets; Town Won\u0027t Eat a New Mother",
-                                           "date":  "2026-11-20"
-                                       },
-                                       {
-                                           "id":  "salamander-oven-subscription-lapses-40-pies",
-                                           "title":  "Salamander Oven Subscription Lapses Mid-Bake; 40 Pies Half-Done",
-                                           "date":  "2026-11-19"
                                        }
                                    ]
                   },
@@ -2566,6 +2566,40 @@
                                    ]
                   },
                   {
+                      "name":  "Varnholt",
+                      "short":  "Varnholt",
+                      "type":  "place",
+                      "blurb":  "A harbor kingdom with strict customs rules and a berth fee for everything that floats, including some things that should not.",
+                      "appearances":  7,
+                      "articles":  [
+                                       {
+                                           "id":  "feast-bill-6100-gp-plumbrook-strong-year",
+                                           "title":  "Halfling\u0027s Feast for 2,000 Bills 6,100 gp on a 900 gp Budget",
+                                           "date":  "2026-11-27"
+                                       },
+                                       {
+                                           "id":  "red-dragon-feast-oven-2000-turnips-skorvath",
+                                           "title":  "Red Dragon Lights Feast Oven; 2,000 Eat Turnips and Pie",
+                                           "date":  "2026-11-26"
+                                       },
+                                       {
+                                           "id":  "giant-eagles-refuse-updraft-company-escort-duke",
+                                           "title":  "Giant Eagles Refuse Party\u0027s Escort Plan: \u0027Not a Coach Service\u0027",
+                                           "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "sahuagin-underwater-trade-parley-varnholt-water-breathing",
+                                           "title":  "Sahuagin Demand Underwater Trade Talks; Envoys Hold Breath",
+                                           "date":  "2026-11-11"
+                                       },
+                                       {
+                                           "id":  "rogue-pickpockets-envoy-whistle-varnholt-pellam-incident",
+                                           "title":  "Rogue Picks Envoy\u0027s Pocket, Starts Varnholt-Pellam Incident",
+                                           "date":  "2026-11-06"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Apple of Discord Artificers",
                       "short":  "Discord Apple",
                       "type":  "company",
@@ -3038,40 +3072,6 @@
                                            "id":  "giant-boar-tavern-stable-duchess-harrowgate",
                                            "title":  "Giant Boar Rents Tavern Stable; Innkeeper Names Her Duchess",
                                            "date":  "2026-11-12"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Varnholt",
-                      "short":  "Varnholt",
-                      "type":  "place",
-                      "blurb":  "A harbor kingdom with strict customs rules and a berth fee for everything that floats, including some things that should not.",
-                      "appearances":  6,
-                      "articles":  [
-                                       {
-                                           "id":  "red-dragon-feast-oven-2000-turnips-skorvath",
-                                           "title":  "Red Dragon Lights Feast Oven; 2,000 Eat Turnips and Pie",
-                                           "date":  "2026-11-26"
-                                       },
-                                       {
-                                           "id":  "giant-eagles-refuse-updraft-company-escort-duke",
-                                           "title":  "Giant Eagles Refuse Party\u0027s Escort Plan: \u0027Not a Coach Service\u0027",
-                                           "date":  "2026-11-21"
-                                       },
-                                       {
-                                           "id":  "sahuagin-underwater-trade-parley-varnholt-water-breathing",
-                                           "title":  "Sahuagin Demand Underwater Trade Talks; Envoys Hold Breath",
-                                           "date":  "2026-11-11"
-                                       },
-                                       {
-                                           "id":  "rogue-pickpockets-envoy-whistle-varnholt-pellam-incident",
-                                           "title":  "Rogue Picks Envoy\u0027s Pocket, Starts Varnholt-Pellam Incident",
-                                           "date":  "2026-11-06"
-                                       },
-                                       {
-                                           "id":  "gelatinous-cube-conference-room-varnholt-pellam-parley",
-                                           "title":  "Gelatinous Cube Hosted Varnholt-Pellam Parley as \u0027Glass Room\u0027",
-                                           "date":  "2026-11-04"
                                        }
                                    ]
                   },
@@ -4084,6 +4084,35 @@
                                    ]
                   },
                   {
+                      "name":  "the Moot",
+                      "short":  "the Moot",
+                      "type":  "institution",
+                      "blurb":  "The parliament of Halruaa.",
+                      "appearances":  4,
+                      "articles":  [
+                                       {
+                                           "id":  "feast-bill-6100-gp-plumbrook-strong-year",
+                                           "title":  "Halfling\u0027s Feast for 2,000 Bills 6,100 gp on a 900 gp Budget",
+                                           "date":  "2026-11-27"
+                                       },
+                                       {
+                                           "id":  "halruaa-election-turnout-45-years-nettleyahu",
+                                           "title":  "Halruaa Election Turnout Fastest in 45 Years",
+                                           "date":  "2026-10-27"
+                                       },
+                                       {
+                                           "id":  "pumpkin-smash-harvest-festival-stillwarder-crowd",
+                                           "title":  "Giant Pumpkin Smash Draws Crowd in Stillwarder; Pieces Looted",
+                                           "date":  "2026-10-26"
+                                       },
+                                       {
+                                           "id":  "donwald-endorsement-nettleyahu-halruaa-election",
+                                           "title":  "Donwald Endorses Nettleyahu Days Before Halruaa Election",
+                                           "date":  "2026-10-19"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Oil Lords of Amn",
                       "short":  "the Oil Lords",
                       "type":  "institution",
@@ -4225,6 +4254,30 @@
                                            "id":  "bird-flu-evergreen-reach-dairy-cows-wendell",
                                            "title":  "Bird Flu Jumps to Evergreen Reach Cows; Soup Advised",
                                            "date":  "2026-10-13"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Blackfrost Friday",
+                      "short":  "Blackfrost Friday",
+                      "type":  "event",
+                      "blurb":  "Brindlemoor\u0027s big sale day, the morning after the Grand Feast. Queues form at sundown the night before.",
+                      "appearances":  3,
+                      "articles":  [
+                                       {
+                                           "id":  "adventuring-party-blackfrost-guard-store-credit",
+                                           "title":  "Adventuring Party Guards Sale 19 Hours, Paid in Store Credit",
+                                           "date":  "2026-11-27"
+                                       },
+                                       {
+                                           "id":  "doorbuster-adventuring-party-12-doors-unlocked",
+                                           "title":  "Party Kicks In 12 Doors for Doorbuster Sale; All Were Unlocked",
+                                           "date":  "2026-11-27"
+                                       },
+                                       {
+                                           "id":  "potion-of-speed-blackfrost-queue-party-ages",
+                                           "title":  "Potion of Speed Wins Blackfrost Queue; Party Ages a Year",
+                                           "date":  "2026-11-27"
                                        }
                                    ]
                   },
@@ -4373,6 +4426,30 @@
                                    ]
                   },
                   {
+                      "name":  "Duke Osgar Wendmoor of Varnholt",
+                      "short":  "Duke Wendmoor",
+                      "type":  "person",
+                      "blurb":  "A Varnholt duke traveling to Brindlemoor\u0027s Grand Feast with eleven courtiers and nineteen trunks, one of which is shoes.",
+                      "appearances":  3,
+                      "articles":  [
+                                       {
+                                           "id":  "feast-bill-6100-gp-plumbrook-strong-year",
+                                           "title":  "Halfling\u0027s Feast for 2,000 Bills 6,100 gp on a 900 gp Budget",
+                                           "date":  "2026-11-27"
+                                       },
+                                       {
+                                           "id":  "red-dragon-feast-oven-2000-turnips-skorvath",
+                                           "title":  "Red Dragon Lights Feast Oven; 2,000 Eat Turnips and Pie",
+                                           "date":  "2026-11-26"
+                                       },
+                                       {
+                                           "id":  "giant-eagles-refuse-updraft-company-escort-duke",
+                                           "title":  "Giant Eagles Refuse Party\u0027s Escort Plan: \u0027Not a Coach Service\u0027",
+                                           "date":  "2026-11-21"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Fraddie Mace Home-Loan Hall",
                       "short":  "Fraddie Mace",
                       "type":  "agency",
@@ -4441,6 +4518,30 @@
                                            "id":  "adventuring-party-fealty-dropped-coins-lord-hask",
                                            "title":  "Adventuring Party Sworn to Lord After Coin Pickup Mishap",
                                            "date":  "2026-11-04"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Gilbert",
+                      "short":  "Gilbert",
+                      "type":  "creature",
+                      "blurb":  "A griffon egg bought for the Grand Feast for 591 gp. Probably real. Not yet hatched.",
+                      "appearances":  3,
+                      "articles":  [
+                                       {
+                                           "id":  "feast-bill-6100-gp-plumbrook-strong-year",
+                                           "title":  "Halfling\u0027s Feast for 2,000 Bills 6,100 gp on a 900 gp Budget",
+                                           "date":  "2026-11-27"
+                                       },
+                                       {
+                                           "id":  "halfling-cooks-strike-feast-plumbrook-cousins",
+                                           "title":  "Halfling Cooks Strike Before Feast, Led by Organizer\u0027s Cousins",
+                                           "date":  "2026-11-24"
+                                       },
+                                       {
+                                           "id":  "griffon-egg-feast-geese-adventuring-party",
+                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
+                                           "date":  "2026-11-17"
                                        }
                                    ]
                   },
@@ -4537,6 +4638,30 @@
                                            "id":  "ivory-keep-names-new-herald-unblemished-record",
                                            "title":  "Ivory Keep Names New Herald for Her Unblemished Record of Agreeing",
                                            "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Hobb Fernsley, owner of Fernsley\u0027s Outfitters",
+                      "short":  "Hobb Fernsley",
+                      "type":  "person",
+                      "blurb":  "Owner of Fernsley\u0027s Outfitters on the far bank of the Tumblebrook, known for his winter sales and fine print.",
+                      "appearances":  3,
+                      "articles":  [
+                                       {
+                                           "id":  "adventuring-party-blackfrost-guard-store-credit",
+                                           "title":  "Adventuring Party Guards Sale 19 Hours, Paid in Store Credit",
+                                           "date":  "2026-11-27"
+                                       },
+                                       {
+                                           "id":  "yeti-fur-coats-300-percent-first-snow",
+                                           "title":  "Yeti Fur Coats Up 300% After First Snow; Yetis Unimpressed",
+                                           "date":  "2026-11-21"
+                                       },
+                                       {
+                                           "id":  "harpy-jingle-adventuring-party-river-fernsley",
+                                           "title":  "Harpy Jingle Walks Party Into River; Shop Calls It Foot Traffic",
+                                           "date":  "2026-11-18"
                                        }
                                    ]
                   },
@@ -4997,6 +5122,30 @@
                                    ]
                   },
                   {
+                      "name":  "the Hearthside Cooks\u0027 Guild",
+                      "short":  "the Hearthside Guild",
+                      "type":  "organization",
+                      "blurb":  "Brindlemoor\u0027s guild of 38 halfling cooks, eleven of them Plumbrooks. They want two silver a day and a chair at lunch.",
+                      "appearances":  3,
+                      "articles":  [
+                                       {
+                                           "id":  "feast-bill-6100-gp-plumbrook-strong-year",
+                                           "title":  "Halfling\u0027s Feast for 2,000 Bills 6,100 gp on a 900 gp Budget",
+                                           "date":  "2026-11-27"
+                                       },
+                                       {
+                                           "id":  "red-dragon-feast-oven-2000-turnips-skorvath",
+                                           "title":  "Red Dragon Lights Feast Oven; 2,000 Eat Turnips and Pie",
+                                           "date":  "2026-11-26"
+                                       },
+                                       {
+                                           "id":  "halfling-cooks-strike-feast-plumbrook-cousins",
+                                           "title":  "Halfling Cooks Strike Before Feast, Led by Organizer\u0027s Cousins",
+                                           "date":  "2026-11-24"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Liberty Lanterns",
                       "short":  "the Lanterns",
                       "type":  "party",
@@ -5017,30 +5166,6 @@
                                            "id":  "impeachment-maztica-senate-judge-moraine-warlord",
                                            "title":  "Maztica Senate Plots Impeachment of Judge Who Jailed Warlord",
                                            "date":  "2026-10-17"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "the Moot",
-                      "short":  "the Moot",
-                      "type":  "institution",
-                      "blurb":  "The parliament of Halruaa.",
-                      "appearances":  3,
-                      "articles":  [
-                                       {
-                                           "id":  "halruaa-election-turnout-45-years-nettleyahu",
-                                           "title":  "Halruaa Election Turnout Fastest in 45 Years",
-                                           "date":  "2026-10-27"
-                                       },
-                                       {
-                                           "id":  "pumpkin-smash-harvest-festival-stillwarder-crowd",
-                                           "title":  "Giant Pumpkin Smash Draws Crowd in Stillwarder; Pieces Looted",
-                                           "date":  "2026-10-26"
-                                       },
-                                       {
-                                           "id":  "donwald-endorsement-nettleyahu-halruaa-election",
-                                           "title":  "Donwald Endorses Nettleyahu Days Before Halruaa Election",
-                                           "date":  "2026-10-19"
                                        }
                                    ]
                   },
@@ -5579,25 +5704,6 @@
                                    ]
                   },
                   {
-                      "name":  "Duke Osgar Wendmoor of Varnholt",
-                      "short":  "Duke Wendmoor",
-                      "type":  "person",
-                      "blurb":  "A Varnholt duke traveling to Brindlemoor\u0027s Grand Feast with eleven courtiers and nineteen trunks, one of which is shoes.",
-                      "appearances":  2,
-                      "articles":  [
-                                       {
-                                           "id":  "red-dragon-feast-oven-2000-turnips-skorvath",
-                                           "title":  "Red Dragon Lights Feast Oven; 2,000 Eat Turnips and Pie",
-                                           "date":  "2026-11-26"
-                                       },
-                                       {
-                                           "id":  "giant-eagles-refuse-updraft-company-escort-duke",
-                                           "title":  "Giant Eagles Refuse Party\u0027s Escort Plan: \u0027Not a Coach Service\u0027",
-                                           "date":  "2026-11-21"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Dullas",
                       "short":  "Dullas",
                       "type":  "city",
@@ -5712,25 +5818,6 @@
                                    ]
                   },
                   {
-                      "name":  "Gilbert",
-                      "short":  "Gilbert",
-                      "type":  "creature",
-                      "blurb":  "A griffon egg bought for the Grand Feast for 591 gp. Probably real. Not yet hatched.",
-                      "appearances":  2,
-                      "articles":  [
-                                       {
-                                           "id":  "halfling-cooks-strike-feast-plumbrook-cousins",
-                                           "title":  "Halfling Cooks Strike Before Feast, Led by Organizer\u0027s Cousins",
-                                           "date":  "2026-11-24"
-                                       },
-                                       {
-                                           "id":  "griffon-egg-feast-geese-adventuring-party",
-                                           "title":  "Party Sent for 200 Geese Returns With 3 and a Griffon Egg",
-                                           "date":  "2026-11-17"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "Grand General Brigand Healing Guild",
                       "short":  "the Brigand Guild",
                       "type":  "company",
@@ -5841,25 +5928,6 @@
                                            "id":  "griffon-air-route-teleportation-circle-hopwell",
                                            "title":  "Griffon Air Route Runs Straight Into a Teleportation Circle",
                                            "date":  "2026-11-14"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Hobb Fernsley, owner of Fernsley\u0027s Outfitters",
-                      "short":  "Hobb Fernsley",
-                      "type":  "person",
-                      "blurb":  "Owner of Fernsley\u0027s Outfitters on the far bank of the Tumblebrook, known for his winter sales and fine print.",
-                      "appearances":  2,
-                      "articles":  [
-                                       {
-                                           "id":  "yeti-fur-coats-300-percent-first-snow",
-                                           "title":  "Yeti Fur Coats Up 300% After First Snow; Yetis Unimpressed",
-                                           "date":  "2026-11-21"
-                                       },
-                                       {
-                                           "id":  "harpy-jingle-adventuring-party-river-fernsley",
-                                           "title":  "Harpy Jingle Walks Party Into River; Shop Calls It Foot Traffic",
-                                           "date":  "2026-11-18"
                                        }
                                    ]
                   },
@@ -5997,6 +6065,25 @@
                                    ]
                   },
                   {
+                      "name":  "Lantern Row",
+                      "short":  "Lantern Row",
+                      "type":  "place",
+                      "blurb":  "A crooked shopping lane in Brindlemoor lined with chandlers, cobblers, and bookbinders. Since Blackfrost Friday every doorway carries a sign reading PLEASE TRY THE HANDLE.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "doorbuster-adventuring-party-12-doors-unlocked",
+                                           "title":  "Party Kicks In 12 Doors for Doorbuster Sale; All Were Unlocked",
+                                           "date":  "2026-11-27"
+                                       },
+                                       {
+                                           "id":  "locate-object-stolen-sword-watch-evidence-room",
+                                           "title":  "Locate Object Finds Stolen Sword in Watch Evidence Room",
+                                           "date":  "2026-11-25"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Ledgerhall Counting House",
                       "short":  "Ledgerhall",
                       "type":  "organization",
@@ -6031,6 +6118,25 @@
                                            "id":  "golden-coast-clerks-call-first-strike-margrave-rolls-initiative",
                                            "title":  "Golden Coast Clerks Call First Strike; Margrave Rolls for Initiative",
                                            "date":  "2026-10-10"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "Lumenwick Glassworks",
+                      "short":  "Lumenwick",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor glassworks that makes crystal balls and sells the future by the month.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "potion-of-speed-blackfrost-queue-party-ages",
+                                           "title":  "Potion of Speed Wins Blackfrost Queue; Party Ages a Year",
+                                           "date":  "2026-11-27"
+                                       },
+                                       {
+                                           "id":  "crystal-ball-subscription-lumenwick-seer-review",
+                                           "title":  "Crystal Ball Launches at 40 gp, Future Costs Extra",
+                                           "date":  "2026-10-27"
                                        }
                                    ]
                   },
@@ -6681,25 +6787,6 @@
                                    ]
                   },
                   {
-                      "name":  "the Hearthside Cooks\u0027 Guild",
-                      "short":  "the Hearthside Guild",
-                      "type":  "organization",
-                      "blurb":  "Brindlemoor\u0027s guild of 38 halfling cooks, eleven of them Plumbrooks. They want two silver a day and a chair at lunch.",
-                      "appearances":  2,
-                      "articles":  [
-                                       {
-                                           "id":  "red-dragon-feast-oven-2000-turnips-skorvath",
-                                           "title":  "Red Dragon Lights Feast Oven; 2,000 Eat Turnips and Pie",
-                                           "date":  "2026-11-26"
-                                       },
-                                       {
-                                           "id":  "halfling-cooks-strike-feast-plumbrook-cousins",
-                                           "title":  "Halfling Cooks Strike Before Feast, Led by Organizer\u0027s Cousins",
-                                           "date":  "2026-11-24"
-                                       }
-                                   ]
-                  },
-                  {
                       "name":  "the Homeland Watchtower",
                       "short":  "the Watchtower",
                       "type":  "agency",
@@ -6734,6 +6821,25 @@
                                            "id":  "hotel-strike-chikraggo-marathon-innhands-guild",
                                            "title":  "Hotel Strike Hits Chikraggo Long March; 7,000 Innhands Wait",
                                            "date":  "2026-10-17"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Ironvow Company",
+                      "short":  "the Ironvow Company",
+                      "type":  "organization",
+                      "blurb":  "A four-member Brindlemoor adventuring party hired to guard the Grand Feast\u0027s food overnight. They ate a third of it and were then made official tasters.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "feast-bill-6100-gp-plumbrook-strong-year",
+                                           "title":  "Halfling\u0027s Feast for 2,000 Bills 6,100 gp on a 900 gp Budget",
+                                           "date":  "2026-11-27"
+                                       },
+                                       {
+                                           "id":  "adventuring-party-guard-feast-eats-third-tasting",
+                                           "title":  "Adventuring Party Hired to Guard Feast Eats a Third of It",
+                                           "date":  "2026-11-25"
                                        }
                                    ]
                   },
@@ -7019,6 +7125,25 @@
                                            "id":  "impeachment-maztica-senate-judge-moraine-warlord",
                                            "title":  "Maztica Senate Plots Impeachment of Judge Who Jailed Warlord",
                                            "date":  "2026-10-17"
+                                       }
+                                   ]
+                  },
+                  {
+                      "name":  "the Tumblebrook",
+                      "short":  "the Tumblebrook",
+                      "type":  "place",
+                      "blurb":  "The river that runs through Brindlemoor. Its nearest bridge is never quite where you want it.",
+                      "appearances":  2,
+                      "articles":  [
+                                       {
+                                           "id":  "adventuring-party-blackfrost-guard-store-credit",
+                                           "title":  "Adventuring Party Guards Sale 19 Hours, Paid in Store Credit",
+                                           "date":  "2026-11-27"
+                                       },
+                                       {
+                                           "id":  "harpy-jingle-adventuring-party-river-fernsley",
+                                           "title":  "Harpy Jingle Walks Party Into River; Shop Calls It Foot Traffic",
+                                           "date":  "2026-11-18"
                                        }
                                    ]
                   },
@@ -8995,6 +9120,20 @@
                                    ]
                   },
                   {
+                      "name":  "Hurryvale Draughts",
+                      "short":  "Hurryvale",
+                      "type":  "organization",
+                      "blurb":  "A Brindlemoor potion brewer whose cut-price Potions of Speed carry a one-year aging side effect in very small print.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "potion-of-speed-blackfrost-queue-party-ages",
+                                           "title":  "Potion of Speed Wins Blackfrost Queue; Party Ages a Year",
+                                           "date":  "2026-11-27"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "Impiltur",
                       "short":  "Impiltur",
                       "type":  "country",
@@ -9523,20 +9662,6 @@
                                            "id":  "peace-talks-alliance-1997-rollback-czar-vlad",
                                            "title":  "Peace Talks: Damara Eyes Alliance Rollback to 1997",
                                            "date":  "2026-10-26"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "Lumenwick Glassworks",
-                      "short":  "Lumenwick",
-                      "type":  "organization",
-                      "blurb":  "A Brindlemoor glassworks that makes crystal balls and sells the future by the month.",
-                      "appearances":  1,
-                      "articles":  [
-                                       {
-                                           "id":  "crystal-ball-subscription-lumenwick-seer-review",
-                                           "title":  "Crystal Ball Launches at 40 gp, Future Costs Extra",
-                                           "date":  "2026-10-27"
                                        }
                                    ]
                   },
@@ -11137,6 +11262,20 @@
                                    ]
                   },
                   {
+                      "name":  "The Dawnqueue Company",
+                      "short":  "the Dawnqueue Company",
+                      "type":  "organization",
+                      "blurb":  "A four-member Brindlemoor adventuring party who drank Potions of Speed to win the Blackfrost Friday queue and aged a year apiece.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "potion-of-speed-blackfrost-queue-party-ages",
+                                           "title":  "Potion of Speed Wins Blackfrost Queue; Party Ages a Year",
+                                           "date":  "2026-11-27"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Day of Old Shields",
                       "short":  "the Day of Old Shields",
                       "type":  "event",
@@ -11389,6 +11528,20 @@
                                    ]
                   },
                   {
+                      "name":  "the Gristlebanner Company",
+                      "short":  "the Gristlebanners",
+                      "type":  "organization",
+                      "blurb":  "A four-member Brindlemoor adventuring party that guarded Fernsley\u0027s Outfitters for 19 hours on Blackfrost Friday and was paid in store credit.",
+                      "appearances":  1,
+                      "articles":  [
+                                       {
+                                           "id":  "adventuring-party-blackfrost-guard-store-credit",
+                                           "title":  "Adventuring Party Guards Sale 19 Hours, Paid in Store Credit",
+                                           "date":  "2026-11-27"
+                                       }
+                                   ]
+                  },
+                  {
                       "name":  "the Gullet copper mine",
                       "short":  "the Gullet",
                       "type":  "place",
@@ -11497,20 +11650,6 @@
                                            "id":  "unlimited-tiny-hut-10-feet-voidpocket-mule",
                                            "title":  "\u0027Unlimited\u0027 Tiny Hut Is 10 Feet Wide. Six Heroes, One Mule Tried",
                                            "date":  "2026-11-20"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "the Ironvow Company",
-                      "short":  "the Ironvow Company",
-                      "type":  "organization",
-                      "blurb":  "A four-member Brindlemoor adventuring party hired to guard the Grand Feast\u0027s food overnight. They ate a third of it and were then made official tasters.",
-                      "appearances":  1,
-                      "articles":  [
-                                       {
-                                           "id":  "adventuring-party-guard-feast-eats-third-tasting",
-                                           "title":  "Adventuring Party Hired to Guard Feast Eats a Third of It",
-                                           "date":  "2026-11-25"
                                        }
                                    ]
                   },
@@ -12351,20 +12490,6 @@
                                            "id":  "baseball-tickets-brewmasters-fans-flee-south",
                                            "title":  "Baseball Tickets Top 2,000 gp at Home; Fans Flee South",
                                            "date":  "2026-10-27"
-                                       }
-                                   ]
-                  },
-                  {
-                      "name":  "the Tumblebrook",
-                      "short":  "the Tumblebrook",
-                      "type":  "place",
-                      "blurb":  "The river that runs through Brindlemoor. Its nearest bridge is never quite where you want it.",
-                      "appearances":  1,
-                      "articles":  [
-                                       {
-                                           "id":  "harpy-jingle-adventuring-party-river-fernsley",
-                                           "title":  "Harpy Jingle Walks Party Into River; Shop Calls It Foot Traffic",
-                                           "date":  "2026-11-18"
                                        }
                                    ]
                   },
