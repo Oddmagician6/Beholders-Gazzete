@@ -601,6 +601,34 @@
       "hashtags": "#LesserRestoration #SpellSlots #CopperLadle #SecondHelpingCompany",
       "publishAt": "2026-11-27T09:45:00Z",
       "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "feast-bill-6100-gp-plumbrook-strong-year",
+      "release_tag": "reel-stage-nov27-feast-bill-ig-20261127",
+      "hashtags": "#Brindlemoor #GrandFeast #Feastwarden #OdoPlumbrook",
+      "publishAt": "2026-11-27T18:30:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "adventuring-party-blackfrost-guard-store-credit",
+      "release_tag": "reel-stage-nov27-store-credit-ig-20261127",
+      "hashtags": "#BlackfrostFriday #GristlebannerCompany #Mimic #FernsleysOutfitters",
+      "publishAt": "2026-11-27T21:00:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "potion-of-speed-blackfrost-queue-party-ages",
+      "release_tag": "reel-stage-nov27-speed-potion-ig-20261127",
+      "hashtags": "#PotionOfSpeed #BlackfrostFriday #DawnqueueCompany #BagOfHolding",
+      "publishAt": "2026-11-27T23:30:00Z",
+      "custom_artwork_confirmed": true
+    },
+    {
+      "article_id": "doorbuster-adventuring-party-12-doors-unlocked",
+      "release_tag": "reel-stage-nov27-doorbuster-ig-20261127",
+      "hashtags": "#BlackfrostFriday #LanternRow #GildedKettleCompany #DoorbusterDeals",
+      "publishAt": "2026-11-28T02:00:00Z",
+      "custom_artwork_confirmed": true
     }
   ]
 }
