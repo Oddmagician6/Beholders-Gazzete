@@ -10297,6 +10297,142 @@
         "rumor": "My cousin swears the barbarian who kicked in the cobbler's door went back the next day and kicked it in again, just to get a second pair of boots at the sale price."
       },
       "fiction": true
+    },
+    {
+      "id": "music-box-yule-gift-adventuring-party-ambushed",
+      "title": "Yule Music Box Won't Stop; Couriers Ambushed for 9 Days",
+      "category": "Travel",
+      "author": "Grashka Ironjaw",
+      "date": "2026-11-28",
+      "excerpt": "An adventuring party carried a duke's Yule music box nine days to his rival. It never stopped playing. Every bandit on the road heard them coming.",
+      "social": "A duke hired an adventuring party to deliver his rival a Yule music box. It played the same jolly reel for all 9 days on the road. They were ambushed 14 times, once by an owlbear that only wanted to dance. You are handed a wrapped gift and told not to open it. Do you open it?",
+      "content": "<p>Duke Osgar Wendmoor of Varnholt sent his rival an early Yule gift this week: a brass music box, hand-delivered by a hired adventuring party called the Copper Kettle Company. The box began playing when the party left Varnholt. It did not stop for nine days. Nobody had cast identify on it, because nobody had asked.</p>\n\n<p>The recipient was Duke Aldous Thistlewick of Greymere. The two dukes have feuded for eleven years over a fishing weir and, more recently, a remark about a hat. Tension held at roughly thirty siege-days before the gift went out. It is higher now.</p>\n\n<p>The tune is a Yule reel. Forty bars, then it starts over. The party counted 6,000 repeats before the fighter asked them to stop counting out loud.</p>\n\n<p>\"We're couriers. You carry the thing and you don't touch the thing,\" said Brannoc Hale, the company's leader, who now hums the reel in his sleep. \"That's the whole job. The steward said it was a music box. What's to identify about a music box?\"</p>\n\n<p>The road from Varnholt to Greymere runs through the Gallowfen woods, which have bandits the way a dog has fleas. Smart parties move quietly there. This party moved like a parade. Bandits found them on the first night. Goblins found them on the third. By the ninth day the count stood at fourteen ambushes, including one owlbear that came out of the brush, listened for a while, and swayed. It did not attack. Hale described the encounter as \"the worst one.\"</p>\n\n<p>The company's rogue, Wenna Fitch, was meant to scout ahead. She scouted ahead with the box in her pack. \"Every bush I hid behind played a reel,\" Fitch said. \"I've been doing this nine years. I have never been found by a goblin who was clapping along.\"</p>\n\n<p>The party fought back. The cleric cast silence and walked inside the sphere with the box for four hours, until she ran out of spells and patience in that order. The wizard tried dispel magic. The reel picked up tempo. They wrapped the box in three bedrolls, then in a bag of holding, which only gave it an echo. One night they buried it. They dug it up at dawn because the contract said \"delivered intact,\" and the box was still playing underground, muffled and somehow smug.</p>\n\n<p>The handover at Greymere took place on Fourthday. Handshake between Hale and the duke's chamberlain: firm, two seconds, no hidden dagger detected, though the chamberlain's ears were stuffed with wool. Duke Thistlewick then opened the lid. The music stopped at once.</p>\n\n<p>The box plays while it is shut. It goes quiet when you open it. A card inside, in Duke Wendmoor's hand, read: \"So that you may never be without music.\"</p>\n\n<p>Thistlewick has closed the lid again, for spite, and says he will send it back next Yule by the slowest party he can find. Wendmoor told this paper he was \"delighted the big one liked it.\" The Copper Kettle Company has asked for hazard pay and a quiet room. They got a field ration each and a bill for the bedrolls. I would have taken the ration. Ottoline Vex covered the gift from Wendmoor's gallery, where she reports the box was \"charming.\" She was never within earshot.</p>\n\n<p><em>Ironjaw, filed from the front.</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Gift That Keeps Playing",
+          "text": "A noble hires the party to carry a sealed, gift-wrapped box to a rival across bandit country, payment on delivery intact. The box plays a loud tune the whole way, drawing every bandit and goblin on the road, and the party must decide whether to open a present that was never theirs."
+        },
+        "npc": {
+          "name": "Corwin Lisle",
+          "role": "Steward to a petty duke",
+          "want": "He wants the gift delivered sealed, on time, and without anyone asking what it does.",
+          "secret": "He knows the box goes silent when opened and was paid extra by his duke to make sure the couriers never find out.",
+          "race": "human",
+          "gender": "male",
+          "kind": "noble"
+        },
+        "location": {
+          "name": "The Gallowfen Road",
+          "text": "A nine-day forest road between two feuding duchies, thick with bandit camps. The bandits have started setting their ambushes by sound, and a few now know the tune.",
+          "tavern": false
+        },
+        "rumor": "My cousin swears the bandits out on the fen road leave a lute player on watch now, just to tell them what song's coming."
+      },
+      "fiction": true
+    },
+    {
+      "id": "tax-collector-suggestion-spell-levy-paid-twice",
+      "title": "Tax Collector's Suggestion Spell Has 300 Pay Their Levy Twice",
+      "category": "Scandal",
+      "author": "Ottoline Vex",
+      "date": "2026-11-28",
+      "excerpt": "A tax collector cast Suggestion on Brindlemoor's levy queue. An adventuring party and 300 citizens paid twice, and the party wants its 20 gold back.",
+      "social": "Brindlemoor's tax collector put a Suggestion spell in his sales pitch. The Blistered Heel Company owed 20 gold and paid 40, and 300 citizens who owe nothing paid twice too. The refund form costs 2 silver to file, payable at his table. Does your party file the form, or pay the collector a visit?",
+      "content": "<p>Brindlemoor's tax collector wove a Suggestion spell into his pitch for the Adventurers' Levy on Tuesday, and 304 people paid it twice. Four of them were the Blistered Heel Company, an adventuring party that owed 20 gold and handed over 40. The other 300 were citizens who owe no levy at all. On Thursday the party asked the Burgess Council for its money back.</p>\n\n<p>The levy is five gold a head, due once a year from anyone who goes into the Undermaw for profit. Collector Ormond Tidewell set up his table in the market square at the eighth bell and, according to the minutes of his own deposition, said one sentence: \"It would be sensible to pay now, before the queue gets long.\" Then the queue got long, because everyone was paying, and the sensible thing was to pay again before it got longer. By noon the line ran past the Sleeping Mule Tavern and back. A baker paid for himself and then for his oven.</p>\n\n<p>Readers may recall that the town banned spellcasting <a href=\"/a/hold-person-heckler-spellcasting-ban-brindlemoor\">after the Hold Person business</a> on November 15. The ban covers the Chamber. It does not cover the market square or the tax table, a point the gentleman from the Tax Table made to the Council for twenty minutes. Nobody had asked. Suggestion already has a record in this town, having made <a href=\"/a/bard-suggestion-spell-900-voters-goat-rally\">900 voters agree with a goat</a> last week, and the Council has still not defined it.</p>\n\n<p>The Blistered Heel Company sent its cleric, Dorrit Hale, to argue for the refund. \"We cleared a stirge nest out of the Undermaw last month,\" she told the Council. \"We know what being drained feels like. The stirges didn't give us a receipt.\" The Collector did give receipts. Two each.</p>\n\n<p>The Council followed procedure, and I say that as praise. A refund requires Form 9-R. Form 9-R requires a filing fee of two silver, payable at the Collector's table, where a courtier who asked not to be named because they were not authorized to be awake told me a new sign reads \"It would be sensible to file now.\" The lady from the Mill Ward moved to waive the fee. The motion failed 5-4. Councilor Maldrith Quennel, a lich who has paid every levy since before the town had one, asked to see the refund request in writing. It was in writing. He asked again.</p>\n\n<p>Collector Tidewell calls the spell crowd management. \"I suggested something reasonable,\" he said. \"If three hundred people found it reasonable twice, I hardly see how that is my fault.\" He has taken in 3,040 gold against an expected 20, and he has asked the Council whether the surplus may go toward a larger table.</p>\n\n<p>For the record, the Council's Promises Made this session stand at fourteen, the newest being \"a swift and fair refund process.\" Promises Kept stand at one, the Collector's receipts, which were swift. The refund is on next week's agenda. So is the table.</p>\n\n<p><em>— O.V., from the gallery</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Twice-Paid Levy",
+          "text": "A town's tax collector has been charming his queue with the Suggestion spell, and half the town has paid its taxes two or three times over. The town council wants proof before it refunds a copper, and the refund clerk will pay the party a cut of anything they recover for her ledger."
+        },
+        "npc": {
+          "name": "Selwyn Parch",
+          "role": "Clerk of Refunds",
+          "want": "She wants the refund pile off her desk before the spring levy starts the whole thing again.",
+          "secret": "The collector has been casting Suggestion on her too, and every form she stamps comes out reading denied.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Refund Annex",
+          "text": "A converted stable behind the counting house where unpaid refund forms are stacked to the rafters. An unseen servant keeps filing them, and nobody remembers casting it.",
+          "tavern": false
+        },
+        "rumor": "They say the collector bought the spell off a bard who lost an election to a goat, and he still owes the bard for it."
+      },
+      "fiction": true
+    },
+    {
+      "id": "healing-potions-hangover-temple-queue-last-round",
+      "title": "Party Uses Healing Potions on Hangovers, Waits in Temple Queue",
+      "category": "Local Chaos",
+      "author": "Skritch Mudwhistle",
+      "date": "2026-11-28",
+      "excerpt": "An adventuring party drank all five emergency healing potions as a hangover cure on Feast Night. Now it waits in a temple queue. Allegedly 311th.",
+      "social": "On Feast Night, the Last Round Company drank all five of its emergency healing potions as a hangover cure. The headache came back about four minutes later. Two days on, they hold token 311 in a temple queue that wraps twice around the building, and they have a rat job Monday. What's the silliest thing your character ever drank a healing potion for?",
+      "content": "<p>At roughly the second bell after dawn on Saturday, the hangover queue at Brindlemoor's Temple of the Gentle Morning allegedly wrapped twice around the temple, and the Last Round Company was standing in it with no healing potions left. The four-member adventuring party drank all five of its emergency potions of healing as a hangover cure at around the third bell after midnight on Feast Night. Allegedly. They admit this freely and at volume, which is part of the problem.</p>\n\n<p>\"It was the cleric's idea,\" said fighter Hadrik Stoneleigh, a dwarf, who was lying on the temple steps with a turnip on his forehead at the time. \"She said a headache is damage, and potions are for damage. I liked that. It sounded like a rule.\"</p>\n\n<p>Sister Odile Varn, the party's cleric, still stands by the logic. \"I was also very tired,\" she said. The wizard, Corran Leafe, said he pointed out that the party was at full hit points. \"Full hit points and empty everything else,\" he said. \"Nobody listened. Then I drank one too.\" The potions ran 50 gold apiece. The headaches allegedly came back about four minutes later and brought friends.</p>\n\n<p>Mother Rosamund Kettlewell, who runs the temple, explained the trouble to me while stepping over a halfling. A hangover counts as poisoned, she said, and a potion of healing does nothing for poisoned. Lesser restoration does, at 30 gold a casting. The temple has three clerics, each of whom can cast it only so many times before lunch, and the line holds about 400 people who ate at <a href=\"/a/red-dragon-feast-oven-2000-turnips-skorvath\">the Grand Feast's turnip dinner</a>. \"Thursday night I cast it on a man who wanted me to know he was fine,\" she said. \"He asked for two.\"</p>\n\n<p>The temple hands out numbered tokens, carved from leftover feast turnips. The Last Round Company holds token 311. A courtier of Duke Osgar Wendmoor of Varnholt has allegedly held token 9 since Friday on a velvet cushion while the duke waits at the inn, which is how nobles queue: by cushion, from somewhere warm. \"That one is very loud,\" the duke said later, pointing at Stoneleigh, who was.</p>\n\n<p>\"It's the turnips,\" said Mabel Thornquist, a cooper's wife, who was holding a bucket at the time and would not say why. \"Two thousand people, one vegetable. Something had to give.\"</p>\n\n<p>The temple also has a new brass offering bowl by the door. It is very shiny. I looked at it for a while. You can see your whole face in it, and a pigeon behind you, which I did not care for. Anyway.</p>\n\n<p>Then there's Monday. The party is due under the Undermaw on a 40-gold contract to clear giant rats from a cellar, and five new potions cost 250 gold. Leafe has done the sums and the job now loses 210 gold. The rogue, a halfling named Pip Tumbledown, proposed writing to the rats to ask for a later date. My colleague Hollis Delvewright would call all this a lesson in resource management. Hollis allegedly went home from the feast at a reasonable hour and therefore knows nothing.</p>\n\n<p>The Watch has asked the queue to stop sitting on the temple steps. The queue has allegedly declined. Mother Kettlewell expects it to clear by Sunday. Feastwarden Odo Plumbrook, reached at home, said next year's feast for 3,000 will simply need a bigger temple. Allegedly.</p>\n\n<p><em>— Skritch, on the beat (allegedly)</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "Tokens for the Morning After",
+          "text": "A temple's healing queue is so long that someone is selling its low-numbered tokens out the back for 2 gold each, and a hawker on the steps is selling watered-down potions of healing as hangover cures. The head cleric hires the party to find both sellers before the next adventuring party walks into a dungeon carrying fakes."
+        },
+        "npc": {
+          "name": "Linnea Brask",
+          "role": "Acolyte at the Token Table",
+          "want": "She wants the queue gone by sundown so she can finally sleep.",
+          "secret": "She has been selling low-numbered tokens out the back door, and a visiting noble bought six of them.",
+          "race": "human",
+          "gender": "female",
+          "kind": "religious"
+        },
+        "location": {
+          "name": "The Long Steps",
+          "text": "The wide front steps of a temple of healing, where a queue of the hungover sits wrapped in blankets. Every step is numbered in chalk, and the numbers keep getting rubbed out and rewritten.",
+          "tavern": false
+        },
+        "rumor": "My cousin says if you tell the cleric it was the turnips, she casts lesser restoration on you for free."
+      },
+      "fiction": true
+    },
+    {
+      "id": "giant-boar-acorn-pension-9-piglets-adopted",
+      "title": "Giant Boar Retires on Acorn Pension; Her 9 Piglets Adopted",
+      "category": "Creature Features",
+      "author": "Brother Wendell Tumbleberry",
+      "date": "2026-11-28",
+      "excerpt": "Duchess, the giant boar who was meant to be the feast roast, retired Saturday on a bushel of acorns a day. All 9 piglets found homes. Soup is advised.",
+      "social": "Duchess was hauled out of the Thornwood to be roasted for a feast of 2,000. On Saturday she retired instead, on a pension of one bushel of acorns a day for life. All nine of her piglets went to new homes, and one went to a kobold warren that has already built it a trap with a cushion in it. What would you name yours?",
+      "content": "<p>Friends, Duchess the giant boar has retired. On Saturday morning she moved out of the big stall at the Sleeping Mule and into its back yard, on a pension of one bushel of acorns a day for the rest of her life, and all nine of her piglets went to new homes at an adoption fair on Tanner's Row.</p>\n\n<p>For anyone just joining us: Duchess was brought back alive from the Thornwood to be the roast at Feastwarden Odo Plumbrook's Grand Feast, which promised to feed 2,000 people on a 900 gp budget and was held on the Town Green on Thursday. Then she <a href=\"/a/giant-boar-duchess-9-piglets-feast\">had nine piglets six days out</a>, and not one soul in Brindlemoor would eat a new mother. The town ate turnips. I had seconds.</p>\n\n<p>Keeper Bess Harrowgate ran the fair from an upturned barrel. Every adopter signed a card under house rule six, \"No eating the guests,\" which she says follows the piglet wherever it goes. \"I had forty-one applications for nine pigs,\" she said. \"Three of them listed their kitchen as the pig's bedroom. Those I kept, for the Watch.\"</p>\n\n<p>The homes, as best I could count them: two to turnip farms on the north road, one to the Brindlemoor Shovellers' Lodge as a mascot, one to Gatekeeper Oswin Hask, who plans to charge it toll by the leg like everyone else (\"Four legs. Fair is fair.\"), and one to the Clatterhole, the kobold warren behind the breadbox door. Ozzle Pinchwick, wearing his pie-tin hat, told me the warren voted eleven to nothing and has already dug the piglet an inch-deep pit with a cushion at the bottom. Seer Hester Vole of the Seers' Hall took the runt. \"I saw a pig,\" she said. \"It was in my kitchen. So now it is.\" The last three went to families with a fence and a child who cried on cue.</p>\n\n<p>Now, the old herbals say a piglet should never leave its mother before the first frost. The Thornwood rangers' ledger, which actually counted, says giant boar piglets wean in about nine days, and these ones turned nine days old on Saturday. So everyone is in the right this time, which I'd like noted.</p>\n\n<p>The pension came from Reeve Maudrey Fennick of Brindlemoor, who signed it at her desk and said only, \"We are aware of the boar.\" Plumbrook, who is still guarantor on the lease, gave a speech from a chair in the yard calling it \"a strong start to her second career\" and promising her a garden next year. Duchess ate the chair's cushion while he stood on it. Mortimer, the tavern's own mule, got his stall back after six weeks in the woodshed and has filed no complaints, a first.</p>\n\n<p>My friend Nyx asked whether there's a ledger-glass you can use to adopt a piglet these days. Go outside, Nyx. There are pigs out there.</p>\n\n<p>Soup today, friends, is a gentle acorn-and-leek. Soak your acorns in fresh water for two days, changing it morning and night, until the bitterness is gone. That bitterness is tannin, and it upsets the stomach. Then simmer them with leeks and a knob of butter. Duchess skips the soaking. Her stomach is her own business.</p>\n\n<p><em>Rest well, friends. — Brother Wendell</em></p>",
+      "featured": false,
+      "facebook": true,
+      "campaign": {
+        "hook": {
+          "title": "The Tenth Piglet",
+          "text": "A farmer's prize giant boar sow had nine piglets, but the pen now holds ten, and the extra one is never there at sunrise. The farmer will pay 50 gp to know who it is before the adoption fair hands it to some unlucky family."
+        },
+        "npc": {
+          "name": "Margery Fenwold",
+          "role": "Pig farmer and fair organizer",
+          "want": "She wants every piglet in a good home by the end of the week, with no one asking awkward questions about the tenth.",
+          "secret": "She knows the tenth piglet is a wereboar child from the next farm over, and she has been feeding it anyway because its family left it behind.",
+          "race": "halfling",
+          "gender": "female",
+          "kind": "commoner"
+        },
+        "location": {
+          "name": "The Acorn Yard",
+          "text": "A muddy paddock behind a farmhouse, ruled by a retired giant boar sow who lets no stranger past the gate. Her count of the litter is always one more than the farmer's.",
+          "tavern": false
+        },
+        "rumor": "My cousin swears one of those piglets at the fair stood up on two legs and asked for its mum."
+      },
+      "fiction": true
     }
   ]
 }
